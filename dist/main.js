@@ -1,25 +1,25 @@
 import * as T from './vendor/three.module.min.js';
 import {CHUNK,field,height,buildingSize,pondDistance,resolveSolid,rebase,stringSeed} from './world.js';
 import {makeChunk,disposeChunk,makeSky,wind,waterTime} from './models.js';
+import {createWheatDetailLayer} from './dense-wheat.js';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
-<div class="film" aria-hidden="true"></div>
 <main class="screen" id="menu">
- <header class="topline"><div class="brand"><span class="brand-mark">///</span><span>THE BACKROOMS / 探索档案</span></div><div class="rec">FIELD RECORDING — 010</div></header>
- <div class="hero"><p class="eyebrow" id="eyebrow">无人之境 · 永恒白昼</p><h1 class="level">LEVEL 10</h1><h2 class="cn-title">丰 裕</h2><div class="subtitle">THE FIELD OF WHEAT</div><div class="short-rule"></div><p class="intro">风经过麦田。<br>这里，没有人记得上一次天黑。</p>
- <nav class="menu"><button class="menu-button primary" id="start" disabled><span>正在进入麦田</span><small>…</small></button><button class="menu-button" id="open-settings"><span>画面与声音</span><small>02</small></button><button class="menu-button" id="open-journal"><span>层级档案</span><small>03</small></button><button class="menu-button" id="open-controls"><span>操作指南</span><small>04</small></button></nav></div>
- <div class="scene-label"><span>生存难度 · 0</span>安全 / 稳定 / 极少量实体</div>
- <div class="loading" id="loading">正在显现的地平线 <span id="load-number">0%</span><div class="loading-track"><i id="load-bar"></i></div></div>
- <footer class="bottomline"><span>LEVEL 10 — ABUNDANCE</span><span class="hint desktop-hint">W A S D 移动 · 鼠标 环顾 · 建议佩戴耳机</span><span class="mobile-hint">左侧移动 · 右侧滑动环顾</span><span>∞</span></footer>
+ <header class="topline"><span>THE BACKROOMS</span></header>
+ <div class="hero"><p class="eyebrow" id="eyebrow">EXPLORATION</p><h1 class="level">LEVEL 10</h1><h2 class="cn-title">丰裕</h2><div class="subtitle">ABUNDANCE</div><div class="short-rule"></div>
+ <nav class="menu" aria-label="主菜单"><button class="menu-button primary selected" id="start" disabled><span>正在进入麦田</span><small>…</small></button><button class="menu-button" id="open-settings"><span>游戏设置</span></button><button class="menu-button" id="open-journal"><span>层级档案</span></button><button class="menu-button" id="open-controls"><span>操作说明</span></button></nav></div>
+
+ <div class="loading" id="loading">LOADING <span id="load-number">0%</span><div class="loading-track"><i id="load-bar"></i></div></div>
+ <footer class="bottomline"><span class="desktop-hint">↑ ↓ 选择　 ENTER 确定</span><span class="mobile-hint">轻触选项进入</span><span>ESC 返回</span></footer>
 </main>
 <div class="hud" id="hud" hidden><div class="hud-top"><div><div class="hud-title">LEVEL 10 <span style="opacity:.5">/</span> 丰裕</div><div class="hud-sub" id="location">泥土小径</div></div><div class="compass"><div>· &nbsp; · &nbsp; ▾ &nbsp; · &nbsp; ·</div><b id="bearing">N &nbsp; 000°</b></div><div class="hud-right"><button id="pause-button" aria-label="暂停游戏">ESC 暂停</button><div class="hud-sub" id="weather-label">阴天 · 风速 2.4 m/s</div><span id="fps" class="fps" hidden></span></div></div>
  <div class="crosshair"></div><div class="interact" id="interact" hidden></div><div class="toast" id="toast" role="status"></div>
- <div class="hud-bottom"><div class="stats"><div><div class="stat-label">体力</div><div class="stat-line"><div class="bar"><i id="stamina" style="width:100%"></i></div></div></div><div><div class="stat-label">水分</div><div class="stat-line"><div class="bar"><i id="hydration" style="width:100%"></i></div></div></div><div><div class="stat-label">杏仁水</div><div class="stat-line inventory"><span class="bottle-icon"></span><span id="bottle-count">00</span></div></div></div><div class="key-hints">SHIFT 奔跑 &nbsp; C 蹲下 &nbsp; E 拾取 / 饮水<br>Q 饮用杏仁水 &nbsp; J 档案 &nbsp; F 全屏</div></div></div>
+ <div class="hud-bottom"><div class="stats"><div><div class="stat-label">体力</div><div class="stat-line"><div class="bar"><i id="stamina" style="width:100%"></i></div></div></div><div><div class="stat-label">水分</div><div class="stat-line"><div class="bar"><i id="hydration" style="width:100%"></i></div></div></div><div><div class="stat-label">杏仁水</div><div class="stat-line inventory"><span class="bottle-icon"></span><span id="bottle-count">00</span></div></div></div><div class="key-hints">E 拾取　 Q 饮用　 J 档案</div></div></div>
 <div class="touch-ui" id="touch" hidden><div class="joystick" id="joystick"><div class="stick" id="stick"></div></div><div class="touch-actions"><button id="touch-run" aria-label="奔跑">跑</button><button id="touch-jump" aria-label="跳跃">跃</button><button id="touch-use" aria-label="拾取">E</button><button id="touch-drink" aria-label="饮水">Q</button></div></div>
 <div class="modal" id="settings" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden><div class="panel"><div class="panel-header"><h2 id="settings-title">画面与声音</h2><button class="close" data-close aria-label="关闭">×</button></div>
  <label class="setting"><span>画面质量<small>控制麦田细节与远景密度</small></span><select id="quality"><option value="high">精细</option><option value="balanced">均衡 · 推荐</option><option value="low">流畅</option></select></label>
- <label class="setting"><span>复古画面<small>低分辨率、扫描线与暗角</small></span><input id="retro" type="checkbox" checked></label>
+ <label class="setting"><span>像素渲染<small>低分辨率与清晰锯齿边缘</small></span><input id="retro" type="checkbox" checked></label>
  <label class="setting"><span>视野 <b id="fov-value">72°</b></span><input id="fov" type="range" min="55" max="95" step="1" value="72"></label>
  <label class="setting"><span>鼠标灵敏度</span><input id="sensitivity" type="range" min="20" max="180" value="75"></label>
  <label class="setting"><span>环境音量</span><input id="volume" type="range" min="0" max="100" value="65"></label>
@@ -41,6 +41,7 @@ renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicTone
 const scene=new T.Scene();scene.background=new T.Color('#acb6b1');scene.fog=new T.Fog('#acb6b1',60,225);
 scene.add(new T.HemisphereLight('#c9d2d4','#6b6042',2.0));const sun=new T.DirectionalLight('#ddd8c4',1.5);sun.position.set(-60,100,25);scene.add(sun);
 const sky=makeSky();scene.add(sky);
+const wheatDetail=createWheatDetailLayer(wind);scene.add(wheatDetail.object);
 const camera=new T.PerspectiveCamera(settings.fov,innerWidth/innerHeight,.075,480);camera.rotation.order='YXZ';
 const state={cx:0n,cz:0n,x:.6,z:52,y:0,yaw:-.37,pitch:-.025,velocity:new T.Vector3(),jump:0,vy:0,grounded:true,stamina:100,hydration:100,bottles:0,distance:0,elapsed:0};
 const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),chunks=new Map(),collected=new Set();
@@ -50,7 +51,7 @@ const radius=()=>settings.quality==='low'?2:3;
 function chunkLevel(dx,dz){const d=Math.max(Math.abs(dx),Math.abs(dz));return d<=1?0:d<=2?1:2}
 function updateQueue(){const wanted=new Set(),n=radius(),next=[];for(let dz=-n;dz<=n;dz++)for(let dx=-n;dx<=n;dx++){const cx=state.cx+BigInt(dx),cz=state.cz+BigInt(dz),key=`${cx},${cz}`,level=chunkLevel(dx,dz);wanted.add(key);const c=chunks.get(key);if(c){c.group.position.set(dx*CHUNK,0,dz*CHUNK);if(c.level!==level||c.quality!==settings.quality)next.push({cx,cz,key,level,d:dx*dx+dz*dz+10})}else next.push({cx,cz,key,level,d:dx*dx+dz*dz})}for(const[k,c]of chunks){if(!wanted.has(k)){scene.remove(c.group);disposeChunk(c);chunks.delete(k)}}queue=next.sort((a,b)=>a.d-b.d)}
 function streamOne(){const item=queue.shift();if(!item)return;const old=chunks.get(item.key),f=field(item.cx,item.cz,seed);const c=makeChunk(f,item.level,settings.quality,collected);c.group.position.set(Number(item.cx-state.cx)*CHUNK,0,Number(item.cz-state.cz)*CHUNK);if(old){scene.remove(old.group);disposeChunk(old)}chunks.set(item.key,c);scene.add(c.group)}
-function resize(){const scale=(settings.retro?settings.quality==='high'?.75:settings.quality==='low'?.48:.62:1)*autoScale;const maxWidth=settings.quality==='low'?1100:settings.quality==='high'?1920:1600;let w=Math.min(innerWidth*scale,maxWidth),h=w*innerHeight/innerWidth;renderer.setSize(Math.max(320,Math.floor(w)),Math.max(200,Math.floor(h)),false);camera.aspect=innerWidth/innerHeight;camera.fov=Number(settings.fov);camera.updateProjectionMatrix();document.body.classList.toggle('clean',!settings.retro)}
+function resize(){const scale=(settings.retro?settings.quality==='high'?.75:settings.quality==='low'?.48:.62:1)*autoScale;const maxWidth=settings.quality==='low'?1100:settings.quality==='high'?1920:1600;let w=Math.min(innerWidth*scale,maxWidth),h=w*innerHeight/innerWidth;renderer.setSize(Math.max(320,Math.floor(w)),Math.max(200,Math.floor(h)),false);camera.aspect=innerWidth/innerHeight;camera.fov=Number(settings.fov);camera.updateProjectionMatrix();document.body.classList.toggle('native-resolution',!settings.retro)}
 addEventListener('resize',resize);resize();updateQueue();
 
 class Ambience{
@@ -63,7 +64,7 @@ class Ambience{
 }
 const audio=new Ambience();
 function toast(text){$('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),3600)}
-function setPlay(value){playing=value;$('#menu').hidden=value;$('#hud').hidden=!value;$('#touch').hidden=!value||!touchDevice;if(value){audio.start();if(!started){started=true;toast('沿着小径前行。地上的瓶子可以按 E 拾取。')}$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';$('#eyebrow').textContent='探索暂停 · 风仍在吹';}else{keys.clear();joy.x=joy.z=0;touchRun=false;$('#stick').style.transform='';if(document.pointerLockElement)document.exitPointerLock();}}
+function setPlay(value){playing=value;$('#menu').hidden=value;$('#hud').hidden=!value;$('#touch').hidden=!value||!touchDevice;if(value){audio.start();if(!started){started=true;toast('沿着小径前行。地上的瓶子可以按 E 拾取。')}$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';$('#eyebrow').textContent='PAUSED';}else{keys.clear();joy.x=joy.z=0;touchRun=false;$('#stick').style.transform='';if(document.pointerLockElement)document.exitPointerLock();}}
 function start(){if(!ready)return;setPlay(true);if(!touchDevice){try{const p=renderer.domElement.requestPointerLock?.();if(p&&p.catch)p.catch(()=>toast('按住鼠标拖动环顾，W A S D 移动。'))}catch{toast('按住鼠标拖动环顾，W A S D 移动。')}}}
 $('#start').onclick=start;$('#pause-button').onclick=()=>setPlay(false);
 document.addEventListener('pointerlockchange',()=>{if(!document.pointerLockElement&&playing&&!touchDevice&&!activeModal){setPlay(false)}});
@@ -77,7 +78,20 @@ function drink(){if(state.bottles<1){toast('没有杏仁水。可以在路边或
 function use(){if(!interaction)return;if(interaction.kind==='bottle'){const {p,chunk}=interaction;if(collected.has(p.id))return;collected.add(p.id);state.bottles++;chunk.group.remove(p.mesh);p.mesh.traverse(o=>{if(o.geometry)o.geometry.dispose()});p.mesh=null;audio.chime();toast('拾取了杏仁水 · 按 Q 饮用');interaction=null}else{state.hydration=100;toast('喝了一口清水。有一点泥土的味道。');audio.footstep(false,true)}updateHUD()}
 function jump(){if(state.grounded&&state.stamina>5){state.vy=4.8;state.grounded=false;state.stamina-=4}}
 async function fullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{toast('此浏览器暂不支持全屏。')}}
-document.addEventListener('keydown',e=>{if(activeModal){if(e.code==='Escape'){e.preventDefault();closeModal()}if(e.code==='Tab'){const items=[...activeModal.querySelectorAll('button,input,select')];if(e.shiftKey&&document.activeElement===items[0]){e.preventDefault();items.at(-1).focus()}else if(!e.shiftKey&&document.activeElement===items.at(-1)){e.preventDefault();items[0].focus()}}return}if(e.code==='Enter'&&!playing){start();return}if(!playing)return;if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.repeat)return;if(e.code==='Escape')setPlay(false);if(e.code==='KeyE')use();if(e.code==='KeyQ')drink();if(e.code==='Space')jump();if(e.code==='KeyJ')openModal('journal');if(e.code==='KeyF')fullscreen()});
+document.addEventListener('keydown',e=>{if(activeModal){if(e.code==='Escape'){e.preventDefault();closeModal()}if(e.code==='Tab'){const items=[...activeModal.querySelectorAll('button,input,select')];if(e.shiftKey&&document.activeElement===items[0]){e.preventDefault();items.at(-1).focus()}else if(!e.shiftKey&&document.activeElement===items.at(-1)){e.preventDefault();items[0].focus()}}return}if(!playing){
+ const buttons=[...document.querySelectorAll('.menu-button')].filter(button=>!button.disabled);
+ if(e.code==='ArrowDown'||e.code==='ArrowUp'){
+  e.preventDefault();
+  let index=buttons.indexOf(document.activeElement);
+  index=(index+(e.code==='ArrowDown'?1:-1)+buttons.length)%buttons.length;
+  if(buttons[index]){document.querySelectorAll('.menu-button').forEach(button=>button.classList.remove('selected'));buttons[index].classList.add('selected');buttons[index].focus();}
+ }else if(e.code==='Enter'){
+  e.preventDefault();
+  const selected=buttons.includes(document.activeElement)?document.activeElement:$('#start');
+  if(selected&&!selected.disabled)selected.click();
+ }
+ return;
+} if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.repeat)return;if(e.code==='Escape')setPlay(false);if(e.code==='KeyE')use();if(e.code==='KeyQ')drink();if(e.code==='Space')jump();if(e.code==='KeyJ')openModal('journal');if(e.code==='KeyF')fullscreen()});
 document.addEventListener('keyup',e=>keys.delete(e.code));
 addEventListener('blur',()=>{keys.clear();mouseDragging=false;if(playing)setPlay(false)});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)setPlay(false)});
@@ -143,6 +157,7 @@ renderer.domElement.addEventListener('webglcontextrestored',()=>{contextLost=fal
 function animate(now){requestAnimationFrame(animate);const rawDt=(now-lastFrame)/1000,last=lastFrame;lastFrame=now;const dt=Math.min(.035,Math.max(.001,rawDt));if(document.hidden||contextLost)return;time+=dt;wind.time.value=time;waterTime.value=time;
  if(queue.length&&!streamFailed&&(!playing||frameCount%3===0)){try{streamOne()}catch(e){streamFailed=true;console.error('World streaming failed',e);$('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请刷新</span><small>↻</small>';return}const total=(radius()*2+1)**2,progress=Math.round(chunks.size/total*100);$('#load-number').textContent=progress+'%';$('#load-bar').style.width=progress+'%';if(!ready&&chunks.size>=9){ready=true;$('#start').disabled=false;$('#start').innerHTML='<span>进入麦田</span><small>ENTER ↵</small>'}if(!queue.length)$('#loading').hidden=true;}
  if(playing)move(dt);else{camera.position.set(state.x,(height(state.x,state.z,state.cx,state.cz)+1.94)+Math.sin(time*.23)*.009,state.z);camera.rotation.set(state.pitch,state.yaw+(started?0:Math.sin(time*.07)*.015),0);wind.player.value.set(10000,0,10000)}
+ wheatDetail.update(chunks,camera.position,settings.quality,`${state.cx},${state.cz}`);
  sky.position.copy(camera.position);weather(dt);uiTick+=dt;if(uiTick>.12){uiTick=0;if(playing)scanInteraction();updateHUD()}
  renderer.render(scene,camera);document.documentElement.dataset.bootState="ready";frameCount++;frameTime+=rawDt;
  if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;if(playing&&!queue.length){qualityTimer+=1.5;if(qualityTimer>4.5){let next=autoScale;if(fps<35)next=Math.max(.6,autoScale-.08);else if(fps>57)next=Math.min(1,autoScale+.025);if(next!==autoScale){autoScale=next;resize()}qualityTimer=0}}}

@@ -2,5 +2,24 @@ import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 const args=process.argv.slice(2),option=(name,fallback)=>{const i=args.indexOf(name);return i<0?fallback:args[i+1]},root=resolve('dist');
-const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.txt':'text/plain; charset=utf-8'};
-createServer(async(req,res)=>{try{const url=new URL(req.url,'http://terminal.local'),path=resolve(root,'.'+decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname));if(!path.startsWith(root+sep)){res.writeHead(403);res.end();return}const data=await readFile(path);res.writeHead(200,{'Content-Type':types[extname(path)]||'application/octet-stream','Cache-Control':'no-store'});res.end(data)}catch{res.writeHead(404,{'Content-Type':'text/plain'});res.end('Not found')}}).listen(Number(option('--port','4173')),option('--host','0.0.0.0'),()=>console.log('Level 10 preview ready'));
+const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.txt':'text/plain; charset=utf-8','.woff':'font/woff'};
+// Local inspection routes are served only here, never from the published dist.
+async function visualCheck(url){
+ const panel=url.searchParams.get('panel')||'menu';
+ if(panel==='atlas')return `<!doctype html><html><head><meta charset="utf-8"><title>Wheat texture inspection</title><style>body{background:#263327;margin:20px}canvas{display:block;max-width:100%;height:auto}</style></head><body><script type="module">import {buildDenseWheat} from './dense-wheat.js';import {field} from './world.js';import {Vector3} from './vendor/three.module.min.js';const wind={time:{value:0},player:{value:new Vector3()},strength:{value:0}};const group=buildDenseWheat(field(1n,1n,10),0,'balanced',wind).mesh;document.body.append(group.children[0].material.map.image);</script></body></html>`;
+ const source=await readFile(resolve(root,'main.js'),'utf8');
+ let markup=source.match(/game\.innerHTML=`([\s\S]*?)`;/)[1];
+ markup=markup.replace('id="loading"','id="loading" hidden');
+ if(panel==='menu')markup=markup.replace('id="start" disabled','id="start"').replace('正在进入麦田','进入麦田');
+ else{markup=markup.replace('id="menu"','id="menu" hidden');markup=markup.replace(new RegExp('(id="'+panel+'"[^>]*?) hidden'), '$1');}
+ return '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Interface inspection</title><link rel="stylesheet" href="./style.css"></head><body><div id="game">'+markup+'</div></body></html>';
+}
+createServer(async(req,res)=>{
+ try{
+  const url=new URL(req.url,'http://terminal.local');
+  if(url.pathname==='/__visual-check.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await visualCheck(url));return;}
+  const path=resolve(root,'.'+decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname));
+  if(!path.startsWith(root+sep)){res.writeHead(403);res.end();return;}
+  const data=await readFile(path);res.writeHead(200,{'Content-Type':types[extname(path)]||'application/octet-stream','Cache-Control':'no-store'});res.end(data);
+ }catch{res.writeHead(404,{'Content-Type':'text/plain'});res.end('Not found');}
+}).listen(Number(option('--port','4173')),option('--host','0.0.0.0'),()=>console.log('Level 10 preview ready'));

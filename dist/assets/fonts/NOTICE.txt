@@ -1,0 +1,11 @@
+Level 10 Pixel is a character subset of GNU Unifont 17.0.05,
+renamed and converted to WOFF for this game's interface.
+Upstream: https://unifoundry.com/unifont/
+
+Copyright © 1998-2026 Roman Czyborra, Paul Hardy, Qianqian Fang,
+Andrew Miller, Johnnie Weaver, David Corbett, Ælla Chiana Moskopp,
+Rebecca Bettencourt, Ho-Seok Ee, et al.
+
+This modified font is distributed under the SIL Open Font License 1.1.
+See unifont-OFL-1.1.txt. The upstream dual-license notice is included
+as unifont-LICENSE.txt. These font licenses do not apply to game code.

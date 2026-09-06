@@ -1,7 +1,28 @@
 import * as T from './vendor/three.module.min.js';
+import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js';
 import {CHUNK,random,height,roadDistance,pondDistance,buildingSize,wheatCandidates,periodOrigin} from './world.js';
 const UP=new T.Vector3(0,1,0),dummy=new T.Object3D(),color=new T.Color();
-const box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,7),cone=new T.ConeGeometry(1,1,8),leafGeo=new T.IcosahedronGeometry(1,1);
+const box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,7),cone=new T.ConeGeometry(1,1,8),leafGeo=foliageGeometry();
+function foliageGeometry(){
+ const rng=random(0x101ea5),positions=[],colors=[];
+ const tint=new T.Color(),normal=new T.Vector3(),axis=new T.Vector3(),side=new T.Vector3();
+ const center=new T.Vector3();
+ function vertex(a,col){positions.push(a.x,a.y,a.z);colors.push(col.r,col.g,col.b);}
+ for(let i=0;i<72;i++){
+  const longitude=rng()*Math.PI*2,vertical=rng()*2-1,radius=Math.cbrt(rng())*.93;
+  center.set(Math.cos(longitude)*Math.sqrt(1-vertical*vertical)*radius,vertical*radius,Math.sin(longitude)*Math.sqrt(1-vertical*vertical)*radius);
+  normal.set((rng()-.5)*.8,.4+rng()*.6,(rng()-.5)*.8).normalize();
+  axis.set(Math.cos(longitude),.16*(rng()-.5),Math.sin(longitude));
+  side.crossVectors(normal,axis).normalize();axis.crossVectors(side,normal).normalize();
+  const length=.13+rng()*.13,width=.055+rng()*.045;
+  const tip=center.clone().addScaledVector(axis,length),base=center.clone().addScaledVector(axis,-length*.8);
+  const left=center.clone().addScaledVector(side,width),right=center.clone().addScaledVector(side,-width);
+  const ridge=center.clone().addScaledVector(normal,.025);
+  tint.setScalar(.78+rng()*.22);
+  for(const [a,b]of [[base,left],[left,tip],[tip,right],[right,base]]){vertex(a,tint);vertex(b,tint);vertex(ridge,tint);}
+ }
+ const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new T.Float32BufferAttribute(colors,3));geometry.computeVertexNormals();return geometry;
+}
 function noiseTexture(kind){const n=128,data=new Uint8Array(n*n*4),r=random(kind==='brick'?971:kind==='wood'?941:717);for(let y=0;y<n;y++)for(let x=0;x<n;x++){const i=(y*n+x)*4;let a=.72+r()*.28;if(kind==='wood')a*=.75+.25*Math.sin(x*.72+Math.sin(y*.04)*.3)**2;if(kind==='roof')a*=.75+.25*Math.sin(x*.72)**4;if(kind==='brick'){const mortar=y%16<2||(x+(Math.floor(y/16)%2)*16)%32<2;a=mortar?.58:a;}data[i]=Math.floor(255*a);data[i+1]=Math.floor(250*a);data[i+2]=Math.floor(237*a);data[i+3]=255;}const t=new T.DataTexture(data,n,n);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=T.LinearFilter;t.minFilter=T.LinearMipmapLinearFilter;t.generateMipmaps=true;t.colorSpace=T.SRGBColorSpace;t.needsUpdate=true;return t}
 const woodTex=noiseTexture('wood'),brickTex=noiseTexture('brick'),roofTex=noiseTexture('roof');
 function material(hex,texture=null){return new T.MeshStandardMaterial({color:hex,map:texture,roughness:1})}
@@ -16,7 +37,7 @@ class Batch{
  beam(mat,a,b,r=.07){const mid=a.clone().add(b).multiplyScalar(.5),q=new T.Quaternion().setFromUnitVectors(UP,b.clone().sub(a).normalize());dummy.position.copy(mid);dummy.quaternion.copy(q);dummy.scale.set(r,a.distanceTo(b),r);dummy.updateMatrix();const g=cylinder.toNonIndexed();g.applyMatrix4(dummy.matrix);if(!this.parts.has(mat))this.parts.set(mat,[]);this.parts.get(mat).push(g)}
  finish(group){for(const [mat,parts]of this.parts){let count=parts.reduce((n,g)=>n+g.attributes.position.count,0),p=new Float32Array(count*3),n=new Float32Array(count*3),uv=new Float32Array(count*2),at=0;for(const g of parts){p.set(g.attributes.position.array,at*3);n.set(g.attributes.normal.array,at*3);if(g.attributes.uv)uv.set(g.attributes.uv.array,at*2);at+=g.attributes.position.count;g.dispose()}const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(p,3));g.setAttribute('normal',new T.BufferAttribute(n,3));g.setAttribute('uv',new T.BufferAttribute(uv,2));g.computeBoundingSphere();const mesh=new T.Mesh(g,mat);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh)}}
 }
-const terrainVertex=`varying vec3 vTerrain;`;
+const terrainVertex=`varying vec3 vTerrain;\n`;
 const terrainFragment=`
 varying vec3 vTerrain;
 uniform vec4 uFeature;
@@ -37,21 +58,7 @@ if(uFeature.z==2.){float bd=max(abs(p.x-uFeature.x)/11.,abs(p.y-uFeature.y)/13.)
 diffuseColor.rgb=base*(.89+n*.35);
 `)};return mat}
 function ground(f){const g=new T.PlaneGeometry(CHUNK,CHUNK,28,28);g.rotateX(-Math.PI/2);g.translate(CHUNK/2,0,CHUNK/2);const a=g.attributes.position;for(let i=0;i<a.count;i++){const x=a.getX(i),z=a.getZ(i);let y=height(x,z,f.x,f.z);if(f.type==='pond'){const pd=pondDistance(x,z,f);y-=Math.max(0,1-pd)*2.3+.22*Math.max(0,1.18-pd)}a.setY(i,y)}g.computeVertexNormals();const mesh=new T.Mesh(g,terrainMaterial(f));mesh.receiveShadow=true;return mesh}
-function wheatGeometry(detailed){const p=[],c=[];const tri=(a,b,d,col)=>{p.push(...a,...b,...d);for(let j=0;j<3;j++)c.push(...col)};const quad=(a,b,d,e,col)=>{tri(a,b,d,col);tri(a,d,e,col)};const stem=[.65,.57,.33],grain=[.91,.78,.47];quad([-.008,0,0],[.008,0,0],[.078,1.14,0],[.060,1.14,0],stem);quad([0,0,-.008],[0,0,.008],[.069,1.14,.008],[.069,1.14,-.008],stem);for(let i=0;i<2;i++){const h=.28+i*.28,s=i?-1:1;quad([0,h,0],[.035,h+.02,.015],[s*.22,h+.19,.045],[s*.30,h+.16,.035],[.56,.54,.27]);}
- if(detailed){for(let i=0;i<7;i++){for(let side=-1;side<=1;side+=2){const y=.94+i*.033,x=.06+i*.006+side*.021,z=i%2?.012:-.012,w=.023*(1-i*.045);const a=[x-side*w,y,z],b=[x,y-.024,z-w*.55],d=[x+side*w,y+.035,z],e=[x,y+.02,z+w*.65];tri(a,b,d,grain);tri(a,d,e,[.79,.64,.37]);const tip=[x+side*.065,y+.135,z];tri(d,[d[0]+.002,d[1],d[2]+.002],tip,[.73,.64,.41]);}}}
- else{quad([.035,.91,0],[.091,.93,0],[.115,1.19,0],[.077,1.24,0],grain);quad([.071,.92,-.024],[.071,.92,.024],[.10,1.21,.02],[.10,1.23,-.018],[.76,.65,.38]);}
- const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('color',new T.Float32BufferAttribute(c,3));g.computeVertexNormals();return g}
-const wheatHigh=wheatGeometry(true),wheatLow=wheatGeometry(false);
 export const wind={time:{value:0},player:{value:new T.Vector3()},strength:{value:.32}};
-const wheatMat=new T.MeshStandardMaterial({color:'#d0b677',vertexColors:true,side:T.DoubleSide,roughness:1});
-wheatMat.onBeforeCompile=s=>{s.uniforms.uTime=wind.time;s.uniforms.uPlayer=wind.player;s.uniforms.uWind=wind.strength;s.vertexShader='uniform float uTime;uniform vec3 uPlayer;uniform float uWind;\n'+s.vertexShader;s.vertexShader=s.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
-vec3 root=(modelMatrix*instanceMatrix*vec4(0.,0.,0.,1.)).xyz;
-float sway=sin(uTime*1.6+root.x*.26+root.z*.19)+.4*sin(uTime*2.3+root.x*.8);
-float bend=pow(max(position.y,0.),2.);transformed.x+=sway*.065*bend*uWind;transformed.z+=sin(uTime*.93+root.x*.14)*.055*bend*uWind;
-vec2 away=root.xz-uPlayer.xz;float d=length(away);vec2 push=away/max(d,.01)*(1.-smoothstep(.1,1.15,d));
-mat3 invRotation=transpose(mat3(instanceMatrix));vec3 pushed=invRotation*vec3(push.x,0.,push.y);transformed.xz+=pushed.xz*bend*.42;transformed.y-=length(push)*bend*.22;
-`)};
-function buildWheat(f,level,quality){const candidates=wheatCandidates(f),stride=level===0?(quality==='low'?2:1):level===1?(quality==='high'?2:3):(quality==='high'?5:8);const chosen=candidates.filter(a=>a.i%stride===0),mesh=new T.InstancedMesh(level===0?wheatHigh:wheatLow,wheatMat,chosen.length);let i=0;for(const w of chosen){dummy.position.set(w.x,height(w.x,w.z,f.x,f.z),w.z);dummy.rotation.set((w.t-.5)*.10,w.a,(w.t-.5)*.10);dummy.scale.setScalar(w.s);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);color.setHSL(.115+w.t*.018,.26+w.t*.12,.59+w.t*.09);mesh.setColorAt(i,color);i++}mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;mesh.computeBoundingSphere();mesh.receiveShadow=true;return {mesh,candidates}}
 function gableGeometry(w,h){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute([-w/2,0,0,w/2,0,0,0,h,0,w/2,0,0,-w/2,0,0,0,h,0],3));g.setAttribute('uv',new T.Float32BufferAttribute([0,0,1,0,.5,1,1,0,0,0,.5,1],2));g.computeVertexNormals();return g}
 function building(f,b,colliders,pickups){const {cx:x,cz:z,variant:v}=f,[w,d,h]=buildingSize(f),y=height(x,z,f.x,f.z)+.04,wall=v===0?materials.red:v===1?materials.brick:materials.wood,roof=v===0?materials.steel:materials.roof,doorW=v===2?2:3.8,roofH=w*.36;
  b.box(materials.floor,x,y-.02,z,w,.18,d);b.box(wall,x-w/2,y+h/2,z,.23,h,d);b.box(wall,x+w/2,y+h/2,z,.23,h,d);b.box(wall,x,y+h/2,z-d/2,w,h,.23);
@@ -74,7 +81,7 @@ function building(f,b,colliders,pickups){const {cx:x,cz:z,variant:v}=f,[w,d,h]=b
  const addBox=(x1,z1,x2,z2)=>colliders.push({kind:'box',x1,z1,x2,z2});addBox(x-w/2-.15,z-d/2,x-w/2+.15,z+d/2);addBox(x+w/2-.15,z-d/2,x+w/2+.15,z+d/2);addBox(x-w/2,z-d/2-.15,x+w/2,z-d/2+.15);addBox(x-w/2,z+d/2-.15,x-doorW/2,z+d/2+.15);addBox(x+doorW/2,z+d/2-.15,x+w/2,z+d/2+.15);addBox(x-w/2+.55,z-3.9,x-w/2+1.65,z-.1);addBox(x+w/2-1.6,z-d/2+.65,x+w/2-.45,z-d/2+1.8);
  pickups.push({id:f.key+':barn',x:x-1,z:z+1,y:y+.03});
 }
-const leafMats=['#3e4b28','#485333','#333f2a','#5a542d'].map(x=>material(x));
+const leafMats=[new T.MeshStandardMaterial({color:0xffffff,vertexColors:true,side:T.DoubleSide,roughness:1})];
 const bushMat=material('#495332');
 function vegetation(f,b,colliders,level){const r=random(f.seed^84234),crowns=[];
  for(const tree of f.trees){const x=tree.x,z=tree.z,s=tree.scale,y=height(x,z,f.x,f.z),h=(tree.variant===1?9:6.5)*s,tr=.21*s;b.add(cylinder,materials.darkwood,x,y+h*.4,z,tr,h*.8,tr);colliders.push({kind:'circle',x,z,r:tr+.10});
@@ -84,7 +91,7 @@ function vegetation(f,b,colliders,level){const r=random(f.seed^84234),crowns=[];
  // Rows of clipped hedgerow, with gaps to reach the field.
  for(let i=10;i<56;i+=2.1){if(i>27&&i<34)continue;for(const side of[0,1]){const x=side?5.4:i,z=side?i:5.4,y=height(x,z,f.x,f.z);crowns.push({x,y:y+.9,z,sx:1.30,sy:.98,sz:1.2,variant:2,shade:r()});if(level<2)crowns.push({x:x+(r()-.5)*.5,y:y+1.25,z:z+.15,sx:.75,sy:.65,sz:.80,variant:1,shade:r()})}}
  colliders.push({kind:'box',x1:4.55,z1:8.8,x2:6.25,z2:26.5},{kind:'box',x1:4.55,z1:34,x2:6.25,z2:56.9},{kind:'box',x1:8.8,z1:4.55,x2:26.5,z2:6.25},{kind:'box',x1:34,z1:4.55,x2:56.9,z2:6.25});
- const leaves=new T.InstancedMesh(leafGeo,leafMats[0],crowns.length);crowns.forEach((a,i)=>{dummy.position.set(a.x,a.y,a.z);dummy.rotation.set(r(),r()*6.28,r());dummy.scale.set(a.sx,a.sy,a.sz);dummy.updateMatrix();leaves.setMatrixAt(i,dummy.matrix);color.setHSL(.18+a.variant*.015,.22+a.shade*.12,.34+a.shade*.13);leaves.setColorAt(i,color)});leaves.instanceMatrix.needsUpdate=true;leaves.instanceColor.needsUpdate=true;leaves.computeBoundingSphere();leaves.castShadow=true;leaves.receiveShadow=true;
+ const leaves=new T.InstancedMesh(leafGeo,leafMats[0],crowns.length);crowns.forEach((a,i)=>{dummy.position.set(a.x,a.y,a.z);dummy.rotation.set(r(),r()*6.28,r());dummy.scale.set(a.sx,a.sy,a.sz);dummy.updateMatrix();leaves.setMatrixAt(i,dummy.matrix);color.setHSL(.19+a.variant*.012,.24+a.shade*.13,.28+a.shade*.09);leaves.setColorAt(i,color)});leaves.instanceMatrix.needsUpdate=true;leaves.instanceColor.needsUpdate=true;leaves.computeBoundingSphere();leaves.castShadow=true;leaves.receiveShadow=true;
  return leaves;
 }
 function poles(f,b,colliders,group){const x=3.5,z=34,y=height(x,z,f.x,f.z),h=9.8;b.add(cylinder,materials.wood,x,y+h/2,z,.115,h,.115);b.box(materials.darkwood,x,y+h-.65,z,2.9,.13,.15);for(const side of[-1,0,1]){b.add(cylinder,materials.trim,x+side*1.1,y+h-.41,z,.10,.26,.10);const pts=[];for(let k=0;k<=20;k++){const t=k/20,zz=z-64*t,base=height(x,zz,f.x,f.z);pts.push(new T.Vector3(x+side*1.1,base+h-.24-Math.sin(t*Math.PI)*1.5,zz))}const geo=new T.BufferGeometry().setFromPoints(pts);group.add(new T.Line(geo,new T.LineBasicMaterial({color:'#333d34'})))}colliders.push({kind:'circle',x,z,r:.18})}
@@ -96,7 +103,7 @@ function grassGeometry(){const p=[];for(let i=0;i<5;i++){const a=i*2.399,x=Math.
 const grassGeo=grassGeometry(),grassMat=new T.MeshStandardMaterial({color:'#5c6436',roughness:1,side:T.DoubleSide});
 function grasses(f,level){const r=random(f.seed^179123),points=[];for(let i=0;i<(level===2?320:700);i++){let x=r()*64,z=r()*64;if(roadDistance(x,z)<.5||roadDistance(x,z)>3.2&&roadDistance(x,z)<7.1||f.type==='pond'&&pondDistance(x,z,f)>1.04&&pondDistance(x,z,f)<1.27)points.push([x,z,.6+r()*.8])}const mesh=new T.InstancedMesh(grassGeo,grassMat,points.length);points.forEach(([x,z,s],i)=>{dummy.position.set(x,height(x,z,f.x,f.z),z);dummy.rotation.set(0,r()*6.28,0);dummy.scale.setScalar(s);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix)});mesh.computeBoundingSphere();return mesh}
 export function makeBottle(x,y,z){const g=new T.Group();const body=new T.Mesh(new T.CylinderGeometry(.095,.085,.32,8),glass);body.position.y=.19;const label=new T.Mesh(new T.CylinderGeometry(.097,.089,.15,8),materials.label);label.position.y=.19;const neck=new T.Mesh(new T.CylinderGeometry(.044,.07,.09,8),glass);neck.position.y=.40;const cap=new T.Mesh(new T.CylinderGeometry(.048,.048,.045,8),materials.cap);cap.position.y=.46;const stripe=new T.Mesh(new T.BoxGeometry(.1,.028,.01),materials.darkwood);stripe.position.set(0,.20,.095);g.add(body,label,neck,cap,stripe);g.position.set(x,y,z);g.rotation.z=.18;return g}
-export function makeChunk(f,level,quality,collected){const group=new T.Group(),b=new Batch(),colliders=[],pickups=[];group.add(ground(f));const wheat=buildWheat(f,level,quality);group.add(wheat.mesh,vegetation(f,b,colliders,level),grasses(f,level));poles(f,b,colliders,group);if(f.type==='building')building(f,b,colliders,pickups);if(f.type==='pond')group.add(pond(f));const r=random(f.seed^28391);if(r()<.36)pickups.push({id:f.key+':road',x:2.8,z:18+r()*23,y:0});if(f.x===0n&&f.z===0n)pickups.push({id:'0,0:welcome',x:1.9,z:46,y:0});b.finish(group);for(const p of pickups){p.y=Math.max(p.y,height(p.x,p.z,f.x,f.z)+.025);if(!collected.has(p.id)){p.mesh=makeBottle(p.x,p.y,p.z);group.add(p.mesh)}}const wheatBuckets=new Map();for(const w of wheat.candidates){const key=`${Math.floor(w.x/2)},${Math.floor(w.z/2)}`;if(!wheatBuckets.has(key))wheatBuckets.set(key,[]);wheatBuckets.get(key).push(w)}return {group,colliders,pickups,wheatBuckets,field:f,level,quality}}
-export function disposeChunk(chunk){chunk.group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&![box,cylinder,cone,leafGeo,wheatHigh,wheatLow,grassGeo].includes(o.geometry))o.geometry.dispose();if(o.material&&!Object.values(materials).includes(o.material)&&!leafMats.includes(o.material)&&![grassMat,wheatMat,glass].includes(o.material))o.material.dispose()});}
+export function makeChunk(f,level,quality,collected){const group=new T.Group(),b=new Batch(),colliders=[],pickups=[];group.add(ground(f));const wheat=buildDenseWheat(f,level,quality,wind);group.add(wheat.mesh,vegetation(f,b,colliders,level),grasses(f,level));poles(f,b,colliders,group);if(f.type==='building')building(f,b,colliders,pickups);if(f.type==='pond')group.add(pond(f));const r=random(f.seed^28391);if(r()<.36)pickups.push({id:f.key+':road',x:2.8,z:18+r()*23,y:0});if(f.x===0n&&f.z===0n)pickups.push({id:'0,0:welcome',x:1.9,z:46,y:0});b.finish(group);for(const p of pickups){p.y=Math.max(p.y,height(p.x,p.z,f.x,f.z)+.025);if(!collected.has(p.id)){p.mesh=makeBottle(p.x,p.y,p.z);group.add(p.mesh)}}const wheatBuckets=new Map();for(const w of wheat.candidates){const key=`${Math.floor(w.x/2)},${Math.floor(w.z/2)}`;if(!wheatBuckets.has(key))wheatBuckets.set(key,[]);wheatBuckets.get(key).push(w)}return {group,colliders,pickups,wheatBuckets,field:f,level,quality}}
+export function disposeChunk(chunk){chunk.group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&!isSharedWheatResource(o.geometry)&&![box,cylinder,cone,leafGeo,grassGeo].includes(o.geometry))o.geometry.dispose();if(o.material&&!isSharedWheatResource(o.material)&&!Object.values(materials).includes(o.material)&&!leafMats.includes(o.material)&&![grassMat,glass].includes(o.material))o.material.dispose()});}
 export function makeSky(){const mat=new T.ShaderMaterial({side:T.BackSide,depthWrite:false,uniforms:{uTime:wind.time},vertexShader:`varying vec3 vDirection;void main(){vDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,fragmentShader:`precision highp float;varying vec3 vDirection;uniform float uTime;
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+1.),f.x),f.y);}float fbm(vec2 p){float a=.52,n=0.;for(int i=0;i<5;i++){n+=a*noise(p);p=p*2.03+vec2(7.1,3.7);a*=.5;}return n;}void main(){vec3 d=normalize(vDirection);float elev=max(d.y,0.);vec2 p=d.xz/(elev+.35)*2.1;float n=fbm(p+vec2(uTime*.002,0.));float fine=fbm(p*3.8);vec3 cloud=mix(vec3(.33,.38,.39),vec3(.66,.69,.69),smoothstep(.22,.76,n));cloud-=smoothstep(.4,.8,fine)*.075;vec3 col=mix(vec3(.65,.69,.68),cloud,smoothstep(-.04,.35,d.y));gl_FragColor=vec4(col,1.);}`});return new T.Mesh(new T.SphereGeometry(420,24,16),mat)}
