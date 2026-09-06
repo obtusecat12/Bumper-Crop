@@ -70,3 +70,64 @@ edge heights over 3,600 fields, cancelled streaming tasks and resource ownership
 All 37 native GLES shader pairs compile and link using actual Three.js shader chunks. Transfer-state checks also confirm that loss of focus preserves pause and streaming failure cancels landmark searches. Native model and terrain
 renders are diagnostic assets, not browser screenshots. Browser frame rate has
 not been measured; quality tiers and adaptive resolution remain available.
+
+
+## V6 · preserve the scene, remove repeated work
+
+The requested road and lake changes are separate from the performance work.
+Wheat density, ear shapes/awn geometry, atlas resolution, cloud integration
+samples, pixel resolution settings, weather and collisions have not been reduced.
+
+- A persistent module worker constructs terrain, vegetation, buildings, water,
+  collision buckets and nearby ear patches. ArrayBuffers transfer their storage
+  to the renderer; shared geometry, textures and materials register once.
+- The packet codec preserves complete typed geometry attributes, local matrices,
+  instance matrices/colors, shader source and live wind/view uniform bindings.
+  Its resource registry accepts stale jobs before discarding their owned data.
+  Canvas atlas RGBA bytes are retained, along with color space and flipY.
+- Nearby ears are prepared once in 6 m patches. Ordinary movement reuses uploaded
+  instance buffers. Frustum bounds include wind and player deformation. Rebasing
+  reproduces the original Float32(raw root + cell offset) translations.
+- Exact indexing merges only byte-identical vertices across every attribute;
+  it does not approximate positions, recompute normals or simplify triangles.
+- Static object matrices stay frozen until a rebase. New chunk materials compile
+  asynchronously against the same scene lights/fog before installation. Fully
+  opaque fog and zero-contribution micro-detail skip invisible noise calculations.
+  Existing late sky drawing and all cloud sample counts remain unchanged.
+
+Primary implementation references:
+[MDN transferable objects](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects),
+[Three WebGLRenderer](https://threejs.org/docs/pages/WebGLRenderer.html),
+[Three BufferGeometry](https://threejs.org/docs/pages/BufferGeometry.html),
+[Three InstancedMesh](https://threejs.org/docs/pages/InstancedMesh.html),
+[Three DataTexture](https://threejs.org/docs/pages/DataTexture.html).
+
+Lakes now span multiple 64 m cells, with a shared seed, asymmetric bays, broad
+lobes and projecting banks. The initial basin covers about 0.96 ha across nine
+cells. Other basins vary in size and shape. Banks use physical metre widths,
+clustered grass/straw/rush colonies, uneven gaps, silt patches and small pebbles.
+The water boundary, terrain, plant habitat and collision use the same shape.
+Developer travel normalizes a dry bank point into its actual cell before loading;
+nearestness still compares true lake-center distance. Drinking range is 1.8 m
+from the waterline instead of a fraction of an enlarged lake radius.
+
+Each road contributes a complete pair of recessed wheel cuts at intersections;
+junction wear uses both corridors. Driveways fade lengthwise into the yard,
+without circular caps. A low, dense grass sward occupies median and shoulders,
+with coherent worn gaps and no roots in the wheel cuts.
+
+Landscape references reviewed by the asset agent:
+[ScotWays Coronation Road](https://scotways.com/heritage-path/HP293/),
+[Wildlife Trusts lowland meadow and pasture](https://www.wildlifetrusts.org/habitats/grassland/lowland-meadow-and-pasture).
+The supplied lake and road screenshots are the main visual targets.
+
+Validation scope: native worker/transfer and real Canvas2D checks, exact ear
+matrix/color comparisons across three qualities and origin rebases, cancelled
+worker packet handling, asynchronous install/fallback checks, and shader compile
+and isolated terrain/water renders under Mesa GLES. The current default-view
+near-ear submission falls from 896,500 to 545,600 triangles (39.1%) through
+frustum culling; every visible sampled stem is preserved. Balanced cached update
+median was about 0.028 ms in Node. These are CPU/geometry measurements, not
+browser FPS. Shared-edge heights match within 3.4e-14 m over 66,048 samples,
+including 6,450 pond edge samples. Large signed-coordinate nearest searches and
+dry landings pass. No browser frame-rate result is claimed.

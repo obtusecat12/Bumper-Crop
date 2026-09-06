@@ -223,6 +223,7 @@ const fogFragment = `
     // Never weaken Three's original concealment: fully opaque at fogFar.
     float baseFog = smoothstep(fogNear, fogFar, fogDistance);
   #endif
+  if(baseFog>=1.){gl_FragColor.rgb=fogColor;}else{
   vec3 fogMidpoint = mix(cameraPosition, vLayerFogWorld, .58);
   vec2 fogMap = (fogMidpoint.xz + uLayerFogOrigin + vec2(uLayerFogTime * .30, uLayerFogTime * .11)) / 256.0;
   float patchA = layerFogNoise(fogMap);
@@ -238,6 +239,7 @@ const fogFragment = `
   vec3 layerColor = fogColor * vec3(.967, .992, 1.018);
   gl_FragColor.rgb = mix(gl_FragColor.rgb, layerColor, layerFog * (1.0 - baseFog));
   gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, baseFog);
+  }
 #endif`;
 
 /** Install once, then call attach(newChunk.group) before rendering new chunks.

@@ -1,10 +1,10 @@
 import * as T from './vendor/three.module.min.js';
-import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js';
-import {makeNature,isSharedNatureResource} from './nature.js';
-import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js';
-import {makeLake,isSharedLakeResource} from './lake.js';
-import {makeGround,makeVerge,isSharedGroundResource} from './ground.js';
-import {CHUNK,random,height,surfaceHeight,laneOffset,mod} from './world.js';
+import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=6';
+import {makeNature,isSharedNatureResource} from './nature.js?v=6';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=6';
+import {makeLake,isSharedLakeResource} from './lake.js?v=6';
+import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=6';
+import {CHUNK,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=6';
 const UP=new T.Vector3(0,1,0),dummy=new T.Object3D();
 const box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,7);
 function noiseTexture(kind){const n=128,data=new Uint8Array(n*n*4),r=random(kind==='brick'?971:kind==='wood'?941:717);for(let y=0;y<n;y++)for(let x=0;x<n;x++){const i=(y*n+x)*4;let a=.72+r()*.28;if(kind==='wood')a*=.75+.25*Math.sin(x*.72+Math.sin(y*.04)*.3)**2;if(kind==='roof')a*=.75+.25*Math.sin(x*.72)**4;if(kind==='brick'){const mortar=y%16<2||(x+(Math.floor(y/16)%2)*16)%32<2;a=mortar?.58:a;}data[i]=Math.floor(255*a);data[i+1]=Math.floor(250*a);data[i+2]=Math.floor(237*a);data[i+3]=255;}const t=new T.DataTexture(data,n,n);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=T.LinearFilter;t.minFilter=T.LinearMipmapLinearFilter;t.generateMipmaps=true;t.colorSpace=T.SRGBColorSpace;t.needsUpdate=true;return t}
@@ -21,7 +21,7 @@ class Batch{
  beam(mat,a,b,r=.07){const mid=a.clone().add(b).multiplyScalar(.5),q=new T.Quaternion().setFromUnitVectors(UP,b.clone().sub(a).normalize());dummy.position.copy(mid);dummy.quaternion.copy(q);dummy.scale.set(r,a.distanceTo(b),r);dummy.updateMatrix();const g=cylinder.toNonIndexed();g.applyMatrix4(dummy.matrix);if(!this.parts.has(mat))this.parts.set(mat,[]);this.parts.get(mat).push(g)}
  finish(group){for(const [mat,parts]of this.parts){let count=parts.reduce((n,g)=>n+g.attributes.position.count,0),p=new Float32Array(count*3),n=new Float32Array(count*3),uv=new Float32Array(count*2),at=0;for(const g of parts){p.set(g.attributes.position.array,at*3);n.set(g.attributes.normal.array,at*3);if(g.attributes.uv)uv.set(g.attributes.uv.array,at*2);at+=g.attributes.position.count;g.dispose()}const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(p,3));g.setAttribute('normal',new T.BufferAttribute(n,3));g.setAttribute('uv',new T.BufferAttribute(uv,2));g.computeBoundingSphere();const mesh=new T.Mesh(g,mat);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh)}}
 }
-function poles(f,b,colliders,group){if(!f.roads[0].enabled||mod(f.z,2n)!==0n)return;const z=34,x=2.4+laneOffset(f.roads[0],z),y=surfaceHeight(x,z,f),h=9.8;b.add(cylinder,materials.wood,x,y+h/2,z,.115,h,.115);b.box(materials.darkwood,x,y+h-.65,z,2.9,.13,.15);for(const side of[-1,0,1]){b.add(cylinder,materials.trim,x+side*1.1,y+h-.41,z,.10,.26,.10);const pts=[];for(let k=0;k<=20;k++){const t=k/20,zz=z-128*t,base=height(x,zz,f.x,f.z);pts.push(new T.Vector3(x+side*1.1,base+h-.24-Math.sin(t*Math.PI)*1.5,zz))}const geo=new T.BufferGeometry().setFromPoints(pts);group.add(new T.Line(geo,new T.LineBasicMaterial({color:'#333d34'})))}colliders.push({kind:'circle',x,z,r:.18})}
+function poles(f,b,colliders,group){if(!f.roads[0].enabled||mod(f.z,2n)!==0n)return;const z=34,x=2.4+laneOffset(f.roads[0],z);if(f.type==='pond'&&pondShoreDistance(x,z,f)<.8)return;const y=surfaceHeight(x,z,f),h=9.8;b.add(cylinder,materials.wood,x,y+h/2,z,.115,h,.115);b.box(materials.darkwood,x,y+h-.65,z,2.9,.13,.15);for(const side of[-1,0,1]){b.add(cylinder,materials.trim,x+side*1.1,y+h-.41,z,.10,.26,.10);const pts=[];for(let k=0;k<=20;k++){const t=k/20,zz=z-128*t,base=height(x,zz,f.x,f.z);pts.push(new T.Vector3(x+side*1.1,base+h-.24-Math.sin(t*Math.PI)*1.5,zz))}const geo=new T.BufferGeometry().setFromPoints(pts);group.add(new T.Line(geo,new T.LineBasicMaterial({color:'#333d34'})))}colliders.push({kind:'circle',x,z,r:.18})}
 export function makeBottle(x,y,z){const g=new T.Group();const body=new T.Mesh(new T.CylinderGeometry(.095,.085,.32,8),glass);body.position.y=.19;const label=new T.Mesh(new T.CylinderGeometry(.097,.089,.15,8),materials.label);label.position.y=.19;const neck=new T.Mesh(new T.CylinderGeometry(.044,.07,.09,8),glass);neck.position.y=.40;const cap=new T.Mesh(new T.CylinderGeometry(.048,.048,.045,8),materials.cap);cap.position.y=.46;const stripe=new T.Mesh(new T.BoxGeometry(.1,.028,.01),materials.darkwood);stripe.position.set(0,.20,.095);g.add(body,label,neck,cap,stripe);g.position.set(x,y,z);g.rotation.z=.18;return g}
 
 export const wind={time:{value:0},player:{value:new T.Vector3()},strength:{value:.32}};
@@ -49,7 +49,8 @@ export function* createChunkTask(f,level,quality,collected){
 // Offline validation can construct synchronously; gameplay advances one phase per frame.
 export function makeChunk(...args){const task=createChunkTask(...args);let step;do{step=task.next()}while(!step.done);return step.value}
 const isShared=r=>isSharedWheatResource(r)||isSharedNatureResource(r)||isSharedBuildingResource(r)||isSharedLakeResource(r)||isSharedGroundResource(r);
-export function disposeChunk(chunk){const disposed=new Set();chunk.group.traverse(o=>{
+export const isSharedModelResource=r=>isShared(r)||[box,cylinder,glass,woodTex,brickTex,roofTex,...Object.values(materials)].includes(r);
+export function disposeChunk(chunk){if(chunk.disposePacketResources){chunk.disposePacketResources();return}const disposed=new Set();chunk.group.traverse(o=>{
  if(o.isInstancedMesh)o.dispose();
  if(o.geometry&&!disposed.has(o.geometry)&&!isShared(o.geometry)&&![box,cylinder].includes(o.geometry)){disposed.add(o.geometry);o.geometry.dispose()}
  if(o.material&&!disposed.has(o.material)&&!isShared(o.material)&&!Object.values(materials).includes(o.material)&&o.material!==glass){disposed.add(o.material);o.material.dispose()}

@@ -1,5 +1,6 @@
+import {pondShapeGLSL} from './lake-shape.js?v=6';
 import * as T from './vendor/three.module.min.js';
-import {surfaceHeight,roadDistance,laneOffset,pondDistance,pondPoint,buildingSize,buildingLocal,periodOrigin,random} from './world.js';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=6';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -13,8 +14,37 @@ uniform vec2 uSize;
 uniform vec2 uWorldOffset;
 float hash2(vec2 p){p=mod(p,2048.);vec3 p3=fract(vec3(p.xyx)*.1031);p3+=dot(p3,p3.yzx+33.33);return fract((p3.x+p3.y)*p3.z);}
 float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash2(i),hash2(i+vec2(1,0)),f.x),mix(hash2(i+vec2(0,1)),hash2(i+1.),f.x),f.y);}
-float laneD(vec2 p){float d=10000.;for(int i=0;i<4;i++){vec4 l=uLanes[i];if(l.w<.5)continue;float t=i<2?p.y:p.x;float c=l.x+l.y*sin(t*.0490873852)+l.z*sin(t*.0981747704);d=min(d,abs((i<2?p.x:p.y)-c));}if(uHasDrive>.5){vec2 a=p-uDrive.xy,v=uDrive.zw-uDrive.xy;d=min(d,length(a-v*clamp(dot(a,v)/max(dot(v,v),.0001),0.,1.)));}return d;}
-float pondD(vec2 p){vec2 d=p-uPond.xy;float c=cos(uShore.x),s=sin(uShore.x);vec2 uv=vec2(c*d.x-s*d.y,s*d.x+c*d.y)/uPond.zw;float a=atan(uv.y,uv.x),ph=uShore.y;float r=1.+uShore.z*(.60*sin(3.*a+ph)+.28*sin(5.*a-ph*.7)+.12*sin(9.*a+ph*1.7));return length(uv)/r;}
+void pathData(float d,float t,float weight,float edgeOffset,inout vec4 info){
+ if(weight<=0.)return;
+ info.x=min(info.x,d+(1.-weight)*2.6);
+ if(d>2.65)return;
+ float phase=t*.0981747704;
+ float offset=.77+.020*sin(phase*5.)+.012*sin(phase*11.);
+ float width=.235+.022*sin(phase*3.)+.012*sin(phase*7.);
+ float wheel=(1.-smoothstep(width*.42,width+.075,abs(d-offset)+edgeOffset))*weight;
+ info.y=max(info.y,wheel);
+ float cover=(1.-smoothstep(.86,1.80,d))*weight;
+ if(cover>info.z){info.w=info.z;info.z=cover;}else info.w=max(info.w,cover);
+}
+vec3 laneData(vec2 p,float edgeOffset){
+ vec4 info=vec4(10000.,0.,0.,0.);
+ for(int i=0;i<4;i++){
+  vec4 l=uLanes[i];if(l.w<.5)continue;
+  float t=i<2?p.y:p.x;
+  float c=l.x+l.y*sin(t*.0490873852)+l.z*sin(t*.0981747704);
+  pathData(abs((i<2?p.x:p.y)-c),t,1.,edgeOffset,info);
+ }
+ if(uHasDrive>.5){
+  vec2 a=p-uDrive.xy,v=uDrive.zw-uDrive.xy;float len=max(length(v),.01);
+  float t=dot(a,v)/len,across=abs(a.x*v.y-a.y*v.x)/len;
+  float corridor=smoothstep(-4.6,-2.2,t)*(1.-smoothstep(len-.04,len+.72,t));
+  float boundary=smoothstep(0.,.24,min(min(p.x,p.y),min(64.-p.x,64.-p.y)));
+  info.x=min(info.x,across+(1.-corridor)*3.8);
+  pathData(across,t,corridor*boundary*smoothstep(-1.6,3.4,t),edgeOffset,info);
+ }
+ return vec3(info.x,info.y,info.w);
+}
+${pondShapeGLSL}
 `;
 function groundMaterial(f){
  const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1});
@@ -37,35 +67,39 @@ function groundMaterial(f){
    vec2 p=vTerrain.xz,g=p+uWorldOffset,q=p+mod(uWorldOffset,2048.);
    float broad=noise2(g*.125),soilPatch=noise2(g*.5),clods=noise2(q*5.);
    float fineFade=1.-smoothstep(.004,.035,length(fwidth(q)));
-   float grain=(noise2(q*43.)*.56+noise2(q*97.)*.44-.5)*fineFade;
-   float rd=laneD(p);
-   float brokenEdge=(noise2(q*11.)-.5)*.082+(noise2(q*3.)-.5)*.10;
-   float halfWidth=.235+(noise2(g*.5)-.5)*.065;
-   float rut=1.-smoothstep(halfWidth-.075,halfWidth+.065,abs(rd-.77)+brokenEdge);
+   float grain=0.;if(fineFade>0.)grain=(noise2(q*43.)*.56+noise2(q*97.)*.44-.5)*fineFade;
+   // At most 6 cm of irregular soil at the rut edge; the authoritative recessed
+   // wheel geometry and collision height are unchanged. Integer noise scales
+   // preserve the same color at the repeating world-coordinate boundary.
+   float roadEdgeOffset=(noise2(q*3.)-.5)*.080+(clods-.5)*.040;
+   vec3 tracks=laneData(p,roadEdgeOffset);float rd=tracks.x;
+   // Each pair survives intersections. Min distance is only used for the verge.
+   float edgeBreak=(noise2(q*11.)-.5)*.13+(clods-.5)*.11;
+   float rut=smoothstep(.015,.97,clamp(tracks.y+edgeBreak*tracks.y*(1.-tracks.y)*4.,0.,1.));
    float soilTone=clamp(.43+broad*.22+(soilPatch-.5)*.26+(clods-.5)*.20+grain*.19,0.,1.);
    vec3 dirt=mix(vec3(.114,.094,.065),vec3(.237,.205,.147),soilTone);
-   float stoneSpeck=smoothstep(.77,.91,noise2(q*29.))*smoothstep(.43,.69,clods)*fineFade;
-   float darkGrain=smoothstep(.75,.91,noise2(q*61.))*fineFade;
+   float stoneSpeck=0.,darkGrain=0.;if(fineFade>0.){stoneSpeck=smoothstep(.77,.91,noise2(q*29.))*smoothstep(.43,.69,clods)*fineFade;darkGrain=smoothstep(.75,.91,noise2(q*61.))*fineFade;}
    dirt+=stoneSpeck*vec3(.047,.041,.030)-darkGrain*vec3(.017,.014,.010);
-   vec3 grass=mix(vec3(.090,.119,.047),vec3(.175,.199,.092),.22+broad*.44+soilPatch*.26);
+   vec3 grass=mix(vec3(.082,.111,.041),vec3(.166,.191,.079),.22+broad*.44+soilPatch*.26);
    grass*=.92+clods*.12+grain*.14;
    vec3 field=mix(vec3(.250,.198,.099),vec3(.374,.299,.157),.30+broad*.40+soilPatch*.20);
    field*=.94+clods*.10+grain*.13;
    float vergeBreak=(noise2(g*.5)-.5)*.63+(clods-.5)*.18;
    vec3 base=mix(grass,field,smoothstep(1.42,2.32,rd+vergeBreak));
-   float scuff=(1.-smoothstep(.28,.55,rd))*smoothstep(.65,.84,noise2(q*2.))*.23;
+   float scuff=(1.-smoothstep(.30,1.45,rd))*smoothstep(.57,.80,noise2(q*1.8))*.36;
+   scuff=max(scuff,tracks.z*(.54+soilPatch*.35));
    base=mix(base,dirt,scuff);
    base=mix(base,dirt,rut);
    if(uBuilding.w>.5){vec2 b=p-uBuilding.xy;float c=cos(uBuilding.z),s=sin(uBuilding.z);vec2 v=abs(vec2(c*b.x-s*b.y,s*b.x+c*b.y));float e=max(v.x-uSize.x,v.y-uSize.y);base=mix(dirt,base,smoothstep(1.3,3.5,e+(clods-.5)*.19));}
    if(uShore.w>.5){
-    vec3 outside=base;float pd=pondD(p);
+    vec3 outside=base;vec4 shore=pondMetricsV6(p,uPond,uShore);float bank=shore.w;
     vec3 silt=mix(vec3(.105,.099,.077),vec3(.205,.199,.157),soilTone);
     vec3 loam=mix(vec3(.34,.313,.228),vec3(.47,.433,.321),soilTone);
     vec3 drygrass=mix(vec3(.12,.141,.067),vec3(.245,.252,.134),.26+broad*.44+soilPatch*.18);
-    base=mix(silt,loam,smoothstep(.994,1.018,pd));
-    base=mix(base,drygrass,smoothstep(1.032,1.075,pd));
+    base=mix(silt,loam,smoothstep(-.22,.55,shore.y));
+    base=mix(base,drygrass,smoothstep(.11,.40,bank));
     // Restore the actual local road/field material across the entire outer bank.
-    base=mix(base,outside,smoothstep(1.31,1.44,pd));
+    base=mix(base,outside,smoothstep(.65,1.12,bank));
    }
    diffuseColor.rgb=base;
   `);
@@ -80,7 +114,7 @@ function groundMaterial(f){
    normal=normalize(max(abs(soilDet),.00000001)*normal-soilGradient);
   `);
  };
- m.customProgramCacheKey=()=> 'rural-ground-v5-fine-soil';
+ m.customProgramCacheKey=()=> 'rural-ground-v6.1-low-dense-sward';
  return m;
 }
 function samples(step,edges){
@@ -99,14 +133,16 @@ export function makeGround(f,level){
  };
  // Add samples only through each driveway's bounding region. Oblique paths
  // retain real recessed ruts instead of crossing a coarse 1.5 m triangle.
- const xs=refine(samples(step,f.roads.slice(0,2)),f.driveway?.x1,f.driveway?.x2),zs=refine(samples(step,f.roads.slice(2)),f.driveway?.z1,f.driveway?.z2),p=[],uv=[],idx=[],nx=xs.length;
+ const xs=refine(samples(step,f.roads.slice(0,2)),f.driveway?.x1,f.driveway?.x2),zs=refine(samples(step,f.roads.slice(2)),f.driveway?.z1,f.driveway?.z2),nx=xs.length,nz=zs.length;
+ const p=new Float32Array(nx*nz*3),uv=new Float32Array(nx*nz*2),idx=new (nx*nz>65535?Uint32Array:Uint16Array)((nx-1)*(nz-1)*6);
+ let pi=0,ui=0,ii=0;
  // Every vertex uses the physics height. No overlay plane or texture-only groove.
- for(const z of zs)for(const x of xs){p.push(x,surfaceHeight(x,z,f),z);uv.push(x/64,z/64)}
- for(let z=0;z<zs.length-1;z++)for(let x=0;x<nx-1;x++){const a=z*nx+x,b=a+1,c=a+nx,d=c+1;idx.push(a,c,b,b,c,d)}
+ for(const z of zs)for(const x of xs){p[pi++]=x;p[pi++]=surfaceHeight(x,z,f);p[pi++]=z;uv[ui++]=x/64;uv[ui++]=z/64}
+ for(let z=0;z<nz-1;z++)for(let x=0;x<nx-1;x++){const a=z*nx+x,b=a+1,c=a+nx,d=c+1;idx[ii++]=a;idx[ii++]=c;idx[ii++]=b;idx[ii++]=b;idx[ii++]=c;idx[ii++]=d}
  const geo=new T.BufferGeometry();
- geo.setAttribute('position',new T.Float32BufferAttribute(p,3));
- geo.setAttribute('uv',new T.Float32BufferAttribute(uv,2));
- geo.setIndex(idx);geo.computeVertexNormals();geo.computeBoundingBox();geo.computeBoundingSphere();
+ geo.setAttribute('position',new T.BufferAttribute(p,3));
+ geo.setAttribute('uv',new T.BufferAttribute(uv,2));
+ geo.setIndex(new T.BufferAttribute(idx,1));geo.computeVertexNormals();geo.computeBoundingBox();geo.computeBoundingSphere();
  const mesh=new T.Mesh(geo,groundMaterial(f));
  mesh.name='sculpted-ground-and-wheel-ruts';mesh.receiveShadow=true;
  return mesh;
@@ -121,18 +157,27 @@ class PlantGeometry{
  leaf(a,b,w,tone){const dx=b[0]-a[0],dz=b[2]-a[2],len=Math.hypot(dx,dz)||1,m=[a[0]+dx*.43,a[1]+(b[1]-a[1])*.43+.001,a[2]+dz*.43];this.quad(a,[m[0]+dz/len*w,m[1],m[2]-dx/len*w],b,[m[0]-dz/len*w,m[1]-.001,m[2]+dx/len*w],tone)}
  finish(){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(this.p,3));g.setAttribute('color',new T.Float32BufferAttribute(this.c,3));g.computeVertexNormals();g.computeBoundingBox();g.computeBoundingSphere();shared.add(g);return g}
 }
-function bladeGeometry(variant=0,far=false){
- const g=new PlantGeometry(),r=random(0x417faf+variant*971),tone=new T.Color();
- const count=far?3:variant===2?8:6;
+function bladeGeometry(variant=0,detail=0){
+ const g=new PlantGeometry(),r=random(0x417faf+variant*971),tone=new T.Color(),baseTone=new T.Color(),basalTone=new T.Color();
+ const far=detail>=2,count=detail===0?7:detail===1?5:4;
  for(let i=0;i<count;i++){
-  const a=r()*TAU,x=Math.cos(a)*r()*.037,z=Math.sin(a)*r()*.037,h=.075+r()*(variant===2?.125:.092),bend=.022+r()*.064,w=.0015+r()*.0017;
-  const side=[-Math.sin(a),Math.cos(a)],segments=far?2:3;
-  const dry=r()<.16;
-  tone.setHSL(dry?.145:.195+r()*.035,dry?.25:.32,.19+r()*.095);
-  for(let k=0;k<segments;k++){
-   const t=k/segments,u=(k+1)/segments,at=q=>[x+Math.cos(a)*bend*q*q,h*q,z+Math.sin(a)*bend*q*q],v1=at(t),v2=at(u);
-   const left=(v,q,s)=>[v[0]+side[0]*w*s*(1-q*.94),v[1],v[2]+side[1]*w*s*(1-q*.94)];
-   g.quad(left(v1,t,-1),left(v1,t,1),left(v2,u,1),left(v2,u,-1),tone);
+  const a=i*2.399963+r()*.48,rad=Math.sqrt(r())*.15,x=Math.cos(a)*rad,z=Math.sin(a)*rad,h=.12+r()*(variant===2?.16:.14),bend=.050+r()*.15,w=.0042+r()*.0030;
+  const side=[-Math.sin(a),Math.cos(a)];
+  const dry=r()<.10;
+  tone.setHSL(dry?.145:.195+r()*.035,dry?.29:.38,.20+r()*.095);
+  baseTone.copy(tone).multiplyScalar(.80);
+  basalTone.copy(baseTone).multiplyScalar(.44);
+  const b0=[x-side[0]*w,0,z-side[1]*w],b1=[x+side[0]*w,0,z+side[1]*w],tip=[x+Math.cos(a)*bend,h,z+Math.sin(a)*bend];
+  if(far){g.tri(b0,b1,tip,tone);continue}
+  const t=.57,mx=x+Math.cos(a)*bend*t*t,mz=z+Math.sin(a)*bend*t*t;
+  const m0=[mx-side[0]*w*.54,h*t,mz-side[1]*w*.54],m1=[mx+side[0]*w*.54,h*t,mz+side[1]*w*.54];
+  // Two triangles below the bend and one tapered tip preserve the silhouette.
+  g.quad(b0,b1,m1,m0,baseTone);g.tri(m0,m1,tip,tone);
+  if(detail===0||i<2){
+   // Short, sprawling basal leaves fill the space between upright blades.
+   // One triangle each gives real low coverage without transparent-card fill.
+   const a0=a+1.15+r()*.85,dx=Math.cos(a0),dz=Math.sin(a0),length=.13+r()*.12,bw=.006+r()*.0025;
+   g.tri([x-dz*bw,.004,z+dx*bw],[x+dz*bw,.004,z-dx*bw],[x+dx*length,.025+r()*.045,z+dz*length],basalTone);
   }
  }
  return g.finish();
@@ -177,7 +222,7 @@ function daisyGeometry(){
  }
  return g.finish();
 }
-const grassGeos=[bladeGeometry(0),bladeGeometry(1),bladeGeometry(2)],farGrassGeo=bladeGeometry(0,true);
+const grassGeos=[bladeGeometry(0),bladeGeometry(1),bladeGeometry(2)],midGrassGeos=[bladeGeometry(0,1),bladeGeometry(1,1),bladeGeometry(2,1)],farGrassGeo=bladeGeometry(0,2);
 const fernGeos=[fernGeometry(true),fernGeometry(false)],daisyGeo=daisyGeometry();
 const plantMat=new T.MeshStandardMaterial({color:0xffffff,vertexColors:true,roughness:1,side:T.DoubleSide});
 const stoneGeo=new T.IcosahedronGeometry(1,0),stoneMat=new T.MeshStandardMaterial({color:'#77705e',roughness:1});
@@ -195,33 +240,67 @@ function addInstances(group,geo,mat,points,f,name){
  mesh.computeBoundingBox();mesh.computeBoundingSphere();mesh.name=name;mesh.receiveShadow=true;
  group.add(mesh);
 }
+// Dense turf uses packed numeric streams rather than thousands of point objects.
+function addTurfInstances(group,geo,points,f,name){
+ const count=points.length/6;if(!count)return;
+ const mesh=new T.InstancedMesh(geo,plantMat,count),tint=new T.Color();
+ for(let i=0,j=0;i<count;i++,j+=6){
+  const x=points[j],z=points[j+1],s=points[j+2];
+  dummy.position.set(x,surfaceHeight(x,z,f)-.005,z);
+  dummy.rotation.set(0,points[j+3],0);dummy.scale.set(s,s*points[j+5],s);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);
+  const value=points[j+4];tint.setRGB(value,value,value);mesh.setColorAt(i,tint);
+ }
+ mesh.instanceMatrix.needsUpdate=true;mesh.instanceColor.needsUpdate=true;
+ mesh.computeBoundingBox();mesh.computeBoundingSphere();mesh.name=name;mesh.receiveShadow=true;group.add(mesh);
+}
+const turfClamp=v=>Math.max(0,Math.min(1,v));
+function turfHash(a,b){let n=Math.imul(a,374761393)^Math.imul(b,668265263);n=Math.imul(n^(n>>>13),1274126177);return((n^(n>>>16))>>>0)/4294967295}
+function turfNoise(x,z){
+ const ix=Math.floor(x),iz=Math.floor(z);let u=x-ix,v=z-iz;u=u*u*(3-2*u);v=v*v*(3-2*v);
+ const a=turfHash(ix,iz),b=turfHash(ix+1,iz),c=turfHash(ix,iz+1),d=turfHash(ix+1,iz+1);
+ return(a+(b-a)*u)*(1-v)+(c+(d-c)*u)*v;
+}
 export function makeVerge(f,level){
- const group=new T.Group(),r=random(f.seed^0x11bad),grass=[],stones=[],ferns=[],daisies=[];
- group.name='fine-mixed-trackside-plants';
+ const group=new T.Group(),r=random(f.seed^0x11bad),grass=[[],[],[]],stones=[],ferns=[],daisies=[],road={};
+ const near=level===0,far=level>=2,worldX=periodOrigin(f.x)%2048,worldZ=periodOrigin(f.z)%2048;
+ const size=buildingSize(f),halfW=size[0]/2,halfD=size[1]/2,co=Math.cos(f.buildingAngle||0),si=Math.sin(f.buildingAngle||0);
+ group.name='dense-fine-trackside-turf';
  const blocked=(x,z)=>{
   if(x<.08||z<.08||x>63.92||z>63.92)return true;
-  if(f.type==='pond'&&pondDistance(x,z,f)<1.035)return true;
-  if(f.type==='building'){const p=buildingLocal(x,z,f),[w,d]=buildingSize(f);if(Math.abs(p.x)<w/2+1.25&&Math.abs(p.z)<d/2+1.25)return true}
+  if(f.type==='pond'&&pondMetrics(x,z,f).metres<.38)return true;
+  if(f.type==='building'){const dx=x-f.cx,dz=z-f.cz;if(Math.abs(co*dx-si*dz)<halfW+1.25&&Math.abs(si*dx+co*dz)<halfD+1.25)return true}
   return false;
  };
- const addGrass=(x,z,s,kind=0)=>{if(blocked(x,z))return;const d=roadDistance(x,z,f);if(Math.abs(d-.77)<.27)return;grass.push({x,z,s,a:r()*TAU,v:Math.floor(r()*3),tint:.82+r()*.27,lod:r(),kind})};
+ const addGrass=(x,z,s,kind=0)=>{
+  if(blocked(x,z))return;roadProfile(x,z,f,road);if(road.rut>.14)return;
+  const lush=turfNoise((x+worldX)*.66,(z+worldZ)*.66),small=turfNoise((x+worldX)*2.5,(z+worldZ)*2.5);
+  // Coherent gaps and a few flattened tufts read as trampling, not missing dots.
+  const worn=turfClamp((.38-lush)*3.8)+road.junction*(.64+small*.30);
+  if(r()<worn*.78||r()<.035)return;
+  const bucket=far?0:Math.floor(r()*3),heightScale=.88-Math.min(.64,worn*.70);
+  grass[bucket].push(x,z,s*(.90+lush*.20),r()*TAU,.85+r()*.27,heightScale);
+ };
  const addFlower=(x,z)=>{if(blocked(x,z)||roadDistance(x,z,f)<1.22)return;daisies.push({x,z,s:.66+r()*.45,a:r()*TAU,tint:.91+r()*.11,lod:r()})};
- // Irregular clusters replace identical clumps placed at regular intervals.
- const seedLane=(point,length)=>{
-  for(let t=.18;t<length-.18;t+=.21+r()*.32){
-   if(r()<.11)continue;
-   const median=point(t,(r()-.5)*.53);addGrass(median.x,median.z,.48+r()*.35,1);
-   for(const side of [-1,1]){
-    if(r()<.18)continue;
-    const s=side*(1.28+r()*.65),p=point(t+(r()-.5)*.14,s);
-    addGrass(p.x,p.z,.72+r()*.47);
-    if(r()<.45){const q=point(t+(r()-.5)*.26,s+side*(.05+r()*.21));addGrass(q.x,q.z,.55+r()*.40)}
-    if(r()<.023)addFlower(p.x+(r()-.5)*.28,p.z+(r()-.5)*.28);
+ // Staggered rows form overlapping sward across the full median and shoulders.
+ // Row/column jitter and coherent thin patches remove any planting-grid pattern.
+ const spacing=near?.28:far?.60:.38,offsets=[-.31,-.16,.00,.16,.31,1.17,1.43,1.70,1.98,-1.17,-1.43,-1.70,-1.98];
+ const seedLane=(l,drive)=>{
+  const vx=drive?drive.x2-drive.x1:0,vz=drive?drive.z2-drive.z1:0,len=drive?Math.hypot(vx,vz):64;
+  if(len<.1)return;
+  for(let t=.10+r()*spacing;t<len-.10;t+=spacing*(.82+r()*.36)){
+   const shift=(r()-.5)*.09;
+   for(let i=0;i<offsets.length;i++){
+    const a=t+(r()-.5)*spacing*.9,s=offsets[i]+shift+(r()-.5)*.11;
+    let x,z;
+    if(drive){x=drive.x1+vx*a/len-vz*s/len;z=drive.z1+vz*a/len+vx*s/len}
+    else{const c=l.edge+laneOffset(l,a)+s;x=l.axis==='x'?c:a;z=l.axis==='x'?a:c}
+    addGrass(x,z,(i<5?.90:.96)+r()*.14,i<5?1:0);
+    if(i>=5&&r()<.0018)addFlower(x+(r()-.5)*.3,z+(r()-.5)*.3);
    }
   }
  };
- for(const l of f.roads){if(!l.enabled)continue;seedLane((t,s)=>{const q=l.edge+laneOffset(l,t)+s;return l.axis==='x'?{x:q,z:t}:{x:t,z:q}},64)}
- if(f.driveway){const d=f.driveway,vx=d.x2-d.x1,vz=d.z2-d.z1,len=Math.hypot(vx,vz);if(len>.1)seedLane((t,s)=>({x:d.x1+vx*t/len-vz*s/len,z:d.z1+vz*t/len+vx*s/len}),len)}
+ for(const l of f.roads)if(l.enabled)seedLane(l,null);
+ if(f.driveway)seedLane(null,f.driveway);
  // Detached, uneven tufts soften the crop margin without filling wheel tracks.
  for(let i=0;i<1500;i++){
   const x=r()*64,z=r()*64,d=roadDistance(x,z,f);
@@ -238,16 +317,12 @@ export function makeVerge(f,level){
  };
  // Moist bank plants stay above water and occur in broken patches.
  if(f.type==='pond'){
-  for(let i=0;i<520;i++){
-   const a=r()*TAU,soilPatch=.5+.5*Math.sin(a*3+f.shorePhase),q=pondPoint(f,a,1.06+r()*.27);
-   if(r()<.22+soilPatch*.58)addGrass(q.x+(r()-.5)*.11,q.z+(r()-.5)*.11,.66+r()*.52,2);
-  }
   for(let i=0;i<55;i++){
    const a=r()*TAU,soilPatch=.5+.5*Math.sin(a*3+f.shorePhase+.8);
    if(r()>.12+soilPatch*.72)continue;
-   const q=pondPoint(f,a,1.11+r()*.17);fernAt(q.x,q.z,.55+r()*.42);
+   const q=pondBankPoint(f,a,2+r()*4);fernAt(q.x,q.z,.55+r()*.42);
   }
-  for(let i=0;i<9;i++){const q=pondPoint(f,r()*TAU,1.24+r()*.14);if(r()<.36)addFlower(q.x,q.z)}
+  for(let i=0;i<9;i++){const q=pondBankPoint(f,r()*TAU,4+r()*3);if(r()<.36)addFlower(q.x,q.z)}
  }
  // Small fern colonies sit at shaded hedge/tree feet, not in exposed wheat.
  for(const shrub of f.shrubs||[]){
@@ -260,10 +335,9 @@ export function makeVerge(f,level){
   if(r()>.45)continue;
   for(let i=0;i<2;i++){const a=r()*TAU,rad=(.66+r()*.64)*tree.scale;fernAt(tree.x+Math.cos(a)*rad,tree.z+Math.sin(a)*rad,.62+r()*.32)}
  }
- const near=level===0,far=level>=2;
- if(far){addInstances(group,farGrassGeo,plantMat,grass.filter(p=>p.lod<.20),f,'distant-fine-grass')}
+ if(far){addTurfInstances(group,farGrassGeo,grass[0],f,'distant-dense-fine-grass')}
  else{
-  for(let v=0;v<3;v++)addInstances(group,grassGeos[v],plantMat,grass.filter(p=>p.v===v&&(near||p.lod<.55)),f,'fine-grass-variant-'+v);
+  for(let v=0;v<3;v++)addTurfInstances(group,(near?grassGeos:midGrassGeos)[v],grass[v],f,'dense-fine-grass-variant-'+v);
   addInstances(group,fernGeos[near?0:1],plantMat,ferns.filter(p=>near||p.lod<.55),f,'small-feathered-ferns');
   addInstances(group,daisyGeo,plantMat,daisies.filter(p=>near||p.lod<.25),f,'rare-tiny-verge-daisies');
   addInstances(group,stoneGeo,stoneMat,stones.filter(p=>near||p.lod<.37),f,'scattered-fine-rut-gravel');

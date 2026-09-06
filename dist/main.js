@@ -1,9 +1,10 @@
+import {createChunkStream} from './world-stream.js?v=6';
 import * as T from './vendor/three.module.min.js';
-import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js';
-import {createWheatDetailLayer} from './dense-wheat.js';
-import {createAtmosphere} from './atmosphere.js';
-import {findNearestLandmark,findSafeLanding,applyTeleport} from './developer-tools.js';
+import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=6';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=6';
+import {createWheatDetailLayer} from './dense-wheat.js?v=6';
+import {createAtmosphere} from './atmosphere.js?v=6';
+import {findNearestLandmark,findSafeLanding,applyTeleport} from './developer-tools.js?v=6';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -44,13 +45,14 @@ if(!['high','balanced','low'].includes(settings.quality))settings.quality='balan
 let renderer;
 try{renderer=new T.WebGLRenderer({antialias:false,powerPreference:'high-performance',alpha:false});renderer.setPixelRatio(1);renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','Level 10 三维麦田');game.prepend(renderer.domElement)}catch(e){e.userTitle='无法启动 3D 画面';e.userMessage='当前浏览器无法创建 3D 画面。请确认已启用硬件加速，并使用支持 WebGL 2 的浏览器。';throw e}
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.23;
-const scene=new T.Scene();scene.background=new T.Color('#acb6b1');scene.fog=new T.Fog('#acb6b1',60,225);
+const scene=new T.Scene();scene.matrixAutoUpdate=false;scene.background=new T.Color('#acb6b1');scene.fog=new T.Fog('#acb6b1',60,225);
 scene.add(new T.HemisphereLight('#c9d2d4','#6b6042',2.0));const sun=new T.DirectionalLight('#ddd8c4',1.5);sun.position.set(-60,100,25);scene.add(sun);
 const atmosphere=createAtmosphere({scene,quality:settings.quality});scene.add(atmosphere.sky);
-const wheatDetail=createWheatDetailLayer(wind);scene.add(wheatDetail.object);atmosphere.attachFog(wheatDetail.object);
+const wheatDetail=createWheatDetailLayer(wind,{onMesh:mesh=>atmosphere.attachFog(mesh)});scene.add(wheatDetail.object);atmosphere.attachFog(wheatDetail.object);
 const camera=new T.PerspectiveCamera(settings.fov,innerWidth/innerHeight,.075,480);camera.rotation.order='YXZ';
 const state={cx:0n,cz:0n,x:.6,z:52,y:0,yaw:-.37,pitch:-.025,velocity:new T.Vector3(),jump:0,vy:0,grounded:true,stamina:100,hydration:100,bottles:0,distance:0,elapsed:0};
 const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),chunks=new Map(),collected=new Set();
+const wheatView={value:new T.Vector3()},chunkStream=createChunkStream({wind,viewUniform:wheatView});
 let queue=[],activeBuild=null,playing=false,started=false,ready=false,lastFrame=performance.now(),time=0,uiTick=0,step=0,footTimer=0,toastTimer,activeModal=null,lastFocus=null,hadMovement=false,lastWeather='',qualityTimer=0,frameCount=0,frameTime=0,fps=60,autoScale=1,contextLost=false,streamFailed=false;
 let developerSearch=null,teleportJob=null,coverageRadius=0;
 let interaction=null;const keys=new Set(),joy={x:0,z:0};let touchRun=false,mouseDragging=false;
@@ -58,21 +60,58 @@ const radius=()=>settings.quality==='low'?2:3;
 function chunkLevel(dx,dz){const d=Math.max(Math.abs(dx),Math.abs(dz));return d<=1?0:d<=2?1:2}
 function updateQueue(){
  const wanted=new Set(),n=radius(),next=[];
- if(activeBuild){activeBuild.task.return();activeBuild=null}
+ if(activeBuild){
+  const old=activeBuild;old.cancelled=true;old.task?.return();
+  if(old.job)chunkStream.cancel(old.job);
+  if(old.chunk&&!old.compiling)disposeChunk(old.chunk);
+  activeBuild=null;
+ }
  for(let dz=-n;dz<=n;dz++)for(let dx=-n;dx<=n;dx++){
   const cx=state.cx+BigInt(dx),cz=state.cz+BigInt(dz),key=`${cx},${cz}`,level=chunkLevel(dx,dz);wanted.add(key);const c=chunks.get(key);
-  if(c){c.group.position.set(dx*CHUNK,0,dz*CHUNK);if(c.level!==level||c.quality!==settings.quality)next.push({cx,cz,key,level,d:dx*dx+dz*dz+10})}else next.push({cx,cz,key,level,d:dx*dx+dz*dz});
+  if(c){c.group.position.set(dx*CHUNK,0,dz*CHUNK);c.group.updateMatrix();if(c.level!==level||c.quality!==settings.quality)next.push({cx,cz,key,level,d:dx*dx+dz*dz+10})}else next.push({cx,cz,key,level,d:dx*dx+dz*dz});
  }
  for(const[k,c]of chunks)if(!wanted.has(k)){scene.remove(c.group);disposeChunk(c);chunks.delete(k)}
  queue=next.sort((a,b)=>a.d-b.d);updateCoverage();
 }
-function streamOne(){
- if(!activeBuild){const item=queue.shift();if(!item)return;const f=field(item.cx,item.cz,seed);activeBuild={item,task:createChunkTask(f,item.level,settings.quality,collected)}}
- const step=activeBuild.task.next();if(!step.done)return;
- const item=activeBuild.item,c=step.value,old=chunks.get(item.key);activeBuild=null;
- c.group.position.set(Number(item.cx-state.cx)*CHUNK,0,Number(item.cz-state.cz)*CHUNK);
- if(old){scene.remove(old.group);disposeChunk(old)}chunks.set(item.key,c);atmosphere.attachFog(c.group);scene.add(c.group);updateCoverage();
+function finishChunk(build,c){
+ if(build.cancelled){disposeChunk(c);return}
+ c.group.position.set(Number(build.item.cx-state.cx)*CHUNK,0,Number(build.item.cz-state.cz)*CHUNK);
+ c.group.traverse(o=>{o.updateMatrix();o.matrixAutoUpdate=false});
+ // An item may have been picked up while this replacement was in the worker.
+ for(const p of c.pickups)if(p.mesh&&collected.has(p.id)){c.group.remove(p.mesh);p.mesh=null}
+ atmosphere.attachFog(c.group);build.chunk=c;build.compiling=true;
+ // KHR_parallel_shader_compile lets the driver prepare a new material before
+ // the first visible frame. The target Scene supplies identical lights/fog.
+ renderer.compileAsync(c.group,camera,scene).then(()=>{
+  build.compiling=false;
+  if(build.cancelled){disposeChunk(c);build.chunk=null;return}
+  build.prepared=true;
+ },error=>{build.compiling=false;build.error=error});
 }
+function streamOne(){
+ if(!activeBuild){
+  if(chunkStream.starting||chunkStream.busy)return;
+  const item=queue.shift();if(!item)return;
+  activeBuild={item,quality:settings.quality};
+  if(chunkStream.available)activeBuild.job=chunkStream.request({cx:item.cx,cz:item.cz,seed,level:item.level,quality:settings.quality,collected:[...collected]});
+  else activeBuild.task=createChunkTask(field(item.cx,item.cz,seed),item.level,settings.quality,collected);
+ }
+ const build=activeBuild;
+ if(build.error)throw build.error;
+ if(build.prepared){
+  const c=build.chunk,old=chunks.get(build.item.key);activeBuild=null;
+  if(old){scene.remove(old.group);disposeChunk(old)}
+  chunks.set(build.item.key,c);scene.add(c.group);updateCoverage();return;
+ }
+ if(build.compiling)return;
+ if(build.job){
+  if(!build.job.done)return;
+  if(build.job.error){build.task=createChunkTask(field(build.item.cx,build.item.cz,seed),build.item.level,build.quality,collected);build.job=null;return}
+  const c=build.job.chunk;build.job.chunk=null;build.job=null;if(c)finishChunk(build,c);return;
+ }
+ const step=build.task.next();if(step.done){build.task=null;finishChunk(build,step.value)}
+}
+
 function resize(){const scale=(settings.retro?settings.quality==='high'?.75:settings.quality==='low'?.48:.62:1)*autoScale;const maxWidth=settings.quality==='low'?1100:settings.quality==='high'?1920:1600;let w=Math.min(innerWidth*scale,maxWidth),h=w*innerHeight/innerWidth;renderer.setSize(Math.max(320,Math.floor(w)),Math.max(200,Math.floor(h)),false);camera.aspect=innerWidth/innerHeight;camera.fov=Number(settings.fov);camera.updateProjectionMatrix();document.body.classList.toggle('native-resolution',!settings.retro)}
 addEventListener('resize',resize);resize();updateQueue();
 
@@ -224,7 +263,7 @@ function scanInteraction(){
  }
  if(!interaction){
   const chunk=currentChunk();
-  if(chunk?.field.type==='pond'&&pondDistance(state.x,state.z,chunk.field)<1.16){
+  if(chunk?.field.type==='pond'&&pondShoreDistance(state.x,state.z,chunk.field)<1.8){
    interaction={kind:'water'};
   }
  }
@@ -232,7 +271,7 @@ function scanInteraction(){
  prompt.hidden=!interaction;
  if(interaction)prompt.innerHTML=interaction.kind==='bottle'?'<kbd>E</kbd> 拾取杏仁水':'<kbd>E</kbd> 饮用湖水';
 }
-function updateHUD(){if(activeModal?.id==='developer')updateDeveloperCoordinates();const degrees=((Math.round(-state.yaw*180/Math.PI)%360)+360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(degrees/45)%8];$('#bearing').textContent=`${dir}  ${String(degrees).padStart(3,'0')}°`;$('#stamina').style.width=state.stamina+'%';$('#hydration').style.width=state.hydration+'%';$('#bottle-count').textContent=String(state.bottles).padStart(2,'0');const c=currentChunk();let location=c&&roadDistance(state.x,state.z,c.field)>2.2?'田间草地':'泥土小径';if(c){const f=c.field;if(f.type==='pond'&&pondDistance(state.x,state.z,f)<1.24)location='湖泊 · 未开垦的低地';else if(f.type==='building'){const[w,d]=buildingSize(f);const bp=buildingLocal(state.x,state.z,f);if(Math.abs(bp.x)<w/2&&Math.abs(bp.z)<d/2)location=BUILDING_NAMES[f.variant];else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}$('#location').textContent=`${location}  /  ${Math.round(state.distance)} m`;$('#fps').textContent=`${Math.round(fps)} FPS · ${chunks.size} 区块`;}
+function updateHUD(){if(activeModal?.id==='developer')updateDeveloperCoordinates();const degrees=((Math.round(-state.yaw*180/Math.PI)%360)+360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(degrees/45)%8];$('#bearing').textContent=`${dir}  ${String(degrees).padStart(3,'0')}°`;$('#stamina').style.width=state.stamina+'%';$('#hydration').style.width=state.hydration+'%';$('#bottle-count').textContent=String(state.bottles).padStart(2,'0');const c=currentChunk();let location=c&&roadDistance(state.x,state.z,c.field)>2.2?'田间草地':'泥土小径';if(c){const f=c.field;if(f.type==='pond'&&pondShoreDistance(state.x,state.z,f)<7)location='湖泊 · 未开垦的低地';else if(f.type==='building'){const[w,d]=buildingSize(f);const bp=buildingLocal(state.x,state.z,f);if(Math.abs(bp.x)<w/2&&Math.abs(bp.z)<d/2)location=BUILDING_NAMES[f.variant];else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}$('#location').textContent=`${location}  /  ${Math.round(state.distance)} m`;$('#fps').textContent=`${Math.round(fps)} FPS · ${chunks.size} 区块`;}
 
 const rainCount=900,rainPositions=new Float32Array(rainCount*6);for(let i=0;i<rainCount;i++){const x=(Math.random()-.5)*38,y=Math.random()*20,z=(Math.random()-.5)*38;rainPositions.set([x,y,z,x-.10,y-.60,z],i*6)}const rainGeo=new T.BufferGeometry();rainGeo.setAttribute('position',new T.BufferAttribute(rainPositions,3));const rainMat=new T.LineBasicMaterial({color:'#c9d3ce',transparent:true,opacity:0,depthWrite:false});const rain=new T.LineSegments(rainGeo,rainMat);rain.frustumCulled=false;scene.add(rain);atmosphere.attachFog(rain);let rainAmount=0;
 function weather(dt){
@@ -265,7 +304,7 @@ function animate(now){requestAnimationFrame(animate);const rawDt=(now-lastFrame)
 $('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请刷新</span><small>↻</small>';return}const total=(radius()*2+1)**2,progress=Math.round(chunks.size/total*100);$('#load-number').textContent=progress+'%';$('#load-bar').style.width=progress+'%';if(!ready&&!teleportJob&&neighbourhoodReady()){ready=true;$('#start').disabled=false;$('#start').innerHTML='<span>进入麦田</span><small>ENTER ↵</small>'}if(!queue.length&&!activeBuild)$('#loading').hidden=true;}
  completeTeleport();
  if(playing)move(dt);else{camera.position.set(state.x,(cameraFloor()+1.94)+Math.sin(time*.23)*.009,state.z);camera.rotation.set(state.pitch,state.yaw+(started?0:Math.sin(time*.07)*.015),0);wind.player.value.set(10000,0,10000)}
- wheatDetail.update(chunks,camera.position,settings.quality,`${state.cx},${state.cz}`);
+ wheatView.value.copy(camera.position);wheatDetail.update(chunks,camera.position,settings.quality,`${state.cx},${state.cz}`);
  weather(dt);uiTick+=dt;if(uiTick>.12){uiTick=0;if(playing)scanInteraction();updateHUD()}
  renderer.render(scene,camera);document.documentElement.dataset.bootState="ready";frameCount++;frameTime+=rawDt;
  if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;if(playing&&!queue.length&&!activeBuild){qualityTimer+=1.5;if(qualityTimer>4.5){let next=autoScale;if(fps<35)next=Math.max(.6,autoScale-.08);else if(fps>57)next=Math.min(1,autoScale+.025);if(next!==autoScale){autoScale=next;resize()}qualityTimer=0}}}

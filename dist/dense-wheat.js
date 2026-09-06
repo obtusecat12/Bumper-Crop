@@ -1,11 +1,12 @@
 // Golden mature wheat: varied silhouette clumps plus three bounded grain meshes.
 // Geometry/materials/textures are shared; per-chunk meshes and canopy are owned by the chunk.
 import * as T from './vendor/three.module.min.js';
-import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js';
+import { exactIndexGeometry } from './exact-index.js?v=6';
+import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js?v=6';
 
 const dummy = new T.Object3D(), tint = new T.Color(), shared = new Set();
 const TAU = Math.PI * 2, DETAIL_CAPACITY = 12000, DETAIL_VARIANTS = 3;
-let resources;
+let resources, detailTemplates;
 
 // No remote image dependencies. Each tile is a different, irregular stand of ripe ears.
 function wheatAtlas() {
@@ -93,7 +94,7 @@ function cardGeometry() {
   const g = new T.BufferGeometry();
   g.setAttribute('position', new T.Float32BufferAttribute(p, 3));
   g.setAttribute('normal', new T.Float32BufferAttribute(normals, 3));
-  g.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); return g;
+  g.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); exactIndexGeometry(g, T); return g;
 }
 
 // Three distinct ear profiles, each 220 triangles. Kernels have depth from every azimuth.
@@ -181,7 +182,11 @@ function detailedGeometry(variant) {
     }
   }
   g.computeBoundingBox(); g.computeBoundingSphere();
-  g.name = ['wheat-upright-ear', 'wheat-arched-ear', 'wheat-nodding-ear'][variant]; return g;
+  g.name = ['wheat-upright-ear', 'wheat-arched-ear', 'wheat-nodding-ear'][variant]; exactIndexGeometry(g, T); return g;
+}
+
+function detailGeometries() {
+  return detailTemplates || (detailTemplates = Array.from({ length: DETAIL_VARIANTS }, (_, i) => detailedGeometry(i)));
 }
 
 function animateMaterial(material, wind, { cards = false, detail = false, canopy = false, detailRadius, viewCenter } = {}) {
@@ -232,7 +237,7 @@ function animateMaterial(material, wind, { cards = false, detail = false, canopy
 
 function getResources(wind) {
   if (resources) return resources;
-  const atlas = wheatAtlas(), cards = cardGeometry(), detailed = Array.from({ length: DETAIL_VARIANTS }, (_, i) => detailedGeometry(i));
+  const atlas = wheatAtlas(), cards = cardGeometry(), detailed = detailGeometries();
   const cardMaterial = new T.MeshStandardMaterial({ color: 0xffffff, map: atlas,
     side: T.DoubleSide, alphaTest: .17, roughness: 1 });
   const detailMaterial = new T.MeshStandardMaterial({ color: 0xffffff, side: T.DoubleSide, vertexColors: true, roughness: .92 });
@@ -287,54 +292,118 @@ export function buildDenseWheat(f, level, quality, wind) {
   return { mesh: group, candidates: wheatCandidates(f) };
 }
 
-// Exactly three reusable instance buffers (4,000 each), shared across the whole world.
-export function createWheatDetailLayer(wind) {
-  const r = getResources(wind), object = new T.Group(), perVariant = DETAIL_CAPACITY / DETAIL_VARIANTS;
-  object.name = 'near-wheat-grains'; object.count = 0;
-  const pools = r.detailed.map((geometry, i) => {
-    const mesh = new T.InstancedMesh(geometry, r.detailMaterial, perVariant);
-    mesh.count = 0; mesh.frustumCulled = false; mesh.receiveShadow = true;
-    mesh.name = `near-wheat-grains-${i}`; mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
-    object.add(mesh); return mesh;
+const DETAIL_PATCH_SIZE = 6, DETAIL_SPACING = .305, DETAIL_BOUND_PADDING = 1.5;
+const qualityDetail = quality => ({ radius: quality === 'high' ? 14 : quality === 'low' ? 8 : 11,
+  keep: quality === 'high' ? 1 : quality === 'low' ? .64 : .83 });
+
+// Run in the chunk worker. Every lattice point has its own original RNG stream.
+// No atlas, material, DOM, collision, camera or renderer work is needed here.
+export function prepareWheatDetail(f, quality = 'balanced') {
+  const { keep } = qualityDetail(quality), patches = new Map(), geometries = detailGeometries();
+  const temporary = new T.Object3D(), color = new T.Color(), transformedBox = new T.Box3();
+  const last = Math.floor(CHUNK / DETAIL_SPACING);
+  for (let iz = 0; iz <= last; iz++) for (let ix = 0; ix <= last; ix++) {
+    const rng = random(f.seed ^ Math.imul(ix, 734287) ^ Math.imul(iz, 912931));
+    const x = (ix + .10 + rng() * .78) * DETAIL_SPACING, z = (iz + .10 + rng() * .78) * DETAIL_SPACING;
+    const selection = rng(), variant = Math.floor(rng() * DETAIL_VARIANTS);
+    if (selection > keep || !wheatAllowed(x, z, f)) continue;
+    const key = `${Math.floor(x / DETAIL_PATCH_SIZE)},${Math.floor(z / DETAIL_PATCH_SIZE)},${variant}`;
+    let patch = patches.get(key);
+    if (!patch) {
+      patch = { key, variant, matrices: [], colors: [], roots: [], box: new T.Box3(),
+        rootBounds: [Infinity, Infinity, -Infinity, -Infinity] };
+      patches.set(key, patch);
+    }
+    temporary.position.set(x, surfaceHeight(x, z, f) - .012, z);
+    temporary.rotation.set((rng() - .5) * .18, rng() * TAU, (rng() - .5) * .20);
+    const breadth = .84 + rng() * .31, stature = .82 + rng() * .32;
+    temporary.scale.set(breadth, stature, breadth); temporary.updateMatrix();
+    patch.matrices.push(...temporary.matrix.elements); patch.roots.push(x, z);
+    const shade = .90 + rng() * .10;
+    color.setRGB(shade, shade * (.96 + rng() * .035), shade * (.91 + rng() * .07));
+    patch.colors.push(color.r, color.g, color.b);
+    transformedBox.copy(geometries[variant].boundingBox).applyMatrix4(temporary.matrix); patch.box.union(transformedBox);
+    patch.rootBounds[0] = Math.min(patch.rootBounds[0], x); patch.rootBounds[1] = Math.min(patch.rootBounds[1], z);
+    patch.rootBounds[2] = Math.max(patch.rootBounds[2], x); patch.rootBounds[3] = Math.max(patch.rootBounds[3], z);
+  }
+  let count = 0, byteLength = 0;
+  const result = [...patches.values()].map(p => {
+    const matrices = new Float32Array(p.matrices), colors = new Float32Array(p.colors), roots = new Float64Array(p.roots);
+    // Covers the original ear geometry, max wind, tilt, and player-push deformation.
+    const box = p.box.expandByScalar(DETAIL_BOUND_PADDING), sphere = box.getBoundingSphere(new T.Sphere());
+    count += colors.length / 3; byteLength += matrices.byteLength + colors.byteLength + roots.byteLength;
+    return { key: p.key, variant: p.variant, count: colors.length / 3, matrices, colors, roots,
+      rootBounds: p.rootBounds, bounds: [...box.min.toArray(), ...box.max.toArray()],
+      center: sphere.center.toArray(), radius: sphere.radius };
   });
-  object.userData.wheat = { capacity: DETAIL_CAPACITY, variants: DETAIL_VARIANTS, trianglesPerStem: 220 };
-  let lastX = Infinity, lastZ = Infinity, lastKey = '', lastQuality = '', lastStamp = -1;
+  return { version: 1, quality, spacing: DETAIL_SPACING, patchSize: DETAIL_PATCH_SIZE, count, byteLength, patches: result };
+}
+
+// Patches retain their uploaded buffers for the lifetime of their chunk.
+// Ordinary movement only changes visibility; translations update once per rebase.
+export function createWheatDetailLayer(wind, { onMesh } = {}) {
+  const r = getResources(wind), object = new T.Group(), records = new Map();
+  object.name = 'near-wheat-grains'; object.count = 0;
+  object.userData.wheat = { capacity: 0, baselineCapacity: DETAIL_CAPACITY, variants: DETAIL_VARIANTS,
+    trianglesPerStem: 220, patchSize: DETAIL_PATCH_SIZE, cachedPatches: 0, activePatches: 0 };
+  function discard(record) {
+    for (const mesh of record.meshes.values()) { object.remove(mesh); mesh.dispose(); }
+  }
+  function place(mesh, patch, ox, oz) {
+    const array = mesh.instanceMatrix.array;
+    for (let i = 0; i < patch.count; i++) {
+      // Original code stores Float32(rawRoot + offset), not Float32(root) + offset.
+      array[i * 16 + 12] = patch.roots[i * 2] + ox;
+      array[i * 16 + 14] = patch.roots[i * 2 + 1] + oz;
+    }
+    mesh.instanceMatrix.addUpdateRange(0, patch.count * 16); mesh.instanceMatrix.needsUpdate = true;
+    mesh.boundingSphere = new T.Sphere(new T.Vector3(patch.center[0] + ox, patch.center[1], patch.center[2] + oz), patch.radius);
+    mesh.boundingBox = new T.Box3(new T.Vector3(patch.bounds[0] + ox, patch.bounds[1], patch.bounds[2] + oz),
+      new T.Vector3(patch.bounds[3] + ox, patch.bounds[4], patch.bounds[5] + oz));
+    mesh.userData.offsetX = ox; mesh.userData.offsetZ = oz;
+  }
+  function activate(record, patch, ox, oz) {
+    let mesh = record.meshes.get(patch.key);
+    if (!mesh) {
+      mesh = new T.InstancedMesh(r.detailed[patch.variant], r.detailMaterial, patch.count);
+      mesh.instanceMatrix.array.set(patch.matrices);
+      mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
+      // Colors are immutable and share the received CPU array without copying.
+      mesh.instanceColor = new T.InstancedBufferAttribute(patch.colors, 3);
+      mesh.frustumCulled = true; mesh.receiveShadow = true; mesh.matrixAutoUpdate = false;
+      mesh.name = `near-wheat-grains-${patch.variant} / ${record.chunk.field.key} / ${patch.key}`;
+      mesh.userData.wheatPatch = { key: patch.key, variant: patch.variant, count: patch.count };
+      place(mesh, patch, ox, oz); record.meshes.set(patch.key, mesh); object.add(mesh); onMesh?.(mesh);
+    } else if (mesh.userData.offsetX !== ox || mesh.userData.offsetZ !== oz) place(mesh, patch, ox, oz);
+    mesh.visible = true; return mesh;
+  }
   function update(chunks, player, quality, originKey) {
-    r.viewCenter.value.copy(player);
-    // Detect newly installed chunks even if a replacement leaves map.size unchanged.
-    let stamp = chunks.size; for (const chunk of chunks.values()) stamp = (stamp + (chunk.field.seed >>> 0)) >>> 0;
-    if (originKey === lastKey && quality === lastQuality && stamp === lastStamp && Math.hypot(player.x - lastX, player.z - lastZ) < 2.25) return;
-    lastX = player.x; lastZ = player.z; lastKey = originKey; lastQuality = quality; lastStamp = stamp;
-    const radius = quality === 'high' ? 14 : quality === 'low' ? 8 : 11;
-    const keep = quality === 'high' ? 1 : quality === 'low' ? .64 : .83;
-    // A fixed lattice means lower qualities are true subsets; streaming never rerolls plants.
-    const spacing = .305, buildRadius = radius + 2.75, counts = [0, 0, 0]; r.detailRadius.value = radius;
-    for (const chunk of chunks.values()) {
-      const f = chunk.field, ox = chunk.group.position.x, oz = chunk.group.position.z;
-      const px = player.x - ox, pz = player.z - oz;
-      if (px < -buildRadius || px > CHUNK + buildRadius || pz < -buildRadius || pz > CHUNK + buildRadius) continue;
-      const minX = Math.max(0, Math.floor((px - buildRadius) / spacing)), maxX = Math.min(Math.floor(CHUNK / spacing), Math.ceil((px + buildRadius) / spacing));
-      const minZ = Math.max(0, Math.floor((pz - buildRadius) / spacing)), maxZ = Math.min(Math.floor(CHUNK / spacing), Math.ceil((pz + buildRadius) / spacing));
-      for (let iz = minZ; iz <= maxZ; iz++) for (let ix = minX; ix <= maxX; ix++) {
-        const rng = random(f.seed ^ Math.imul(ix, 734287) ^ Math.imul(iz, 912931));
-        const x = (ix + .10 + rng() * .78) * spacing, z = (iz + .10 + rng() * .78) * spacing;
-        const selection = rng(), variant = Math.floor(rng() * DETAIL_VARIANTS);
-        if (selection > keep || Math.hypot(x - px, z - pz) > buildRadius || !wheatAllowed(x, z, f) || counts[variant] >= perVariant) continue;
-        const mesh = pools[variant], at = counts[variant]++;
-        dummy.position.set(x + ox, surfaceHeight(x, z, f) - .012, z + oz);
-        dummy.rotation.set((rng() - .5) * .18, rng() * TAU, (rng() - .5) * .20);
-        const breadth = .84 + rng() * .31, stature = .82 + rng() * .32;
-        dummy.scale.set(breadth, stature, breadth); dummy.updateMatrix(); mesh.setMatrixAt(at, dummy.matrix);
-        const shade = .90 + rng() * .10; tint.setRGB(shade, shade * (.96 + rng() * .035), shade * (.91 + rng() * .07)); mesh.setColorAt(at, tint);
+    r.viewCenter.value.copy(player); const { radius } = qualityDetail(quality); r.detailRadius.value = radius;
+    const current = new Set(chunks.values()); let activeCount = 0, activePatches = 0;
+    for (const [chunk, record] of records) {
+      if (!current.has(chunk) || (chunk.detailPatches && chunk.detailPatches !== record.data)) {
+        discard(record); records.delete(chunk);
+      } else for (const mesh of record.meshes.values()) mesh.visible = false;
+    }
+    for (const chunk of current) {
+      const ox = chunk.group.position.x, oz = chunk.group.position.z, px = player.x - ox, pz = player.z - oz;
+      if (px < -radius || px > CHUNK + radius || pz < -radius || pz > CHUNK + radius) continue;
+      // A quality change keeps the current chunk until its worker-built replacement
+      // arrives. Never synchronously regenerate that obsolete chunk on the render thread.
+      if (!chunk.detailPatches) chunk.detailPatches = prepareWheatDetail(chunk.field, chunk.quality || quality);
+      let record = records.get(chunk);
+      if (!record) { record = { chunk, data: chunk.detailPatches, meshes: new Map() }; records.set(chunk, record); }
+      for (const patch of record.data.patches) {
+        const bounds = patch.rootBounds, dx = Math.max(bounds[0] - px, 0, px - bounds[2]), dz = Math.max(bounds[1] - pz, 0, pz - bounds[3]);
+        if (dx * dx + dz * dz > (radius + .0001) ** 2) continue;
+        activate(record, patch, ox, oz); activeCount += patch.count; activePatches++;
       }
     }
-    object.count = counts.reduce((a, b) => a + b, 0);
-    pools.forEach((mesh, i) => {
-      mesh.count = counts[i]; mesh.instanceMatrix.needsUpdate = true;
-      if (mesh.instanceColor) { mesh.instanceColor.setUsage(T.DynamicDrawUsage); mesh.instanceColor.needsUpdate = true; }
-    });
+    let capacity = 0, cachedPatches = 0;
+    for (const record of records.values()) for (const mesh of record.meshes.values()) { capacity += mesh.count; cachedPatches++; }
+    object.count = activeCount; Object.assign(object.userData.wheat, { capacity, cachedPatches, activePatches, originKey });
   }
-  return { object, update, dispose: () => pools.forEach(mesh => mesh.dispose()) };
+  return { object, update, dispose() { for (const record of records.values()) discard(record); records.clear(); object.count = 0; } };
 }
 
 export function isSharedWheatResource(resource) { return shared.has(resource); }
