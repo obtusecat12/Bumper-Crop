@@ -1,12 +1,12 @@
 // The render thread never constructs field geometry. Procedural templates remain
 // in this worker; unique geometry and instance arrays transfer without copies.
 import * as T from './vendor/three.module.min.js';
-import {field} from './world.js?v=7';
-import {createPacker} from './scene-packets.js?v=7';
+import {field} from './world.js?v=8';
+import {createPacker} from './scene-packets.js?v=8';
 if(typeof OffscreenCanvas==='undefined')throw Error('OffscreenCanvas is unavailable');
 globalThis.document={createElement(tag){if(tag==='canvas')return new OffscreenCanvas(1,1);throw Error('Unsupported worker element '+tag)}};
-const models=await import('./models.js?v=7');
-const wheat=await import('./dense-wheat.js?v=7');
+const models=await import('./models.js?v=8');
+const wheat=await import('./dense-wheat.js?v=8');
 const packer=createPacker({T,isSharedResource:models.isSharedModelResource,wind:models.wind});
 self.onmessage=event=>{
  const {id,cx,cz,seed,level,quality,collected}=event.data;let chunk;

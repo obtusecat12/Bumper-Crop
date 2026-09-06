@@ -1,3 +1,4 @@
+import {farmRoadWeight} from './farm-layout.js?v=8';
 // Pure, chunk-independent power-line layout. Dependencies come from world.js.
 // A span exists only between consecutive physical poles. A missing wet-land
 // pole terminates the line at its last real support; it never creates a long
@@ -15,6 +16,7 @@ export function createPowerLinePlanner({CHUNK = 64, field, laneOffset, surfaceHe
   function poleForField(f) {
     if (f.z % 2n !== 0n || !f.roads?.[0]?.enabled) return null;
     const x = 2.4 + laneOffset(f.roads[0], POWER_POLE_Z), z = POWER_POLE_Z;
+    if(farmRoadWeight(x,z,f)<.5)return null;
     if (f.type === 'pond' && pondShoreDistance(x, z, f) < .8) return null;
     const y = surfaceHeight(x, z, f);
     return {cx: f.x, cz: f.z, x, y, z, wireY: y + POWER_INSULATOR_OFFSET};

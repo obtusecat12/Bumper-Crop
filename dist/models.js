@@ -1,12 +1,13 @@
-import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=7';
+import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=8';
+import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=8';
 import * as T from './vendor/three.module.min.js';
-import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=7';
-import {makeNature,isSharedNatureResource} from './nature.js?v=7';
-import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=7';
-import {makeLake,isSharedLakeResource} from './lake.js?v=7';
-import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=7';
-import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=7';
-import {createPowerLinePlanner,POWER_POLE_HEIGHT} from './power-lines.js?v=7';
+import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=8';
+import {makeNature,isSharedNatureResource} from './nature.js?v=8';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=8';
+import {makeLake,isSharedLakeResource} from './lake.js?v=8';
+import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=8';
+import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=8';
+import {createPowerLinePlanner,POWER_POLE_HEIGHT} from './power-lines.js?v=8';
 const powerLines=createPowerLinePlanner({CHUNK,field,laneOffset,surfaceHeight,pondShoreDistance});
 const UP=new T.Vector3(0,1,0),dummy=new T.Object3D();
 const box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,7);
@@ -55,6 +56,7 @@ export function* createChunkTask(f,level,quality,collected){
   if(f.type==='building'){
    const building=makeRuralBuilding(f,level);group.add(building.group);colliders.push(...building.colliders);pickups.push(...building.pickups);yield 'building';
   }
+  const farm=makePhotoFarmChunk(f,wind);if(farm){group.add(farm.group);colliders.push(...farm.colliders);yield 'photo-farm'}
   if(f.type==='pond'){group.add(makeLake(f,level,wind));yield 'lake'}
   const r=random(f.seed^28391);
   if(f.roads[0].enabled&&r()<.30)pickups.push({id:f.key+':road',x:1.65,z:18+r()*23,y:0});
@@ -66,7 +68,7 @@ export function* createChunkTask(f,level,quality,collected){
 }
 // Offline validation can construct synchronously; gameplay advances one phase per frame.
 export function makeChunk(...args){const task=createChunkTask(...args);let step;do{step=task.next()}while(!step.done);return step.value}
-const isShared=r=>isSharedWheatResource(r)||isSharedNatureResource(r)||isSharedBuildingResource(r)||isSharedLakeResource(r)||isSharedGroundResource(r);
+const isShared=r=>isSharedPhotoFarmResource(r)||isSharedWheatResource(r)||isSharedNatureResource(r)||isSharedBuildingResource(r)||isSharedLakeResource(r)||isSharedGroundResource(r);
 export const isSharedModelResource=r=>isShared(r)||[box,cylinder,glass,woodTex,brickTex,roofTex,...Object.values(materials)].includes(r);
 export function disposeChunk(chunk){if(chunk.disposePacketResources){chunk.disposePacketResources();return}const disposed=new Set();chunk.group.traverse(o=>{
  if(o.isInstancedMesh)o.dispose();

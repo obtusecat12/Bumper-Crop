@@ -1,6 +1,7 @@
-import {pondShapeGLSL} from './lake-shape.js?v=7';
+import {FARM,FARM_FOOTPRINTS,farmRoadWeight,farmFootprintDistance,farmMeadow} from './farm-layout.js?v=8';
+import {pondShapeGLSL} from './lake-shape.js?v=8';
 import * as T from './vendor/three.module.min.js';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=7';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=8';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -12,6 +13,19 @@ uniform vec4 uShore;
 uniform vec4 uBuilding;
 uniform vec2 uSize;
 uniform vec2 uWorldOffset;
+uniform vec3 uFarm;
+uniform vec4 uFarmBuildings[6];
+uniform vec2 uFarmSizes[6];
+float farmRoadMask(vec2 p){
+ if(uFarm.z<.5)return 1.;vec2 q=p+uFarm.xy;
+ float mainRegion=min(min(q.x+138.,480.-q.x),min(q.y+62.,360.-q.y));float background=min(min(q.x+10.,42.-q.x),min(q.y+170.,-45.-q.y));return 1.-smoothstep(0.,18.,max(mainRegion,background));
+}
+float farmYard(vec2 p){
+ float dist=10000.;vec2 q=p+uFarm.xy;
+ for(int i=0;i<6;i++){vec4 b=uFarmBuildings[i];vec2 d=q-b.xy;float c=cos(b.z),s=sin(b.z);vec2 e=abs(vec2(c*d.x-s*d.y,s*d.x+c*d.y))-uFarmSizes[i];dist=min(dist,length(max(e,vec2(0.)))+min(max(e.x,e.y),0.));}return dist;
+}
+float photoMeadow(vec2 p){vec2 q=p+uFarm.xy-vec2(362.,248.);float across=dot(q,vec2(.565,-.825)),along=dot(q,vec2(-.825,-.565));return min(70.-abs(across),min(along+27.,40.-along));}
+
 float hash2(vec2 p){p=mod(p,2048.);vec3 p3=fract(vec3(p.xyx)*.1031);p3+=dot(p3,p3.yzx+33.33);return fract((p3.x+p3.y)*p3.z);}
 float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash2(i),hash2(i+vec2(1,0)),f.x),mix(hash2(i+vec2(0,1)),hash2(i+1.),f.x),f.y);}
 void pathData(float d,float t,float weight,float edgeOffset,inout vec4 info){
@@ -32,7 +46,7 @@ vec3 laneData(vec2 p,float edgeOffset){
   vec4 l=uLanes[i];if(l.w<.5)continue;
   float t=i<2?p.y:p.x;
   float c=l.x+l.y*sin(t*.0490873852)+l.z*sin(t*.0981747704);
-  pathData(abs((i<2?p.x:p.y)-c),t,1.,edgeOffset,info);
+  pathData(abs((i<2?p.x:p.y)-c),t,farmRoadMask(p),edgeOffset,info);
  }
  if(uHasDrive>.5){
   vec2 a=p-uDrive.xy,v=uDrive.zw-uDrive.xy;float len=max(length(v),.01);
@@ -49,6 +63,9 @@ ${pondShapeGLSL}
 function groundMaterial(f){
  const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1});
  m.onBeforeCompile=s=>{
+  s.uniforms.uFarm={value:new T.Vector3(f.farm?.x||0,f.farm?.z||0,f.farm?1:0)};
+  s.uniforms.uFarmBuildings={value:FARM_FOOTPRINTS.map(p=>new T.Vector4(p.x,p.z,p.angle,0))};
+  s.uniforms.uFarmSizes={value:FARM_FOOTPRINTS.map(p=>new T.Vector2(p.hx,p.hz))};
   s.uniforms.uLanes={value:f.roads.map(l=>new T.Vector4(l.edge,l.amplitude,l.harmonic,l.enabled?1:0))};
   const d=f.driveway;
   s.uniforms.uDrive={value:d?new T.Vector4(d.x1,d.z1,d.x2,d.z2):new T.Vector4(0,0,1,1)};
@@ -127,6 +144,12 @@ if(uBuilding.w>.5){
     // Restore the actual local road/field material across the entire outer bank.
     base=mix(base,outside,smoothstep(.65,1.12,bank));
    }
+   if(uFarm.z>.5){
+    float e=farmYard(p),edge=(soilPatch-.5)*1.7+(broad-.5)*1.1+(clods-.5)*.25;
+    base=mix(base,grass,smoothstep(-1.5,1.5,photoMeadow(p)+edge));
+    float yard=1.-smoothstep(.35,3.4,e+edge);
+    base=mix(base,dirt*(.94+soilPatch*.08)+grain*.004,yard);
+   }
    diffuseColor.rgb=base;
   `);
   s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
@@ -140,7 +163,7 @@ if(uBuilding.w>.5){
    normal=normalize(max(abs(soilDet),.00000001)*normal-soilGradient);
   `);
  };
- m.customProgramCacheKey=()=> 'rural-ground-v7-weathered-yards';
+ m.customProgramCacheKey=()=> 'rural-ground-v8-kephart';
  return m;
 }
 function samples(step,edges){
@@ -292,6 +315,7 @@ export function makeVerge(f,level){
  const size=buildingSize(f),halfW=size[0]/2,halfD=size[1]/2,co=Math.cos(f.buildingAngle||0),si=Math.sin(f.buildingAngle||0);
  group.name='dense-fine-trackside-turf';
  const blocked=(x,z)=>{
+  if(farmFootprintDistance(x,z,f)<.4)return true;
   if(x<.08||z<.08||x>63.92||z>63.92)return true;
   if(f.type==='pond'&&pondMetrics(x,z,f).metres<.38)return true;
   if(f.type==='building'){const dx=x-f.cx,dz=z-f.cz;if(Math.abs(co*dx-si*dz)<halfW+1.25&&Math.abs(si*dx+co*dz)<halfD+1.25)return true}
@@ -320,6 +344,7 @@ export function makeVerge(f,level){
     let x,z;
     if(drive){x=drive.x1+vx*a/len-vz*s/len;z=drive.z1+vz*a/len+vx*s/len}
     else{const c=l.edge+laneOffset(l,a)+s;x=l.axis==='x'?c:a;z=l.axis==='x'?a:c}
+    if(farmRoadWeight(x,z,f)<.1)continue;
     addGrass(x,z,(i<5?.90:.96)+r()*.14,i<5?1:0);
     if(i>=5&&r()<.0018)addFlower(x+(r()-.5)*.3,z+(r()-.5)*.3);
    }
@@ -360,6 +385,16 @@ export function makeVerge(f,level){
  for(const tree of f.trees||[]){
   if(r()>.45)continue;
   for(let i=0;i<2;i++){const a=r()*TAU,rad=(.66+r()*.64)*tree.scale;fernAt(tree.x+Math.cos(a)*rad,tree.z+Math.sin(a)*rad,.62+r()*.32)}
+ }
+ // The fixed farm's short meadow and broken yard turf use the same fine blades.
+ // This only runs in the reserved photographic area; no global density changes.
+ if(f.farm){
+  const span=near?.38:far?.75:.52;
+  for(let z=.2;z<64;z+=span)for(let x=.2;x<64;x+=span){
+   const px=x+(r()-.5)*span*.85,pz=z+(r()-.5)*span*.85,d=farmFootprintDistance(px,pz,f);
+   if(farmMeadow(px+f.farm.x,pz+f.farm.z)>0)addGrass(px,pz,.62+r()*.20);
+   else if(d>.45&&d<3.3&&r()<.30)addGrass(px,pz,.48+r()*.36);
+  }
  }
  if(far){addTurfInstances(group,farGrassGeo,grass[0],f,'distant-dense-fine-grass')}
  else{

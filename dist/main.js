@@ -1,12 +1,13 @@
-import {createCardOrderController} from './instance-order.js?v=7';
-import {createPerformanceMeter} from './performance-meter.js?v=7';
-import {createChunkStream} from './world-stream.js?v=7';
+import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=8';
+import {createCardOrderController} from './instance-order.js?v=8';
+import {createPerformanceMeter} from './performance-meter.js?v=8';
+import {createChunkStream} from './world-stream.js?v=8';
 import * as T from './vendor/three.module.min.js';
-import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=7';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=7';
-import {createWheatDetailLayer} from './dense-wheat.js?v=7';
-import {createAtmosphere} from './atmosphere.js?v=7';
-import {findNearestLandmark,findSafeLanding,applyTeleport} from './developer-tools.js?v=7';
+import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=8';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=8';
+import {createWheatDetailLayer} from './dense-wheat.js?v=8';
+import {createAtmosphere} from './atmosphere.js?v=8';
+import {findNearestLandmark,findSafeLanding,applyTeleport} from './developer-tools.js?v=8';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -33,10 +34,10 @@ game.innerHTML=`
  <label class="setting"><span>开发者模式<small>F2 打开地标传送与坐标</small></span><input id="devMode" type="checkbox"></label>
  <div class="panel-note">画面会根据运行速度自动调整分辨率。所有画质均保留碰撞与无限地图。设置保存在当前浏览器。</div>
 </div></div>
-<div class="modal" id="journal" role="dialog" aria-modal="true" aria-labelledby="journal-title" hidden><div class="panel"><div class="panel-header"><h2 id="journal-title">层级档案 / 010</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="journal-meta">M.E.G. FIELD NOTES · 丰裕</div><div class="journal-body"><p><strong>你正站在一片没有尽头的麦田。</strong><br>树木与高度近似的灌木将麦田分割成小块。天空始终阴沉，偶有短暂细雨与雾气，白昼从未结束。</p><p>沿着两条轮胎碾痕前行。中间的草仍在生长，但车辙里的种子永远不会发芽。这里没有被发现过的车辆。</p><p>低地的湖水清澈，带有泥土的气味。靠近湖岸时，可按 <strong>E</strong> 饮水。</p><p>谷仓、马厩和木棚大多空无一人。里面偶尔能找到木料、钉子和遗落的杏仁水。拾起杏仁水后，按 <strong>Q</strong> 饮用。</p><p>麦丛会拖慢脚步。回到小径可以更快前进。没有任务期限，沿着风走下去。</p></div><div class="panel-note" id="expedition">尚未开始探索。</div></div></div>
+<div class="modal" id="journal" role="dialog" aria-modal="true" aria-labelledby="journal-title" hidden><div class="panel"><div class="panel-header"><h2 id="journal-title">层级档案 / 010</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="journal-meta">M.E.G. FIELD NOTES · 丰裕</div><div class="journal-body"><p><strong>你正站在一片没有尽头的麦田。</strong><br>树木与高度近似的灌木将麦田分割成小块。天空始终阴沉，偶有短暂细雨与雾气，白昼从未结束。</p><p>沿着两条轮胎碾痕前行。中间的草仍在生长，但车辙里的种子永远不会发芽。这里没有被发现过的车辆。</p><p>低地的湖水清澈，带有泥土的气味。靠近湖岸时，可按 <strong>E</strong> 饮水。</p><p>谷仓、马厩和木棚大多空无一人。里面偶尔能找到木料、钉子和遗落的杏仁水。拾起杏仁水后，按 <strong>Q</strong> 饮用。</p><p>麦丛会拖慢脚步。回到小径可以更快前进。没有任务期限，沿着风走下去。</p><p>出生点东北侧有一处固定农场。按 <strong>F2</strong> 可前往两处照片机位；移动或环顾即可恢复探索镜头。</p><p class="reference-credit">农场影像参考：Edmund Garman，<a href="https://www.flickr.com/photos/3cl/3718833796" target="_blank" rel="noopener noreferrer">Kephart Farm</a> / <a href="https://www.flickr.com/photos/3cl/3719218226" target="_blank" rel="noopener noreferrer">Kephart Farm 2</a>，2009，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。场景为依据照片重新制作的三维重建。</p></div><div class="panel-note" id="expedition">尚未开始探索。</div></div></div>
 <div class="modal" id="controls" role="dialog" aria-modal="true" aria-labelledby="controls-title" hidden><div class="panel"><div class="panel-header"><h2 id="controls-title">操作指南</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="controls-list"><div><span class="key">W A S D</span>移动</div><div><span class="key">鼠标</span>环顾四周</div><div><span class="key">SHIFT</span>按住奔跑</div><div><span class="key">SPACE</span>跳跃</div><div><span class="key">C</span>按住蹲下</div><div><span class="key">E</span>拾取 / 湖边饮水</div><div><span class="key">Q</span>饮用杏仁水</div><div><span class="key">J</span>层级档案</div><div><span class="key">ESC</span>暂停 / 释放鼠标</div><div><span class="key">F</span>切换全屏</div><div><span class="key">F2</span>开发者传送</div></div><div class="panel-note">点击「进入麦田」后即可用鼠标观察。若浏览器不允许锁定鼠标，按住鼠标拖动也可以环顾。触屏设备使用左侧摇杆移动、右侧滑动观察。</div></div></div>`;
 
-game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V7</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
+game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V8</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
 
 const touchDevice=matchMedia('(pointer:coarse)').matches;
 document.body.classList.toggle('touch-mode',touchDevice);
@@ -57,7 +58,7 @@ const state={cx:0n,cz:0n,x:.6,z:52,y:0,yaw:-.37,pitch:-.025,velocity:new T.Vecto
 const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),chunks=new Map(),collected=new Set();
 const wheatView={value:new T.Vector3()},chunkStream=createChunkStream({wind,viewUniform:wheatView});
 let queue=[],activeBuild=null,playing=false,started=false,ready=false,lastFrame=performance.now(),time=0,uiTick=0,step=0,footTimer=0,toastTimer,activeModal=null,lastFocus=null,hadMovement=false,lastWeather='',qualityTimer=0,frameCount=0,frameTime=0,fps=60,autoScale=1,contextLost=false,streamFailed=false;
-let developerSearch=null,teleportJob=null,coverageRadius=0;
+let developerSearch=null,teleportJob=null,coverageRadius=0,referenceView=null;
 let interaction=null;const keys=new Set(),joy={x:0,z:0};let touchRun=false,mouseDragging=false;
 const radius=()=>settings.quality==='low'?2:3;
 function chunkLevel(dx,dz){const d=Math.max(Math.abs(dx),Math.abs(dz));return d<=1?0:d<=2?1:2}
@@ -73,6 +74,7 @@ function updateQueue(){
   const cx=state.cx+BigInt(dx),cz=state.cz+BigInt(dz),key=`${cx},${cz}`,level=chunkLevel(dx,dz);wanted.add(key);const c=chunks.get(key);
   if(c){c.group.position.set(dx*CHUNK,0,dz*CHUNK);c.group.updateMatrix();if(c.level!==level||c.quality!==settings.quality)next.push({cx,cz,key,level,d:dx*dx+dz*dz+10})}else next.push({cx,cz,key,level,d:dx*dx+dz*dz});
  }
+ if(referenceView)for(const item of photoCorridorTiles(state,referenceView)){if(wanted.has(item.key))continue;wanted.add(item.key);const c=chunks.get(item.key);if(c){c.group.position.set(Number(item.cx-state.cx)*64,0,Number(item.cz-state.cz)*64);c.group.updateMatrix();if(c.quality!==settings.quality)next.push(item)}else next.push(item)}
  for(const[k,c]of chunks)if(!wanted.has(k)){scene.remove(c.group);disposeChunk(c);chunks.delete(k)}
  queue=next.sort((a,b)=>a.d-b.d);updateCoverage();
 }
@@ -115,7 +117,7 @@ function streamOne(){
  const step=build.task.next();if(step.done){build.task=null;finishChunk(build,step.value)}
 }
 
-function resize(){const scale=(settings.retro?settings.quality==='high'?.75:settings.quality==='low'?.48:.62:1)*autoScale;const maxWidth=settings.quality==='low'?1100:settings.quality==='high'?1920:1600;let w=Math.min(innerWidth*scale,maxWidth),h=w*innerHeight/innerWidth;renderer.setSize(Math.max(320,Math.floor(w)),Math.max(200,Math.floor(h)),false);camera.aspect=innerWidth/innerHeight;camera.fov=Number(settings.fov);camera.updateProjectionMatrix();document.body.classList.toggle('native-resolution',!settings.retro)}
+function resize(){const scale=(settings.retro?settings.quality==='high'?.75:settings.quality==='low'?.48:.62:1)*autoScale;const maxWidth=settings.quality==='low'?1100:settings.quality==='high'?1920:1600;let w=Math.min(innerWidth*scale,maxWidth),h=w*innerHeight/innerWidth;renderer.setSize(Math.max(320,Math.floor(w)),Math.max(200,Math.floor(h)),false);camera.aspect=innerWidth/innerHeight;camera.fov=referenceView?2*Math.atan(Math.tan(referenceView.fov*Math.PI/360)*1.5/camera.aspect)*180/Math.PI:Number(settings.fov);camera.far=referenceView?1000:480;atmosphere.sky.scale.setScalar(referenceView?2:1);camera.updateProjectionMatrix();document.body.classList.toggle('native-resolution',!settings.retro)}
 addEventListener('resize',resize);resize();updateQueue();
 
 class Ambience{
@@ -137,7 +139,7 @@ function openModal(id){if(activeModal)activeModal.hidden=true;lastFocus=document
 function closeModal(){if(!activeModal||teleportJob)return;if(developerSearch){developerSearch.return();developerSearch=null;developerBusy(false);$('#developer-status').textContent='已取消搜索。';}activeModal.hidden=true;activeModal=null;lastFocus?.focus()}
 $('#open-developer').onclick=()=>openModal('developer');$('#developer-button').onclick=()=>openModal('developer');
 $('#open-settings').onclick=()=>openModal('settings');$('#open-journal').onclick=()=>openModal('journal');$('#open-controls').onclick=()=>openModal('controls');document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal);document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal()}));
-for(const key of Object.keys(settings)){const el=$('#'+key);if(!el)continue;if(el.type==='checkbox')el.checked=Boolean(settings[key]);else el.value=settings[key];el.addEventListener('input',()=>{settings[key]=el.type==='checkbox'?el.checked:el.type==='range'?Number(el.value):el.value;try{localStorage.setItem('level10.preferences.v1',JSON.stringify(settings))}catch{}if(key==='quality'){autoScale=1;updateQueue()}if(['quality','retro','fov'].includes(key))resize();if(key==='volume')audio.setVolume();if(key==='devMode')$('#developer-button').hidden=!settings.devMode;$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;})}$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;$('#developer-button').hidden=!settings.devMode;
+for(const key of Object.keys(settings)){const el=$('#'+key);if(!el)continue;if(el.type==='checkbox')el.checked=Boolean(settings[key]);else el.value=settings[key];el.addEventListener('input',()=>{settings[key]=el.type==='checkbox'?el.checked:el.type==='range'?Number(el.value):el.value;try{localStorage.setItem('level10.preferences.v1',JSON.stringify(settings))}catch{}if(key==='quality'){autoScale=1;updateQueue()}if(key==='fov')leaveReferenceView();if(['quality','retro','fov'].includes(key))resize();if(key==='volume')audio.setVolume();if(key==='devMode')$('#developer-button').hidden=!settings.devMode;$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;})}$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;$('#developer-button').hidden=!settings.devMode;
 
 function savePreferences(){try{localStorage.setItem('level10.preferences.v1',JSON.stringify(settings))}catch{}}
 function performanceText(){const v=performanceMeter.values,ms=n=>n===null?'—':n.toFixed(1)+' ms';return `CPU ${ms(v.cpu)} · GPU ${v.supported===false?'浏览器未提供计时':ms(v.gpu)} · ${v.calls} 批次 · ${(v.triangles/1e6).toFixed(2)}M 三角形`;}
@@ -163,10 +165,14 @@ function updateCoverage(){
   coverageRadius=ring;
  }
 }
+function leaveReferenceView(){
+ if(!referenceView)return;referenceView=null;resize();scene.fog.near=60;scene.fog.far=Math.min(225,Math.max(.2,coverageRadius*64+Math.min(state.x,state.z,64-state.x,64-state.z)-8));updateQueue();
+}
 function beginTeleport(target){
  if(streamFailed){developerBusy(false);$('#developer-status').textContent='场景加载失败，请刷新页面重试。';return;}
  const previous={};for(const key of ['cx','cz','x','z','y','yaw','pitch'])previous[key]=state[key];
- teleportJob={target,previous};developerBusy(true);setPlay(false);interaction=null;$('#interact').hidden=true;
+ const previousReference=referenceView;referenceView=target.kind==='photo'?target:null;resize();
+ teleportJob={target,previous,previousReference};developerBusy(true);setPlay(false);interaction=null;$('#interact').hidden=true;
  applyTeleport(state,{cx:target.cx,cz:target.cz,x:target.x,z:target.z,y:surfaceHeight(target.x,target.z,target.field)+1.77,yaw:state.yaw,pitch:-.045});
  ready=false;$('#start').disabled=true;$('#loading').hidden=false;$('#load-number').textContent='0%';$('#load-bar').style.width='0%';
  updateQueue();updateDeveloperCoordinates();
@@ -185,7 +191,7 @@ function completeTeleport(){
  if(!teleportJob||queue.length||activeBuild||!neighbourhoodReady())return;
  const job=teleportJob,landing=job.restoring?job.previous:findSafeLanding(job.target,currentChunk().colliders);
  if(!landing){
-  applyTeleport(state,job.previous);job.restoring=true;job.target={...job.target,label:'原位置'};updateQueue();return;
+  referenceView=job.previousReference;resize();applyTeleport(state,job.previous);job.restoring=true;job.target={...job.target,label:'原位置'};updateQueue();return;
  }
  applyTeleport(state,landing);teleportJob=null;developerBusy(false);ready=true;$('#start').disabled=false;$('#loading').hidden=true;
  $('#developer-status').textContent=job.restoring?'目的地没有安全落点，已返回原位置。':`已抵达${job.target.label}。`;
@@ -193,12 +199,13 @@ function completeTeleport(){
  camera.position.set(state.x,state.y,state.z);camera.rotation.set(state.pitch,state.yaw,0);
  if(!document.hasFocus()||document.hidden)return;
  closeModal();setPlay(true);
- toast(job.restoring?'未找到安全落点，已回到原位置。':`已抵达${job.target.label}。点击画面继续环顾；F2 再次传送。`);
+ toast(job.restoring?'未找到安全落点，已回到原位置。':(job.target.kind==='photo'?`已抵达${job.target.label}。移动或转动视角恢复常规镜头。`:`已抵达${job.target.label}。点击画面继续环顾；F2 再次传送。`));
 }
 document.querySelectorAll('[data-teleport]').forEach(button=>button.addEventListener('click',()=>{
  if(developerSearch||teleportJob||streamFailed)return;
  audio.start();developerBusy(true);const kind=button.dataset.teleport;
- if(kind==='start'){const f=field(0n,0n,seed);beginTeleport({field:f,cx:0n,cz:0n,x:.6,z:52,kind:'start',label:'初始小径'});}
+ if(kind.startsWith('farm-'))beginTeleport(farmViewTarget(kind,field,seed));
+ else if(kind==='start'){const f=field(0n,0n,seed);beginTeleport({field:f,cx:0n,cz:0n,x:.6,z:52,kind:'start',label:'初始小径'});}
  else{developerSearch=findNearestLandmark({...state},seed,kind);$('#developer-status').textContent='正在寻找最近的地标…';}
 }));
 
@@ -223,14 +230,14 @@ document.addEventListener('keydown',e=>{if(e.code==='F2'){e.preventDefault();if(
 document.addEventListener('keyup',e=>keys.delete(e.code));
 addEventListener('blur',()=>{keys.clear();mouseDragging=false;if(playing)setPlay(false)});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)setPlay(false)});
-document.addEventListener('mousemove',e=>{if(!playing||touchDevice||(!document.pointerLockElement&&!mouseDragging))return;const sens=Number(settings.sensitivity)*.000025;state.yaw-=e.movementX*sens;state.pitch-=e.movementY*sens;state.pitch=T.MathUtils.clamp(state.pitch,-1.4,1.4)});
+document.addEventListener('mousemove',e=>{if(!playing||touchDevice||(!document.pointerLockElement&&!mouseDragging))return;if(e.movementX||e.movementY)leaveReferenceView();const sens=Number(settings.sensitivity)*.000025;state.yaw-=e.movementX*sens;state.pitch-=e.movementY*sens;state.pitch=T.MathUtils.clamp(state.pitch,-1.4,1.4)});
 renderer.domElement.addEventListener('mousedown',()=>{if(playing){mouseDragging=true;if(!document.pointerLockElement&&!touchDevice){try{renderer.domElement.requestPointerLock?.()?.catch?.(()=>{});}catch{}}}});addEventListener('mouseup',()=>mouseDragging=false);renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
 let joyPointer=null,lookPointer=null,lastTouch={x:0,y:0};
 $('#joystick').addEventListener('pointerdown',e=>{joyPointer=e.pointerId;$('#joystick').setPointerCapture(e.pointerId);moveJoy(e)});
 function moveJoy(e){if(e.pointerId!==joyPointer)return;const r=$('#joystick').getBoundingClientRect();let x=(e.clientX-r.left-r.width/2)/40,z=(e.clientY-r.top-r.height/2)/40,l=Math.hypot(x,z);if(l>1){x/=l;z/=l}joy.x=x;joy.z=z;$('#stick').style.transform=`translate(${x*33}px,${z*33}px)`}
 $('#joystick').addEventListener('pointermove',moveJoy);for(const event of['pointerup','pointercancel'])$('#joystick').addEventListener(event,()=>{joyPointer=null;joy.x=joy.z=0;$('#stick').style.transform=''})
 renderer.domElement.addEventListener('pointerdown',e=>{if(!playing||e.pointerType==='mouse')return;lookPointer=e.pointerId;lastTouch={x:e.clientX,y:e.clientY};renderer.domElement.setPointerCapture(e.pointerId)});
-renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerId!==lookPointer||!playing)return;state.yaw-=(e.clientX-lastTouch.x)*.004;state.pitch=T.MathUtils.clamp(state.pitch-(e.clientY-lastTouch.y)*.004,-1.4,1.4);lastTouch={x:e.clientX,y:e.clientY}});
+renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerId!==lookPointer||!playing)return;if(e.clientX!==lastTouch.x||e.clientY!==lastTouch.y)leaveReferenceView();state.yaw-=(e.clientX-lastTouch.x)*.004;state.pitch=T.MathUtils.clamp(state.pitch-(e.clientY-lastTouch.y)*.004,-1.4,1.4);lastTouch={x:e.clientX,y:e.clientY}});
 for(const event of['pointerup','pointercancel'])renderer.domElement.addEventListener(event,()=>lookPointer=null);
 $('#touch-run').addEventListener('pointerdown',e=>{touchRun=true;e.currentTarget.setPointerCapture(e.pointerId)});for(const event of['pointerup','pointercancel'])$('#touch-run').addEventListener(event,()=>touchRun=false);$('#touch-use').onclick=use;$('#touch-drink').onclick=drink;$('#touch-jump').onclick=jump;
 
@@ -239,6 +246,7 @@ function cameraFloor(){const f=currentChunk()?.field;const floor=f?surfaceHeight
 function contactWheat(chunk,x,z){if(!chunk)return 0;let contact=0,bx=Math.floor(x/2),bz=Math.floor(z/2);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const stems=chunk.wheatBuckets.get(`${bx+dx},${bz+dz}`);if(!stems)continue;for(const w of stems){const vx=x-w.x,vz=z-w.z,dist=Math.hypot(vx,vz);if(dist<.33)contact+=1-dist/.33;}}return Math.min(1,contact)}
 function move(dt){const c=currentChunk(),inWheat=contactWheat(c,state.x,state.z),f=c?.field;let sx=(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0)+joy.x,sz=(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-(keys.has('KeyW')||keys.has('ArrowUp')?1:0)+joy.z;
  const l=Math.hypot(sx,sz);if(l>1){sx/=l;sz/=l}const moving=l>.09,crouch=keys.has('KeyC'),running=(keys.has('ShiftLeft')||keys.has('ShiftRight')||touchRun)&&state.stamina>1&&moving&&!crouch;
+ if(referenceView&&(moving||crouch||state.jump>0))leaveReferenceView();
  const water=f?.type==='pond'&&pondDistance(state.x,state.z,f)<1;const brushDrag=vegetationDrag(state,c?.softVolumes);let speed=(crouch?1.35:running?5.4:3.0)*(1-inWheat*.48)*(1-brushDrag)*(water?.55:1)*(state.hydration<10?.8:1);
  const tx=(Math.cos(state.yaw)*sx+Math.sin(state.yaw)*sz)*speed,tz=(-Math.sin(state.yaw)*sx+Math.cos(state.yaw)*sz)*speed,lerp=1-Math.exp(-dt*11);state.velocity.x=T.MathUtils.lerp(state.velocity.x,tx,lerp);state.velocity.z=T.MathUtils.lerp(state.velocity.z,tz,lerp);
  const oldX=state.x,oldZ=state.z;const next={x:state.x+state.velocity.x*dt,z:state.z+state.velocity.z*dt};
@@ -250,7 +258,7 @@ function move(dt){const c=currentChunk(),inWheat=contactWheat(c,state.x,state.z)
  const moved=Math.hypot(state.x-oldX,state.z-oldZ);state.distance+=moved;const shift=rebase(state);if(shift.dx||shift.dz)updateQueue();
  if(!state.grounded){state.vy-=12.2*dt;state.jump+=state.vy*dt;if(state.jump<=0){state.jump=0;state.vy=0;state.grounded=true;audio.footstep(!!inWheat,water)}}
  state.stamina=T.MathUtils.clamp(state.stamina+(running?-17:12)*dt,0,100);state.hydration=Math.max(0,state.hydration-dt*(moving?.029:.009));state.elapsed+=dt;
- const floor=cameraFloor();let camH=crouch?1.06:1.77;state.y=T.MathUtils.lerp(state.y||floor+camH,floor+camH,1-Math.exp(-dt*12));step+=moved*2.8;const bob=settings.bob&&moving&&state.grounded?Math.sin(step*2)*.021*(running?1.5:1):0;camera.position.set(state.x,state.y+state.jump+bob,state.z);camera.rotation.set(state.pitch,state.yaw,settings.bob&&moving?Math.cos(step)*.003:0);wind.player.value.set(state.x,state.y,state.z);
+ const floor=cameraFloor();let camH=referenceView?.eye??(crouch?1.06:1.77);state.y=T.MathUtils.lerp(state.y||floor+camH,floor+camH,1-Math.exp(-dt*12));step+=moved*2.8;const bob=settings.bob&&moving&&state.grounded?Math.sin(step*2)*.021*(running?1.5:1):0;camera.position.set(state.x,state.y+state.jump+bob,state.z);camera.rotation.set(state.pitch,state.yaw,settings.bob&&moving?Math.cos(step)*.003:0);wind.player.value.set(state.x,state.y,state.z);
  if(moved>.002&&state.grounded){footTimer+=moved;if(footTimer>(running?1.5:1.4)){audio.footstep(!!inWheat,water);footTimer=0}}audio.update(moving,inWheat,rainAmount);hadMovement=moving;
 }
 function scanInteraction(){
@@ -291,6 +299,8 @@ function weather(dt){
  const far=Math.min(coverage,(settings.quality==='low'?165:225)-mist*95-rainAmount*30);
  scene.fog.far=Math.min(coverage,T.MathUtils.lerp(scene.fog.far,far,dt*.55));
  scene.fog.near=Math.min(scene.fog.far*.44,T.MathUtils.lerp(scene.fog.near,60-mist*42-rainAmount*12,dt*.25));
+ if(referenceView&&!teleportJob&&!queue.length&&!activeBuild){scene.fog.near=referenceView.range*.77;scene.fog.far=referenceView.range;}
+ atmosphere.fog.uniforms.uLayerFogScale.value=referenceView&&!teleportJob&&!queue.length&&!activeBuild ? .1 : 1;
  rain.visible=rainAmount>.01;
  if(rain.visible){
   rainMat.opacity=rainAmount*.27;const a=rainGeo.attributes.position;
@@ -309,7 +319,7 @@ function animate(now){requestAnimationFrame(animate);const rawDt=(now-lastFrame)
  if((queue.length||activeBuild)&&!streamFailed&&(!playing||frameCount%3===0)){try{streamOne()}catch(e){streamFailed=true;console.error('World streaming failed',e);if(developerSearch){developerSearch.return();developerSearch=null;}if(teleportJob)teleportJob=null;developerBusy(false);$('#developer-status').textContent='场景加载失败，请刷新页面重试。';
 $('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请刷新</span><small>↻</small>';return}const total=(radius()*2+1)**2,progress=Math.round(chunks.size/total*100);$('#load-number').textContent=progress+'%';$('#load-bar').style.width=progress+'%';if(!ready&&!teleportJob&&neighbourhoodReady()){ready=true;$('#start').disabled=false;$('#start').innerHTML='<span>进入麦田</span><small>ENTER ↵</small>'}if(!queue.length&&!activeBuild)$('#loading').hidden=true;}
  completeTeleport();
- if(playing)move(dt);else{camera.position.set(state.x,(cameraFloor()+1.94)+Math.sin(time*.23)*.009,state.z);camera.rotation.set(state.pitch,state.yaw+(started?0:Math.sin(time*.07)*.015),0);wind.player.value.set(10000,0,10000)}
+ if(playing)move(dt);else{camera.position.set(state.x,(cameraFloor()+(referenceView?.eye??1.94))+(referenceView?0:Math.sin(time*.23)*.009),state.z);camera.rotation.set(state.pitch,state.yaw+(started?0:Math.sin(time*.07)*.015),0);wind.player.value.set(10000,0,10000)}
  wheatView.value.copy(camera.position);wheatDetail.update(chunks,camera.position,settings.quality,`${state.cx},${state.cz}`);
  weather(dt);uiTick+=dt;if(uiTick>.12){uiTick=0;if(playing)scanInteraction();updateHUD()}
  cardOrder.update(camera);performanceMeter.beforeRender();renderer.render(scene,camera);performanceMeter.end();document.documentElement.dataset.bootState="ready";frameCount++;frameTime+=rawDt;

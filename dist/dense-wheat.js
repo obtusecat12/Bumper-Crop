@@ -1,8 +1,8 @@
 // Golden mature wheat: varied silhouette clumps plus three bounded grain meshes.
 // Geometry/materials/textures are shared; per-chunk meshes and canopy are owned by the chunk.
 import * as T from './vendor/three.module.min.js';
-import { exactIndexGeometry } from './exact-index.js?v=7';
-import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js?v=7';
+import { exactIndexGeometry } from './exact-index.js?v=8';
+import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js?v=8';
 
 const dummy = new T.Object3D(), tint = new T.Color(), shared = new Set();
 const TAU = Math.PI * 2, DETAIL_CAPACITY = 12000, DETAIL_VARIANTS = 3;
@@ -74,6 +74,10 @@ function wheatAtlas() {
     }
     ctx.restore();
   }
+  // A restrained six-percent chroma boost, baked once into RGB only.
+  const pixels=ctx.getImageData(0,0,canvas.width,canvas.height);
+  for(let i=0;i<pixels.data.length;i+=4){if(!pixels.data[i+3])continue;const a=pixels.data,l=.2126*a[i]+.7152*a[i+1]+.0722*a[i+2];for(let c=0;c<3;c++)a[i+c]=Math.max(0,Math.min(255,Math.round(l+(a[i+c]-l)*1.06)));}
+  ctx.putImageData(pixels,0,0);
   const texture = new T.CanvasTexture(canvas);
   texture.colorSpace = T.SRGBColorSpace; texture.magFilter = T.LinearFilter;
   texture.minFilter = T.LinearMipmapLinearFilter; texture.generateMipmaps = true;
@@ -100,7 +104,7 @@ function cardGeometry() {
 // Three distinct ear profiles, each 220 triangles. Kernels have depth from every azimuth.
 function detailedGeometry(variant) {
   const positions = [], colors = [], grains = [];
-  const palette = ['#b99a5b', '#dfc58c', '#d0af70', '#bb9656', '#a18850'].map(c => new T.Color(c));
+  const palette = ['#b99a5b', '#dfc58c', '#d0af70', '#bb9656', '#a18850'].map(c => {const v=new T.Color(c),l=.2126*v.r+.7152*v.g+.0722*v.b;v.setRGB(l+(v.r-l)*1.06,l+(v.g-l)*1.06,l+(v.b-l)*1.06);return v});
   const tri = (a, b, c, tone) => {
     positions.push(...a, ...b, ...c); const col = palette[tone];
     for (let i = 0; i < 3; i++) colors.push(col.r, col.g, col.b);
@@ -265,7 +269,7 @@ function canopyGeometry(f) {
   const p = [], c = [], step = 1.55, rng = random(f.seed ^ 0xaaa818), col = new T.Color();
   const vertex = (x, z) => {
     p.push(x, surfaceHeight(x, z, f) + 1.055 + Math.sin(x * 1.8 + z) * .045 + Math.sin(x * .51 - z * .34) * .055, z);
-    col.setHSL(.112 + rng() * .012, .35 + rng() * .09, .40 + rng() * .085);
+    col.setHSL(.112 + rng() * .012, (.35 + rng() * .09)*1.06, .40 + rng() * .085);
     c.push(col.r, col.g, col.b);
   };
   for (let z = .7; z < 62; z += step) for (let x = .7; x < 62; x += step) {

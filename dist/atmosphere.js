@@ -101,30 +101,38 @@ uniform float uCloudMist;
 uniform float uCloudRain;
 uniform int uCloudSteps;
 
-// Integer-period spatial scales make the BigInt world-origin wrap invisible.
-// The sheared 3D field advects in world space, independently of camera motion.
+// Integer-period spatial scales keep the BigInt origin wrap invisible.
+// Two 3D fetches, as before: a rounded low deck and a faster upper field.
+// Their relative advection and RGBA warp deform the volume continuously.
 float cloudDensity(vec3 p, float footprint) {
   float h = (p.y - 92.0) / 124.0;
   if (h <= 0.0 || h >= 1.0) return 0.0;
-  vec3 drift = vec3(uCloudTime * 1.65, 0.0, uCloudTime * .53);
-  vec3 q = p + drift;
-  q.x += (p.y - 92.0) * .30;
-  // Mip-filter the density to the integration footprint. This prevents
-  // distant thin layers from aliasing into stripes when steps become long.
-  vec4 shape = textureLod(uCloudNoise, q / 512.0, max(0.0, log2(footprint / 8.0)));
-  vec4 detail = textureLod(uCloudNoise, q / 128.0 + vec3(.17, .31, .11), max(0.0, log2(footprint / 2.0)));
-  // A scalloped base and feathered upper boundary produce an actual slab.
-  float base = .018 + .28 * (1.0-shape.a) + .06 * (1.0-detail.a);
-  // Widen the altitude kernel with the ray footprint as well as mipmapping
-  // its 3D noise. Distant sub-step slices must not form parallel terraces.
-  float feather = .10 + min(.10, footprint * .0014);
-  float profile = smoothstep(base - feather * .22, base + feather, h) * (1.0 - smoothstep(.70, 1.0, h));
-  float billows = shape.r * .58 + shape.a * .42;
-  float erosion = (1.0 - detail.a) * .17 + (1.0 - detail.b) * .075;
-  float coverage = .285 - uCloudRain * .025;
-  float body = max(0.0, billows - coverage - erosion * (1.0 - h * .45));
-  // Tiny density at wispy edges, substantial optical depth inside each body.
-  return body * profile * (1.18 + uCloudRain * .28);
+  vec3 lower = p + vec3(uCloudTime * 1.35, uCloudTime * .065, uCloudTime * .46);
+  lower.x += (p.y - 92.0) * .18;
+  vec4 shape = textureLod(uCloudNoise, lower / 512.0, max(0.0, log2(footprint / 8.0)));
+  // The upper layer slips across the lower billows. Slow vertical evolution
+  // and the local warp prevent either erosion or highlights moving as a card.
+  vec3 upper = p + vec3(uCloudTime * 2.75, -uCloudTime * .095, -uCloudTime * .38);
+  upper.x += (p.y - 92.0) * .65;
+  upper += (shape.gbr - .5) * vec3(20.0, 11.0, 20.0);
+  vec4 detail = textureLod(uCloudNoise, upper / vec3(512.0, 128.0, 256.0) + vec3(.17, .31, .11), max(0.0, log2(footprint / 2.0)));
+  // Broad cellular lobes carry the lower surface; independent detail is a
+  // restrained edge erosion, preserving soft, rounded marshmallow volumes.
+  float feather = .14 + min(.18, footprint * .003);
+  float roundness = smoothstep(.12, .85, shape.a);
+  float base = .025 + .31 * (1.0 - roundness) + .035 * (1.0 - shape.r);
+  float lowProfile = smoothstep(base - feather * .5, base + feather, h)
+    * (1.0 - smoothstep(.54, .83, h));
+  float billows = shape.r * .40 + shape.a * .60;
+  float erosion = (1.0 - detail.a) * .090 + (1.0 - detail.b) * .045;
+  float lowerBody = max(0.0, billows - (.30 - uCloudRain * .025) - erosion);
+  // A high, smoother overcast lid remains behind the lower rounded masses.
+  // Separate density/altitude kernels make the two wind speeds perceptible.
+  float highBase = .36 + .18 * (1.0 - detail.r);
+  float highProfile = smoothstep(highBase - feather * .2, highBase + feather, h)
+    * (1.0 - smoothstep(.78, 1.0, h));
+  float upperBody = .06 + .23 * smoothstep(.23, .72, detail.r * .7 + detail.a * .3);
+  return (lowerBody * lowProfile * 1.30 + upperBody * highProfile) * (1.0 + uCloudRain * .24);
 }
 
 void main() {
@@ -201,6 +209,7 @@ const fogFragmentPars = `
   uniform float uLayerFogTime;
   uniform float uLayerFogMist;
   uniform float uLayerFogRain;
+  uniform float uLayerFogScale;
   float layerFogHash(vec2 p) {
     vec3 p3 = fract(vec3(p.xyx) * .1031);
     p3 += dot(p3, p3.yzx + 33.33);
@@ -233,7 +242,7 @@ const fogFragment = `
   float raisedColumn = exp(-abs(fogMidpoint.y - 4.2) * .13);
   float lowOptical = max(0.0, fogDistance - 25.0) * .0021 * lowColumn * (.30 + patchA * 1.8);
   float farOptical = max(0.0, fogDistance - 72.0) * .0036 * raisedColumn * (.22 + patchB * 1.2);
-  float opticalDepth = (lowOptical + farOptical) * (1.0 + uLayerFogMist * 3.6 + uLayerFogRain * .5);
+  float opticalDepth = (lowOptical + farOptical) * uLayerFogScale * (1.0 + uLayerFogMist * 3.6 + uLayerFogRain * .5);
   float layerFog = 1.0 - exp(-opticalDepth);
   // A subtle cooler bank color returns exactly to fogColor at the cutoff.
   vec3 layerColor = fogColor * vec3(.967, .992, 1.018);
@@ -261,6 +270,7 @@ const fullFogReturn = `
  */
 export function installLayeredFog({scene} = {}) {
   const uniforms = {
+    uLayerFogScale: {value:1},
     uLayerFogCameraWorld: {value: new T.Matrix4()},
     uLayerFogOrigin: {value: new T.Vector2()},
     uLayerFogTime: {value: 0},

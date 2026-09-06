@@ -1,4 +1,4 @@
-import {CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=7';
+import {CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=8';
 
 const titles={pond:'湖泊',building:'建筑',grove:'树林'};
 function marker(f,kind){
@@ -87,7 +87,8 @@ export function* findNearestLandmark(position,seed,kind,maxRadius=32){
 function worldPoint(f,x,z){const c=Math.cos(f.buildingAngle||0),s=Math.sin(f.buildingAngle||0);return {x:f.cx+c*x+s*z,z:f.cz-s*x+c*z}}
 export function findSafeLanding(target,colliders){
  const f=target.field,lake=target.lakeField||f,points=[];
- if(target.kind==='start'){
+ if(target.kind==='photo'){points.push({x:target.x,z:target.z});
+ }else if(target.kind==='start'){
   points.push({x:.6,z:52});
  }else if(target.kind==='pond'){
   points.push({x:target.x,z:target.z});
@@ -111,7 +112,7 @@ export function findSafeLanding(target,colliders){
   const ground=surfaceHeight(p.x,p.z,f);
   if(f.type==='pond'&&ground<f.lakeY+.035)continue;
   if([[.4,0],[-.4,0],[0,.4],[0,-.4]].some(([dx,dz])=>Math.abs(surfaceHeight(p.x+dx,p.z+dz,f)-ground)>.32))continue;
-  return {cx:f.x,cz:f.z,x:p.x,z:p.z,y:ground+1.77,yaw:target.kind==='start'?-.37:Math.atan2(p.x-(target.focusX??target.x),p.z-(target.focusZ??target.z)),pitch:-.045};
+  return {cx:f.x,cz:f.z,x:p.x,z:p.z,y:ground+(target.eye??1.77),yaw:target.kind==='start'?-.37:Math.atan2(p.x-(target.focusX??target.x),p.z-(target.focusZ??target.z)),pitch:target.kind==='photo'?Math.atan2(target.focusY+.40-ground-target.eye,Math.hypot(p.x-target.focusX,p.z-target.focusZ)):-.045};
  }
  return null;
 }
