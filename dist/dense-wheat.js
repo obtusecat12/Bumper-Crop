@@ -1,7 +1,7 @@
 // Dense wheat: shared crossed silhouettes, a distant canopy, and bounded near geometry.
 // Shared resources are retained while individual world chunks are unloaded.
 import * as T from './vendor/three.module.min.js';
-import { CHUNK, height, wheatAllowed, wheatCandidates, random } from './world.js';
+import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js';
 
 const dummy = new T.Object3D();
 const shared = new Set();
@@ -164,11 +164,11 @@ function getResources(wind) {
 function canopyGeometry(f) {
   const p = [], c = [], step = 1.55, rng = random(f.seed ^ 0xaaa818), col = new T.Color();
   const vertex = (x, z) => {
-    p.push(x, height(x, z, f.x, f.z) + .99 + Math.sin(x * 1.8 + z) * .025, z);
+    p.push(x, surfaceHeight(x, z, f) + .99 + Math.sin(x * 1.8 + z) * .025, z);
     col.setHSL(.108 + rng() * .016, .36 + rng() * .09, .36 + rng() * .09);
     c.push(col.r, col.g, col.b);
   };
-  for (let z = 7.6; z < 55.9; z += step) for (let x = 7.6; x < 55.9; x += step) {
+  for (let z = .7; z < 62; z += step) for (let x = .7; x < 62; x += step) {
     if (![ [x,z], [x+step,z], [x,z+step], [x+step,z+step] ].every(([a,b]) => wheatAllowed(a,b,f))) continue;
     vertex(x,z); vertex(x,z+step); vertex(x+step,z+step);
     vertex(x,z); vertex(x+step,z+step); vertex(x+step,z);
@@ -183,7 +183,7 @@ function canopyGeometry(f) {
 export function buildDenseWheat(f, level, quality, wind) {
   const r = getResources(wind), group = new T.Group(), roots = [], rng = random(f.seed ^ 0x72ac0f);
   const spacing = quality === 'low' ? .98 : .80;
-  for (let z = 7.65; z < 56.4; z += spacing) for (let x = 7.65; x < 56.4; x += spacing) {
+  for (let z = .65; z < 63.4; z += spacing) for (let x = .65; x < 63.4; x += spacing) {
     const xx = x + (rng() - .5) * spacing * .45, zz = z + (rng() - .5) * spacing * .45;
     const a = rng() * Math.PI, s = .94 + rng() * .13;
     if (wheatAllowed(xx, zz, f)) roots.push({x:xx, z:zz, a, s});
@@ -191,7 +191,7 @@ export function buildDenseWheat(f, level, quality, wind) {
   const mesh = new T.InstancedMesh(r.cards, r.cardMaterial, roots.length);
   const width = quality === 'low' ? 1.23 : 1.06;
   roots.forEach((root, i) => {
-    dummy.position.set(root.x, height(root.x, root.z, f.x, f.z) - .025, root.z);
+    dummy.position.set(root.x, surfaceHeight(root.x, root.z, f) - .025, root.z);
     dummy.rotation.set(0, root.a, 0); dummy.scale.set(width, root.s, width);
     dummy.updateMatrix(); mesh.setMatrixAt(i, dummy.matrix);
   });
@@ -234,7 +234,7 @@ export function createWheatDetailLayer(wind) {
         const x = (ix + .12 + rng()*.72)*spacing, z = (iz + .12 + rng()*.72)*spacing;
         if (Math.hypot(x-px,z-pz)>buildRadius || !wheatAllowed(x,z,f)) continue;
         if (at >= maxCount) continue;
-        dummy.position.set(x + ox, height(x,z,f.x,f.z), z + oz);
+        dummy.position.set(x + ox, surfaceHeight(x,z,f), z + oz);
         dummy.rotation.set((rng()-.5)*.08, rng()*Math.PI*2, (rng()-.5)*.08);
         dummy.scale.set(.9+rng()*.25, .94+rng()*.14, .9+rng()*.25);
         dummy.updateMatrix(); object.setMatrixAt(at++, dummy.matrix);
