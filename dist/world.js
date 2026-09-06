@@ -21,7 +21,14 @@ export function roadSample(x,z,f,includeDrive=true){let distance=1e4,along=0;if(
  return {distance,along};}
 export function roadDistance(x,z,f){return roadSample(x,z,f).distance}
 export function roadRelief(x,z,f){
- const profile=({distance:d,along:t})=>d>1.6?0:-.12*Math.exp(-(((d-.77)/.24)**2))*(.88+.12*Math.sin(t*Math.PI/32)**2)+.033*Math.exp(-((d/.38)**2));
+ const profile=({distance:d,along:t})=>{
+  if(d>1.6)return 0;
+  // Shallow compressed earth, with changing rut width/depth instead of embossed
+  // tractor-tread ridges. Every phase closes at cell boundaries.
+  const phase=t*Math.PI/32,width=.225+.012*Math.sin(phase*3)+.006*Math.sin(phase*7);
+  const depth=.081+.011*Math.sin(phase*2)+.007*Math.sin(phase*5);
+  return -depth*Math.exp(-(((d-.77)/width)**2))+.018*Math.exp(-((d/.36)**2));
+ };
  const plain=profile(roadSample(x,z,f,false));if(!f.driveway)return plain;
  const a=smooth(0,1.6,Math.min(x,z,64-x,64-z));return plain*(1-a)+profile(roadSample(x,z,f))*a;
 }

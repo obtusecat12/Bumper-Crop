@@ -1,162 +1,247 @@
-// Dense wheat: shared crossed silhouettes, a distant canopy, and bounded near geometry.
-// Shared resources are retained while individual world chunks are unloaded.
+// Golden mature wheat: varied silhouette clumps plus three bounded grain meshes.
+// Geometry/materials/textures are shared; per-chunk meshes and canopy are owned by the chunk.
 import * as T from './vendor/three.module.min.js';
 import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js';
 
-const dummy = new T.Object3D();
-const shared = new Set();
+const dummy = new T.Object3D(), tint = new T.Color(), shared = new Set();
+const TAU = Math.PI * 2, DETAIL_CAPACITY = 12000, DETAIL_VARIANTS = 3;
 let resources;
 
-// All silhouettes are drawn locally at runtime; there are no image/CDN dependencies.
+// No remote image dependencies. Each tile is a different, irregular stand of ripe ears.
 function wheatAtlas() {
-  const cell = 384, n = 3;
+  const cell = 512, height = 768, count = 3;
   const canvas = document.createElement('canvas');
-  canvas.width = cell * n; canvas.height = 512;
-  const ctx = canvas.getContext('2d'), rng = random(0x10ab0da);
-  for (let variant = 0; variant < n; variant++) {
-    ctx.save(); ctx.beginPath(); ctx.rect(variant * cell, 0, cell, 512); ctx.clip();
-    for (let stem = 0; stem < 11; stem++) {
-      const x = variant * cell + 17 + stem * 34.6 + (rng() - .5) * 14;
-      const top = 40 + rng() * 85, bend = (rng() - .5) * 33;
-      const shade = Math.floor(rng() * 24);
-      const stalk = ctx.createLinearGradient(0, 510, 0, top);
-      stalk.addColorStop(0, '#68502c'); stalk.addColorStop(.55, '#ad8844');
-      stalk.addColorStop(1, `rgb(${202 + shade},${165 + shade},${98 + shade})`);
-      ctx.strokeStyle = stalk; ctx.lineWidth = 1.7 + rng() * .8;
-      ctx.beginPath(); ctx.moveTo(x, 515);
-      ctx.bezierCurveTo(x - 5, 330, x + bend * .3, 170, x + bend, top + 54); ctx.stroke();
-      for (let j = 0; j < 3; j++) {
-        const y = 258 + j * 62 + rng() * 18, side = (j + stem) % 2 ? -1 : 1;
-        const reach = 22 + rng() * 23;
-        ctx.fillStyle = j === 2 ? '#806533' : '#af904d';
+  canvas.width = cell * count; canvas.height = height;
+  const ctx = canvas.getContext('2d'), rng = random(0x5eadb17);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (let variant = 0; variant < count; variant++) {
+    ctx.save(); ctx.beginPath(); ctx.rect(variant * cell + 2, 0, cell - 4, height); ctx.clip();
+    ctx.translate(variant * cell, 0);
+    for (let stem = 0; stem < 13; stem++) {
+      const rootX = 20 + stem * 39 + (rng() - .5) * 17;
+      const direction = rootX < 62 ? 1 : rootX > 444 ? -1 : rng() < .5 ? -1 : 1;
+      const bend = direction * (12 + rng() * 47), baseX = rootX + bend;
+      const baseY = 175 + rng() * 181, length = 69 + rng() * 30;
+      const nodding = (stem + variant) % 3 !== 0;
+      const angle = -Math.PI / 2 + direction * (nodding ? .60 + rng() * .59 : .08 + rng() * .34);
+      const curve = direction * (nodding ? .50 + rng() * .66 : .13 + rng() * .31);
+      const shade = Math.floor(rng() * 21), gold = `rgb(${193 + shade},${158 + shade},${91 + shade})`;
+      const stalk = ctx.createLinearGradient(rootX, height, baseX, baseY);
+      stalk.addColorStop(0, '#795c32'); stalk.addColorStop(.44, '#b08b4c'); stalk.addColorStop(1, '#d1b376');
+      ctx.strokeStyle = stalk; ctx.lineWidth = 1.65 + rng() * .85;
+      ctx.beginPath(); ctx.moveTo(rootX, height + 8);
+      ctx.bezierCurveTo(rootX - bend * .16, 545, baseX - Math.cos(angle) * 85,
+        baseY - Math.sin(angle) * 85, baseX, baseY); ctx.stroke();
+      // Mature blades are narrow, ribbon-like and curled down at the tips.
+      for (let leaf = 0; leaf < 2; leaf++) {
+        const y = 398 + rng() * 315, side = (stem + leaf) % 2 ? 1 : -1;
+        const x = rootX + bend * (1 - y / height) * .6, reach = 45 + rng() * 40;
+        ctx.strokeStyle = leaf ? '#967740' : '#b49759'; ctx.lineWidth = 1.5 + rng() * .6;
         ctx.beginPath(); ctx.moveTo(x, y);
-        ctx.quadraticCurveTo(x + side * reach * .4, y - 34, x + side * reach, y - 20);
-        ctx.quadraticCurveTo(x + side * reach * .45, y - 7, x, y + 3); ctx.fill();
+        ctx.bezierCurveTo(x + side * 20, y - 37, x + side * reach, y - 51, x + side * (reach + 8), y + 24);
+        ctx.stroke();
       }
-      const headX = x + bend;
-      ctx.strokeStyle = '#ccac6b'; ctx.lineWidth = 2.1;
-      ctx.beginPath(); ctx.moveTo(headX, top + 65); ctx.lineTo(headX + 5, top + 7); ctx.stroke();
-      for (let row = 0; row < 8; row++) for (const side of [-1, 1]) {
-        const y = top + 11 + row * 6.2, xx = headX + 5 - row * .53;
-        const w = (3.2 + Math.sin((row + 1) / 9 * Math.PI) * 1.6);
-        ctx.save(); ctx.translate(xx + side * w * .48, y); ctx.rotate(side * .42);
-        ctx.fillStyle = side < 0 ? `rgb(${209 + shade},${175 + shade},${105 + shade})` : `rgb(${180 + shade},${143 + shade},${77 + shade})`;
-        ctx.beginPath(); ctx.ellipse(0, 0, w, 5.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-        ctx.strokeStyle = 'rgba(218,188,124,.85)'; ctx.lineWidth = .78;
-        ctx.beginPath(); ctx.moveTo(xx + side * w, y - 3);
-        ctx.lineTo(xx + side * (10 + row * .9), y - 28 - rng() * 13); ctx.stroke();
+      const point = t => {
+        const a = angle + curve * t;
+        return { x: baseX + length * (Math.sin(a) - Math.sin(angle)) / curve,
+          y: baseY + length * (Math.cos(angle) - Math.cos(a)) / curve, a };
+      };
+      ctx.strokeStyle = '#ba9659'; ctx.lineWidth = 2.1;
+      ctx.beginPath(); ctx.moveTo(baseX, baseY);
+      for (let i = 1; i <= 10; i++) { const p = point(i / 10); ctx.lineTo(p.x, p.y); } ctx.stroke();
+      // Alternating spikelets around a curved rachis, with side shading and fine awns.
+      for (let row = 0; row < 9; row++) for (const side of [-1, 1]) {
+        const p = point(.07 + row * .101 + (side > 0 ? .021 : 0));
+        const dx = Math.cos(p.a), dy = Math.sin(p.a), nx = -dy, ny = dx;
+        const taper = .68 + .32 * Math.sin((row + 1) / 10 * Math.PI);
+        const gx = p.x + nx * side * 3.6 * taper, gy = p.y + ny * side * 3.6 * taper;
+        ctx.save(); ctx.translate(gx, gy); ctx.rotate(p.a - Math.PI / 2 - side * .27);
+        const grain = ctx.createLinearGradient(-4, 0, 4, 0);
+        grain.addColorStop(0, '#a37c43'); grain.addColorStop(.42, gold);
+        grain.addColorStop(.69, `rgb(${220 + shade},${189 + shade},${129 + shade})`); grain.addColorStop(1, '#b48c4b');
+        ctx.fillStyle = grain; ctx.beginPath(); ctx.ellipse(0, 0, 3.7 * taper, 6.4 * taper, 0, 0, TAU); ctx.fill();
+        ctx.strokeStyle = 'rgba(143,103,47,.36)'; ctx.lineWidth = .5;
+        ctx.beginPath(); ctx.moveTo(.8, -4.6 * taper); ctx.quadraticCurveTo(-.6, 0, .8, 5 * taper); ctx.stroke(); ctx.restore();
+        const awnLength = 22 + rng() * 21, fan = side * (.18 + rng() * .28);
+        const ax = Math.cos(p.a + fan), ay = Math.sin(p.a + fan);
+        ctx.strokeStyle = `rgba(${221 + shade},${190 + shade},${130 + shade},${.65 + rng() * .25})`;
+        ctx.lineWidth = .55 + rng() * .35;
+        ctx.beginPath(); ctx.moveTo(gx + dx * 4, gy + dy * 4);
+        ctx.quadraticCurveTo(gx + ax * awnLength * .55, gy + ay * awnLength * .55,
+          gx + ax * awnLength, gy + ay * awnLength); ctx.stroke();
       }
     }
     ctx.restore();
   }
   const texture = new T.CanvasTexture(canvas);
-  texture.colorSpace = T.SRGBColorSpace;
-  texture.magFilter = T.LinearFilter;
-  texture.minFilter = T.LinearMipmapLinearFilter;
-  texture.generateMipmaps = true;
-  return texture;
+  texture.colorSpace = T.SRGBColorSpace; texture.magFilter = T.LinearFilter;
+  texture.minFilter = T.LinearMipmapLinearFilter; texture.generateMipmaps = true;
+  texture.name = 'procedural-ripe-wheat-atlas'; return texture;
 }
 
 function cardGeometry() {
-  const p = [], uv = [], normals = [], colors = [];
-  const vertex = (x, y, z, u, v) => {
-    p.push(x, y, z); uv.push(u, v); normals.push(0, 1, 0);
-    colors.push(1, 1, 1);
-  };
+  const p = [], uv = [], normals = [];
+  const vertex = (x, y, z, u, v) => { p.push(x, y, z); uv.push(u, v); normals.push(0, 1, 0); };
   for (let side = 0; side < 3; side++) {
-    const a = side * Math.PI / 3, x = Math.cos(a) * .43, z = Math.sin(a) * .43;
-    const u0 = side / 3, u1 = (side + 1) / 3, top = 1.58;
+    const a = side * Math.PI / 3, x = Math.cos(a) * .48, z = Math.sin(a) * .48;
+    // Inset UVs prevent one atlas tile from bleeding into the neighbouring tile.
+    const u0 = (side * 512 + 2) / 1536, u1 = ((side + 1) * 512 - 2) / 1536;
+    const top = 1.77;
     vertex(-x, 0, -z, u0, 0); vertex(x, 0, z, u1, 0); vertex(x, top, z, u1, 1);
     vertex(-x, 0, -z, u0, 0); vertex(x, top, z, u1, 1); vertex(-x, top, -z, u0, 1);
   }
   const g = new T.BufferGeometry();
   g.setAttribute('position', new T.Float32BufferAttribute(p, 3));
   g.setAttribute('normal', new T.Float32BufferAttribute(normals, 3));
-  g.setAttribute('uv', new T.Float32BufferAttribute(uv, 2));
-  g.setAttribute('color', new T.Float32BufferAttribute(colors, 3));
-  return g;
+  g.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); return g;
 }
 
-function detailedGeometry() {
-  const positions = [], colors = [];
-  const palette = ['#bfa163', '#dfc185', '#cfaa66', '#b8914d', '#ab9256'].map(c => new T.Color(c));
-  const tri = (a, b, c, tone) => { positions.push(...a, ...b, ...c); const col = palette[tone];
-    for (let i = 0; i < 3; i++) colors.push(col.r, col.g, col.b); };
+// Three distinct ear profiles, each 220 triangles. Kernels have depth from every azimuth.
+function detailedGeometry(variant) {
+  const positions = [], colors = [], grains = [];
+  const palette = ['#b99a5b', '#dfc58c', '#d0af70', '#bb9656', '#a18850'].map(c => new T.Color(c));
+  const tri = (a, b, c, tone) => {
+    positions.push(...a, ...b, ...c); const col = palette[tone];
+    for (let i = 0; i < 3; i++) colors.push(col.r, col.g, col.b);
+  };
   const quad = (a, b, c, d, tone) => { tri(a, b, c, tone); tri(a, c, d, tone); };
-  quad([-.006, 0, 0], [.006, 0, 0], [.064, 1.21, 0], [.052, 1.21, 0], 0);
-  quad([0, 0, -.006], [0, 0, .006], [.058, 1.21, .006], [.058, 1.21, -.006], 0);
-  for (let leaf = 0; leaf < 3; leaf++) {
-    const y = .28 + leaf * .23, s = leaf % 2 ? -1 : 1;
-    quad([.02, y, 0], [.03, y + .02, .014], [s * .14, y + .19, .045], [s * .23, y + .12, .019], 4);
+  const add = (a, b, scale = 1) => a.map((v, i) => v + b[i] * scale);
+  const profiles = [
+    { x: .085, y: 1.205, z: -.013, start: .12, curve: .46, length: .244 },
+    { x: .222, y: 1.238, z: .032, start: .62, curve: .57, length: .252 },
+    { x: .306, y: 1.183, z: -.027, start: 1.08, curve: .93, length: .260 }
+  ];
+  const p = profiles[variant], end = [p.x, p.y, p.z];
+  const c1 = [-.017, .43, -p.z * .3], c2 = [p.x - Math.sin(p.start) * .31, p.y - Math.cos(p.start) * .31, p.z * .65];
+  const stem = t => [0, 1, 2].map(i => 3 * (1 - t) ** 2 * t * c1[i] + 3 * (1 - t) * t * t * c2[i] + t ** 3 * end[i]);
+  const head = t => {
+    const a = p.start + p.curve * t;
+    return [p.x + p.length * (Math.cos(p.start) - Math.cos(a)) / p.curve,
+      p.y + p.length * (Math.sin(a) - Math.sin(p.start)) / p.curve,
+      p.z + Math.sin(t * Math.PI) * .006];
+  };
+  const tube = (path, segments, radius, tone) => {
+    for (let i = 0; i < segments; i++) for (let side = 0; side < 3; side++) {
+      const a = path(i / segments), b = path((i + 1) / segments);
+      const r0 = radius * (1 - .27 * i / segments), r1 = radius * (1 - .27 * (i + 1) / segments);
+      const angle = side * TAU / 3, next = (side + 1) * TAU / 3;
+      const offset = (v, angle, r) => [v[0] + Math.cos(angle) * r, v[1], v[2] + Math.sin(angle) * r];
+      quad(offset(a, angle, r0), offset(a, next, r0), offset(b, next, r1), offset(b, angle, r1), tone);
+    }
+  };
+  tube(stem, 5, .0048, 0); tube(head, 3, .0030, 2);
+  // Long, slim, slightly twisted dry blades. Width is only 8–13 mm.
+  for (let leaf = 0; leaf < 2; leaf++) {
+    const root = stem(.28 + leaf * .27), angle = variant * .9 + leaf * 2.8;
+    const reach = .22 + leaf * .045, dx = Math.cos(angle), dz = Math.sin(angle);
+    const center = t => [root[0] + dx * reach * t, root[1] + .14 * Math.sin(t * Math.PI) - .07 * t,
+      root[2] + dz * reach * t + .025 * Math.sin(t * Math.PI)];
+    for (let segment = 0; segment < 3; segment++) {
+      const t0 = segment / 3, t1 = (segment + 1) / 3, a = center(t0), b = center(t1);
+      const w0 = .001 + .006 * Math.sin((t0 + .1) / 1.1 * Math.PI), w1 = .0002 + .006 * Math.sin(t1 * Math.PI);
+      quad(add(a, [-dz, .18, dx], -w0), add(a, [-dz, .18, dx], w0),
+        add(b, [-dz, -.2, dx], w1), add(b, [-dz, -.2, dx], -w1), 4);
+    }
   }
-  for (let row = 0; row < 7; row++) for (const side of [-1, 1]) {
-    const y = 1.09 + row * .031, x = .055 + row * .004 + side * .012;
-    const z = row % 2 ? .008 : -.008, w = .015 * (1 - row * .045);
-    const base = [x - side * .006, y - .022, z], outer = [x + side * w, y + .011, z];
-    const top = [x + side * .003, y + .037, z], front = [x, y + .004, z + .012];
-    const back = [x, y + .004, z - .012];
-    tri(base, front, outer, 2); tri(outer, front, top, 1);
-    tri(base, outer, back, 3); tri(outer, top, back, 2);
-    tri(top, [top[0] + side * .0018, top[1], top[2] + .001], [x + side * .052, y + .145, z + .006], 1);
+  for (let row = 0; row < 8; row++) for (const side of [-1, 1]) {
+    const t = .065 + row * .118 + (side > 0 ? .018 : 0), a = p.start + p.curve * t;
+    const along = [Math.sin(a), Math.cos(a), 0], across = [Math.cos(a), -Math.sin(a), 0];
+    const taper = .71 + .29 * Math.sin((row + 1) / 9 * Math.PI);
+    const center = add(add(head(t), across, side * .0135 * taper), [0, 0, 1], (row % 2 ? 1 : -1) * .0035);
+    const axis = add(along, across, side * .31), tip = add(center, axis, .028 * taper), base = add(center, axis, -.025 * taper);
+    const ring = [add(center, across, .012 * taper), add(center, [0, 0, 1], .0105 * taper),
+      add(center, across, -.012 * taper), add(center, [0, 0, 1], -.0105 * taper)];
+    const grainStart = positions.length;
+    for (let edge = 0; edge < 4; edge++) {
+      const next = (edge + 1) % 4;
+      tri(base, ring[next], ring[edge], edge % 2 ? 3 : 2);
+      tri(tip, ring[edge], ring[next], edge < 2 ? 1 : 2);
+    }
+    grains.push({ start: grainStart, end: positions.length, center, axis, taper });
+    // Crossed tapered bristles remain visible around the head without thick needles.
+    const awn = add(add(tip, along, .086 + (7 - row) * .004), across, side * (.026 + row * .003));
+    awn[2] += (row % 2 ? 1 : -1) * .017;
+    tri(add(tip, across, -.00085), add(tip, across, .00085), awn, 1);
+    tri(add(tip, [0, 0, 1], -.0007), add(tip, [0, 0, 1], .0007), awn, 1);
   }
   const g = new T.BufferGeometry();
   g.setAttribute('position', new T.Float32BufferAttribute(positions, 3));
   g.setAttribute('color', new T.Float32BufferAttribute(colors, 3));
-  g.computeVertexNormals(); return g;
+  g.computeVertexNormals();
+  // Smooth each individual kernel analytically while retaining sharp gaps between glumes.
+  const normals = g.attributes.normal.array;
+  for (const grain of grains) {
+    const length = Math.hypot(...grain.axis), a = grain.axis.map(v => v / length), n = [a[1], -a[0], 0];
+    for (let i = grain.start; i < grain.end; i += 3) {
+      const q = [positions[i] - grain.center[0], positions[i + 1] - grain.center[1], positions[i + 2] - grain.center[2]];
+      const along = (q[0] * a[0] + q[1] * a[1]) / (.026 * grain.taper) ** 2;
+      const across = (q[0] * n[0] + q[1] * n[1]) / (.012 * grain.taper) ** 2;
+      const nx = a[0] * along + n[0] * across, ny = a[1] * along + n[1] * across, nz = q[2] / (.0105 * grain.taper) ** 2;
+      const norm = Math.hypot(nx, ny, nz); normals[i] = nx / norm; normals[i + 1] = ny / norm; normals[i + 2] = nz / norm;
+    }
+  }
+  g.computeBoundingBox(); g.computeBoundingSphere();
+  g.name = ['wheat-upright-ear', 'wheat-arched-ear', 'wheat-nodding-ear'][variant]; return g;
 }
 
 function animateMaterial(material, wind, { cards = false, detail = false, canopy = false, detailRadius, viewCenter } = {}) {
   material.onBeforeCompile = shader => {
-    shader.uniforms.uTime = wind.time; shader.uniforms.uPlayer = wind.player;
-    shader.uniforms.uWind = wind.strength;
+    shader.uniforms.uTime = wind.time; shader.uniforms.uPlayer = wind.player; shader.uniforms.uWind = wind.strength;
     if (viewCenter) shader.uniforms.uWheatView = viewCenter;
     if (detail) shader.uniforms.uDetailRadius = detailRadius;
     shader.vertexShader = 'uniform float uTime; uniform vec3 uPlayer; uniform float uWind;\n' +
-      (viewCenter ? 'uniform vec3 uWheatView;\n' : '') + (detail ? 'uniform float uDetailRadius;\n' : '') + (canopy ? 'varying vec3 vWheatWorld;\n' : '') + shader.vertexShader;
+      (viewCenter ? 'uniform vec3 uWheatView;\n' : '') + (detail ? 'varying float vWheatRange;\n' : '') +
+      (canopy ? 'varying vec3 vWheatWorld;\n' : '') + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
       vec3 wheatRoot = (modelMatrix * ${canopy ? '' : 'instanceMatrix *'} vec4(0.,0.,0.,1.)).xyz;
       ${canopy ? 'wheatRoot = (modelMatrix * vec4(position, 1.)).xyz; vWheatWorld = wheatRoot;' : ''}
       float phase = wheatRoot.x * .22 + wheatRoot.z * .17;
       float bend = pow(max(position.y, 0.), 2.);
-      float sway = sin(uTime * 1.3 + phase) + .32 * sin(uTime * 2.1 + phase * 2.8);
-      transformed.x += sway * .036 * bend * uWind;
-      transformed.z += cos(uTime * .94 + phase) * .022 * bend * uWind;
-      ${!canopy ? `vec2 away = wheatRoot.xz - uPlayer.xz; float d = length(away);
+      float sway = sin(uTime * 1.3 + phase) + .28 * sin(uTime * 2.1 + phase * 2.8);
+      ${canopy ? '' : `vec3 wheatWind = transpose(mat3(instanceMatrix)) * vec3(sway * .040, 0., cos(uTime * .94 + phase) * .024);
+      transformed.xz += wheatWind.xz * bend * uWind;
+      vec2 away = wheatRoot.xz - uPlayer.xz; float d = length(away);
       vec2 push = away / max(d, .01) * (1. - smoothstep(.18, 1.15, d));
       vec3 localPush = transpose(mat3(instanceMatrix)) * vec3(push.x, 0., push.y);
       transformed.xz += localPush.xz * bend * .3;
-      transformed.y -= length(push) * bend * .18;` : ''}
-      ${detail ? 'transformed.y *= 1. - smoothstep(uDetailRadius - 2.5, uDetailRadius, length(wheatRoot.xz - uWheatView.xz));' : ''}
+      transformed.y -= length(push) * bend * .18;`}
+      ${detail ? 'vWheatRange = length(wheatRoot.xz - uWheatView.xz);' : ''}
     `);
-    // Upward vegetation normals give the same soft overcast light from every azimuth.
+    // Shared upward normals light both card faces evenly; the grain meshes retain volume shading.
     if (cards) shader.fragmentShader = shader.fragmentShader.replace('#include <normal_fragment_begin>',
       '#include <normal_fragment_begin>\n#ifdef DOUBLE_SIDED\n normal *= faceDirection;\n#endif');
+    if (detail) {
+      shader.fragmentShader = 'uniform float uDetailRadius; varying float vWheatRange;\n' + shader.fragmentShader;
+      shader.fragmentShader = shader.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
+        float detailFade = 1. - smoothstep(uDetailRadius - 2.5, uDetailRadius, vWheatRange);
+        float detailPattern = fract(dot(floor(gl_FragCoord.xy), vec2(.754877666, .569840296)));
+        if (detailFade < .001 || detailPattern > detailFade) discard;
+      `);
+    }
     if (canopy) {
       shader.fragmentShader = 'uniform vec3 uWheatView; varying vec3 vWheatWorld;\n' + shader.fragmentShader;
       shader.fragmentShader = shader.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
         float canopyFade = smoothstep(25., 42., length(vWheatWorld.xz - uWheatView.xz));
-        float screenPattern = fract(dot(floor(gl_FragCoord.xy), vec2(.754877666,.569840296)));
+        float screenPattern = fract(dot(floor(gl_FragCoord.xy), vec2(.754877666, .569840296)));
         if (canopyFade < .001 || screenPattern > canopyFade) discard;
       `);
     }
   };
-  material.customProgramCacheKey = () => `dense-wheat-v1-${cards}-${detail}-${canopy}`;
+  material.customProgramCacheKey = () => `dense-wheat-v5-${cards}-${detail}-${canopy}`;
 }
 
 function getResources(wind) {
   if (resources) return resources;
-  const atlas = wheatAtlas(), cards = cardGeometry(), detailed = detailedGeometry();
+  const atlas = wheatAtlas(), cards = cardGeometry(), detailed = Array.from({ length: DETAIL_VARIANTS }, (_, i) => detailedGeometry(i));
   const cardMaterial = new T.MeshStandardMaterial({ color: 0xffffff, map: atlas,
-    side: T.DoubleSide, alphaTest: .20, roughness: 1, vertexColors: true });
-  const detailMaterial = new T.MeshStandardMaterial({ color: 0xffffff, side: T.DoubleSide,
-    vertexColors: true, roughness: 1 });
-  const canopyMaterial = new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true,
-    side: T.DoubleSide, roughness: 1 });
+    side: T.DoubleSide, alphaTest: .17, roughness: 1 });
+  const detailMaterial = new T.MeshStandardMaterial({ color: 0xffffff, side: T.DoubleSide, vertexColors: true, roughness: .92 });
+  const canopyMaterial = new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, side: T.DoubleSide, roughness: 1 });
   const detailRadius = { value: 11 }, viewCenter = { value: new T.Vector3() };
   animateMaterial(cardMaterial, wind, { cards: true });
   animateMaterial(detailMaterial, wind, { detail: true, detailRadius, viewCenter });
   animateMaterial(canopyMaterial, wind, { canopy: true, viewCenter });
-  for (const resource of [atlas, cards, detailed, cardMaterial, detailMaterial, canopyMaterial]) shared.add(resource);
+  for (const resource of [atlas, cards, ...detailed, cardMaterial, detailMaterial, canopyMaterial]) shared.add(resource);
   resources = { atlas, cards, detailed, cardMaterial, detailMaterial, canopyMaterial, detailRadius, viewCenter };
   return resources;
 }
@@ -164,85 +249,92 @@ function getResources(wind) {
 function canopyGeometry(f) {
   const p = [], c = [], step = 1.55, rng = random(f.seed ^ 0xaaa818), col = new T.Color();
   const vertex = (x, z) => {
-    p.push(x, surfaceHeight(x, z, f) + .99 + Math.sin(x * 1.8 + z) * .025, z);
-    col.setHSL(.108 + rng() * .016, .36 + rng() * .09, .36 + rng() * .09);
+    p.push(x, surfaceHeight(x, z, f) + 1.055 + Math.sin(x * 1.8 + z) * .045 + Math.sin(x * .51 - z * .34) * .055, z);
+    col.setHSL(.112 + rng() * .012, .35 + rng() * .09, .40 + rng() * .085);
     c.push(col.r, col.g, col.b);
   };
   for (let z = .7; z < 62; z += step) for (let x = .7; x < 62; x += step) {
-    if (![ [x,z], [x+step,z], [x,z+step], [x+step,z+step] ].every(([a,b]) => wheatAllowed(a,b,f))) continue;
-    vertex(x,z); vertex(x,z+step); vertex(x+step,z+step);
-    vertex(x,z); vertex(x+step,z+step); vertex(x+step,z);
+    if (![[x, z], [x + step, z], [x, z + step], [x + step, z + step]].every(([a, b]) => wheatAllowed(a, b, f))) continue;
+    vertex(x, z); vertex(x, z + step); vertex(x + step, z + step);
+    vertex(x, z); vertex(x + step, z + step); vertex(x + step, z);
   }
   const g = new T.BufferGeometry();
-  g.setAttribute('position', new T.Float32BufferAttribute(p,3));
-  g.setAttribute('color', new T.Float32BufferAttribute(c,3)); g.computeVertexNormals(); return g;
+  g.setAttribute('position', new T.Float32BufferAttribute(p, 3));
+  g.setAttribute('color', new T.Float32BufferAttribute(c, 3)); g.computeVertexNormals(); return g;
 }
 
-// Returned `candidates` preserve the existing spatial collision buckets exactly.
-// Visual density never changes with chunk LOD; the cheap far canopy prevents mip holes.
+// Collision candidates are returned unchanged. Chunk LOD never removes the visible stand.
 export function buildDenseWheat(f, level, quality, wind) {
   const r = getResources(wind), group = new T.Group(), roots = [], rng = random(f.seed ^ 0x72ac0f);
   const spacing = quality === 'low' ? .98 : .80;
   for (let z = .65; z < 63.4; z += spacing) for (let x = .65; x < 63.4; x += spacing) {
-    const xx = x + (rng() - .5) * spacing * .45, zz = z + (rng() - .5) * spacing * .45;
-    const a = rng() * Math.PI, s = .94 + rng() * .13;
-    if (wheatAllowed(xx, zz, f)) roots.push({x:xx, z:zz, a, s});
+    const xx = x + (rng() - .5) * spacing * .58, zz = z + (rng() - .5) * spacing * .58;
+    const a = rng() * TAU, s = .84 + rng() * .29, tone = .89 + rng() * .11;
+    if (wheatAllowed(xx, zz, f)) roots.push({ x: xx, z: zz, a, s, tone });
   }
-  const mesh = new T.InstancedMesh(r.cards, r.cardMaterial, roots.length);
-  const width = quality === 'low' ? 1.23 : 1.06;
+  const mesh = new T.InstancedMesh(r.cards, r.cardMaterial, roots.length), width = quality === 'low' ? 1.25 : 1.05;
   roots.forEach((root, i) => {
     dummy.position.set(root.x, surfaceHeight(root.x, root.z, f) - .025, root.z);
-    dummy.rotation.set(0, root.a, 0); dummy.scale.set(width, root.s, width);
-    dummy.updateMatrix(); mesh.setMatrixAt(i, dummy.matrix);
+    dummy.rotation.set(0, root.a, 0); dummy.scale.set(width, root.s, width); dummy.updateMatrix(); mesh.setMatrixAt(i, dummy.matrix);
+    tint.setRGB(root.tone, root.tone * .987, root.tone * .953); mesh.setColorAt(i, tint);
   });
-  mesh.instanceMatrix.needsUpdate = true; mesh.computeBoundingSphere();
-  // Bounds include shader wind and contact deformation.
-  if (mesh.boundingSphere) mesh.boundingSphere.radius += 1;
+  mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  mesh.computeBoundingSphere(); if (mesh.boundingSphere) mesh.boundingSphere.radius += 1.2;
   mesh.receiveShadow = true; mesh.name = 'dense-wheat-cards';
   const canopy = new T.Mesh(canopyGeometry(f), r.canopyMaterial); canopy.name = 'distant-wheat-canopy';
   group.add(mesh, canopy);
-  group.userData.wheat = { clumps: roots.length, silhouettesPerClump: 33, detailLevel: level };
+  group.userData.wheat = { clumps: roots.length, silhouettesPerClump: 39, detailLevel: level, variants: 3 };
   return { mesh: group, candidates: wheatCandidates(f) };
 }
 
-// One bounded detail mesh for the entire world, rather than one high mesh per chunk.
+// Exactly three reusable instance buffers (4,000 each), shared across the whole world.
 export function createWheatDetailLayer(wind) {
-  const r = getResources(wind), maxCount = 12000;
-  const object = new T.InstancedMesh(r.detailed, r.detailMaterial, maxCount);
-  object.count = 0; object.frustumCulled = false; object.receiveShadow = true;
-  object.name = 'near-wheat-grains'; object.instanceMatrix.setUsage(T.DynamicDrawUsage);
-  let lastX = Infinity, lastZ = Infinity, lastKey = '', lastQuality = '', lastCount = -1;
+  const r = getResources(wind), object = new T.Group(), perVariant = DETAIL_CAPACITY / DETAIL_VARIANTS;
+  object.name = 'near-wheat-grains'; object.count = 0;
+  const pools = r.detailed.map((geometry, i) => {
+    const mesh = new T.InstancedMesh(geometry, r.detailMaterial, perVariant);
+    mesh.count = 0; mesh.frustumCulled = false; mesh.receiveShadow = true;
+    mesh.name = `near-wheat-grains-${i}`; mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
+    object.add(mesh); return mesh;
+  });
+  object.userData.wheat = { capacity: DETAIL_CAPACITY, variants: DETAIL_VARIANTS, trianglesPerStem: 220 };
+  let lastX = Infinity, lastZ = Infinity, lastKey = '', lastQuality = '', lastStamp = -1;
   function update(chunks, player, quality, originKey) {
     r.viewCenter.value.copy(player);
-    // Chunk count also catches late-streamed fields while the player stands still.
-    if (originKey === lastKey && quality === lastQuality && chunks.size === lastCount &&
-        Math.hypot(player.x - lastX, player.z - lastZ) < 2.5) return;
-    lastX = player.x; lastZ = player.z; lastKey = originKey; lastQuality = quality; lastCount = chunks.size;
+    // Detect newly installed chunks even if a replacement leaves map.size unchanged.
+    let stamp = chunks.size; for (const chunk of chunks.values()) stamp = (stamp + (chunk.field.seed >>> 0)) >>> 0;
+    if (originKey === lastKey && quality === lastQuality && stamp === lastStamp && Math.hypot(player.x - lastX, player.z - lastZ) < 2.25) return;
+    lastX = player.x; lastZ = player.z; lastKey = originKey; lastQuality = quality; lastStamp = stamp;
     const radius = quality === 'high' ? 14 : quality === 'low' ? 8 : 11;
-    const spacing = quality === 'high' ? .31 : quality === 'low' ? .38 : .33;
-    const buildRadius = radius + 3.0; r.detailRadius.value = radius;
-    let at = 0;
+    const keep = quality === 'high' ? 1 : quality === 'low' ? .64 : .83;
+    // A fixed lattice means lower qualities are true subsets; streaming never rerolls plants.
+    const spacing = .305, buildRadius = radius + 2.75, counts = [0, 0, 0]; r.detailRadius.value = radius;
     for (const chunk of chunks.values()) {
       const f = chunk.field, ox = chunk.group.position.x, oz = chunk.group.position.z;
       const px = player.x - ox, pz = player.z - oz;
       if (px < -buildRadius || px > CHUNK + buildRadius || pz < -buildRadius || pz > CHUNK + buildRadius) continue;
-      const minX = Math.max(0, Math.floor((px-buildRadius)/spacing)), maxX = Math.min(Math.floor(CHUNK/spacing), Math.ceil((px+buildRadius)/spacing));
-      const minZ = Math.max(0, Math.floor((pz-buildRadius)/spacing)), maxZ = Math.min(Math.floor(CHUNK/spacing), Math.ceil((pz+buildRadius)/spacing));
+      const minX = Math.max(0, Math.floor((px - buildRadius) / spacing)), maxX = Math.min(Math.floor(CHUNK / spacing), Math.ceil((px + buildRadius) / spacing));
+      const minZ = Math.max(0, Math.floor((pz - buildRadius) / spacing)), maxZ = Math.min(Math.floor(CHUNK / spacing), Math.ceil((pz + buildRadius) / spacing));
       for (let iz = minZ; iz <= maxZ; iz++) for (let ix = minX; ix <= maxX; ix++) {
-        // Each stem is stable across rebuilds and quality-independent world streaming.
         const rng = random(f.seed ^ Math.imul(ix, 734287) ^ Math.imul(iz, 912931));
-        const x = (ix + .12 + rng()*.72)*spacing, z = (iz + .12 + rng()*.72)*spacing;
-        if (Math.hypot(x-px,z-pz)>buildRadius || !wheatAllowed(x,z,f)) continue;
-        if (at >= maxCount) continue;
-        dummy.position.set(x + ox, surfaceHeight(x,z,f), z + oz);
-        dummy.rotation.set((rng()-.5)*.08, rng()*Math.PI*2, (rng()-.5)*.08);
-        dummy.scale.set(.9+rng()*.25, .94+rng()*.14, .9+rng()*.25);
-        dummy.updateMatrix(); object.setMatrixAt(at++, dummy.matrix);
+        const x = (ix + .10 + rng() * .78) * spacing, z = (iz + .10 + rng() * .78) * spacing;
+        const selection = rng(), variant = Math.floor(rng() * DETAIL_VARIANTS);
+        if (selection > keep || Math.hypot(x - px, z - pz) > buildRadius || !wheatAllowed(x, z, f) || counts[variant] >= perVariant) continue;
+        const mesh = pools[variant], at = counts[variant]++;
+        dummy.position.set(x + ox, surfaceHeight(x, z, f) - .012, z + oz);
+        dummy.rotation.set((rng() - .5) * .18, rng() * TAU, (rng() - .5) * .20);
+        const breadth = .84 + rng() * .31, stature = .82 + rng() * .32;
+        dummy.scale.set(breadth, stature, breadth); dummy.updateMatrix(); mesh.setMatrixAt(at, dummy.matrix);
+        const shade = .90 + rng() * .10; tint.setRGB(shade, shade * (.96 + rng() * .035), shade * (.91 + rng() * .07)); mesh.setColorAt(at, tint);
       }
     }
-    object.count = at; object.instanceMatrix.needsUpdate = true;
+    object.count = counts.reduce((a, b) => a + b, 0);
+    pools.forEach((mesh, i) => {
+      mesh.count = counts[i]; mesh.instanceMatrix.needsUpdate = true;
+      if (mesh.instanceColor) { mesh.instanceColor.setUsage(T.DynamicDrawUsage); mesh.instanceColor.needsUpdate = true; }
+    });
   }
-  return { object, update, dispose: () => object.dispose() };
+  return { object, update, dispose: () => pools.forEach(mesh => mesh.dispose()) };
 }
 
 export function isSharedWheatResource(resource) { return shared.has(resource); }
