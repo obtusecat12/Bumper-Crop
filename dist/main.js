@@ -36,7 +36,7 @@ let settings={quality:touchDevice?'low':'balanced',retro:true,fov:72,sensitivity
 try{const saved=JSON.parse(localStorage.getItem('level10.preferences.v1')||'null');if(saved&&typeof saved==='object')settings={...settings,...saved}}catch{}
 if(!['high','balanced','low'].includes(settings.quality))settings.quality='balanced';
 let renderer;
-try{renderer=new T.WebGLRenderer({antialias:false,powerPreference:'high-performance',alpha:false});renderer.setPixelRatio(1);renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','Level 10 三维麦田');game.prepend(renderer.domElement)}catch(e){game.innerHTML='<div class="fatal"><h1>无法启动 3D 画面</h1><p>请在浏览器设置中启用硬件加速，并使用支持 WebGL 2 的浏览器。</p><button onclick="location.reload()">重新尝试</button></div>';throw e}
+try{renderer=new T.WebGLRenderer({antialias:false,powerPreference:'high-performance',alpha:false});renderer.setPixelRatio(1);renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','Level 10 三维麦田');game.prepend(renderer.domElement)}catch(e){e.userTitle='无法启动 3D 画面';e.userMessage='当前浏览器无法创建 3D 画面。请确认已启用硬件加速，并使用支持 WebGL 2 的浏览器。';throw e}
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.23;
 const scene=new T.Scene();scene.background=new T.Color('#acb6b1');scene.fog=new T.Fog('#acb6b1',60,225);
 scene.add(new T.HemisphereLight('#c9d2d4','#6b6042',2.0));const sun=new T.DirectionalLight('#ddd8c4',1.5);sun.position.set(-60,100,25);scene.add(sun);
@@ -110,7 +110,29 @@ function move(dt){const c=currentChunk(),inWheat=contactWheat(c,state.x,state.z)
  const floor=height(state.x,state.z,state.cx,state.cz);let camH=crouch?1.06:1.77;if(water)camH-=.22;state.y=T.MathUtils.lerp(state.y||floor+camH,floor+camH,1-Math.exp(-dt*12));step+=moved*2.8;const bob=settings.bob&&moving&&state.grounded?Math.sin(step*2)*.021*(running?1.5:1):0;camera.position.set(state.x,state.y+state.jump+bob,state.z);camera.rotation.set(state.pitch,state.yaw,settings.bob&&moving?Math.cos(step)*.003:0);wind.player.value.set(state.x,state.y,state.z);
  if(moved>.002&&state.grounded){footTimer+=moved;if(footTimer>(running?1.5:1.4)){audio.footstep(!!inWheat,water);footTimer=0}}audio.update(moving,inWheat,rainAmount);hadMovement=moving;
 }
-function scanInteraction(){interaction=null;let nearest=2.25;for(const c of chunks.values()){if(Math.abs(Number(c.field.x-state.cx))>1||Math.abs(Number(c.field.z-state.cz))>1)continue;for(const p of c.pickups){if(!p.mesh)continue;const dx=p.x+c.group.position.x-state.x,dz=p.z+c.group.position.z-state.z,d=Math.hypot(dx,dz);if(d<nearest){nearest=d;interaction={kind:'bottle',p,chunk:c}}}if(!interaction){const c=currentChunk();if(c?.field.type==='pond'){const pd=pondDistance(state.x,state.z,c.field);if(pd<1.16)interaction={kind:'water'}}}const el=$('#interact');el.hidden=!interaction;if(interaction)el.innerHTML=interaction.kind==='bottle'?'<kbd>E</kbd> 拾取杏仁水':'<kbd>E</kbd> 饮用湖水';}
+function scanInteraction(){
+ interaction=null;
+ let nearest=2.25;
+ for(const chunk of chunks.values()){
+  if(Math.abs(Number(chunk.field.x-state.cx))>1||Math.abs(Number(chunk.field.z-state.cz))>1)continue;
+  for(const pickup of chunk.pickups){
+   if(!pickup.mesh)continue;
+   const dx=pickup.x+chunk.group.position.x-state.x;
+   const dz=pickup.z+chunk.group.position.z-state.z;
+   const distance=Math.hypot(dx,dz);
+   if(distance<nearest){nearest=distance;interaction={kind:'bottle',p:pickup,chunk};}
+  }
+ }
+ if(!interaction){
+  const chunk=currentChunk();
+  if(chunk?.field.type==='pond'&&pondDistance(state.x,state.z,chunk.field)<1.16){
+   interaction={kind:'water'};
+  }
+ }
+ const prompt=$('#interact');
+ prompt.hidden=!interaction;
+ if(interaction)prompt.innerHTML=interaction.kind==='bottle'?'<kbd>E</kbd> 拾取杏仁水':'<kbd>E</kbd> 饮用湖水';
+}
 function updateHUD(){const degrees=((Math.round(-state.yaw*180/Math.PI)%360)+360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(degrees/45)%8];$('#bearing').textContent=`${dir}  ${String(degrees).padStart(3,'0')}°`;$('#stamina').style.width=state.stamina+'%';$('#hydration').style.width=state.hydration+'%';$('#bottle-count').textContent=String(state.bottles).padStart(2,'0');const c=currentChunk();let location='泥土小径';if(c){const f=c.field;if(f.type==='pond'&&pondDistance(state.x,state.z,f)<1.24)location='湖泊 · 未开垦的低地';else if(f.type==='building'){const[w,d]=buildingSize(f);if(Math.abs(state.x-f.cx)<w/2&&Math.abs(state.z-f.cz)<d/2)location=['旧谷仓','砖砌谷仓','木棚','空马厩'][f.variant];else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}$('#location').textContent=`${location}  /  ${Math.round(state.distance)} m`;$('#fps').textContent=`${Math.round(fps)} FPS · ${chunks.size} 区块`;}
 
 const rainCount=900,rainPositions=new Float32Array(rainCount*6);for(let i=0;i<rainCount;i++){const x=(Math.random()-.5)*38,y=Math.random()*20,z=(Math.random()-.5)*38;rainPositions.set([x,y,z,x-.10,y-.60,z],i*6)}const rainGeo=new T.BufferGeometry();rainGeo.setAttribute('position',new T.BufferAttribute(rainPositions,3));const rainMat=new T.LineBasicMaterial({color:'#c9d3ce',transparent:true,opacity:0,depthWrite:false});const rain=new T.LineSegments(rainGeo,rainMat);rain.frustumCulled=false;scene.add(rain);let rainAmount=0;
@@ -122,7 +144,7 @@ function animate(now){requestAnimationFrame(animate);const rawDt=(now-lastFrame)
  if(queue.length&&!streamFailed&&(!playing||frameCount%3===0)){try{streamOne()}catch(e){streamFailed=true;console.error('World streaming failed',e);$('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请刷新</span><small>↻</small>';return}const total=(radius()*2+1)**2,progress=Math.round(chunks.size/total*100);$('#load-number').textContent=progress+'%';$('#load-bar').style.width=progress+'%';if(!ready&&chunks.size>=9){ready=true;$('#start').disabled=false;$('#start').innerHTML='<span>进入麦田</span><small>ENTER ↵</small>'}if(!queue.length)$('#loading').hidden=true;}
  if(playing)move(dt);else{camera.position.set(state.x,(height(state.x,state.z,state.cx,state.cz)+1.94)+Math.sin(time*.23)*.009,state.z);camera.rotation.set(state.pitch,state.yaw+(started?0:Math.sin(time*.07)*.015),0);wind.player.value.set(10000,0,10000)}
  sky.position.copy(camera.position);weather(dt);uiTick+=dt;if(uiTick>.12){uiTick=0;if(playing)scanInteraction();updateHUD()}
- renderer.render(scene,camera);frameCount++;frameTime+=rawDt;
+ renderer.render(scene,camera);document.documentElement.dataset.bootState="ready";frameCount++;frameTime+=rawDt;
  if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;if(playing&&!queue.length){qualityTimer+=1.5;if(qualityTimer>4.5){let next=autoScale;if(fps<35)next=Math.max(.6,autoScale-.08);else if(fps>57)next=Math.min(1,autoScale+.025);if(next!==autoScale){autoScale=next;resize()}qualityTimer=0}}}
 }
 requestAnimationFrame(animate);
