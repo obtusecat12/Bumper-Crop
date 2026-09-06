@@ -1,3 +1,4 @@
+import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=7';
 // Scene packet codec for procedural Three.js chunks. No DOM or Worker globals.
 // Supply the same Three.js revision on both sides. Pack before attachFog().
 const VERSION=1;
@@ -91,7 +92,7 @@ export function createPacker({T,isSharedResource=()=>false,wind={},viewUniform}=
   }
   function node(o){
    if(o.isSkinnedMesh||o.isBatchedMesh)throw Error('Skinned/BatchedMesh is outside the procedural chunk codec');
-   const id=packet.nodes.length;nodeIds.set(o,id);const r={id,type:o.type,props:{},matrix:null,geometry:null,material:null,children:[],userData:plain(o.userData),layers:o.layers.mask};packet.nodes.push(r);
+   const id=packet.nodes.length;nodeIds.set(o,id);const r={id,type:o.type,props:{},matrix:null,geometry:null,material:null,children:[],userData:packCardOrderUserData(o.userData,plain,buffer=>{if(!buffers.has(buffer)){buffers.add(buffer);transfer.push(buffer)}}),layers:o.layers.mask};packet.nodes.push(r);
    if(o.matrixAutoUpdate)o.updateMatrix();r.matrix=o.matrix.toArray();r.position=o.position.toArray();r.quaternion=o.quaternion.toArray();r.scale=o.scale.toArray();
    for(const key of nodeProps)r.props[key]=o[key];
    if(o.geometry)r.geometry=resource(o.geometry,'geometries');
@@ -161,7 +162,7 @@ export function createUnpacker({T,wind={},viewUniform,uniformBindings={}}={}){
    const g=r.geometry?lookup(r.geometry):undefined,m=Array.isArray(r.material)?r.material.map(lookup):r.material?lookup(r.material):undefined;
    let o;if(r.instanceMatrix)o=new T.InstancedMesh(g,m,r.instanceMatrix.array.length/16);
    else if(r.type==='Mesh')o=new T.Mesh(g,m);else if(r.type==='LineSegments')o=new T.LineSegments(g,m);else if(r.type==='LineLoop')o=new T.LineLoop(g,m);else if(r.type==='Line')o=new T.Line(g,m);else if(r.type==='Points')o=new T.Points(g,m);else if(r.type==='Group')o=new T.Group();else if(r.type==='Object3D')o=new T.Object3D();else throw Error('Unsupported object type '+r.type);
-   Object.assign(o,r.props);o.matrix.fromArray(r.matrix);o.position.fromArray(r.position);o.quaternion.fromArray(r.quaternion);o.scale.fromArray(r.scale);o.matrixWorldNeedsUpdate=true;o.layers.mask=r.layers;o.userData=plain(r.userData);
+   Object.assign(o,r.props);o.matrix.fromArray(r.matrix);o.position.fromArray(r.position);o.quaternion.fromArray(r.quaternion);o.scale.fromArray(r.scale);o.matrixWorldNeedsUpdate=true;o.layers.mask=r.layers;o.userData=unpackCardOrderUserData(r.userData,plain);
    if(r.instanceMatrix){o.instanceMatrix=attribute(r.instanceMatrix);o.instanceColor=r.instanceColor?attribute(r.instanceColor):null;o.count=r.count;o.boundingBox=box(r.boundingBox);o.boundingSphere=sphere(r.boundingSphere)}
    if(r.morphTargetInfluences)o.morphTargetInfluences=r.morphTargetInfluences.slice();if(r.morphTargetDictionary)o.morphTargetDictionary={...r.morphTargetDictionary};nodes[r.id]=o;
   }

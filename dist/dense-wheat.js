@@ -1,8 +1,8 @@
 // Golden mature wheat: varied silhouette clumps plus three bounded grain meshes.
 // Geometry/materials/textures are shared; per-chunk meshes and canopy are owned by the chunk.
 import * as T from './vendor/three.module.min.js';
-import { exactIndexGeometry } from './exact-index.js?v=6';
-import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js?v=6';
+import { exactIndexGeometry } from './exact-index.js?v=7';
+import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js?v=7';
 
 const dummy = new T.Object3D(), tint = new T.Color(), shared = new Set();
 const TAU = Math.PI * 2, DETAIL_CAPACITY = 12000, DETAIL_VARIANTS = 3;
@@ -189,16 +189,24 @@ function detailGeometries() {
   return detailTemplates || (detailTemplates = Array.from({ length: DETAIL_VARIANTS }, (_, i) => detailedGeometry(i)));
 }
 
-function animateMaterial(material, wind, { cards = false, detail = false, canopy = false, detailRadius, viewCenter } = {}) {
+function animateMaterial(material, wind, { cards = false, detail = false, solidDetail = false, canopy = false, detailRadius, viewCenter } = {}) {
+  const fadingDetail = detail && !solidDetail;
   material.onBeforeCompile = shader => {
     shader.uniforms.uTime = wind.time; shader.uniforms.uPlayer = wind.player; shader.uniforms.uWind = wind.strength;
     if (viewCenter) shader.uniforms.uWheatView = viewCenter;
-    if (detail) shader.uniforms.uDetailRadius = detailRadius;
+    if (fadingDetail) shader.uniforms.uDetailRadius = detailRadius;
     shader.vertexShader = 'uniform float uTime; uniform vec3 uPlayer; uniform float uWind;\n' +
-      (viewCenter ? 'uniform vec3 uWheatView;\n' : '') + (detail ? 'varying float vWheatRange;\n' : '') +
+      (viewCenter ? 'uniform vec3 uWheatView;\n' : '') + (fadingDetail ? 'uniform float uDetailRadius; varying float vWheatRange;\n' : '') +
       (canopy ? 'varying vec3 vWheatWorld;\n' : '') + shader.vertexShader;
+    // A whole stem outside the existing detail radius had zero fragment coverage.
+    // Clip it before normals, wind, player deformation and projection are evaluated.
+    if (fadingDetail) shader.vertexShader = shader.vertexShader.replace('void main() {', `void main() {
+      vec3 wheatRoot = (modelMatrix * instanceMatrix * vec4(0.,0.,0.,1.)).xyz;
+      vWheatRange = length(wheatRoot.xz - uWheatView.xz);
+      if (vWheatRange >= uDetailRadius) { gl_Position = vec4(0., 0., 2., 1.); return; }
+    `);
     shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
-      vec3 wheatRoot = (modelMatrix * ${canopy ? '' : 'instanceMatrix *'} vec4(0.,0.,0.,1.)).xyz;
+      ${fadingDetail ? '' : `vec3 wheatRoot = (modelMatrix * ${canopy ? '' : 'instanceMatrix *'} vec4(0.,0.,0.,1.)).xyz;`}
       ${canopy ? 'wheatRoot = (modelMatrix * vec4(position, 1.)).xyz; vWheatWorld = wheatRoot;' : ''}
       float phase = wheatRoot.x * .22 + wheatRoot.z * .17;
       float bend = pow(max(position.y, 0.), 2.);
@@ -210,12 +218,11 @@ function animateMaterial(material, wind, { cards = false, detail = false, canopy
       vec3 localPush = transpose(mat3(instanceMatrix)) * vec3(push.x, 0., push.y);
       transformed.xz += localPush.xz * bend * .3;
       transformed.y -= length(push) * bend * .18;`}
-      ${detail ? 'vWheatRange = length(wheatRoot.xz - uWheatView.xz);' : ''}
     `);
     // Shared upward normals light both card faces evenly; the grain meshes retain volume shading.
     if (cards) shader.fragmentShader = shader.fragmentShader.replace('#include <normal_fragment_begin>',
       '#include <normal_fragment_begin>\n#ifdef DOUBLE_SIDED\n normal *= faceDirection;\n#endif');
-    if (detail) {
+    if (fadingDetail) {
       shader.fragmentShader = 'uniform float uDetailRadius; varying float vWheatRange;\n' + shader.fragmentShader;
       shader.fragmentShader = shader.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
         float detailFade = 1. - smoothstep(uDetailRadius - 2.5, uDetailRadius, vWheatRange);
@@ -232,7 +239,7 @@ function animateMaterial(material, wind, { cards = false, detail = false, canopy
       `);
     }
   };
-  material.customProgramCacheKey = () => `dense-wheat-v5-${cards}-${detail}-${canopy}`;
+  material.customProgramCacheKey = () => `dense-wheat-v7-${cards}-${detail}-${solidDetail}-${canopy}`;
 }
 
 function getResources(wind) {
@@ -241,13 +248,16 @@ function getResources(wind) {
   const cardMaterial = new T.MeshStandardMaterial({ color: 0xffffff, map: atlas,
     side: T.DoubleSide, alphaTest: .17, roughness: 1 });
   const detailMaterial = new T.MeshStandardMaterial({ color: 0xffffff, side: T.DoubleSide, vertexColors: true, roughness: .92 });
+  const detailCoreMaterial = new T.MeshStandardMaterial({ color: 0xffffff, side: T.DoubleSide, vertexColors: true, roughness: .92 });
+  detailMaterial.name = 'Wheat detail / fading fringe'; detailCoreMaterial.name = 'Wheat detail / fully covered core';
   const canopyMaterial = new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, side: T.DoubleSide, roughness: 1 });
   const detailRadius = { value: 11 }, viewCenter = { value: new T.Vector3() };
   animateMaterial(cardMaterial, wind, { cards: true });
   animateMaterial(detailMaterial, wind, { detail: true, detailRadius, viewCenter });
+  animateMaterial(detailCoreMaterial, wind, { detail: true, solidDetail: true, detailRadius, viewCenter });
   animateMaterial(canopyMaterial, wind, { canopy: true, viewCenter });
-  for (const resource of [atlas, cards, ...detailed, cardMaterial, detailMaterial, canopyMaterial]) shared.add(resource);
-  resources = { atlas, cards, detailed, cardMaterial, detailMaterial, canopyMaterial, detailRadius, viewCenter };
+  for (const resource of [atlas, cards, ...detailed, cardMaterial, detailMaterial, detailCoreMaterial, canopyMaterial]) shared.add(resource);
+  resources = { atlas, cards, detailed, cardMaterial, detailMaterial, detailCoreMaterial, canopyMaterial, detailRadius, viewCenter };
   return resources;
 }
 
@@ -293,6 +303,8 @@ export function buildDenseWheat(f, level, quality, wind) {
 }
 
 const DETAIL_PATCH_SIZE = 6, DETAIL_SPACING = .305, DETAIL_BOUND_PADDING = 1.5;
+// Radius tests use CPU doubles; leave 1 mm for Float32 instance/uniform rounding.
+const DETAIL_CORE_GUARD = .001;
 const qualityDetail = quality => ({ radius: quality === 'high' ? 14 : quality === 'low' ? 8 : 11,
   keep: quality === 'high' ? 1 : quality === 'low' ? .64 : .83 });
 
@@ -343,6 +355,7 @@ export function prepareWheatDetail(f, quality = 'balanced') {
 // Ordinary movement only changes visibility; translations update once per rebase.
 export function createWheatDetailLayer(wind, { onMesh } = {}) {
   const r = getResources(wind), object = new T.Group(), records = new Map();
+  const registeredMaterials = new WeakSet();
   object.name = 'near-wheat-grains'; object.count = 0;
   object.userData.wheat = { capacity: 0, baselineCapacity: DETAIL_CAPACITY, variants: DETAIL_VARIANTS,
     trianglesPerStem: 220, patchSize: DETAIL_PATCH_SIZE, cachedPatches: 0, activePatches: 0 };
@@ -362,10 +375,11 @@ export function createWheatDetailLayer(wind, { onMesh } = {}) {
       new T.Vector3(patch.bounds[3] + ox, patch.bounds[4], patch.bounds[5] + oz));
     mesh.userData.offsetX = ox; mesh.userData.offsetZ = oz;
   }
-  function activate(record, patch, ox, oz) {
+  function activate(record, patch, ox, oz, core) {
+    const material = core ? r.detailCoreMaterial : r.detailMaterial;
     let mesh = record.meshes.get(patch.key);
     if (!mesh) {
-      mesh = new T.InstancedMesh(r.detailed[patch.variant], r.detailMaterial, patch.count);
+      mesh = new T.InstancedMesh(r.detailed[patch.variant], material, patch.count);
       mesh.instanceMatrix.array.set(patch.matrices);
       mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
       // Colors are immutable and share the received CPU array without copying.
@@ -373,13 +387,19 @@ export function createWheatDetailLayer(wind, { onMesh } = {}) {
       mesh.frustumCulled = true; mesh.receiveShadow = true; mesh.matrixAutoUpdate = false;
       mesh.name = `near-wheat-grains-${patch.variant} / ${record.chunk.field.key} / ${patch.key}`;
       mesh.userData.wheatPatch = { key: patch.key, variant: patch.variant, count: patch.count };
-      place(mesh, patch, ox, oz); record.meshes.set(patch.key, mesh); object.add(mesh); onMesh?.(mesh);
+      place(mesh, patch, ox, oz); record.meshes.set(patch.key, mesh); object.add(mesh); onMesh?.(mesh); registeredMaterials.add(material);
     } else if (mesh.userData.offsetX !== ox || mesh.userData.offsetZ !== oz) place(mesh, patch, ox, oz);
+    if (mesh.material !== material) {
+      mesh.material = material;
+      // Existing callers attach fog in onMesh. Register each shared variant once,
+      // including when a cached patch first switches from fringe to core.
+      if (!registeredMaterials.has(material)) { onMesh?.(mesh); registeredMaterials.add(material); }
+    }
     mesh.visible = true; return mesh;
   }
   function update(chunks, player, quality, originKey) {
     r.viewCenter.value.copy(player); const { radius } = qualityDetail(quality); r.detailRadius.value = radius;
-    const current = new Set(chunks.values()); let activeCount = 0, activePatches = 0;
+    const current = new Set(chunks.values()); let activeCount = 0, activePatches = 0, corePatches = 0, coreStems = 0;
     for (const [chunk, record] of records) {
       if (!current.has(chunk) || (chunk.detailPatches && chunk.detailPatches !== record.data)) {
         discard(record); records.delete(chunk);
@@ -396,12 +416,20 @@ export function createWheatDetailLayer(wind, { onMesh } = {}) {
       for (const patch of record.data.patches) {
         const bounds = patch.rootBounds, dx = Math.max(bounds[0] - px, 0, px - bounds[2]), dz = Math.max(bounds[1] - pz, 0, pz - bounds[3]);
         if (dx * dx + dz * dz > (radius + .0001) ** 2) continue;
-        activate(record, patch, ox, oz); activeCount += patch.count; activePatches++;
+        // The maximum root distance over an AABB occurs at one of its corners.
+        // Fully inside the original solid region, detailFade was exactly 1 for
+        // every fragment, so its stochastic discard is unnecessary.
+        const farX = Math.max(Math.abs(bounds[0] - px), Math.abs(bounds[2] - px));
+        const farZ = Math.max(Math.abs(bounds[1] - pz), Math.abs(bounds[3] - pz));
+        const coreRadius = radius - 2.5 - DETAIL_CORE_GUARD;
+        const core = farX * farX + farZ * farZ <= coreRadius * coreRadius;
+        activate(record, patch, ox, oz, core); activeCount += patch.count; activePatches++;
+        if (core) { corePatches++; coreStems += patch.count; }
       }
     }
     let capacity = 0, cachedPatches = 0;
     for (const record of records.values()) for (const mesh of record.meshes.values()) { capacity += mesh.count; cachedPatches++; }
-    object.count = activeCount; Object.assign(object.userData.wheat, { capacity, cachedPatches, activePatches, originKey });
+    object.count = activeCount; Object.assign(object.userData.wheat, { capacity, cachedPatches, activePatches, corePatches, coreStems, originKey });
   }
   return { object, update, dispose() { for (const record of records.values()) discard(record); records.clear(); object.count = 0; } };
 }

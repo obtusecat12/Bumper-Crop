@@ -1,11 +1,19 @@
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=6';
+import {height,random} from './world.js?v=7';
 
 // Main-wall dimensions; roof overhangs/optional porch are described by footprint.
 export const RURAL_BUILDING_SIZES = Object.freeze([[7,9,3],[2.8,3.2,2.7],[12,17,4.9],[13,19,5.1],[11,15,4.3],[13,9,3.7],[13,18,3.8],[8,11,3.2]].map(Object.freeze));
 export function buildingDimensions(f){return RURAL_BUILDING_SIZES[((f.variant||0)%8+8)%8].map(n=>n*(f.buildingScale||1));}
 export function variantSize(v){return [...RURAL_BUILDING_SIZES[((v||0)%8+8)%8]];}
 const unitBox=new T.BoxGeometry(1,1,1).toNonIndexed();
+// The dusty floor grid is the sole top surface. Removing the slab's covered
+// top eliminates grazing-angle depth shimmer without raising floor elevation.
+const floorSlabGeo=new T.BufferGeometry();
+for(const name of ['position','normal','uv']){
+ const source=unitBox.attributes[name],out=[];
+ for(let i=0;i<source.count;i++)if(unitBox.attributes.normal.getY(i)<.5)for(let k=0;k<source.itemSize;k++)out.push(source.array[i*source.itemSize+k]);
+ floorSlabGeo.setAttribute(name,new T.Float32BufferAttribute(out,source.itemSize));
+}
 const barrelGeo=new T.CylinderGeometry(.43,.39,1.04,12,3).toNonIndexed();
 const hoopGeo=new T.CylinderGeometry(.441,.441,.045,12,1,true).toNonIndexed();
 const stoneGeo=new T.DodecahedronGeometry(1,0);
@@ -13,26 +21,57 @@ const cylinder=new T.CylinderGeometry(1,1,1,8).toNonIndexed();
 const up=new T.Vector3(0,1,0),tmp=new T.Object3D(),vv=new T.Vector3(),nn=new T.Vector3();
 const mat3=new T.Matrix3();
 function texture(kind){
- const n=128,data=new Uint8Array(n*n*4),r=random(kind==='brick'?18273:93421);
+ // One small, shared, mipmapped map per surface. Macro stains and fine grain
+ // are baked once; weather never adds a per-frame shader-noise pass.
+ const n=128,data=new Uint8Array(n*n*4),r=random(({wood:93421,roof:39473,brick:18273,floor:81547,stone:22763})[kind]);
+ const TAU=Math.PI*2,columns=Array.from({length:n},()=>.78+r()*.22);
  for(let y=0;y<n;y++)for(let x=0;x<n;x++){
-  let v=.79+r()*.21;
-  if(kind==='wood')v*=.79+.21*Math.sin(x*.45+Math.sin(y*.12)*.42)**2;
-  if(kind==='roof')v*=.73+.27*Math.cos(x*Math.PI/8)**6;
-  if(kind==='brick'){const mortar=y%24<2||(x+(Math.floor(y/24)%2)*24)%48<2;v=mortar?.65:(.75+.25*r());}
-  let i=(y*n+x)*4;data[i]=255*v;data[i+1]=250*v;data[i+2]=238*v;data[i+3]=255;
+  const u=x/n,vv=y/n,a=TAU*u,b=TAU*vv;
+  const broad=.5+.22*Math.sin(a)+.17*Math.sin(b*2+a)+.11*Math.cos(a*3-b*2);
+  const grain=Math.sin(a*23+.72*Math.sin(b*2)+.27*Math.sin(a*3+b));
+  let value=.85+r()*.15,red=1,green=.98,blue=.93;
+  if(kind==='wood'||kind==='floor'){
+   const knot=Math.sin(a*7+Math.sin(b*2)*.9)*Math.sin(b*3);
+   value*=.83+.12*grain*grain+.05*broad;
+   value*=.92+.08*columns[x];
+   if(knot>.86)value*=.85;
+   // Fine longitudinal checks and pale fibres, rather than repeating dark bars.
+   if(grain<-.965&&Math.sin(b*5+a*2)>.20)value*=.64;
+   if(kind==='floor'){
+    const dust=.13+.16*broad;
+    value=value*(1-dust)+.81*dust;
+    // Four broad planks per repeat. Grain and joints share mip filtering, so
+    // their subpixel detail fades instead of shimmering as separate dark boxes.
+    const across=x%32;
+    if(across<2||across>30)value*=.49+.26*broad;
+    if((y+(Math.floor(x/32)%4)*32)%128<1)value*=.61;
+    green=.965;blue=.88;
+   }
+  }else if(kind==='roof'){
+   value*=.80+.16*Math.cos(a*8)**6+.04*broad;
+   const oxide=Math.max(0,broad-.48)*(.32+.68*columns[x]);
+   red=1;green=.99-oxide*.25;blue=.95-oxide*.42;
+  }else if(kind==='brick'){
+   const mortar=y%24<2||(x+(Math.floor(y/24)%2)*24)%48<2;
+   value=mortar?.57:.74+.20*r()+broad*.06;
+  }else{
+   value*=.72+.20*broad+.08*Math.sin(a*9+b*5)**2;
+   green=.975;blue=.89;
+  }
+  const i=(y*n+x)*4;data[i]=255*value*red;data[i+1]=255*value*green;data[i+2]=255*value*blue;data[i+3]=255;
  }
- const tex=new T.DataTexture(data,n,n);tex.wrapS=tex.wrapT=T.RepeatWrapping;tex.magFilter=T.NearestFilter;tex.minFilter=T.LinearMipmapLinearFilter;tex.generateMipmaps=true;tex.colorSpace=T.SRGBColorSpace;tex.needsUpdate=true;return tex;
+ const tex=new T.DataTexture(data,n,n);tex.wrapS=tex.wrapT=T.RepeatWrapping;tex.magFilter=T.LinearFilter;tex.minFilter=T.LinearMipmapLinearFilter;tex.anisotropy=4;tex.generateMipmaps=true;tex.colorSpace=T.SRGBColorSpace;tex.needsUpdate=true;return tex;
 }
-const woodTex=texture('wood'),roofTex=texture('roof'),brickTex=texture('brick');
-const shared=new Set([unitBox,barrelGeo,hoopGeo,stoneGeo,cylinder,woodTex,roofTex,brickTex]);
+const woodTex=texture('wood'),roofTex=texture('roof'),brickTex=texture('brick'),floorTex=texture('floor'),stoneTex=texture('stone');
+const shared=new Set([unitBox,floorSlabGeo,barrelGeo,hoopGeo,stoneGeo,cylinder,woodTex,roofTex,brickTex,floorTex,stoneTex]);
 function material(color,map=null){let m=new T.MeshStandardMaterial({color,map,vertexColors:true,roughness:1,side:T.DoubleSide});shared.add(m);return m;}
-const M={wood:material('#8a8270',woodTex),red:material('#863d31',woodTex),darkRed:material('#653c30',woodTex),dark:material('#4d493c',woodTex),trim:material('#c2c0a8',woodTex),brick:material('#956950',brickTex),brickDark:material('#71584b',brickTex),stone:material('#747264'),roof:material('#4c5350',roofTex),tin:material('#7b827a',roofTex),rust:material('#795b45',roofTex),black:material('#202e2a'),metal:material('#515950'),floor:material('#756f57',woodTex),hay:material('#92815a')};
+const M={wood:material('#938b7c',woodTex),red:material('#914e40',woodTex),darkRed:material('#72483d',woodTex),dark:material('#514b40',woodTex),trim:material('#bfbaa5',woodTex),brick:material('#956950',brickTex),brickDark:material('#71584b',brickTex),stone:material('#817b6c',stoneTex),roof:material('#4c5350',roofTex),tin:material('#7b827a',roofTex),rust:material('#795b45',roofTex),black:material('#202e2a'),metal:material('#515950'),floor:material('#867b61',floorTex),hay:material('#92815a')};
 export function isSharedBuildingResource(resource){return shared.has(resource);}
 
 // Every board, brace, shingle-course and prop is merged by material. Vertex
 // colour gives deterministic wear without one material or draw call per board.
 class Batch{
- constructor(r,weather){this.parts=new Map();this.r=r;this.weather=weather;this.boxes=0;}
+ constructor(r,weather){this.parts=new Map();this.r=r;this.weather=weather;this.boxes=0;this.halfWidth=0;this.halfDepth=0;}
  add(geo,mat,x,y,z,sx=1,sy=1,sz=1,rx=0,ry=0,rz=0,shade=null){
   tmp.position.set(x,y,z);tmp.rotation.set(rx,ry,rz);tmp.scale.set(sx,sy,sz);tmp.updateMatrix();this.matrix(geo,mat,tmp.matrix,shade);
  }
@@ -43,8 +82,24 @@ class Batch{
    vv.fromBufferAttribute(p,i).applyMatrix4(matrix);nn.fromBufferAttribute(n,i).applyNormalMatrix(mat3);
    a.p.push(vv.x,vv.y,vv.z);a.n.push(nn.x,nn.y,nn.z);
    let nx=Math.abs(nn.x),ny=Math.abs(nn.y),nz=Math.abs(nn.z);
-   if(ny>nx&&ny>nz)a.u.push(vv.x*.6,vv.z*.6);else if(nx>nz)a.u.push(vv.z*.6,vv.y*.6);else a.u.push(vv.x*.6,vv.y*.6);
-   a.c.push(shade0,shade0,shade0);
+   if(ny>nx&&ny>nz)a.u.push(mat===M.floor?(vv.x+this.halfWidth-.12)/1.2:vv.x*.6,vv.z*.6);else if(nx>nz)a.u.push(vv.z*.6,vv.y*.6);else a.u.push(vv.x*.6,vv.y*.6);
+   // Stable object-space weather: rain-darkened feet, sun-washed upper wood,
+   // and dust retained against walls. No random draws alter generation choices.
+   let red=shade0,green=shade0,blue=shade0;
+   if(mat.map===woodTex||mat.map===brickTex){
+    const basal=Math.max(0,1-Math.max(0,vv.y)/1.45);
+    const mottled=.89+.11*Math.sin(vv.x*.79+vv.z*.53+this.weather*5)**2;
+    const wear=mottled*(1-basal*(.16+this.weather*.09));
+    red*=wear;green*=wear*(1-basal*.035);blue*=wear*(1-basal*.085);
+   }
+   if((mat===M.floor||mat===M.stone)&&nn.y>.7&&vv.y<.04){
+    const edge=Math.min(this.halfWidth-Math.abs(vv.x),this.halfDepth-Math.abs(vv.z));
+    const corner=Math.max(0,1-edge/1.25);
+    const patch=.92+.10*Math.sin(vv.x*.93+this.weather*4)*Math.cos(vv.z*.66)+.06*Math.sin(vv.z*2.1+vv.x*.31);
+    const tone=patch*(1-corner*.12);
+    red*=tone;green*=tone*.963;blue*=tone*.864;
+   }
+   a.c.push(red,green,blue);
   }
  }
  box(mat,x,y,z,w,h,d,rx=0,ry=0,rz=0,shade=null){if(w<=.0001||h<=.0001||d<=.0001)return;this.boxes++;this.add(unitBox,mat,x,y,z,w,h,d,rx,ry,rz,shade);}
@@ -61,7 +116,7 @@ export function makeRuralBuilding(f,level=0){
  const y=f.buildingY??height(f.cx,f.cz,f.x,f.z),c=Math.cos(angle),sn=Math.sin(angle),isBrick=v===4;
  const wallMat=isBrick?(r()<.5?M.brick:M.brickDark):(v===2?M.red:v===3?(r()<.65?M.red:M.wood):v===6?M.darkRed:M.wood);
  const roofMat=r()<.2?M.rust:r()<.55?M.roof:M.tin,trim=(v===2||v===3||v===6)?M.trim:M.dark;
- const front=d/2,back=-d/2;
+ const front=d/2,back=-d/2,wallRuns=[],detailRandom=random((f.seed||1)^0x41c6f93b);b.halfWidth=w/2;b.halfDepth=d/2;
  function world(x,z){return{x:f.cx+s*(c*x+sn*z),z:f.cz+s*(-sn*x+c*z)};}
  function solid(x,z,hx,hz,localAngle=0){const p=world(x,z);colliders.push({kind:'obb',x:p.x,z:p.z,hx:hx*s,hz:hz*s,angle:angle+localAngle});}
  function block(mat,x,yy,z,ww,hh,dd,ry=0,collide=true){b.box(mat,x,yy,z,ww,hh,dd,0,ry);if(collide)solid(x,z,ww/2,dd/2,ry);}
@@ -70,7 +125,7 @@ export function makeRuralBuilding(f,level=0){
  function wall(axis,fixed,start,end,hh,openings=[],mat=wallMat,siding='vertical',base=0){
   const thickness=isBrick&&mat===wallMat?.27:.14;
   const doorIntervals=openings.filter(o=>o.bottom<.15).map(o=>[o.at-o.width/2,o.at+o.width/2]).sort((a,b)=>a[0]-b[0]);
-  let from=start;for(const [lo,hi]of [...doorIntervals,[end,end]]){if(lo>from&&base<.15){const mid=(from+lo)/2;if(axis==='z')solid(mid,fixed,(lo-from)/2,thickness/2);else solid(fixed,mid,thickness/2,(lo-from)/2);}from=Math.max(from,hi);}
+  let from=start;for(const [lo,hi]of [...doorIntervals,[end,end]]){if(lo>from&&base<.15){const mid=(from+lo)/2;if(axis==='z')solid(mid,fixed,(lo-from)/2,thickness/2);else solid(fixed,mid,thickness/2,(lo-from)/2);wallRuns.push({axis,fixed,start:from,end:lo,thickness});}from=Math.max(from,hi);}
   const xs=[start,end,...openings.flatMap(o=>[o.at-o.width/2,o.at+o.width/2]).filter(a=>a>start&&a<end)].sort((a,b)=>a-b);
   const ys=[base,hh,...openings.flatMap(o=>[o.bottom,o.bottom+o.height]).filter(a=>a>base&&a<hh)].sort((a,b)=>a-b);
   for(let xi=0;xi<xs.length-1;xi++)for(let yi=0;yi<ys.length-1;yi++){
@@ -97,8 +152,17 @@ export function makeRuralBuilding(f,level=0){
   else b.box(M.black,fixed-.025*Math.sign(fixed),o.bottom+o.height/2,o.at,.023,o.height-.07,o.width-.07,0,0,0,.94);
  }
  function floor(wood=true){
-  b.box(wood?M.floor:M.stone,0,-.07,0,w-.15,.14,d-.12);
-  if(wood)for(let xx=-w/2+.12;xx<w/2;xx+=.3)b.box(M.dark,xx,.006,0,.016,.008,d-.2,0,0,0,.86);
+  b.add(floorSlabGeo,wood?M.floor:M.stone,0,-.07,0,w-.15,.14,d-.12);
+  // Plank seams are baked into floorTex at their original 30 cm spacing.
+  // The old explicit-shade seam boxes consumed no generation random numbers.
+  // An inexpensive low grid lets corner grime and tracked dust vary across the
+  // floor; it is merged into its existing material draw. Floor height is intact.
+  const nx=Math.max(2,Math.ceil(w/1.7)),nz=Math.max(2,Math.ceil(d/1.7));
+  for(let iz=0;iz<nz;iz++)for(let ix=0;ix<nx;ix++){
+   const x0=-w/2+.078+(w-.156)*ix/nx,x1=-w/2+.078+(w-.156)*(ix+1)/nx;
+   const z0=back+.064+(d-.128)*iz/nz,z1=back+.064+(d-.128)*(iz+1)/nz;
+   b.polygon(wood?M.floor:M.stone,[[x0,.002,z0],[x0,.002,z1],[x1,.002,z1],[x1,.002,z0]],1);
+  }
  }
  function cornerPosts(){for(const xx of[-w/2,w/2])for(const zz of[back,front])b.box(trim,xx,h/2,zz,.18,h,.19);}
  function gableProfile(width,wallH,rise,mat=roofMat,roofDepth=d,z0=0){
@@ -129,6 +193,8 @@ export function makeRuralBuilding(f,level=0){
  }
  function roofBeamPosts(){for(let zz=back+.45;zz<=front-.45;zz+=3.0){for(const sign of[-1,1]){const xx=sign*(w/2-.25);b.box(M.dark,xx,h/2,zz,.19,h,.19);b.beam(M.dark,[xx,h-1,zz],[xx-sign*.8,h-.2,zz],.13);}}}
  function entrance(at,width,dh,zz=front,slide=true){
+  // Worn timber threshold reaches the graded earth; its top stays flush.
+  b.box(M.dark,at,-.050,zz+.12,width-.045,.105,.30,0,0,0,.96);
   for(const sign of[-1,1])b.box(trim,at+sign*(width/2+.06),dh/2,zz+.06,.15,dh,.19);
   b.box(trim,at,dh+.06,zz+.10,width+.3,.19,.20);
   const leaf=width/2;
@@ -142,7 +208,7 @@ export function makeRuralBuilding(f,level=0){
  }
  function doorPanel(x,yy,z,width,hh,yaw){
   const cc=Math.cos(yaw),ss=Math.sin(yaw);function pt(lx,ly,lz=0){return[x+cc*lx+ss*lz,yy+ly,z-ss*lx+cc*lz];}
-  for(let i=0;i<Math.ceil(width/.23);i++){let bw=width/Math.ceil(width/.23),p=pt(-width/2+(i+.5)*bw,0);b.box(wallMat,...p,bw-.012,hh,.1,0,yaw);}
+  for(let i=0;i<Math.ceil(width/.23);i++){let bw=width/Math.ceil(width/.23),p=pt(-width/2+(i+.5)*bw,0);b.box(isBrick?M.wood:wallMat,...p,bw-.012,hh,.1,0,yaw);}
   for(const dy of[-hh*.37,hh*.37]){let p=pt(0,dy,.072);b.box(trim,...p,width,.10,.055,0,yaw);}
   b.beam(trim,pt(-width*.44,-hh*.36,.09),pt(width*.44,hh*.36,.09),.065);
   if(width>1.2)b.beam(trim,pt(width*.44,-hh*.36,.09),pt(-width*.44,hh*.36,.09),.065);
@@ -209,6 +275,9 @@ export function makeRuralBuilding(f,level=0){
   for(const side of[-1,1])wall('x',side*w/2,back,front,h,[-5.6,-1.8,2.0,5.8].map(at=>({at,width:1.32,bottom:1.70,height:1.05})));
   cornerPosts();entrance(0,dw,dh);roofBeamPosts();const mw=4.5,mh=h+1.2;
   for(const side of[-1,1]){roofSegments([[side*w/2,h],[side*mw/2,h+.75]].sort((a,b)=>a[0]-b[0]),d+.8,roofMat);wall('x',side*mw/2,back,front,mh,[-5,0,5].map(at=>({at,width:2.0,bottom:h+.88,height:.22})),wallMat,'horizontal',h+.75);}
+  // Close the low wing gables below the monitor; these formerly admitted a
+  // broad wedge of sky above each front/back wall. Open doorways are unchanged.
+  for(const zz of[back,front])for(const side of[-1,1])b.polygon(wallMat,[[side*w/2,h,zz],[side*mw/2,h+.75,zz],[side*mw/2,h,zz]],.94);
   for(const zz of[back,front]){b.box(wallMat,0,h+.60,zz,mw,1.2,.14);smallVent(0,h+.64,zz+.12);}gableProfile(mw,mh,1.12,roofMat);b.box(trim,0,mh+.02,front,mw,.15,.20);
   // Six stalls with kick boards, open upper rails and solid partitions.
   for(const side of[-1,1])for(let zz=back+1.1;zz<front-2;zz+=3.55){
@@ -228,6 +297,52 @@ export function makeRuralBuilding(f,level=0){
  // Scars, repaired lower boards and irregular foot stones are seeded and sparse.
  if(!isBrick){for(let i=0;i<(v===1?8:14);i++){let zz=back+.2+r()*(d-.4),yy=.2+r()*Math.min(2,h-.3),side=r()<.5?-1:1;b.box(r()<.5?M.dark:wallMat,side*(w/2+.084),yy,zz,.018,.025+r()*.10,.25+r()*.3,0,0,0,.71+r()*.15);}}
  for(const xx of[-w/2+.18,w/2-.18])for(const zz of[back+.18,front-.18])b.add(stoneGeo,M.stone,xx,-.05,zz,.32,.16,.29,0,r()*6.28,0,.91);
+ // Restrained construction history, all inside the existing roof/door bounds.
+ // The independent detail seed preserves original variants, entrances, colliders,
+ // resource pickups, optional props and porch/lean-to decisions exactly.
+ for(const run of wallRuns){
+  const length=run.end-run.start,mid=(run.start+run.end)/2;
+  if(length<.20)continue;
+  const inward=run.fixed-Math.sign(run.fixed)*(run.thickness/2+.04);
+  if(!isBrick){
+   if(run.axis==='z')b.box(M.dark,mid,.091,inward,length,.12,.072,0,0,0,.82);
+   else b.box(M.dark,inward,.091,mid,.072,.12,length,0,0,0,.82);
+  }
+  // A shallow interrupted course grounds the existing raised timber floor.
+  // Foundation is visual only; stones never project past the old roof footprint.
+  const count=Math.max(1,Math.ceil(length/2.9)),unit=length/count;
+  for(let i=0;i<count;i++){
+   const at=run.start+(i+.5)*unit,gap=.025+detailRandom()*.036;
+   const hh=.16+detailRandom()*.065,yy=.023-hh/2;
+   const mat=M.stone,tone=.79+detailRandom()*.20;
+   if(run.axis==='z')b.box(mat,at,yy,run.fixed,unit-gap,hh,run.thickness+.14,0,0,0,tone);
+   else b.box(mat,run.fixed,yy,at,run.thickness+.14,hh,unit-gap,0,0,0,tone);
+  }
+ }
+ if(v!==1){
+  // A few iron repair straps on existing frame posts, with flat fastener heads.
+  // Faces stay flush; there are no new freestanding objects or collision volumes.
+  for(const side of[-1,1])for(const zz of[back+.45,Math.min(front-.45,back+3.45)]){
+   if(v===5||v===7)continue;
+   const xx=side*(w/2-.25),yy=Math.min(h-.38,2.65),face=zz+.104;
+   b.box(M.metal,xx,yy,face,.13,.23,.018,0,0,0,.70);
+   for(const dy of[-.066,.066])b.polygon(M.dark,[[xx-.013,yy+dy-.013,face+.011],[xx+.013,yy+dy-.013,face+.011],[xx+.013,yy+dy+.013,face+.011],[xx-.013,yy+dy+.013,face+.011]],.66);
+  }
+ }
+ // Long-grain scuffs and two old repair patches live on the inside side walls.
+ // They are surface planes: 24 triangles at most, merged with existing timber.
+ if(!isBrick){
+  for(const side of[-1,1]){
+   const face=side*(w/2-.079),length=Math.min(1.25,d*.18);
+   for(let i=0;i<3;i++){
+    const zz=back+.7+(d-1.4)*(i+.27)/3,yy=.28+detailRandom()*.61;
+    const low=yy-.013,high=yy+.014+detailRandom()*.018;
+    b.polygon(M.dark,[[face,low,zz-length/2],[face,high,zz-length*.34],[face,high,zz+length/2],[face,low,zz+length*.42]],.73+detailRandom()*.14);
+   }
+   const zz=back+d*(side<0?.30:.66),yy=.44+detailRandom()*.18;
+   b.box(M.wood,side*(w/2-.09),yy,zz,.032,.14,Math.min(.81,d*.24),0,0,0,.87);
+  }
+ }
  b.finish(group);group.position.set(f.cx,y+.035,f.cz);group.rotation.y=angle;group.scale.setScalar(s);group.name=`rural-${v}`;group.userData.ruralVariant=v;
  const bounds=new T.Box3();for(const mesh of group.children)bounds.union(mesh.geometry.boundingBox);
  const nearZ=v===1?.05:Math.min(1.5,d*.15),nearX=v===0?-1.15:0,p=world(nearX,nearZ);

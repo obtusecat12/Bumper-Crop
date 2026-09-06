@@ -1,6 +1,6 @@
-import {pondShapeGLSL} from './lake-shape.js?v=6';
+import {pondShapeGLSL} from './lake-shape.js?v=7';
 import * as T from './vendor/three.module.min.js';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=6';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=7';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -90,7 +90,33 @@ function groundMaterial(f){
    scuff=max(scuff,tracks.z*(.54+soilPatch*.35));
    base=mix(base,dirt,scuff);
    base=mix(base,dirt,rut);
-   if(uBuilding.w>.5){vec2 b=p-uBuilding.xy;float c=cos(uBuilding.z),s=sin(uBuilding.z);vec2 v=abs(vec2(c*b.x-s*b.y,s*b.x+c*b.y));float e=max(v.x-uSize.x,v.y-uSize.y);base=mix(dirt,base,smoothstep(1.3,3.5,e+(clods-.5)*.19));}
+// Irregular aged soil around the existing building footprint.
+// Uses its existing p,g,q,dirt,base,broad,soilPatch,clods,grain and uniforms.
+// The same terrain mesh and surfaceHeight remain authoritative: zero overlays,
+// zero geometry, zero draw calls, zero extra texture samples, zero new uniforms.
+if(uBuilding.w>.5){
+ vec2 b=p-uBuilding.xy;
+ float c=cos(uBuilding.z),s=sin(uBuilding.z);
+ vec2 local=vec2(c*b.x-s*b.y,s*b.x+c*b.y);
+ vec2 outside=abs(local)-uSize;
+ float e=length(max(outside,vec2(0.)))+min(max(outside.x,outside.y),0.);
+ // A broken yard edge varies over metres as well as centimetres. Its rounded
+ // corners and asymmetric patches avoid the former uniform rectangular halo.
+ float yardBreak=(soilPatch-.5)*1.60+(broad-.5)*1.20+(clods-.5)*.25;
+ yardBreak+=sin(local.x*.43+local.y*.27)*.20;
+ float yard=1.-smoothstep(.65,3.35,e+yardBreak);
+ vec3 yardDirt=dirt*(.94+soilPatch*.08);
+ // Exposed roof edges shed water into a narrow, incomplete darker drip zone.
+ float longSide=1.-smoothstep(uSize.y-.25,uSize.y+.42,abs(local.y));
+ float drip=(1.-smoothstep(.11,.48,abs(abs(local.x)-uSize.x-.39)))*longSide;
+ drip*=.16+.16*smoothstep(.28,.72,clods);
+ yardDirt*=1.-drip;
+ // Old compacted dust and fine pale fragments collect in the surrounding soil.
+ float dryDust=smoothstep(.50,.82,soilPatch)*(1.-smoothstep(.15,2.45,e));
+ yardDirt+=dryDust*vec3(.014,.012,.008)+grain*vec3(.004,.003,.002);
+ base=mix(base,yardDirt,yard);
+}
+
    if(uShore.w>.5){
     vec3 outside=base;vec4 shore=pondMetricsV6(p,uPond,uShore);float bank=shore.w;
     vec3 silt=mix(vec3(.105,.099,.077),vec3(.205,.199,.157),soilTone);
@@ -114,7 +140,7 @@ function groundMaterial(f){
    normal=normalize(max(abs(soilDet),.00000001)*normal-soilGradient);
   `);
  };
- m.customProgramCacheKey=()=> 'rural-ground-v6.1-low-dense-sward';
+ m.customProgramCacheKey=()=> 'rural-ground-v7-weathered-yards';
  return m;
 }
 function samples(step,edges){

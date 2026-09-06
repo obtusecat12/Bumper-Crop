@@ -131,3 +131,98 @@ median was about 0.028 ms in Node. These are CPU/geometry measurements, not
 browser FPS. Shared-edge heights match within 3.4e-14 m over 66,048 samples,
 including 6,450 pond edge samples. Large signed-coordinate nearest searches and
 dry landings pass. No browser frame-rate result is claimed.
+
+## V7 · preserve generated content, reduce hidden work
+
+The performance pass retains the V6 seed, complete field descriptors, road and
+lake shapes, all plant counts/transforms/colors, quality tiers, texture sizes,
+cloud sample counts and pixel-resolution rules. Building weathering and repaired
+power connections are the requested visual changes. No CRT overlay is added.
+
+- Near-ear vertices outside their original detail radius exit before normals,
+  wind and projection. Fully covered 6 m patches use an otherwise identical
+  opaque shader; fringe patches retain their original stochastic coverage.
+- Completely fogged opaque fragments keep their original depth and alpha-test
+  silhouettes, but skip surface/PBR shading whose final color is already the
+  fog color. Transparent water/glass/rain and the cloud shader retain their
+  original paths. Soil derivatives and fog-boundary alpha coverage were checked.
+- Optional F2 / frame-rate diagnostics expose local CPU submission time, GPU
+  elapsed time when the browser offers it, draws and triangle counts. Only one
+  asynchronous timer query may be pending; it is sampled once per 60 frames,
+  read only when available, and discarded after disjoint/context-loss events.
+  Diagnostics never change quality or send measurements anywhere.
+
+The cable graph now requires two real, dry-land support poles. Each endpoint
+uses its own pole's road offset and insulator height. Missing lake-bank poles
+terminate the line at the last actual support. Every traversed tile owns its
+clipped part of a span, with identical shared endpoints, so visible mid-span
+geometry no longer depends on a remote source tile. Three wires share one draw
+per tile. Field descriptors retain the original chunk seed and additionally
+carry the world seed for correct neighbor queries. The initial loading view now
+also keeps its fog cutoff inside the loaded footprint.
+
+Rural buildings gain weathered fibers and grain checks, dusty floor variation,
+localized lower-wall staining, interrupted foundation courses, flush worn
+thresholds, repair straps and flat fasteners. The surrounding soil has an
+irregular worn yard and broken roof-drip dampness. Existing variants, optional
+props, positions, entrances, pickups and collision layouts remain intact.
+Details use existing material batches and shared maps.
+
+Primary references reviewed for the V7 implementation:
+
+- [ARM: Early-Z](https://support.arm.com/documentation/102224/0200/Early-Z)
+- [ARM: alpha-test rendering](https://developer.arm.com/documentation/102471/latest/Profile-and-compare-transparency-implementations/Alpha-test)
+- [NVIDIA GPU Gems: countless blades of waving grass](https://developer.nvidia.com/gpugems/gpugems/part-i-natural-effects/chapter-7-rendering-countless-blades-waving-grass)
+- [NVIDIA GPU Gems 2: virtual botany](https://developer.nvidia.com/gpugems/gpugems2/part-i-geometric-complexity/chapter-1-toward-photorealism-virtual-botany)
+- [AMD GPUOpen: procedural grass](https://gpuopen.com/learn/mesh_shaders/mesh_shaders-procedural_grass_rendering/) (algorithm context; WebGL 2 does not expose these mesh shaders)
+- [MDN: WebGL best practices](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices)
+- [Khronos: asynchronous WebGL 2 GPU timers](https://registry.khronos.org/webgl/extensions/EXT_disjoint_timer_query_webgl2/)
+- [Three: InstancedMesh](https://threejs.org/docs/pages/InstancedMesh.html)
+- [NPS Preservation Brief 20: historic barns](https://www.nps.gov/orgs/1739/upload/preservation-brief-20-barns.pdf)
+- [Pennsylvania Historical and Museum Commission: barn types](https://www.pa.gov/agencies/phmc/historic-preservation/education-outreach/pennsylvania-agricultural-history-project/field-guide-agricultural-resources/barn-types)
+- [NPS Preservation Brief 47: historic building exteriors](https://www.nps.gov/orgs/1739/upload/preservation-brief-47-exteriors-small-medium-buildings.pdf)
+
+Validation is native model/worker/Canvas2D/GLES verification, not a browser FPS
+benchmark. 2,601 field descriptors match V6 exactly after excluding the new
+worldSeed metadata. Across three qualities and huge coordinates, 337,110 ear
+stems in 3,957 patches preserve all matrix/color/root/bounds bytes. Three native
+ear views compare 2,880,000 pixels with zero differences. Power-line tests pass
+28,577 assertions over four seeds, huge signed coordinates, 398 real connected
+spans, 142 missing-edge cases and 13 lake-removed poles. Worker transfer checks
+preserve every geometry attribute, instanced record, hierarchy, shader source,
+wind uniform binding and actual Canvas atlas pixel, including the new lines.
+
+V7 final integration adds cached eight-direction ordering inside each wheat-card
+InstancedMesh. The generation phase prepares eight small integer permutations;
+packing transfers their storage once. The render thread swaps whole matrix/color
+records, keeps original bounds/counts/materials, uses 7.5-degree hysteresis and a
+1 MiB per-frame upload budget. Stable-heading movement performs no order uploads.
+An explicit generation phase also supports the original staged fallback.
+
+Two 800x450 native card comparisons match all pixels. Successful alpha/depth
+samples fall from 308,330 to 87,412 in the initial view and 152,981 to 67,755 in
+the side view. These are overdraw opportunities, not total fragment invocations
+or a 56–72% FPS claim. Some mobile GPUs already have an order-independent
+[fragment prepass](https://developer.arm.com/community/arm-community-blogs/b/mobile-graphics-and-gaming-blog/posts/immortalis-g925-the-fragment-prepass);
+therefore no extra whole-scene depth prepass was added. Permutation checks cover
+240,000 paired records, camera-sector changes, bounded uploads and disposal.
+
+The fog shortcut passes nine native color/depth/coverage comparisons totaling
+2,160,000 pixels with no differences, including minified trilinear alpha textures
+and soil derivatives at fogFar. Actual integrated wire endpoints coincide with
+insulator mesh vertices, and LineSegments survive worker transport unchanged.
+Final building checks cover 96 seeded layouts: collisions, pickups, footprints
+and material draw counts are unchanged. Added model triangles range from 8 to
+638 for the sampled variants. Dusty floor grids replace the slab's hidden top;
+existing 30 cm floor seams move into the mipmapped map to avoid distant moire.
+Stable wing-wall gaps are closed, and brick-barn doors now use timber surfaces.
+Native exterior, interior, threshold and yard views use actual shared sRGB maps,
+trilinear mipmaps and anisotropy. Mild inherited raised-roof-seam aliasing remains
+consistent with the non-antialiased retro renderer. No browser FPS is claimed.
+
+Final integrated gates: all 19 application modules parse with consistent V7
+entry/worker imports; all 34 complete Three.js shader pairs compile and link.
+An actual generated-card packet test preserves transferred permutation-array
+identity and 46,024 paired records across eight headings, with zero stable-heading
+uploads and disposal cleanup. Resident worker, cancellation, shared-resource
+registration, fallback and compile-before-install checks pass.

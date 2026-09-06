@@ -242,6 +242,18 @@ const fogFragment = `
   }
 #endif`;
 
+// Fully fogged opaque fragments have the same final RGB regardless of their
+// PBR/soil calculations. Keep their original depth and silhouette, but bypass
+// that shading. Alpha-tested/dithered surfaces must run the original coverage
+// tests first. Transparent/custom materials retain their entire original path.
+const fullFogReturn = `
+#if defined(USE_FOG) && !defined(FOG_EXP2)
+  if (length(vLayerFogWorld - cameraPosition) >= fogFar) {
+    gl_FragColor = vec4(fogColor, 1.0);
+    return;
+  }
+#endif`;
+
 /** Install once, then call attach(newChunk.group) before rendering new chunks.
  * Existing onBeforeCompile and program cache keys are preserved. Supports
  * standard/basic/line materials and custom shaders using Three's fog chunks.
@@ -263,6 +275,14 @@ export function installLayeredFog({scene} = {}) {
     const compile = function(shader, renderer) {
       previous.call(this, shader, renderer);
       if (!shader.vertexShader.includes('#include <fog_vertex>') || !shader.fragmentShader.includes('#include <fog_fragment>')) return;
+      if (!material.transparent && !material.isShaderMaterial && material.opacity === 1 &&
+          !material.dithering && !material.alphaToCoverage && material.blending === T.NormalBlending) {
+        const coverage = material.alphaTest > 0 || material.alphaHash || /\bdiscard\b/.test(shader.fragmentShader);
+        const anchor = coverage ? '#include <alphahash_fragment>' : '#include <logdepthbuf_fragment>';
+        // Both anchors follow clipping and logarithmic-depth writes. The later
+        // one also follows map alpha, custom discard, alphaTest and alphaHash.
+        shader.fragmentShader = shader.fragmentShader.replace(anchor, anchor + fullFogReturn);
+      }
       Object.assign(shader.uniforms, uniforms);
       shader.vertexShader = shader.vertexShader.replace('#include <fog_pars_vertex>', fogVertexPars).replace('#include <fog_vertex>', fogVertex);
       shader.fragmentShader = shader.fragmentShader.replace('#include <fog_pars_fragment>', fogFragmentPars).replace('#include <fog_fragment>', fogFragment);
@@ -271,7 +291,7 @@ export function installLayeredFog({scene} = {}) {
     // stock/custom keys derive themselves from onBeforeCompile.toString().
     const key = previousKey.call(material);
     material.onBeforeCompile = compile;
-    material.customProgramCacheKey = function() {return key + '|layered-world-fog-v5';};
+    material.customProgramCacheKey = function() {return key + '|layered-world-fog-v7';};
     records.set(material, {previous, previousKey, compile});
     material.needsUpdate = true;
   }

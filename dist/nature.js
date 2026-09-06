@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {height} from './world.js?v=6';
+import {height} from './world.js?v=7';
 
 // Open-grown eastern/central US farm trees. The crown follows the woody branch
 // hierarchy; every foliage instance is a little open spray of individual leaves.
