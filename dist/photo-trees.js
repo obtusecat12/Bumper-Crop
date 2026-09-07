@@ -1,4 +1,5 @@
 import * as T from './vendor/three.module.min.js';
+import {attachRuralDetail} from './rural-textures.js?v=9';
 
 // Photo-specific Kephart Farm trees. Trunks and branch scaffolds are merged;
 // foliage is individual small leaves drawn into shared alpha-cut twig cards.
@@ -17,6 +18,7 @@ const profiles = {
 };
 const aliases = {green: 'broad', maple: 'broad', oak: 'broad', 'broad-green': 'broad', 'green-maple': 'broad', plum: 'burgundy', 'purple-maple': 'burgundy', 'burgundy-maple': 'burgundy', 'red-maple': 'burgundy', 'low-willow': 'orchard', 'low-orchard': 'orchard', willow: 'weeping', 'thin-willow': 'weeping', 'thin-weeping': 'weeping', pine: 'evergreen', spruce: 'evergreen', conifer: 'evergreen'};
 const barkMaterial = new T.MeshStandardMaterial({vertexColors: true, roughness: 1});
+attachRuralDetail(barkMaterial,'bark');
 barkMaterial.name = 'Photo trees / shared rough bark'; shared.add(barkMaterial);
 
 function random(seed) {
@@ -148,6 +150,7 @@ function materials(kind, wind) {
   const depth = new T.MeshDepthMaterial({map: texture, alphaTest, side: T.DoubleSide, depthPacking: T.RGBADepthPacking});
   const distance = new T.MeshDistanceMaterial({map: texture, alphaTest, side: T.DoubleSide});
   for (const m of [leaves, depth, distance]) {addWind(m, key, kind); shared.add(m);}
+  attachRuralDetail(leaves,kind==='weeping'?'fineleaf':'broadleaf');
   const result = {leaves, depth, distance}; map.set(kind, result); return result;
 }
 

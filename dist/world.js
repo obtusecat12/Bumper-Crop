@@ -1,5 +1,6 @@
-import {farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=8';
-import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=8';
+import {farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=9';
+import {createSettlementPlanner} from './rural-settlements.js?v=9';
+import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=9';
 export {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance};
 // Infinite signed BigInt cells with deterministic seed-based generation.
 export const CHUNK=64;
@@ -9,6 +10,7 @@ const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t)};
 export function stringSeed(value){let h=2166136261;for(const c of String(value))h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0}
 export function chunkSeed(x,z,seed){return stringSeed(`${seed}:${x}:${z}`)}
 export function random(seed){let a=seed>>>0;return()=>{a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+const settlements=createSettlementPlanner({chunkSeed,random,stringSeed});
 export function periodOrigin(index){return Number(mod(index,1024n))*CHUNK}
 export function height(x,z,cx=0n,cz=0n){const a=x+periodOrigin(cx),b=z+periodOrigin(cz),p=Math.PI*2/65536;return Math.sin(a*p*256)*.22+Math.cos(b*p*128)*.20+Math.sin((a+b)*p*64)*.27}
 const SIZES=[[7,9,3],[2.8,3.2,2.7],[12,17,4.9],[13,19,5.1],[11,15,4.3],[13,9,3.7],[13,18,3.8],[8,11,3.2]];
@@ -119,14 +121,14 @@ function lakeForTile(x,z,seed){
  }
  return null;
 }
-export function field(x,z,seed,withVegetation=true){const cs=chunkSeed(x,z,seed),r=random(cs^0x127abab),candidate=landmark(x,z,seed);let type=candidate.type;if(type==='building'&&!hasBuilding(x,z,seed,candidate.rank))type='wheat';const small=r()<.56,variant=small?[0,1,7][Math.floor(r()*3)]:[2,3,4,5,6][Math.floor(r()*5)],f={key:`${x},${z}`,x,z,type,variant,cx:18+r()*28,cz:18+r()*28,rx:7+r()**.65*13,rz:5+r()**.75*10,seed:cs,worldSeed:seed,tint:r(),trees:[],shrubs:[],angle:(r()-.5)*Math.PI,shorePhase:r()*6.283,shoreAmplitude:.045+r()*.065,hill:r(),depth:1+r()*1.7,buildingScale:.85+r()*.29};
+export function field(x,z,seed,withVegetation=true){const cs=chunkSeed(x,z,seed),r=random(cs^0x127abab),candidate=landmark(x,z,seed);let type=candidate.type;if(type==='building'&&!hasBuilding(x,z,seed,candidate.rank))type='wheat';const settlementAddition=type==='wheat'&&settlements.additionalBuilding(x,z,seed);if(settlementAddition)type='building';const small=r()<.56,variant=small?[0,1,7][Math.floor(r()*3)]:[2,3,4,5,6][Math.floor(r()*5)],f={key:`${x},${z}`,x,z,type,variant,cx:18+r()*28,cz:18+r()*28,rx:7+r()**.65*13,rz:5+r()**.75*10,seed:cs,worldSeed:seed,tint:r(),trees:[],shrubs:[],angle:(r()-.5)*Math.PI,shorePhase:r()*6.283,shoreAmplitude:.045+r()*.065,hill:r(),depth:1+r()*1.7,buildingScale:.85+r()*.29};
  f.roads=[lane('x',x,z,seed,0),lane('x',x+1n,z,seed,64),lane('z',z,x,seed,0),lane('z',z+1n,x,seed,64)];
  const lake=lakeForTile(x,z,seed);if(lake){Object.assign(f,lake);type=f.type='pond';}else if(type==='pond'){type=f.type='wheat';}
 
  f.farm=farmContext(x,z);
  if(f.farm&&type==='building'&&farmMask(f.cx+f.farm.x,f.cz+f.farm.z)>.4)type=f.type='wheat';
  if(type==='building'){if(x===0n&&z===0n){f.variant=2;f.cx=32;f.cz=27;f.buildingScale=.96}const endpoints=f.roads.filter(l=>l.enabled).map(l=>l.axis==='x'?{x:clamp(l.edge+laneOffset(l,f.cz),0,64),z:f.cz}:{x:f.cx,z:clamp(l.edge+laneOffset(l,f.cx),0,64)}).sort((a,b)=>Math.hypot(a.x-f.cx,a.z-f.cz)-Math.hypot(b.x-f.cx,b.z-f.cz));
- const target=x===0n&&z===0n?{x:0,z:29}:(endpoints[0]||{x:Math.max(4,f.cx-11),z:Math.min(60,f.cz+14)});f.buildingAngle=Math.atan2(target.x-f.cx,target.z-f.cz)+(r()-.5)*.45;if(x===0n&&z===0n)f.buildingAngle=-Math.PI*.45;const [w,d]=buildingSize(f),dist=d/2+3.1;f.buildingY=height(f.cx,f.cz,x,z)+.04;f.driveway={x1:f.cx+Math.sin(f.buildingAngle)*dist,z1:f.cz+Math.cos(f.buildingAngle)*dist,x2:target.x,z2:target.z}}
+ const target=x===0n&&z===0n?{x:0,z:29}:(endpoints[0]||{x:Math.max(4,f.cx-11),z:Math.min(60,f.cz+14)});const angleRandom=settlementAddition?random(settlements.hashBigInt(x,z,seed,'angle'))():r();f.buildingAngle=Math.atan2(target.x-f.cx,target.z-f.cz)+(angleRandom-.5)*.45;if(x===0n&&z===0n)f.buildingAngle=-Math.PI*.45;const [w,d]=buildingSize(f),dist=d/2+3.1;f.buildingY=height(f.cx,f.cz,x,z)+.04;f.driveway={x1:f.cx+Math.sin(f.buildingAngle)*dist,z1:f.cz+Math.cos(f.buildingAngle)*dist,x2:target.x,z2:target.z}}
  if(withVegetation){addVegetation(f,r);if(f.farm){f.trees=f.trees.filter(t=>farmMask(t.x+f.farm.x,t.z+f.farm.z)<.25);f.shrubs=f.shrubs.filter(t=>farmMask(t.x+f.farm.x,t.z+f.farm.z)<.25);vegetationCover(f)}}return f;
 }
 export function wheatAllowed(x,z,f){if(x<.3||z<.3||x>63.7||z>63.7||roadDistance(x,z,f)<2.05||inClearing(x,z,f))return false;for(const p of f.cover?.get(Math.floor(z/4)*17+Math.floor(x/4))||[])if(Math.hypot(x-p.x,z-p.z)<p.r)return false;return true}

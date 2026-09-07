@@ -1,10 +1,14 @@
-import {FARM,FARM_FOOTPRINTS,farmRoadWeight,farmFootprintDistance,farmMeadow} from './farm-layout.js?v=8';
-import {pondShapeGLSL} from './lake-shape.js?v=8';
+import {FARM,FARM_FOOTPRINTS,farmRoadWeight,farmFootprintDistance,farmMeadow} from './farm-layout.js?v=9';
+import {pondShapeGLSL} from './lake-shape.js?v=9';
 import * as T from './vendor/three.module.min.js';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=8';
+import {ruralTextures} from './rural-textures.js?v=9';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=9';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
+uniform sampler2D uRuralSoil;
+uniform sampler2D uRuralPath;
+uniform sampler2D uRuralTurf;
 uniform vec4 uLanes[4];
 uniform vec4 uDrive;
 uniform float uHasDrive;
@@ -63,6 +67,9 @@ ${pondShapeGLSL}
 function groundMaterial(f){
  const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1});
  m.onBeforeCompile=s=>{
+  s.uniforms.uRuralSoil={value:ruralTextures.soil};
+  s.uniforms.uRuralPath={value:ruralTextures.path};
+  s.uniforms.uRuralTurf={value:ruralTextures.turf};
   s.uniforms.uFarm={value:new T.Vector3(f.farm?.x||0,f.farm?.z||0,f.farm?1:0)};
   s.uniforms.uFarmBuildings={value:FARM_FOOTPRINTS.map(p=>new T.Vector4(p.x,p.z,p.angle,0))};
   s.uniforms.uFarmSizes={value:FARM_FOOTPRINTS.map(p=>new T.Vector2(p.hx,p.hz))};
@@ -101,6 +108,17 @@ function groundMaterial(f){
    grass*=.92+clods*.12+grain*.14;
    vec3 field=mix(vec3(.250,.198,.099),vec3(.374,.299,.157),.30+broad*.40+soilPatch*.20);
    field*=.94+clods*.10+grain*.13;
+   // Three resident albedo samples, shared across all streamed tiles. The
+   // authoritative rut mask still blends surfaces: no photographed road strips.
+   vec3 soilAlbedo=texture2D(uRuralSoil,q*.5).rgb;
+   vec3 pathAlbedo=texture2D(uRuralPath,q*.5).rgb;
+   vec3 turfAlbedo=texture2D(uRuralTurf,q*.5).rgb;
+   float soilDetail=dot(soilAlbedo,vec3(.2126,.7152,.0722));
+   float materialDetail=.30+.70*fineFade;
+   dirt=mix(dirt,mix(soilAlbedo,pathAlbedo,rut)*(.92+soilPatch*.16),.72*materialDetail);
+   grass*=mix(1.,clamp(.60+dot(turfAlbedo,vec3(.2126,.7152,.0722))*3.,.65,1.38),materialDetail);
+   grass=mix(grass,turfAlbedo,.22*materialDetail);
+   field*=mix(1.,clamp(.62+soilDetail*2.5,.68,1.35),materialDetail);
    float vergeBreak=(noise2(g*.5)-.5)*.63+(clods-.5)*.18;
    vec3 base=mix(grass,field,smoothstep(1.42,2.32,rd+vergeBreak));
    float scuff=(1.-smoothstep(.30,1.45,rd))*smoothstep(.57,.80,noise2(q*1.8))*.36;
@@ -155,7 +173,7 @@ if(uBuilding.w>.5){
   s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
    // Millimetre-scale soil relief, filtered away as a pixel covers more ground.
    // The visible wheel grooves remain the actual displaced terrain geometry.
-   float soilMicroHeight=(clods*.0024+grain*.0008)*fineFade;
+   float soilMicroHeight=(clods*.0024+grain*.0008+soilDetail*.0020)*fineFade;
    vec3 soilDx=dFdx(-vViewPosition),soilDy=dFdy(-vViewPosition);
    vec3 soilRx=cross(soilDy,normal),soilRy=cross(normal,soilDx);
    float soilDet=dot(soilDx,soilRx);
@@ -163,7 +181,7 @@ if(uBuilding.w>.5){
    normal=normalize(max(abs(soilDet),.00000001)*normal-soilGradient);
   `);
  };
- m.customProgramCacheKey=()=> 'rural-ground-v8-kephart';
+ m.customProgramCacheKey=()=> 'rural-ground-v9-generated';
  return m;
 }
 function samples(step,edges){
