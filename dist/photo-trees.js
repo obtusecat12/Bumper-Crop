@@ -1,5 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {attachRuralDetail} from './rural-textures.js?v=9';
+import {JoinedWood} from './joined-wood.js?v=10';
+import {attachRuralDetail} from './rural-textures.js?v=10';
 
 // Photo-specific Kephart Farm trees. Trunks and branch scaffolds are merged;
 // foliage is individual small leaves drawn into shared alpha-cut twig cards.
@@ -160,19 +161,15 @@ function createTemplate(kind, variant) {
   const positions = [], colors = [], sprays = [], branchColor = new T.Color(p.bark), color = new T.Color(p.color);
   let woodTriangles = 0;
   function triangle(a, b, c, tint) {for (const q of [a, b, c]) {positions.push(q.x, q.y, q.z); colors.push(tint.r, tint.g, tint.b);} woodTriangles++;}
-  function beam(a, b, ra, rb, sides = 5) {
-    const dir = b.clone().sub(a).normalize(), right = V().crossVectors(dir, Math.abs(dir.y) > .9 ? V(1, 0, 0) : UP).normalize(), front = V().crossVectors(dir, right).normalize();
-    for (let i = 0; i < sides; i++) {
-      const aa = i / sides * TAU, bb = (i + 1) / sides * TAU;
-      const n1 = right.clone().multiplyScalar(Math.cos(aa)).addScaledVector(front, Math.sin(aa)), n2 = right.clone().multiplyScalar(Math.cos(bb)).addScaledVector(front, Math.sin(bb));
-      const tint = branchColor.clone().multiplyScalar(.85 + r() * .25);
-      const a1 = a.clone().addScaledVector(n1, ra), a2 = a.clone().addScaledVector(n2, ra), b1 = b.clone().addScaledVector(n1, rb), b2 = b.clone().addScaledVector(n2, rb);
-      triangle(a1, a2, b1, tint); triangle(a2, b2, b1, tint);
-    }
+  const wood = new JoinedWood(triangle);
+  function faceTints(sides) {
+    // Keep exactly the original per-segment RNG draws in their original order:
+    // all later branch points, spray transforms and colours depend on them.
+    return Array.from({length: sides}, () => branchColor.clone().multiplyScalar(.85 + r() * .25));
   }
   function limb(a, b, ra, rb, sides = 5, sag = .05) {
     const mid = a.clone().lerp(b, .53).add(V((r() - .5) * .15, a.distanceTo(b) * sag, (r() - .5) * .15));
-    beam(a, mid, ra, ra * .49 + rb * .51, sides); beam(mid, b, ra * .49 + rb * .51, rb, sides);
+    wood.add([a, mid, b], [ra, ra * .49 + rb * .51, rb], sides, [faceTints(sides), faceTints(sides)]);
   }
   function spray(point, size = 1, direction = UP, shade = 1) {
     const quaternion = new T.Quaternion().setFromUnitVectors(UP, direction.clone().normalize());
@@ -272,6 +269,7 @@ function createTemplate(kind, variant) {
       spray(point, scale, direction, .83 + (point.y / h) * .22);
     }
   }
+  wood.finish();
   const geometry = new T.BufferGeometry();
   geometry.setAttribute('position', new T.Float32BufferAttribute(positions, 3));
   geometry.setAttribute('color', new T.Float32BufferAttribute(colors, 3));

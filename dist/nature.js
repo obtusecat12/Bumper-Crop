@@ -1,6 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {attachRuralDetail} from './rural-textures.js?v=9';
-import {height} from './world.js?v=9';
+import {attachRuralDetail} from './rural-textures.js?v=10';
+import {JoinedWood} from './joined-wood.js?v=10';
+import {height} from './world.js?v=10';
 
 // Open-grown eastern/central US farm trees. The crown follows the woody branch
 // hierarchy; every foliage instance is a little open spray of individual leaves.
@@ -94,18 +95,14 @@ function foliageGeometry(species,level,attached=false){
 class NatureBatch{
  constructor(level,wind){this.level=Math.max(0,Math.min(2,level|0));this.wind=wind;this.positions=[];this.colors=[];this.sprays=new Map();this.woodTriangles=0;this.tempColor=new T.Color();}
  triangle(a,b,c,color){for(const v of[a,b,c]){this.positions.push(v.x,v.y,v.z);this.colors.push(color.r,color.g,color.b)}this.woodTriangles++;}
- beam(a,b,ra,rb,tint,depth=0,phase=0,keepAtDistance=false){
+ beginWood(){this.wood=new JoinedWood((a,b,c,tint)=>this.triangle(a,b,c,tint));}
+ finishWood(){this.wood.finish();this.wood=null;}
+ beam(a,b,ra,rb,tint,depth=0,phase=0,keepAtDistance=false){this.path([a,b],[ra,rb],tint,depth,phase,keepAtDistance);}
+ path(points,radii,tint,depth=0,phase=0,keepAtDistance=false){
   if(!keepAtDistance&&((this.level===2&&depth>2)||(this.level===1&&depth>3)))return;
-  const axis=b.clone().sub(a),len=axis.length();if(len<.0001||ra<.0005)return;axis.divideScalar(len);
-  const side=V().crossVectors(axis,Math.abs(axis.y)>.9?V(1,0,0):UP).normalize(),front=V().crossVectors(axis,side).normalize();
-  const sides=depth<1?7:depth<3?5:3;
-  for(let i=0;i<sides;i++){
-   const t0=i/sides*TAU,t1=(i+1)/sides*TAU,rough=1+Math.sin(i*7.2+phase)*.08;
-   const n0=side.clone().multiplyScalar(Math.cos(t0)).addScaledVector(front,Math.sin(t0)),n1=side.clone().multiplyScalar(Math.cos(t1)).addScaledVector(front,Math.sin(t1));
-   const a0=a.clone().addScaledVector(n0,ra*rough),a1=a.clone().addScaledVector(n1,ra),b0=b.clone().addScaledVector(n0,rb),b1=b.clone().addScaledVector(n1,rb);
-   this.tempColor.copy(tint).multiplyScalar(.90+.12*(.5+.5*Math.sin(i*2.1+phase)));
-   this.triangle(a0,a1,b0,this.tempColor);this.triangle(a1,b1,b0,this.tempColor);
-  }
+  const sides=depth<1?7:depth<3?5:3,colors=[];
+  for(let i=0;i<sides;i++)colors.push(tint.clone().multiplyScalar(.90+.12*(.5+.5*Math.sin(i*2.1+phase))));
+  this.wood.add(points,radii,sides,points.slice(1).map(()=>colors),.08,phase);
  }
  spray(species,point,direction,size,shade,roll=0,attached=false){
   const q=new T.Quaternion().setFromUnitVectors(UP,direction.clone().normalize());q.multiply(new T.Quaternion().setFromAxisAngle(UP,roll));
@@ -135,12 +132,12 @@ function plantContext(batch,f,item,index,isShrub=false){
  const species=isShrub?Math.abs(item.variant|0)%4:Math.abs(item.variant|0)%6;
  const point=p=>V(item.x+(p.x*c+p.z*s)*scale,base+p.y*scale,item.z+(p.z*c-p.x*s)*scale);
  const dir=p=>V(p.x*c+p.z*s,p.y,p.z*c-p.x*s);
- const context={r,scale,species,point,dir,beam(a,b,ra,rb,depth=1,col=bark[species]){batch.beam(point(a),point(b),ra*scale,rb*scale,col,depth,index*.81,isShrub&&depth<=3)},spray(p,d,size=1,leafSpecies=species,wide=1){const variation=.92+r()*.18;batch.spray(leafSpecies,point(p),dir(d),V(size*scale*wide,size*scale,size*scale),variation,r()*TAU,isShrub)}};
+ const context={r,scale,species,point,dir,path(points,radii,depth=1,col=bark[species]){batch.path(points.map(point),radii.map(x=>x*scale),col,depth,index*.81,isShrub&&depth<=3)},beam(a,b,ra,rb,depth=1,col=bark[species]){batch.beam(point(a),point(b),ra*scale,rb*scale,col,depth,index*.81,isShrub&&depth<=3)},spray(p,d,size=1,leafSpecies=species,wide=1){const variation=.92+r()*.18;batch.spray(leafSpecies,point(p),dir(d),V(size*scale*wide,size*scale,size*scale),variation,r()*TAU,isShrub)}};
  context.limb=(a,b,ra,rb,depth=1,col=bark[species],bend=.12)=>{
   const delta=b.clone().sub(a),len=delta.length(),side=V(-delta.z,0,delta.x).normalize(),sway=(r()-.5)*bend*len;
   const m1=a.clone().lerp(b,.31).addScaledVector(side,sway).add(V(0,len*bend*(.10+r()*.20),0));
   const m2=a.clone().lerp(b,.68).addScaledVector(side,sway*.65).add(V(0,len*bend*(.18+r()*.28),0));
-  context.beam(a,m1,ra,ra+(rb-ra)*.31,depth,col);context.beam(m1,m2,ra+(rb-ra)*.31,ra+(rb-ra)*.68,depth,col);context.beam(m2,b,ra+(rb-ra)*.68,rb,depth,col);
+  context.path([a,m1,m2,b],[ra,ra+(rb-ra)*.31,ra+(rb-ra)*.68,rb],depth,col);
  };
  context.twig=(a,b,size=1,leafSpecies=species,wide=1)=>{context.limb(a,b,.022,.005,3,species===4?bark[2]:bark[species],.18);const d=b.clone().sub(a).normalize(),lift=d.clone().add(V((r()-.5)*.22,.20,(r()-.5)*.22)).normalize();context.spray(a.clone().lerp(b,.27),lift,size,leafSpecies,wide);context.spray(b.clone().addScaledVector(d,-.19),d,size*.92,leafSpecies,wide)};
  return context;
@@ -154,7 +151,7 @@ function forkTwig(c,start,end,spread,size=1,leafSpecies=c.species,wide=1){
  }
 }
 function trunkSpine(c,points,radii){
- for(let i=0;i<points.length-1;i++)c.beam(points[i],points[i+1],radii[i],radii[i+1],0);
+ c.path(points,radii,0);
  return y=>{for(let i=0;i<points.length-1;i++)if(y<=points[i+1].y)return points[i].clone().lerp(points[i+1],Math.max(0,(y-points[i].y)/(points[i+1].y-points[i].y)));return points[points.length-1].clone()};
 }
 function tree(batch,f,t,i,colliders){
@@ -280,8 +277,8 @@ function shrub(batch,f,s,i,colliders,softVolumes){
 
 export function makeNature(f,level=0,wind=fallbackWind){
  const batch=new NatureBatch(level,wind),colliders=[],softVolumes=[];
- (f.trees||[]).forEach((t,i)=>tree(batch,f,t,i,colliders));
- (f.shrubs||[]).forEach((s,i)=>shrub(batch,f,s,i,colliders,softVolumes));
+ (f.trees||[]).forEach((t,i)=>{batch.beginWood();tree(batch,f,t,i,colliders);batch.finishWood()});
+ (f.shrubs||[]).forEach((s,i)=>{batch.beginWood();shrub(batch,f,s,i,colliders,softVolumes);batch.finishWood()});
  const group=batch.finish();group.userData.natureStats.trees=(f.trees||[]).length;group.userData.natureStats.shrubs=(f.shrubs||[]).length;
  return {group,colliders,softVolumes};
 }
