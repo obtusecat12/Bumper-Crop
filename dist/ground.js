@@ -1,8 +1,8 @@
-import {FARM,FARM_FOOTPRINTS,farmRoadWeight,farmFootprintDistance,farmMeadow} from './farm-layout.js?v=10';
-import {pondShapeGLSL} from './lake-shape.js?v=10';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance,farmMeadow} from './farm-layout.js?v=11';
+import {pondShapeGLSL} from './lake-shape.js?v=11';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=10';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=10';
+import {ruralTextures} from './rural-textures.js?v=11';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=11';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -20,9 +20,9 @@ uniform vec2 uWorldOffset;
 uniform vec3 uFarm;
 uniform vec4 uFarmBuildings[6];
 uniform vec2 uFarmSizes[6];
+${FARM_MASK_GLSL}
 float farmRoadMask(vec2 p){
- if(uFarm.z<.5)return 1.;vec2 q=p+uFarm.xy;
- float mainRegion=min(min(q.x+138.,480.-q.x),min(q.y+62.,360.-q.y));float background=min(min(q.x+10.,42.-q.x),min(q.y+170.,-45.-q.y));return 1.-smoothstep(0.,18.,max(mainRegion,background));
+ if(uFarm.z<.5)return 1.;return 1.-farmMaskAt(p+uFarm.xy);
 }
 float farmYard(vec2 p){
  float dist=10000.;vec2 q=p+uFarm.xy;

@@ -24,7 +24,29 @@ export function farmContext(cx,cz){
  if(cx<0n||cx>9n||cz< -2n||cz>7n)return null;
  return {x:Number(cx)*64-FARM.x,z:Number(cz)*64-FARM.z};
 }
-export function farmMask(x,z){const main=Math.min(x-FARM.minX,FARM.maxX-x,z-FARM.minZ,FARM.maxZ-z),background=Math.min(x+10,42-x,z+170,-45-z);return smooth(0,18,Math.max(main,background))}
+// Keep the authored farm grounds and the two photo sightlines clear. The broad
+// FARM bounds identify eligible tiles; they must not erase whole nearby fields.
+const FARM_MASK_GROUNDS=[-72,55,-64,104],FARM_MASK_BACKGROUND=[-10,42,-170,-45];
+const FARM_MASK_FEATHER=18,FARM_SIGHTLINE_PADDING=24;
+const farmRectangleDepth=(x,z,b)=>Math.min(x-b[0],b[1]-x,z-b[2],b[3]-z);
+export function farmMask(x,z){
+ const original=smooth(0,FARM_MASK_FEATHER,Math.max(Math.min(x-FARM.minX,FARM.maxX-x,z-FARM.minZ,FARM.maxZ-z),farmRectangleDepth(x,z,FARM_MASK_BACKGROUND)));
+ if(original===0)return 0;
+ const grounds=farmRectangleDepth(x,z,FARM_MASK_GROUNDS);
+ const background=farmRectangleDepth(x,z,FARM_MASK_BACKGROUND);
+ let protectedDepth=Math.max(grounds,background);
+ if(protectedDepth>=FARM_MASK_FEATHER)return original;
+ for(const view of FARM_SIGHTLINES){
+  const px=x-view.x,pz=z-view.z,along=px*view.dx+pz*view.dz,across=Math.abs(px*view.dz-pz*view.dx);
+  // The reference camera uses a 3:2 source frame; retain a 24 m envelope so
+  // mature crowns just outside either frame cannot enter the photographed view.
+  const halfWidth=Math.max(0,along)*view.spread;
+  const sightline=Math.min(along+FARM_MASK_FEATHER,view.range+FARM_SIGHTLINE_PADDING-along,halfWidth+FARM_SIGHTLINE_PADDING-across);
+  protectedDepth=Math.max(protectedDepth,sightline);
+ }
+ // Intersect the old mask: never suppress existing content outside it.
+ return Math.min(original,smooth(0,FARM_MASK_FEATHER,protectedDepth));
+}
 export function farmRoadWeight(x,z,f){return f?.farm?1-farmMask(x+f.farm.x,z+f.farm.z):1}
 export function farmFootprintDistance(x,z,f){
  if(!f?.farm)return 1e4;x+=f.farm.x;z+=f.farm.z;let result=1e4;
@@ -56,3 +78,28 @@ export function farmExcludesLake(lake){
  const x=Number(lake.lakeOwnerX)*64+lake.lakeLocalX-FARM.x,z=Number(lake.lakeOwnerZ)*64+lake.lakeLocalZ-FARM.z,b=lake.bounds;
  return x+b[1]>FARM.minX&&x+b[0]<FARM.maxX&&z+b[3]>FARM.minZ&&z+b[2]<FARM.maxZ;
 }
+
+// Precompute the two directions once; farmMask is sampled for every wheat stem.
+const FARM_SIGHTLINES=Object.values(FARM_VIEWS).map(view=>{
+ const dx=view.focusX-view.x,dz=view.focusZ-view.z,len=Math.hypot(dx,dz);
+ return {x:view.x,z:view.z,dx:dx/len,dz:dz/len,spread:Math.tan(view.fov*Math.PI/360)*1.5,range:view.range};
+});
+
+// Ground shading and procedural generation share every bound and camera value.
+// Emit scalar GLSL once so the per-fragment path never needs an array or loop.
+const farmGLSLNumber=n=>Number.isInteger(n)?n+'.0':String(n);
+const farmRectangleGLSL=b=>`min(min(q.x-(${farmGLSLNumber(b[0])}),${farmGLSLNumber(b[1])}-q.x),min(q.y-(${farmGLSLNumber(b[2])}),${farmGLSLNumber(b[3])}-q.y))`;
+export const FARM_MASK_GLSL=`float farmMaskAt(vec2 q){
+ float background=${farmRectangleGLSL(FARM_MASK_BACKGROUND)};
+ float original=smoothstep(0.0,${farmGLSLNumber(FARM_MASK_FEATHER)},max(${farmRectangleGLSL([FARM.minX,FARM.maxX,FARM.minZ,FARM.maxZ])},background));
+ if(original==0.0)return 0.0;
+ float protectedDepth=max(${farmRectangleGLSL(FARM_MASK_GROUNDS)},background);
+ ${FARM_SIGHTLINES.map((view,i)=>{
+  const n=farmGLSLNumber;
+  return `float px${i}=q.x-(${n(view.x)}),pz${i}=q.y-(${n(view.z)});
+ float along${i}=px${i}*${n(view.dx)}+pz${i}*${n(view.dz)};
+ float across${i}=abs(px${i}*${n(view.dz)}-pz${i}*${n(view.dx)});
+ protectedDepth=max(protectedDepth,min(min(along${i}+${n(FARM_MASK_FEATHER)},${n(view.range+FARM_SIGHTLINE_PADDING)}-along${i}),max(0.0,along${i})*${n(view.spread)}+${n(FARM_SIGHTLINE_PADDING)}-across${i}));`;
+ }).join('\n ')}
+ return min(original,smoothstep(0.0,${farmGLSLNumber(FARM_MASK_FEATHER)},protectedDepth));
+}`;

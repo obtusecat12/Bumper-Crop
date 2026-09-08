@@ -1,14 +1,15 @@
-import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=10';
-import {createCardOrderController} from './instance-order.js?v=10';
-import {createPerformanceMeter} from './performance-meter.js?v=10';
-import {createChunkStream} from './world-stream.js?v=10';
+import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=11';
+import {createCardOrderController} from './instance-order.js?v=11';
+import {createPerformanceMeter} from './performance-meter.js?v=11';
+import {createChunkStream} from './world-stream.js?v=11';
 import * as T from './vendor/three.module.min.js';
-import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=10';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=10';
-import {createWheatDetailLayer} from './dense-wheat.js?v=10';
-import {createAtmosphere} from './atmosphere.js?v=10';
-import {findNearestLandmark,findSafeLanding,applyTeleport} from './developer-tools.js?v=10';
-import {initializeRuralTextures} from './rural-textures.js?v=10';
+import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=11';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=11';
+import {createWheatDetailLayer} from './dense-wheat.js?v=11';
+import {createAtmosphere} from './atmosphere.js?v=11';
+import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=11';
+import {initializeRuralTextures} from './rural-textures.js?v=11';
+import {createNavigationMap} from './map-ui.js?v=11';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -22,7 +23,7 @@ game.innerHTML=`
 </main>
 <div class="hud" id="hud" hidden><div class="hud-top"><div><div class="hud-title">LEVEL 10 <span style="opacity:.5">/</span> 丰裕</div><div class="hud-sub" id="location">泥土小径</div></div><div class="compass"><div>· &nbsp; · &nbsp; ▾ &nbsp; · &nbsp; ·</div><b id="bearing">N &nbsp; 000°</b></div><div class="hud-right"><button id="pause-button" aria-label="暂停游戏">ESC 暂停</button><div class="hud-sub" id="weather-label">阴天 · 风速 2.4 m/s</div><span id="fps" class="fps" hidden></span><button id="developer-button" class="developer-hud" hidden>F2 开发者</button></div></div>
  <div class="crosshair"></div><div class="interact" id="interact" hidden></div><div class="toast" id="toast" role="status"></div>
- <div class="hud-bottom"><div class="stats"><div><div class="stat-label">体力</div><div class="stat-line"><div class="bar"><i id="stamina" style="width:100%"></i></div></div></div><div><div class="stat-label">水分</div><div class="stat-line"><div class="bar"><i id="hydration" style="width:100%"></i></div></div></div><div><div class="stat-label">杏仁水</div><div class="stat-line inventory"><span class="bottle-icon"></span><span id="bottle-count">00</span></div></div></div><div class="key-hints">E 拾取　 Q 饮用　 J 档案</div></div></div>
+ <div class="hud-bottom"><div class="stats"><div><div class="stat-label">体力</div><div class="stat-line"><div class="bar"><i id="stamina" style="width:100%"></i></div></div></div><div><div class="stat-label">水分</div><div class="stat-line"><div class="bar"><i id="hydration" style="width:100%"></i></div></div></div><div><div class="stat-label">杏仁水</div><div class="stat-line inventory"><span class="bottle-icon"></span><span id="bottle-count">00</span></div></div></div><div class="key-hints">E 拾取　 Q 饮用　 F 地图　 J 档案</div></div></div>
 <div class="touch-ui" id="touch" hidden><div class="joystick" id="joystick"><div class="stick" id="stick"></div></div><div class="touch-actions"><button id="touch-run" aria-label="奔跑">跑</button><button id="touch-jump" aria-label="跳跃">跃</button><button id="touch-use" aria-label="拾取">E</button><button id="touch-drink" aria-label="饮水">Q</button></div></div>
 <div class="modal" id="settings" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden><div class="panel"><div class="panel-header"><h2 id="settings-title">画面与声音</h2><button class="close" data-close aria-label="关闭">×</button></div>
  <label class="setting"><span>画面质量<small>控制麦田细节与远景密度</small></span><select id="quality"><option value="high">精细</option><option value="balanced">均衡 · 推荐</option><option value="low">流畅</option></select></label>
@@ -36,9 +37,9 @@ game.innerHTML=`
  <div class="panel-note">画面会根据运行速度自动调整分辨率。所有画质均保留碰撞与无限地图。设置保存在当前浏览器。</div>
 </div></div>
 <div class="modal" id="journal" role="dialog" aria-modal="true" aria-labelledby="journal-title" hidden><div class="panel"><div class="panel-header"><h2 id="journal-title">层级档案 / 010</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="journal-meta">M.E.G. FIELD NOTES · 丰裕</div><div class="journal-body"><p><strong>你正站在一片没有尽头的麦田。</strong><br>树木与高度近似的灌木将麦田分割成小块。天空始终阴沉，偶有短暂细雨与雾气，白昼从未结束。</p><p>沿着两条轮胎碾痕前行。中间的草仍在生长，但车辙里的种子永远不会发芽。这里没有被发现过的车辆。</p><p>低地的湖水清澈，带有泥土的气味。靠近湖岸时，可按 <strong>E</strong> 饮水。</p><p>谷仓、马厩和木棚大多空无一人。里面偶尔能找到木料、钉子和遗落的杏仁水。拾起杏仁水后，按 <strong>Q</strong> 饮用。</p><p>麦丛会拖慢脚步。回到小径可以更快前进。没有任务期限，沿着风走下去。</p><p>出生点东北侧有一处固定农场。按 <strong>F2</strong> 可前往两处照片机位；移动或环顾即可恢复探索镜头。</p><p class="reference-credit">农场影像参考：Edmund Garman，<a href="https://www.flickr.com/photos/3cl/3718833796" target="_blank" rel="noopener noreferrer">Kephart Farm</a> / <a href="https://www.flickr.com/photos/3cl/3719218226" target="_blank" rel="noopener noreferrer">Kephart Farm 2</a>，2009，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。场景为依据照片重新制作的三维重建。</p></div><div class="panel-note" id="expedition">尚未开始探索。</div></div></div>
-<div class="modal" id="controls" role="dialog" aria-modal="true" aria-labelledby="controls-title" hidden><div class="panel"><div class="panel-header"><h2 id="controls-title">操作指南</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="controls-list"><div><span class="key">W A S D</span>移动</div><div><span class="key">鼠标</span>环顾四周</div><div><span class="key">SHIFT</span>按住奔跑</div><div><span class="key">SPACE</span>跳跃</div><div><span class="key">C</span>按住蹲下</div><div><span class="key">E</span>拾取 / 湖边饮水</div><div><span class="key">Q</span>饮用杏仁水</div><div><span class="key">J</span>层级档案</div><div><span class="key">ESC</span>暂停 / 释放鼠标</div><div><span class="key">F</span>切换全屏</div><div><span class="key">F2</span>开发者传送</div></div><div class="panel-note">点击「进入麦田」后即可用鼠标观察。若浏览器不允许锁定鼠标，按住鼠标拖动也可以环顾。触屏设备使用左侧摇杆移动、右侧滑动观察。</div></div></div>`;
+<div class="modal" id="controls" role="dialog" aria-modal="true" aria-labelledby="controls-title" hidden><div class="panel"><div class="panel-header"><h2 id="controls-title">操作指南</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="controls-list"><div><span class="key">W A S D</span>移动</div><div><span class="key">鼠标</span>环顾四周</div><div><span class="key">SHIFT</span>按住奔跑</div><div><span class="key">SPACE</span>跳跃</div><div><span class="key">C</span>按住蹲下</div><div><span class="key">E</span>拾取 / 湖边饮水</div><div><span class="key">Q</span>饮用杏仁水</div><div><span class="key">J</span>层级档案</div><div><span class="key">ESC</span>暂停 / 释放鼠标</div><div><span class="key">F</span>地图 / 点击传送</div><div><span class="key">F10</span>切换全屏</div><div><span class="key">F2</span>开发者传送</div></div><div class="panel-note">点击「进入麦田」后即可用鼠标观察。若浏览器不允许锁定鼠标，按住鼠标拖动也可以环顾。触屏设备使用左侧摇杆移动、右侧滑动观察。</div></div></div>`;
 
-game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V10</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
+game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V11</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
 
 const touchDevice=matchMedia('(pointer:coarse)').matches;
 document.body.classList.toggle('touch-mode',touchDevice);
@@ -62,8 +63,9 @@ const state={cx:0n,cz:0n,x:.6,z:52,y:0,yaw:-.37,pitch:-.025,velocity:new T.Vecto
 const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),chunks=new Map(),collected=new Set();
 const wheatView={value:new T.Vector3()},chunkStream=createChunkStream({wind,viewUniform:wheatView});
 let queue=[],activeBuild=null,playing=false,started=false,ready=false,lastFrame=performance.now(),time=0,uiTick=0,step=0,footTimer=0,toastTimer,activeModal=null,lastFocus=null,hadMovement=false,lastWeather='',qualityTimer=0,frameCount=0,frameTime=0,fps=60,autoScale=1,contextLost=false,streamFailed=false;
-let developerSearch=null,teleportJob=null,coverageRadius=0,referenceView=null;
+let developerSearch=null,teleportJob=null,coverageRadius=0,referenceView=null,mapWasPlaying=false;
 let interaction=null;const keys=new Set(),joy={x:0,z:0};let touchRun=false,mouseDragging=false;
+const navigationMap=createNavigationMap({host:game,seed,onOpen:toggleMap,onClose:()=>closeModal(),onTeleport:teleportFromMap});
 const radius=()=>settings.quality==='low'?2:3;
 function chunkLevel(dx,dz){const d=Math.max(Math.abs(dx),Math.abs(dz));return d<=1?0:d<=2?1:2}
 function updateQueue(){
@@ -139,8 +141,10 @@ function start(){if(!ready||teleportJob||developerSearch)return;setPlay(true);if
 $('#start').onclick=start;$('#pause-button').onclick=()=>setPlay(false);
 document.addEventListener('pointerlockchange',()=>{if(!document.pointerLockElement&&playing&&!touchDevice&&!activeModal){setPlay(false)}});
 document.addEventListener('pointerlockerror',()=>{if(playing)toast('按住鼠标拖动环顾，W A S D 移动。')});
-function openModal(id){if(activeModal)activeModal.hidden=true;lastFocus=document.activeElement;if(playing)setPlay(false);activeModal=$('#'+id);activeModal.hidden=false;if(id==='developer'){settings.devMode=true;$('#devMode').checked=true;$('#developer-button').hidden=false;savePreferences();updateDeveloperCoordinates();}if(id==='journal')$('#expedition').textContent=started?`已探索 ${Math.round(state.distance)} 米 · ${Math.floor(state.elapsed/60)} 分钟 · 杏仁水 ${state.bottles} 瓶`:'尚未开始探索。';activeModal.querySelector('button,select,input')?.focus()}
-function closeModal(){if(!activeModal||teleportJob)return;if(developerSearch){developerSearch.return();developerSearch=null;developerBusy(false);$('#developer-status').textContent='已取消搜索。';}activeModal.hidden=true;activeModal=null;lastFocus?.focus()}
+function openModal(id){if(navigationMap.isOpen)navigationMap.hide();if(activeModal)activeModal.hidden=true;lastFocus=document.activeElement;if(playing)setPlay(false);activeModal=$('#'+id);activeModal.hidden=false;if(id==='world-map')navigationMap.show(state);if(id==='developer'){settings.devMode=true;$('#devMode').checked=true;$('#developer-button').hidden=false;savePreferences();updateDeveloperCoordinates();}if(id==='journal')$('#expedition').textContent=started?`已探索 ${Math.round(state.distance)} 米 · ${Math.floor(state.elapsed/60)} 分钟 · 杏仁水 ${state.bottles} 瓶`:'尚未开始探索。';activeModal.querySelector('button,select,input')?.focus()}
+function closeModal(resume=true){if(!activeModal||teleportJob)return;const wasMap=activeModal.id==='world-map';if(developerSearch){developerSearch.return();developerSearch=null;developerBusy(false);$('#developer-status').textContent='已取消搜索。';}if(wasMap)navigationMap.hide();activeModal.hidden=true;activeModal=null;lastFocus?.focus();if(wasMap&&resume&&mapWasPlaying&&ready)start();}
+function toggleMap(){if(teleportJob||developerSearch||!ready)return;if(activeModal?.id==='world-map'){closeModal();return;}if(activeModal)return;mapWasPlaying=playing;openModal('world-map');}
+function teleportFromMap(point){if(teleportJob||developerSearch)return;if(streamFailed){navigationMap.setStatus('场景加载失败，请刷新后重试。');return;}try{const target=createMapTarget(point,seed);if(!target){navigationMap.setStatus('附近没有可用落点，请点击另一处地面。');return;}beginTeleport(target);}catch(error){console.error('Map destination failed',error);navigationMap.setBusy(false,'无法准备此处落点，请选择另一处地面。');}}
 $('#open-developer').onclick=()=>openModal('developer');$('#developer-button').onclick=()=>openModal('developer');
 $('#open-settings').onclick=()=>openModal('settings');$('#open-journal').onclick=()=>openModal('journal');$('#open-controls').onclick=()=>openModal('controls');document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal);document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal()}));
 for(const key of Object.keys(settings)){const el=$('#'+key);if(!el)continue;if(el.type==='checkbox')el.checked=Boolean(settings[key]);else el.value=settings[key];el.addEventListener('input',()=>{settings[key]=el.type==='checkbox'?el.checked:el.type==='range'?Number(el.value):el.value;try{localStorage.setItem('level10.preferences.v1',JSON.stringify(settings))}catch{}if(key==='quality'){autoScale=1;updateQueue()}if(key==='fov')leaveReferenceView();if(['quality','retro','fov'].includes(key))resize();if(key==='volume')audio.setVolume();if(key==='devMode')$('#developer-button').hidden=!settings.devMode;$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;})}$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;$('#developer-button').hidden=!settings.devMode;
@@ -154,6 +158,7 @@ function updateDeveloperCoordinates(){
  if(teleportJob){const total=(radius()*2+1)**2;$('#developer-status').textContent=`正在准备${teleportJob.target.label} · ${Math.min(100,Math.round(chunks.size/total*100))}%`;}
 }
 function developerBusy(value){
+ navigationMap.setBusy(value,value?'正在准备目的地，抵达后继续探索。':undefined);
  document.querySelectorAll('[data-teleport]').forEach(button=>button.disabled=value);
  $('#developer').setAttribute('aria-busy',String(value));
  $('#developer [data-close]').disabled=!!teleportJob;if(teleportJob)$('#developer .panel').focus();
@@ -193,7 +198,7 @@ function advanceDeveloperSearch(){
 }
 function completeTeleport(){
  if(!teleportJob||queue.length||activeBuild||!neighbourhoodReady())return;
- const job=teleportJob,landing=job.restoring?job.previous:findSafeLanding(job.target,currentChunk().colliders);
+ const job=teleportJob,landing=job.restoring?job.previous:findSafeLanding(job.target,teleportColliders());
  if(!landing){
   referenceView=job.previousReference;resize();applyTeleport(state,job.previous);job.restoring=true;job.target={...job.target,label:'原位置'};updateQueue();return;
  }
@@ -202,9 +207,10 @@ function completeTeleport(){
  $('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';
  camera.position.set(state.x,state.y,state.z);camera.rotation.set(state.pitch,state.yaw,0);
  if(!document.hasFocus()||document.hidden)return;
- closeModal();setPlay(true);
- toast(job.restoring?'未找到安全落点，已回到原位置。':(job.target.kind==='photo'?`已抵达${job.target.label}。移动或转动视角恢复常规镜头。`:`已抵达${job.target.label}。点击画面继续环顾；F2 再次传送。`));
+ closeModal(false);setPlay(true);
+ toast(job.restoring?'未找到安全落点，已回到原位置。':(job.target.kind==='photo'?`已抵达${job.target.label}。移动或转动视角恢复常规镜头。`:`已抵达${job.target.label}。点击画面继续环顾；F 打开地图。`));
 }
+function teleportColliders(){const solids=[];for(const ch of chunks.values()){const dx=Number(ch.field.x-state.cx)*CHUNK,dz=Number(ch.field.z-state.cz)*CHUNK;if(Math.abs(dx)>CHUNK||Math.abs(dz)>CHUNK)continue;for(const c of ch.colliders)solids.push(c.kind==='box'?{...c,x1:c.x1+dx,x2:c.x2+dx,z1:c.z1+dz,z2:c.z2+dz}:{...c,x:c.x+dx,z:c.z+dz});}return solids;}
 document.querySelectorAll('[data-teleport]').forEach(button=>button.addEventListener('click',()=>{
  if(developerSearch||teleportJob||streamFailed)return;
  audio.start();developerBusy(true);const kind=button.dataset.teleport;
@@ -217,7 +223,7 @@ function drink(){if(state.bottles<1){toast('没有杏仁水。可以在路边或
 function use(){if(!interaction)return;if(interaction.kind==='bottle'){const {p,chunk}=interaction;if(collected.has(p.id))return;collected.add(p.id);state.bottles++;chunk.group.remove(p.mesh);p.mesh.traverse(o=>{if(o.geometry)o.geometry.dispose()});p.mesh=null;audio.chime();toast('拾取了杏仁水 · 按 Q 饮用');interaction=null}else{state.hydration=100;toast('喝了一口清水。有一点泥土的味道。');audio.footstep(false,true)}updateHUD()}
 function jump(){if(state.grounded&&state.stamina>5){state.vy=4.8;state.grounded=false;state.stamina-=4}}
 async function fullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{toast('此浏览器暂不支持全屏。')}}
-document.addEventListener('keydown',e=>{if(e.code==='F2'){e.preventDefault();if(e.repeat)return;if(activeModal?.id==='developer')closeModal();else if(!teleportJob)openModal('developer');return}if(activeModal){if(e.code==='Escape'){e.preventDefault();closeModal()}if(e.code==='Tab'){const items=[...activeModal.querySelectorAll('button,input,select')].filter(el=>!el.disabled);if(!items.length){e.preventDefault();return}if(e.shiftKey&&document.activeElement===items[0]){e.preventDefault();items.at(-1).focus()}else if(!e.shiftKey&&document.activeElement===items.at(-1)){e.preventDefault();items[0].focus()}}return}if(!playing){
+document.addEventListener('keydown',e=>{if(e.code==='KeyF'){e.preventDefault();if(!e.repeat)toggleMap();return;}if(e.code==='F2'){e.preventDefault();if(e.repeat)return;if(activeModal?.id==='developer')closeModal();else if(!teleportJob)openModal('developer');return}if(activeModal){if(e.code==='Escape'){e.preventDefault();closeModal()}if(e.code==='Tab'){const items=[...activeModal.querySelectorAll('button,input,select,[tabindex="0"]')].filter(el=>!el.disabled);if(!items.length){e.preventDefault();return}if(e.shiftKey&&document.activeElement===items[0]){e.preventDefault();items.at(-1).focus()}else if(!e.shiftKey&&document.activeElement===items.at(-1)){e.preventDefault();items[0].focus()}}return}if(!playing){
  const buttons=[...document.querySelectorAll('.menu-button')].filter(button=>!button.disabled);
  if(e.code==='ArrowDown'||e.code==='ArrowUp'){
   e.preventDefault();
@@ -230,7 +236,7 @@ document.addEventListener('keydown',e=>{if(e.code==='F2'){e.preventDefault();if(
   if(selected&&!selected.disabled)selected.click();
  }
  return;
-} if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.repeat)return;if(e.code==='Escape')setPlay(false);if(e.code==='KeyE')use();if(e.code==='KeyQ')drink();if(e.code==='Space')jump();if(e.code==='KeyJ')openModal('journal');if(e.code==='KeyF')fullscreen()});
+} if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.repeat)return;if(e.code==='Escape')setPlay(false);if(e.code==='KeyE')use();if(e.code==='KeyQ')drink();if(e.code==='Space')jump();if(e.code==='KeyJ')openModal('journal');if(e.code==='F10'){e.preventDefault();fullscreen();}});
 document.addEventListener('keyup',e=>keys.delete(e.code));
 addEventListener('blur',()=>{keys.clear();mouseDragging=false;if(playing)setPlay(false)});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)setPlay(false)});
@@ -321,8 +327,12 @@ renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();p
 renderer.domElement.addEventListener('webglcontextrestored',()=>{contextLost=false;$('#start').disabled=!ready||!!teleportJob;$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';resize()});
 function animate(now){requestAnimationFrame(animate);const rawDt=(now-lastFrame)/1000,last=lastFrame;lastFrame=now;const dt=Math.min(.035,Math.max(.001,rawDt));if(document.hidden||contextLost)return;performanceMeter.begin(settings.showfps||settings.devMode);time+=dt;advanceDeveloperSearch();wind.time.value=time;waterTime.value=time;
  if((queue.length||activeBuild)&&!streamFailed&&(!playing||frameCount%3===0)){try{streamOne()}catch(e){streamFailed=true;console.error('World streaming failed',e);if(developerSearch){developerSearch.return();developerSearch=null;}if(teleportJob)teleportJob=null;developerBusy(false);$('#developer-status').textContent='场景加载失败，请刷新页面重试。';
-$('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请刷新</span><small>↻</small>';return}const total=(radius()*2+1)**2,progress=Math.round(chunks.size/total*100);$('#load-number').textContent=progress+'%';$('#load-bar').style.width=progress+'%';if(!ready&&!teleportJob&&neighbourhoodReady()){ready=true;$('#start').disabled=false;$('#start').innerHTML='<span>进入麦田</span><small>ENTER ↵</small>'}if(!queue.length&&!activeBuild)$('#loading').hidden=true;}
+$('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请刷新</span><small>↻</small>';return}const total=(radius()*2+1)**2,progress=Math.round(chunks.size/total*100);if(teleportJob&&navigationMap.isOpen)navigationMap.setStatus(`正在准备${teleportJob.target.label} · ${Math.min(100,progress)}%`);$('#load-number').textContent=progress+'%';$('#load-bar').style.width=progress+'%';if(!ready&&!teleportJob&&neighbourhoodReady()){ready=true;$('#start').disabled=false;$('#start').innerHTML='<span>进入麦田</span><small>ENTER ↵</small>'}if(!queue.length&&!activeBuild)$('#loading').hidden=true;}
  completeTeleport();
+ navigationMap.update(state,now,playing,!teleportJob);
+ // The opaque map covers the scene. Stop 3D rendering/detail updates while
+ // reading it; world streaming continues when a map teleport is in progress.
+ if(navigationMap.isOpen){performanceMeter.end();return;}
  if(playing)move(dt);else{camera.position.set(state.x,(cameraFloor()+(referenceView?.eye??1.94))+(referenceView?0:Math.sin(time*.23)*.009),state.z);camera.rotation.set(state.pitch,state.yaw+(started?0:Math.sin(time*.07)*.015),0);wind.player.value.set(10000,0,10000)}
  wheatView.value.copy(camera.position);wheatDetail.update(chunks,camera.position,settings.quality,`${state.cx},${state.cz}`);
  weather(dt);uiTick+=dt;if(uiTick>.12){uiTick=0;if(playing)scanInteraction();updateHUD()}

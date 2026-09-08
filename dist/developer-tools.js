@@ -1,4 +1,5 @@
-import {CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=10';
+import {CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=11';
+import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=11';
 
 const titles={pond:'湖泊',building:'建筑',grove:'树林'};
 function marker(f,kind){
@@ -11,8 +12,8 @@ function marker(f,kind){
 }
 
 function inLandingTile(p,margin=.35){return p.x>=margin&&p.z>=margin&&p.x<=CHUNK-margin&&p.z<=CHUNK-margin}
-function pondDryPoint(p,f,lake=f){
- if(!inLandingTile(p,.65)||pondMetrics(p.x,p.z,lake).metres<1.25)return false;
+function pondDryPoint(p,f,lake=f,margin=.65){
+ if(!inLandingTile(p,margin)||pondMetrics(p.x,p.z,lake).metres<1.25)return false;
  const ground=surfaceHeight(p.x,p.z,f);
  if(ground<lake.lakeY+.045)return false;
  for(const [dx,dz] of [[.4,0],[-.4,0],[0,.4],[0,-.4]]){
@@ -85,9 +86,101 @@ export function* findNearestLandmark(position,seed,kind,maxRadius=32){
 }
 
 function worldPoint(f,x,z){const c=Math.cos(f.buildingAngle||0),s=Math.sin(f.buildingAngle||0);return {x:f.cx+c*x+s*z,z:f.cz-s*x+c*z}}
+
+// All arithmetic stays relative to a cell. In particular, a BigInt map address
+// is never rounded through an absolute floating-point world position.
+function mapCellPoint(origin,x,z){
+ const dx=Math.floor(x/CHUNK),dz=Math.floor(z/CHUNK);
+ return {cx:origin.cx+BigInt(dx),cz:origin.cz+BigInt(dz),x:x-dx*CHUNK,z:z-dz*CHUNK};
+}
+function mapTerrainClear(p,f){
+ if(f.type==='pond'&&!pondDryPoint(p,f,f,0))return false;
+ if(f.type==='building'){
+  const q=buildingLocal(p.x,p.z,f),[w,d]=buildingSize(f);
+  if(Math.abs(q.x)<w/2+.65&&Math.abs(q.z)<d/2+.65)return false;
+ }
+ if(farmFootprintDistance(p.x,p.z,f)<.65)return false;
+ const ground=surfaceHeight(p.x,p.z,f);
+ return [[.4,0],[-.4,0],[0,.4],[0,-.4]].every(([dx,dz])=>Math.abs(surfaceHeight(p.x+dx,p.z+dz,f)-ground)<=.32);
+}
+function* mapOffsets(p){
+ yield {x:p.x,z:p.z};
+ for(const radius of [.55,1,1.6,2.4,3.5,5,7,10,14])for(let i=0;i<32;i++){
+  const a=i*Math.PI/16;yield {x:p.x+Math.cos(a)*radius,z:p.z+Math.sin(a)*radius};
+ }
+}
+function farmEntrance(f,point){
+ if(!f.farm||farmFootprintDistance(point.x,point.z,f)>=.65)return null;
+ const x=point.x+f.farm.x,z=point.z+f.farm.z;
+ let chosen=null,best=Infinity;
+ for(const [name,p] of Object.entries(FARM_PLACEMENTS)){
+  const footprint=FARM_FOOTPRINTS.find(q=>q.x===p.x&&q.z===p.z);
+  if(!footprint)continue;
+  const c=Math.cos(p.angle||0),s=Math.sin(p.angle||0),dx=x-p.x,dz=z-p.z;
+  const distance=Math.hypot(Math.max(0,Math.abs(c*dx-s*dz)-footprint.hx),Math.max(0,Math.abs(s*dx+c*dz)-footprint.hz));
+  if(distance<best){best=distance;chosen={name,p,footprint};}
+ }
+ if(!chosen)return null;
+ const {name,p,footprint}=chosen,sx=p.scaleX||1;
+ // Door facades match kephart-models.js: the annex and shed carriage doors
+ // face -Z; the cottage's +Z entrance is beyond its shallow front porch.
+ const direction=name==='annex'||name==='shed'?-1:1;
+ const door=name==='barn'?-.35*sx:name==='cottage'?.05*sx:0;
+ const facade=footprint.hz+(name==='cottage'?2.05:0);
+ const transform=(x,z)=>worldPoint({cx:p.x-f.farm.x,cz:p.z-f.farm.z,buildingAngle:p.angle},x,z);
+ const points=[];
+ for(const extra of [2.2,3.2,4.5,6])for(const lateral of [0,-1,1,-2,2])points.push(transform(door+lateral,direction*(facade+extra)));
+ return {points,label:'农场建筑门外'};
+}
+
+/** Prepare a map click for the normal terrain-loading teleport transaction.
+ * The returned kind remains "map"; findSafeLanding performs the final checks
+ * against the actual loaded solids before the player is allowed to move.
+ */
+export function createMapTarget(point,seed){
+ if(typeof point?.cx!=='bigint'||typeof point?.cz!=='bigint')throw new TypeError('Map cells must be BigInt');
+ if(!Number.isFinite(point.x)||!Number.isFinite(point.z)||point.x<0||point.x>CHUNK||point.z<0||point.z>CHUNK)throw new RangeError('Map local coordinates must be between 0 and 64');
+ const clicked=mapCellPoint(point,point.x,point.z),source=field(clicked.cx,clicked.cz,seed),cache=new Map([[source.key,source]]);
+ const getField=p=>{const key=`${p.cx},${p.cz}`;if(!cache.has(key))cache.set(key,field(p.cx,p.cz,seed));return cache.get(key)};
+ let candidates=[],label='地图位置',mapMode='point';
+ const farm=farmEntrance(source,clicked);
+ if(farm){candidates=farm.points;label=farm.label;mapMode='building';
+ }else if(source.type==='building'){
+  const q=buildingLocal(clicked.x,clicked.z,source),[w,d]=buildingSize(source);
+  if(Math.abs(q.x)<w/2+.65&&Math.abs(q.z)<d/2+.65){
+   const door=source.variant===0?-1.15:source.variant===7?-.55:0;
+   for(const extra of [2.2,3.2,4.5,6])for(const lateral of [0,-1,1,-2,2])candidates.push(worldPoint(source,door*(source.buildingScale||1)+lateral,d/2+extra));
+   label=`${BUILDING_NAMES[source.variant]}门外`;mapMode='building';
+  }
+ }
+ if(source.type==='pond'&&!pondDryPoint(clicked,source,source,0)){
+  // Search the entire irregular shore, not the radial line from lake center.
+  // A lake spans cells, so resolve each candidate into its real terrain tile
+  // before ranking dry, walkable banks by distance from the clicked position.
+  for(let i=0;i<512;i++)for(const metres of [1.3,1.8,2.6,3.6,5.2,7]){
+   const q=pondBankPoint(source,i*Math.PI/256,metres),p=mapCellPoint(clicked,q.x,q.z),f=getField(p);
+   if(source.lakeId&&f.lakeId!==source.lakeId)continue;
+   if(mapTerrainClear(p,f))candidates.push(q);
+  }
+  candidates.sort((a,b)=>(a.x-clicked.x)**2+(a.z-clicked.z)**2-((b.x-clicked.x)**2+(b.z-clicked.z)**2));
+  label='湖岸';mapMode='shore';
+ }
+ if(!candidates.length&&mapMode==='shore')return null;
+ if(!candidates.length)candidates=[{x:clicked.x,z:clicked.z}];
+ const prepared=candidates.map(q=>{const p=mapCellPoint(clicked,q.x,q.z);return {...p,field:getField(p)}});
+ const first=prepared.find(p=>mapTerrainClear(p,p.field))||prepared[0];
+ const nearby=prepared.filter(p=>p.cx===first.cx&&p.cz===first.cz).map(({x,z})=>({x,z}));
+ return {...first,kind:'map',label,mapMode,mapCandidates:nearby,mapClick:clicked,
+  yaw:Number.isFinite(point.yaw)?point.yaw:0};
+}
+
 export function findSafeLanding(target,colliders){
  const f=target.field,lake=target.lakeField||f,points=[];
- if(target.kind==='photo'){points.push({x:target.x,z:target.z});
+ if(target.kind==='map'){
+  points.push({x:target.x,z:target.z});
+  if(target.mapMode==='shore'||target.mapMode==='building')points.push(...(target.mapCandidates||[]));
+  points.push(...mapOffsets(target));
+ }else if(target.kind==='photo'){points.push({x:target.x,z:target.z});
  }else if(target.kind==='start'){
   points.push({x:.6,z:52});
  }else if(target.kind==='pond'){
@@ -103,16 +196,18 @@ export function findSafeLanding(target,colliders){
  // Last-resort dry clearings, still checked against every actual solid collider.
  for(let z=4;z<=60;z+=4)for(let x=4;x<=60;x+=4)points.push({x,z});
  for(const p of points){
-  if(!inLandingTile(p))continue;
+  if(target.kind==='map'){
+   if(!inLandingTile(p,0)||p.x>=CHUNK||p.z>=CHUNK||!mapTerrainClear(p,f))continue;
+  }else if(!inLandingTile(p))continue;
   if(target.kind==='pond'&&!pondDryPoint(p,f,lake))continue;
-  if(f.type==='pond'&&target.kind!=='pond'&&!pondDryPoint(p,f))continue;
+  if(f.type==='pond'&&target.kind!=='pond'&&!pondDryPoint(p,f,f,target.kind==='map'?0:.65))continue;
   if(f.type==='building'){const q=buildingLocal(p.x,p.z,f),[w,d]=buildingSize(f);if(Math.abs(q.x)<w/2+.65&&Math.abs(q.z)<d/2+.65)continue;}
   const resolved=resolveSolid({...p},.38,colliders);
   if(Math.hypot(resolved.x-p.x,resolved.z-p.z)>.002)continue;
   const ground=surfaceHeight(p.x,p.z,f);
   if(f.type==='pond'&&ground<f.lakeY+.035)continue;
   if([[.4,0],[-.4,0],[0,.4],[0,-.4]].some(([dx,dz])=>Math.abs(surfaceHeight(p.x+dx,p.z+dz,f)-ground)>.32))continue;
-  return {cx:f.x,cz:f.z,x:p.x,z:p.z,y:ground+(target.eye??1.77),yaw:target.kind==='start'?-.37:Math.atan2(p.x-(target.focusX??target.x),p.z-(target.focusZ??target.z)),pitch:target.kind==='photo'?Math.atan2(target.focusY+.40-ground-target.eye,Math.hypot(p.x-target.focusX,p.z-target.focusZ)):-.045};
+  return {cx:f.x,cz:f.z,x:p.x,z:p.z,y:ground+(target.eye??1.77),yaw:target.kind==='map'?target.yaw:target.kind==='start'?-.37:Math.atan2(p.x-(target.focusX??target.x),p.z-(target.focusZ??target.z)),pitch:target.kind==='photo'?Math.atan2(target.focusY+.40-ground-target.eye,Math.hypot(p.x-target.focusX,p.z-target.focusZ)):-.045};
  }
  return null;
 }
