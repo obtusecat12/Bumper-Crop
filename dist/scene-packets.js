@@ -1,4 +1,4 @@
-import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=11';
+import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=12';
 // Scene packet codec for procedural Three.js chunks. No DOM or Worker globals.
 // Supply the same Three.js revision on both sides. Pack before attachFog().
 const VERSION=1;

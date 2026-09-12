@@ -57,8 +57,6 @@ export function farmClearing(x,z,f){
  if(!f?.farm)return false;
  if(farmFootprintDistance(x,z,f)<2.6)return true;
  const px=x+f.farm.x,pz=z+f.farm.z;
- // A's close grain and B's short meadow foreground belong to the same world.
- if(farmMeadow(px,pz)>0)return true;
  return FARM_TREES.some(t=>(px-t.x)**2+(pz-t.z)**2<(.60+t.crownWidth*.08)**2);
 }
 export const FARM_VIEWS={
@@ -71,7 +69,6 @@ export function farmViewTarget(name,field,seed){
  return {...v,kind:'photo',cx,cz,x:wx-Number(cx)*64,z:wz-Number(cz)*64,focusX:FARM.x+v.focusX-Number(cx)*64,focusZ:FARM.z+v.focusZ-Number(cz)*64,field:field(cx,cz,seed)};
 }
 
-export function farmMeadow(x,z){const dx=x-362,dz=z-248,across=.565*dx-.825*dz,along=-.825*dx-.565*dz;return Math.min(70-Math.abs(across),along+27,40-along)}
 
 export function farmExcludesLake(lake){
  if(lake.lakeOwnerX< -4n||lake.lakeOwnerX>14n||lake.lakeOwnerZ< -4n||lake.lakeOwnerZ>12n)return false;

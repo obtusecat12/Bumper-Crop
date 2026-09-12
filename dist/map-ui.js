@@ -1,4 +1,4 @@
-import {createMapAtlas} from './map-atlas.js?v=11';
+import {createMapAtlas} from './map-atlas.js?v=12';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
 export function mapPoint(center,dx,dz){

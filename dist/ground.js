@@ -1,11 +1,13 @@
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance,farmMeadow} from './farm-layout.js?v=11';
-import {pondShapeGLSL} from './lake-shape.js?v=11';
+import {meadowEnvironment} from './meadow-layout.js?v=12';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=12';
+import {pondShapeGLSL} from './lake-shape.js?v=12';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=11';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=11';
+import {ruralTextures} from './rural-textures.js?v=12';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=12';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
+varying vec4 vMeadow;
 uniform sampler2D uRuralSoil;
 uniform sampler2D uRuralPath;
 uniform sampler2D uRuralTurf;
@@ -28,7 +30,6 @@ float farmYard(vec2 p){
  float dist=10000.;vec2 q=p+uFarm.xy;
  for(int i=0;i<6;i++){vec4 b=uFarmBuildings[i];vec2 d=q-b.xy;float c=cos(b.z),s=sin(b.z);vec2 e=abs(vec2(c*d.x-s*d.y,s*d.x+c*d.y))-uFarmSizes[i];dist=min(dist,length(max(e,vec2(0.)))+min(max(e.x,e.y),0.));}return dist;
 }
-float photoMeadow(vec2 p){vec2 q=p+uFarm.xy-vec2(362.,248.);float across=dot(q,vec2(.565,-.825)),along=dot(q,vec2(-.825,-.565));return min(70.-abs(across),min(along+27.,40.-along));}
 
 float hash2(vec2 p){p=mod(p,2048.);vec3 p3=fract(vec3(p.xyx)*.1031);p3+=dot(p3,p3.yzx+33.33);return fract((p3.x+p3.y)*p3.z);}
 float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash2(i),hash2(i+vec2(1,0)),f.x),mix(hash2(i+vec2(0,1)),hash2(i+1.),f.x),f.y);}
@@ -83,8 +84,8 @@ function groundMaterial(f){
   const [w,depth]=buildingSize(f);
   s.uniforms.uSize={value:new T.Vector2(w/2,depth/2)};
   s.uniforms.uWorldOffset={value:new T.Vector2(periodOrigin(f.x),periodOrigin(f.z))};
-  s.vertexShader='varying vec3 vTerrain;\n'+s.vertexShader;
-  s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvTerrain=position;');
+  s.vertexShader='varying vec3 vTerrain;\nvarying vec4 vMeadow;\n'+(f.meadow?'attribute vec4 meadowData;\n':'')+s.vertexShader;
+  s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvTerrain=position; vMeadow='+(f.meadow?'meadowData':'vec4(0.)')+';');
   // Keep this newline: Three's shader begins with a preprocessor directive.
   s.fragmentShader=terrainDecl+'\n'+s.fragmentShader;
   s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
@@ -123,6 +124,13 @@ function groundMaterial(f){
    vec3 field=soilAlbedo*vec3(.86,.80,.74)*(.91+broad*.14+(soilPatch-.5)*.08);
    float vergeBreak=(noise2(g*.5)-.5)*.63+(clods-.5)*.18;
    vec3 base=mix(grass,field,smoothstep(1.42,2.32,rd+vergeBreak));
+   // A vertex-sampled ecological field adds no fragment texture fetches.
+   float meadowCover=smoothstep(.06,.76,vMeadow.x);
+   vec3 meadowGrass=mix(grass*vec3(1.05,.96,.83),grass*vec3(.88,1.06,.91),vMeadow.y);
+   meadowGrass*=.91+vMeadow.w*.15;
+   float meadowLitter=smoothstep(.32,.70,1.-vMeadow.w)*(.20+clods*.35);
+   meadowGrass=mix(meadowGrass,soilAlbedo*vec3(.80,.73,.57),meadowLitter);
+   base=mix(base,meadowGrass,meadowCover);
    float scuff=(1.-smoothstep(.30,1.45,rd))*smoothstep(.57,.80,noise2(q*1.8))*.36;
    scuff=max(scuff,tracks.z*(.54+soilPatch*.35));
    base=mix(base,dirt,scuff);
@@ -166,7 +174,6 @@ if(uBuilding.w>.5){
    }
    if(uFarm.z>.5){
     float e=farmYard(p),edge=(soilPatch-.5)*1.7+(broad-.5)*1.1+(clods-.5)*.25;
-    base=mix(base,grass,smoothstep(-1.5,1.5,photoMeadow(p)+edge));
     float yard=1.-smoothstep(.35,3.4,e+edge);
     base=mix(base,dirt*(.94+soilPatch*.08)+grain*.004,yard);
    }
@@ -183,7 +190,7 @@ if(uBuilding.w>.5){
    normal=normalize(max(abs(soilDet),.00000001)*normal-soilGradient);
   `);
  };
- m.customProgramCacheKey=()=> 'rural-ground-v10-brown-earth';
+ m.customProgramCacheKey=()=> 'rural-ground-v12-meadow-'+!!f.meadow;
  return m;
 }
 function samples(step,edges){
@@ -211,6 +218,7 @@ export function makeGround(f,level){
  const geo=new T.BufferGeometry();
  geo.setAttribute('position',new T.BufferAttribute(p,3));
  geo.setAttribute('uv',new T.BufferAttribute(uv,2));
+ if(f.meadow){const data=new Float32Array(nx*nz*4),sample={};let n=0;for(const z of zs)for(const x of xs){meadowEnvironment(x,z,f.meadow,sample);data[n++]=sample.cover;data[n++]=sample.moisture;data[n++]=sample.shade;data[n++]=sample.patchDensity;}geo.setAttribute('meadowData',new T.BufferAttribute(data,4));}
  geo.setIndex(new T.BufferAttribute(idx,1));geo.computeVertexNormals();geo.computeBoundingBox();geo.computeBoundingSphere();
  const mesh=new T.Mesh(geo,groundMaterial(f));
  mesh.name='sculpted-ground-and-wheel-ruts';mesh.receiveShadow=true;
@@ -406,14 +414,12 @@ export function makeVerge(f,level){
   if(r()>.45)continue;
   for(let i=0;i<2;i++){const a=r()*TAU,rad=(.66+r()*.64)*tree.scale;fernAt(tree.x+Math.cos(a)*rad,tree.z+Math.sin(a)*rad,.62+r()*.32)}
  }
- // The fixed farm's short meadow and broken yard turf use the same fine blades.
- // This only runs in the reserved photographic area; no global density changes.
+ // The farm's small yard turf remains separate from natural meadow vegetation.
  if(f.farm){
   const span=near?.38:far?.75:.52;
   for(let z=.2;z<64;z+=span)for(let x=.2;x<64;x+=span){
    const px=x+(r()-.5)*span*.85,pz=z+(r()-.5)*span*.85,d=farmFootprintDistance(px,pz,f);
-   if(farmMeadow(px+f.farm.x,pz+f.farm.z)>0)addGrass(px,pz,.62+r()*.20);
-   else if(d>.45&&d<3.3&&r()<.30)addGrass(px,pz,.48+r()*.36);
+   if(d>.45&&d<3.3&&r()<.30)addGrass(px,pz,.48+r()*.36);
   }
  }
  if(far){addTurfInstances(group,farGrassGeo,grass[0],f,'distant-dense-fine-grass')}

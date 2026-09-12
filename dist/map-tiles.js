@@ -1,6 +1,7 @@
-import {field,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=11';
-import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight,farmMeadow} from './farm-layout.js?v=11';
-import {pondShoreWidth} from './lake-shape.js?v=11';
+import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=12';
+import {field,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=12';
+import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=12';
+import {pondShoreWidth} from './lake-shape.js?v=12';
 
 // A geography-only view of the existing world. Never imports Three, terrain,
 // textures, vegetation geometry, or the streamed chunk manager.
@@ -47,15 +48,20 @@ export function mapFootprints(f){
  return result;
 }
 function metadata(f){
- return {cx:f.x,cz:f.z,type:f.type,label:f.type==='pond'?'湖泊':f.type==='building'?BUILDING_NAMES[f.variant%8]:'麦田',vegetationMode:f.vegetationMode,footprints:mapFootprints(f),roads:f.roads,driveway:f.driveway||null,lake:f.type==='pond'?{id:f.lakeId,x:f.cx,z:f.cz,outline:Array.from({length:160},(_,i)=>pondPoint(f,i*TAU/160))}:null,trees:f.trees.map(t=>({x:t.x,z:t.z,r:TREE_RADII[t.variant%6]*t.scale,variant:t.variant})),shrubs:f.shrubs.map(s=>({x:s.x,z:s.z,r:s.width*s.scale*.50})),farm:f.farm?{x:f.farm.x,z:f.farm.z}:null};
+ return {cx:f.x,cz:f.z,type:f.type,label:f.type==='pond'?'湖泊':f.type==='building'?BUILDING_NAMES[f.variant%8]:'麦田',vegetationMode:f.vegetationMode,footprints:mapFootprints(f),roads:f.roads,driveway:f.driveway||null,lake:f.type==='pond'?{id:f.lakeId,x:f.cx,z:f.cz,outline:Array.from({length:160},(_,i)=>pondPoint(f,i*TAU/160))}:null,trees:f.trees.map(t=>({x:t.x,z:t.z,r:TREE_RADII[t.variant%6]*t.scale,variant:t.variant})),shrubs:f.shrubs.map(s=>({x:s.x,z:s.z,r:s.width*s.scale*.50})),farm:f.farm?{x:f.farm.x,z:f.farm.z}:null,meadow:f.meadow?{size:f.meadow.size,step:f.meadow.step,grid:f.meadow.grid}:null};
 }
 
 function drawMeadow(ctx,f){
- if(!f.farm)return;
- const denominator=.565*.565+.825*.825;
- const points=[[-70,-27],[70,-27],[70,40],[-70,40]].map(([across,along])=>({x:362+(.565*across-.825*along)/denominator-f.farm.x,z:248+(-.825*across-.565*along)/denominator-f.farm.z}));
- if(overlaps(points)){path(ctx,points);ctx.fillStyle=COLORS.grass;ctx.fill()}
+ if(!f.meadow)return;
+ const n=128,layer=makeCanvas(n),g=layer.getContext('2d'),pixels=g.createImageData(n,n),env={};
+ for(let z=0;z<n;z++)for(let x=0;x<n;x++){
+  meadowEnvironment((x+.5)*64/n,(z+.5)*64/n,f.meadow,env);
+  const c=env.cover;if(c<=.001)continue;const i=(z*n+x)*4,wet=env.moisture,d=env.patchDensity;
+  pixels.data[i]=Math.round(122-wet*15+d*8);pixels.data[i+1]=Math.round(133+wet*7+d*7);pixels.data[i+2]=Math.round(78+wet*10+d*6);pixels.data[i+3]=Math.round(Math.min(1,c*1.25)*255);
+ }
+ g.putImageData(pixels,0,0);ctx.drawImage(layer,0,0,64,64);
 }
+
 function line(ctx,points,color,width){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.z):ctx.moveTo(p.x,p.z));ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke()}
 function drawLane(ctx,f,l){
  const points=[];for(let t=0;t<=64;t+=2){const shift=l.edge+laneOffset(l,t);points.push(l.axis==='x'?{x:shift,z:t,t}:{x:t,z:shift,t})}
@@ -194,15 +200,15 @@ export function createMapTiles({seed,maxTiles=192,tilePixels=128,maxPending=maxT
  function hitTest(cx,cz,x,z){
   cx=coordinates(cx);cz=coordinates(cz);const key=keyOf(cx,cz),tile=touch(tiles,key);if(!tile)return null;
   for(const p of tile.metadata.footprints){const dx=x-p.x,dz=z-p.z,c=Math.cos(p.angle),s=Math.sin(p.angle);if(Math.abs(c*dx-s*dz)<=p.hx&&Math.abs(s*dx+c*dz)<=p.hz)return {...p}}
-  const f=touch(fields,key);if(!f)return {kind:tile.metadata.type,label:tile.metadata.label,cx,cz,x,z};
+  const f=touch(fields,key);if(!f){if(meadowSample(x,z,tile.metadata.meadow)>.32)return {kind:'grass',label:'田间草地',cx,cz,x,z};return {kind:tile.metadata.type,label:tile.metadata.label,cx,cz,x,z};}
   if(f.type==='pond'&&pondDistance(x,z,f)<=1)return {kind:'water',label:'湖泊',cx,cz,x,z,lakeId:f.lakeId};
-  if(f.farm&&farmMeadow(x+f.farm.x,z+f.farm.z)>0)return {kind:'grass',label:'草地',cx,cz,x,z};
   if(f.farm)for(const t of FARM_TREES)if(Math.hypot(x+f.farm.x-t.x,z+f.farm.z-t.z)<t.crownWidth*.5)return {kind:'tree',label:'Kephart 农场 · 树木',cx,cz,x,z};
   for(const t of tile.metadata.trees)if(Math.hypot(x-t.x,z-t.z)<t.r)return {kind:'tree',label:f.vegetationMode==='grove'?'小树林':f.vegetationMode==='windbreak'?'防风林':'树木',cx,cz,x,z};
   for(const s of tile.metadata.shrubs)if(Math.hypot(x-s.x,z-s.z)<s.r)return {kind:'hedge',label:'田边树篱',cx,cz,x,z};
   const road=roadProfile(x,z,f,{});
   if(road.rut>.1)return {kind:'path',label:'田间双辙路',cx,cz,x,z};
   if(road.distance<2.05)return {kind:'grass',label:'路边草地',cx,cz,x,z};
+  if(meadowSample(x,z,f.meadow)>.32)return {kind:'grass',label:'田间草地',cx,cz,x,z};
   return {kind:'field',label:'麦田',cx,cz,x,z};
  }
  function cancelPending(){pending.clear();active=null}
