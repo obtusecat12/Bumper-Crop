@@ -17,13 +17,20 @@ function pointText(p){return `X ${coordinate(p.cx,p.x)} · Z ${coordinate(p.cz,p
 // Full-map repaint is event/revision-driven. No secondary WebGL scene/camera.
 export function createNavigationMap({host,seed,onOpen,onClose,onTeleport}){
  const tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});
- host.insertAdjacentHTML('beforeend',`<div class="map-mini" id="map-mini" hidden><button class="map-mini-button" aria-label="打开地图，快捷键 F"><span class="map-mini-viewport"><canvas width="288" height="288" aria-hidden="true"></canvas><span class="map-mini-player">▲</span></span><span class="map-cardinal" data-direction="0">N</span><span class="map-cardinal" data-direction="1">E</span><span class="map-cardinal" data-direction="2">S</span><span class="map-cardinal" data-direction="3">W</span></button><div class="map-mini-caption"><span class="map-mini-bearing">N 000°</span><span>F 地图</span></div></div>
- <div class="modal map-modal" id="world-map" role="dialog" aria-modal="true" aria-labelledby="map-title" hidden><section class="map-panel"><header class="map-header"><div><h2 id="map-title">LEVEL 10 / 区域地图</h2><p>拖动浏览 · 滚轮缩放 · 点击地面传送</p></div><button class="map-close" aria-label="关闭地图">F / 返回</button></header><div class="map-tools"><button data-map-action="out" aria-label="缩小地图">−</button><span class="map-zoom">100%</span><button data-map-action="in" aria-label="放大地图">＋</button><button data-map-action="center">回到当前位置</button><span class="map-north">↑ 北</span></div><div class="map-surface"><canvas class="map-canvas" tabindex="0" aria-label="世界地图，拖动或方向键浏览，点击或 Enter 传送，加减号缩放"></canvas><div class="map-scale"><i></i><span>100 m</span></div><div class="map-loading" role="status"></div></div><footer class="map-footer"><div class="map-legend"><span><i class="map-swatch wheat"></i>麦田</span><span><i class="map-swatch grass"></i>草地</span><span><i class="map-swatch water"></i>湖泊</span><span><i class="map-swatch trees"></i>树木 / 灌木</span><span><i class="map-swatch building"></i>建筑</span><span><i class="map-swatch road"></i>小径</span></div><div class="map-readout" aria-live="polite">点击地图可传送；湖泊会落在岸边。</div></footer></section></div>`);
+ host.insertAdjacentHTML('beforeend',`<div class="map-mini" id="map-mini" data-ui-part="navigation" hidden><div class="map-mini-shell"><div class="instrument-label"><span>FIELD / NAV</span><span data-ui-copy="number">010</span></div><button class="map-mini-button" aria-label="打开地图，快捷键 F" aria-haspopup="dialog" aria-controls="world-map"><span class="map-mini-bezel" aria-hidden="true"></span><span class="map-mini-viewport"><canvas width="288" height="288" aria-hidden="true"></canvas><span class="map-mini-player" aria-hidden="true">▲</span></span><span class="map-cardinal" data-direction="0">N</span><span class="map-cardinal" data-direction="1">E</span><span class="map-cardinal" data-direction="2">S</span><span class="map-cardinal" data-direction="3">W</span><span class="map-mini-glass" aria-hidden="true"></span></button><div class="map-mini-caption"><span class="map-mini-bearing">N 000°</span><span>F 地图</span></div></div></div>
+ <div class="modal map-modal" id="world-map" data-ui-part="map" role="dialog" aria-modal="true" aria-labelledby="map-title" hidden><section class="map-panel"><header class="map-header"><div><div class="equipment-label">M.E.G. / CARTOGRAPHY</div><h2 id="map-title"><span data-ui-copy="code">LEVEL 10</span> / 区域地图</h2><p>拖动浏览 · 滚轮缩放 · 点击地面传送</p></div><button class="map-close" aria-label="关闭地图">F / 返回</button></header><div class="map-tools"><button data-map-action="out" aria-label="缩小地图">−</button><span class="map-zoom">100%</span><button data-map-action="in" aria-label="放大地图">＋</button><button data-map-action="center">回到当前位置</button><span class="map-north">↑ 北</span></div><div class="map-surface"><canvas class="map-canvas" tabindex="0" aria-label="世界地图，拖动或方向键浏览，点击或 Enter 传送，加减号缩放"></canvas><div class="map-surface-glass" aria-hidden="true"></div><div class="map-scale"><i></i><span>100 m</span></div><div class="map-loading" role="status"></div></div><footer class="map-footer"><div class="map-legend"><span><i class="map-swatch wheat"></i>麦田</span><span><i class="map-swatch grass"></i>草地</span><span><i class="map-swatch water"></i>湖泊</span><span><i class="map-swatch trees"></i>树木 / 灌木</span><span><i class="map-swatch building"></i>建筑</span><span><i class="map-swatch road"></i>小径</span></div><div class="map-readout" aria-live="polite">点击地图可传送；湖泊会落在岸边。</div></footer></section></div>`);
  const mini=host.querySelector('#map-mini'),miniButton=mini.querySelector('button'),miniCanvas=mini.querySelector('canvas'),miniCtx=miniCanvas.getContext('2d',{alpha:false});
  const modal=host.querySelector('#world-map'),canvas=modal.querySelector('.map-canvas'),ctx=canvas.getContext('2d',{alpha:false}),surface=modal.querySelector('.map-surface');
  const label=modal.querySelector('.map-readout'),loading=modal.querySelector('.map-loading'),cardinals=[...mini.querySelectorAll('.map-cardinal')];
  let center=null,player=null,zoom=1.5,open=false,busy=false,dirty=true,lastMini=0,miniCenter=null,lastRevision=-1,lastMapRevision=-1,lastYaw=NaN,pointer=null,hover=null,keyboardTarget=false,disposed=false;
  let counts={minimapPaints:0,mapPaints:0};
+ let uiPalette={mapBackground:'#27302a',mapGrid:'#364037',mapPlayer:'#fff3c4',mapOutline:'#121b18',mapCursor:'#fff2c1'};
+ function setUITheme(tokens){
+  const next={...uiPalette};let changed=false;
+  for(const key of Object.keys(next))if(typeof tokens[key]==='string'&&tokens[key]!==next[key]){next[key]=tokens[key];changed=true;}
+  if(!changed)return;
+  uiPalette=next;dirty=true;miniCenter=null;lastRevision=-1;lastMapRevision=-1;
+ }
  function setStatus(text){label.textContent=text;}
  function resize(){if(!open)return;const r=surface.getBoundingClientRect(),w=Math.max(1,Math.min(1280,Math.round(r.width))),h=Math.max(1,Math.min(860,Math.round(r.height)));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;dirty=true;}}
  const observer=new ResizeObserver(resize);observer.observe(surface);
@@ -62,15 +69,15 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport}){
   return list;
  }
  function terrainPaint(context,c,w,h,scale){
-  context.fillStyle='#27302a';context.fillRect(0,0,w,h);context.imageSmoothingEnabled=false;const list=visibleTiles(c,w,h,scale);let missing=0;
-  for(const tile of list){const image=tiles.request(tile.cx,tile.cz,tile.d);if(image){context.drawImage(image,tile.x,tile.z,64*scale+.5,64*scale+.5);}else{missing++;context.strokeStyle='#364037';context.strokeRect(tile.x,tile.z,64*scale,64*scale);}}
+  context.fillStyle=uiPalette.mapBackground;context.fillRect(0,0,w,h);context.imageSmoothingEnabled=false;const list=visibleTiles(c,w,h,scale);let missing=0;
+  for(const tile of list){const image=tiles.request(tile.cx,tile.cz,tile.d);if(image){context.drawImage(image,tile.x,tile.z,64*scale+.5,64*scale+.5);}else{missing++;context.strokeStyle=uiPalette.mapGrid;context.strokeRect(tile.x,tile.z,64*scale,64*scale);}}
   return missing;
  }
  function drawPlayer(context,c,w,h,scale){const p=mapOffset(player,c);if(!p)return;const x=w/2+p.x*scale,z=h/2+p.z*scale;if(x< -20||z< -20||x>w+20||z>h+20)return;
-  context.save();context.translate(x,z);context.rotate(-player.yaw);context.beginPath();context.moveTo(0,-9);context.lineTo(6,7);context.lineTo(0,4);context.lineTo(-6,7);context.closePath();context.fillStyle='#fff3c4';context.strokeStyle='#121b18';context.lineWidth=3;context.stroke();context.fill();context.restore();
+  context.save();context.translate(x,z);context.rotate(-player.yaw);context.beginPath();context.moveTo(0,-9);context.lineTo(6,7);context.lineTo(0,4);context.lineTo(-6,7);context.closePath();context.fillStyle=uiPalette.mapPlayer;context.strokeStyle=uiPalette.mapOutline;context.lineWidth=3;context.stroke();context.fill();context.restore();
  }
  function paintMap(){const missing=terrainPaint(ctx,center,canvas.width,canvas.height,zoom);drawPlayer(ctx,center,canvas.width,canvas.height,zoom);
-  const p=hover||keyboardTarget&&{x:canvas.width/2,z:canvas.height/2};if(p){ctx.strokeStyle='#fff2c1';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x-8,p.z);ctx.lineTo(p.x+8,p.z);ctx.moveTo(p.x,p.z-8);ctx.lineTo(p.x,p.z+8);ctx.stroke();}
+  const p=hover||keyboardTarget&&{x:canvas.width/2,z:canvas.height/2};if(p){ctx.strokeStyle=uiPalette.mapCursor;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x-8,p.z);ctx.lineTo(p.x+8,p.z);ctx.moveTo(p.x,p.z-8);ctx.lineTo(p.x,p.z+8);ctx.stroke();}
   const metres=zoom>4?10:zoom>2?25:50;modal.querySelector('.map-scale i').style.width=(metres*zoom/canvas.width*surface.clientWidth)+'px';modal.querySelector('.map-scale span').textContent=metres+' m';loading.textContent=busy?'正在准备目的地…':missing?'正在绘制周边…':'';counts.mapPaints++;dirty=false;
  }
  function update(state,now,visible,allowWork=true){if(disposed)return;player={cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw};mini.hidden=!visible||open;
@@ -89,5 +96,5 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport}){
  function hide(){open=false;modal.hidden=true;pointer=null;tiles.cancelPending();miniCenter=null;}
  function setBusy(value,text){busy=value;modal.setAttribute('aria-busy',String(value));modal.querySelectorAll('button').forEach(b=>b.disabled=value);if(text)setStatus(text);dirty=true;}
  function dispose(){disposed=true;observer.disconnect();tiles.dispose();mini.remove();modal.remove();}
- return{update,show,hide,setBusy,setStatus,dispose,modal,stats:()=>({...counts,...tiles.stats()}),get isOpen(){return open;}};
+ return{update,show,hide,setBusy,setStatus,setUITheme,dispose,modal,stats:()=>({...counts,...tiles.stats()}),get isOpen(){return open;}};
 }
