@@ -65,7 +65,7 @@ export function meadowPlacements(f){
   // Tall culms emerge through a lower sward rather than replacing it with
   // bare green ground. Reuse the same root, keeping terrain contact exact.
   if(kind!=='shortgrass'&&accept<env.cover*density*.62)
-   result.shortgrass.push({x,z,variant:1-variant,angle:angle+1.8,scale:scale*.94,tint:tint*.97,lod});
+   result.shortgrass.push({x,z,variant:1-variant,angle:angle+1.8,scale:scale*.94,heightScale:.68+patch*.35,tint:tint*.97,lod});
  }
  return result;
 }
