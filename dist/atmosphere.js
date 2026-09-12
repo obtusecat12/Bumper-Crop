@@ -4,6 +4,10 @@ import * as T from './vendor/three.module.min.js';
 // material fog. There is no screen-space noise, flat cloud layer or fog plane.
 const PERIOD = 65536;
 const QUALITY_STEPS = {low: 16, balanced: 32, high: 48};
+const MARCH_STEPS=Object.fromEntries(Object.values(QUALITY_STEPS).map(count=>[count,Array.from({length:48},(_,i)=>{
+  const a=(Math.min(i,count)/count)**1.55,b=(Math.min(i+1,count)/count)**1.55;
+  return new T.Vector2(a,b-a);
+})]));
 const clamp01 = x => Math.min(1, Math.max(0, Number(x) || 0));
 function worldOrigin(value) {
   // BigInt values are 64 m world-cell indices; numbers are offsets in metres.
@@ -100,6 +104,7 @@ uniform float uCloudTime;
 uniform float uCloudMist;
 uniform float uCloudRain;
 uniform int uCloudSteps;
+uniform vec2 uCloudMarch[48];
 
 // Integer-period spatial scales keep the BigInt origin wrap invisible.
 // Two 3D fetches, as before: a rounded low deck and a faster upper field.
@@ -154,11 +159,10 @@ void main() {
       vec3 lightDirection = normalize(vec3(-.45, .84, -.30));
       for (int i = 0; i < 48; i++) {
         if (i >= uCloudSteps || transmittance < .004) break;
-        float a = float(i) / float(uCloudSteps);
-        float b = float(i + 1) / float(uCloudSteps);
-        // More samples resolve the lower cloud surface visible from the field.
-        float start = rayLength * pow(a, 1.55);
-        float stepSize = rayLength * pow(b, 1.55) - start;
+        // Identical altitude distribution, computed once for each quality tier.
+        // Avoid two repeated pow() operations in every cloud integration step.
+        float start = rayLength * uCloudMarch[i].x;
+        float stepSize = rayLength * uCloudMarch[i].y;
         float t = entry + start + phase * stepSize;
         vec3 p = ro + rd * t;
         float density = cloudDensity(p, max(1.0, stepSize * .65));
@@ -355,7 +359,8 @@ export function createAtmosphere({scene, fog = scene?.fog, quality = 'balanced'}
     uCloudTime: {value: 0},
     uCloudMist: {value: 0},
     uCloudRain: {value: 0},
-    uCloudSteps: {value: QUALITY_STEPS[quality] || QUALITY_STEPS.balanced}
+    uCloudSteps: {value: QUALITY_STEPS[quality] || QUALITY_STEPS.balanced},
+    uCloudMarch: {value:MARCH_STEPS[QUALITY_STEPS[quality] || QUALITY_STEPS.balanced]}
   };
   // Three r180 converts ShaderMaterial to GLSL ES 3 automatically. Keeping its
   // normal prefix preserves gl_FragColor and output color-space handling.
@@ -375,7 +380,7 @@ export function createAtmosphere({scene, fog = scene?.fog, quality = 'balanced'}
     uniforms.uCloudMist.value = clamp01(mist);
     uniforms.uCloudRain.value = clamp01(rain);
     uniforms.uCloudOrigin.value.set(worldOrigin(originX), worldOrigin(originZ));
-    if (q) uniforms.uCloudSteps.value = QUALITY_STEPS[q] || QUALITY_STEPS.balanced;
+    if (q){uniforms.uCloudSteps.value = QUALITY_STEPS[q] || QUALITY_STEPS.balanced;uniforms.uCloudMarch.value=MARCH_STEPS[uniforms.uCloudSteps.value];}
     if (camera) {sky.position.copy(camera.position); uniforms.uCloudCamera.value.copy(camera.position);}
     const currentFog = scene?.fog || fog;
     if (currentFog?.color) uniforms.uCloudFogColor.value.copy(currentFog.color);

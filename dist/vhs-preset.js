@@ -8,7 +8,7 @@ export const VHS_PRESET = Object.freeze({
   composite_noise_frequency: .5, composite_noise_detail: 1,
   snow_intensity: .00012, snow_anisotropy: .5,
   video_scanline_phase_shift: 2, video_scanline_phase_shift_offset: 0,
-  chroma_demodulation: 1, luma_smear: .5,
+  chroma_demodulation: 1, luma_smear: .4,
   head_switching: true, head_switching_height: 4, head_switching_offset: 2,
   head_switching_horizontal_shift: 8, head_switching_start_mid_line: false,
   head_switching_mid_line_position: .95, head_switching_mid_line_jitter: .03,

@@ -13,9 +13,13 @@ PS1 320P and clear rendering. Old checkbox preferences migrate to VHS; a new
 explicit filter choice persists. The DOM interface and navigation maps remain
 unfiltered.
 
-VHS uses 480 rows and preserves the viewport aspect ratio. The selected preset
+V16 VHS uses a 640×480 square-pixel signal and a matching 4:3 camera projection.
+The canvas fits inside the window with black bars, without stretching or cropping
+the processed frame. The HUD/minimap follow this picture; menus and the full map
+retain the available window area. Photo lenses use the actual camera aspect.
+The selected preset
 is in `dist/vhs-preset.js`: SP tape speed, Butterworth filters, full chroma
-low-pass, luma smear 0.5, preemphasis 0.65, no added sharpening/ringing, restrained
+low-pass, luma smear 0.4, preemphasis 0.65, no added sharpening/ringing, restrained
 noise, slight edge wave and a small bottom-edge head-switch disturbance.
 Input saturation is raised to 1.16 before the actual ntsc-rs process. Eight
 variants were compared against a native render of the game's meadow; stronger
@@ -25,7 +29,8 @@ preemphasis made grass overly fluorescent, and Constant-K LP lost too much detai
 clock independently of asynchronous completion. Horizontal bandwidth scaling
 is 1, as recommended upstream for 480-row inputs. No arbitrary scanline/grid,
 vignette or timestamp overlay is added. Native signal-filter border transients
-are retained. Very wide aspect ratios are bounded to 1920 columns.
+are retained. V16 only reduces luma smear from 0.5 to 0.4: edges are slightly
+clearer while the soft chroma, noise and 1.16 saturation remain unchanged.
 
 PS1 is a **display-style simulation**, with 320 vertical pixels, nearest
 upscaling, the GPU's signed 4×4 dither matrix and RGB555 quantization. It does
@@ -75,6 +80,12 @@ Native CPU samples for the chosen full 720×480 processing path, including grade
 and row conversion, were approximately 25 ms (relaxed SIMD) and 27 ms (standard)
 median on this executor. These are **not browser or user-device FPS measurements**.
 The filter has a real processing cost even though its work is off the main thread.
+
+The V16 4:3 input has 25.06% fewer pixels than V15's 854×480 input on a 16:9
+window. A separate 35-sample warmed core comparison measured medians of 18.08 ms
+at 854×480 and 13.65 ms at 640×480 with the new preset. This is a scoped host CPU
+comparison, not a game FPS or power-consumption claim. The clarity adjustment
+does not add a filter pass.
 
 Pixel equality is scoped to the pinned **official web core**, the same input,
 preset, frame and SIMD variant. A desktop build, different noise frame, SIMD

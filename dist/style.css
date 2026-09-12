@@ -53,3 +53,19 @@ body[data-filter="vhs"] canvas.scene,body[data-filter="native"] canvas.scene{ima
 @media(max-width:800px){.map-mini{right:14px;top:14px;transform:scale(.78);transform-origin:top right}.hud-right{margin-right:166px}.map-modal{padding:10px}.map-panel{padding:10px}.map-header h2{font-size:16px}.map-header p{font-size:14px;line-height:20px}.map-legend{gap:3px 12px}.map-tools{gap:7px}.map-tools .map-zoom{width:50px}}
 @media(max-width:520px){.map-mini{transform:scale(.64);right:10px;top:10px}.hud-right{margin-right:130px}.hud-title{max-width:150px}.map-header{gap:8px}.map-header p{max-width:235px}.map-panel{padding:8px}.map-panel button{padding:5px 8px}.map-tools{font-size:14px;gap:5px}.map-legend{font-size:13px}.map-footer{line-height:20px}.map-readout{font-size:14px}.map-north{display:none}}
 @media(max-height:520px){.map-modal{padding:6px}.map-panel{padding:8px}.map-header{padding-bottom:6px}.map-header p{display:none}.map-tools{padding:6px 0}.map-footer{padding-top:5px}.map-mini{transform:scale(.64);transform-origin:top right}}
+
+/* The VHS picture is contained, never stretched or cropped to fill the screen.
+   Menus and the full map retain the whole window for readable interaction. */
+body[data-filter="vhs"],body[data-filter="vhs"] #game{background:#080909}
+body[data-filter="vhs"] canvas.scene{width:var(--scene-width,100vw);height:var(--scene-height,100vh);left:var(--scene-left,0px);top:var(--scene-top,0px);right:auto;bottom:auto}
+body[data-filter="vhs"] .hud{inset:var(--scene-top,0px) var(--scene-left,0px)}
+body[data-filter="vhs"] .map-mini{right:calc(var(--scene-left,0px) + 24px);top:calc(var(--scene-top,0px) + 18px)}
+@media(max-width:800px){body[data-filter="vhs"] .map-mini{right:calc(var(--scene-left,0px) + 14px);top:calc(var(--scene-top,0px) + 14px)}}
+@media(max-width:520px){body[data-filter="vhs"] .map-mini{right:calc(var(--scene-left,0px) + 10px);top:calc(var(--scene-top,0px) + 10px)}body[data-filter="vhs"] .key-hints{display:none}body[data-filter="vhs"] .hud{padding:10px}body[data-filter="vhs"] .toast{bottom:65px}}
+
+/* Compact picture controls remain readable even in a tall phone window. Touch
+   controls use the screen's free border area so they cannot cover the minimap. */
+.compact-picture .compass,.compact-picture .key-hints{display:none}
+.compact-picture .hud{padding:10px}.compact-picture .hud-title,.compact-picture .hud-sub{font-size:14px;line-height:18px;max-width:140px}
+.compact-picture .hud-right{margin-right:132px}.compact-picture .map-mini{transform:scale(.64);transform-origin:top right}
+.compact-picture .stats{gap:10px}.compact-picture .bar{width:48px}.compact-picture .toast{bottom:65px}

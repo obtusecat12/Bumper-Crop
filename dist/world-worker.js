@@ -7,7 +7,7 @@ import {createPacker} from './scene-packets.js?v=15';
 import {initializeRuralTextures} from './rural-textures.js?v=13';
 if(typeof OffscreenCanvas==='undefined')throw Error('OffscreenCanvas is unavailable');
 globalThis.document={createElement(tag){if(tag==='canvas')return new OffscreenCanvas(1,1);throw Error('Unsupported worker element '+tag)}};
-const models=await import('./models.js?v=15');
+const models=await import('./models.js?v=16');
 const wheat=await import('./dense-wheat.js?v=13');
 await initializeRuralTextures();
 const packer=createPacker({T,isSharedResource:models.isSharedModelResource,wind:models.wind});

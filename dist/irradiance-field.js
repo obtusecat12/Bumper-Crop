@@ -22,15 +22,23 @@ float probeVisibility(vec3 uv,vec3 delta){
   float variance=max(.0025,m.y-m.x*m.x),p=variance/(variance+gap*gap);
   return p*p*p;
 }
-void gatherProbe(vec3 cell,float blend,vec3 p,vec3 n,inout vec3 sum,inout float weight,inout float available){
-  vec3 uv=(cell+.5)/probeGrid;
-  vec4 location=texture(uProbePosition,uv);if(location.w<.5)return;
-  vec3 position=uProbeOrigin+cell*probeStep+location.xyz;
-  vec3 delta=p-position;
+vec4 probeContribution(vec3 cell,float blend,vec3 p,vec3 n,out float available){
+  vec3 uv=(cell+.5)/probeGrid;available=0.;
+  if(blend<=0.)return vec4(uv,0.);
+  vec4 location=texture(uProbePosition,uv);if(location.w<.5)return vec4(uv,0.);
+  vec3 position=uProbeOrigin+cell*probeStep+location.xyz,delta=p-position;
   float normalWeight=max(.05,dot(n,normalize(-delta+vec3(.00001)))*.5+.5);
-  float base=blend*normalWeight;
-  float v=probeVisibility(uv,delta),w=base*v;
-  sum+=sampleProbe(uv,n)*w;weight+=w;available+=base;
+  available=blend*normalWeight;
+  return vec4(uv,available*probeVisibility(uv,delta));
+}
+// Low-frequency GGX prefilter of the same overcast sky used by the ray cache.
+// Its first angular moment is fitted once; no cubemap or extra texture lookup.
+vec3 ruralReflection(vec3 n,vec3 v,float roughness){
+  float r=clamp(roughness,0.,1.),r2=r*r;
+  float k=clamp(1.-r2/3.+r2*(1.-r)*(.5963702+r*(-3.4923372+r*(3.5997670-1.14283725*r))),.6666667,1.);
+  vec3 reflected=normalize(mix(reflect(-v,n),n,r2));
+  vec3 direction=normalize((vec4(reflected,0.)*viewMatrix).xyz);
+  return mix(vec3(${SKY_BOTTOM.join(',')}),vec3(${SKY_TOP.join(',')}),.5+.5*k*direction.y)*uProbeWeather;
 }
 vec3 ruralIrradiance(vec3 point,vec3 normal){
   vec3 sky=mix(vec3(${SKY_BOTTOM.join(',')}),vec3(${SKY_TOP.join(',')}),normal.y/3.+.5);
@@ -58,12 +66,22 @@ vec3 ruralIrradiance(vec3 point,vec3 normal){
       else if(f.y>=f.z){a=vec3(0,1,0);b=vec3(0,1,1);w=vec4(1.-f.y,f.y-f.z,f.z-f.x,f.x);}
       else{a=vec3(0,0,1);b=vec3(0,1,1);w=vec4(1.-f.z,f.z-f.y,f.y-f.x,f.x);}
     }
-    vec3 sum=vec3(0.);float weight=0.,available=0.;
-    gatherProbe(cell,w.x,p,normal,sum,weight,available);
-    gatherProbe(cell+a,w.y,p,normal,sum,weight,available);
-    gatherProbe(cell+b,w.z,p,normal,sum,weight,available);
-    gatherProbe(cell+1.,w.w,p,normal,sum,weight,available);
-    irradiance=weight>.0001?sum/weight:available>.0001?vec3(.012):sky;
+    float a0,a1,a2,a3;
+    vec4 p0=probeContribution(cell,w.x,p,normal,a0);
+    vec4 p1=probeContribution(cell+a,w.y,p,normal,a1);
+    vec4 p2=probeContribution(cell+b,w.z,p,normal,a2);
+    vec4 p3=probeContribution(cell+1.,w.w,p,normal,a3);
+    float weight=p0.w+p1.w+p2.w+p3.w,available=a0+a1+a2+a3;
+    if(weight>.0001){
+      // Reject only after normalization: dark interiors may have tiny absolute
+      // visibility weights. Omitted total contribution is bounded below .04%.
+      float cutoff=weight*.0001;vec3 sum=vec3(0.);
+      if(p0.w>=cutoff)sum+=sampleProbe(p0.xyz,normal)*p0.w;
+      if(p1.w>=cutoff)sum+=sampleProbe(p1.xyz,normal)*p1.w;
+      if(p2.w>=cutoff)sum+=sampleProbe(p2.xyz,normal)*p2.w;
+      if(p3.w>=cutoff)sum+=sampleProbe(p3.xyz,normal)*p3.w;
+      irradiance=sum/weight;
+    }else irradiance=available>.0001?vec3(.012):sky;
   }
   float edge=min(min(grid.x,probeGrid.x-1.-grid.x),min(grid.z,probeGrid.z-1.-grid.z));
   return mix(sky,irradiance,smoothstep(0.,2.,edge))*uProbeWeather;
@@ -135,11 +153,25 @@ export function createIrradianceField() {
             #endif
             vIrradianceWorld=(modelMatrix*giPosition).xyz;`);
           shader.fragmentShader=pars+'\n'+shader.fragmentShader;
-          shader.fragmentShader=shader.fragmentShader.replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+          shader.fragmentShader=shader.fragmentShader.replace('#include <lights_fragment_end>',`
             vec3 giNormal=inverseTransformDirection(normal,viewMatrix);
-            reflectedLight.indirectDiffuse=material.diffuseColor*ruralIrradiance(vIrradianceWorld,giNormal);`);
+            vec3 ruralGI=ruralIrradiance(vIrradianceWorld,giNormal);
+            #ifdef STANDARD
+              // Let Three conserve energy between diffuse, single and multiple
+              // specular scattering. Do not replace its diffuse result afterward.
+              vec3 ruralSky=mix(vec3(${SKY_BOTTOM.join(',')}),vec3(${SKY_TOP.join(',')}),giNormal.y/3.+.5)*uProbeWeather;
+              float ruralAO=clamp(dot(ruralGI,vec3(.2126,.7152,.0722))/max(.0001,dot(ruralSky,vec3(.2126,.7152,.0722))),0.,1.);
+              float ruralSpecAO=computeSpecularOcclusion(saturate(dot(geometryNormal,geometryViewDir)),ruralAO,material.roughness);
+              irradiance=vec3(0.);
+              iblIrradiance=PI*ruralGI;
+              radiance=ruralReflection(geometryNormal,geometryViewDir,material.roughness)*ruralSpecAO;
+            #endif
+            #include <lights_fragment_end>
+            #ifndef STANDARD
+              reflectedLight.indirectDiffuse=material.diffuseColor*ruralGI;
+            #endif`);
         };
-        m.customProgramCacheKey=()=>key+'|rural-ray-irradiance-v15';m.needsUpdate=true;registered.add(m);
+        m.customProgramCacheKey=()=>key+'|rural-ray-irradiance-v16';m.needsUpdate=true;registered.add(m);
       }
     });
   }

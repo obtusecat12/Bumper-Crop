@@ -2,10 +2,16 @@ import * as T from './vendor/three.module.min.js';
 import {createFrameReadback} from './frame-readback.js?v=14';
 
 export const FILTERS = Object.freeze(['vhs', 'pixel', 'ps1', 'native']);
+export function displayFrame(filter,width,height){
+  const w=filter==='vhs'?Math.min(width,height*4/3):width,h=filter==='vhs'?w*3/4:height;
+  return {width:w,height:h,left:(width-w)/2,top:(height-h)/2,aspect:w/Math.max(1,h)};
+}
 export function displaySize(filter, quality, width, height, autoScale = 1) {
+  // Square pixels throughout: 4:3 projection, 640×480 signal and 4:3 display.
+  if(filter==='vhs')return {width:640,height:480};
   const aspect = Math.max(.2, width / Math.max(1, height));
-  if (filter === 'vhs' || filter === 'ps1') {
-    const h = Math.max(2, Math.min(filter === 'vhs' ? 480 : 320, Math.floor(1920 / aspect)));
+  if (filter === 'ps1') {
+    const h = Math.max(2, Math.min(320, Math.floor(1920 / aspect)));
     return {width: Math.max(2, Math.round(h * aspect / 2) * 2), height: h};
   }
   const scale = (filter === 'pixel' ? quality === 'high' ? .75 : quality === 'low' ? .48 : .62 : 1) * autoScale;
@@ -67,7 +73,7 @@ export function createDisplayFilter(renderer, {onError = () => {}} = {}) {
   function startWorker() {
     if (worker || failed || disposed) return;
     try {
-      worker = new Worker(new URL('./vhs-worker.js?v=14', import.meta.url), {type: 'module', name: 'ntsc-rs-vhs'});
+      worker = new Worker(new URL('./vhs-worker.js?v=16', import.meta.url), {type: 'module', name: 'ntsc-rs-vhs'});
       workerTimer = setTimeout(() => fail(new Error('VHS initialization timed out')), 15000);
       worker.onerror = event => {event.preventDefault?.(); fail(new Error(event.message || 'VHS worker failed'));};
       worker.onmessageerror = () => fail(new Error('VHS frame transfer failed'));

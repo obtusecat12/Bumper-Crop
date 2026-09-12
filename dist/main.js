@@ -1,15 +1,16 @@
+import {createMaterialFinish} from './material-finish.js?v=16';
 import {createRuralShadows} from './rural-shadows.js?v=15';
-import {createIrradianceField} from './irradiance-field.js?v=15';
-import {createDisplayFilter,displaySize,FILTERS} from './display-filter.js?v=14';
+import {createIrradianceField} from './irradiance-field.js?v=16';
+import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=16';
 import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=13';
 import {createCardOrderController} from './instance-order.js?v=13';
 import {createPerformanceMeter} from './performance-meter.js?v=14';
-import {createChunkStream} from './world-stream.js?v=15';
+import {createChunkStream} from './world-stream.js?v=16';
 import * as T from './vendor/three.module.min.js';
 import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=13';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=15';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=16';
 import {createWheatDetailLayer} from './dense-wheat.js?v=13';
-import {createAtmosphere} from './atmosphere.js?v=13';
+import {createAtmosphere} from './atmosphere.js?v=16';
 import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=13';
 import {initializeRuralTextures} from './rural-textures.js?v=13';
 import {createNavigationMap} from './map-ui.js?v=13';
@@ -42,7 +43,7 @@ game.innerHTML=`
 <div class="modal" id="journal" role="dialog" aria-modal="true" aria-labelledby="journal-title" hidden><div class="panel"><div class="panel-header"><h2 id="journal-title">层级档案 / 010</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="journal-meta">M.E.G. FIELD NOTES · 丰裕</div><div class="journal-body"><p><strong>你正站在一片没有尽头的麦田。</strong><br>树木与高度近似的灌木将麦田分割成小块。天空始终阴沉，偶有短暂细雨与雾气，白昼从未结束。</p><p>沿着两条轮胎碾痕前行。中间的草仍在生长，但车辙里的种子永远不会发芽。这里没有被发现过的车辆。</p><p>低地的湖水清澈，带有泥土的气味。靠近湖岸时，可按 <strong>E</strong> 饮水。</p><p>谷仓、马厩和木棚大多空无一人。里面偶尔能找到木料、钉子和遗落的杏仁水。拾起杏仁水后，按 <strong>Q</strong> 饮用。</p><p>麦丛会拖慢脚步。回到小径可以更快前进。没有任务期限，沿着风走下去。</p><p>出生点东北侧有一处固定农场。按 <strong>F2</strong> 可前往两处照片机位；移动或环顾即可恢复探索镜头。</p><p class="reference-credit">农场影像参考：Edmund Garman，<a href="https://www.flickr.com/photos/3cl/3718833796" target="_blank" rel="noopener noreferrer">Kephart Farm</a> / <a href="https://www.flickr.com/photos/3cl/3719218226" target="_blank" rel="noopener noreferrer">Kephart Farm 2</a>，2009，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。场景为依据照片重新制作的三维重建。</p></div><div class="panel-note" id="expedition">尚未开始探索。</div></div></div>
 <div class="modal" id="controls" role="dialog" aria-modal="true" aria-labelledby="controls-title" hidden><div class="panel"><div class="panel-header"><h2 id="controls-title">操作指南</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="controls-list"><div><span class="key">W A S D</span>移动</div><div><span class="key">鼠标</span>环顾四周</div><div><span class="key">SHIFT</span>按住奔跑</div><div><span class="key">SPACE</span>跳跃</div><div><span class="key">C</span>按住蹲下</div><div><span class="key">E</span>拾取 / 湖边饮水</div><div><span class="key">Q</span>饮用杏仁水</div><div><span class="key">J</span>层级档案</div><div><span class="key">ESC</span>暂停 / 释放鼠标</div><div><span class="key">F</span>地图 / 点击传送</div><div><span class="key">F10</span>切换全屏</div><div><span class="key">F2</span>开发者传送</div></div><div class="panel-note">点击「进入麦田」后即可用鼠标观察。若浏览器不允许锁定鼠标，按住鼠标拖动也可以环顾。触屏设备使用左侧摇杆移动、右侧滑动观察。</div></div></div>`;
 
-game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V15</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
+game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V16</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
 
 const touchDevice=matchMedia('(pointer:coarse)').matches;
 document.body.classList.toggle('touch-mode',touchDevice);
@@ -63,11 +64,12 @@ const displayFilter=createDisplayFilter(renderer,{onError:()=>{settings.filter='
 const scene=new T.Scene();scene.matrixAutoUpdate=false;scene.background=new T.Color('#acb6b1');scene.fog=new T.Fog('#acb6b1',60,225);
 scene.add(new T.HemisphereLight('#c9d2d4','#6b6042',1.4));
 const atmosphere=createAtmosphere({scene,quality:settings.quality});scene.add(atmosphere.sky);
+const materialFinish=createMaterialFinish();
 let lightingReady=false;
-const wheatDetail=createWheatDetailLayer(wind,{onMesh:mesh=>{atmosphere.attachFog(mesh);if(lightingReady){naturalShadows.attach(mesh);irradiance.attach(mesh)}}});scene.add(wheatDetail.object);atmosphere.attachFog(wheatDetail.object);
+const wheatDetail=createWheatDetailLayer(wind,{onMesh:mesh=>{atmosphere.attachFog(mesh);if(lightingReady){materialFinish.attach(mesh);naturalShadows.attach(mesh);irradiance.attach(mesh)}}});scene.add(wheatDetail.object);atmosphere.attachFog(wheatDetail.object);
 const camera=new T.PerspectiveCamera(settings.fov,innerWidth/innerHeight,.075,480);camera.rotation.order='YXZ';
 const naturalShadows=createRuralShadows({renderer,scene,camera,quality:settings.quality}),irradiance=createIrradianceField();
-lightingReady=true;naturalShadows.attach(wheatDetail.object);irradiance.attach(wheatDetail.object);
+lightingReady=true;materialFinish.attach(wheatDetail.object);naturalShadows.attach(wheatDetail.object);irradiance.attach(wheatDetail.object);
 function releaseChunk(chunk){naturalShadows.detach(chunk.group);irradiance.remove(chunk);disposeChunk(chunk);}
 const state={cx:0n,cz:0n,x:.6,z:52,y:0,yaw:-.37,pitch:-.025,velocity:new T.Vector3(),jump:0,vy:0,grounded:true,stamina:100,hydration:100,bottles:0,distance:0,elapsed:0};
 const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),chunks=new Map(),collected=new Set();
@@ -100,7 +102,7 @@ function finishChunk(build,c){
  c.group.traverse(o=>{o.updateMatrix();o.matrixAutoUpdate=false});
  // An item may have been picked up while this replacement was in the worker.
  for(const p of c.pickups)if(p.mesh&&collected.has(p.id)){c.group.remove(p.mesh);p.mesh=null}
- atmosphere.attachFog(c.group);naturalShadows.attach(c.group);irradiance.attach(c.group);cardOrder.register(c.group);build.chunk=c;build.compiling=true;
+ atmosphere.attachFog(c.group);materialFinish.attach(c.group);naturalShadows.attach(c.group);irradiance.attach(c.group);cardOrder.register(c.group);build.chunk=c;build.compiling=true;
  // KHR_parallel_shader_compile lets the driver prepare a new material before
  // the first visible frame. The target Scene supplies identical lights/fog.
  renderer.compileAsync(c.group,camera,scene).then(()=>{
@@ -134,9 +136,12 @@ function streamOne(){
 }
 
 function resize(){
+ const frame=displayFrame(settings.filter,innerWidth,innerHeight);
+ document.body.classList.toggle('compact-picture',frame.width<640||frame.height<360);
+ for(const key of ['width','height','left','top'])document.documentElement.style.setProperty('--scene-'+key,frame[key]+'px');
  const size=displaySize(settings.filter,settings.quality,innerWidth,innerHeight,autoScale);
  renderer.setSize(size.width,size.height,false);displayFilter.configure(settings.filter,size.width,size.height);
- camera.aspect=innerWidth/innerHeight;camera.fov=referenceView?2*Math.atan(Math.tan(referenceView.fov*Math.PI/360)*1.5/camera.aspect)*180/Math.PI:Number(settings.fov);
+ camera.aspect=frame.aspect;camera.fov=referenceView?2*Math.atan(Math.tan(referenceView.fov*Math.PI/360)*1.5/camera.aspect)*180/Math.PI:Number(settings.fov);
  camera.far=referenceView?1000:480;atmosphere.sky.scale.setScalar(referenceView?2:1);camera.updateProjectionMatrix();
  document.body.dataset.filter=settings.filter;naturalShadows.resize(settings.quality,referenceView?.range||220);
 }

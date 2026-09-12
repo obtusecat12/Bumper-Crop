@@ -46,7 +46,7 @@ vec3 lakeWaves(vec2 p,float time) {
 function waterMaterial(wind) {
   const mat = new T.MeshStandardMaterial({
     name: 'slate-blue wind-ripple water', color: '#314956', roughness: .34,
-    metalness: .23, transparent: false, depthWrite: true,
+    metalness: 0, transparent: false, depthWrite: true,
   });
   mat.onBeforeCompile = shader => {
     shader.uniforms.uLakeTime = wind.time;
@@ -74,20 +74,13 @@ roughnessFactor=clamp(.29+lakeMottle*.16+lakeShallow*.07,.25,.55);`);
 vec3 lakeNormal=normalize(vec3(-lakeW.y,1.,-lakeW.z));
 normal=normalize(mat3(viewMatrix)*lakeNormal);
 `);
-    shader.fragmentShader = shader.fragmentShader.replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-vec3 lakeEye=normalize(cameraPosition-vLakeWorld);
-float lakeFresnel=pow(1.-max(dot(lakeNormal,lakeEye),0.),4.);
-vec3 lakeReflection=reflect(-lakeEye,lakeNormal);
-vec2 lakeSkyUV=lakeReflection.xz/(max(lakeReflection.y,0.)+.24)*2.3;
-float lakeSky=lakeNoise(lakeSkyUV+vec2(uLakeTime*.004,0.));
-vec3 lakeSkyTint=mix(vec3(.055,.079,.098),vec3(.107,.128,.143),lakeSky);
-lakeSkyTint*=mix(.58,1.,smoothstep(-.04,.18,lakeReflection.y));
-// A muted sky reflection remains readable under the game's cloudy lighting.
-totalEmissiveRadiance+=lakeSkyTint*(.17+lakeFresnel*.62);
-float lakeSilver=pow(max(dot(reflect(-normalize(vec3(-.42,.76,.49)),lakeNormal),lakeEye),0.),85.);
-totalEmissiveRadiance+=vec3(.28,.31,.32)*lakeSilver*(1.-lakeShallow*.7);`);
+    shader.fragmentShader = shader.fragmentShader.replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>
+// Water is a dielectric with IOR 1.333. Sunlight is shadowed normally;
+// the common overcast reflection replaces the old unshadowed emissive glint.
+material.specularColor=vec3(.0203732);
+`);
   };
-  mat.customProgramCacheKey = () => 'rural-lake-water-v6.0';
+  mat.customProgramCacheKey = () => 'rural-lake-water-v16';
   return keep(mat);
 }
 
