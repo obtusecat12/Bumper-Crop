@@ -1,4 +1,4 @@
-import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=12';
+import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=13';
 // Scene packet codec for procedural Three.js chunks. No DOM or Worker globals.
 // Supply the same Three.js revision on both sides. Pack before attachFog().
 const VERSION=1;
@@ -9,7 +9,7 @@ const uniformAliases={uPhotoTreeTime:'time',uPhotoTreeWind:'strength',uTime:'tim
 const plain=value=>typeof structuredClone==='function'?structuredClone(value):value;
 function shaderLib(T,m){
  if(m.isShaderMaterial)return {vertexShader:m.vertexShader,fragmentShader:m.fragmentShader,uniforms:m.uniforms};
- const name=m.isMeshPhysicalMaterial?'physical':m.isMeshStandardMaterial?'standard':m.isMeshPhongMaterial?'phong':m.isMeshLambertMaterial?'lambert':m.isMeshNormalMaterial?'normal':m.isPointsMaterial?'points':m.isLineDashedMaterial?'dashed':'basic';
+ const name=m.isMeshPhysicalMaterial?'physical':m.isMeshStandardMaterial?'standard':m.isMeshLambertMaterial?'lambert':m.isMeshPhongMaterial?'phong':m.isMeshLambertMaterial?'lambert':m.isMeshNormalMaterial?'normal':m.isPointsMaterial?'points':m.isLineDashedMaterial?'dashed':'basic';
  return T.ShaderLib[name];
 }
 function shaderHash(value){let n=2166136261;for(let i=0;i<value.length;i++)n=Math.imul(n^value.charCodeAt(i),16777619);return (n>>>0).toString(36)}

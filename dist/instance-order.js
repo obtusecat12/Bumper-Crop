@@ -6,7 +6,7 @@ import * as T from './vendor/three.module.min.js';
 
 export const CARD_ORDER_KEY = 'cardDrawOrder';
 const SECTORS = 8, SECTOR_ANGLE = Math.PI / 4;
-const eligible = mesh => mesh?.isInstancedMesh && mesh.count > 0 && mesh.name === 'dense-wheat-cards' &&
+const eligible = mesh => mesh?.isInstancedMesh && mesh.count > 0 && (mesh.name === 'dense-wheat-cards' || mesh.name.startsWith('sward-patch-')) &&
   !Array.isArray(mesh.material) && mesh.material?.transparent !== true && !mesh.morphTexture;
 
 /** Worker-side preparation; keep this optional metadata next to the mesh.
@@ -73,11 +73,13 @@ export function createCardOrderController({ maxUploadBytes = 1024 * 1024, hyster
       const Index = data.orders[0].constructor;
       const previous = states.get(mesh);
       const current = previous?.current || Index.from({ length: mesh.count }, (_, i) => i), slots = previous?.slots || current.slice();
-      const record = { mesh, data, current, slots, sector: previous?.sector ?? null, onDispose: () => remove(mesh),
-        bytes: mesh.instanceMatrix.array.byteLength + (mesh.instanceColor?.array.byteLength || 0) };
+      const extra=Object.values(mesh.geometry.attributes).filter(a=>a.isInstancedBufferAttribute&&a.count===mesh.count);
+      const record = { mesh, data, current, slots, extra, sector: previous?.sector ?? null, onDispose: () => remove(mesh),
+        bytes: mesh.instanceMatrix.array.byteLength + (mesh.instanceColor?.array.byteLength || 0)+extra.reduce((n,a)=>n+a.array.byteLength,0) };
       // Static arrays still upload correctly, but DynamicDrawUsage advertises the
       // occasional sector changes. Register before the mesh's first rendering.
       mesh.instanceMatrix.setUsage(T.DynamicDrawUsage); mesh.instanceColor?.setUsage(T.DynamicDrawUsage);
+      for(const a of extra)a.setUsage(T.DynamicDrawUsage);
       mesh.addEventListener('dispose', record.onDispose); records.set(mesh, record); states.set(mesh, record);
     });
     stats.meshes = records.size;
@@ -90,10 +92,12 @@ export function createCardOrderController({ maxUploadBytes = 1024 * 1024, hyster
       const displaced = current[i];
       for (let k = 0; k < 16; k++) { const at = i * 16 + k, src = from * 16 + k, value = matrix[at]; matrix[at] = matrix[src]; matrix[src] = value; }
       if (colors) for (let k = 0; k < 3; k++) { const at = i * 3 + k, src = from * 3 + k, value = colors[at]; colors[at] = colors[src]; colors[src] = value; }
+      for(const a of record.extra)for(let k=0;k<a.itemSize;k++){const at=i*a.itemSize+k,src=from*a.itemSize+k,value=a.array[at];a.array[at]=a.array[src];a.array[src]=value}
       current[i] = wanted; current[from] = displaced; slots[wanted] = i; slots[displaced] = from;
     }
     mesh.instanceMatrix.clearUpdateRanges(); mesh.instanceMatrix.addUpdateRange(0, matrix.length); mesh.instanceMatrix.needsUpdate = true;
     if (colors) { mesh.instanceColor.clearUpdateRanges(); mesh.instanceColor.addUpdateRange(0, colors.length); mesh.instanceColor.needsUpdate = true; }
+    for(const a of record.extra){a.clearUpdateRanges();a.addUpdateRange(0,a.array.length);a.needsUpdate=true}
     // Reordering leaves the existing conservative bounds valid.
     record.sector = sector;
   }

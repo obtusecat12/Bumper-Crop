@@ -1,7 +1,7 @@
-import {meadowForTile,meadowSample,meadowEnvironment} from './meadow-layout.js?v=12';
-import {farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=12';
-import {createSettlementPlanner} from './rural-settlements.js?v=12';
-import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=12';
+import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=13';
+import {farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=13';
+import {createSettlementPlanner} from './rural-settlements.js?v=13';
+import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=13';
 export {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance};
 // Infinite signed BigInt cells with deterministic seed-based generation.
 export const CHUNK=64;
@@ -90,8 +90,23 @@ function addVegetation(f,r){const valid=(x,z,margin=0)=>x>2.5&&x<61.5&&z>2.5&&z<
  if(f.vegetationMode==='windbreak'){const side=r()<.5,offset=6+r()*5,v=r()<.7?5:1;for(let i=0;i<10;i++)for(let row=0;row<(r()<.23?2:1);row++){const t=9+i*4.4+(r()-.5)*.9;addTree(side?offset+row*3.4:t,side?t:offset+row*3.4,v,.75+r()*.35)}}
  else if(f.vegetationMode==='grove'){const gx=12+r()*39,gz=12+r()*39,n=7+Math.floor(r()*5),v=Math.floor(r()*5);for(let i=0;i<n;i++){const a=i*2.399+r()*.6,rad=2+Math.sqrt(r())*6;addTree(gx+Math.cos(a)*rad,gz+Math.sin(a)*rad,r()<.72?v:Math.floor(r()*6),.62+r()*.55)}}
  else{const n=r()<.36?0:1+Math.floor(r()*3);for(let i=0;i<n;i++){const side=r()<.5;addTree(side?4+r()*5:8+r()*48,side?8+r()*48:4+r()*5,Math.floor(r()*6),.67+r()*.65)}}
- // Broken, mixed living field boundaries, never continuous invisible walls.
- for(const axis of ['x','z']){if(r()<.17)continue;const gap=16+r()*31,baseWidth=1.55+r()*.65,dominant=Math.floor(r()*4),offset=3.2+r()*.8;for(let t=6+r()*2;t<60;t+=1.4+r()*.9){if(Math.abs(t-gap)<2.4||r()<.10)continue;const x=axis==='x'?offset+.25*Math.sin(t*.19):t,z=axis==='z'?offset+.25*Math.sin(t*.19):t;if(!valid(x,z,-.65))continue;f.shrubs.push({x,z,width:baseWidth*(.85+r()*.25),scale:.82+r()*.28,rotation:r()*6.283,variant:r()<.70?dominant:Math.floor(r()*4),seed:Math.floor(r()*4294967296)})}}
+ // Sparse irregular thickets are owned by 128 m cells, not field-edge rows.
+ // Parent/offspring coordinates are shared on both sides of tile boundaries.
+ const mx=meadowFloorDiv(f.x,2n),mz=meadowFloorDiv(f.z,2n);
+ for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+  const ax=mx+BigInt(dx),az=mz+BigInt(dz),q=random(chunkSeed(ax,az,f.worldSeed)^0x532f901);
+  if(q()>.49)continue;
+  const cx=Number(ax*2n-f.x)*64+q()*128,cz=Number(az*2n-f.z)*64+q()*128;
+  const radius=3+q()*7,stretch=.5+q()*.8,turn=q()*6.283,n=3+Math.floor(q()*8),dominant=Math.floor(q()*4);
+  for(let j=0;j<n;j++){
+   const a=q()*6.283,rad=Math.sqrt(q())*radius,u=Math.cos(a)*rad,v=Math.sin(a)*rad*stretch;
+   const x=cx+Math.cos(turn)*u-Math.sin(turn)*v,z=cz+Math.sin(turn)*u+Math.cos(turn)*v;
+   const width=.8+q()*1.65,scale=.58+q()*.66,rotation=q()*6.283,variant=q()<.65?dominant:Math.floor(q()*4),seed=Math.floor(q()*4294967296);
+   if(x<0||z<0||x>=64||z>=64||roadDistance(x,z,f)<2.6||inClearing(x,z,f))continue;
+   if(f.shrubs.some(p=>Math.hypot(x-p.x,z-p.z)<.5+(width*scale+p.width*p.scale)*.18))continue;
+   f.shrubs.push({x,z,width,scale,rotation,variant,seed,thicket:true});
+  }
+ }
  vegetationCover(f);
 }
 // Independent succession stream: old tree/border and landmark random draws remain intact.

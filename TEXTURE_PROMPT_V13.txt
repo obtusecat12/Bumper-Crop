@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: ONE original high-quality square grass texture atlas for crossed billboard vegetation in a Three.js game.
+subject: Four distinct dense photoreal US rural meadow grass sward patches. Each patch is a lush, broad, continuous wall of overlapping fine grass blades and stems, with full-width dense basal coverage, not an isolated skinny tuft. Each represents a patch about 0.6 to 0.9 meters wide and about 0.45 meters tall. Mixed fine green blades with a few pale dry blades, naturally curved leaves, subtle irregular height variation and interwoven foliage.
+composition: A precise 2 by 2 atlas of four equal square cells, without visible grids, text, or borders. One different grass patch wholly contained in each quadrant. Each quadrant has at least 8 percent transparent margin at left, right, and top. All four root baselines are horizontally aligned at 8 percent above the bottom of their own cell. The silhouette occupies the central 84 percent of each cell width. Every leaf and blade remains fully contained in its own quadrant. Orthographic straight-on front view, consistent scale and perspective across all four patches.
+background: TRUE TRANSPARENT alpha background surrounding and between every blade. Only grass is visible. No backdrop or ground plane. The four cutouts must be immediately usable for alpha-tested billboard rendering.
+lighting: Soft overcast neutral natural light, evenly exposed, subtle self-shading only, no cast shadows.
+color palette: Natural cool to neutral muted meadow greens, darker stems and bases, slight gray tones, a few pale dry blades. No yellow-lime or neon green. No oversaturation or oversharpening.
+photo quality: High-quality realistic botanical surface detail, natural fine leaf texture, crisp natural silhouettes, 2K square.
+aspect ratio: 1:1.
+Avoid: White backdrop, painted checkerboard backdrop, opaque background, landscape scenery, soil, ground plane, cast shadows, root balls, turf slabs, flowers, ferns, shrubs, separate sparse lone tufts, excessive yellow, neon lime green, visible grid lines, dividers, borders, text, logos, watermarks, clipping or any blade crossing a quadrant boundary.

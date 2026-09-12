@@ -2,7 +2,7 @@ import * as T from './vendor/three.module.min.js';
 
 // Shared, mipmapped albedo assets. Mirror-repeat makes opposite edge values
 // continuous without four extra texture reads or per-frame canvas processing.
-export const RURAL_TEXTURE_FILES={soil:'soil-loamy-earth-v9',path:'path-compacted-fine-gravel-v9',turf:'turf-short-patchy-meadow-v9',bark:'bark-weathered-oak-elm-v9',birch:'bark-pale-birch-aspen-v9',broadleaf:'canopy-small-oak-hawthorn-v9',fineleaf:'canopy-fine-willow-privet-v9'};
+export const RURAL_TEXTURE_FILES={meadow:'meadow-sward-v13',soil:'soil-loamy-earth-v9',path:'path-compacted-fine-gravel-v9',turf:'turf-short-patchy-meadow-v9',bark:'bark-weathered-oak-elm-v9',birch:'bark-pale-birch-aspen-v9',broadleaf:'canopy-small-oak-hawthorn-v9',fineleaf:'canopy-fine-willow-privet-v9'};
 const resources=new Set();
 export const ruralTextures=Object.fromEntries(Object.keys(RURAL_TEXTURE_FILES).map(key=>{
  const texture=new T.DataTexture(new Uint8Array([128,128,128,255]),1,1);

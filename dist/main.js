@@ -1,15 +1,15 @@
-import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=12';
-import {createCardOrderController} from './instance-order.js?v=12';
-import {createPerformanceMeter} from './performance-meter.js?v=12';
-import {createChunkStream} from './world-stream.js?v=12';
+import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=13';
+import {createCardOrderController} from './instance-order.js?v=13';
+import {createPerformanceMeter} from './performance-meter.js?v=13';
+import {createChunkStream} from './world-stream.js?v=13';
 import * as T from './vendor/three.module.min.js';
-import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=12';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=12';
-import {createWheatDetailLayer} from './dense-wheat.js?v=12';
-import {createAtmosphere} from './atmosphere.js?v=12';
-import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=12';
-import {initializeRuralTextures} from './rural-textures.js?v=12';
-import {createNavigationMap} from './map-ui.js?v=12';
+import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=13';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=13';
+import {createWheatDetailLayer} from './dense-wheat.js?v=13';
+import {createAtmosphere} from './atmosphere.js?v=13';
+import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=13';
+import {initializeRuralTextures} from './rural-textures.js?v=13';
+import {createNavigationMap} from './map-ui.js?v=13';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`

@@ -1,9 +1,9 @@
-import {meadowEnvironment} from './meadow-layout.js?v=12';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=12';
-import {pondShapeGLSL} from './lake-shape.js?v=12';
+import {meadowEnvironment} from './meadow-layout.js?v=13';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=13';
+import {pondShapeGLSL} from './lake-shape.js?v=13';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=12';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=12';
+import {ruralTextures} from './rural-textures.js?v=13';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=13';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
