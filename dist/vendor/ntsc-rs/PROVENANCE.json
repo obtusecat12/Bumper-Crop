@@ -1,0 +1,31 @@
+{
+  "retrievedUTC": "2026-09-12",
+  "binary": {
+    "source": "https://web.ntsc.rs/assets/ntsc_rs_web_wrapper_bg-D9z-w6RX.wasm",
+    "file": "ntsc_rs_web_wrapper_bg.wasm",
+    "bytes": 251813,
+    "sha256": "327540e052c8f99445877b078ab1c6121bf5f6eb9e49e159f5ce753b22c5210b"
+  },
+  "jsGlue": {
+    "sourceMap": "https://web.ntsc.rs/assets/effect-worker.worker-uKG--9qw.js.map",
+    "sourceMapEntry": "../../ntsc-rs-web-wrapper/build/ntsc_rs_web_wrapper.js",
+    "file": "ntsc-rs.js",
+    "sha256": "54dea3e595a025017011ce98505b79e13c5760bd3e562677dd2df73f7c25e486"
+  },
+  "licenses": {
+    "source": "https://web.ntsc.rs/licenses.json",
+    "sha256": "39fc3bbb913e3316a115263f951fb4beb11baebe183923335e9d93248ffa6e41"
+  },
+  "sourceReference": {
+    "webMainAtRetrieval": "94cdeb63af42d56d8dec53c27e6fc404eb275ff2",
+    "coreLockRevision": "abb8d99b17d70e74c489875001141632487e9b5a",
+    "coreVersionReportedByDeployedLicenses": "0.1.2",
+    "note": "The deployed binary carries no surfaced exact build commit. Main revision / lock revision record source references at download time, not independently verified byte-reproducible build provenance."
+  },
+  "relaxedSIMDBinary": {
+    "source": "https://web.ntsc.rs/assets/ntsc_rs_web_wrapper_relaxed_bg-CA5Ci4AW.wasm",
+    "file": "ntsc_rs_web_wrapper_relaxed_bg.wasm",
+    "bytes": 251931,
+    "sha256": "2785dc14d980c599b9b105c0b5ee7ebec70a3d3ec409c14cc5d1cfcab2395a3f"
+  }
+}

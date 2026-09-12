@@ -1,7 +1,7 @@
 // Opt-in local diagnostics. One asynchronous GPU query at a time, at most once
 // per 60 frames. Never wait for a result or change the scene/quality settings.
 export function createPerformanceMeter(renderer, clock = () => performance.now()) {
-  let gl, ext, initialized = false, frame = 0, pending = null, active = false, enabled = false, start = 0;
+  let gl, ext, initialized = false, frame = 0, lastQueryFrame = -60, pending = null, active = false, enabled = false, start = 0;
   const values = {cpu: null, gpu: null, calls: 0, triangles: 0, supported: null};
   const average = (old, next) => old === null ? next : old * .9 + next * .1;
   function drop() { if (pending) gl.deleteQuery(pending); pending = null; active = false; }
@@ -27,10 +27,12 @@ export function createPerformanceMeter(renderer, clock = () => performance.now()
     }
   }
   function beforeRender() {
-    if (!enabled || !ext || pending || frame % 60 !== 1) return;
+    // VHS presents cached frames between captures. Wait for an actual scene
+    // draw after the interval, rather than repeatedly timing only the blit.
+    if (!enabled || !ext || pending || frame - lastQueryFrame < 60) return;
     gl.getParameter(ext.GPU_DISJOINT_EXT);
     pending = gl.createQuery();
-    if (pending) { gl.beginQuery(ext.TIME_ELAPSED_EXT, pending); active = true; }
+    if (pending) { gl.beginQuery(ext.TIME_ELAPSED_EXT, pending); active = true; lastQueryFrame = frame; }
   }
   function end() {
     if (active) { gl.endQuery(ext.TIME_ELAPSED_EXT); active = false; }
