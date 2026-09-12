@@ -8,6 +8,7 @@ import {height} from './world.js?v=13';
 // width on a shrub is its approximate full spread in metres, before scale.
 const TAU=Math.PI*2, UP=new T.Vector3(0,1,0), V=(x=0,y=0,z=0)=>new T.Vector3(x,y,z);
 const shared=new Set(), leafGeometries=new Map(), windMaterials=new WeakMap();
+const depthMaterials=new WeakMap();
 const fallbackWind={time:{value:0},strength:{value:.5}};
 const woodMaterial=new T.MeshStandardMaterial({color:0xffffff,vertexColors:true,roughness:1});
 attachRuralDetail(woodMaterial,'bark');
@@ -35,6 +36,9 @@ function leafMaterial(wind,species){
     transformed.z+=cos(uNatureTime*1.13+nphase*1.4)*.027*uNatureWind*nflex;
    #endif`);
  };m.customProgramCacheKey=()=> 'nature-leaves-v5-attached';
+ const depth=new T.MeshDepthMaterial({side:T.DoubleSide,depthPacking:T.RGBADepthPacking});
+ depth.onBeforeCompile=m.onBeforeCompile;depth.customProgramCacheKey=()=> 'nature-moving-depth-v15';
+ depthMaterials.set(m,depth);shared.add(depth);
  attachRuralDetail(m,kind);variants.set(kind,m);shared.add(m);return m;
 }
 
@@ -119,7 +123,7 @@ class NatureBatch{
   }
   for(const [key,items]of this.sprays){
    const attached=typeof key==='string',species=attached?Number(key.split(':')[0]):key;
-   const g=foliageGeometry(species,this.level,attached),m=new T.InstancedMesh(g,leafMaterial(this.wind,species),items.length);m.name='Open foliage sprays / '+['oak','cottonwood','elm','maple','birch','conifer','compound'][species]+(attached?' / attached shrub shoots':'');
+   const g=foliageGeometry(species,this.level,attached),m=new T.InstancedMesh(g,leafMaterial(this.wind,species),items.length);m.customDepthMaterial=depthMaterials.get(m.material);m.name='Open foliage sprays / '+['oak','cottonwood','elm','maple','birch','conifer','compound'][species]+(attached?' / attached shrub shoots':'');
    items.forEach((a,i)=>{m.setMatrixAt(i,a.mat);m.setColorAt(i,a.color)});m.instanceMatrix.needsUpdate=true;m.instanceColor.needsUpdate=true;m.computeBoundingSphere();m.castShadow=true;m.receiveShadow=true;group.add(m);
    triangles+=g.attributes.position.count/3*items.length;drawCalls++;leafSprays+=items.length;
   }

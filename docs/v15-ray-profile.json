@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "chunks": 25,
+  "level0": 9,
+  "level1": 16,
+  "groundMin": 0.024688949808478355,
+  "groundMax": 0.20734861493110657,
+  "transferredMiB": 41.00249099731445,
+  "volume": {
+    "computed": 2527,
+    "reused": 0,
+    "rays": 155674,
+    "ms": 1985.201639,
+    "triangles": 558815,
+    "bytes": 58880728
+  },
+  "statuses": {
+    "invalid": 355,
+    "occluded": 1010,
+    "open": 1162
+  },
+  "farm": {
+    "key": "2,1",
+    "level": 0,
+    "triangles": 108289,
+    "groundCount": 4608,
+    "groundMean": [
+      0.10806041025433741,
+      0.0653476963885219,
+      0.03772862877303851
+    ],
+    "alphaTriangles": 34488,
+    "generateMs": 577.4689260000005
+  },
+  "normal": {
+    "key": "0,-1",
+    "level": 1,
+    "triangles": 15124,
+    "groundCount": 7488,
+    "groundMean": [
+      0.12058549942787036,
+      0.10221035337388022,
+      0.05084776646173042
+    ],
+    "alphaTriangles": 0,
+    "generateMs": 546.5978330000002
+  }
+}

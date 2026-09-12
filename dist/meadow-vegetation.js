@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
 import {createMeadowPlantAssets} from './meadow-plants.js?v=13';
 import {createFernGeometry} from './fern-geometry.js?v=13';
-import {makeSward,isSharedSwardResource} from './meadow-sward.js?v=13';
+import {makeSward,isSharedSwardResource} from './meadow-sward.js?v=15';
 import {meadowEnvironment} from './meadow-layout.js?v=13';
 import {random,periodOrigin,roadProfile,inClearing,surfaceHeight} from './world.js?v=13';
 import {farmFootprintDistance} from './farm-layout.js?v=13';
@@ -81,7 +81,7 @@ export function makeMeadowVegetation(f,level,wind){
   // The canopy always remains; only tiny interior geometric accents thin.
   const list=points[kind].filter(p=>p.variant===variant&&(level<2||kind==='fern'||kind==='seedgrass'));
   if(!list.length)continue;counts[kind]=(counts[kind]||0)+list.length;
-  const mesh=new T.InstancedMesh(assets[kind][lod][variant],material,list.length);mesh.name=`meadow-${kind}-${variant}`;
+  const mesh=new T.InstancedMesh(assets[kind][lod][variant],material,list.length);mesh.name=`meadow-${kind}-${variant}`;mesh.receiveShadow=true;
   list.forEach((p,i)=>{dummy.position.set(p.x,p.y-.009,p.z);dummy.rotation.set(0,p.angle,0);dummy.scale.set(p.scale,p.scale*p.heightScale,p.scale);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);tone.setRGB(p.tint,p.tint,p.tint);mesh.setColorAt(i,tone)});
   mesh.instanceMatrix.needsUpdate=true;mesh.instanceColor.needsUpdate=true;mesh.computeBoundingBox();mesh.computeBoundingSphere();mesh.boundingSphere.radius+=.15;group.add(mesh);
  }

@@ -22,7 +22,7 @@ function cardGeometry(level){
 function initialize(wind){
  if(mat)return;
  templates=[cardGeometry(0),cardGeometry(1)];
- mat=new T.MeshBasicMaterial({map:ruralTextures.meadow,side:T.DoubleSide,alphaTest:.32,depthWrite:true,color:0xffffff});
+ mat=new T.MeshLambertMaterial({map:ruralTextures.meadow,side:T.DoubleSide,alphaTest:.32,depthWrite:true,color:0xffffff});
  shared.add(mat);
  mat.onBeforeCompile=s=>{
   s.uniforms.uTime=wind.time;s.uniforms.uWind=wind.strength;
@@ -39,10 +39,14 @@ function initialize(wind){
    transformed.x+=wave*uWind*.09*flex;
    transformed.z+=sin(uTime*.83+root.x*.39)*uWind*.045*flex;`);
   s.fragmentShader='varying vec3 vSward;\n'+s.fragmentShader;
+  s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_begin>',`#include <normal_fragment_begin>
+   #ifdef DOUBLE_SIDED
+    normal *= faceDirection;
+   #endif`);
   s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
    diffuseColor.rgb*=vSward.y*mix(.74,1.08,smoothstep(0.,.65,vSward.x));`);
  };
- mat.customProgramCacheKey=()=> 'continuous-sward-v13';
+ mat.customProgramCacheKey=()=> 'continuous-sward-lit-v15';
 }
 export function makeSward(f,points,level,wind){
  initialize(wind);const group=new T.Group();group.name='continuous-meadow-sward';
@@ -62,7 +66,7 @@ export function makeSward(f,points,level,wind){
    const extent=p.width*.73+.15;
    bounds.expandByPoint(point.set(p.x-extent,p.y-.04,p.z-extent));bounds.expandByPoint(point.set(p.x+extent,p.y+p.height+.04,p.z+extent));
   });
-  mesh.instanceMatrix.needsUpdate=true;mesh.boundingBox=bounds;mesh.boundingSphere=bounds.getBoundingSphere(new T.Sphere());mesh.receiveShadow=false;
+  mesh.instanceMatrix.needsUpdate=true;mesh.boundingBox=bounds;mesh.boundingSphere=bounds.getBoundingSphere(new T.Sphere());mesh.receiveShadow=true;
   if(!layout.orders[i])layout.orders[i]=prepareCardDrawOrder(mesh);
   // Transfer only copies: cached permutations must survive worker packets.
   mesh.userData[CARD_ORDER_KEY]={...layout.orders[i],orders:layout.orders[i].orders.map(a=>a.slice())};group.add(mesh);

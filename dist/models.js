@@ -1,9 +1,9 @@
-import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=13';
+import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=15';
 import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=13';
 import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=13';
 import * as T from './vendor/three.module.min.js';
 import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=13';
-import {makeNature,isSharedNatureResource} from './nature.js?v=13';
+import {makeNature,isSharedNatureResource} from './nature.js?v=15';
 import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=13';
 import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=13';
 import {isSharedRuralTexture} from './rural-textures.js?v=13';

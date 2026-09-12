@@ -9,7 +9,7 @@ const uniformAliases={uPhotoTreeTime:'time',uPhotoTreeWind:'strength',uTime:'tim
 const plain=value=>typeof structuredClone==='function'?structuredClone(value):value;
 function shaderLib(T,m){
  if(m.isShaderMaterial)return {vertexShader:m.vertexShader,fragmentShader:m.fragmentShader,uniforms:m.uniforms};
- const name=m.isMeshPhysicalMaterial?'physical':m.isMeshStandardMaterial?'standard':m.isMeshLambertMaterial?'lambert':m.isMeshPhongMaterial?'phong':m.isMeshLambertMaterial?'lambert':m.isMeshNormalMaterial?'normal':m.isPointsMaterial?'points':m.isLineDashedMaterial?'dashed':'basic';
+ const name=m.isMeshDepthMaterial?'depth':m.isMeshDistanceMaterial?'distanceRGBA':m.isMeshPhysicalMaterial?'physical':m.isMeshStandardMaterial?'standard':m.isMeshLambertMaterial?'lambert':m.isMeshPhongMaterial?'phong':m.isMeshLambertMaterial?'lambert':m.isMeshNormalMaterial?'normal':m.isPointsMaterial?'points':m.isLineDashedMaterial?'dashed':'basic';
  return T.ShaderLib[name];
 }
 function shaderHash(value){let n=2166136261;for(let i=0;i<value.length;i++)n=Math.imul(n^value.charCodeAt(i),16777619);return (n>>>0).toString(36)}
@@ -97,15 +97,17 @@ export function createPacker({T,isSharedResource=()=>false,wind={},viewUniform}=
    for(const key of nodeProps)r.props[key]=o[key];
    if(o.geometry)r.geometry=resource(o.geometry,'geometries');
    if(o.material)r.material=Array.isArray(o.material)?o.material.map(m=>resource(m,'materials')):resource(o.material,'materials');
+   for(const key of ['customDepthMaterial','customDistanceMaterial'])if(o[key])r[key]=resource(o[key],'materials');
    if(o.isInstancedMesh){r.count=o.count;r.instanceMatrix=attribute(o.instanceMatrix,false);r.instanceColor=o.instanceColor?attribute(o.instanceColor,false):null;r.boundingBox=boxRecord(o.boundingBox);r.boundingSphere=sphereRecord(o.boundingSphere)}
    if(o.morphTargetInfluences)r.morphTargetInfluences=o.morphTargetInfluences.slice();
    if(o.morphTargetDictionary)r.morphTargetDictionary={...o.morphTargetDictionary};
    r.children=o.children.map(node);return id;
   }
   try{
-   const root=node(chunk.group),metadata={};for(const[k,v]of Object.entries(chunk))if(k!=='group'&&k!=='pickups')metadata[k]=k==='detailPatches'?v:plain(v);
+   const root=node(chunk.group),metadata={};for(const[k,v]of Object.entries(chunk))if(k!=='group'&&k!=='pickups')metadata[k]=(k==='detailPatches'||k==='rayGeometry')?v:plain(v);
    packet.chunk={root,...metadata,pickups:(chunk.pickups||[]).map(p=>{const q={};for(const[k,v]of Object.entries(p))if(k!=='mesh')q[k]=plain(v);q.meshNode=p.mesh?nodeIds.get(p.mesh):null;if(p.mesh&&q.meshNode===undefined)throw Error('Pickup mesh is outside chunk hierarchy');return q})};
    for(const patch of chunk.detailPatches?.patches||[])for(const v of Object.values(patch))if(ArrayBuffer.isView(v)&&!buffers.has(v.buffer)){buffers.add(v.buffer);transfer.push(v.buffer)}
+   if(chunk.rayGeometry){const g=chunk.rayGeometry;for(const a of [g.positions,g.colors,g.uvs,g.textureIds,g.thin,g.ground,...g.alphaTextures.map(t=>t.data)])if(!buffers.has(a.buffer)){buffers.add(a.buffer);transfer.push(a.buffer)}}
    return {packet,transfer};
   }catch(error){for(const r of newShared)sharedIds.delete(r);throw error}
  }
@@ -162,6 +164,7 @@ export function createUnpacker({T,wind={},viewUniform,uniformBindings={}}={}){
    const g=r.geometry?lookup(r.geometry):undefined,m=Array.isArray(r.material)?r.material.map(lookup):r.material?lookup(r.material):undefined;
    let o;if(r.instanceMatrix)o=new T.InstancedMesh(g,m,r.instanceMatrix.array.length/16);
    else if(r.type==='Mesh')o=new T.Mesh(g,m);else if(r.type==='LineSegments')o=new T.LineSegments(g,m);else if(r.type==='LineLoop')o=new T.LineLoop(g,m);else if(r.type==='Line')o=new T.Line(g,m);else if(r.type==='Points')o=new T.Points(g,m);else if(r.type==='Group')o=new T.Group();else if(r.type==='Object3D')o=new T.Object3D();else throw Error('Unsupported object type '+r.type);
+   for(const key of ['customDepthMaterial','customDistanceMaterial'])if(r[key])o[key]=lookup(r[key]);
    Object.assign(o,r.props);o.matrix.fromArray(r.matrix);o.position.fromArray(r.position);o.quaternion.fromArray(r.quaternion);o.scale.fromArray(r.scale);o.matrixWorldNeedsUpdate=true;o.layers.mask=r.layers;o.userData=unpackCardOrderUserData(r.userData,plain);
    if(r.instanceMatrix){o.instanceMatrix=attribute(r.instanceMatrix);o.instanceColor=r.instanceColor?attribute(r.instanceColor):null;o.count=r.count;o.boundingBox=box(r.boundingBox);o.boundingSphere=sphere(r.boundingSphere)}
    if(r.morphTargetInfluences)o.morphTargetInfluences=r.morphTargetInfluences.slice();if(r.morphTargetDictionary)o.morphTargetDictionary={...r.morphTargetDictionary};nodes[r.id]=o;
