@@ -1,4 +1,4 @@
-import {createVhsCore} from './vhs-core.js?v=19';
+import {createVhsCore} from './vhs-core.js?v=20';
 
 let core;
 try {
@@ -9,10 +9,10 @@ try {
 }
 self.onmessage = ({data}) => {
   if (!core || data.type !== 'frame') return;
-  const {buffer, width, height, frame, epoch, capturedAt} = data, start = performance.now();
+  const {buffer, width, height, frame, epoch, capturedAt, sequence, pregradedTopDown} = data, start = performance.now();
   try {
-    core.process(buffer, width, height, frame);
-    self.postMessage({type: 'frame', buffer, width, height, epoch, capturedAt, ms: performance.now() - start}, [buffer]);
+    core.process(buffer, width, height, frame, {pregradedTopDown});
+    self.postMessage({type: 'frame', buffer, width, height, epoch, capturedAt, sequence, ms: performance.now() - start}, [buffer]);
   } catch (error) {
     self.postMessage({type: 'error', message: String(error?.message || error)});
   }

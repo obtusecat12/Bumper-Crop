@@ -22,7 +22,7 @@ export async function createVhsCore(moduleOrPath) {
   list.free();
   return {
     preset,
-    process(buffer, width, height, frame) {
+    process(buffer, width, height, frame, {pregradedTopDown = false} = {}) {
       if (!(buffer instanceof ArrayBuffer) || !Number.isInteger(width) || !Number.isInteger(height) ||
           width < 2 || height < 2 || width > 1920 || height > 1080 ||
           buffer.byteLength !== width * height * 4 || !Number.isSafeInteger(frame) || frame < 0) {
@@ -31,7 +31,8 @@ export async function createVhsCore(moduleOrPath) {
       const input = new Uint8Array(buffer), target = effect.inputBuffer(width, height), stride = width * 4;
       // WebGL readback is bottom-up. ntsc-rs expects display-encoded sRGB,
       // top-down. Grade and flip together, in the worker, without extra buffers.
-      for (let y = 0; y < height; y++) {
+      if (pregradedTopDown) target.set(input);
+      else for (let y = 0; y < height; y++) {
         let src = (height - 1 - y) * stride, dst = y * stride;
         for (let x = 0; x < width; x++, src += 4, dst += 4) {
           const r = input[src], g = input[src + 1], b = input[src + 2], luma = .299 * r + .587 * g + .114 * b;

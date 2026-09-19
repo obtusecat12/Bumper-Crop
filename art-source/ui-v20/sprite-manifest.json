@@ -1,0 +1,362 @@
+{
+  "sheet_size": [
+    1254,
+    1254
+  ],
+  "coordinate_convention": "All boxes are [left, top, right, bottom], right and bottom exclusive. Visible boxes use alpha >32. Crop boxes include gutters. Local pivots use crop origin.",
+  "generation": "Built-in image_gen; one generation per sheet; original two supplied references used for each; normalized final prompts in prompts.json.",
+  "materials": {
+    "file": "materials-sheet-v1.png",
+    "sprites": {
+      "leather_panel": {
+        "visible_box": [
+          34,
+          141,
+          631,
+          446
+        ],
+        "crop_box": [
+          24,
+          131,
+          642,
+          457
+        ],
+        "pivot": [
+          309,
+          163
+        ]
+      },
+      "brass_panel": {
+        "visible_box": [
+          679,
+          141,
+          1221,
+          446
+        ],
+        "crop_box": [
+          669,
+          131,
+          1232,
+          457
+        ],
+        "pivot": [
+          281.5,
+          163
+        ]
+      },
+      "wheat_sprig": {
+        "visible_box": [
+          52,
+          477,
+          713,
+          1148
+        ],
+        "crop_box": [
+          40,
+          466,
+          725,
+          1160
+        ],
+        "pivot": [
+          45,
+          650
+        ],
+        "pivot_description": "Near lower-left stem/rivet base; use crop top-left if positioning as an ornament."
+      },
+      "rivet": {
+        "visible_box": [
+          678,
+          949,
+          846,
+          1114
+        ],
+        "crop_box": [
+          668,
+          939,
+          856,
+          1124
+        ],
+        "pivot": [
+          94,
+          92.5
+        ]
+      },
+      "almond_water_bottle": {
+        "visible_box": [
+          1060,
+          815,
+          1196,
+          1134
+        ],
+        "crop_box": [
+          1050,
+          805,
+          1206,
+          1144
+        ],
+        "pivot": [
+          78,
+          169.5
+        ]
+      }
+    },
+    "notes": [
+      "The patch sprites include bevel frames; the brass patch includes four rivets. Use panel interiors only if plain materials are required.",
+      "Fine grain and gold remain stronger than the requested muted old-game look at full source resolution; downscale for UI use and consider moderate desaturation.",
+      "Wheat contains two heads plus a small rivet at the base; it closely follows the original diagonal motif."
+    ]
+  },
+  "compass": {
+    "file": "compass-sheet-v1.png",
+    "sprites": {
+      "housing_ring": {
+        "visible_box": [
+          54,
+          122,
+          638,
+          702
+        ],
+        "crop_box": [
+          42,
+          108,
+          650,
+          716
+        ],
+        "pivot": [
+          304,
+          304
+        ],
+        "center_on_sheet": [
+          346,
+          412
+        ],
+        "outside_radius": [
+          292,
+          290
+        ],
+        "open_center_radius_approx": [
+          218,
+          211
+        ]
+      },
+      "glass_lid": {
+        "visible_box": [
+          665,
+          146,
+          1196,
+          674
+        ],
+        "crop_box": [
+          650,
+          130,
+          1210,
+          690
+        ],
+        "pivot": [
+          280,
+          280
+        ],
+        "center_on_sheet": [
+          930,
+          410
+        ]
+      },
+      "loop_crown": {
+        "visible_box": [
+          187,
+          807,
+          486,
+          1072
+        ],
+        "crop_box": [
+          177,
+          797,
+          497,
+          1083
+        ],
+        "pivot": [
+          160,
+          271
+        ],
+        "pivot_description": "Bottom center attachment at crown base; place above ring."
+      },
+      "caption_tag": {
+        "visible_box": [
+          633,
+          866,
+          1195,
+          1095
+        ],
+        "crop_box": [
+          622,
+          855,
+          1208,
+          1107
+        ],
+        "pivot": [
+          293,
+          126
+        ]
+      }
+    },
+    "alignment": {
+      "glass_scale_relative_to_ring_source": 1.1,
+      "recommended": "Crop ring to its 608 square; crop glass to its 560 square; display both at the same normalized square dimensions and center pivot. Fine tune glass scale ~1% if needed.",
+      "ring_note": "Outer meaningful-alpha silhouette is 584 by 580 (0.7% deviation from circle); crop is square.",
+      "glass_alpha": "Central 220x220 region mean alpha 4.96/255; center sample RGBA [255,255,255,2]. It is a transparent glass layer, not an opaque white disk.",
+      "ring_center_alpha": "Central 200x200 region mean alpha 0.03/255."
+    }
+  },
+  "vial": {
+    "file": "vial-sheet-v1.png",
+    "sprites": {
+      "cork": {
+        "visible_box": [
+          47,
+          480,
+          256,
+          687
+        ],
+        "crop_box": [
+          37,
+          470,
+          266,
+          697
+        ],
+        "pivot": [
+          114.5,
+          113.5
+        ]
+      },
+      "back_glass": {
+        "visible_box": [
+          339,
+          242,
+          571,
+          995
+        ],
+        "crop_box": [
+          327,
+          230,
+          583,
+          1010
+        ],
+        "crop_size": [
+          256,
+          780
+        ],
+        "pivot": [
+          128,
+          390
+        ],
+        "mouth_center": [
+          127,
+          46
+        ],
+        "bottom_center": [
+          128,
+          742
+        ]
+      },
+      "front_glass": {
+        "visible_box": [
+          654,
+          243,
+          886,
+          995
+        ],
+        "crop_box": [
+          642,
+          230,
+          898,
+          1010
+        ],
+        "crop_size": [
+          256,
+          780
+        ],
+        "pivot": [
+          128,
+          390
+        ],
+        "mouth_center": [
+          126,
+          46
+        ],
+        "bottom_center": [
+          128,
+          742
+        ]
+      },
+      "holder_bracket": {
+        "visible_box": [
+          949,
+          343,
+          1222,
+          927
+        ],
+        "crop_box": [
+          938,
+          333,
+          1233,
+          938
+        ],
+        "pivot": [
+          147.5,
+          302.5
+        ],
+        "notes": "Generator produced two straps connected by a right-side spine. For a single strap use the top band crop below."
+      },
+      "holder_single_band_optional": {
+        "crop_box": [
+          939,
+          333,
+          1232,
+          489
+        ],
+        "pivot": [
+          146.5,
+          78
+        ],
+        "notes": "Top band only, excluding lower bracket; right-side spine may leave a small endpoint below rivet."
+      }
+    },
+    "alignment": {
+      "normalized_canvas": [
+        256,
+        780
+      ],
+      "pivot": [
+        128,
+        390
+      ],
+      "body_ratio_width_to_height": "232:753 = 1:3.25",
+      "mouth_center": [
+        127,
+        46
+      ],
+      "interior_rect_approx": [
+        67,
+        111,
+        174,
+        660
+      ],
+      "liquid_mask_recommendation": "Constrain liquid within central opening approximately x=67..174 and y=111..670 of normalized tube crop, with rounded lower end reaching y~704. Inspect art against the final fill before shipping.",
+      "layer_order": [
+        "holder bracket behind",
+        "back glass",
+        "liquid clipped within tube interior",
+        "front glass",
+        "cork overlapping mouth"
+      ],
+      "cork_recommendation": "Scale cork crop to around 206 pixels wide on the 256-wide normalized tube canvas; place its bottom near mouth y=47. Rotate only the whole assembled vial around shared center.",
+      "back_alpha": "Inner body mean alpha 0.007/255; center sample alpha 0.",
+      "front_alpha": "Inner body mean alpha 4.09/255; center sample alpha 1."
+    },
+    "notes": [
+      "No liquid and no text in vial sheet.",
+      "The back layer includes both edge walls and a complete mouth ellipse; front layer includes another mouth and bottom. Stack aligned to avoid doubled edges, and reduce front layer opacity if thick glass becomes too strong.",
+      "Cork has finer texture than the requested low-frequency finish at source resolution."
+    ]
+  }
+}

@@ -112,3 +112,38 @@ body[data-filter="vhs"] .map-mini{right:calc(var(--scene-left,0px) + 14px);top:c
 @media(max-height:560px){:root{--compass-width:clamp(156px,calc(var(--scene-height,100vh) * .5),245px);--vitals-width:clamp(250px,calc(var(--scene-height,100vh) * .72),340px)}.screen{padding:16px max(28px,calc(var(--scene-left,0px) + var(--scene-width,100vw) * .09));gap:6px}.hero{padding:8px 0}.title-window{padding-bottom:14px}.eyebrow{display:none}.level{font-size:30px}.cn-title{font-size:22px;margin:4px 0}.subtitle{display:none}.menu{gap:1px}.menu-button{min-height:32px;font-size:17px;line-height:24px;padding:4px 0 4px 24px}.bottomline{font-size:12px;line-height:18px}.topline{font-size:12px}.loading{font-size:12px;line-height:18px}.panel{max-height:calc(100dvh - 24px)}.modal{padding:12px}.map-modal{padding:8px}.map-header p{display:none}.map-tools{padding:5px 0}.map-footer{padding-top:5px}.touch-mode .joystick,.touch-mode .touch-actions{bottom:30px}.sanity-vial{width:20%;bottom:57%}}
 @media(max-height:380px){.topline{display:none}.hero{padding:0}.title-window{padding-bottom:6px}.cn-title{display:none}.menu-button{min-height:30px;padding-top:3px;padding-bottom:3px}.screen{gap:6px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* V20: separated low-resolution materials; the complete UI is in the signal. */
+:root{--vitals-width:clamp(218px,calc(var(--scene-width,100vw) * .30),330px);--compass-width:clamp(148px,calc(var(--scene-width,100vw) * .18),205px)}
+.raster-source{opacity:0!important}
+.raster-source,.raster-source *{transition:none!important;animation:none!important}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;clip-path:inset(50%);overflow:hidden;white-space:nowrap}
+.screen,.modal,.touch-ui{inset:var(--scene-top,0px) var(--scene-left,0px)}
+.screen{padding:clamp(18px,4vh,44px) clamp(24px,calc(var(--scene-width,100vw) * .095),100px);background:linear-gradient(90deg,#151a14ed 0%,#171c15ad 38%,#12160e20 77%);gap:12px}
+.hero{filter:none;width:350px}.title-window{padding-bottom:26px}.level{font-size:44px}.cn-title{font-size:29px;letter-spacing:.22em}.eyebrow{letter-spacing:.16em}
+.menu-button{min-height:43px;letter-spacing:.02em}.menu{gap:5px}.menu-button:before{content:none}
+.hud{padding:16px}.stats{aspect-ratio:640/320;width:var(--vitals-width);isolation:isolate}
+.sanity-vial{left:32%;top:-56.56%;bottom:auto;width:11.6%;aspect-ratio:256/780;transform:rotate(-5.4deg);transform-origin:bottom center;z-index:1}
+.sanity-vial img,.sanity-vial svg{position:absolute;inset:0;width:100%;height:100%}.sanity-vial .tube-front{opacity:.68}.sanity-vial .tube-cork{left:9.8%;top:-13.3%;width:80.5%;height:19.7%}
+.vitals-art,.vitals-gauges{inset:0;width:100%;height:100%;image-rendering:auto}.vitals-art{z-index:2}.vitals-gauges{z-index:3}
+.map-mini{width:var(--compass-width);height:calc(var(--compass-width) * 296 / 256);right:calc(var(--scene-left,0px) + 14px)!important;top:calc(var(--scene-top,0px) + 12px)!important;transform:none!important}
+.map-mini-button{background:none;border:0;box-shadow:none}.map-mini-viewport{display:none}.map-mini-art,.map-cardinal,.map-mini-caption{visibility:hidden}
+.key-hints{font-size:13px;opacity:.78}.toast{bottom:calc(var(--vitals-width) * .6)!important}
+.modal{padding:20px;background:#141a14f2}.panel{max-height:100%;width:min(640px,100%);padding:18px 24px}.map-panel{max-height:100%}
+.retro-select{position:relative;min-width:0}.retro-select-value{width:100%;padding:8px 7px;min-height:40px;text-align:left;color:var(--ui-ink);background:#282c20;border:0;border-bottom:1px solid var(--ui-line);font:15px/23px var(--ui-font)}
+.retro-options{position:absolute;right:0;top:100%;z-index:40;min-width:100%;width:max-content;max-width:220px;background:#272b20;border:1px solid #776747;padding:4px}
+.retro-options button{display:block;width:100%;text-align:left;padding:8px 10px;border:0;background:#272b20;color:var(--ui-ink);font:15px/22px var(--ui-font)}
+.retro-options button[aria-selected=true],.retro-options button:focus{background:#494b36;color:#e2d1a2;outline:0}
+.touch-ui .joystick{left:18px;bottom:calc(var(--vitals-width) * .58);width:88px;height:88px;background:#272b20dc;border:3px solid #8c7650;box-shadow:inset 2px 2px #b6a172,inset -2px -3px #171a12}.touch-ui .stick{left:25px;top:25px;width:32px;height:32px;background:#79735a}
+.touch-actions{right:18px;bottom:26px}.touch-actions button{background:#6f664b;border:2px solid #a39161;box-shadow:inset 1px 1px #c7b884,inset -2px -2px #2a291e}
+.compact-picture{--compass-width:126px;--vitals-width:220px}.compact-picture .screen{padding:12px 22px;gap:6px}.compact-picture .topline{display:none}.compact-picture .hero{padding:0;margin:0!important}.compact-picture .title-window{padding-bottom:10px}.compact-picture .level{font-size:28px}.compact-picture .cn-title{font-size:20px;margin:4px 0}.compact-picture .eyebrow,.compact-picture .subtitle{display:none}.compact-picture .menu{gap:0}.compact-picture .menu-button{min-height:29px;font-size:16px;line-height:21px;padding-top:4px;padding-bottom:4px}.compact-picture .bottomline{font-size:11px;gap:8px}.compact-picture .hud{padding:8px}.compact-picture .hud button{font-size:11px}.compact-picture .panel{padding:8px}.compact-picture .modal{padding:10px}.compact-picture .setting{margin:10px 0;font-size:14px;line-height:20px}.compact-picture .setting small{font-size:11px;line-height:15px}
+@media(max-height:560px){:root{--compass-width:clamp(126px,calc(var(--scene-height,100vh) * .37),176px);--vitals-width:clamp(215px,calc(var(--scene-height,100vh) * .60),280px)}}
+
+body[data-filter="ps1"]{--vitals-width:clamp(230px,calc(var(--scene-width,100vw) * .31),430px);--compass-width:clamp(148px,calc(var(--scene-width,100vw) * .18),260px)}
+body[data-filter="ps1"] .menu-button{font-size:clamp(18px,calc(var(--scene-height,100vh) * .026),28px);min-height:clamp(32px,calc(var(--scene-height,100vh) * .046),50px)}
+body[data-filter="ps1"] .panel{width:min(840px,100%)}
+body[data-filter="ps1"] .setting,body[data-filter="ps1"] .controls-list,body[data-filter="ps1"] .journal-body{font-size:clamp(16px,calc(var(--scene-height,100vh) * .023),25px);line-height:1.6}
+body[data-filter="ps1"] .setting{grid-template-columns:minmax(0,1fr) 220px}
+body[data-filter="ps1"] .retro-select-value,body[data-filter="ps1"] .retro-options button{font-size:clamp(15px,calc(var(--scene-height,100vh) * .019),21px);line-height:1.5}
+body[data-filter="ps1"] .setting small,body[data-filter="ps1"] .panel-note{font-size:clamp(12px,calc(var(--scene-height,100vh) * .017),19px);line-height:1.5}
+body[data-filter="ps1"].compact-picture{--vitals-width:220px;--compass-width:126px}
+body[data-filter="ps1"].compact-picture .setting{grid-template-columns:minmax(0,1fr) 140px}
