@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=21';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=22';
 
 const pars=`
 precision highp sampler3D;
@@ -7,6 +7,7 @@ varying vec3 vIrradianceWorld;
 uniform sampler3D uProbeR,uProbeG,uProbeB,uProbePosition,uProbeMX,uProbeMY,uProbeMZ;
 uniform vec3 uProbeOrigin;
 uniform float uProbeReady,uProbeWeather;
+uniform vec3 uShelterRoom,uShelterBounce;
 const vec3 probeGrid=vec3(19.,7.,19.);
 const vec3 probeStep=vec3(4.,2.,4.);
 vec3 sampleProbe(vec3 uv,vec3 n){
@@ -24,12 +25,18 @@ float probeVisibility(vec3 uv,vec3 delta){
   float variance=max(.0025,m.y-m.x*m.x),p=variance/(variance+gap*gap);
   return p*p*p;
 }
+bool shelterInside(vec3 p){
+ if(uShelterRoom.z<.5)return false;vec2 q=p.xz-uShelterRoom.xy;float roof=q.y< -1.6?5.15+(q.y+5.8)*4.10/4.2:9.25-(q.y+1.6)*5.95/7.4;
+ return abs(q.x)<11.71&&abs(q.y)<5.63&&p.y>.32&&p.y<roof+.24;
+}
 vec4 probeContribution(vec3 cell,float blend,vec3 p,vec3 n,out float available){
   vec3 uv=(cell+.5)/probeGrid;available=0.;
   if(blend<=0.)return vec4(uv,0.);
   vec4 location=texture(uProbePosition,uv);if(location.w<.5)return vec4(uv,0.);
   vec3 position=uProbeOrigin+cell*probeStep+location.xyz,delta=p-position;
-  float normalWeight=max(.05,dot(n,normalize(-delta+vec3(.00001)))*.5+.5);
+  bool indoor=shelterInside(p);if(indoor&&!shelterInside(position))return vec4(uv,0.);
+  float facing=dot(n,normalize(-delta+vec3(.00001)));
+  float normalWeight=indoor?max(.12,facing*.5+.5):max(.05,facing*.5+.5);
   available=blend*normalWeight;
   return vec4(uv,available*probeVisibility(uv,delta));
 }
@@ -52,7 +59,7 @@ vec3 ruralIrradiance(vec3 point,vec3 normal){
   vec3 uv=(grid+.5)/probeGrid;
   vec4 status=texture(uProbePosition,uv);
   vec3 irradiance;
-  if(status.w>1.5){
+  if(status.w>1.5&&!shelterInside(p)){
     // Empty field: hardware interpolation of SH, no visibility gathers.
     irradiance=sampleProbe(uv,normal);
   }else{
@@ -83,8 +90,17 @@ vec3 ruralIrradiance(vec3 point,vec3 normal){
       if(p2.w>=cutoff)sum+=sampleProbe(p2.xyz,normal)*p2.w;
       if(p3.w>=cutoff)sum+=sampleProbe(p3.xyz,normal)*p3.w;
       irradiance=sum/weight;
+    }else if(shelterInside(p)){
+      // At a room corner the tetrahedron can contain no eligible room probe.
+      // Gather the other corners only for this rare fallback, with real visibility.
+      vec3 sum=vec3(0.);float total=0.;
+      for(int i=0;i<8;i++){vec3 off=vec3(float(i%2),float((i/2)%2),float(i/4));vec3 w8=mix(1.-f,f,off);float av;vec4 pp=probeContribution(cell+off,w8.x*w8.y*w8.z,p,normal,av);sum+=sampleProbe(pp.xyz,normal)*pp.w;total+=pp.w;}
+      irradiance=total>1.e-9?sum/total:vec3(0.);
     }else irradiance=available>.0001?vec3(.012):sky;
   }
+  // Room-scale higher-bounce closure, measured from the room's traced L0 energy.
+  // This low-frequency term stays zero in an unlit room and never crosses its walls.
+  if(shelterInside(p))irradiance=max(irradiance,uShelterBounce);
   float edge=min(min(grid.x,probeGrid.x-1.-grid.x),min(grid.z,probeGrid.z-1.-grid.z));
   return mix(sky,irradiance,smoothstep(0.,2.,edge))*uProbeWeather;
 }`;
@@ -95,14 +111,14 @@ export function createIrradianceField() {
     t.format=T.RGBAFormat;t.minFilter=t.magFilter=i<3?T.LinearFilter:T.NearestFilter;
     t.generateMipmaps=false;t.unpackAlignment=1;t.colorSpace=T.NoColorSpace;t.needsUpdate=true;return t;
   });
-  const uniforms={uProbeOrigin:{value:new T.Vector3()},uProbeReady:{value:0},uProbeWeather:{value:1}};
+  const uniforms={uProbeOrigin:{value:new T.Vector3()},uProbeReady:{value:0},uProbeWeather:{value:1},uShelterRoom:{value:new T.Vector3(0,0,0)},uShelterBounce:{value:new T.Vector3()}};
   ['R','G','B','Position','MX','MY','MZ'].forEach((key,i)=>uniforms['uProbe'+key]={value:textures[i]});
   const registered=new WeakSet(),sent=new Set(),active=new Map();
   let worker,ready=false,failed=false,serial=0,wanted='',current=null,lastChange=0,latestState=null,paused=false;
   const values={status:'准备中',computed:0,reused:0,rays:0,ms:0,triangles:0,bytes:0};
   function fail(error){if(failed)return;failed=true;worker?.terminate();uniforms.uProbeReady.value=0;values.status='柔阴影模式';console.warn('Indirect ray cache unavailable',error)}
   try{
-    worker=new Worker(new URL('./irradiance-worker.js?v=21',import.meta.url),{type:'module',name:'rural-ray-cache'});
+    worker=new Worker(new URL('./irradiance-worker.js?v=22',import.meta.url),{type:'module',name:'rural-ray-cache'});
     worker.onerror=e=>{e.preventDefault?.();fail(new Error(e.message||'Ray worker failed'))};
     worker.onmessageerror=()=>fail(new Error('Ray cache transfer failed'));
     worker.onmessage=({data})=>{
@@ -130,9 +146,21 @@ export function createIrradianceField() {
         }
       }
       for(const t of textures)t.needsUpdate=true;
-      current=data;Object.assign(values,data.stats,{status:'已缓存'});uniforms.uProbeReady.value=1;updateOrigin();
+      current=data;updateShelterBounce();Object.assign(values,data.stats,{status:'已缓存'});uniforms.uProbeReady.value=1;updateOrigin();
     };
   }catch(error){fail(error)}
+  function updateShelterBounce(){
+    const sum=uniforms.uShelterBounce.value;sum.set(0,0,0);
+    if(!current||current.cx< -1n||current.cx>3n||current.cz< -4n||current.cz>0n)return;
+    const centerX=84-Number(current.cx)*64,centerZ=-80-Number(current.cz)*64;let count=0;
+    // Only interior probes below the roof, excluding outdoor samples and solids.
+    for(let i=0;i<GRID[0]*GRID[1]*GRID[2];i++){const p=i*4,s=i*12;if(current.positions[p+3]<.5)continue;
+      const x=current.baseX+(i%GRID[0])*STEP[0]+current.positions[p],y=current.baseY+(Math.floor(i/GRID[0])%GRID[1])*STEP[1]+current.positions[p+1],z=current.baseZ+Math.floor(i/(GRID[0]*GRID[1]))*STEP[2]+current.positions[p+2];
+      if(Math.abs(x-centerX)>11.5||Math.abs(z-centerZ)>5.5||y<.35||y>4.5)continue;
+      sum.x+=Math.max(0,current.sh[s]);sum.y+=Math.max(0,current.sh[s+1]);sum.z+=Math.max(0,current.sh[s+2]);count++;
+    }
+    if(count)sum.multiplyScalar(.22/count);
+  }
   function updateOrigin(){
     if(!current||!latestState)return;
     const dx=Number(current.cx-latestState.cx),dz=Number(current.cz-latestState.cz);
@@ -173,7 +201,7 @@ export function createIrradianceField() {
               reflectedLight.indirectDiffuse=material.diffuseColor*ruralGI;
             #endif`);
         };
-        m.customProgramCacheKey=()=>key+'|rural-ray-irradiance-v16';m.needsUpdate=true;registered.add(m);
+        m.customProgramCacheKey=()=>key+'|rural-ray-irradiance-v22';m.needsUpdate=true;registered.add(m);
       }
     });
   }
@@ -186,6 +214,8 @@ export function createIrradianceField() {
   }
   function remove(chunk){const key=chunk.field.key;if(active.get(key)!==chunk)return;active.delete(key);if(sent.delete(key)&&!failed){worker.postMessage({type:'remove',key});lastChange=performance.now();wanted='';}}
   function update({state,now,rain=0,enabled=true}) {
+    const shelterNear=state.cx>=-1n&&state.cx<=3n&&state.cz>=-4n&&state.cz<=0n;
+    uniforms.uShelterRoom.value.set(shelterNear?84-Number(state.cx)*64:0,shelterNear?-80-Number(state.cz)*64:0,shelterNear?1:0);
     latestState=state;updateOrigin();uniforms.uProbeWeather.value=1-rain*.18;
     if(failed||!ready)return;
     pause(!enabled);
@@ -204,11 +234,13 @@ export function createIrradianceField() {
     const o=uniforms.uProbeOrigin.value,gx=(point.x-o.x)/STEP[0],gy=(point.y-o.y)/STEP[1],gz=(point.z-o.z)/STEP[2];
     if(gx<0||gy<0||gz<0||gx>GRID[0]-1||gy>GRID[1]-1||gz>GRID[2]-1)return 1.23;
     const bx=Math.min(Math.floor(gx),GRID[0]-2),by=Math.min(Math.floor(gy),GRID[1]-2),bz=Math.min(Math.floor(gz),GRID[2]-2),fx=gx-bx,fy=gy-by,fz=gz-bz;
+    const room=uniforms.uShelterRoom.value,inside=p=>{if(room.z<.5)return false;const x=p.x-room.x,z=p.z-room.y,roof=z< -1.6?5.15+(z+5.8)*4.10/4.2:9.25-(z+1.6)*5.95/7.4;return Math.abs(x)<11.71&&Math.abs(z)<5.63&&p.y>.32&&p.y<roof+.24;},indoors=inside(point);
     let light=0,weight=0;
     for(let z=0;z<2;z++)for(let y=0;y<2;y++)for(let x=0;x<2;x++){
       const i=((bz+z)*GRID[1]+by+y)*GRID[0]+bx+x,p=i*4,s=i*12;
       if(current.positions[p+3]<.5)continue;
       const dx=point.x-o.x-(bx+x)*STEP[0]-current.positions[p],dy=point.y-o.y-(by+y)*STEP[1]-current.positions[p+1],dz=point.z-o.z-(bz+z)*STEP[2]-current.positions[p+2];
+      if(indoors&&!inside({x:point.x-dx,y:point.y-dy,z:point.z-dz}))continue;
       const d=Math.hypot(dx,dy,dz),ax=dx**4,ay=dy**4,az=dz**4,ws=Math.max(1e-9,ax+ay+az),m=current.moments;
       const ix=s+(dx<0?2:0),iy=s+4+(dy<0?2:0),iz=s+8+(dz<0?2:0);
       const mean=(m[ix]*ax+m[iy]*ay+m[iz]*az)/ws,variance=Math.max(.0025,(m[ix+1]*ax+m[iy+1]*ay+m[iz+1]*az)/ws-mean*mean);
@@ -217,7 +249,7 @@ export function createIrradianceField() {
       light+=Math.max(0,current.sh[s]*.2126+current.sh[s+1]*.7152+current.sh[s+2]*.0722)*w;weight+=w;
     }
     if(weight<.0001)return 1.23;
-    return 1.23*Math.min(3.2,Math.max(1,.13/Math.max(.004,light/weight)));
+    return 1.23*Math.min(indoors?20:3.2,Math.max(1,.13/Math.max(.001,light/weight)));
   }
   function restore(){for(const t of textures)t.needsUpdate=true;}
   function dispose(){worker?.terminate();for(const t of textures)t.dispose();}

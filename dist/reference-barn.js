@@ -1,14 +1,14 @@
 import * as T from './vendor/three.module.min.js';
-import {REFERENCE_BARN as B,barnFootprintDistance,barnLandscape} from './reference-barn-layout.js?v=21';
-import {landmarkTextures as tex} from './landmark-textures.js?v=21';
-import {surfaceHeight,random,roadDistance} from './world.js?v=21';
-import {makeNature} from './nature.js?v=21';
+import {REFERENCE_BARN as B,BARN_ROOFLIGHTS,barnFootprintDistance,barnLandscape} from './reference-barn-layout.js?v=22';
+import {landmarkTextures as tex} from './landmark-textures.js?v=22';
+import {surfaceHeight,random,roadDistance} from './world.js?v=22';
+import {makeNature} from './nature.js?v=22';
 const shared=new Set(),keep=x=>(shared.add(x),x);
 export const isSharedReferenceBarnResource=x=>shared.has(x);
 const mat=(name,color,map=null)=>keep(new T.MeshStandardMaterial({name,color,map,roughness:.94,side:T.DoubleSide}));
 const M={brick:mat('reference orange brick','#b5a699',tex.brick),roof:mat('weathered slate roof','#b1b3b1',tex.slate),door:mat('blue grey vertical boards','#b6c0bb',tex.bluewood),wood:mat('old exposed rafters','#4c4030'),iron:mat('black iron hinges','#34382f'),floor:mat('earthen barn floor','#544936'),grass:mat('rough grass along brick footings','#8d9b61',tex.straw),straw:mat('loose straw bed','#c3b18a',tex.straw),quilt:mat('faded cotton blanket','#a9a99e',tex.quilt),enamel:mat('1980s speckled enamel steel','#939994',tex.enamel),rim:mat('rolled black enamel rim','#172020'),paste:mat('warm flour paste','#d0c4a2',tex.paste),stove:mat('painted camp burner','#364b3c'),flame:mat('small blue burner flame','#365db2')};
 M.brick.color.setRGB(1.18,1.08,1.0);M.roof.color.setRGB(1.12,1.12,1.15);M.door.color.setRGB(.95,1.08,1.23);M.floor.color.setRGB(.91,.91,.88);M.floor.map=tex.stubble;M.wood.map=tex.bluewood;M.wood.color.setRGB(1.02,.88,.69);
-Object.assign(M,{rope:mat('natural twine','#796b48'),pillow:mat('worn linen pillow','#dad1b2',tex.quilt),blanket:mat('rolled wool blanket','#717667',tex.quilt),pack:mat('olive canvas and straps','#68705a',tex.quilt),sack:mat('canvas flour and feed sacks','#b7ac88',tex.quilt),boot:mat('worn leather boots','#443b2e'),paper:mat('folded field notebook','#baae88'),stone:mat('flat kitchen hearth stones','#77756a',tex.slate),lantern:mat('warm lantern mantle','#cbb482')});M.lantern.emissive.set('#ffc87b');M.lantern.emissiveIntensity=2.0;
+Object.assign(M,{rope:mat('natural twine','#796b48'),pillow:mat('worn linen pillow','#dad1b2',tex.quilt),blanket:mat('rolled wool blanket','#717667',tex.quilt),pack:mat('olive canvas and straps','#68705a',tex.quilt),sack:mat('canvas flour and feed sacks','#b7ac88',tex.quilt),boot:mat('worn leather boots','#443b2e'),paper:mat('folded field notebook','#baae88'),stone:mat('flat kitchen hearth stones','#77756a',tex.slate),lantern:mat('warm lantern mantle','#cbb482')});M.lantern.emissive.set('#ffc87b');M.lantern.emissiveIntensity=2.0;M.rooflight=keep(new T.MeshBasicMaterial({name:'aged translucent rear rooflight',color:'#b4b9a7',transparent:true,opacity:.24,depthWrite:false,side:T.DoubleSide}));
 M.flame.emissive.set('#477bee');M.flame.emissiveIntensity=.75;M.enamel.roughness=.36;M.rim.roughness=.3;M.iron.metalness=.3;M.paste.roughness=.64;
 const unitBox=keep(new T.BoxGeometry(1,1,1)),unitCylinder=keep(new T.CylinderGeometry(1,1,1,12)),dummy=new T.Object3D();
 class Batch{
@@ -17,7 +17,7 @@ class Batch{
  box(m,x,y,z,w,h,d,rx=0,ry=0,rz=0){const g=unitBox.clone(),uv=g.attributes.uv;for(let i=0;i<uv.count;i++){const face=Math.floor(i/4),u=face<2?d:w,v=face>=2&&face<4?d:h;uv.setXY(i,uv.getX(i)*u/(m===M.brick?2.6:2),uv.getY(i)*v/(m===M.brick?2.6:2))}this.add(g,m,x,y,z,w,h,d,rx,ry,rz);g.dispose()}
  quad(m,a,b,c,d,scale=2.6){const p=[...a,...b,...c,...a,...c,...d],g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));const w=Math.hypot(...a.map((v,i)=>v-b[i]))/scale,h=Math.hypot(...a.map((v,i)=>v-d[i]))/scale;g.setAttribute('uv',new T.Float32BufferAttribute([0,0,w,0,w,h,0,0,w,h,0,h],2));g.computeVertexNormals();g.setAttribute('rayTwoSided',new T.Uint8BufferAttribute(new Uint8Array(6).fill(1),1));this.add(g,m);g.dispose()}
  beam(m,a,b,w=.16,d=w){const v=new T.Vector3(...b).sub(new T.Vector3(...a)),mid=new T.Vector3(...a).add(new T.Vector3(...b)).multiplyScalar(.5);dummy.position.copy(mid);dummy.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),v.clone().normalize());dummy.scale.set(w,v.length(),d);dummy.updateMatrix();const g=unitBox.clone().applyMatrix4(dummy.matrix);this.add(g,m);g.dispose()}
- finish(group){for(const[m,parts]of this.parts){const n=parts.reduce((a,g)=>a+g.attributes.position.count,0),p=new Float32Array(n*3),ns=new Float32Array(n*3),uv=new Float32Array(n*2),twoSided=new Uint8Array(n);let at=0;for(const g of parts){p.set(g.attributes.position.array,at*3);ns.set(g.attributes.normal.array,at*3);if(g.attributes.uv)uv.set(g.attributes.uv.array,at*2);if(g.attributes.rayTwoSided)twoSided.set(g.attributes.rayTwoSided.array,at);at+=g.attributes.position.count;g.dispose()}const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(p,3));g.setAttribute('normal',new T.BufferAttribute(ns,3));g.setAttribute('uv',new T.BufferAttribute(uv,2));g.setAttribute('rayTwoSided',new T.BufferAttribute(twoSided,1));g.computeBoundingSphere();const mesh=new T.Mesh(g,m);mesh.name=m.name;mesh.castShadow=mesh.receiveShadow=true;group.add(mesh)}}
+ finish(group){for(const[m,parts]of this.parts){const n=parts.reduce((a,g)=>a+g.attributes.position.count,0),p=new Float32Array(n*3),ns=new Float32Array(n*3),uv=new Float32Array(n*2),twoSided=new Uint8Array(n);let at=0;for(const g of parts){p.set(g.attributes.position.array,at*3);ns.set(g.attributes.normal.array,at*3);if(g.attributes.uv)uv.set(g.attributes.uv.array,at*2);if(g.attributes.rayTwoSided)twoSided.set(g.attributes.rayTwoSided.array,at);at+=g.attributes.position.count;g.dispose()}const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(p,3));g.setAttribute('normal',new T.BufferAttribute(ns,3));g.setAttribute('uv',new T.BufferAttribute(uv,2));g.setAttribute('rayTwoSided',new T.BufferAttribute(twoSided,1));g.computeBoundingSphere();const mesh=new T.Mesh(g,m);mesh.name=m.name;mesh.castShadow=!m.transparent;mesh.receiveShadow=true;group.add(mesh)}}
 }
 function polygon(batch,m,points,scale=2.6){for(let i=1;i<points.length-1;i++){const g=new T.BufferGeometry(),a=[points[0],points[i],points[i+1]];g.setAttribute('position',new T.Float32BufferAttribute(a.flat(),3));g.setAttribute('uv',new T.Float32BufferAttribute(a.flatMap(p=>[(p[0]+p[2])/scale,p[1]/scale]),2));g.computeVertexNormals();g.setAttribute('rayTwoSided',new T.Uint8BufferAttribute([1,1,1],1));batch.add(g,m);g.dispose()}}
 function cloth(w,d,height,phase){const nx=8,nz=12,p=[],uv=[],ids=[];for(let j=0;j<=nz;j++)for(let i=0;i<=nx;i++){const x=(i/nx-.5)*w,z=(j/nz-.5)*d,edge=Math.min(i/nx,1-i/nx,j/nz,1-j/nz);p.push(x,height+Math.min(1,edge*9)*.08+Math.sin(z*13+x*4+phase)*.023+Math.sin(x*17+z*2)*.013,z);uv.push(i/nx,j/nz)}for(let j=0;j<nz;j++)for(let i=0;i<nx;i++){const a=j*(nx+1)+i;ids.push(a,a+nx+1,a+1,a+1,a+nx+1,a+nx+2)}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(ids);g.computeVertexNormals();g.setAttribute('rayTwoSided',new T.Uint8BufferAttribute(new Uint8Array(p.length/3).fill(1),1));return g}
@@ -36,7 +36,9 @@ function mound(b,m,x,z,w,d,h,seed,y=0){
 function rounded(b,m,x,y,z,w,h,d,rot=0){const g=new T.SphereGeometry(1,10,6);b.add(g,m,x,y,z,w*.5,h*.5,d*.5,0,rot);g.dispose();}
 function bale(b,x,y,z,w=1.35,h=.56,d=.78,rot=0){
  const g=new T.BoxGeometry(w,h,d,5,3,3),p=g.attributes.position,rr=random(Math.round((x+30)*83+(z+20)*171+y*122));
- for(let i=0;i<p.count;i++)p.setXYZ(i,p.getX(i)+(rr()-.5)*.05,p.getY(i)+(rr()-.5)*.04,p.getZ(i)+(rr()-.5)*.04);g.computeVertexNormals();b.add(g,M.straw,x,y+h*.5,z,1,1,1,0,rot);g.dispose();
+ // Round compressed bale edges; duplicate face vertices use the same displacement,
+ // keeping the block closed instead of opening random black cracks at every face.
+ for(let i=0;i<p.count;i++){const v=new T.Vector3(p.getX(i),p.getY(i),p.getZ(i)),r=.048,core=new T.Vector3(Math.max(-w/2+r,Math.min(w/2-r,v.x)),Math.max(-h/2+r,Math.min(h/2-r,v.y)),Math.max(-d/2+r,Math.min(d/2-r,v.z))),delta=v.clone().sub(core).normalize().multiplyScalar(r),noise=Math.sin(v.x*27.1+v.y*41.7+v.z*19.3+x*3+z)*.012;core.add(delta).addScaledVector(v.clone().normalize(),noise);p.setXYZ(i,core.x,core.y,core.z);}g.computeVertexNormals();b.add(g,M.straw,x,y+h*.5,z,1,1,1,0,rot);g.dispose();
  for(const side of[-.31,.31]){const xx=x+side*w;for(const dz of[-d*.5,d*.5])b.beam(M.rope,[xx,y+.03,z+dz],[xx,y+h-.02,z+dz],.012);b.beam(M.rope,[xx,y+h+.015,z-d*.5],[xx,y+h+.015,z+d*.5],.013);}
 }
 function crate(b,x,y,z,w=.7,h=.52,d=.55){
@@ -140,13 +142,21 @@ export function makeReferenceBarn(f,level,wind){if(!f.barn)return null;const gro
  b.quad(M.roof,[-ext,roofY(front),front],[dx-cut,roofY(front),front],[dx-cut,rh+.05,rz],[-ext,rh+.05,rz],2.5);
  b.quad(M.roof,[dx+cut,roofY(front),front],[ext,roofY(front),front],[ext,rh+.05,rz],[dx+cut,rh+.05,rz],2.5);
  b.quad(M.roof,[dx-cut,roofY(joinZ),joinZ],[dx+cut,roofY(joinZ),joinZ],[dx+cut,rh+.05,rz],[dx-cut,rh+.05,rz],2.5);
- b.quad(M.roof,[-ext,rh+.05,rz],[ext,rh+.05,rz],[ext,re-.24,back],[-ext,re-.24,back],2.5);
+ const rearY=z=>re+(z+d)*(rh-re)/(rz+d);
+ const roofX=[-ext,...BARN_ROOFLIGHTS.flatMap(p=>[p.x-p.width*.5,p.x+p.width*.5]),ext].sort((a,b)=>a-b),roofZ=[back,-4.58,-3.22,rz];
+ for(let i=0;i<roofX.length-1;i++)for(let j=0;j<roofZ.length-1;j++){
+  const x1=roofX[i],x2=roofX[i+1],z1=roofZ[j],z2=roofZ[j+1],pane=BARN_ROOFLIGHTS.some(p=>Math.abs((x1+x2)*.5-p.x)<p.width*.49&&Math.abs((z1+z2)*.5-p.z)<p.depth*.49);
+  b.quad(pane?M.rooflight:M.roof,[x1,rearY(z2)+.05,z2],[x2,rearY(z2)+.05,z2],[x2,rearY(z1)+.05,z1],[x1,rearY(z1)+.05,z1],2.5);
+  if(!pane)b.quad(M.wood,[x1,rearY(z1)-.10,z1],[x2,rearY(z1)-.10,z1],[x2,rearY(z2)-.10,z2],[x1,rearY(z2)-.10,z2],1.7);
+ }
+ for(const p of BARN_ROOFLIGHTS){for(const side of[-1,1]){const x=p.x+side*p.width*.5;b.beam(M.wood,[x,rearY(p.z-p.depth*.5)-.02,p.z-p.depth*.5],[x,rearY(p.z+p.depth*.5)-.02,p.z+p.depth*.5],.055);}for(const side of[-1,1]){const z=p.z+side*p.depth*.5;b.beam(M.wood,[p.x-p.width*.5,rearY(z)-.02,z],[p.x+p.width*.5,rearY(z)-.02,z],.055);}}
+
  // Separate inward-facing wooden boarding beneath the exterior slate.
  const under=(a,c,d,e)=>b.quad(M.wood,[a[0],a[1]-.10,a[2]],[e[0],e[1]-.10,e[2]],[d[0],d[1]-.10,d[2]],[c[0],c[1]-.10,c[2]],1.7);
  under([-12,roofY(5.8),5.8],[dx-cut,roofY(5.8),5.8],[dx-cut,rh,rz],[-12,rh,rz]);
  under([dx+cut,roofY(5.8),5.8],[12,roofY(5.8),5.8],[12,rh,rz],[dx+cut,rh,rz]);
  under([dx-cut,roofY(joinZ),joinZ],[dx+cut,roofY(joinZ),joinZ],[dx+cut,rh,rz],[dx-cut,rh,rz]);
- under([-12,rh,rz],[12,rh,rz],[12,re,-5.8],[-12,re,-5.8]);
+
  const doorFront=d+.22,top=6.85,peak=8.06;
  b.box(M.door,dx,4.95,doorFront,3.80,3.78,.17);
  for(const s of[-1,1]){const x=dx+s*half;b.box(M.brick,x+s*.17,(top+e)/2,d-.30,.34,top-e,.85);polygon(b,M.brick,[[x+s*.34,e,d],[x+s*.34,top,d],[x+s*.34,roofY(joinZ),joinZ]]);b.beam(M.wood,[x,0,d+.34],[x,top,d+.34],.14,.18);}

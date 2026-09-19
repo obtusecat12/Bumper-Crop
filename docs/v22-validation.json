@@ -1,0 +1,99 @@
+{
+  "colliders": {
+    "count": 15,
+    "lodStable": true,
+    "passages": 483
+  },
+  "wheat": {
+    "formerHarvestSamples": 2981,
+    "allowed": 2637,
+    "ratio": 0.8846024823884603,
+    "ownerTileCandidates": 9385,
+    "mapSamples": 8
+  },
+  "water": {
+    "seams": 56,
+    "triangles": 1355
+  },
+  "splash": {
+    "maxParticles": 64,
+    "maxRings": 6,
+    "rebasing": true
+  },
+  "droplets": {
+    "oneSecondDisplacement": 0.20191427519255922,
+    "fullDiameterAt240": 19.584000000000003
+  },
+  "worker": {
+    "thinAttributes": 30,
+    "thinTriangles": 20591,
+    "timeBound": true,
+    "paletteTransferred": true
+  },
+  "lensLifecycle": {
+    "sha256": "554e7fe4fa3deec93f14ace83565930869180898a2ae4698022fe63debe749a5",
+    "checks": [
+      {
+        "name": "A large drop visibly travels within two seconds",
+        "passed": true,
+        "detail": {
+          "travel": 0.4732396330199694,
+          "speed": 0.29572178756944784
+        }
+      },
+      {
+        "name": "A small bead can stay pinned",
+        "passed": true,
+        "detail": {
+          "travel": 0
+        }
+      },
+      {
+        "name": "Shed water cannot extend its parent beyond its lifetime",
+        "passed": true,
+        "detail": {
+          "deadline": 7.184215388493612,
+          "remaining": false,
+          "reportedAge": 6.199999999999983
+        }
+      },
+      {
+        "name": "Another entry produces a fresh visible spray despite old trails",
+        "passed": true,
+        "detail": {
+          "fresh": 19,
+          "count": 24
+        }
+      },
+      {
+        "name": "Merging overlapping drops conserves their volume",
+        "passed": true,
+        "detail": {
+          "count": 1,
+          "volume": 35
+        }
+      },
+      {
+        "name": "Looking and moving preserve finite state and the pool bound",
+        "passed": true,
+        "detail": {
+          "finite": true,
+          "maxCount": 20
+        }
+      }
+    ]
+  },
+  "filter": {
+    "output": [
+      1440,
+      1080
+    ],
+    "preVHSStep": [
+      1200,
+      900
+    ],
+    "blend": 0.16,
+    "officialOutputPresentationByteIdentical": true
+  },
+  "limits": "Native GLES and numerical checks; no whole-browser or user-device FPS claim."
+}

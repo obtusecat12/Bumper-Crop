@@ -125,12 +125,24 @@ const DEFAULT_LIGHTING={
  bounceAlbedo:[.28,.25,.19],bounceSkyRays:2
 };
 
+// Stratified next-event samples through a real opening. Geometry remains opaque.
+function portalBasis(p){const m=p.roofSlope;if(m===undefined)return{ny:0,nz:1,vy:1,vz:0};const l=Math.hypot(1,m);return{ny:1/l,nz:-m/l,vy:m/l,vz:1/l};}
+function throughSkyPortal(x,y,z,dx,dy,dz,portals){
+ for(const p of portals){const b=portalBasis(p),side=(y-p.y)*b.ny+(z-p.z)*b.nz,dot=dy*b.ny+dz*b.nz;if(side>=0||dot<=0)continue;const t=-side/dot,qy=y+dy*t-p.y,qz=z+dz*t-p.z;if(Math.abs(x+dx*t-p.x)<p.width*.5&&Math.abs(qy*b.vy+qz*b.vz)<p.height*.5)return true;}return false;
+}
+function portalSamples(bvh,x,y,z,portals,n,far,ignore,accept){
+ let rays=0;for(const p of portals){const b=portalBasis(p);if((y-p.y)*b.ny+(z-p.z)*b.nz>=0)continue;for(let j=0;j<n;j++)for(let i=0;i<n;i++){
+  const v=((j+.5)/n-.5)*p.height;let dx=p.x+((i+.5)/n-.5)*p.width-x,dy=p.y+b.vy*v-y,dz=p.z+b.vz*v-z;const d2=dx*dx+dy*dy+dz*dz,d=Math.sqrt(d2);if(d<.015)continue;dx/=d;dy/=d;dz/=d;
+  const cosine=dy*b.ny+dz*b.nz;if(cosine<=0)continue;rays++;if(!bvh.occluded(x,y,z,dx,dy,dz,far,.002,ignore))accept(dx,dy,dz,p.width*p.height*cosine/(d2*n*n));
+ }}return rays;
+}
 // Optional sky visibility rays at each first hit account for eaves/enclosure.
 // One diffuse bounce + direct next-event sun visibility, not full path tracing.
 // No per-frame time: cache is stable under camera motion and world rebasing.
 export function traceIrradianceProbe(bvh,x,y,z,options={}) {
  const o={...DEFAULT_LIGHTING,...options},sh=new Float32Array(12),moments=new Float32Array(12),momentWeights=new Float32Array(6),hit={},rays=clamp(Math.floor(o.rays),16,512),far=o.maxDistance;
  const sun=o.sunDirection,sl=Math.hypot(...sun)||1,sx=sun[0]/sl,sy=sun[1]/sl,sz=sun[2]/sl;
+ const portals=o.skyPortals||[];
  const rotation=(o.seed>>>0)*.00000161803398875,skyRayCount=clamp(Math.floor(o.bounceSkyRays),0,4);
  let skyCount=0,sumDistance=0,sumDistance2=0,backfaceCount=0,rayCount=0,closestBackface=Infinity,closestObstacle=Infinity,relocation=[0,0,0];
  for(let i=0;i<rays;i++) {
@@ -138,7 +150,7 @@ export function traceIrradianceProbe(bvh,x,y,z,options={}) {
   let red,green,blue,distance=far;
   rayCount++;
   if(!bvh.firstHit(x,y,z,dx,dy,dz,far,hit)) {
-   const t=clamp(dy*.5+.5,0,1);red=o.skyBottom[0]+(o.skyTop[0]-o.skyBottom[0])*t;green=o.skyBottom[1]+(o.skyTop[1]-o.skyBottom[1])*t;blue=o.skyBottom[2]+(o.skyTop[2]-o.skyBottom[2])*t;skyCount++;
+   const t=clamp(dy*.5+.5,0,1);red=o.skyBottom[0]+(o.skyTop[0]-o.skyBottom[0])*t;green=o.skyBottom[1]+(o.skyTop[1]-o.skyBottom[1])*t;blue=o.skyBottom[2]+(o.skyTop[2]-o.skyBottom[2])*t;skyCount++;if(throughSkyPortal(x,y,z,dx,dy,dz,portals))red=green=blue=0;
   } else {
    distance=hit.t;
    if(!hit.ground)closestObstacle=Math.min(closestObstacle,distance);
@@ -157,15 +169,16 @@ export function traceIrradianceProbe(bvh,x,y,z,options={}) {
     const ax=Math.abs(ny)>.9?1:0,ay=Math.abs(ny)>.9?0:1;
     let tx=ay*nz,ty=-ax*nz,tz=ax*ny-ay*nx;const tl=Math.hypot(tx,ty,tz)||1;tx/=tl;ty/=tl;tz/=tl;
     const bx=ny*tz-nz*ty,by=nz*tx-nx*tz,bz=nx*ty-ny*tx;let visible=0;
-    for(let j=0;j<skyRayCount;j++) {const rr=Math.sqrt((j+.5)/skyRayCount),a=(j+i*.61803398875)*GOLDEN+rotation,u=rr*Math.cos(a),v=rr*Math.sin(a),w=Math.sqrt(1-rr*rr);rayCount++;if(!bvh.occluded(p,q,s,tx*u+bx*v+nx*w,ty*u+by*v+ny*w,tz*u+bz*v+nz*w,far,.002,ignore))visible++}
+    for(let j=0;j<skyRayCount;j++) {const rr=Math.sqrt((j+.5)/skyRayCount),a=(j+i*.61803398875)*GOLDEN+rotation,u=rr*Math.cos(a),v=rr*Math.sin(a),w=Math.sqrt(1-rr*rr);rayCount++;if(!bvh.occluded(p,q,s,tx*u+bx*v+nx*w,ty*u+by*v+ny*w,tz*u+bz*v+nz*w,far,.002,ignore)&&!throughSkyPortal(p,q,s,tx*u+bx*v+nx*w,ty*u+by*v+ny*w,tz*u+bz*v+nz*w,portals))visible++}
     skyVisibility=visible/skyRayCount;
    }
    const skyT=clamp(ny/3+.5,0,1);
    // E_sky / PI is the cosine-filtered linear-gradient environment. E_sun
    // is directional irradiance; divide by PI for Lambertian outgoing radiance.
-   const sr=(o.skyBottom[0]+(o.skyTop[0]-o.skyBottom[0])*skyT)*skyVisibility+o.sunRadiance[0]*sunAmount/PI;
-   const sg=(o.skyBottom[1]+(o.skyTop[1]-o.skyBottom[1])*skyT)*skyVisibility+o.sunRadiance[1]*sunAmount/PI;
-   const sb=(o.skyBottom[2]+(o.skyTop[2]-o.skyBottom[2])*skyT)*skyVisibility+o.sunRadiance[2]*sunAmount/PI;
+   const bounce=[0,0,0];if(portals.length)rayCount+=portalSamples(bvh,p,q,s,portals,2,far,ignore,(dx,dy,dz,omega)=>{const w=Math.max(0,nx*dx+ny*dy+nz*dz)*omega/PI,t=clamp(dy*.5+.5,0,1);for(let c=0;c<3;c++)bounce[c]+=(o.skyBottom[c]+(o.skyTop[c]-o.skyBottom[c])*t)*w;});
+   const sr=bounce[0]+(o.skyBottom[0]+(o.skyTop[0]-o.skyBottom[0])*skyT)*skyVisibility+o.sunRadiance[0]*sunAmount/PI;
+   const sg=bounce[1]+(o.skyBottom[1]+(o.skyTop[1]-o.skyBottom[1])*skyT)*skyVisibility+o.sunRadiance[1]*sunAmount/PI;
+   const sb=bounce[2]+(o.skyBottom[2]+(o.skyTop[2]-o.skyBottom[2])*skyT)*skyVisibility+o.sunRadiance[2]*sunAmount/PI;
    red=clamp(hit.r??o.bounceAlbedo[0],0,.96)*sr;green=clamp(hit.g??o.bounceAlbedo[1],0,.96)*sg;blue=clamp(hit.b??o.bounceAlbedo[2],0,.96)*sb;
    }
   }
@@ -179,6 +192,7 @@ export function traceIrradianceProbe(bvh,x,y,z,options={}) {
   sh[9]+=2*red*dz;sh[10]+=2*green*dz;sh[11]+=2*blue*dz;
  }
  for(let i=0;i<12;i++)sh[i]/=rays;
+ if(portals.length)rayCount+=portalSamples(bvh,x,y,z,portals,4,far,-1,(dx,dy,dz,omega)=>{const t=clamp(dy*.5+.5,0,1),w=omega/(4*PI);for(let c=0;c<3;c++){const v=(o.skyBottom[c]+(o.skyTop[c]-o.skyBottom[c])*t)*w;sh[c]+=v;sh[3+c]+=2*v*dx;sh[6+c]+=2*v*dy;sh[9+c]+=2*v*dz;}});
  for(let i=0;i<6;i++){moments[i*2]=momentWeights[i]>1e-6?moments[i*2]/momentWeights[i]:far;moments[i*2+1]=momentWeights[i]>1e-6?moments[i*2+1]/momentWeights[i]:far*far}
  const backfaceRatio=backfaceCount/rays;
  return {sh,moments,visibility:skyCount/rays,meanDistance:sumDistance/rays,meanDistance2:sumDistance2/rays,backfaceRatio,valid:backfaceRatio<=.25,relocation:new Float32Array(relocation),closestBackface,closestObstacle,rayCount};

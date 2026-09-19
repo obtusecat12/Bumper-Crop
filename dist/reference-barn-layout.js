@@ -14,3 +14,6 @@ export function barnTarget(field,seed,photo=false,surfaceHeight=null){const wx=p
 export const BARN_TREES=Array.from({length:25},(_,i)=>({x:-58+i*4.7+Math.sin(i*2.31)*1.5,z:-69-Math.sin(i*1.72)*6,variant:i%3,scale:.63+(Math.sin(i*2.75)+1)*.17,rotation:i*2.31,seed:777+i}));
 export const BARN_SHRUBS=Array.from({length:17},(_,i)=>({x:-34+i*3.4,z:-10-Math.sin(i*2.4)*2,variant:1,scale:.85+(Math.sin(i*3.1)+1)*.17,width:3.5+(Math.sin(i*2.1)+1)*.65,rotation:i*2.1}));
 export function barnLandscape(f){if(!f.barn)return{trees:[],shrubs:[]};const local=t=>({...t,x:t.x-f.barn.x,z:t.z-f.barn.z});return{trees:BARN_TREES.map(local),shrubs:BARN_SHRUBS.map(local)};}
+
+// Rear rooflight replacements are hidden from the supplied front photograph.
+export const BARN_ROOFLIGHTS=Object.freeze([{x:-5.8,z:-3.9,width:1.36,depth:1.36},{x:5.5,z:-3.9,width:1.36,depth:1.36}]);

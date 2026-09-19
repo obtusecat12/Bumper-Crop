@@ -1,7 +1,7 @@
-import {landmarkTextures} from './landmark-textures.js?v=21';
+import {landmarkTextures} from './landmark-textures.js?v=22';
 import * as T from './vendor/three.module.min.js';
-import { random, height, surfaceHeight, roadDistance } from './world.js?v=21';
-import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=21';
+import { random, height, surfaceHeight, roadDistance } from './world.js?v=22';
+import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=22';
 
 // Reference-led irregular rural lake: shared shapes, cross-tile water, and dense
 // broken banks. The original layered wind-ripple / sky-reflection water is retained.

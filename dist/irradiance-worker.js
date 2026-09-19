@@ -1,5 +1,6 @@
-import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=21';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=21';
+import {REFERENCE_BARN as B,BARN_ROOFLIGHTS} from './reference-barn-layout.js?v=22';
+import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=22';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=22';
 
 const chunks=new Map(),cache=new Map(),scene=new ChunkBVHScene();
 let revision=0,job=null,running=false,paused=false;
@@ -21,6 +22,9 @@ async function run() {
         if(Math.abs(dx)<=2&&Math.abs(dz)<=2)entries.push({bvh:c.bvh,x:dx*64,y:0,z:dz*64});
       }
       scene.setEntries(entries);
+      const shelter=entries.some(e=>e.x===(1-Number(cx))*64&&e.z===(-2-Number(cz))*64)&&cx>=-1n&&cx<=3n&&cz>=-4n&&cz<=0n?{x:B.x-Number(cx)*64,z:B.z-Number(cz)*64}:null;
+      const portal=shelter?{x:shelter.x+B.doorX,y:B.y+B.doorHeight*.5,z:shelter.z+B.depth*.5,width:B.doorWidth,height:B.doorHeight}:null;
+      const roofPortals=shelter?BARN_ROOFLIGHTS.map(p=>({x:shelter.x+p.x,y:B.y+B.rearEave+(p.z+B.depth*.5)*(B.ridge-B.rearEave)/(B.ridgeZ+B.depth*.5)+.05,z:shelter.z+p.z,width:p.width,height:p.depth*Math.hypot(1,(B.ridge-B.rearEave)/(B.ridgeZ+B.depth*.5)),roofSlope:(B.ridge-B.rearEave)/(B.ridgeZ+B.depth*.5)})):[];
       const count=GRID[0]*GRID[1]*GRID[2],sh=new Float32Array(count*12),moments=new Float32Array(count*12),positions=new Float32Array(count*4);
       let computed=0,reused=0,rays=0,slice=performance.now();
       const gx=cx*16n+BigInt(baseX/4),gz=cz*16n+BigInt(baseZ/4);
@@ -38,7 +42,7 @@ async function run() {
           p=traceRelocatedProbe(scene,px,py,pz,{...lighting,seed});
           // Narrow doorways need more visibility samples; cache this work once.
           // Open fields retain the inexpensive 32-ray path.
-          if(p.valid&&p.visibility<.18&&p.closestObstacle<12){const coarse=p;rays+=coarse.rayCount;p=traceRelocatedProbe(scene,px,py,pz,{...lighting,seed,rays:96,bounceSkyRays:4});if(p.valid&&p.position.every((v,i)=>Math.abs(v-coarse.position[i])<.00001)){for(let i=0;i<12;i++){p.sh[i]=coarse.sh[i]*.25+p.sh[i]*.75;p.moments[i]=coarse.moments[i]*.25+p.moments[i]*.75;}}}
+          if(p.valid&&p.visibility<.18&&p.closestObstacle<12){const coarse=p;rays+=coarse.rayCount;p=traceRelocatedProbe(scene,px,py,pz,{...lighting,seed,rays:96,bounceSkyRays:4,skyPortals:portal&&Math.abs(px-shelter.x)<12&&Math.abs(pz-shelter.z)<5.8&&py>B.y&&py<B.y+B.ridge?[portal,...roofPortals]:[]});if(p.valid&&p.position.every((v,i)=>Math.abs(v-coarse.position[i])<.00001)){for(let i=0;i<12;i++){p.sh[i]=coarse.sh[i]*.25+p.sh[i]*.75;p.moments[i]=coarse.moments[i]*.25+p.moments[i]*.75;}}}
           p.offset=[p.position[0]-px,p.position[1]-py,p.position[2]-pz];
           cache.set(key,p);if(cache.size>10000)cache.delete(cache.keys().next().value);
           computed++;rays+=p.rayCount;

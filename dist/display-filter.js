@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {createFrameReadback} from './frame-readback.js?v=21';
+import {createFrameReadback} from './frame-readback.js?v=22';
 
 export const VHS_SIGNAL_SIZE=Object.freeze({width:1440,height:1080});
 export const FILTERS = Object.freeze(['vhs', 'pixel', 'ps1', 'native']);
@@ -33,8 +33,8 @@ void main(){
  vec2 uv=(filterMode==0||filterMode==2)?vec2(vUv.x,1.0-vUv.y):vUv;
  // Slight 900-line raster stepping, then official 1080-line VHS processing.
  // The scene and HUD share one source frame; no sharp layer is added afterward.
- if(filterMode==2){vec2 grid=vec2(1200.,900.);vec2 stepped=(floor(uv*grid)+.5)/grid;uv=mix(uv,stepped,.38);}
  vec3 c=texture(picture,uv).rgb;
+ if(filterMode==2){vec2 grid=vec2(1200.,900.);vec2 stepped=(floor(uv*grid)+.5)/grid;c=mix(c,texture(picture,stepped).rgb,.16);}
  if(filterMode==2){
   // Exact byte-domain equivalent of the established 1.16 input saturation.
   // Flip here too: asynchronous bottom-up GL readback is now top-down.
@@ -71,7 +71,7 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  function fail(error){if(failed||disposed)return;failed=true;epoch++;readback.cancel();readJob=null;stopWorkers();console.error('VHS filter failed',error);onError(error);}
  function startWorkers(){if(workers.length||failed||disposed)return;
   for(let i=0;i<poolSize;i++)try{
-   const worker=new Worker(new URL('./vhs-worker.js?v=21',import.meta.url),{type:'module',name:'ntsc-rs-'+i});
+   const worker=new Worker(new URL('./vhs-worker.js?v=22',import.meta.url),{type:'module',name:'ntsc-rs-'+i});
    const slot={worker,ready:false,busy:false,timer:setTimeout(()=>fail(new Error('VHS initialization timed out')),20000)};workers.push(slot);
    worker.onerror=e=>{e.preventDefault?.();if(!workers.includes(slot))return;fail(new Error(e.message||'VHS worker failed'));};worker.onmessageerror=()=>{if(workers.includes(slot))fail(new Error('VHS transfer failed'));};
    worker.onmessage=({data})=>{

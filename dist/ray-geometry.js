@@ -1,9 +1,9 @@
 import * as T from './vendor/three.module.min.js';
-import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=21';
-import {ruralTextures} from './rural-textures.js?v=21';
-import {periodOrigin,buildingSize,buildingLocal,pondMetrics} from './world.js?v=21';
-import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=21';
-import {meadowEnvironment} from './meadow-layout.js?v=21';
+import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=22';
+import {ruralTextures} from './rural-textures.js?v=22';
+import {periodOrigin,buildingSize,buildingLocal,pondMetrics} from './world.js?v=22';
+import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=22';
+import {meadowEnvironment} from './meadow-layout.js?v=22';
 
 // Runs in the existing generation worker, before its geometry is transferred.
 // True ground/building/prop/branch/leaf triangles; no solid canopy/house proxies.
