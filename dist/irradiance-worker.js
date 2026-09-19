@@ -1,5 +1,5 @@
-import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=15';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=15';
+import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=21';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=21';
 
 const chunks=new Map(),cache=new Map(),scene=new ChunkBVHScene();
 let revision=0,job=null,running=false,paused=false;

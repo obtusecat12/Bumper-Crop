@@ -1,6 +1,7 @@
+import {landmarkTextures} from './landmark-textures.js?v=21';
 import * as T from './vendor/three.module.min.js';
-import { random, height, surfaceHeight, roadDistance } from './world.js?v=13';
-import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=13';
+import { random, height, surfaceHeight, roadDistance } from './world.js?v=21';
+import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=21';
 
 // Reference-led irregular rural lake: shared shapes, cross-tile water, and dense
 // broken banks. The original layered wind-ripple / sky-reflection water is retained.
@@ -13,75 +14,36 @@ const tint = new T.Color();
 const keep = resource => { shared.add(resource); return resource; };
 export const isSharedLakeResource = resource => !!resource && shared.has(resource);
 
-const waterHeader = `
-uniform float uLakeTime;
-uniform float uLakeWind;
-varying vec2 vLakeXZ;
-varying vec3 vLakeWorld;
-varying float vLakeRadius;
-float lakeHash(vec2 p) { return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
-float lakeNoise(vec2 p) {
-  vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f);
-  return mix(mix(lakeHash(i),lakeHash(i+vec2(1.,0.)),f.x),
-    mix(lakeHash(i+vec2(0.,1.)),lakeHash(i+vec2(1.,1.)),f.x),f.y);
-}
-void lakeWave(inout vec3 wave,vec2 p,vec2 dir,float freq,float amplitude,float speed,float time) {
-  float phase=dot(p,dir)*freq+time*speed;
-  // Break long sine crests into short, natural wind ripples, never a grid.
-  phase+=sin(dot(p,vec2(-dir.y,dir.x))*1.37+time*.12)*.64;
-  float aa=1.-smoothstep(.7,3.1,fwidth(phase));
-  wave.x+=sin(phase)*amplitude*aa;
-  wave.yz+=cos(phase)*amplitude*freq*dir*aa;
-}
-vec3 lakeWaves(vec2 p,float time) {
-  vec3 w=vec3(0.);
-  lakeWave(w,p,normalize(vec2(.12,1.)),8.3,.0080,1.05,time);
-  lakeWave(w,p,normalize(vec2(.24,1.)),18.7,.0034,1.54,time);
-  lakeWave(w,p,normalize(vec2(-.09,1.)),35.4,.0014,2.03,time);
-  lakeWave(w,p,normalize(vec2(.66,.75)),12.3,.0020,-.87,time);
-  return w*(.68+clamp(uLakeWind,0.,1.)*.65);
-}
-`;
-
+// Three gravity-wave bands move actual triangles. Fine waves are carried by the
+// low-resolution water texture; lake-local phase survives tile streaming/rebases.
+export const WATER_WAVES=[{k:.938,a:.048,dir:[.342,.940],w:3.033},{k:.576,a:.058,dir:[-.800,.600],w:2.376},{k:.385,a:.034,dir:[.940,.342],w:1.943}];
+export function waterDisplacement(x,z,r,time,wind=.32){const edge=1-Math.max(0,Math.min(1,(r-.94)/.06))**2*(3-2*Math.max(0,Math.min(1,(r-.94)/.06)));return WATER_WAVES.reduce((h,v)=>h+v.a*Math.sin((x*v.dir[0]+z*v.dir[1])*v.k-time*v.w),0)*edge*(.76+wind*.42);}
 function waterMaterial(wind) {
-  const mat = new T.MeshStandardMaterial({
-    name: 'slate-blue wind-ripple water', color: '#314956', roughness: .34,
-    metalness: 0, transparent: false, depthWrite: true,
-  });
-  mat.onBeforeCompile = shader => {
-    shader.uniforms.uLakeTime = wind.time;
-    shader.uniforms.uLakeWind = wind.strength;
-    shader.vertexShader = `attribute float lakeRadius; attribute vec2 lakeCoord;
-varying vec2 vLakeXZ; varying vec3 vLakeWorld; varying float vLakeRadius;
-` + shader.vertexShader;
-    shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
-vLakeXZ=lakeCoord; vLakeRadius=lakeRadius;
-vLakeWorld=(modelMatrix*vec4(position,1.)).xyz;`);
-    shader.fragmentShader = waterHeader + shader.fragmentShader;
-    shader.fragmentShader = shader.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
-vec2 lakeP=vLakeXZ;
-vec3 lakeW=lakeWaves(lakeP,uLakeTime);
-lakeW*=.48+.85*lakeNoise(lakeP*vec2(5.6,1.7));
-float lakeMottle=lakeNoise(lakeP*.57)*.58+lakeNoise(lakeP*1.8)*.42;
-float lakeShallow=smoothstep(.89,1.,vLakeRadius);
-vec3 lakeDeep=mix(vec3(.029,.047,.060),vec3(.051,.072,.087),lakeMottle);
-vec3 lakeEdge=vec3(.087,.100,.103);
-diffuseColor.rgb=mix(lakeDeep,lakeEdge,lakeShallow*.66);
-diffuseColor.rgb*=.93+lakeW.x*16.0;`);
-    shader.fragmentShader = shader.fragmentShader.replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
-roughnessFactor=clamp(.29+lakeMottle*.16+lakeShallow*.07,.25,.55);`);
-    shader.fragmentShader = shader.fragmentShader.replace('#include <normal_fragment_begin>', `#include <normal_fragment_begin>
-vec3 lakeNormal=normalize(vec3(-lakeW.y,1.,-lakeW.z));
-normal=normalize(mat3(viewMatrix)*lakeNormal);
-`);
-    shader.fragmentShader = shader.fragmentShader.replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>
-// Water is a dielectric with IOR 1.333. Sunlight is shadowed normally;
-// the common overcast reflection replaces the old unshadowed emissive glint.
-material.specularColor=vec3(.0203732);
-`);
-  };
-  mat.customProgramCacheKey = () => 'rural-lake-water-v16';
-  return keep(mat);
+ const mat=new T.MeshStandardMaterial({name:'PS1 triangulated animated water',color:'#778f94',roughness:.40,metalness:0,flatShading:true,transparent:false,depthWrite:true});
+ mat.onBeforeCompile=shader=>{
+  shader.uniforms.uLakeTime=wind.time;shader.uniforms.uLakeWind=wind.strength;shader.uniforms.uLakeTexture={value:landmarkTextures.water};
+  shader.vertexShader=`uniform float uLakeTime;uniform float uLakeWind;attribute float lakeRadius;attribute vec2 lakeCoord;varying vec2 vLakeXZ;varying float vLakeRadius;
+`+shader.vertexShader;
+  shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
+   vLakeXZ=lakeCoord;vLakeRadius=lakeRadius;
+   float lakeH=sin(dot(lakeCoord,vec2(.342,.940))*.938-uLakeTime*3.033)*.048
+     +sin(dot(lakeCoord,vec2(-.800,.600))*.576-uLakeTime*2.376)*.058
+     +sin(dot(lakeCoord,vec2(.940,.342))*.385-uLakeTime*1.943)*.034;
+   transformed.y+=lakeH*(1.-smoothstep(.94,1.,lakeRadius))*(.76+uLakeWind*.42);
+  `);
+  shader.fragmentShader=`uniform float uLakeTime;uniform sampler2D uLakeTexture;varying vec2 vLakeXZ;varying float vLakeRadius;
+`+shader.fragmentShader;
+  shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+   vec3 rippleA=texture2D(uLakeTexture,vLakeXZ/9.0+vec2(.013,.006)*uLakeTime).rgb;
+   vec3 rippleB=texture2D(uLakeTexture,vLakeXZ.yx/14.0+vec2(-.007,.010)*uLakeTime).rgb;
+   float lakeShallow=smoothstep(.89,1.,vLakeRadius);
+   vec3 lakeColor=(rippleA*.64+rippleB*.36)*.58;
+   diffuseColor.rgb=mix(lakeColor,vec3(.105,.117,.104),lakeShallow*.50);
+  `);
+  shader.fragmentShader=shader.fragmentShader.replace('#include <lights_physical_fragment>',`#include <lights_physical_fragment>
+material.specularColor=vec3(.0203732);`);
+ };
+ mat.customProgramCacheKey=()=> 'rural-low-poly-water-v21';return keep(mat);
 }
 
 function dryGrassMaterial(wind) {
@@ -131,10 +93,11 @@ function clipPolygon(poly,axis,bound,keepGreater){
   }
   return out;
 }
-function waterGeometry(f,y){
-  const sectors=320,scales=[0,.30,.60,.82,.94,1],rings=[];
+export function waterGeometry(f,y){
+  const count=Math.ceil(Math.max(f.rx,f.rz)*1.35/2.0),scales=Array.from({length:count+1},(_,i)=>i/count),rings=[];
   const positions=[],normals=[],radius=[],coords=[],indices=[];
   for(const scale of scales){
+    const sectors=scale===0?1:scale===1?320:Math.max(12,Math.min(312,Math.ceil(scale*Math.max(f.rx,f.rz)*1.35*Math.PI/4.8)*4));
     const ring=[];
     for(let i=0;i<sectors;i++){
       const q=pondPoint(f,i/sectors*TAU,scale);ring.push({...q,d:scale});
@@ -142,6 +105,7 @@ function waterGeometry(f,y){
     rings.push(ring);
   }
   const emit=(a,b,c)=>{
+    if(Math.max(a.x,b.x,c.x)<0||Math.min(a.x,b.x,c.x)>64||Math.max(a.z,b.z,c.z)<0||Math.min(a.z,b.z,c.z)>64)return;
     let poly=[a,b,c];
     for(const [axis,bound,greater] of [['x',0,true],['x',64,false],['z',0,true],['z',64,false]]){
       poly=clipPolygon(poly,axis,bound,greater);if(poly.length<3)return;
@@ -153,17 +117,22 @@ function waterGeometry(f,y){
     }
     for(let i=1;i<poly.length-1;i++)indices.push(base,base+i,base+i+1);
   };
-  for(let i=0;i<sectors;i++)emit(rings[0][i],rings[1][(i+1)%sectors],rings[1][i]);
-  for(let ring=1;ring<scales.length-1;ring++)for(let i=0;i<sectors;i++){
-    const j=(i+1)%sectors,a=rings[ring],b=rings[ring+1];
-    emit(a[i],a[j],b[i]);emit(a[j],b[j],b[i]);
+  for(let i=0;i<rings[1].length;i++)emit(rings[0][0],rings[1][(i+1)%rings[1].length],rings[1][i]);
+  // Progressively fewer angular samples toward the centre avoid the old dense
+  // starburst of sliver triangles. The outer shoreline retains all 320 points.
+  for(let ring=1;ring<rings.length-1;ring++){
+    const a=rings[ring],b=rings[ring+1],na=a.length,nb=b.length;let i=0,j=0;
+    while(i<na||j<nb){
+      if((i+1)/na<=(j+1)/nb){emit(a[i%na],a[(i+1)%na],b[j%nb]);i++;}
+      else{emit(a[i%na],b[(j+1)%nb],b[j%nb]);j++;}
+    }
   }
   const g=new T.BufferGeometry();
   g.setAttribute('position',new T.Float32BufferAttribute(positions,3));
   g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));
   g.setAttribute('lakeRadius',new T.Float32BufferAttribute(radius,1));
   g.setAttribute('lakeCoord',new T.Float32BufferAttribute(coords,2));
-  g.setIndex(indices);g.computeBoundingSphere();return g;
+  g.setIndex(indices);g.computeBoundingSphere();g.boundingSphere.radius+=.22;g.computeBoundingBox();g.boundingBox.min.y-=.22;g.boundingBox.max.y+=.22;return g;
 }
 
 // Three interwoven growth habits: short living grass, sprawling straw, and

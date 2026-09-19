@@ -1,0 +1,14 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: one square 2x2 interior material texture atlas for an old PS1/PS2-style Three.js game
+style: clean subdued low-frequency painted and baked material surfaces, softly resolved old-console texture art, restrained contrast
+layout: four equal square quadrants, boundaries exactly at the horizontal and vertical midpoint; each material fills its entire quadrant right up to its edges, zero gutters, zero divider lines, zero frames
+top-left quadrant: matted old pale straw bedding, flattened softly painted overlapping straw
+top-right quadrant: muted olive-beige worn quilt fabric, shallow stitched squares, old muted blanket surface
+bottom-left quadrant: aged speckled off-white enamel cookware material with dark enamel rim colour included in restrained thin dark wear marks along the patch edges, surface texture only, material for a 1980s American cooking pot
+bottom-right quadrant: creamy beige thick flour batter, small soft bubbles and soft swirls, simmering flour-paste surface
+view: orthographic directly front-on material scans; absolutely flat surface projection, the batter seen straight down
+lighting: uniform flat diffuse illumination
+tiling: every quadrant designed to tile internally as a square cropped patch, opposite edges of each quadrant visually continuous
+aspect ratio: 1:1 square
+Avoid: text, labels, numbers, whole pots, cookware objects, bowls, scenes, perspective, cast shadows, simulated bevelled panels, shiny glare, excessive crisp grit, noisy microtexture, oversharpening, oversaturation

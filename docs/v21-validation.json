@@ -1,0 +1,27 @@
+{
+  "nativeRuntime": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "currentMaterialPrograms": 22,
+  "compiledLinked": true,
+  "fullLightingAndCSMPrograms": 251,
+  "maxFullSceneSamplers": 13,
+  "wetLensPixelsChanged": 2006,
+  "wetLensOutsideCapsChanged": 0,
+  "waterBoundaryCheck": "matching vertices at t=0,1.5,20; zero displacement at coast",
+  "physicsChecks": [
+    "pinning",
+    "gravity",
+    "volume and momentum conservation on merge",
+    "lifetime",
+    "bounded count",
+    "teleport reset",
+    "entry hysteresis"
+  ],
+  "collisionChecks": [
+    "closed doors block",
+    "open doors pass",
+    "map landing outside",
+    "F2 door approach",
+    "stable LOD layout"
+  ],
+  "limits": "Native representative rendering, not live browser or user device frame rate"
+}

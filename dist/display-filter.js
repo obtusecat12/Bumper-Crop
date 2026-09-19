@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {createFrameReadback} from './frame-readback.js?v=14';
+import {createFrameReadback} from './frame-readback.js?v=21';
 
 export const VHS_SIGNAL_SIZE=Object.freeze({width:1440,height:1080});
 export const FILTERS = Object.freeze(['vhs', 'pixel', 'ps1', 'native']);
@@ -60,7 +60,7 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  const uiScene=new T.Scene(),uiQuad=new T.Mesh(geometry,uiMaterial);uiQuad.frustumCulled=false;uiScene.add(uiQuad);
  renderer.info.autoReset=false;
  let mode='native',width=0,height=0,epoch=0,disposed=false,failed=false,readJob=null;
- let source=null,texture=null,spare=null,lastCapture=-Infinity,lastOutput=0,sequence=0,displayed=-1,compositor=null,uiTexture=null,uiWidth=0,uiHeight=0;
+ let source=null,texture=null,spare=null,lastCapture=-Infinity,lastOutput=0,sequence=0,displayed=-1,compositor=null,lensEffect=null,uiTexture=null,uiWidth=0,uiHeight=0;
  const workers=[],cores=globalThis.navigator?.hardwareConcurrency||2,poolSize=cores>=8?3:cores>=4?2:1;
  const values={ms:null,latency:null,fps:0,workers:poolSize};
  const smooth=(a,b)=>a===null?b:a*.85+b*.15;
@@ -68,7 +68,7 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  function fail(error){if(failed||disposed)return;failed=true;epoch++;readback.cancel();readJob=null;stopWorkers();console.error('VHS filter failed',error);onError(error);}
  function startWorkers(){if(workers.length||failed||disposed)return;
   for(let i=0;i<poolSize;i++)try{
-   const worker=new Worker(new URL('./vhs-worker.js?v=20',import.meta.url),{type:'module',name:'ntsc-rs-'+i});
+   const worker=new Worker(new URL('./vhs-worker.js?v=21',import.meta.url),{type:'module',name:'ntsc-rs-'+i});
    const slot={worker,ready:false,busy:false,timer:setTimeout(()=>fail(new Error('VHS initialization timed out')),20000)};workers.push(slot);
    worker.onerror=e=>{e.preventDefault?.();if(!workers.includes(slot))return;fail(new Error(e.message||'VHS worker failed'));};worker.onmessageerror=()=>{if(workers.includes(slot))fail(new Error('VHS transfer failed'));};
    worker.onmessage=({data})=>{
@@ -95,11 +95,12 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
   if(mode==='vhs'||mode==='ps1'){source=new T.FramebufferTexture(w,h);source.colorSpace=T.NoColorSpace;source.minFilter=source.magFilter=T.NearestFilter;source.generateMipmaps=false;}
   if(mode==='vhs'){failed=false;startWorkers();}
  }
+ function setLensEffect(next){lensEffect=next;}
  function setCompositor(next){compositor=next;uiTexture?.dispose();uiTexture=new T.CanvasTexture(next.canvas);uiWidth=next.canvas.width;uiHeight=next.canvas.height;uiTexture.flipY=true;uiTexture.colorSpace=T.NoColorSpace;uiTexture.minFilter=uiTexture.magFilter=T.LinearFilter;uiTexture.generateMipmaps=false;uiMaterial.uniforms.picture.value=uiTexture;}
  function compose(scene,view,beforeScene,skipScene){
   // Upload changed UI before 3D draw submission, not in the middle of it.
   if(compositor){const changed=compositor.paint(width,height);if(uiWidth!==compositor.canvas.width||uiHeight!==compositor.canvas.height)setCompositor(compositor);else if(changed)uiTexture.needsUpdate=true;renderer.initTexture(uiTexture);}
-  if(skipScene)renderer.clear();else{beforeScene?.();renderer.render(scene,view);}
+  if(skipScene)renderer.clear();else{beforeScene?.();renderer.render(scene,view);lensEffect?.render(width,height);}
   if(uiTexture){const old=renderer.autoClear;renderer.autoClear=false;renderer.render(uiScene,camera);renderer.autoClear=old;}
  }
  function present(picture,kind){material.uniforms.picture.value=picture;material.uniforms.filterMode.value=kind;material.uniforms.frameHeight.value=height;renderer.render(screen,camera);}
@@ -122,7 +123,7 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
   }else if(!texture)renderer.clear();
   if(texture)present(texture,0);
  }
- function contextLost(){epoch++;readback.cancel(true);if(readJob){readJob.slot.busy=false;readJob=null;}width=height=0;compositor?.invalidate();}
- function dispose(){disposed=true;epoch++;readback.cancel(renderer.getContext().isContextLost());stopWorkers();source?.dispose();texture?.dispose();uiTexture?.dispose();geometry.dispose();material.dispose();uiMaterial.dispose();compositor?.dispose();}
- return{configure,render,contextLost,dispose,setCompositor,values};
+ function contextLost(){lensEffect?.contextLost();epoch++;readback.cancel(true);if(readJob){readJob.slot.busy=false;readJob=null;}width=height=0;compositor?.invalidate();}
+ function dispose(){lensEffect?.dispose();disposed=true;epoch++;readback.cancel(renderer.getContext().isContextLost());stopWorkers();source?.dispose();texture?.dispose();uiTexture?.dispose();geometry.dispose();material.dispose();uiMaterial.dispose();compositor?.dispose();}
+ return{configure,render,contextLost,dispose,setCompositor,setLensEffect,values};
 }

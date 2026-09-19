@@ -1,0 +1,14 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: one square 2x2 exterior material texture atlas for an old PS1/PS2-style Three.js game
+style: clean subdued low-frequency painted and baked material surfaces, softly resolved old-console texture art, restrained contrast
+layout: four equal square quadrants, boundaries exactly at the horizontal and vertical midpoint; each material fills its entire quadrant right up to its edges, zero gutters, zero divider lines, zero frames
+top-left quadrant: rustic burnt red-orange brick with small bricks in horizontal offset courses and thin pale mortar, modest broad discoloration
+top-right quadrant: weathered slate-grey roof tiles, soft muted grey mottling and large irregular subdued moss patches, weathered roof tiles visible without crisp tiny grit
+bottom-left quadrant: dark blue-grey vertical wooden planks like double-height barn doors, subtle broad age variation, narrow simple plank seams
+bottom-right quadrant: harvested pale straw stubble over subdued brown soil
+view: orthographic front-on material scans; absolutely flat surface projection
+lighting: uniform flat diffuse illumination
+tiling: every quadrant designed to tile internally as a square cropped patch, opposite edges of each quadrant visually continuous
+aspect ratio: 1:1 square
+Avoid: text, labels, numbers, objects, scenes, perspective, cast shadows, simulated bevelled panels, shiny highlights, excessive crisp grit, noisy microtexture, oversharpening, oversaturation

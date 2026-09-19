@@ -1,0 +1,8 @@
+import * as T from './vendor/three.module.min.js';
+export const LANDMARK_TEXTURES=['brick','slate','bluewood','stubble','straw','quilt','enamel','paste','water'];
+const shared=new Set();
+export const landmarkTextures=Object.fromEntries(LANDMARK_TEXTURES.map(name=>{const t=new T.DataTexture(new Uint8Array([128,128,128,255]),1,1);t.name='PS1/2 reference material / '+name;t.colorSpace=T.SRGBColorSpace;t.wrapS=t.wrapT=T.MirroredRepeatWrapping;t.magFilter=T.NearestFilter;t.minFilter=T.LinearMipmapLinearFilter;t.generateMipmaps=true;t.anisotropy=2;t.needsUpdate=true;shared.add(t);return[name,t];}));
+let loading;
+async function decode(url){const response=await fetch(url);if(!response.ok)throw Error('Reference material unavailable: '+url.pathname);const bitmap=await createImageBitmap(await response.blob());const canvas=typeof OffscreenCanvas==='undefined'?document.createElement('canvas'):new OffscreenCanvas(256,256);canvas.width=canvas.height=256;const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(bitmap,0,0,256,256);bitmap.close();return{data:new Uint8Array(c.getImageData(0,0,256,256).data),width:256,height:256};}
+export function initializeLandmarkTextures(decodeImage=decode){if(!loading)loading=Promise.all(LANDMARK_TEXTURES.map(async name=>{const pixels=await decodeImage(new URL('./textures/v21/'+name+'.webp',import.meta.url));if(pixels.width!==256||pixels.height!==256||pixels.data.length!==256*256*4)throw Error('Invalid reference texture');landmarkTextures[name].image=pixels;landmarkTextures[name].needsUpdate=true;})).catch(e=>{loading=null;throw e;});return loading;}
+export const isSharedLandmarkTexture=r=>shared.has(r);

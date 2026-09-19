@@ -1,13 +1,16 @@
-import {meadowEnvironment} from './meadow-layout.js?v=13';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=13';
-import {pondShapeGLSL} from './lake-shape.js?v=13';
+import {landmarkTextures} from './landmark-textures.js?v=21';
+import {meadowEnvironment} from './meadow-layout.js?v=21';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=21';
+import {pondShapeGLSL} from './lake-shape.js?v=21';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=13';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=13';
+import {ruralTextures} from './rural-textures.js?v=21';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=21';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
 varying vec4 vMeadow;
+uniform sampler2D uBarnStubble;
+uniform vec3 uBarn;
 uniform sampler2D uRuralSoil;
 uniform sampler2D uRuralPath;
 uniform sampler2D uRuralTurf;
@@ -24,7 +27,7 @@ uniform vec4 uFarmBuildings[6];
 uniform vec2 uFarmSizes[6];
 ${FARM_MASK_GLSL}
 float farmRoadMask(vec2 p){
- if(uFarm.z<.5)return 1.;return 1.-farmMaskAt(p+uFarm.xy);
+ vec2 bp=p+uBarn.xy;float edge=min(min(bp.x+60.,56.-bp.x),min(bp.y+25.,82.-bp.y));float harvest=uBarn.z*smoothstep(0.,4.,edge);return (uFarm.z<.5?1.:1.-farmMaskAt(p+uFarm.xy))*(1.-harvest);
 }
 float farmYard(vec2 p){
  float dist=10000.;vec2 q=p+uFarm.xy;
@@ -68,6 +71,8 @@ ${pondShapeGLSL}
 function groundMaterial(f){
  const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1});
  m.onBeforeCompile=s=>{
+  s.uniforms.uBarn={value:new T.Vector3(f.barn?.x||0,f.barn?.z||0,f.barn?1:0)};
+  s.uniforms.uBarnStubble={value:landmarkTextures.stubble};
   s.uniforms.uRuralSoil={value:ruralTextures.soil};
   s.uniforms.uRuralPath={value:ruralTextures.path};
   s.uniforms.uRuralTurf={value:ruralTextures.turf};
@@ -176,6 +181,17 @@ if(uBuilding.w>.5){
     float e=farmYard(p),edge=(soilPatch-.5)*1.7+(broad-.5)*1.1+(clods-.5)*.25;
     float yard=1.-smoothstep(.35,3.4,e+edge);
     base=mix(base,dirt*(.94+soilPatch*.08)+grain*.004,yard);
+   }
+   if(uBarn.z>.5){
+    vec2 bp=p+uBarn.xy;
+    float edge=min(min(bp.x+60.,56.-bp.x),min(bp.y+25.,82.-bp.y));
+    float harvest=smoothstep(0.,4.,edge)*smoothstep(1.65,2.65,rd);
+    vec3 cutField=texture2D(uBarnStubble,bp/3.6).rgb*1.1;
+    float rows=.93+.07*sin(bp.y*2.45+sin(bp.x*.05)*.4);
+    float footprint=max(abs(bp.x)-12.,abs(bp.y)-5.8);
+    float threshold=(1.-smoothstep(0.,2.5,abs(bp.x-3.1)))*(1.-smoothstep(6.,13.,bp.y));
+    cutField=mix(cutField*rows,dirt,max(1.-smoothstep(0.,1.0,footprint),threshold)*.8);
+    base=mix(base,cutField,harvest);
    }
    diffuseColor.rgb=base;
   `);

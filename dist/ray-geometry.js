@@ -1,15 +1,17 @@
+import {landmarkTextures} from './landmark-textures.js?v=21';
+import {barnHarvest} from './reference-barn-layout.js?v=21';
 import * as T from './vendor/three.module.min.js';
-import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=15';
-import {ruralTextures} from './rural-textures.js?v=13';
-import {periodOrigin,buildingSize,buildingLocal,pondMetrics} from './world.js?v=13';
-import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=13';
-import {meadowEnvironment} from './meadow-layout.js?v=13';
+import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=21';
+import {ruralTextures} from './rural-textures.js?v=21';
+import {periodOrigin,buildingSize,buildingLocal,pondMetrics} from './world.js?v=21';
+import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=21';
+import {meadowEnvironment} from './meadow-layout.js?v=21';
 
 // Runs in the existing generation worker, before its geometry is transferred.
 // True ground/building/prop/branch/leaf triangles; no solid canopy/house proxies.
 // Fine wheat and grass do not occlude this low-frequency indirect-light cache.
 export function buildRayGeometry(root,f=null) {
-  const groundAlbedo=createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics});
+  const groundAlbedo=createGroundRayAlbedo({landmarkTextures,barnHarvest,ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics});
   root.updateMatrixWorld(true);
   const inverse = root.matrixWorld.clone().invert(), matrix = new T.Matrix4(), instance = new T.Matrix4();
   const draws=[], textureIds=new Map(), textures=[], averages=new WeakMap(); let total=0;
@@ -42,7 +44,7 @@ export function buildRayGeometry(root,f=null) {
     mat.map.updateMatrix();return id;
   }
   root.traverse(o=>{
-    if(!o.isMesh||!o.geometry?.attributes.position||(!o.castShadow&&o.name!=='sculpted-ground-and-wheel-ruts'))return;
+    if(o.userData.dynamicDoor||!o.isMesh||!o.geometry?.attributes.position||(!o.castShadow&&o.name!=='sculpted-ground-and-wheel-ruts'))return;
     const mat=o.material;if(Array.isArray(mat)||mat.transparent||mat.isShaderMaterial)return;
     const g=o.geometry,start=g.drawRange.start||0,count=Math.min((g.index?.count??g.attributes.position.count)-start,g.drawRange.count);
     if(!Number.isFinite(count)||count<3)return;

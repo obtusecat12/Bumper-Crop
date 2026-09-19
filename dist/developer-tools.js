@@ -1,5 +1,6 @@
-import {CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=13';
-import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=13';
+import {barnFootprintDistance} from './reference-barn-layout.js?v=21';
+import {CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=21';
+import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=21';
 
 const titles={pond:'湖泊',building:'建筑',grove:'树林'};
 function marker(f,kind){
@@ -99,6 +100,7 @@ function mapTerrainClear(p,f){
   const q=buildingLocal(p.x,p.z,f),[w,d]=buildingSize(f);
   if(Math.abs(q.x)<w/2+.65&&Math.abs(q.z)<d/2+.65)return false;
  }
+ if(barnFootprintDistance(p.x,p.z,f)<.65)return false;
  if(farmFootprintDistance(p.x,p.z,f)<.65)return false;
  const ground=surfaceHeight(p.x,p.z,f);
  return [[.4,0],[-.4,0],[0,.4],[0,-.4]].every(([dx,dz])=>Math.abs(surfaceHeight(p.x+dx,p.z+dz,f)-ground)<=.32);
@@ -144,7 +146,8 @@ export function createMapTarget(point,seed){
  const getField=p=>{const key=`${p.cx},${p.cz}`;if(!cache.has(key))cache.set(key,field(p.cx,p.cz,seed));return cache.get(key)};
  let candidates=[],label='地图位置',mapMode='point';
  const farm=farmEntrance(source,clicked);
- if(farm){candidates=farm.points;label=farm.label;mapMode='building';
+ if(source.barn&&barnFootprintDistance(clicked.x,clicked.z,source)<.65){for(const extra of[2.4,3.4,4.5])candidates.push({x:3.1-source.barn.x,z:5.8+extra-source.barn.z});label='砖砌谷仓门外';mapMode='building';
+ }else if(farm){candidates=farm.points;label=farm.label;mapMode='building';
  }else if(source.type==='building'){
   const q=buildingLocal(clicked.x,clicked.z,source),[w,d]=buildingSize(source);
   if(Math.abs(q.x)<w/2+.65&&Math.abs(q.z)<d/2+.65){
@@ -180,6 +183,7 @@ export function findSafeLanding(target,colliders){
   points.push({x:target.x,z:target.z});
   if(target.mapMode==='shore'||target.mapMode==='building')points.push(...(target.mapCandidates||[]));
   points.push(...mapOffsets(target));
+ }else if(target.kind==='reference-barn'){points.push({x:target.x,z:target.z});
  }else if(target.kind==='photo'){points.push({x:target.x,z:target.z});
  }else if(target.kind==='start'){
   points.push({x:.6,z:52});

@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: one square seamless old-console water material texture for an old PS1/PS2-style Three.js game
+subject: grey-blue and muted grey-green water surface, soft broad angular highlights and sparse broken ripples
+style: clean subdued low-frequency painted and baked surface, softly resolved old-console texture art, restrained contrast
+view: orthographic straight down onto a flat continuous water surface, filling the entire image
+lighting: uniform flat diffuse illumination, soft broad angular reflected tones
+tiling: seamless repeat horizontally and vertically, opposing image edges visually continuous
+aspect ratio: 1:1 square
+Avoid: perspective, horizon, shore, land, sky, objects, text, labels, frames, gutters, strong reflections, shiny glare, excessive crisp grit, noisy microtexture, oversharpening, oversaturation

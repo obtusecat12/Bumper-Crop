@@ -28,8 +28,9 @@ export function linearTextureMean(texture){
 // Return fn(f, localX, localZ, outRGB?, meadowAtTriangleCenter?). The optional
 // meadow value uses {cover,moisture,patchDensity}; pass barycentric-average
 // meadowData for an exact match to the mesh's vertex interpolation when handy.
-export function createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics}){
+export function createGroundRayAlbedo({landmarkTextures,barnHarvest,ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics}){
  const soil=linearTextureMean(ruralTextures.soil),path=linearTextureMean(ruralTextures.path),turf=linearTextureMean(ruralTextures.turf);
+ const stubble=landmarkTextures?linearTextureMean(landmarkTextures.stubble):soil;
  const env={};
  function lanes(f,x,z){
   const info=[10000,0,0,0],roadWeight=farmRoadWeight(x,z,f);
@@ -71,6 +72,7 @@ export function createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironm
    blend(silt,loam,smooth(-.22,.55,m.metres),out);blend(out,drygrass,smooth(.11,.40,m.bank));blend(out,outside,smooth(.65,1.12,m.bank));
   }
   if(f.farm){const e=farmFootprintDistance(x,z,f),edge=(soilPatch-.5)*1.7+(broad-.5)*1.1,yard=1-smooth(.35,3.4,e+edge);blend(out,scale(dirt.slice(),.94+soilPatch*.08),yard)}
+  if(f.barn&&barnHarvest){const x0=x+f.barn.x,z0=z+f.barn.z,footprint=Math.max(Math.abs(x0)-12,Math.abs(z0)-5.8),threshold=(1-smooth(0,2.5,Math.abs(x0-3.1)))*(1-smooth(6,13,z0)),rows=.93+.07*Math.sin(z0*2.45+Math.sin(x0*.05)*.4),cut=stubble.map(c=>c*1.1*rows);blend(cut,dirt,Math.max(1-smooth(0,1,footprint),threshold)*.8);blend(out,cut,barnHarvest(x,z,f)*smooth(1.65,2.65,rd));}
   for(let i=0;i<3;i++)out[i]=clamp(out[i],.005,.9);return out;
  }
  sample.means={soil,path,turf};return sample;
