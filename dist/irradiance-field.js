@@ -11,7 +11,9 @@ const vec3 probeGrid=vec3(19.,7.,19.);
 const vec3 probeStep=vec3(4.,2.,4.);
 vec3 sampleProbe(vec3 uv,vec3 n){
   vec4 basis=vec4(1.,n);
-  return max(vec3(0.),vec3(dot(texture(uProbeR,uv),basis),dot(texture(uProbeG,uv),basis),dot(texture(uProbeB,uv),basis)));
+  vec4 r=texture(uProbeR,uv),g=texture(uProbeG,uv),b=texture(uProbeB,uv);
+  // Limit negative L1 ringing relative to measured energy, never add light to zero-energy probes.
+  return max(vec3(r.x,g.x,b.x)*.06,vec3(dot(r,basis),dot(g,basis),dot(b,basis)));
 }
 float probeVisibility(vec3 uv,vec3 delta){
   float distance=length(delta);if(distance<.001)return 1.;

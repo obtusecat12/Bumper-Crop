@@ -31,6 +31,9 @@ in vec2 vUv;out vec4 outColor;
 const int dither[16]=int[16](-4,0,-3,1,2,-2,3,-1,-3,1,-4,0,3,-1,2,-2);
 void main(){
  vec2 uv=(filterMode==0||filterMode==2)?vec2(vUv.x,1.0-vUv.y):vUv;
+ // Slight 900-line raster stepping, then official 1080-line VHS processing.
+ // The scene and HUD share one source frame; no sharp layer is added afterward.
+ if(filterMode==2){vec2 grid=vec2(1200.,900.);vec2 stepped=(floor(uv*grid)+.5)/grid;uv=mix(uv,stepped,.38);}
  vec3 c=texture(picture,uv).rgb;
  if(filterMode==2){
   // Exact byte-domain equivalent of the established 1.16 input saturation.

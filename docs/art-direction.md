@@ -11,3 +11,7 @@ User preference established in V20, applying to subsequent textures and UI:
 - Keep all existing input, accessible state, safe map teleport and multi-level theme API behavior.
 
 V20 components: `dist/assets/ui-v20/`. Source sheets generated as transparent parts, then mechanically cropped, reduced to 24–256 px and moderately desaturated. Glass alpha is preserved. UI is rasterized at up to720 lines before the final display filter; a320-line PS1 mode naturally rasterizes it at320 lines.
+
+## Mandatory reference workflow (V22 user direction)
+
+Before every subsequent visual feature or scene revision, search for and inspect actual reference images. Verify original-game screenshots rather than trusting captions on remasters. Record source pages and image URLs. Use real inhabited spaces to establish scale, placement, connected storage and wear before adding small detail. All scenes should have clear use, human scale, grounded contact and plausible lighting. Do not wait for the user to request lived-in context. Barn surroundings remain standing wheat; only its footprint and short doorway approach are cleared.

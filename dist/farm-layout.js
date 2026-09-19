@@ -1,4 +1,3 @@
-import {barnHarvest} from './reference-barn-layout.js?v=21';
 // One fixed photographic landmark. BigInt guards keep the infinite world exact.
 export const FARM={x:160,z:96,y:.40,minX:-138,maxX:480,minZ:-62,maxZ:360};
 export const FARM_PLACEMENTS={barn:{x:0,z:0,angle:0,scaleX:.86,scaleZ:.86},annex:{x:-17,z:28,angle:-Math.PI/2},cottage:{x:-29.484,z:-4.395,angle:0,scaleX:22/24.4,scaleY:1.1778},shed:{x:20.867,z:-19.860,angle:Math.PI/2,scaleX:.725,scaleZ:.725}};
@@ -48,7 +47,7 @@ export function farmMask(x,z){
  // Intersect the old mask: never suppress existing content outside it.
  return Math.min(original,smooth(0,FARM_MASK_FEATHER,protectedDepth));
 }
-export function farmRoadWeight(x,z,f){return(f?.farm?1-farmMask(x+f.farm.x,z+f.farm.z):1)*(1-barnHarvest(x,z,f))}
+export function farmRoadWeight(x,z,f){return(f?.farm?1-farmMask(x+f.farm.x,z+f.farm.z):1)}
 export function farmFootprintDistance(x,z,f){
  if(!f?.farm)return 1e4;x+=f.farm.x;z+=f.farm.z;let result=1e4;
  for(const p of FARM_FOOTPRINTS){const dx=x-p.x,dz=z-p.z,c=Math.cos(p.angle),s=Math.sin(p.angle),a=Math.abs(c*dx-s*dz)-p.hx,b=Math.abs(s*dx+c*dz)-p.hz;result=Math.min(result,Math.hypot(Math.max(a,0),Math.max(b,0))+Math.min(Math.max(a,b),0))}return result;

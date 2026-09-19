@@ -36,6 +36,9 @@ async function run() {
           // Keep samples stable in absolute integer-grid coordinates.
           const seed=Number(BigInt.asUintN(32,(gx+BigInt(x))*73856093n^(gz+BigInt(z))*19349663n^BigInt(y*83492791)));
           p=traceRelocatedProbe(scene,px,py,pz,{...lighting,seed});
+          // Narrow doorways need more visibility samples; cache this work once.
+          // Open fields retain the inexpensive 32-ray path.
+          if(p.valid&&p.visibility<.18&&p.closestObstacle<12){const coarse=p;rays+=coarse.rayCount;p=traceRelocatedProbe(scene,px,py,pz,{...lighting,seed,rays:96,bounceSkyRays:4});if(p.valid&&p.position.every((v,i)=>Math.abs(v-coarse.position[i])<.00001)){for(let i=0;i<12;i++){p.sh[i]=coarse.sh[i]*.25+p.sh[i]*.75;p.moments[i]=coarse.moments[i]*.25+p.moments[i]*.75;}}}
           p.offset=[p.position[0]-px,p.position[1]-py,p.position[2]-pz];
           cache.set(key,p);if(cache.size>10000)cache.delete(cache.keys().next().value);
           computed++;rays+=p.rayCount;

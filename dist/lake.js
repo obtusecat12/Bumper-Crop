@@ -14,36 +14,45 @@ const tint = new T.Color();
 const keep = resource => { shared.add(resource); return resource; };
 export const isSharedLakeResource = resource => !!resource && shared.has(resource);
 
-// Three gravity-wave bands move actual triangles. Fine waves are carried by the
-// low-resolution water texture; lake-local phase survives tile streaming/rebases.
-export const WATER_WAVES=[{k:.938,a:.048,dir:[.342,.940],w:3.033},{k:.576,a:.058,dir:[-.800,.600],w:2.376},{k:.385,a:.034,dir:[.940,.342],w:1.943}];
-export function waterDisplacement(x,z,r,time,wind=.32){const edge=1-Math.max(0,Math.min(1,(r-.94)/.06))**2*(3-2*Math.max(0,Math.min(1,(r-.94)/.06)));return WATER_WAVES.reduce((h,v)=>h+v.a*Math.sin((x*v.dir[0]+z*v.dir[1])*v.k-time*v.w),0)*edge*(.76+wind*.42);}
+// Original PS1 references use coarse moving colour planes, not PBR caustics.
+// A small deterministic palette map keeps the broken streaks legible at 320p.
+function rippleTexture(){
+ const size=64,data=new Uint8Array(size*size*4),palette=['#345957','#48706b','#62847c','#85a298','#b7c4b6'].map(c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)));
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+  const u=x/size*TAU,v=y/size*TAU,phase=v*3+Math.sin(u)*1.5+Math.sin(u*2-v)*.58;
+  const wave=Math.sin(phase)*.70+Math.sin(v*5+u+Math.sin(u*2))*.22+Math.sin(u*2-v)*.08;
+  const band=wave>.70?4:wave>.51?3:wave>-.13?2:wave>-.70?1:0,k=(y*size+x)*4;
+  data.set(palette[band],k);data[k+3]=255;
+ }
+ const t=keep(new T.DataTexture(data,size,size));t.name='PS1 broad ripple palette / 64px';t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=T.NearestFilter;t.minFilter=T.NearestMipmapLinearFilter;t.generateMipmaps=true;t.colorSpace=T.SRGBColorSpace;t.needsUpdate=true;return t;
+}
+const rippleMap=rippleTexture();
+export const WATER_WAVES=[{k:.938,a:.016,dir:[.342,.940],w:1.233},{k:.576,a:.017,dir:[-.800,.600],w:.976},{k:.385,a:.009,dir:[.940,.342],w:.743}];
+export function waterDisplacement(x,z,r,time,wind=.32){time=Math.floor(time*12)/12;const edge=1-Math.max(0,Math.min(1,(r-.94)/.06))**2*(3-2*Math.max(0,Math.min(1,(r-.94)/.06)));return WATER_WAVES.reduce((h,v)=>h+v.a*Math.sin((x*v.dir[0]+z*v.dir[1])*v.k-time*v.w),0)*edge*(.76+wind*.42);}
 function waterMaterial(wind) {
- const mat=new T.MeshStandardMaterial({name:'PS1 triangulated animated water',color:'#778f94',roughness:.40,metalness:0,flatShading:true,transparent:false,depthWrite:true});
+ const mat=new T.MeshBasicMaterial({name:'PS1 palette-textured water facets',color:0xffffff,transparent:false,depthWrite:true});
  mat.onBeforeCompile=shader=>{
-  shader.uniforms.uLakeTime=wind.time;shader.uniforms.uLakeWind=wind.strength;shader.uniforms.uLakeTexture={value:landmarkTextures.water};
-  shader.vertexShader=`uniform float uLakeTime;uniform float uLakeWind;attribute float lakeRadius;attribute vec2 lakeCoord;varying vec2 vLakeXZ;varying float vLakeRadius;
-`+shader.vertexShader;
+  shader.uniforms.uLakeTime=wind.time;shader.uniforms.uLakeWind=wind.strength;shader.uniforms.uLakeTexture={value:rippleMap};
+  shader.vertexShader=`uniform float uLakeTime;uniform float uLakeWind;attribute float lakeRadius;attribute vec2 lakeCoord;attribute float facetTone;varying vec2 vLakeXZ;varying float vLakeRadius;varying float vFacetTone;\n`+shader.vertexShader;
   shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
-   vLakeXZ=lakeCoord;vLakeRadius=lakeRadius;
-   float lakeH=sin(dot(lakeCoord,vec2(.342,.940))*.938-uLakeTime*3.033)*.048
-     +sin(dot(lakeCoord,vec2(-.800,.600))*.576-uLakeTime*2.376)*.058
-     +sin(dot(lakeCoord,vec2(.940,.342))*.385-uLakeTime*1.943)*.034;
+   vLakeXZ=lakeCoord;vLakeRadius=lakeRadius;vFacetTone=facetTone;
+   float tick=floor(uLakeTime*12.)/12.;
+   float lakeH=sin(dot(lakeCoord,vec2(.342,.940))*.938-tick*1.233)*.016
+     +sin(dot(lakeCoord,vec2(-.800,.600))*.576-tick*.976)*.017
+     +sin(dot(lakeCoord,vec2(.940,.342))*.385-tick*.743)*.009;
    transformed.y+=lakeH*(1.-smoothstep(.94,1.,lakeRadius))*(.76+uLakeWind*.42);
   `);
-  shader.fragmentShader=`uniform float uLakeTime;uniform sampler2D uLakeTexture;varying vec2 vLakeXZ;varying float vLakeRadius;
-`+shader.fragmentShader;
+  shader.fragmentShader=`uniform float uLakeTime;uniform sampler2D uLakeTexture;varying vec2 vLakeXZ;varying float vLakeRadius;varying float vFacetTone;\n`+shader.fragmentShader;
   shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
-   vec3 rippleA=texture2D(uLakeTexture,vLakeXZ/9.0+vec2(.013,.006)*uLakeTime).rgb;
-   vec3 rippleB=texture2D(uLakeTexture,vLakeXZ.yx/14.0+vec2(-.007,.010)*uLakeTime).rgb;
-   float lakeShallow=smoothstep(.89,1.,vLakeRadius);
-   vec3 lakeColor=(rippleA*.64+rippleB*.36)*.58;
-   diffuseColor.rgb=mix(lakeColor,vec3(.105,.117,.104),lakeShallow*.50);
+   float tick=floor(uLakeTime*12.)/12.;
+   vec2 uv=vLakeXZ/8.5+vec2(.026,.022)*tick;
+   uv.x+=floor(sin(vLakeXZ.y*.31+tick*.9)*1.8)/64.;
+   vec3 ripple=texture2D(uLakeTexture,uv).rgb;
+   float bank=smoothstep(.87,1.,vLakeRadius);
+   diffuseColor.rgb=mix(ripple*vFacetTone,vec3(.115,.173,.141),bank*.46);
   `);
-  shader.fragmentShader=shader.fragmentShader.replace('#include <lights_physical_fragment>',`#include <lights_physical_fragment>
-material.specularColor=vec3(.0203732);`);
  };
- mat.customProgramCacheKey=()=> 'rural-low-poly-water-v21';return keep(mat);
+ mat.customProgramCacheKey=()=> 'ps1-palette-water-v22';return keep(mat);
 }
 
 function dryGrassMaterial(wind) {
@@ -94,10 +103,10 @@ function clipPolygon(poly,axis,bound,keepGreater){
   return out;
 }
 export function waterGeometry(f,y){
-  const count=Math.ceil(Math.max(f.rx,f.rz)*1.35/2.0),scales=Array.from({length:count+1},(_,i)=>i/count),rings=[];
-  const positions=[],normals=[],radius=[],coords=[],indices=[];
+  const count=Math.ceil(Math.max(f.rx,f.rz)*1.35/4.5),scales=Array.from({length:count+1},(_,i)=>i/count),rings=[];
+  const positions=[],normals=[],radius=[],coords=[],tones=[],indices=[];
   for(const scale of scales){
-    const sectors=scale===0?1:scale===1?320:Math.max(12,Math.min(312,Math.ceil(scale*Math.max(f.rx,f.rz)*1.35*Math.PI/4.8)*4));
+    const sectors=scale===0?1:scale===1?320:Math.max(12,Math.min(312,Math.ceil(scale*Math.max(f.rx,f.rz)*1.35*Math.PI/9.6)*4));
     const ring=[];
     for(let i=0;i<sectors;i++){
       const q=pondPoint(f,i/sectors*TAU,scale);ring.push({...q,d:scale});
@@ -110,10 +119,10 @@ export function waterGeometry(f,y){
     for(const [axis,bound,greater] of [['x',0,true],['x',64,false],['z',0,true],['z',64,false]]){
       poly=clipPolygon(poly,axis,bound,greater);if(poly.length<3)return;
     }
-    const base=positions.length/3;
+    const base=positions.length/3,tone=.94+.075*Math.sin(((a.x+b.x+c.x)/3-f.cx)*.33+((a.z+b.z+c.z)/3-f.cz)*.27);
     for(const v of poly){
       positions.push(v.x,y,v.z);normals.push(0,1,0);radius.push(v.d);
-      coords.push(v.x-f.cx,v.z-f.cz);
+      coords.push(v.x-f.cx,v.z-f.cz);tones.push(tone);
     }
     for(let i=1;i<poly.length-1;i++)indices.push(base,base+i,base+i+1);
   };
@@ -132,6 +141,7 @@ export function waterGeometry(f,y){
   g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));
   g.setAttribute('lakeRadius',new T.Float32BufferAttribute(radius,1));
   g.setAttribute('lakeCoord',new T.Float32BufferAttribute(coords,2));
+  g.setAttribute('facetTone',new T.Float32BufferAttribute(tones,1));
   g.setIndex(indices);g.computeBoundingSphere();g.boundingSphere.radius+=.22;g.computeBoundingBox();g.boundingBox.min.y-=.22;g.boundingBox.max.y+=.22;return g;
 }
 

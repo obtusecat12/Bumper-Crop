@@ -1,5 +1,3 @@
-import {landmarkTextures} from './landmark-textures.js?v=21';
-import {barnHarvest} from './reference-barn-layout.js?v=21';
 import * as T from './vendor/three.module.min.js';
 import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=21';
 import {ruralTextures} from './rural-textures.js?v=21';
@@ -11,7 +9,7 @@ import {meadowEnvironment} from './meadow-layout.js?v=21';
 // True ground/building/prop/branch/leaf triangles; no solid canopy/house proxies.
 // Fine wheat and grass do not occlude this low-frequency indirect-light cache.
 export function buildRayGeometry(root,f=null) {
-  const groundAlbedo=createGroundRayAlbedo({landmarkTextures,barnHarvest,ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics});
+  const groundAlbedo=createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics});
   root.updateMatrixWorld(true);
   const inverse = root.matrixWorld.clone().invert(), matrix = new T.Matrix4(), instance = new T.Matrix4();
   const draws=[], textureIds=new Map(), textures=[], averages=new WeakMap(); let total=0;
@@ -78,7 +76,7 @@ export function buildRayGeometry(root,f=null) {
           if(g.attributes.meadowData){const a=g.attributes.meadowData;meadow={cover:0,moisture:0,patchDensity:0};for(let j=0;j<3;j++){const i=index?index.getX(t+j):t+j;meadow.cover+=a.getX(i)/3;meadow.moisture+=a.getY(i)/3;meadow.patchDensity+=a.getW(i)/3;}}
           colors.set(f?groundAlbedo(f,x,z,undefined,meadow):groundAlbedo.means.soil.map((c,i)=>c*[.86,.80,.74][i]),at*3);
         }
-        ids[at]=d.alpha;thin[at]=d.thin;at++;
+        ids[at]=d.alpha;thin[at]=d.thin||(g.attributes.rayTwoSided?.getX(index?index.getX(t):t)>0?1:0);at++;
       }
     }
   }

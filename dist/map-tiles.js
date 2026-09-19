@@ -1,4 +1,4 @@
-import {REFERENCE_BARN,barnLandscape,barnHarvest} from './reference-barn-layout.js?v=21';
+import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=21';
 import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=21';
 import {field,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=21';
 import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=21';
@@ -147,7 +147,7 @@ export function createMapTiles({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   const canvas=canvasFactory(tilePixels);canvas.width=canvas.height=tilePixels;
   const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw new Error('Canvas2D is required for the map.');
   ctx.setTransform(tilePixels/64,0,0,tilePixels/64,0,0);ctx.lineJoin='round';ctx.lineCap='butt';
-  const tone=Math.round((f.tint-.5)*10);ctx.fillStyle=`rgb(${184+tone} ${164+tone} ${108+tone})`;ctx.fillRect(0,0,64,64);drawMeadow(ctx,f);if(f.barn){ctx.fillStyle='#a6956d';ctx.fillRect(-f.barn.x-60,-f.barn.z-25,116,107);ctx.strokeStyle='rgba(110,94,56,.17)';ctx.lineWidth=.3;for(let z=-25;z<82;z+=3){ctx.beginPath();ctx.moveTo(-f.barn.x-60,z-f.barn.z);ctx.lineTo(-f.barn.x+56,z-f.barn.z);ctx.stroke();}}yield;
+  const tone=Math.round((f.tint-.5)*10);ctx.fillStyle=`rgb(${184+tone} ${164+tone} ${108+tone})`;ctx.fillRect(0,0,64,64);drawMeadow(ctx,f);yield;
   for(const lane of f.roads){if(lane.enabled)drawLane(ctx,f,lane);yield}
   drawDrive(ctx,f.driveway);yield;
   if(f.type==='pond'){
@@ -213,7 +213,6 @@ export function createMapTiles({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   if(road.rut>.1)return {kind:'path',label:'田间双辙路',cx,cz,x,z};
   if(road.distance<2.05)return {kind:'grass',label:'路边草地',cx,cz,x,z};
   if(meadowSample(x,z,f.meadow)>.32)return {kind:'grass',label:'田间草地',cx,cz,x,z};
-  if(barnHarvest(x,z,f)>.5)return{kind:'field',label:'收割后的田地',cx,cz,x,z};
   return {kind:'field',label:'麦田',cx,cz,x,z};
  }
  function cancelPending(){pending.clear();active=null}

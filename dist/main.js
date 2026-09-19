@@ -1,3 +1,4 @@
+import {createWaterImpact} from './water-impact.js?v=21';
 import {createLensWater} from './lens-water.js?v=21';
 import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=21';
 import {updateBarnDoors} from './reference-barn.js?v=21';
@@ -73,6 +74,8 @@ renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicTone
 const displayFilter=createDisplayFilter(renderer,{onError:()=>{settings.filter='pixel';$('#filter').value='pixel';resize();savePreferences();toast('VHS 滤镜未能运行，已切换为像素画面；可在设置中重试。')}});
 const scene=new T.Scene();scene.matrixAutoUpdate=false;scene.background=new T.Color('#acb6b1');scene.fog=new T.Fog('#acb6b1',60,225);
 scene.add(new T.HemisphereLight('#c9d2d4','#6b6042',1.4));
+// A stable local light avoids shader recompilation as the shelter streams.
+const shelterLamp=new T.PointLight('#ffce90',0,8,2);scene.add(shelterLamp);
 const atmosphere=createAtmosphere({scene,quality:settings.quality});scene.add(atmosphere.sky);
 const materialFinish=createMaterialFinish();
 let lightingReady=false;
@@ -91,6 +94,7 @@ const navigationMap=createNavigationMap({host:game,parts:instrumentParts,seed,on
 const uiThemes=createUIThemes();
 document.documentElement.addEventListener('ui-themechange',event=>{navigationMap.setUITheme(event.detail.tokens);survivalDisplay.setUITheme(event.detail.tokens)});
 uiThemes.applyLevel('10');window.levelUI=uiThemes;
+const waterImpact=createWaterImpact(scene);atmosphere.attachFog(waterImpact.group);
 const lensWater=createLensWater(renderer);displayFilter.setLensEffect(lensWater);let barnDoorAngle=0,barnDoorGoal=0,wetLastYaw=0,wetLastVx=0,wetLastVz=0;
 const uiRaster=createUIRaster(game,{survival:survivalDisplay,navigation:navigationMap});displayFilter.setCompositor(uiRaster);
 const radius=()=>settings.quality==='low'?2:3;
@@ -214,7 +218,7 @@ function leaveReferenceView(){
  if(!referenceView)return;referenceView=null;resize();scene.fog.near=60;scene.fog.far=Math.min(225,Math.max(.2,coverageRadius*64+Math.min(state.x,state.z,64-state.x,64-state.z)-8));updateQueue();
 }
 function beginTeleport(target){
- lensWater.reset();
+ lensWater.reset();waterImpact.clear();
  if(streamFailed){developerBusy(false);$('#developer-status').textContent='场景加载失败，请刷新页面重试。';return;}
  const previous={};for(const key of ['cx','cz','x','z','y','yaw','pitch'])previous[key]=state[key];
  const previousReference=referenceView;referenceView=target.kind==='photo'?target:null;resize();
@@ -375,7 +379,9 @@ $('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请
  const wetDistance=state.distance,wetFall=state.vy;
  if(playing){move(dt);survivalDisplay.animate(dt,state,step);}else{camera.position.set(state.x,(cameraFloor()+(referenceView?.eye??1.94))+(referenceView?0:Math.sin(time*.23)*.009),state.z);camera.rotation.set(state.pitch,state.yaw+(started?0:Math.sin(time*.07)*.015),0);wind.player.value.set(10000,0,10000)}
  const wf=currentChunk()?.field,wa=wf?.type==='pond';
- lensWater.update(dt,{enabled:playing&&!teleportJob,aspect:camera.aspect,shore:wa?pondShoreDistance(state.x,state.z,wf):Infinity,feet:wf?cameraFloor()+state.jump:Infinity,level:wa?wf.lakeY:0,moved:state.distance-wetDistance,speed:(state.distance-wetDistance)/dt,grounded:state.grounded,fallSpeed:wetFall,pitch:state.pitch,roll:camera.rotation.z,accelX:((state.velocity.x-wetLastVx)*Math.cos(state.yaw)-(state.velocity.z-wetLastVz)*Math.sin(state.yaw))/dt*.025+Math.sin(state.yaw-wetLastYaw)/dt*.055});wetLastVx=state.velocity.x;wetLastVz=state.velocity.z;wetLastYaw=state.yaw;
+ const lampNear=state.cx>=-1n&&state.cx<=3n&&state.cz>=-4n&&state.cz<=0n;shelterLamp.intensity=lampNear?4:0;if(lampNear)shelterLamp.position.set(Number(1n-state.cx)*64+16.32,1.28,Number(-2n-state.cz)*64+47.91);
+ const splashPower=lensWater.update(dt,{enabled:playing&&!teleportJob,aspect:camera.aspect,shore:wa?pondShoreDistance(state.x,state.z,wf):Infinity,feet:wf?cameraFloor()+state.jump:Infinity,level:wa?wf.lakeY:0,moved:state.distance-wetDistance,speed:(state.distance-wetDistance)/dt,grounded:state.grounded,fallSpeed:wetFall,pitch:state.pitch,roll:camera.rotation.z,accelX:((state.velocity.x-wetLastVx)*Math.cos(state.yaw)-(state.velocity.z-wetLastVz)*Math.sin(state.yaw))/dt*.025+Math.sin(state.yaw-wetLastYaw)/dt*.055});wetLastVx=state.velocity.x;wetLastVz=state.velocity.z;wetLastYaw=state.yaw;
+ if(splashPower>0&&wa)waterImpact.emit(splashPower,state,wf.lakeY);waterImpact.update(dt,state,camera,playing&&!teleportJob);
  if(Math.abs(barnDoorGoal-barnDoorAngle)>.001){barnDoorAngle+=Math.sign(barnDoorGoal-barnDoorAngle)*Math.min(Math.abs(barnDoorGoal-barnDoorAngle),dt*.85);for(const ch of chunks.values())updateBarnDoors(ch,barnDoorAngle);naturalShadows.invalidate();}
  wheatView.value.copy(camera.position);wheatDetail.update(chunks,camera.position,settings.quality,`${state.cx},${state.cz}`);
  weather(dt);irradiance.update({state,now,rain:rainAmount,enabled:ready&&!teleportJob});
@@ -384,5 +390,5 @@ $('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请
  cardOrder.update(camera);displayFilter.render(scene,camera,now,()=>{performanceMeter.beforeRender();naturalShadows.update({now,originKey:`${state.cx},${state.cz}`,quality:settings.quality,rain:rainAmount})});performanceMeter.end();document.documentElement.dataset.bootState="ready";frameCount++;frameTime+=rawDt;
  if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;if(playing&&!queue.length&&!activeBuild&&['pixel','native'].includes(settings.filter)){qualityTimer+=1.5;if(qualityTimer>4.5){let next=autoScale;if(fps<35)next=Math.max(.6,autoScale-.08);else if(fps>57)next=Math.min(1,autoScale+.025);if(next!==autoScale){autoScale=next;resize()}qualityTimer=0}}}
 }
-addEventListener('pagehide',event=>{if(!event.persisted){displayFilter.dispose();naturalShadows.dispose();irradiance.dispose()}});
+addEventListener('pagehide',event=>{if(!event.persisted){displayFilter.dispose();waterImpact.dispose();naturalShadows.dispose();irradiance.dispose()}});
 requestAnimationFrame(animate);

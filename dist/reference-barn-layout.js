@@ -3,7 +3,9 @@ export const REFERENCE_BARN=Object.freeze({x:84,z:-80,y:.35,width:24,depth:11.6,
 const smooth=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};
 export function barnContext(cx,cz){if(cx<0n||cx>2n||cz< -3n||cz>0n)return null;return{x:Number(cx)*64-REFERENCE_BARN.x,z:Number(cz)*64-REFERENCE_BARN.z};}
 export function barnFootprintDistance(x,z,f){if(!f?.barn)return 1e4;x+=f.barn.x;z+=f.barn.z;const a=Math.abs(x)-12,b=Math.abs(z)-5.8;return Math.hypot(Math.max(a,0),Math.max(b,0))+Math.min(Math.max(a,b),0);}
-export function barnHarvest(x,z,f){if(!f?.barn)return 0;x+=f.barn.x;z+=f.barn.z;const edge=Math.min(x+60,56-x,z+25,82-z);return smooth(0,4,edge);}
+// Only the building and its short doorway approach displace standing wheat.
+export function barnHarvest(){return 0;}
+export function barnEntrance(x,z,f){if(!f?.barn)return false;x+=f.barn.x;z+=f.barn.z;return Math.abs(x-3.1)<2.05&&z>5.5&&z<9.2;}
 export function barnGroundHeight(x,z,f,y){const d=barnFootprintDistance(x,z,f);return y+(.32-y)*(1-smooth(.1,2.6,d));}
 export function barnTarget(field,seed,photo=false,surfaceHeight=null){const wx=photo?38.313:REFERENCE_BARN.x+REFERENCE_BARN.doorX,wz=photo?-22.497:REFERENCE_BARN.z+11,cx=BigInt(Math.floor(wx/64)),cz=BigInt(Math.floor(wz/64)),x=wx-Number(cx)*64,z=wz-Number(cz)*64,f=field(cx,cz,seed);
  return{kind:photo?'photo':'reference-barn',label:photo?'砖砌谷仓 · 照片机位':'砖砌谷仓',cx,cz,x,z,eye:photo?4.138-(surfaceHeight?.(x,z,f)||0):1.77,focusX:REFERENCE_BARN.x+.32-Number(cx)*64,focusZ:REFERENCE_BARN.z+.79-Number(cz)*64,focusY:3.18,fov:24.278,referenceAspect:4/3,range:235,field:f};}
