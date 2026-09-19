@@ -1,14 +1,14 @@
 // UI-only level themes. No world, renderer, filter, or map-cache mutation.
 export const FIELD_THEME=Object.freeze({
-  ink:'#e5d4ac',muted:'#c0ac83',accent:'#e4c77c',line:'#a78548',
-  shell:'#46321d',shellTop:'#987341',shellBottom:'#211a10',
-  bevelLight:'#c8a970',bevelDark:'#1b140b',screen:'#2a2013',screenDeep:'#161109',
-  screenInk:'#d8c49a',glass:'#dec69c',button:'#c7a971',buttonActive:'#efd394',
-  buttonInk:'#342516',activeInk:'#211a10',shadow:'#100c07',
-  vialLiquid:'#c5a853',vialShadow:'#57410e',vialLight:'#e6ce79',vialSurface:'#f3dda0',
-  mapBackground:'#27302a',mapGrid:'#364037',mapPlayer:'#fff3c4',mapOutline:'#121b18',mapCursor:'#fff2c1',
-  radius:'0px',bezel:'0px',font:"Georgia, HarvestSerif, 'Times New Roman', 'Songti SC', SimSun, serif",
-  vitalsSkin:'url("./assets/ui/harvest-vitals.png")',compassSkin:'url("./assets/ui/harvest-compass.svg")',keySkin:'url("./assets/ui/harvest-key.svg")',vialSkin:'url("./assets/ui/sanity-vial.png")'
+ ink:'#c8ba96',muted:'#a3987b',accent:'#d2c291',line:'#756747',
+ shell:'#403d2e',shellTop:'#756747',shellBottom:'#28271e',bevelLight:'#b1a17a',bevelDark:'#191d17',screen:'#302f24',screenDeep:'#171c17',
+ screenInk:'#bdb494',glass:'#bfc8aa',button:'#373b2e',buttonActive:'#e0d2a6',buttonInk:'#c8ba96',activeInk:'#e0d2a6',shadow:'#10160f',
+ vialLiquid:'#af9561',vialShadow:'#544c30',vialLight:'#c3b47c',vialSurface:'#d7d9b0',
+ mapBackground:'#27302a',mapGrid:'#364037',mapPlayer:'#e2d9b3',mapOutline:'#121b18',mapCursor:'#fff2c1',
+ radius:'0px',bezel:'0px',font:"Georgia, HarvestSerif, 'Times New Roman', 'Songti SC', SimSun, serif",
+ // Compatibility tokens retained for registered themes; default instruments
+ // use geometry and palette tokens rather than whole-widget image skins.
+ vitalsSkin:'none',compassSkin:'none',keySkin:'none',vialSkin:'none'
 });
 const cssName=k=>'--ui-'+k.replace(/[A-Z]/g,c=>'-'+c.toLowerCase());
 const idValue=(id,label)=>{if(typeof id!=='string'||!id.trim()||id.length>80)throw new TypeError('Invalid '+label);return id;};

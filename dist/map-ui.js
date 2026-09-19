@@ -1,3 +1,4 @@
+import {drawCompass,INSTRUMENT_PALETTE} from './instrument-drawing.js?v=19';
 import {createMapAtlas} from './map-atlas.js?v=13';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
@@ -17,15 +18,17 @@ function pointText(p){return `X ${coordinate(p.cx,p.x)} · Z ${coordinate(p.cz,p
 // Full-map repaint is event/revision-driven. No secondary WebGL scene/camera.
 export function createNavigationMap({host,seed,onOpen,onClose,onTeleport}){
  const tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});
- host.insertAdjacentHTML('beforeend',`<div class="map-mini" id="map-mini" data-ui-part="navigation" hidden><button class="map-mini-button" aria-label="打开地图，快捷键 F" aria-haspopup="dialog" aria-controls="world-map"><span class="map-mini-viewport"><canvas width="288" height="288" aria-hidden="true"></canvas><span class="map-mini-player" aria-hidden="true">▲</span><span class="map-mini-glass" aria-hidden="true"></span></span><span class="map-mini-art" aria-hidden="true"></span><span class="instrument-label"><span>FIELD / NAV</span><span data-ui-copy="number">010</span></span><span class="map-cardinal" data-direction="0">N</span><span class="map-cardinal" data-direction="1">E</span><span class="map-cardinal" data-direction="2">S</span><span class="map-cardinal" data-direction="3">W</span><span class="map-mini-caption"><span class="map-mini-bearing">N 000°</span><span>F 地图</span></span></button></div>
+ host.insertAdjacentHTML('beforeend',`<div class="map-mini" id="map-mini" data-ui-part="navigation" hidden><button class="map-mini-button" aria-label="打开地图，快捷键 F" aria-haspopup="dialog" aria-controls="world-map"><span class="map-mini-viewport"><canvas width="288" height="288" aria-hidden="true"></canvas><span class="map-mini-player" aria-hidden="true">▲</span><span class="map-mini-glass" aria-hidden="true"></span></span><canvas class="map-mini-art" width="179" height="204" aria-hidden="true"></canvas><span class="instrument-label"><span>FIELD / NAV</span><span data-ui-copy="number">010</span></span><span class="map-cardinal" data-direction="0">N</span><span class="map-cardinal" data-direction="1">E</span><span class="map-cardinal" data-direction="2">S</span><span class="map-cardinal" data-direction="3">W</span><span class="map-mini-caption"><span class="map-mini-bearing">N 000°</span><span>F 地图</span></span></button></div>
  <div class="modal map-modal" id="world-map" data-ui-part="map" role="dialog" aria-modal="true" aria-labelledby="map-title" hidden><section class="map-panel"><header class="map-header"><div><h2 id="map-title"><span data-ui-copy="code">LEVEL 10</span> / 区域地图</h2><p>拖动浏览 · 滚轮缩放 · 点击地面传送</p></div><button class="map-close" aria-label="关闭地图">F / 返回</button></header><div class="map-tools"><button data-map-action="out" aria-label="缩小地图">−</button><span class="map-zoom">100%</span><button data-map-action="in" aria-label="放大地图">＋</button><button data-map-action="center">回到当前位置</button><span class="map-north">↑ 北</span></div><div class="map-surface"><canvas class="map-canvas" tabindex="0" aria-label="世界地图，拖动或方向键浏览，点击或 Enter 传送，加减号缩放"></canvas><div class="map-scale"><i></i><span>100 m</span></div><div class="map-loading" role="status"></div></div><footer class="map-footer"><div class="map-legend"><span><i class="map-swatch wheat"></i>麦田</span><span><i class="map-swatch grass"></i>草地</span><span><i class="map-swatch water"></i>湖泊</span><span><i class="map-swatch trees"></i>树木 / 灌木</span><span><i class="map-swatch building"></i>建筑</span><span><i class="map-swatch road"></i>小径</span></div><div class="map-readout" aria-live="polite">点击地图可传送；湖泊会落在岸边。</div></footer></section></div>`);
- const mini=host.querySelector('#map-mini'),miniButton=mini.querySelector('button'),miniCanvas=mini.querySelector('canvas'),miniCtx=miniCanvas.getContext('2d',{alpha:false});
+ const mini=host.querySelector('#map-mini'),miniButton=mini.querySelector('button'),miniCanvas=mini.querySelector('.map-mini-viewport canvas'),miniCtx=miniCanvas.getContext('2d',{alpha:false});
  const modal=host.querySelector('#world-map'),canvas=modal.querySelector('.map-canvas'),ctx=canvas.getContext('2d',{alpha:false}),surface=modal.querySelector('.map-surface');
  const label=modal.querySelector('.map-readout'),loading=modal.querySelector('.map-loading'),cardinals=[...mini.querySelectorAll('.map-cardinal')];
  let center=null,player=null,zoom=1.5,open=false,busy=false,dirty=true,lastMini=0,miniCenter=null,lastRevision=-1,lastMapRevision=-1,lastYaw=NaN,pointer=null,hover=null,keyboardTarget=false,disposed=false;
  let counts={minimapPaints:0,mapPaints:0};
+ const compassCanvas=mini.querySelector('.map-mini-art'),compassCtx=compassCanvas.getContext('2d');compassCtx.setTransform(compassCanvas.width/256,0,0,compassCanvas.height/292,0,0);drawCompass(compassCtx);
  let uiPalette={mapBackground:'#27302a',mapGrid:'#364037',mapPlayer:'#fff3c4',mapOutline:'#121b18',mapCursor:'#fff2c1'};
  function setUITheme(tokens){
+  drawCompass(compassCtx,{...INSTRUMENT_PALETTE,metal:tokens.shellTop,light:tokens.bevelLight,dark:tokens.shellBottom,face:tokens.screen});
   const next={...uiPalette};let changed=false;
   for(const key of Object.keys(next))if(typeof tokens[key]==='string'&&tokens[key]!==next[key]){next[key]=tokens[key];changed=true;}
   if(!changed)return;
@@ -86,7 +89,7 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport}){
   else{
    const yaw=((state.yaw%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
    if(yaw!==lastYaw){miniCanvas.style.transform=`translate(-50%,-50%) rotate(${yaw}rad)`;const bearing=(Math.round(-yaw*180/Math.PI)+360)%360;mini.querySelector('.map-mini-bearing').textContent=`${['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8]} ${String(bearing).padStart(3,'0')}°`;
-    cardinals.forEach((el,i)=>{const a=yaw+i*Math.PI/2;el.style.left=`${(520.31+Math.sin(a)*344)/1254*100}%`;el.style.top=`${(618.10-Math.cos(a)*344)/1254*100}%`;});lastYaw=yaw;}
+    cardinals.forEach((el,i)=>{const a=yaw+i*Math.PI/2;el.style.left=`${(128+Math.sin(a)*92)/256*100}%`;el.style.top=`${(140-Math.cos(a)*92)/292*100}%`;});lastYaw=yaw;}
    const offset=miniCenter&&mapOffset(player,miniCenter),revision=tiles.stats().revision;
    if(now-lastMini>=100&&(!offset||Math.hypot(offset.x,offset.z)>.35||revision!==lastRevision)){terrainPaint(miniCtx,player,MINI,MINI,MINI_SCALE);miniCenter={...player};lastMini=now;lastRevision=revision;counts.minimapPaints++;}
   }

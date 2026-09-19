@@ -24,7 +24,7 @@ export async function createVhsCore(moduleOrPath) {
     preset,
     process(buffer, width, height, frame) {
       if (!(buffer instanceof ArrayBuffer) || !Number.isInteger(width) || !Number.isInteger(height) ||
-          width < 2 || height < 2 || width > 1920 || height > 480 ||
+          width < 2 || height < 2 || width > 1920 || height > 1080 ||
           buffer.byteLength !== width * height * 4 || !Number.isSafeInteger(frame) || frame < 0) {
         throw new Error('Invalid VHS frame');
       }
