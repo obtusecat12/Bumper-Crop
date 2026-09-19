@@ -1,0 +1,51 @@
+{
+  "mode": "built-in image_gen",
+  "generation_calls": 2,
+  "guide_downloaded_and_read": "/workspace/scratch/7a5f9c1d25b5/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "name": "three-arc-vitals",
+      "path": "/workspace/scratch/7a5f9c1d25b5/generated_images/exec-bdfc8450-6a2f-4e82-bbdf-9b5f8c0ccf4f.png",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGBA",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: isolated textured game HUD vitals panel, high-resolution PNG\ninput images: Image 1 is the existing vitals artwork to edit. Image 2 is the original game HUD screenshot for style and layout reference.\nprimary edit: preserve the existing detailed wheat ornament on the left, antique brass and bronze rails, dark leather, warm colors, overall silhouette, and straight-on front view. Add a THIRD concentric curved gauge inside the two existing gauges.\ngauges: exactly three nested curved gauges, each with a thick continuous textured colored fill and bronze divider rails. Outer gauge is stamina, green through yellow to orange. Middle gauge is hydration, blue. Inner gauge is health, ruby and dark red. All three gauges are completely full along their entire curved paths. Keep the three colored paths clearly distinct and visually readable.\nlabel beds: to the right of the arcs, three separate blank dark leather label rows, one aligned with the end of each arc. Retain an additional bottom bottle/count row with the small existing bottle icon. Increase the room for these four rows as needed while keeping the panel close to the original reference. No writing or numbers anywhere.\nmaterials and style: the same detailed golden wheat relief, aged brass edges, bronze rivets, worn dark leather, textured early-2000s game HUD rendering as the provided artwork.\ncomposition: one complete panel only, centered with a small safe margin so none of the wheat ornament or frame is cropped, front view, no perspective tilt.\nbackground: genuinely transparent alpha background outside the item. Remove the checkerboard visible behind the edit target; that pattern must not be drawn into the new image. Preserve clean detailed cutout edges.\naspect ratio: 2:1\nAvoid: text, letters, numbers, extra gauges, test tubes, additional objects, checkerboard pattern, fake transparency, backdrop, floor, drop shadow outside the item, watermark.",
+      "referenced_image_paths": [
+        "/workspace/scratch/7a5f9c1d25b5/generated_images/exec-a0bbe2f7-951f-4e7f-bb57-9050c4791c3c.png",
+        "/workspace/scratch/7a5f9c1d25b5/upload/8ea92394-6f16-4729-9ed3-81b1f9b0dd21.png"
+      ]
+    },
+    {
+      "name": "corked-empty-test-tube",
+      "path": "/workspace/scratch/7a5f9c1d25b5/generated_images/exec-aa1376b7-41fa-44bd-879d-5d1a46f5c762.png",
+      "width": 724,
+      "height": 2172,
+      "mode": "RGBA",
+      "visible_bbox_alpha_at_least_16": [
+        209,
+        36,
+        514,
+        2142
+      ],
+      "approximate_fluid_mask_bbox": [
+        250,
+        353,
+        475,
+        2110
+      ],
+      "approximate_fluid_mask_bottom_radius": 112,
+      "approximate_cork_free_bbox": [
+        222,
+        36,
+        500,
+        208
+      ],
+      "approximate_cork_embedded_bottom_y": 345,
+      "alpha_note": "Red/yellow speckles in the tool preview have alpha only 1 or 2 out of 255. Preserve native alpha; do not flatten or use chroma key.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: one isolated corked laboratory test tube used as the empty glass shell of a game HUD sanity gauge, high-resolution PNG\ninput image: the provided game screenshot is a style reference only, for believable textured early-2000s game HUD materials and warm natural lighting.\nobject: a realistic narrow clear glass laboratory test tube with a natural tan oak cork stopper. The tube is vertical and straight, with a long body, rounded bottom, realistic thick glass rim, fine specular glass highlights, and believable porous cork texture.\ninterior: completely empty, with a wide clear interior for runtime fluid compositing. No liquid, no contents, no internal markings. The clear empty interior should remain visually open.\ncomposition: full object from the top of the cork to the rounded bottom, centered, straight-on front view. The entire vial fills nearly the image height with small safe margins. Only the vial is present.\nmaterials and style: realistic clear glass, natural porous tan cork, subtle surface texture consistent with the reference's 2005 game HUD. Warm natural lighting, fine restrained glass edge highlights.\nbackground: genuinely transparent alpha background outside the vial and through the empty glass interior, preserving the visible glass edges and reflections. If alpha transparency cannot be expressed, use a perfectly uniform pure black background and a pure black empty interior suitable for glass compositing. Never draw a checkerboard pattern.\naspect ratio: 1:3\nAvoid: liquid, colored filling, label, text, lettering, numbers, logo, stand, mount, frame, additional objects, photostudio floor, external cast shadow, checkerboard, patterned background, watermark.",
+      "referenced_image_paths": [
+        "/workspace/scratch/7a5f9c1d25b5/upload/8ea92394-6f16-4729-9ed3-81b1f9b0dd21.png"
+      ]
+    }
+  ]
+}
