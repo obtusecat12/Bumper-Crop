@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=22';
+import {height,random} from './world.js?v=23';
 
 // Main-wall dimensions; roof overhangs/optional porch are described by footprint.
 export const RURAL_BUILDING_SIZES = Object.freeze([[7,9,3],[2.8,3.2,2.7],[12,17,4.9],[13,19,5.1],[11,15,4.3],[13,9,3.7],[13,18,3.8],[8,11,3.2]].map(Object.freeze));
@@ -112,7 +112,7 @@ class Batch{
 }
 export function makeRuralBuilding(f,level=0){
  const v=((f.variant||0)%8+8)%8,[w,d,h]=variantSize(v),s=f.buildingScale||1,angle=f.buildingAngle||0;
- const r=random((f.seed||1)^0x8a7e551),weather=.35+r()*.65,b=new Batch(r,weather),group=new T.Group(),colliders=[],pickups=[];
+ const r=random((f.seed||1)^0x8a7e551),weather=.35+r()*.65,b=new Batch(r,weather),group=new T.Group(),colliders=[],pickups=[],rainRoofs=[];
  const y=f.buildingY??height(f.cx,f.cz,f.x,f.z),c=Math.cos(angle),sn=Math.sin(angle),isBrick=v===4;
  const wallMat=isBrick?(r()<.5?M.brick:M.brickDark):(v===2?M.red:v===3?(r()<.65?M.red:M.wood):v===6?M.darkRed:M.wood);
  const roofMat=r()<.2?M.rust:r()<.55?M.roof:M.tin,trim=(v===2||v===3||v===6)?M.trim:M.dark;
@@ -183,6 +183,7 @@ export function makeRuralBuilding(f,level=0){
   b.box(mat,0,wallH+rise+.06,z0,.17,.14,roofDepth+.9);
  }
  function roofSegments(points,depth,mat,z0=0){
+  for(let i=0;i<points.length-1;i++){const a=points[i],b=points[i+1],slope=(b[1]-a[1])/(b[0]-a[0]);rainRoofs.push({minX:Math.min(a[0],b[0]),maxX:Math.max(a[0],b[0]),minZ:z0-depth/2,maxZ:z0+depth/2,y0:a[1]-slope*a[0]+.09,yx:slope,yz:0});}
   for(let i=0;i<points.length-1;i++){
    const a=points[i],q=points[i+1],dx=q[0]-a[0],dy=q[1]-a[1],len=Math.hypot(dx,dy),rot=Math.atan2(dy,dx),cx=(a[0]+q[0])/2,cy=(a[1]+q[1])/2;
    b.box(mat,cx,cy,z0,len,.10,depth,0,0,rot);
@@ -220,7 +221,7 @@ export function makeRuralBuilding(f,level=0){
  function ladder(x,z,hh=3.8){const lean=.35;for(const sign of[-1,1])b.beam(M.wood,[x+sign*.28,.05,z+lean],[x+sign*.28,hh,z],.075);for(let yy=.3;yy<hh;yy+=.29)b.box(M.dark,x,yy,z+lean*(1-yy/hh),.65,.075,.065);solid(x,z+.18,.36,.22);}
  function bench(x,z,len=2.4){b.box(M.wood,x,.90,z,len,.13,.68);for(const xx of[-len*.42,len*.42])for(const zz of[-.24,.24])b.box(M.dark,x+xx,.44,z+zz,.095,.9,.095);b.box(M.dark,x,.24,z,len-.1,.08,.51);solid(x,z,len/2,.36);}
  function smallVent(x,yy,z){b.box(M.black,x,yy,z,.64,.52,.035);for(let k=0;k<5;k++)b.box(trim,x,yy-.2+k*.1,z+.036,.67,.033,.085,.16);}
- function porch(ww,deep=1.8){const zz=front+deep/2; b.box(M.floor,0,-.03,zz,ww,.11,deep);for(const xx of[-ww/2,ww/2]){b.box(M.dark,xx,1.28,front+deep-.15,.14,2.56,.14);solid(xx,front+deep-.15,.08,.08);b.beam(M.dark,[xx,1.9,front+deep-.15],[xx,2.6,front+deep-.8],.1);}b.box(roofMat,0,2.72,zz,ww+.35,.1,deep+.36,-.14);}
+ function porch(ww,deep=1.8){const zz=front+deep/2;rainRoofs.push({minX:-ww/2-.18,maxX:ww/2+.18,minZ:front-.18,maxZ:front+deep+.18,y0:2.80-Math.tan(.14)*zz,yx:0,yz:Math.tan(.14)}); b.box(M.floor,0,-.03,zz,ww,.11,deep);for(const xx of[-ww/2,ww/2]){b.box(M.dark,xx,1.28,front+deep-.15,.14,2.56,.14);solid(xx,front+deep-.15,.08,.08);b.beam(M.dark,[xx,1.9,front+deep-.15],[xx,2.6,front+deep-.8],.1);}b.box(roofMat,0,2.72,zz,ww+.35,.1,deep+.36,-.14);}
  function hayBales(x,z,n=3){for(let i=0;i<n;i++){let zz=z+(i%2)*.72,xx=x+Math.floor(i/2)*.80;b.box(M.hay,xx,.31,zz,.77,.60,.64,0,(r()-.5)*.06);for(const dx of[-.24,.24])b.box(M.dark,xx+dx,.619,zz,.018,.012,.66,0,0,0,.87);}solid(x+(Math.floor((n-1)/2))*.4,z+.35,.4+Math.floor((n-1)/2)*.4,.7);}
 
  if(v===0){ // Narrow weatherboard workshop, offset door and optional porch.
@@ -242,7 +243,7 @@ export function makeRuralBuilding(f,level=0){
   floor();const dw=4.4,dh=3.9;wall('z',front,-w/2,w/2,h,[{at:0,width:dw,bottom:0,height:dh}]);wall('z',back,-w/2,w/2,h);
   for(const side of[-1,1])wall('x',side*w/2,back,front,h,[{at:-d*.18,width:1.15,bottom:2.15,height:1.3}]);cornerPosts();gableProfile(w,h,3.2);entrance(0,dw,dh);roofBeamPosts();
   b.box(M.dark,0,h+.75,front+.06,2.12,1.52,.07);for(const sign of[-1,1]){b.box(trim,sign*1.1,h+.75,front+.14,.10,1.65,.12);b.beam(trim,[sign*1.05,h+.08,front+.18],[-sign*1.05,h+1.48,front+.18],.09);}b.box(trim,0,h+1.52,front+.15,2.3,.1,.13);
-  b.box(roofMat,0,h+3.10,front+.48,1.25,.1,1.7);b.beam(M.dark,[0,h+2.2,front-.1],[0,h+2.2,front+1.4],.12);
+  rainRoofs.push({minX:-.625,maxX:.625,minZ:front-.37,maxZ:front+1.33,y0:h+3.15,yx:0,yz:0});b.box(roofMat,0,h+3.10,front+.48,1.25,.1,1.7);b.beam(M.dark,[0,h+2.2,front-.1],[0,h+2.2,front+1.4],.12);
   lumber(-w/2+1.1,back+3,3.5);if(r()<.55)ladder(w/2-1,back+1.1,4.5);else barrel(w/2-.75,back+.7);
   b.box(M.dark,0,h-.42,back+2,w-.45,.17,3.9);for(let xx=-w/2+.3;xx<w/2;xx+=.27)b.box(M.floor,xx,h-.30,back+2,.25,.10,3.7);
  }else if(v===3){ // Dairy barn: gambrel double-pitch roof, two ventilators, window row.
@@ -266,7 +267,7 @@ export function makeRuralBuilding(f,level=0){
   bench(w/2-1.15,back+1,2.1);if(r()<.5)barrel(-w/2+.7,back+.7);else lumber(-w/2+.75,back+2.2,2.6);
  }else if(v===5){ // Open implement shelter: three broad bays, tall front shed roof.
   floor(false);wall('z',back,-w/2,w/2,h-.9);wall('x',-w/2,back,front,h-.9);wall('x',w/2,back,front,h-.9);for(const xx of[-w/2,w/2])b.polygon(wallMat,[[xx,h-.9,back],[xx,h-.9,front],[xx,h,front]]);
-  let roofAngle=-Math.atan2(.9,d);b.box(roofMat,0,h-.40,0,w+.85,.12,Math.hypot(d+1,.9),roofAngle);for(let xx=-w/2-.3;xx<w/2+.4;xx+=.62)b.box(roofMat,xx,h-.325,0,.035,.035,d+.95,roofAngle);
+  rainRoofs.push({minX:-w/2-.43,maxX:w/2+.43,minZ:back-.5,maxZ:front+.5,y0:h-.28,yx:0,yz:.9/d});let roofAngle=-Math.atan2(.9,d);b.box(roofMat,0,h-.40,0,w+.85,.12,Math.hypot(d+1,.9),roofAngle);for(let xx=-w/2-.3;xx<w/2+.4;xx+=.62)b.box(roofMat,xx,h-.325,0,.035,.035,d+.95,roofAngle);
   const posts=[-w/2,-w/6,w/6,w/2];for(const xx of posts){block(M.dark,xx,h/2,front,.23,h,.23);b.box(M.dark,xx,h/2-.4,back,.23,h-.8,.23);for(const sign of[-1,1])if(Math.abs(xx+sign*.85)<w/2+.01)b.beam(M.wood,[xx,h-1.15,front],[xx+sign*.9,h-.13,front],.15);b.beam(M.dark,[xx,h-.23,front],[xx,h-.98,back],.18);}
   for(let xx=-w/2+.25;xx<w/2;xx+=.42)b.box(M.dark,xx,(h-.9)/2,back-.09,.033,h-.95,.025);for(const side of[-1,1])for(let zz=back+.3;zz<front;zz+=.65)b.box(M.dark,side*(w/2+.09),(h-.9)/2,zz,.025,h-.95,.032);b.box(M.dark,0,h-.2,front,w+.1,.30,.23);b.box(M.dark,0,h-1.0,back,w+.1,.24,.21);for(let zz=back+.3;zz<front;zz+=1.1)b.box(M.dark,0,h-.48+zz/d*.9,zz,w,.11,.10);
   lumber(-w/2+1,back+2,3.1);if(r()<.62){barrel(w/2-.75,back+.8);barrel(w/2-1.7,back+.7);}else hayBales(w/2-1.5,back+1,4);
@@ -289,10 +290,10 @@ export function makeRuralBuilding(f,level=0){
   floor();const low=h-.75,dh=2.35,dw=3.6;wall('z',front,-w/2,w/2,low,[{at:-.55,width:dw,bottom:0,height:dh}]);wall('z',back,-w/2,w/2,h);wall('x',-w/2,back,front,low);wall('x',w/2,back,front,low,[{at:-2.4,width:1.16,bottom:1.2,height:.86}]);
   // Triangular closures meet the one-way slope exactly.
   for(const xx of[-w/2,w/2])b.polygon(wallMat,[[xx,low,back],[xx,h,back],[xx,low,front]]);
-  const rot=Math.atan2(.75,d);b.box(roofMat,0,(h+low)/2+.05,0,w+.8,.12,Math.hypot(d+.9,.75),rot);for(let xx=-w/2-.3;xx<w/2+.4;xx+=.55)b.box(roofMat,xx,(h+low)/2+.12,0,.035,.03,d+.8,rot);
+  rainRoofs.push({minX:-w/2-.4,maxX:w/2+.4,minZ:back-.45,maxZ:front+.45,y0:(h+low)/2+.14,yx:0,yz:-.75/d});const rot=Math.atan2(.75,d);b.box(roofMat,0,(h+low)/2+.05,0,w+.8,.12,Math.hypot(d+.9,.75),rot);for(let xx=-w/2-.3;xx<w/2+.4;xx+=.55)b.box(roofMat,xx,(h+low)/2+.12,0,.035,.03,d+.8,rot);
   entrance(-.55,dw,dh);for(let zz=back+.5;zz<front;zz+=2.0){let yy=h-(zz-back)/d*.75-.16;b.box(M.dark,0,yy,zz,w-.1,.17,.16);for(const side of[-1,1])b.box(M.dark,side*(w/2-.14),yy/2,zz,.17,yy,.17);}
   bench(w/2-1.4,back+1.0,2.2);lumber(-w/2+.70,back+2,2.8);if(r()<.5)barrel(w/2-.75,front-1.2);
-  if(r()<.5){const xx=w/2+1.0,zz=front-2.4;b.box(roofMat,xx,2.15,zz,2.1,.12,3.2,0,0,-.22);for(const z1 of[zz-1.4,zz+1.4])block(M.dark,w/2+1.95,.99,z1,.12,1.98,.12);b.box(M.dark,xx,1.95,zz,2.05,.1,2.7);}
+  if(r()<.5){const xx=w/2+1.0,zz=front-2.4;rainRoofs.push({minX:xx-1.05,maxX:xx+1.05,minZ:zz-1.6,maxZ:zz+1.6,y0:2.25+Math.tan(.22)*xx,yx:-Math.tan(.22),yz:0});b.box(roofMat,xx,2.15,zz,2.1,.12,3.2,0,0,-.22);for(const z1 of[zz-1.4,zz+1.4])block(M.dark,w/2+1.95,.99,z1,.12,1.98,.12);b.box(M.dark,xx,1.95,zz,2.05,.1,2.7);}
  }
  // Scars, repaired lower boards and irregular foot stones are seeded and sparse.
  if(!isBrick){for(let i=0;i<(v===1?8:14);i++){let zz=back+.2+r()*(d-.4),yy=.2+r()*Math.min(2,h-.3),side=r()<.5?-1:1;b.box(r()<.5?M.dark:wallMat,side*(w/2+.084),yy,zz,.018,.025+r()*.10,.25+r()*.3,0,0,0,.71+r()*.15);}}
@@ -343,7 +344,7 @@ export function makeRuralBuilding(f,level=0){
    b.box(M.wood,side*(w/2-.09),yy,zz,.032,.14,Math.min(.81,d*.24),0,0,0,.87);
   }
  }
- b.finish(group);group.position.set(f.cx,y+.035,f.cz);group.rotation.y=angle;group.scale.setScalar(s);group.name=`rural-${v}`;group.userData.ruralVariant=v;
+ b.finish(group);group.position.set(f.cx,y+.035,f.cz);group.rotation.y=angle;group.scale.setScalar(s);group.name=`rural-${v}`;group.userData.ruralVariant=v;group.userData.rainRoofs=rainRoofs;
  const bounds=new T.Box3();for(const mesh of group.children)bounds.union(mesh.geometry.boundingBox);
  const nearZ=v===1?.05:Math.min(1.5,d*.15),nearX=v===0?-1.15:0,p=world(nearX,nearZ);
  pickups.push({id:f.key+':barn',x:p.x,z:p.z,y:y+.07});

@@ -1,7 +1,7 @@
-import {landmarkTextures} from './landmark-textures.js?v=22';
+import {weatherTextures} from './weather-textures.js?v=23';
 import * as T from './vendor/three.module.min.js';
-import { random, height, surfaceHeight, roadDistance } from './world.js?v=22';
-import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=22';
+import { random, height, surfaceHeight, roadDistance } from './world.js?v=23';
+import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=23';
 
 // Reference-led irregular rural lake: shared shapes, cross-tile water, and dense
 // broken banks. The original layered wind-ripple / sky-reflection water is retained.
@@ -14,23 +14,12 @@ const tint = new T.Color();
 const keep = resource => { shared.add(resource); return resource; };
 export const isSharedLakeResource = resource => !!resource && shared.has(resource);
 
-// Original PS1 references use coarse moving colour planes, not PBR caustics.
-// A small deterministic palette map keeps the broken streaks legible at 320p.
-function rippleTexture(){
- const size=64,data=new Uint8Array(size*size*4),palette=['#345957','#48706b','#62847c','#85a298','#b7c4b6'].map(c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)));
- for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-  const u=x/size*TAU,v=y/size*TAU,phase=v*3+Math.sin(u)*1.5+Math.sin(u*2-v)*.58;
-  const wave=Math.sin(phase)*.70+Math.sin(v*5+u+Math.sin(u*2))*.22+Math.sin(u*2-v)*.08;
-  const band=wave>.70?4:wave>.51?3:wave>-.13?2:wave>-.70?1:0,k=(y*size+x)*4;
-  data.set(palette[band],k);data[k+3]=255;
- }
- const t=keep(new T.DataTexture(data,size,size));t.name='PS1 broad ripple palette / 64px';t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=T.NearestFilter;t.minFilter=T.NearestMipmapLinearFilter;t.generateMipmaps=true;t.colorSpace=T.SRGBColorSpace;t.needsUpdate=true;return t;
-}
-const rippleMap=rippleTexture();
+// Detailed continuous ripple albedo on the existing low-poly animated surface.
+const rippleMap=keep(weatherTextures.ripples);rippleMap.wrapS=rippleMap.wrapT=T.MirroredRepeatWrapping;
 export const WATER_WAVES=[{k:.938,a:.016,dir:[.342,.940],w:1.233},{k:.576,a:.017,dir:[-.800,.600],w:.976},{k:.385,a:.009,dir:[.940,.342],w:.743}];
 export function waterDisplacement(x,z,r,time,wind=.32){time=Math.floor(time*12)/12;const edge=1-Math.max(0,Math.min(1,(r-.94)/.06))**2*(3-2*Math.max(0,Math.min(1,(r-.94)/.06)));return WATER_WAVES.reduce((h,v)=>h+v.a*Math.sin((x*v.dir[0]+z*v.dir[1])*v.k-time*v.w),0)*edge*(.76+wind*.42);}
 function waterMaterial(wind) {
- const mat=new T.MeshBasicMaterial({name:'PS1 palette-textured water facets',color:0xffffff,transparent:false,depthWrite:true});
+ const mat=new T.MeshBasicMaterial({name:'PS1 low-poly detailed ripple water',color:0xffffff,transparent:false,depthWrite:true});
  mat.onBeforeCompile=shader=>{
   shader.uniforms.uLakeTime=wind.time;shader.uniforms.uLakeWind=wind.strength;shader.uniforms.uLakeTexture={value:rippleMap};
   shader.vertexShader=`uniform float uLakeTime;uniform float uLakeWind;attribute float lakeRadius;attribute vec2 lakeCoord;attribute float facetTone;varying vec2 vLakeXZ;varying float vLakeRadius;varying float vFacetTone;\n`+shader.vertexShader;
@@ -45,14 +34,16 @@ function waterMaterial(wind) {
   shader.fragmentShader=`uniform float uLakeTime;uniform sampler2D uLakeTexture;varying vec2 vLakeXZ;varying float vLakeRadius;varying float vFacetTone;\n`+shader.fragmentShader;
   shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
    float tick=floor(uLakeTime*12.)/12.;
-   vec2 uv=vLakeXZ/8.5+vec2(.026,.022)*tick;
-   uv.x+=floor(sin(vLakeXZ.y*.31+tick*.9)*1.8)/64.;
+   vec2 uv=vLakeXZ/10.+vec2(.014,.009)*uLakeTime;
+   uv+=vec2(sin(vLakeXZ.y*.27+uLakeTime*.51),cos(vLakeXZ.x*.21-uLakeTime*.38))*.018;
    vec3 ripple=texture2D(uLakeTexture,uv).rgb;
+   vec3 crossing=texture2D(uLakeTexture,uv*vec2(.73,1.12)+vec2(-.010,.014)*uLakeTime+.31).rgb;
+   ripple=mix(ripple,crossing,.22);
    float bank=smoothstep(.87,1.,vLakeRadius);
    diffuseColor.rgb=mix(ripple*vFacetTone,vec3(.115,.173,.141),bank*.46);
   `);
  };
- mat.customProgramCacheKey=()=> 'ps1-palette-water-v22';return keep(mat);
+ mat.customProgramCacheKey=()=> 'ps1-detailed-water-v23';return keep(mat);
 }
 
 function dryGrassMaterial(wind) {

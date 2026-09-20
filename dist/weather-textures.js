@@ -1,0 +1,7 @@
+import * as T from './vendor/three.module.min.js';
+const shared=new Set();
+export const weatherTextures=Object.fromEntries(['ripples','cloud-wallpaper'].map(name=>{const t=new T.DataTexture(new Uint8Array([105,131,140,255]),1,1);t.name='weather / '+name;t.colorSpace=T.SRGBColorSpace;t.wrapS=t.wrapT=T.RepeatWrapping;t.minFilter=T.LinearMipmapLinearFilter;t.magFilter=T.LinearFilter;t.generateMipmaps=true;t.anisotropy=2;t.needsUpdate=true;shared.add(t);return[name,t];}));
+let loading;
+async function decode(url){const r=await fetch(url);if(!r.ok)throw Error('Weather texture failed: '+url.pathname);const im=await createImageBitmap(await r.blob());const c=typeof OffscreenCanvas==='undefined'?document.createElement('canvas'):new OffscreenCanvas(512,512);c.width=c.height=512;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(im,0,0,512,512);im.close();return {data:new Uint8Array(ctx.getImageData(0,0,512,512).data),width:512,height:512};}
+export function initializeWeatherTextures(loader=decode){return loading??=Promise.all(Object.entries(weatherTextures).map(async([name,t])=>{const im=await loader(new URL('./textures/v23/'+name+'.webp',import.meta.url));if(im.width!==512||im.height!==512||im.data.length!==1048576)throw Error('Invalid weather texture');t.image=im;t.needsUpdate=true;})).catch(e=>{loading=null;throw e;});}
+export const isSharedWeatherTexture=r=>shared.has(r);

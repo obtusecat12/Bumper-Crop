@@ -2,7 +2,7 @@
 
 User preference established in V20, applying to subsequent textures and UI:
 
-- All generated textures should feel like old PS1 / PS2 game textures: restrained detail, limited native resolution, moderate contrast and saturation, no over-sharpening, baked gritty noise or photographic microdetail.
+- All generated textures should feel like old PS1 / PS2 game textures: low-poly silhouettes with detailed, continuous texture imagery at restrained native resolution. Preserve fine photographic or painted surface information with soft filtering, moderate contrast and saturation. Do not turn this into blocky pixel art, stepped color bands, over-sharpened detail or baked gritty noise. This distinction was explicitly corrected by the user in V23, including the water reference images.
 - The antique wheat-field UI uses dark leather, subdued brass, parchment and transparent glass. Preserve the reference silhouette, not a flat modern dashboard.
 - Generate reusable small components. Never use a complete generated instrument, status bar, menu or screenshot as the operational UI. Keep text, readings, state fills and motion separate.
 - Status bands use shared SVG geometry; their fill follows the arc. Glass, cork, liquid, compass housing and glass lid have independent layers. Empty meters must really empty.

@@ -31,7 +31,7 @@ body[data-filter="vhs"] canvas.scene,body[data-filter="native"] canvas.scene{ima
 @media(max-width:460px){.developer-actions{grid-template-columns:1fr}.developer-status{min-height:64px}.developer-actions button{min-height:40px}}
 @media(max-height:700px){.hero{padding-top:16px;padding-bottom:16px}.hero .eyebrow{margin-bottom:4px}.hero .short-rule{margin:10px 0}.hero .menu-button{min-height:32px;padding-top:4px;padding-bottom:4px}}
 
-.fps{max-width:min(40vw,480px);white-space:pre-line;overflow-wrap:anywhere}#developer-performance{min-height:0}
+.fps{max-width:min(40vw,480px);white-space:pre-line;overflow-wrap:anywhere}#developer-performance,#weather-status{min-height:0}
 
 .reference-credit{font-size:.74em;opacity:.72;line-height:1.7}.reference-credit a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 

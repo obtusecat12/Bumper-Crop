@@ -1,4 +1,4 @@
-export {farmViewTarget} from './farm-layout.js?v=22';
+export {farmViewTarget} from './farm-layout.js?v=23';
 // A long lens only needs a narrow corridor, not a giant surrounding square.
 // Whole-tile conservative bounds include foliage and the fog concealment margin.
 export function photoCorridorTiles(state,view){

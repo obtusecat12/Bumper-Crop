@@ -1,0 +1,137 @@
+{
+  "interaction": {
+    "developerButtons": 6,
+    "eachDispatchesCorrectWeather": true,
+    "teleportGuard": true,
+    "normalResetsWaterAndFlare": true,
+    "pausedEventsFrozen": true,
+    "probabilityCounts": {
+      "rain": 10000,
+      "fog": 10000,
+      "blackout": 1000,
+      "wallpaper": 1000,
+      "sunbreak": 1000,
+      "normal": 77000
+    },
+    "lensRoofStopsNewDrops": true,
+    "lensBoundedAndFinite": true,
+    "rainDropsAfter30s": 4,
+    "largeBeadsMoveFaster": true
+  },
+  "nativeVisual": {
+    "scope": "Native Mesa GLES shader compile and simple representative scene verification. Not browser/playthrough/FPS validation. Single directional + hemispheric illumination; no CSM or GI in these frames.",
+    "sourceSHA256": {
+      "atmosphere.js": "128fa94d457f8c7db98ddea5e5a2dbd2828d31ba669a702be1e3ece7418637fc",
+      "lake.js": "6edc309636f9f5b3b4b92f75d001363d0d6d328c84a4fd167c8918376b02456e",
+      "rain-render.js": "03b436f79dcffe9b8d789e1041e88f04d9ae68d907d1d065f1d5fda2a813d25b",
+      "wet-ground.js": "e04a18987c56d5050019f76afbdde7dc5c686128e1e5b6c885787f43b7886fe1",
+      "weather-flare.js": "a26a5d180c589d22795154dca53b9607675b2cf7a2fa4a8c84f9067925053d0b",
+      "weather-textures.js": "eae215baa2dda21b9369cc1fc4910327bc6aff128e110986fc131593541c8e27"
+    },
+    "shaders": 20,
+    "allCompiledAndLinked": true,
+    "blackoutForegroundMaxRGBDifference": 0,
+    "blackoutSkyMeanRGB": [
+      1.0,
+      1.0,
+      2.0
+    ],
+    "normalSkyMeanRGB": [
+      131.89104791666668,
+      139.71597083333333,
+      142.00339791666667
+    ],
+    "visuallyChecked": [
+      "normal layered cloud volume",
+      "blackout black sky with unchanged near foreground illumination",
+      "repeated photo wallpaper sky",
+      "clear blue sky",
+      "orange dusk and sun disc",
+      "fog suppresses distant silhouettes",
+      "rain line segments and impact rings",
+      "detailed rippled water",
+      "wet track puddles and rings",
+      "actual flare material over clear sky"
+    ],
+    "defectsFound": [],
+    "harnessCorrections": [
+      "LineBasicMaterial uses Three ShaderLib.basic",
+      "RawShaderMaterial does not receive automatic material shader prefix",
+      "3D texture wraps in R and generates mipmaps",
+      "Three fog color uniform converted into output color space",
+      "Float red rain heightmap uploaded as R32F"
+    ]
+  },
+  "targetedRender": {
+    "actual": [
+      {
+        "name": "lens-natural-rain",
+        "drops": 11,
+        "instances": 22,
+        "capacity": 144,
+        "note": "Actual deterministic rain update for seven seconds, no manual droplet edits"
+      },
+      {
+        "name": "lens-capacity-144",
+        "drops": 24,
+        "instances": 144,
+        "capacity": 144,
+        "note": "Deliberate full-capacity callback fixture: 24 moving heads plus 120 trail segments"
+      }
+    ],
+    "captureCalls": 2,
+    "callbackCalls": 2,
+    "sourceSHA256": {
+      "atmosphere.js": "128fa94d457f8c7db98ddea5e5a2dbd2828d31ba669a702be1e3ece7418637fc",
+      "material-finish.js": "1347fca753b507f93011731d0c9d3d6dbb02b7573ef7cd6ede685ec8d79d3ce9",
+      "rural-shadows.js": "173da1faeb03dd249af46a14c1bf3b3c99aa8a4af47105417858f633020c8876",
+      "irradiance-field.js": "9648145efc89f1bb0e4a62b7020a004734f5924c3694daf79886be94b19220f3",
+      "wet-ground.js": "e04a18987c56d5050019f76afbdde7dc5c686128e1e5b6c885787f43b7886fe1",
+      "lens-water.js": "a2e364a7fac9fc0938e535aa50fcfd78eea4e131331edad24185b9de76809e52"
+    },
+    "groundProgram": {
+      "name": "composed terrain / fog + finish + CSM + GI + weather tint + wet-ground",
+      "vertex": true,
+      "fragment": true,
+      "vertexLog": "",
+      "fragmentLog": "",
+      "linked": true,
+      "linkLog": ""
+    },
+    "attachmentOrder": [
+      "atmosphere",
+      "materialFinish",
+      "naturalShadows CSM",
+      "irradiance",
+      "wetGround"
+    ],
+    "mainLightCounts": {
+      "directional": 2,
+      "directionalShadows": 2,
+      "hemisphere": 1,
+      "point": 1
+    },
+    "nativeLensGlErrors": 0,
+    "visuallyChecked": [
+      "natural 7-second rain has visible refractive beads and narrow trails",
+      "full-capacity 24 heads plus 120 trails displays correctly; trails are subtle",
+      "background orientation correct; transparent pixels preserve scenery"
+    ],
+    "scope": "Composed ground compile/link only. Lens callback output is native GLES over a previous rendered textured scene; no browser or physical GPU timing claim.",
+    "defectsFound": []
+  },
+  "roofVerification": {
+    "proceduralVariants": 8,
+    "metadataRoundTrips": 24,
+    "optionalPorchAndSideBay": true,
+    "hayHoodFixed": true,
+    "farmGeometryPoints": 15,
+    "farmIntegrationPoints": 35,
+    "paddedSupportUsesSlopeMaximum": true,
+    "referenceBarnDormerCovered": true
+  },
+  "limitations": [
+    "Representative native GLES and CPU validation; no browser playthrough or actual device FPS measurement.",
+    "Stored render source hashes precede cache query bump to v23; shader logic unchanged."
+  ]
+}

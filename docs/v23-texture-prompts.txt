@@ -1,0 +1,28 @@
+Built-in imagegen. One generation request per requested texture.
+Prompt guide downloaded and read from:
+https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md
+Style references inspected: upload/01-IMG_4023.png and upload/02-IMG_4024.png.
+
+WATER PROMPT
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: seamless tileable water ripple color texture for a low-poly PS1/PS2-inspired freshwater lake in an early 3D game.
+scene: the entire square image is water surface, seen directly overhead as a flat texture map, without horizon or surrounding landscape.
+texture: dense continuous fine intertwined ripples, short natural wavering lines and stretched soft cloudy reflections. Natural photography-derived water detail, softly blurred and slightly degraded like VHS playback of an early 3D game, while retaining fine intertwined ripple structure. Muted gray-blue and teal overcast freshwater palette, low to medium contrast with silvery diffuse reflections.
+composition: homogeneous ripple scale and density across the complete image, all four edges connect seamlessly when repeated in both directions. No distinct central focal area. Texture only, full bleed.
+lighting: diffuse overcast light; soft stretched cloudy reflection mixed throughout, no localized glare.
+aspect ratio: 1:1.
+output: 512 x 512 pixel target, opaque RGB color texture.
+Avoid: pixel-art blocks, five-color quantization, giant caustic cells, swimming pool caustics, sharp white geometric networks, cartoon lines, strong bloom, hard black gaps, sun discs, buildings, boats, trees, shore, text, logos, watermark, borders.
+
+SKY PROMPT
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: original intentionally fake Windows XP era stock-photo sky texture for an early 3D game sky dome.
+scene: vivid saturated blue sky filled with thick fluffy white cumulus clouds, no ground and no horizon.
+style: cheerful generic early-2000s desktop stock photography, recognizable plump cumulus shapes, slightly softened photographic detail, deliberately artificial and unconvincing when wrapped around a game sky dome.
+composition: full-bleed square image, clouds arranged across the entire texture including the edges, repeated cloud motifs intended to remain obviously recognizable when the texture is tiled across a sky dome. Tileable in both directions. Blue sky between the clouds; thick white cumulus with pale blue-gray shaded undersides.
+lighting: bright daytime stock-photo lighting with saturated clean blue and luminous fluffy white cloud tops.
+aspect ratio: 1:1.
+output: 1024 x 1024 pixel target, opaque RGB color texture.
+Avoid: ground, grass, landscapes, buildings, trees, horizon, sun discs, atmospheric realism that hides the artificial stock-photo effect, dark storm clouds, painterly rendering, pixel-art blocks, text, Windows logos, watermarks, borders.

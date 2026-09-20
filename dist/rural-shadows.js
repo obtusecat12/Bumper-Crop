@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {CSM} from './vendor/csm/CSM.js';
-import {SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=22';
+import {SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=23';
 
 // Contact-hardening filtering: four blocker samples and eight PCF samples.
 // Fixed spatial samples avoid adding another temporal noise reconstruction pass.
@@ -45,7 +45,7 @@ export function createRuralShadows({renderer,scene,camera,quality='balanced'}) {
   const registered=new WeakSet(),materialRoots=new WeakMap(),references=new Map(),shaderChunk=ruralShadowChunk();
   let dirty=true,lastUpdate=-Infinity,lastQuality=quality,origin='',lastPosition=new T.Vector3(Infinity,0,0),lastRotation=new T.Quaternion();
   const values={refreshes:0,casters:0,mapSize:csm.shadowMapSize};
-  const corner=new T.Vector3();
+  const corner=new T.Vector3(),skyDirection=new T.Vector3(),warmSun=new T.Color('#ffb875'),sunColor=new T.Color();let previousDusk=0;
   function supportDepth(i,face){
     const a=i?csm.breaks[i-1]:0,b=csm.breaks[i],d=Math.min(camera.far,csm.maxFar)-camera.near;
     return face==='near'?Math.max(camera.near,(a-.125*a*a)*d):Math.min(camera.far,(b+.125*b*b)*d);
@@ -99,12 +99,15 @@ export function createRuralShadows({renderer,scene,camera,quality='balanced'}) {
     }
     dirty=true;
   }
-  function update({now,originKey='',quality=lastQuality,rain=0}) {
+  function update({now,originKey='',quality=lastQuality,rain=0,clear=0,dusk=0}) {
     if(quality!==lastQuality)resize(quality);
+    sunColor.set(SUN_COLOR).lerp(warmSun,dusk);
+    const sunPower=SUN_INTENSITY*(1-rain*.28)*(1+clear*.24)*(1-dusk*.48);
+    if((Math.abs(previousDusk-dusk)>.005&&now-lastUpdate>=100)||(dusk===0&&previousDusk!==0)){skyDirection.set(...SUN_DIRECTION).lerp(corner.set(-.86,.24,-.45),dusk).normalize().negate();csm.lightDirection.copy(skyDirection);previousDusk=dusk;dirty=true;}
     const rebased=originKey!==origin;origin=originKey;
     const distance=camera.position.distanceToSquared(lastPosition),angle=camera.quaternion.angleTo(lastRotation);
     const moved=distance>.49||angle>.025,jump=distance>256||angle>.65;
-    for(const l of csm.lights){l.color.set(SUN_COLOR);l.intensity=SUN_INTENSITY*(1-rain*.28);}
+    for(const l of csm.lights){l.color.copy(sunColor);l.intensity=sunPower;}
     // Wind is refreshed at 5 Hz, ordinary camera movement at most 10 Hz.
     // Static empty fields reuse their maps indefinitely. Teleports/rebases
     // cannot wait for the cadence because their cached coordinates are invalid.
@@ -122,7 +125,7 @@ export function createRuralShadows({renderer,scene,camera,quality='balanced'}) {
       // Camera FOV/aspect and telephoto views must not clip distant shadows.
       s.camera.far=Math.ceil((depth+16+Math.min(40,csm.maxFar*.05))/8)*8;
       s.camera.updateProjectionMatrix();s.updateMatrices(l);
-      l.color.set(SUN_COLOR);l.intensity=SUN_INTENSITY*(1-rain*.28);
+      l.color.copy(sunColor);l.intensity=sunPower;
       s.normalBias=i===0?.035:.075;s.intensity=.93;
       // Carry depth/world-width scale through Three's per-shadow radius slot.
       s.radius=(s.camera.far-s.camera.near)/(s.camera.right-s.camera.left);

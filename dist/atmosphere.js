@@ -1,3 +1,4 @@
+import {weatherTextures} from './weather-textures.js?v=23';
 import * as T from './vendor/three.module.min.js';
 
 // One generated, periodic 3D texture, genuine bounded volume integration, and
@@ -104,6 +105,8 @@ uniform float uCloudTime;
 uniform float uCloudMist;
 uniform float uCloudRain;
 uniform int uCloudSteps;
+uniform vec4 uSkyEvent;
+uniform sampler2D uSkyWallpaper;
 uniform vec2 uCloudMarch[48];
 
 // Integer-period spatial scales keep the BigInt origin wrap invisible.
@@ -146,7 +149,7 @@ void main() {
   float elevation = max(rd.y, 0.0);
   vec3 upperSky = vec3(.445, .473, .484) - uCloudRain * .055;
   vec3 skyColor = mix(uCloudFogColor, upperSky, smoothstep(.01, .62, elevation));
-  if (rd.y > .025) {
+  if (rd.y > .025 && uSkyEvent.x<.995 && uSkyEvent.y<.995 && uSkyEvent.z<.995) {
     float entry = max(0.0, (92.0 - ro.y) / rd.y);
     float finish = min(2600.0, (216.0 - ro.y) / rd.y);
     if (finish > entry) {
@@ -189,6 +192,20 @@ void main() {
       skyColor = mix(skyColor, clouds, cloudVisibility);
     }
   }
+  vec3 sunDir=normalize(mix(vec3(-.45,.84,-.30),vec3(-.86,.24,-.45),uSkyEvent.w));
+  float sunDot=max(0.,dot(rd,sunDir));
+  vec3 clearSky=mix(vec3(.60,.74,.80),vec3(.055,.235,.50),smoothstep(0.,.75,elevation));
+  vec3 sunset=mix(vec3(.82,.34,.13),vec3(.085,.075,.17),smoothstep(0.,.64,elevation));
+  clearSky=mix(clearSky,sunset,uSkyEvent.w);
+  clearSky+=vec3(1.,.87,.62)*(pow(sunDot,190.)*.36+smoothstep(.99982,.99995,sunDot)*2.);
+  skyColor=mix(skyColor,clearSky,uSkyEvent.z);
+  if(uSkyEvent.y>.001){
+   vec2 wallpaperUV=vec2(atan(rd.z,rd.x)/6.2831853+.5,asin(clamp(rd.y,-1.,1.))/3.14159265+.5)*vec2(10.,5.);
+   // Deliberately repeat the same stock-style photograph, including visible tiling.
+   skyColor=mix(skyColor,texture2D(uSkyWallpaper,wallpaperUV).rgb,uSkyEvent.y);
+  }
+  // Only the sky emissive appearance goes out. Scene illumination is untouched.
+  skyColor=mix(skyColor,vec3(.0002,.0003,.0005),uSkyEvent.x);
   gl_FragColor = vec4(skyColor, 1.0);
   #include <colorspace_fragment>
 }`;
@@ -209,6 +226,8 @@ const fogFragmentPars = `
 #include <fog_pars_fragment>
 #ifdef USE_FOG
   varying vec3 vLayerFogWorld;
+  precision highp sampler3D;
+  uniform sampler3D uLayerFogNoise;
   uniform vec2 uLayerFogOrigin;
   uniform float uLayerFogTime;
   uniform float uLayerFogMist;
@@ -247,6 +266,21 @@ const fogFragment = `
   float lowOptical = max(0.0, fogDistance - 25.0) * .0021 * lowColumn * (.30 + patchA * 1.8);
   float farOptical = max(0.0, fogDistance - 72.0) * .0036 * raisedColumn * (.22 + patchB * 1.2);
   float opticalDepth = (lowOptical + farOptical) * uLayerFogScale * (1.0 + uLayerFogMist * 3.6 + uLayerFogRain * .5);
+  if(uLayerFogMist>.005 && fogDistance>1.){
+   // Three world-space volume samples. Anisotropic advection stretches fine wisps
+   // through real space instead of sliding a screen-space noise sheet.
+   vec3 ray=vLayerFogWorld-cameraPosition;float lengthHere=min(fogDistance,110.);
+   float volume=0.;
+   for(int k=0;k<3;k++){
+    vec3 p=cameraPosition+ray*((float(k)+.5)/3.*lengthHere/max(fogDistance,.001));
+    p.xz+=uLayerFogOrigin+vec2(uLayerFogTime*.41,uLayerFogTime*.14);
+    vec4 n=textureLod(uLayerFogNoise,p/vec3(64.,8.,128.),0.);
+    float wisp=smoothstep(.22,.77,n.r*.35+n.g*.65);
+    float heightDensity=exp(-max(0.,p.y-.5)*.19);
+    volume+=(.006+wisp*.046)*heightDensity;
+   }
+   opticalDepth+=volume*(lengthHere/3.)*uLayerFogMist;
+  }
   float layerFog = 1.0 - exp(-opticalDepth);
   // A subtle cooler bank color returns exactly to fogColor at the cutoff.
   vec3 layerColor = fogColor * vec3(.967, .992, 1.018);
@@ -272,8 +306,10 @@ const fullFogReturn = `
  * standard/basic/line materials and custom shaders using Three's fog chunks.
  * No global ShaderChunk mutation and no per-frame scene traversal.
  */
-export function installLayeredFog({scene} = {}) {
+export function installLayeredFog({scene,noiseTexture=null} = {}) {
+  const ownNoise=!noiseTexture;noiseTexture??=makeCloudNoise();
   const uniforms = {
+    uLayerFogNoise: {value:noiseTexture},
     uLayerFogScale: {value:1},
     uLayerFogCameraWorld: {value: new T.Matrix4()},
     uLayerFogOrigin: {value: new T.Vector2()},
@@ -305,7 +341,7 @@ export function installLayeredFog({scene} = {}) {
     // stock/custom keys derive themselves from onBeforeCompile.toString().
     const key = previousKey.call(material);
     material.onBeforeCompile = compile;
-    material.customProgramCacheKey = function() {return key + '|layered-world-fog-v7';};
+    material.customProgramCacheKey = function() {return key + '|volumetric-wispy-fog-v23';};
     records.set(material, {previous, previousKey, compile});
     material.needsUpdate = true;
   }
@@ -338,7 +374,7 @@ export function installLayeredFog({scene} = {}) {
     });
   }
   attach(scene);
-  return {uniforms, attach, update, detach, dispose() {detach(scene);}};
+  return {uniforms, attach, update, detach, dispose() {detach(scene);if(ownNoise)noiseTexture.dispose();}};
 }
 
 /**
@@ -350,8 +386,10 @@ export function installLayeredFog({scene} = {}) {
  */
 export function createAtmosphere({scene, fog = scene?.fog, quality = 'balanced'} = {}) {
   const texture = makeCloudNoise();
-  const fogController = installLayeredFog({scene});
+  const fogController = installLayeredFog({scene,noiseTexture:texture});
   const uniforms = {
+    uSkyEvent: {value:new T.Vector4()},
+    uSkyWallpaper: {value:weatherTextures['cloud-wallpaper']},
     uCloudNoise: {value: texture},
     uCloudCamera: {value: new T.Vector3()},
     uCloudOrigin: {value: new T.Vector2()},
@@ -375,7 +413,8 @@ export function createAtmosphere({scene, fog = scene?.fog, quality = 'balanced'}
   sky.renderOrder = 1000;
   sky.frustumCulled = false;
   function update(options = {}) {
-    const {time = 0, quality: q, camera, originX = 0, originZ = 0, mist = 0, rain = 0} = options;
+    const {time = 0, quality: q, camera, originX = 0, originZ = 0, mist = 0, rain = 0, event={}} = options;
+    uniforms.uSkyEvent.value.set(event.blackout||0,event.wallpaper||0,event.clear||0,event.dusk||0);
     uniforms.uCloudTime.value = Number(time) || 0;
     uniforms.uCloudMist.value = clamp01(mist);
     uniforms.uCloudRain.value = clamp01(rain);
