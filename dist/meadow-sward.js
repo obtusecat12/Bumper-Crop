@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=23';
-import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=23';
+import {ruralTextures} from './rural-textures.js?v=24';
+import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=24';
 
 const shared=new Set(),layouts=new WeakMap();let templates,mat;
 // Bent, intersecting strips show many fine leaves with a small geometry budget.

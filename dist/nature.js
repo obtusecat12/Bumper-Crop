@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {attachRuralDetail} from './rural-textures.js?v=23';
-import {JoinedWood} from './joined-wood.js?v=23';
-import {height} from './world.js?v=23';
+import {attachRuralDetail} from './rural-textures.js?v=24';
+import {JoinedWood} from './joined-wood.js?v=24';
+import {height} from './world.js?v=24';
 
 // Open-grown eastern/central US farm trees. The crown follows the woody branch
 // hierarchy; every foliage instance is a little open spray of individual leaves.

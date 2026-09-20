@@ -1,4 +1,4 @@
-import {weatherTextures} from './weather-textures.js?v=23';
+import {weatherTextures} from './weather-textures.js?v=24';
 import * as T from './vendor/three.module.min.js';
 
 // One generated, periodic 3D texture, genuine bounded volume integration, and

@@ -1,0 +1,241 @@
+{
+  "timing": {
+    "testedFPS": [
+      60,
+      20,
+      10,
+      5
+    ],
+    "matchedWallTimePhases": true,
+    "manualRainInitial": 0.45,
+    "manualFogInitial": 0.35,
+    "rainFullSeconds": 1.2,
+    "fogFullSeconds": 1.8,
+    "duskStartSeconds": 4,
+    "duskFullSeconds": 9,
+    "eventEndSeconds": 18
+  },
+  "interaction": {
+    "sixF2Callbacks": true,
+    "normalReset": true,
+    "teleportGuard": true,
+    "pauseMapHiddenTabFreeze": true,
+    "pointerLockAcquisitionLoss": true
+  },
+  "manualState": {
+    "states": [
+      {
+        "name": "normal-0",
+        "age": 0,
+        "elapsed": 0,
+        "kind": "normal",
+        "rain": 0,
+        "mist": 0,
+        "blackout": 0,
+        "wallpaper": 0,
+        "clear": 0,
+        "dusk": 0,
+        "flare": 0,
+        "wetness": 0,
+        "fogNear": 60,
+        "fogFar": 225
+      },
+      {
+        "name": "rain-0",
+        "age": 0,
+        "elapsed": 0,
+        "kind": "rain",
+        "rain": 0.45,
+        "mist": 0,
+        "blackout": 0,
+        "wallpaper": 0,
+        "clear": 0,
+        "dusk": 0,
+        "flare": 0,
+        "wetness": 0,
+        "fogNear": 60,
+        "fogFar": 225
+      },
+      {
+        "name": "rain-1",
+        "age": 0.999999999999999,
+        "elapsed": 0.999999999999999,
+        "kind": "rain",
+        "rain": 0.9592592592592588,
+        "mist": 0,
+        "blackout": 0,
+        "wallpaper": 0,
+        "clear": 0,
+        "dusk": 0,
+        "flare": 0,
+        "wetness": 0.027712559178229346,
+        "fogNear": 54.04806422984141,
+        "fogFar": 209.2435724974484
+      },
+      {
+        "name": "fog-0",
+        "age": 0,
+        "elapsed": 0,
+        "kind": "fog",
+        "rain": 0,
+        "mist": 0.35,
+        "blackout": 0,
+        "wallpaper": 0,
+        "clear": 0,
+        "dusk": 0,
+        "flare": 0,
+        "wetness": 0,
+        "fogNear": 60,
+        "fogFar": 225
+      },
+      {
+        "name": "fog-1",
+        "age": 0.999999999999999,
+        "elapsed": 0.999999999999999,
+        "kind": "fog",
+        "rain": 0,
+        "mist": 0.7289437585733878,
+        "blackout": 0,
+        "wallpaper": 0,
+        "clear": 0,
+        "dusk": 0,
+        "flare": 0,
+        "wetness": 0,
+        "fogNear": 48.19450678255716,
+        "fogFar": 176.69557112904243
+      },
+      {
+        "name": "sunbreak-1",
+        "age": 0.999999999999999,
+        "elapsed": 0.999999999999999,
+        "kind": "sunbreak",
+        "rain": 0,
+        "mist": 0,
+        "blackout": 0,
+        "wallpaper": 0,
+        "clear": 0.9518518518518514,
+        "dusk": 0,
+        "flare": 0.9518518518518514,
+        "wetness": 0,
+        "fogNear": 60,
+        "fogFar": 225
+      },
+      {
+        "name": "sunbreak-7",
+        "age": 6.999999999999952,
+        "elapsed": 6.999999999999952,
+        "kind": "sunbreak",
+        "rain": 0,
+        "mist": 0,
+        "blackout": 0,
+        "wallpaper": 0,
+        "clear": 1,
+        "dusk": 0.6479999999999861,
+        "flare": 0.40384000000001274,
+        "wetness": 0,
+        "fogNear": 60,
+        "fogFar": 225
+      },
+      {
+        "name": "sunbreak-10",
+        "age": 9.999999999999895,
+        "elapsed": 9.999999999999895,
+        "kind": "sunbreak",
+        "rain": 0,
+        "mist": 0,
+        "blackout": 0,
+        "wallpaper": 0,
+        "clear": 1,
+        "dusk": 1,
+        "flare": 0.07999999999999996,
+        "wetness": 0,
+        "fogNear": 60,
+        "fogFar": 225
+      }
+    ],
+    "rainSeed": {
+      "itemSize": 4,
+      "eligibleAtPoint45": 485,
+      "total": 1100,
+      "quadrants": [
+        118,
+        137,
+        115,
+        115
+      ],
+      "xRange": [
+        0.004206966143101454,
+        0.9999668598175049
+      ],
+      "zRange": [
+        0.0057512610219419,
+        0.9975953698158264
+      ]
+    },
+    "scope": "Actual manual WeatherDirector at 60 update samples per real second; native GLES actual effect shaders and assets in representative scene, not browser FPS or full-game validation."
+  },
+  "native": {
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "version": "OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+    "glErrors": 0,
+    "programs": 19,
+    "images": [
+      "normal-0.png",
+      "rain-0.png",
+      "rain-0-no-streaks.png",
+      "rain-0-isolated.png",
+      "rain-1.png",
+      "rain-1-no-streaks.png",
+      "rain-1-isolated.png",
+      "fog-0.png",
+      "fog-1.png",
+      "sunbreak-1.png",
+      "sunbreak-7.png",
+      "sunbreak-10.png"
+    ],
+    "executionSeconds": 2.8560600410000916,
+    "limitations": "Native manual GLES state, actual Three shaders/geometry and decoded texture assets. Simple representative lake/soil with fog depth boxes, static time; no full-game browser/frame pacing/VHS or in-game benchmark."
+  },
+  "pixels": {
+    "rain-0": {
+      "streakPixelsDeltaGreater8": 1003,
+      "visibleScreenQuadrants": [
+        516,
+        366,
+        65,
+        56
+      ],
+      "isolatedScreenQuadrants": [
+        527,
+        378,
+        70,
+        65
+      ]
+    },
+    "rain-1": {
+      "streakPixelsDeltaGreater8": 2055,
+      "visibleScreenQuadrants": [
+        803,
+        686,
+        253,
+        313
+      ],
+      "isolatedScreenQuadrants": [
+        829,
+        692,
+        270,
+        313
+      ]
+    },
+    "fog-0": {
+      "meanAbsoluteDeltaAtDepthMarkers": 22.67880728185813
+    },
+    "fog-1": {
+      "meanAbsoluteDeltaAtDepthMarkers": 34.643979912115505
+    }
+  },
+  "limitations": [
+    "Native representative render and extracted handler/CPU tests, not a full browser gameplay run or hardware FPS measurement.",
+    "Shader/source hashes may precede v24 cache-query bump."
+  ]
+}

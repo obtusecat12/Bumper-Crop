@@ -1,14 +1,14 @@
 import * as T from './vendor/three.module.min.js';
-import {weatherSurface} from './weather-surfaces.js?v=23';
+import {weatherSurface} from './weather-surfaces.js?v=24';
 const SIZE=32,SPAN=48,COUNT=1100,RINGS=40;
 export function createRainRenderer(scene,{rng=Math.random}={}){
  const data=new Float32Array(SIZE*SIZE).fill(1000),floor=new T.DataTexture(data,SIZE,SIZE,T.RedFormat,T.FloatType);floor.minFilter=floor.magFilter=T.NearestFilter;floor.generateMipmaps=false;floor.needsUpdate=true;
- const pos=new Float32Array(COUNT*6),seeds=new Float32Array(COUNT*6),tips=new Float32Array(COUNT*2);
- for(let i=0;i<COUNT;i++){const seed=[rng(),rng(),rng()];seeds.set(seed,i*6);seeds.set(seed,i*6+3);tips[i*2+1]=1;}
- const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(pos,3));geo.setAttribute('rainSeed',new T.BufferAttribute(seeds,3));geo.setAttribute('rainTip',new T.BufferAttribute(tips,1));
+ const pos=new Float32Array(COUNT*6),seeds=new Float32Array(COUNT*8),tips=new Float32Array(COUNT*2);
+ for(let i=0;i<COUNT;i++){const seed=[rng(),rng(),rng(),rng()];seeds.set(seed,i*8);seeds.set(seed,i*8+4);tips[i*2+1]=1;}
+ const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(pos,3));geo.setAttribute('rainSeed',new T.BufferAttribute(seeds,4));geo.setAttribute('rainTip',new T.BufferAttribute(tips,1));
  const u={uRainTime:{value:0},uRainTop:{value:20},uRainMin:{value:new T.Vector2()},uRainOrigin:{value:new T.Vector2()},uRainFloor:{value:floor},uRainStrength:{value:0}};
- const mat=new T.LineBasicMaterial({color:'#c0d3dc',transparent:true,opacity:.36,depthWrite:false});
- mat.onBeforeCompile=s=>{Object.assign(s.uniforms,u);s.vertexShader='attribute vec3 rainSeed;attribute float rainTip;uniform float uRainTime,uRainTop,uRainStrength;uniform vec2 uRainMin,uRainOrigin;uniform sampler2D uRainFloor;varying float vRainFade;\n'+s.vertexShader;
+ const mat=new T.LineBasicMaterial({color:'#c0d3dc',transparent:true,opacity:.56,depthWrite:false});
+ mat.onBeforeCompile=s=>{Object.assign(s.uniforms,u);s.vertexShader='attribute vec4 rainSeed;attribute float rainTip;uniform float uRainTime,uRainTop,uRainStrength;uniform vec2 uRainMin,uRainOrigin;uniform sampler2D uRainFloor;varying float vRainFade;\n'+s.vertexShader;
   s.vertexShader=s.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
    vec2 xz=mod(rainSeed.xz*48.-uRainOrigin+vec2(uRainTime*.65,uRainTime*.22)-uRainMin,48.)+uRainMin;
    float yy=uRainTop-mod(rainSeed.y*28.+uRainTime*(15.+rainSeed.x*5.),28.);
@@ -16,11 +16,11 @@ export function createRainRenderer(scene,{rng=Math.random}={}){
    float lengthDrop=.38+rainSeed.z*.35;
    transformed=vec3(xz.x+rainTip*.04,yy-rainTip*lengthDrop,xz.y);
    vec2 edge=min(xz-uRainMin,uRainMin+48.-xz);
-   vRainFade=smoothstep(0.,4.,min(edge.x,edge.y))*uRainStrength;
-   if(yy-lengthDrop<support+.035||rainSeed.x>uRainStrength){transformed=vec3(10000.);vRainFade=0.;}
+   vRainFade=smoothstep(0.,4.,min(edge.x,edge.y))*(.65+.35*uRainStrength);
+   if(yy-lengthDrop<support+.035||rainSeed.w>uRainStrength){transformed=vec3(10000.);vRainFade=0.;}
   `);
   s.fragmentShader='varying float vRainFade;\n'+s.fragmentShader;s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.a*=vRainFade;');};
- mat.customProgramCacheKey=()=> 'roof-clipped-gpu-rain-v23';
+ mat.customProgramCacheKey=()=> 'independent-density-gpu-rain-v24';
  const rain=new T.LineSegments(geo,mat);rain.frustumCulled=false;rain.name='rain / roof clipped columns';rain.visible=false;scene.add(rain);
  const rg=new T.PlaneGeometry(1,1);rg.rotateX(-Math.PI/2);const phases=new T.InstancedBufferAttribute(new Float32Array(RINGS),1);rg.setAttribute('impactAge',phases);
  const rm=new T.MeshBasicMaterial({color:'#d7e1db',transparent:true,depthWrite:false,side:T.DoubleSide});
