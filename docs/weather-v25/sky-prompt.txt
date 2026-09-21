@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Use case: stylized-concept.
+Asset type: one flat, square, seamless repeatable blue-sky texture tile for a retro 3D game backdrop.
+Subject: medium cobalt blue sky with thin, layered white cumulus and stratus clouds photographed from far away. Only sky and clouds.
+Style and texture quality: authentic late-1990s / early-2000s 3D game sky texture, like the soft photographic skies in Half-Life (1998), PS1 / PS2-era games, and Quake-era environment textures. Continuous detailed sky imagery with modest soft highlights, subtly compressed color, and soft retro texture sampling. White cloud layers have flattened, irregular wispy shapes and natural fine internal detail. The result should feel like a real old game texture rather than a modern polished illustration.
+Composition: flat texture asset filling the entire square, visually even blue sky field, clouds distributed naturally across the field with plentiful open blue space. Horizontally stretched distant cloud patches and soft bands, no single large centered cloud. Seamless matching left/right and top/bottom edges for deliberate visible repeating tiles when used across a surreal sky backdrop.
+Color and lighting: restrained medium cobalt blue and gently shaded white; modest contrast; gentle natural daylight; soft highlights.
+Aspect ratio: 1:1. Intended runtime texture size: 512 by 512 pixels; preserve coherent image detail when reduced to that size.
+Avoid: blocky pixel art, giant pixels, voxel shapes, cartoon cloud icons, inflated cotton-ball blobs, piled towering clouds, modern 3D volumetric clouds, oversharpening, oversaturation, excessive glare, a horizon, ground, terrain, sun disc, buildings, people, UI, text, watermark, frame, tile-grid lines, vignette, full-scene screenshot.

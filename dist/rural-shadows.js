@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {CSM} from './vendor/csm/CSM.js';
-import {SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=24';
+import {SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=25';
 
 // Contact-hardening filtering: four blocker samples and eight PCF samples.
 // Fixed spatial samples avoid adding another temporal noise reconstruction pass.
@@ -103,7 +103,7 @@ export function createRuralShadows({renderer,scene,camera,quality='balanced'}) {
     if(quality!==lastQuality)resize(quality);
     sunColor.set(SUN_COLOR).lerp(warmSun,dusk);
     const sunPower=SUN_INTENSITY*(1-rain*.28)*(1+clear*.24)*(1-dusk*.48);
-    if((Math.abs(previousDusk-dusk)>.005&&now-lastUpdate>=100)||(dusk===0&&previousDusk!==0)){skyDirection.set(...SUN_DIRECTION).lerp(corner.set(-.86,.24,-.45),dusk).normalize().negate();csm.lightDirection.copy(skyDirection);previousDusk=dusk;dirty=true;}
+    if((Math.abs(previousDusk-dusk)>.005&&now-lastUpdate>=100)||(dusk===0&&previousDusk!==0)){skyDirection.set(...SUN_DIRECTION).lerp(corner.set(-.86,.065,-.45),dusk).normalize().negate();csm.lightDirection.copy(skyDirection);previousDusk=dusk;dirty=true;}
     const rebased=originKey!==origin;origin=originKey;
     const distance=camera.position.distanceToSquared(lastPosition),angle=camera.quaternion.angleTo(lastRotation);
     const moved=distance>.49||angle>.025,jump=distance>256||angle>.65;

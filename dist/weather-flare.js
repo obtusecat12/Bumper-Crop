@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {weatherSurface} from './weather-surfaces.js?v=24';
+import {weatherSurface} from './weather-surfaces.js?v=25';
 export function createWeatherFlare(renderer){
  const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));
  const uniforms={uSun:{value:new T.Vector2()},uStrength:{value:0},uAspect:{value:4/3}};
@@ -14,7 +14,7 @@ export function createWeatherFlare(renderer){
  outColor=vec4(c,uStrength);}`});
  const scene=new T.Scene(),cam=new T.Camera(),mesh=new T.Mesh(geo,material);mesh.frustumCulled=false;scene.add(mesh);const sun=new T.Vector3(),point=new T.Vector3(),view=new T.Vector3();let target=0,occlusion=0,check=0;
  function update(dt,{weather,camera,state,chunks}){
-  sun.set(-.45,.84,-.30).lerp(new T.Vector3(-.86,.24,-.45),weather.dusk||0).normalize();
+  sun.set(-.45,.84,-.30).lerp(new T.Vector3(-.86,.065,-.45),weather.dusk||0).normalize();
   point.copy(camera.position).addScaledVector(sun,800).project(camera);camera.getWorldDirection(view);check-=dt;
   if(check<=0&&weather.flare>.005){check=.18;occlusion=1;for(let d=0;d<155;d+=d<20?2:10){const x=camera.position.x+sun.x*d,z=camera.position.z+sun.z*d,s=weatherSurface(x,z,state,chunks);if(s&&Math.max(s.y,s.roof)>camera.position.y+sun.y*d+.04){occlusion=0;break;}}}
   target=weather.flare*(view.dot(sun)>.15?1:0)*occlusion;

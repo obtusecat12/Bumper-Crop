@@ -1,0 +1,9 @@
+Head coalescence conserves volume and weighted velocity.
+Stationary beads coalesce and promote to a mobile head without added mass.
+Deposited trail persists after its head exits, remains after 2 seconds, and eventually dries.
+30 / 60 / 120 Hz produce identical optical pixels, populations and water mass for 12 seconds of rain plus entry.
+Entry begins with >50% coherent coverage, drains into streams; aspect changes preserve water mass.
+45-second saturated rain/entry stress: bounded 64 heads + 128 beads; no NaN/negative film; mass ledger closes. Node CPU step+pack mean 2.68 ms, max 12.58 ms (not browser GPU performance).
+Zero/invalid dt is inert; a stalled frame advances at most eight fixed ticks.
+WaterEntryTracker retains original crossing hysteresis and silent reset/rebaseline semantics.
+Real Three.js construction + mock renderer: no dry/paused draw; one wet copy and fullscreen draw; resize, context loss, reset, autoClear restore, idempotent disposal pass.

@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {weatherSurface} from './weather-surfaces.js?v=24';
+import {weatherSurface} from './weather-surfaces.js?v=25';
 const SIZE=32,SPAN=48,COUNT=1100,RINGS=40;
 export function createRainRenderer(scene,{rng=Math.random}={}){
  const data=new Float32Array(SIZE*SIZE).fill(1000),floor=new T.DataTexture(data,SIZE,SIZE,T.RedFormat,T.FloatType);floor.minFilter=floor.magFilter=T.NearestFilter;floor.generateMipmaps=false;floor.needsUpdate=true;
@@ -25,10 +25,18 @@ export function createRainRenderer(scene,{rng=Math.random}={}){
  const rg=new T.PlaneGeometry(1,1);rg.rotateX(-Math.PI/2);const phases=new T.InstancedBufferAttribute(new Float32Array(RINGS),1);rg.setAttribute('impactAge',phases);
  const rm=new T.MeshBasicMaterial({color:'#d7e1db',transparent:true,depthWrite:false,side:T.DoubleSide});
  rm.onBeforeCompile=s=>{s.vertexShader='attribute float impactAge;varying float vImpactAge;\n'+s.vertexShader;s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvImpactAge=impactAge;');s.fragmentShader='varying float vImpactAge;\n'+s.fragmentShader;s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
- float rr=length(vUv-.5)*2.;float edge=abs(rr-(.12+vImpactAge*.82));
- diffuseColor.a=(1.-smoothstep(.035,.095,edge))*(1.-vImpactAge)*.52;
+ vec2 qp=(vUv-.5)*2.;float rr=length(qp),theta=atan(qp.y,qp.x);
+ float center=.07+vImpactAge*.88+.012*sin(theta*3.+vImpactAge*7.);
+ float crest=0.;
+ for(int k=0;k<3;k++){
+  float d=rr-center+float(k)*.13;
+  crest+=exp(-pow(d/.014,2.))*exp(-float(k)*.55);
+ }
+ float facing=.5+.5*sin(theta+.8);
+ diffuseColor.rgb=mix(vec3(.12,.19,.22),vec3(.69,.76,.77),facing);
+ diffuseColor.a=crest*smoothstep(0.,.06,vImpactAge)*pow(1.-vImpactAge,1.3)*.38;
  if(diffuseColor.a<.012)discard;
- `);};rm.defines={USE_UV:''};rm.customProgramCacheKey=()=> 'rain-impact-rings-v23';
+ `);};rm.defines={USE_UV:''};rm.customProgramCacheKey=()=> 'fine-reflected-ripple-crests-v25';
  const rings=new T.InstancedMesh(rg,rm,RINGS);rings.instanceMatrix.setUsage(T.DynamicDrawUsage);rings.frustumCulled=false;rings.count=0;rings.name='rain / independent surface rings';scene.add(rings);
  const pool=[],dummy=new T.Object3D();let gridTimer=Infinity,lastGrid='',budget=0,clock=0;
  function update(dt,{state,camera,chunks,rain:amount=0,active=true}){

@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=24';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=25';
 
 const pars=`
 precision highp sampler3D;
@@ -118,7 +118,7 @@ export function createIrradianceField() {
   const values={status:'准备中',computed:0,reused:0,rays:0,ms:0,triangles:0,bytes:0};
   function fail(error){if(failed)return;failed=true;worker?.terminate();uniforms.uProbeReady.value=0;values.status='柔阴影模式';console.warn('Indirect ray cache unavailable',error)}
   try{
-    worker=new Worker(new URL('./irradiance-worker.js?v=24',import.meta.url),{type:'module',name:'rural-ray-cache'});
+    worker=new Worker(new URL('./irradiance-worker.js?v=25',import.meta.url),{type:'module',name:'rural-ray-cache'});
     worker.onerror=e=>{e.preventDefault?.();fail(new Error(e.message||'Ray worker failed'))};
     worker.onmessageerror=()=>fail(new Error('Ray cache transfer failed'));
     worker.onmessage=({data})=>{
@@ -216,7 +216,7 @@ export function createIrradianceField() {
   function update({state,now,rain=0,clear=0,dusk=0,enabled=true}) {
     const shelterNear=state.cx>=-1n&&state.cx<=3n&&state.cz>=-4n&&state.cz<=0n;
     uniforms.uShelterRoom.value.set(shelterNear?84-Number(state.cx)*64:0,shelterNear?-80-Number(state.cz)*64:0,shelterNear?1:0);
-    latestState=state;updateOrigin();uniforms.uProbeWeather.value=(1-rain*.18)*(1+clear*.12-dusk*.25);uniforms.uWeatherTint.value.setRGB(1,1-dusk*.20,1-dusk*.40);
+    latestState=state;updateOrigin();uniforms.uProbeWeather.value=(1-rain*.18)*(1+clear*.12-dusk*.25);uniforms.uWeatherTint.value.setRGB(1-dusk*.16,1-dusk*.07,1+dusk*.055);
     if(failed||!ready)return;
     pause(!enabled);
     if(!enabled||!sent.size||now-lastChange<300)return;

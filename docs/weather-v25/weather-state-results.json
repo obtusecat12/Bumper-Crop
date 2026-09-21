@@ -1,0 +1,53 @@
+{
+  "snapshots": [
+    {
+      "fps": 120,
+      "ageAtPause": 2.9999999999999867,
+      "cues": [
+        "power-off",
+        "power-on"
+      ]
+    },
+    {
+      "fps": 60,
+      "ageAtPause": 3.000000000000009,
+      "cues": [
+        "power-off",
+        "power-on"
+      ]
+    },
+    {
+      "fps": 30,
+      "ageAtPause": 3.000000000000003,
+      "cues": [
+        "power-off",
+        "power-on"
+      ]
+    },
+    {
+      "fps": 10,
+      "ageAtPause": 3.0000000000000013,
+      "cues": [
+        "power-off",
+        "power-on"
+      ]
+    },
+    {
+      "fps": 5,
+      "ageAtPause": 3.0000000000000004,
+      "cues": [
+        "power-off",
+        "power-on"
+      ]
+    }
+  ],
+  "bins": {
+    "rain": 1000,
+    "fog": 1000,
+    "blackout": 100,
+    "wallpaper": 100,
+    "sunbreak": 100,
+    "normal": 7700
+  },
+  "passed": true
+}

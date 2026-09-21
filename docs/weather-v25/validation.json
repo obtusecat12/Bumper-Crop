@@ -1,0 +1,38 @@
+{
+  "appModulesParsed": 71,
+  "missingRelativeImports": [],
+  "unchangedApartFromCacheVersion": [
+    "world",
+    "ground",
+    "nature",
+    "buildings",
+    "dense-wheat",
+    "meadow-sward",
+    "meadow-vegetation",
+    "photo-farm",
+    "reference-barn",
+    "lake",
+    "vhs-core",
+    "vhs-preset",
+    "display-filter"
+  ],
+  "nativeProgramsLinked": 33,
+  "nativeGLErrors": 0,
+  "checked": [
+    "weather timing at 5/10/30/60/120 FPS; active clock pause/resume",
+    "unchanged natural round probabilities",
+    "mass ledger; bead merging; film persistence; bounded pools; resize/context loss",
+    "identical lens optical fields at30/60/120Hz",
+    "impact timing/rebase/topology and single-pass batches",
+    "cumulative fog transmittance monotonicity",
+    "native crop/lake textures and actual updated shaders",
+    "entry/rain/fog frames through bundled official ntsc-rs WASM at1080 lines"
+  ],
+  "limitations": [
+    "Native manual GLES state; no full browser playthrough or device FPS measurement.",
+    "Native representative scene omits CSM/GI for visual captures.",
+    "WASM effect-survival check uses enlarged native640x400 frames; not full browser composition.",
+    "Eye-level crown is primarily at lower edge while wading; full sheet best seen looking down.",
+    "Lens physics are bounded heuristics, not full fluid dynamics."
+  ]
+}

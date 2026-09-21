@@ -1,4 +1,5 @@
-import {weatherTextures} from './weather-textures.js?v=24';
+import {weatherTextures} from './weather-textures.js?v=25';
+import {createFogVolume,fogVolumePars} from './fog-volume.js?v=25';
 import * as T from './vendor/three.module.min.js';
 
 // One generated, periodic 3D texture, genuine bounded volume integration, and
@@ -108,6 +109,8 @@ uniform int uCloudSteps;
 uniform vec4 uSkyEvent;
 uniform sampler2D uSkyWallpaper;
 uniform vec2 uCloudMarch[48];
+uniform vec3 uStageEvent;
+${fogVolumePars}
 
 // Integer-period spatial scales keep the BigInt origin wrap invisible.
 // Two 3D fetches, as before: a rounded low deck and a faster upper field.
@@ -149,7 +152,7 @@ void main() {
   float elevation = max(rd.y, 0.0);
   vec3 upperSky = vec3(.445, .473, .484) - uCloudRain * .055;
   vec3 skyColor = mix(uCloudFogColor, upperSky, smoothstep(.01, .62, elevation));
-  if (rd.y > .025 && uSkyEvent.x<.995 && uSkyEvent.y<.995 && uSkyEvent.z<.995) {
+  if (rd.y > .025 && uSkyEvent.x<.995 && uSkyEvent.y<.995 && uSkyEvent.z<.995 && uCloudMist<.88) {
     float entry = max(0.0, (92.0 - ro.y) / rd.y);
     float finish = min(2600.0, (216.0 - ro.y) / rd.y);
     if (finish > entry) {
@@ -192,20 +195,64 @@ void main() {
       skyColor = mix(skyColor, clouds, cloudVisibility);
     }
   }
-  vec3 sunDir=normalize(mix(vec3(-.45,.84,-.30),vec3(-.86,.24,-.45),uSkyEvent.w));
+  vec3 sunDir=normalize(mix(vec3(-.45,.84,-.30),vec3(-.86,.065,-.45),uSkyEvent.w));
   float sunDot=max(0.,dot(rd,sunDir));
-  vec3 clearSky=mix(vec3(.60,.74,.80),vec3(.055,.235,.50),smoothstep(0.,.75,elevation));
-  vec3 sunset=mix(vec3(.82,.34,.13),vec3(.085,.075,.17),smoothstep(0.,.64,elevation));
+  float sunward=pow(max(0.,dot(normalize(rd.xz+vec2(.00001)),normalize(sunDir.xz))),5.);
+  float horizon=exp(-elevation*7.5);
+  // A bright, narrow warm horizon under a cooler upper dome. The opposite
+  // horizon keeps its blue-grey earth shadow, rather than an orange overlay.
+  vec3 clearSky=mix(vec3(.64,.76,.81),vec3(.065,.255,.51),smoothstep(0.,.80,elevation));
+  vec3 duskTop=vec3(.115,.155,.225);
+  vec3 duskHorizon=mix(vec3(.39,.36,.42),vec3(.88,.52,.29),sunward);
+  vec3 sunset=mix(duskTop,duskHorizon,horizon);
+  sunset+=vec3(.24,.095,.025)*sunward*exp(-elevation*19.);
   clearSky=mix(clearSky,sunset,uSkyEvent.w);
-  clearSky+=vec3(1.,.87,.62)*(pow(sunDot,190.)*.36+smoothstep(.99982,.99995,sunDot)*2.);
+  float airMass=1./max(.09,sunDir.y+.07);
+  vec3 solar=exp(-vec3(.022,.047,.087)*airMass)*vec3(1.,.98,.88);
+  clearSky+=solar*(pow(sunDot,90.)*.18+pow(sunDot,900.)*.16+smoothstep(.99988,.99998,sunDot)*2.0);
+  // Thin remnants of cloud catch the last light and retain spatial scale.
+  if(rd.y>.03 && uSkyEvent.z>.01){
+   vec3 cloudP=ro+rd*(165./max(rd.y,.06));
+   vec4 veil=textureLod(uCloudNoise,(cloudP+vec3(uCloudTime*.7,0.,0.))/vec3(512.,128.,512.),1.);
+   float veilAmount=smoothstep(.53,.72,veil.g)*.24*smoothstep(.035,.16,rd.y);
+   vec3 veilColor=mix(vec3(.79,.82,.83),mix(vec3(.20,.22,.29),vec3(.88,.52,.34),sunward),uSkyEvent.w);
+   clearSky=mix(clearSky,veilColor,veilAmount);
+  }
   skyColor=mix(skyColor,clearSky,uSkyEvent.z);
   if(uSkyEvent.y>.001){
-   vec2 wallpaperUV=vec2(atan(rd.z,rd.x)/6.2831853+.5,asin(clamp(rd.y,-1.,1.))/3.14159265+.5)*vec2(10.,5.);
-   // Deliberately repeat the same stock-style photograph, including visible tiling.
+   vec2 wallpaperUV=vec2(atan(rd.z,rd.x)/6.2831853+.5,asin(clamp(rd.y,-1.,1.))/3.14159265+.5)*vec2(6.,3.);
    skyColor=mix(skyColor,texture2D(uSkyWallpaper,wallpaperUV).rgb,uSkyEvent.y);
   }
-  // Only the sky emissive appearance goes out. Scene illumination is untouched.
-  skyColor=mix(skyColor,vec3(.0002,.0003,.0005),uSkyEvent.x);
+  // Stage lights are part of the anomalous sky only. Ground lights/shadows
+  // remain unchanged while banks of lamps lose power in succession.
+  if(uStageEvent.y>.001){
+   float az=atan(rd.z,rd.x),el=asin(clamp(rd.y,-1.,1.));
+   vec3 lamps=vec3(0.);float reveal=uStageEvent.y;
+   for(int i=0;i<8;i++){
+    float fi=float(i),la=fi*.78539816+.22,le=.58+.11*sin(fi*2.1);
+    float dx=atan(sin(az-la),cos(az-la)),down=le-el;
+    float cutoff=smoothstep(1.5+fi*.055,1.61+fi*.055,uStageEvent.x);
+    float restored=smoothstep(fi*.075,fi*.075+.20,uStageEvent.z);
+    float power=max(1.-cutoff,restored);
+    float width=.010+max(down,0.)*.13;
+    float axis=dx-sin(fi*1.7)*down*.16;
+    float cone=exp(-axis*axis/(width*width))*smoothstep(-.015,.065,down)*(1.-smoothstep(.45,.75,down));
+    float radial=sqrt(dx*dx+pow((el-le)*1.18,2.));
+    float aperture=1.-smoothstep(.017,.023,radial);
+    float rim=exp(-pow((radial-.028)/.005,2.));
+    float haze=textureLod(uCloudNoise,rd*2.+vec3(uCloudTime*.008,0.,0.),1.).g;
+    float filament=exp(-max(0.,uStageEvent.x-1.55-fi*.055)*9.);
+    lamps+=vec3(.83,.89,1.)*(aperture*power*3.5+cone*power*(.20+.65*haze)+rim*power*.15);
+    lamps+=vec3(.32,.075,.018)*aperture*filament;
+   }
+   skyColor*=1.-reveal*.75;
+   skyColor=mix(skyColor,vec3(.0002,.0003,.0005),uSkyEvent.x);
+   skyColor+=lamps*reveal;
+  }
+  if(uFogVolumeAmount>.001){
+   vec4 v=fogVolumeAt(48.);float trans=pow(v.a,3.);
+   skyColor=skyColor*trans+v.rgb/max(1.-v.a,.0001)*(1.-trans);
+  }
   gl_FragColor = vec4(skyColor, 1.0);
   #include <colorspace_fragment>
 }`;
@@ -226,6 +273,7 @@ const fogFragmentPars = `
 #include <fog_pars_fragment>
 #ifdef USE_FOG
   varying vec3 vLayerFogWorld;
+  ${fogVolumePars}
   precision highp sampler3D;
   uniform sampler3D uLayerFogNoise;
   uniform vec2 uLayerFogOrigin;
@@ -265,28 +313,14 @@ const fogFragment = `
   float raisedColumn = exp(-abs(fogMidpoint.y - 4.2) * .13);
   float lowOptical = max(0.0, fogDistance - 25.0) * .0021 * lowColumn * (.30 + patchA * 1.8);
   float farOptical = max(0.0, fogDistance - 72.0) * .0036 * raisedColumn * (.22 + patchB * 1.2);
-  float opticalDepth = (lowOptical + farOptical) * uLayerFogScale * (1.0 + uLayerFogMist * 3.6 + uLayerFogRain * .5);
-  if(uLayerFogMist>.005 && fogDistance>1.){
-   // Three world-space volume samples. Anisotropic advection stretches fine wisps
-   // through real space instead of sliding a screen-space noise sheet.
-   vec3 ray=vLayerFogWorld-cameraPosition;float lengthHere=min(fogDistance,110.);
-   float volume=0.;
-   for(int k=0;k<3;k++){
-    vec3 p=cameraPosition+ray*((float(k)+.5)/3.*lengthHere/max(fogDistance,.001));
-    p.xz+=uLayerFogOrigin+vec2(uLayerFogTime*.41,uLayerFogTime*.14);
-    vec4 n=textureLod(uLayerFogNoise,p/vec3(64.,8.,128.),0.);
-    float wisp=smoothstep(.22,.77,n.r*.35+n.g*.65);
-    float heightDensity=exp(-max(0.,p.y-.5)*.19);
-    volume+=(.006+wisp*.046)*heightDensity;
-   }
-   opticalDepth+=volume*(lengthHere/3.)*uLayerFogMist;
-  }
+  float opticalDepth = (lowOptical + farOptical) * uLayerFogScale * (1.0 + uLayerFogRain * .5);
   float layerFog = 1.0 - exp(-opticalDepth);
   // A subtle cooler bank color returns exactly to fogColor at the cutoff.
   vec3 layerColor = fogColor * vec3(.967, .992, 1.018);
   gl_FragColor.rgb = mix(gl_FragColor.rgb, layerColor, layerFog * (1.0 - baseFog));
   gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, baseFog);
   }
+  gl_FragColor.rgb=volumeOverOutput(gl_FragColor.rgb,fogDistance);
 #endif`;
 
 // Fully fogged opaque fragments have the same final RGB regardless of their
@@ -296,7 +330,7 @@ const fogFragment = `
 const fullFogReturn = `
 #if defined(USE_FOG) && !defined(FOG_EXP2)
   if (length(vLayerFogWorld - cameraPosition) >= fogFar) {
-    gl_FragColor = vec4(fogColor, 1.0);
+    gl_FragColor = vec4(volumeOverOutput(fogColor,length(vLayerFogWorld-cameraPosition)), 1.0);
     return;
   }
 #endif`;
@@ -306,9 +340,11 @@ const fullFogReturn = `
  * standard/basic/line materials and custom shaders using Three's fog chunks.
  * No global ShaderChunk mutation and no per-frame scene traversal.
  */
-export function installLayeredFog({scene,noiseTexture=null} = {}) {
+export function installLayeredFog({scene,noiseTexture=null,volumeUniforms={}} = {}) {
   const ownNoise=!noiseTexture;noiseTexture??=makeCloudNoise();
   const uniforms = {
+    uFogVolume:{value:null},uFogViewport:{value:new T.Vector2(1,1)},uFogTileSize:{value:new T.Vector2(1,1)},uFogVolumeAmount:{value:0},
+    ...volumeUniforms,
     uLayerFogNoise: {value:noiseTexture},
     uLayerFogScale: {value:1},
     uLayerFogCameraWorld: {value: new T.Matrix4()},
@@ -341,7 +377,7 @@ export function installLayeredFog({scene,noiseTexture=null} = {}) {
     // stock/custom keys derive themselves from onBeforeCompile.toString().
     const key = previousKey.call(material);
     material.onBeforeCompile = compile;
-    material.customProgramCacheKey = function() {return key + '|volumetric-wispy-fog-v23';};
+    material.customProgramCacheKey = function() {return key + '|cumulative-volume-fog-v25';};
     records.set(material, {previous, previousKey, compile});
     material.needsUpdate = true;
   }
@@ -384,10 +420,13 @@ export function installLayeredFog({scene,noiseTexture=null} = {}) {
  * Call attachFog(group) once for each completed streaming chunk/detail layer.
  * The original scene.fog near/far/color remain controlled by weather().
  */
-export function createAtmosphere({scene, fog = scene?.fog, quality = 'balanced'} = {}) {
+export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'balanced'} = {}) {
   const texture = makeCloudNoise();
-  const fogController = installLayeredFog({scene,noiseTexture:texture});
+  const volume=createFogVolume(renderer,texture);
+  const fogController = installLayeredFog({scene,noiseTexture:texture,volumeUniforms:volume.uniforms});
   const uniforms = {
+    ...volume.uniforms,
+    uStageEvent:{value:new T.Vector3()},
     uSkyEvent: {value:new T.Vector4()},
     uSkyWallpaper: {value:weatherTextures['cloud-wallpaper']},
     uCloudNoise: {value: texture},
@@ -414,6 +453,7 @@ export function createAtmosphere({scene, fog = scene?.fog, quality = 'balanced'}
   sky.frustumCulled = false;
   function update(options = {}) {
     const {time = 0, quality: q, camera, originX = 0, originZ = 0, mist = 0, rain = 0, event={}} = options;
+    uniforms.uStageEvent.value.set(event.stageAge||0,event.stageReveal||0,event.stageRestore||0);
     uniforms.uSkyEvent.value.set(event.blackout||0,event.wallpaper||0,event.clear||0,event.dusk||0);
     uniforms.uCloudTime.value = Number(time) || 0;
     uniforms.uCloudMist.value = clamp01(mist);
@@ -424,9 +464,10 @@ export function createAtmosphere({scene, fog = scene?.fog, quality = 'balanced'}
     const currentFog = scene?.fog || fog;
     if (currentFog?.color) uniforms.uCloudFogColor.value.copy(currentFog.color);
     fogController.update(options);
+    volume.update({...options,color:currentFog?.color});
   }
   return {
-    sky, update, attachFog: fogController.attach, fog: fogController,
-    dispose() {fogController.dispose(); sky.geometry.dispose(); material.dispose(); texture.dispose();}
+    sky, update, volume, renderFog:volume.render, attachFog: fogController.attach, fog: fogController,
+    dispose() {volume.dispose();fogController.dispose(); sky.geometry.dispose(); material.dispose(); texture.dispose();}
   };
 }

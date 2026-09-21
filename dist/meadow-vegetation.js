@@ -1,10 +1,10 @@
 import * as T from './vendor/three.module.min.js';
-import {createMeadowPlantAssets} from './meadow-plants.js?v=24';
-import {createFernGeometry} from './fern-geometry.js?v=24';
-import {makeSward,isSharedSwardResource} from './meadow-sward.js?v=24';
-import {meadowEnvironment} from './meadow-layout.js?v=24';
-import {random,periodOrigin,roadProfile,inClearing,surfaceHeight} from './world.js?v=24';
-import {farmFootprintDistance} from './farm-layout.js?v=24';
+import {createMeadowPlantAssets} from './meadow-plants.js?v=25';
+import {createFernGeometry} from './fern-geometry.js?v=25';
+import {makeSward,isSharedSwardResource} from './meadow-sward.js?v=25';
+import {meadowEnvironment} from './meadow-layout.js?v=25';
+import {random,periodOrigin,roadProfile,inClearing,surfaceHeight} from './world.js?v=25';
+import {farmFootprintDistance} from './farm-layout.js?v=25';
 
 const shared=new Set(),kinds=['shortgrass','tallgrass','seedgrass','fern','daisy'];
 let assets,material;const cache=new Map(),CACHE_LIMIT=10;

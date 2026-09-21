@@ -1,5 +1,5 @@
 // Roof profiles match kephart-models.js, including overhangs and porches.
-import {FARM,FARM_PLACEMENTS} from './farm-layout.js?v=24';
+import {FARM,FARM_PLACEMENTS} from './farm-layout.js?v=25';
 
 const farmRoofTransforms=Object.entries(FARM_PLACEMENTS).map(([kind,p])=>({
  kind,x:p.x,z:p.z,y:p.y||0,c:Math.cos(p.angle||0),s:Math.sin(p.angle||0),
