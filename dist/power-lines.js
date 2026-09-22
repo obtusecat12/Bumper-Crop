@@ -1,4 +1,4 @@
-import {farmRoadWeight} from './farm-layout.js?v=25';
+import {farmRoadWeight} from './farm-layout.js?v=26';
 // Pure, chunk-independent power-line layout. Dependencies come from world.js.
 // A span exists only between consecutive physical poles. A missing wet-land
 // pole terminates the line at its last real support; it never creates a long

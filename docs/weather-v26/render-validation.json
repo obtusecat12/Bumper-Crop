@@ -1,0 +1,83 @@
+{
+  "uniqueExpandedProgramsLinked": 14,
+  "nativeGLErrors": 0,
+  "lensResolution": [
+    1440,
+    1080
+  ],
+  "opticalResolution": [
+    720,
+    540
+  ],
+  "blurResolution": [
+    360,
+    270
+  ],
+  "waterStateResolution": [
+    256,
+    256
+  ],
+  "waveCourant": 0.4,
+  "checks": [
+    "actual GPU instanced crown, jet, droplets and spray with atmosphere fog hooks",
+    "actual world-rain GPU billboard shaders, surface droplets and mist",
+    "actual lake material after worker packet hydration and fog/ripple shader chaining",
+    "signed16-bit ping-pong impulse propagation, decay and normals",
+    "actual half-resolution optical targets and framebuffer capture/blur/composite",
+    "dry versus immersion/rupture/flowing rain frames",
+    "official ntsc-rs WASM at1080lines with actual preset and pregrade"
+  ],
+  "limitations": [
+    "Native manual GLES state, not a full browser playthrough or target-device FPS benchmark.",
+    "Lens optics capture uses a prior native game farm frame plus a diagnostic grid as its background.",
+    "Native scene omits UI and full cloud/CSM/GI; unchanged final display integration reviewed from source."
+  ],
+  "rainBatches": 3,
+  "splashBatches": 3,
+  "dryLensPasses": 0,
+  "wetLensPasses": 4,
+  "officialNtscRsLines": 1080,
+  "impactEarlyReturnPathsCompiled": true,
+  "waveState": [
+    "exactZeroInitialization",
+    "boundedAmplitude",
+    "outwardPropagation",
+    "decayWithoutVertexChanges"
+  ],
+  "nativeImageGroups": {
+    "lens": [
+      "dry",
+      "immersed",
+      "emerge 0/.2/.5/.8/2 s",
+      "rain 12 s"
+    ],
+    "impact": [
+      ".12/.26/.45/.7 s at eye and downward views"
+    ],
+    "rain": [
+      "stationary",
+      "sideways camera motion",
+      "upward camera motion"
+    ],
+    "lake": [
+      "actual water normals",
+      "worker packet hydration"
+    ]
+  },
+  "referenceReports": [
+    "native/validation-summary.json",
+    "native/wave-numerics.json",
+    "native/lens-stats.json",
+    "native/rain-stats.json",
+    "native/vhs-report.json"
+  ],
+  "finalLensCacheVersion": 26,
+  "finalPhysicsRain12s": {
+    "movingDrops": 42,
+    "pinnedBeads": 128,
+    "slipEvents": 305,
+    "neckPinches": 292,
+    "visualResult": "Transparent drops and trails remain readable after actual ntsc-rs1080-line process; no opaque gray annuli or excessive screen obstruction."
+  },
+  "finalLensGLErrors": 0
+}

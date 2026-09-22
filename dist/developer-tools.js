@@ -1,6 +1,6 @@
-import {barnFootprintDistance} from './reference-barn-layout.js?v=25';
-import {CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=25';
-import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=25';
+import {barnFootprintDistance} from './reference-barn-layout.js?v=26';
+import {CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=26';
+import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=26';
 
 const titles={pond:'湖泊',building:'建筑',grove:'树林'};
 function marker(f,kind){

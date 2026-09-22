@@ -1,0 +1,37 @@
+{
+  "officialWasm": true,
+  "lines": 1080,
+  "frames": [
+    {
+      "name": "lens-dry",
+      "width": 1440,
+      "height": 1080,
+      "ms": 126.86349200000001
+    },
+    {
+      "name": "lens-emerge-0.2",
+      "width": 1440,
+      "height": 1080,
+      "ms": 96.74131200000011
+    },
+    {
+      "name": "lens-emerge-0.5",
+      "width": 1440,
+      "height": 1080,
+      "ms": 95.39785499999971
+    },
+    {
+      "name": "lens-emerge-2",
+      "width": 1440,
+      "height": 1080,
+      "ms": 99.10295799999994
+    },
+    {
+      "name": "lens-rain-12s",
+      "width": 1440,
+      "height": 1080,
+      "ms": 95.85744700000032
+    }
+  ],
+  "limitations": "Actual1080-line official ntsc-rs WASM on native effects captures using prior native farm frame plus diagnostic grid, not browser playback or target-device benchmark."
+}

@@ -1,5 +1,5 @@
-import {weatherTextures} from './weather-textures.js?v=25';
-import {createFogVolume,fogVolumePars} from './fog-volume.js?v=25';
+import {weatherTextures} from './weather-textures.js?v=26';
+import {createFogVolume,fogVolumePars} from './fog-volume.js?v=26';
 import * as T from './vendor/three.module.min.js';
 
 // One generated, periodic 3D texture, genuine bounded volume integration, and
@@ -314,6 +314,12 @@ const fogFragment = `
   float lowOptical = max(0.0, fogDistance - 25.0) * .0021 * lowColumn * (.30 + patchA * 1.8);
   float farOptical = max(0.0, fogDistance - 72.0) * .0036 * raisedColumn * (.22 + patchB * 1.2);
   float opticalDepth = (lowOptical + farOptical) * uLayerFogScale * (1.0 + uLayerFogRain * .5);
+  // Analytic integral of exponentially decreasing rain haze along this ray.
+  // Stable at horizontal views, inexpensive, and continuous down to the ground.
+  float wetStart=max(0.,cameraPosition.y-.4),wetEnd=max(0.,vLayerFogWorld.y-.4);
+  float wetDy=(wetEnd-wetStart)*.14;
+  float wetColumn=exp(-wetStart*.14)*(abs(wetDy)<.001?1.-wetDy*.5:(1.-exp(-wetDy))/wetDy);
+  opticalDepth+=fogDistance*.0042*uLayerFogRain*wetColumn;
   float layerFog = 1.0 - exp(-opticalDepth);
   // A subtle cooler bank color returns exactly to fogColor at the cutoff.
   vec3 layerColor = fogColor * vec3(.967, .992, 1.018);

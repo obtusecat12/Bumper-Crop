@@ -1,0 +1,306 @@
+{
+  "physics": [
+    {
+      "test": "20 seconds rain",
+      "heads": 37,
+      "beads": 125,
+      "pinches": 410,
+      "slips": 422,
+      "massError": 4.084458851139061e-7
+    },
+    {
+      "test": "humidity slows water loss",
+      "dryMass": 0.465557124441521,
+      "humidMass": 0.9487747407328444
+    },
+    {
+      "test": "camera sheet crossing",
+      "coverageBefore": 1,
+      "ruptureSeconds": 0.6099488524720074,
+      "headsAfter": 7,
+      "massError": 1.0754188295436506e-7
+    },
+    {
+      "test": "impact ring",
+      "lifetime": 0.506389547791332,
+      "centerMin": -0.2681918740272522,
+      "rimMax": 0.5290412902832031
+    }
+  ],
+  "stick-slip": [
+    {
+      "radius": 1.2,
+      "rain": 0,
+      "trackedUID": 1,
+      "headExitOrMergeSeconds": null,
+      "pauses": [
+        {
+          "start": 0.433,
+          "duration": 0.667
+        },
+        {
+          "start": 1.667,
+          "duration": 0.433
+        },
+        {
+          "start": 3.033,
+          "duration": 0.333
+        },
+        {
+          "start": 3.967,
+          "duration": 0.3
+        },
+        {
+          "start": 4.967,
+          "duration": 0.267
+        },
+        {
+          "start": 6.533,
+          "duration": 0.667
+        },
+        {
+          "start": 8.8,
+          "duration": 21.2,
+          "censored": true
+        }
+      ],
+      "repeatSurges": 6,
+      "peakSpeed": 0.2029,
+      "poolStickEvents": 7,
+      "poolSlipEvents": 6
+    },
+    {
+      "radius": 1.6,
+      "rain": 0,
+      "trackedUID": 1,
+      "headExitOrMergeSeconds": null,
+      "pauses": [
+        {
+          "start": 0.4,
+          "duration": 0.667
+        },
+        {
+          "start": 1.6,
+          "duration": 0.433
+        },
+        {
+          "start": 2.9,
+          "duration": 0.367
+        },
+        {
+          "start": 3.767,
+          "duration": 0.3
+        },
+        {
+          "start": 4.633,
+          "duration": 0.233
+        },
+        {
+          "start": 5.733,
+          "duration": 0.667
+        },
+        {
+          "start": 7.967,
+          "duration": 0.2
+        },
+        {
+          "start": 9.233,
+          "duration": 0.8
+        },
+        {
+          "start": 10.933,
+          "duration": 0.267
+        },
+        {
+          "start": 13.067,
+          "duration": 16.933,
+          "censored": true
+        }
+      ],
+      "repeatSurges": 9,
+      "peakSpeed": 0.25,
+      "poolStickEvents": 10,
+      "poolSlipEvents": 9
+    },
+    {
+      "radius": 1.2,
+      "rain": 0.65,
+      "trackedUID": 1,
+      "headExitOrMergeSeconds": null,
+      "pauses": [
+        {
+          "start": 0.433,
+          "duration": 0.667
+        },
+        {
+          "start": 1.667,
+          "duration": 0.433
+        },
+        {
+          "start": 3.033,
+          "duration": 0.333
+        },
+        {
+          "start": 3.967,
+          "duration": 0.3
+        },
+        {
+          "start": 4.967,
+          "duration": 0.267
+        },
+        {
+          "start": 6.533,
+          "duration": 0.667
+        },
+        {
+          "start": 8.8,
+          "duration": 21.2,
+          "censored": true
+        }
+      ],
+      "repeatSurges": 6,
+      "peakSpeed": 0.2029,
+      "poolStickEvents": 242,
+      "poolSlipEvents": 279
+    },
+    {
+      "radius": 1.6,
+      "rain": 0.65,
+      "trackedUID": 1,
+      "headExitOrMergeSeconds": 23.833333333333332,
+      "pauses": [
+        {
+          "start": 0.4,
+          "duration": 0.667
+        },
+        {
+          "start": 1.6,
+          "duration": 0.433
+        },
+        {
+          "start": 2.9,
+          "duration": 0.367
+        },
+        {
+          "start": 3.767,
+          "duration": 0.3
+        },
+        {
+          "start": 4.633,
+          "duration": 0.233
+        },
+        {
+          "start": 5.733,
+          "duration": 0.667
+        },
+        {
+          "start": 7.967,
+          "duration": 0.2
+        },
+        {
+          "start": 9.233,
+          "duration": 0.8
+        },
+        {
+          "start": 10.933,
+          "duration": 0.267
+        },
+        {
+          "start": 13.067,
+          "duration": 10.1
+        }
+      ],
+      "repeatSurges": 10,
+      "peakSpeed": 0.25,
+      "poolStickEvents": 267,
+      "poolSlipEvents": 305
+    }
+  ],
+  "optics-state": {
+    "drySkip": true,
+    "halfResolution": "720x540",
+    "quarterBlur": "360x270",
+    "normalUpdatePasses": 4,
+    "cachedNormalPasses": 3,
+    "stateRestoredOnThrow": true,
+    "contextReset": true
+  },
+  "impact": {
+    "ok": true,
+    "checks": [
+      "3 bounded draws",
+      "no animation attribute writes",
+      "signed delayed ripple feedback",
+      "BigInt rebase",
+      "teleport clear",
+      "ordinary-stride jet suppression",
+      "fog hooks and uniforms",
+      "topology",
+      "time rebase",
+      "idempotent disposal"
+    ],
+    "diagnostics": {
+      "capacity": 1536,
+      "eventCapacity": 10,
+      "mistCapacity": 384,
+      "drawCalls": 3,
+      "spawnUploads": 59433,
+      "rebaseUploads": 6,
+      "emitted": 62,
+      "rippleCallbacks": 70
+    }
+  },
+  "rain": {
+    "pass": true,
+    "waterCallbacks": 87,
+    "checks": [
+      "Instanced geometry capacities",
+      "bounded water hit rate",
+      "immobile seed buffers",
+      "camera relative velocity",
+      "birth-only attribute uploads",
+      "BigInt chunk rebasing without buffers",
+      "real elapsed lifetime",
+      "roof support clipping",
+      "sheltered impact suppression",
+      "inactive and dry hiding",
+      "clear and disposal"
+    ],
+    "statistics": {
+      "births": 87,
+      "waterHits": 87,
+      "attributeUploads": 522,
+      "gridUpdates": 6,
+      "batches": 3,
+      "seedCount": 2600,
+      "surfaceDropCapacity": 576,
+      "mistCapacity": 96
+    }
+  },
+  "integration": {
+    "unchanged": [
+      "world",
+      "ground",
+      "nature",
+      "buildings",
+      "dense-wheat",
+      "meadow-sward",
+      "meadow-vegetation",
+      "photo-farm",
+      "reference-barn",
+      "vhs-core",
+      "vhs-preset",
+      "display-filter",
+      "survival-hud",
+      "weather-state"
+    ],
+    "relativeImports": "resolved",
+    "actualLakeCrossing": {
+      "standingEye": -1.9120346826270205,
+      "surface": -0.5358419687256198,
+      "entry": true,
+      "emergence": true
+    },
+    "cameraAndEffects": "camera-plane crossing, submerged stride suppression, shared final filter"
+  }
+}

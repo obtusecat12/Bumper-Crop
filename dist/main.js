@@ -1,34 +1,35 @@
-import {WeatherDirector,WEATHER_LABELS} from './weather-state.js?v=25';
-import {createRainRenderer} from './rain-render.js?v=25';
-import {weatherSurface} from './weather-surfaces.js?v=25';
-import {createWetGround} from './wet-ground.js?v=25';
-import {createWeatherFlare} from './weather-flare.js?v=25';
-import {initializeWeatherTextures} from './weather-textures.js?v=25';
-import {createWaterImpact} from './water-impact.js?v=25';
-import {createLensWater} from './lens-water.js?v=25';
-import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=25';
-import {updateBarnDoors} from './reference-barn.js?v=25';
-import {initializeLandmarkTextures} from './landmark-textures.js?v=25';
-import {loadInstrumentParts} from './retro-instruments.js?v=25';
-import {createUIRaster} from './ui-raster.js?v=25';
-import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=25';
-import {createUIThemes} from './ui-themes.js?v=25';
-import {createMaterialFinish} from './material-finish.js?v=25';
-import {createRuralShadows} from './rural-shadows.js?v=25';
-import {createIrradianceField} from './irradiance-field.js?v=25';
-import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=25';
-import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=25';
-import {createCardOrderController} from './instance-order.js?v=25';
-import {createPerformanceMeter} from './performance-meter.js?v=25';
-import {createChunkStream} from './world-stream.js?v=25';
+import {WeatherDirector,WEATHER_LABELS} from './weather-state.js?v=26';
+import {createRainRenderer} from './rain-render.js?v=26';
+import {weatherSurface} from './weather-surfaces.js?v=26';
+import {createWetGround} from './wet-ground.js?v=26';
+import {createWeatherFlare} from './weather-flare.js?v=26';
+import {initializeWeatherTextures} from './weather-textures.js?v=26';
+import {createWaterImpact} from './water-impact.js?v=26';
+import {createWaterRipples} from './water-ripples.js?v=26';
+import {createLensWater} from './lens-water.js?v=26';
+import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=26';
+import {updateBarnDoors} from './reference-barn.js?v=26';
+import {initializeLandmarkTextures} from './landmark-textures.js?v=26';
+import {loadInstrumentParts} from './retro-instruments.js?v=26';
+import {createUIRaster} from './ui-raster.js?v=26';
+import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=26';
+import {createUIThemes} from './ui-themes.js?v=26';
+import {createMaterialFinish} from './material-finish.js?v=26';
+import {createRuralShadows} from './rural-shadows.js?v=26';
+import {createIrradianceField} from './irradiance-field.js?v=26';
+import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=26';
+import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=26';
+import {createCardOrderController} from './instance-order.js?v=26';
+import {createPerformanceMeter} from './performance-meter.js?v=26';
+import {createChunkStream} from './world-stream.js?v=26';
 import * as T from './vendor/three.module.min.js';
-import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=25';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=25';
-import {createWheatDetailLayer} from './dense-wheat.js?v=25';
-import {createAtmosphere} from './atmosphere.js?v=25';
-import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=25';
-import {initializeRuralTextures} from './rural-textures.js?v=25';
-import {createNavigationMap} from './map-ui.js?v=25';
+import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=26';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=26';
+import {createWheatDetailLayer} from './dense-wheat.js?v=26';
+import {createAtmosphere} from './atmosphere.js?v=26';
+import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=26';
+import {initializeRuralTextures} from './rural-textures.js?v=26';
+import {createNavigationMap} from './map-ui.js?v=26';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -58,7 +59,7 @@ game.innerHTML=`
 <div class="modal" id="journal" data-ui-part="journal" role="dialog" aria-modal="true" aria-labelledby="journal-title" hidden><div class="panel"><div class="panel-header"><h2 id="journal-title">层级档案 / <span data-ui-copy="number">010</span></h2><button class="close" data-close aria-label="关闭">×</button></div><div class="journal-meta">M.E.G. FIELD NOTES · <span data-ui-copy="name">丰裕</span></div><div class="journal-body"><p><strong>你正站在一片没有尽头的麦田。</strong><br>树木与高度近似的灌木将麦田分割成小块。天空始终阴沉，偶有短暂细雨与雾气，白昼从未结束。</p><p>沿着两条轮胎碾痕前行。中间的草仍在生长，但车辙里的种子永远不会发芽。这里没有被发现过的车辆。</p><p>低地的湖水清澈，带有泥土的气味。靠近湖岸时，可按 <strong>E</strong> 饮水。</p><p>谷仓、马厩和木棚大多空无一人。里面偶尔能找到木料、钉子和遗落的杏仁水。拾起杏仁水后，按 <strong>Q</strong> 饮用。</p><p>麦丛会拖慢脚步。回到小径可以更快前进。没有任务期限，沿着风走下去。</p><p>出生点东北侧有一处固定农场。按 <strong>F2</strong> 可前往两处照片机位；移动或环顾即可恢复探索镜头。</p><p class="reference-credit">农场影像参考：Edmund Garman，<a href="https://www.flickr.com/photos/3cl/3718833796" target="_blank" rel="noopener noreferrer">Kephart Farm</a> / <a href="https://www.flickr.com/photos/3cl/3719218226" target="_blank" rel="noopener noreferrer">Kephart Farm 2</a>，2009，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。场景为依据照片重新制作的三维重建。</p></div><div class="panel-note" id="expedition">尚未开始探索。</div></div></div>
 <div class="modal" id="controls" data-ui-part="controls" role="dialog" aria-modal="true" aria-labelledby="controls-title" hidden><div class="panel"><div class="panel-header"><h2 id="controls-title">操作指南</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="controls-list"><div><span class="key">W A S D</span>移动</div><div><span class="key">鼠标</span>环顾四周</div><div><span class="key">SHIFT</span>按住奔跑</div><div><span class="key">SPACE</span>跳跃</div><div><span class="key">C</span>按住蹲下</div><div><span class="key">E</span>拾取 / 湖边饮水</div><div><span class="key">Q</span>饮用杏仁水</div><div><span class="key">J</span>层级档案</div><div><span class="key">ESC</span>暂停 / 释放鼠标</div><div><span class="key">F</span>地图 / 点击传送</div><div><span class="key">F10</span>切换全屏</div><div><span class="key">F2</span>开发者天气 / 传送</div></div><div class="panel-note">点击「进入麦田」后即可用鼠标观察。若浏览器不允许锁定鼠标，按住鼠标拖动也可以环顾。触屏设备使用左侧摇杆移动、右侧滑动观察。</div></div></div>`;
 
-game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" data-ui-part="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="barn">砖砌谷仓</button><button data-teleport="barn-photo">谷仓 · 照片机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V25</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
+game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" data-ui-part="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="barn">砖砌谷仓</button><button data-teleport="barn-photo">谷仓 · 照片机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V26</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
 
 $('#developer .developer-caption').insertAdjacentHTML('beforebegin',`<p class="developer-caption">天气与异常</p><div class="developer-actions"><button data-weather="rain">触发下雨</button><button data-weather="fog">触发浓雾</button><button data-weather="blackout">天空断电</button><button data-weather="wallpaper">重复蓝天</button><button data-weather="sunbreak">晴空转黄昏</button><button data-weather="normal">恢复正常天气</button></div><div class="developer-status" id="weather-status">阴天 · 概率按每轮天气判定</div>`);
 const instrumentParts=await loadInstrumentParts();
@@ -101,8 +102,10 @@ const navigationMap=createNavigationMap({host:game,parts:instrumentParts,seed,on
 const uiThemes=createUIThemes();
 document.documentElement.addEventListener('ui-themechange',event=>{navigationMap.setUITheme(event.detail.tokens);survivalDisplay.setUITheme(event.detail.tokens)});
 uiThemes.applyLevel('10');window.levelUI=uiThemes;
-const waterImpact=createWaterImpact(scene);atmosphere.attachFog(waterImpact.group);
-const rainEffects=createRainRenderer(scene);atmosphere.attachFog(rainEffects.rain);atmosphere.attachFog(rainEffects.rings);
+const waterRipples=createWaterRipples(renderer);
+const waterImpact=createWaterImpact(scene,{onRipple:waterRipples.emit});atmosphere.attachFog(waterImpact.group);
+const rainEffects=createRainRenderer(scene,{onRipple:waterRipples.emit});atmosphere.attachFog(rainEffects.rain);atmosphere.attachFog(rainEffects.rings);
+const rainWind=new T.Vector3(.85,0,.30),weatherLight=new T.Vector3(-.45,.84,-.30),duskLight=new T.Vector3(-.86,.065,-.45),wetCameraVelocity=new T.Vector3();let wetLastCameraY=0;
 const weatherFlare=createWeatherFlare(renderer);
 const lensWater=createLensWater(renderer);displayFilter.setLensEffect({render(w,h){weatherFlare.render();return lensWater.render(w,h);},contextLost(){weatherFlare.reset();lensWater.contextLost();}});let barnDoorAngle=0,barnDoorGoal=0,wetLastYaw=0,wetLastVx=0,wetLastVz=0;
 const uiRaster=createUIRaster(game,{survival:survivalDisplay,navigation:navigationMap});displayFilter.setCompositor(uiRaster);
@@ -130,7 +133,7 @@ function finishChunk(build,c){
  updateBarnDoors(c,barnDoorAngle);c.group.traverse(o=>{o.updateMatrix();o.matrixAutoUpdate=false});
  // An item may have been picked up while this replacement was in the worker.
  for(const p of c.pickups)if(p.mesh&&collected.has(p.id)){c.group.remove(p.mesh);p.mesh=null}
- atmosphere.attachFog(c.group);materialFinish.attach(c.group);naturalShadows.attach(c.group);irradiance.attach(c.group);cardOrder.register(c.group);wetGround.attach(c.group);build.chunk=c;build.compiling=true;
+ atmosphere.attachFog(c.group);materialFinish.attach(c.group);naturalShadows.attach(c.group);irradiance.attach(c.group);cardOrder.register(c.group);wetGround.attach(c.group);waterRipples.attach(c.group);build.chunk=c;build.compiling=true;
  // KHR_parallel_shader_compile lets the driver prepare a new material before
  // the first visible frame. The target Scene supplies identical lights/fog.
  renderer.compileAsync(c.group,camera,scene).then(()=>{
@@ -186,7 +189,7 @@ class Ambience{
 }
 const audio=new Ambience();
 const weatherDirector=new WeatherDirector({onCue:kind=>audio.powerCue(kind)});let weatherState=weatherDirector.value,rainAmount=0,pointerLockHeld=false;
-for(const button of document.querySelectorAll('[data-weather]'))button.onclick=()=>{if(!ready||teleportJob)return;audio.start();const kind=button.dataset.weather;weatherDirector.start(kind,{manual:true});if(kind==='normal'){weatherDirector.wetness=0;rainEffects.clear();lensWater.reset();weatherFlare.reset();}weatherState=weatherDirector.update(0);closeModal(false);start();toast(kind==='sunbreak'?'晴空已触发 · 4 秒后开始转入黄昏':WEATHER_LABELS[kind]+' · 已触发');};
+for(const button of document.querySelectorAll('[data-weather]'))button.onclick=()=>{if(!ready||teleportJob)return;audio.start();const kind=button.dataset.weather;weatherDirector.start(kind,{manual:true});if(kind==='normal'){weatherDirector.wetness=0;rainEffects.clear();lensWater.reset();waterRipples.reset();waterImpact.clear();weatherFlare.reset();}weatherState=weatherDirector.update(0);closeModal(false);start();toast(kind==='sunbreak'?'晴空已触发 · 4 秒后开始转入黄昏':WEATHER_LABELS[kind]+' · 已触发');};
 
 function toast(text){$('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),3600)}
 function setPlay(value){if(value!==playing)weatherDirector.resetClock();survivalDisplay.resetMotion();playing=value;$('#menu').hidden=value;$('#hud').hidden=!value;$('#touch').hidden=!value||!touchDevice;if(value){audio.start();if(!started){started=true;toast('沿着小径前行。地上的瓶子可以按 E 拾取。')}$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';$('#eyebrow').textContent='PAUSED';}else{pointerLockHeld=false;audio.ctx?.suspend().catch(()=>{});keys.clear();joy.x=joy.z=0;touchRun=false;$('#stick').style.transform='';if(document.pointerLockElement)document.exitPointerLock();}}
@@ -231,7 +234,7 @@ function leaveReferenceView(){
  if(!referenceView)return;referenceView=null;resize();scene.fog.near=60;scene.fog.far=Math.min(225,Math.max(.2,coverageRadius*64+Math.min(state.x,state.z,64-state.x,64-state.z)-8));updateQueue();
 }
 function beginTeleport(target){
- lensWater.reset();waterImpact.clear();rainEffects.clear();weatherFlare.reset();
+ lensWater.reset();waterImpact.clear();waterRipples.reset();rainEffects.clear();weatherFlare.reset();wetLastCameraY=0;
  if(streamFailed){developerBusy(false);$('#developer-status').textContent='场景加载失败，请刷新页面重试。';return;}
  const previous={};for(const key of ['cx','cz','x','z','y','yaw','pitch'])previous[key]=state[key];
  const previousReference=referenceView;referenceView=target.kind==='photo'?target:null;resize();
@@ -307,7 +310,7 @@ for(const event of['pointerup','pointercancel'])renderer.domElement.addEventList
 $('#touch-run').addEventListener('pointerdown',e=>{touchRun=true;e.currentTarget.setPointerCapture(e.pointerId)});for(const event of['pointerup','pointercancel'])$('#touch-run').addEventListener(event,()=>touchRun=false);$('#touch-use').onclick=use;$('#touch-drink').onclick=drink;$('#touch-jump').onclick=jump;
 
 function currentChunk(){return chunks.get(`${state.cx},${state.cz}`)}
-function cameraFloor(){const f=currentChunk()?.field;const floor=f?surfaceHeight(state.x,state.z,f):height(state.x,state.z,state.cx,state.cz);return f?.type==='pond'?Math.max(floor,f.lakeY-.62):floor}
+function cameraFloor(){const f=currentChunk()?.field;return f?surfaceHeight(state.x,state.z,f):height(state.x,state.z,state.cx,state.cz)}
 function contactWheat(chunk,x,z){if(!chunk)return 0;let contact=0,bx=Math.floor(x/2),bz=Math.floor(z/2);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const stems=chunk.wheatBuckets.get(`${bx+dx},${bz+dz}`);if(!stems)continue;for(const w of stems){const vx=x-w.x,vz=z-w.z,dist=Math.hypot(vx,vz);if(dist<.33)contact+=1-dist/.33;}}return Math.min(1,contact)}
 function move(dt){const c=currentChunk(),inWheat=contactWheat(c,state.x,state.z),f=c?.field;let sx=(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0)+joy.x,sz=(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-(keys.has('KeyW')||keys.has('ArrowUp')?1:0)+joy.z;
  const l=Math.hypot(sx,sz);if(l>1){sx/=l;sz/=l}const moving=l>.09,crouch=keys.has('KeyC'),running=(keys.has('ShiftLeft')||keys.has('ShiftRight')||touchRun)&&state.stamina>1&&moving&&!crouch;
@@ -365,7 +368,9 @@ function weather(dt,renderDt=dt){
  skyFill.color.copy(normalFill).lerp(duskFill,dusk);skyFill.intensity=1.4*(1-dusk*.42)*(1-rainAmount*.12);
  wind.strength.value=.60+Math.sin(time*.15)*.23+rainAmount*.4;
  atmosphere.update({time:weatherDirector.elapsed,quality:settings.quality,camera,originX:state.cx,originZ:state.cz,mist,rain:rainAmount,event:weatherState});
- rainEffects.update(dt,{state,camera,chunks,rain:rainAmount,active:playing&&!teleportJob});
+ weatherLight.set(-.45,.84,-.30).lerp(duskLight,dusk).normalize();
+ rainWind.set(.85+Math.sin(weatherDirector.elapsed*.075)*.26,0,.30+Math.cos(weatherDirector.elapsed*.06)*.18);
+ rainEffects.update(dt,{state,camera,chunks,rain:rainAmount,active:playing&&!teleportJob,wind:rainWind,cameraVelocity:wetCameraVelocity,lightDirection:weatherLight});
  wetGround.update({rain:rainAmount,wetness:weatherDirector.wetness,time:weatherDirector.elapsed,state,sky:scene.fog.color});
  weatherFlare.update(playing?dt:0,{weather:weatherState,camera,state,chunks});
  const label=WEATHER_LABELS[weatherState.kind];const phase=weatherState.kind==='rain'?` · 雨量 ${Math.round(rainAmount*100)}%`:weatherState.kind==='fog'?` · 雾量 ${Math.round(mist*100)}%`:weatherState.kind==='sunbreak'?(dusk>.1?' · 转入黄昏':' · 天空放晴'):'';
@@ -373,7 +378,7 @@ function weather(dt,renderDt=dt){
  if(activeModal?.id==='developer'){const status=$('#weather-status'),text=label+phase+(weatherDirector.kind==='normal'?' · 等待下一轮判定':` · ${Math.ceil(Math.max(0,weatherDirector.duration-weatherDirector.age))} 秒`)+' · 自然判定：雨 / 雾各 10%，异常各 1%';if(status.textContent!==text)status.textContent=text;}
 }
 
-renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();irradiance.pause();displayFilter.contextLost();performanceMeter.reset();contextLost=true;if(playing)setPlay(false);$('#start').disabled=true;$('#start').innerHTML='<span>画面正在恢复</span><small>…</small>'});
+renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();irradiance.pause();displayFilter.contextLost();waterRipples.contextLost();waterImpact.clear();rainEffects.clear();performanceMeter.reset();contextLost=true;if(playing)setPlay(false);$('#start').disabled=true;$('#start').innerHTML='<span>画面正在恢复</span><small>…</small>'});
 renderer.domElement.addEventListener('webglcontextrestored',()=>{contextLost=false;naturalShadows.invalidate();irradiance.restore();$('#start').disabled=!ready||!!teleportJob;$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';resize()});
 function animate(now){requestAnimationFrame(animate);const rawDt=(now-lastFrame)/1000,last=lastFrame;lastFrame=now;const dt=Math.min(.035,Math.max(.001,rawDt));if(document.hidden||contextLost)return;performanceMeter.begin(settings.showfps||settings.devMode);time+=dt;advanceDeveloperSearch();wind.time.value=time;waterTime.value=time;
  if((queue.length||activeBuild)&&!streamFailed&&(!playing||frameCount%3===0)){try{streamOne()}catch(e){streamFailed=true;console.error('World streaming failed',e);if(developerSearch){developerSearch.return();developerSearch=null;}if(teleportJob)teleportJob=null;developerBusy(false);$('#developer-status').textContent='场景加载失败，请刷新页面重试。';
@@ -383,21 +388,29 @@ $('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请
  navigationMap.update(state,now,playing,!teleportJob);
  // The opaque map covers the scene. Stop 3D rendering/detail updates while
  // reading it; world streaming continues when a map teleport is in progress.
- if(navigationMap.isOpen){rainEffects.clear();waterImpact.clear();lensWater.update(0,{enabled:false});irradiance.pause();displayFilter.render(scene,camera,now,undefined,true);performanceMeter.end();return;}
+ if(navigationMap.isOpen){rainEffects.clear();waterImpact.clear();waterRipples.reset();lensWater.update(0,{enabled:false});irradiance.pause();displayFilter.render(scene,camera,now,undefined,true);performanceMeter.end();return;}
  const wetDistance=state.distance,wetFall=state.vy;
  if(playing){move(dt);survivalDisplay.animate(dt,state,step);}else{camera.position.set(state.x,(cameraFloor()+(referenceView?.eye??1.94))+(referenceView?0:Math.sin(time*.23)*.009),state.z);camera.rotation.set(state.pitch,state.yaw+(started?0:Math.sin(time*.07)*.015),0);wind.player.value.set(10000,0,10000)}
  const wf=currentChunk()?.field,wa=wf?.type==='pond';
  const lampNear=state.cx>=-1n&&state.cx<=3n&&state.cz>=-4n&&state.cz<=0n;shelterLamp.intensity=lampNear?.05:0;if(lampNear)shelterLamp.position.set(Number(1n-state.cx)*64+16.32,1.28,Number(-2n-state.cz)*64+47.91);
  const weatherCover=weatherSurface(state.x,state.z,state,chunks);
- const splashPower=lensWater.update(weatherDirector.delta,{rain:rainAmount,sheltered:!!weatherCover&&weatherCover.roof>camera.position.y,enabled:playing&&!teleportJob,aspect:camera.aspect,shore:wa?pondShoreDistance(state.x,state.z,wf):Infinity,feet:wf?cameraFloor()+state.jump:Infinity,level:wa?wf.lakeY:0,moved:state.distance-wetDistance,speed:(state.distance-wetDistance)/dt,grounded:state.grounded,fallSpeed:wetFall,pitch:state.pitch,roll:camera.rotation.z,accelX:((state.velocity.x-wetLastVx)*Math.cos(state.yaw)-(state.velocity.z-wetLastVz)*Math.sin(state.yaw))/dt*.025+Math.sin(state.yaw-wetLastYaw)/dt*.055});wetLastVx=state.velocity.x;wetLastVz=state.velocity.z;wetLastYaw=state.yaw;
- if(splashPower>0&&wa)waterImpact.emit(splashPower,state,wf.lakeY);waterImpact.update(weatherDirector.delta,state,camera,playing&&!teleportJob);
+ wetCameraVelocity.set(state.velocity.x,wetLastCameraY?T.MathUtils.clamp((camera.position.y-wetLastCameraY)/dt,-9,9):0,state.velocity.z);wetLastCameraY=camera.position.y;
+ const priorLensSubmersion=lensWater.cameraEntry.wet;
+ const splashPower=lensWater.update(weatherDirector.delta,{rain:rainAmount,humidity:T.MathUtils.clamp(.22+rainAmount*.72+weatherState.mist*.65,0,1),sheltered:!!weatherCover&&weatherCover.roof>camera.position.y,enabled:playing&&!teleportJob,aspect:camera.aspect,shore:wa?pondShoreDistance(state.x,state.z,wf):Infinity,hasWater:wa,cameraHeight:camera.position.y,feet:wf?cameraFloor()+state.jump:Infinity,level:wa?wf.lakeY:0,moved:state.distance-wetDistance,speed:(state.distance-wetDistance)/dt,grounded:state.grounded,fallSpeed:wetFall,pitch:state.pitch,yaw:state.yaw,cameraVelocity:wetCameraVelocity,wind:rainWind,lightDirection:weatherLight,roll:camera.rotation.z,accelX:((state.velocity.x-wetLastVx)*Math.cos(state.yaw)-(state.velocity.z-wetLastVz)*Math.sin(state.yaw))/dt*.025+Math.sin(state.yaw-wetLastYaw)/dt*.055});wetLastVx=state.velocity.x;wetLastVz=state.velocity.z;wetLastYaw=state.yaw;
+ const enteredLensWater=priorLensSubmersion===false&&lensWater.cameraEntry.wet===true,emergedLensWater=priorLensSubmersion===true&&lensWater.cameraEntry.wet===false;
+ let surfacePower=splashPower;
+ if(enteredLensWater&&wetCameraVelocity.y<-.45)surfacePower=Math.max(surfacePower,.8+Math.min(.8,-wetCameraVelocity.y*.12));
+ if(emergedLensWater)surfacePower=Math.max(surfacePower,.45);
+ if(surfacePower>0&&wa&&(camera.position.y>wf.lakeY-.06||enteredLensWater||emergedLensWater))waterImpact.emit(surfacePower,{...state,waterDepth:Math.max(0,wf.lakeY-surfaceHeight(state.x,state.z,wf))},wf.lakeY);
+ waterImpact.update(weatherDirector.delta,state,camera,playing&&!teleportJob,{sunDirection:weatherLight,color:scene.fog.color,intensity:1-rainAmount*.32,ambientIntensity:1-weatherState.dusk*.22});
  if(Math.abs(barnDoorGoal-barnDoorAngle)>.001){barnDoorAngle+=Math.sign(barnDoorGoal-barnDoorAngle)*Math.min(Math.abs(barnDoorGoal-barnDoorAngle),dt*.85);for(const ch of chunks.values())updateBarnDoors(ch,barnDoorAngle);naturalShadows.invalidate();}
  wheatView.value.copy(camera.position);wheatDetail.update(chunks,camera.position,settings.quality,`${state.cx},${state.cz}`);
  weather(weatherDirector.delta,dt);irradiance.update({state,now,rain:rainAmount,clear:weatherState.clear,dusk:weatherState.dusk,enabled:ready&&!teleportJob});
  const exposure=irradiance.exposure(camera.position);renderer.toneMappingExposure=T.MathUtils.lerp(renderer.toneMappingExposure,exposure,1-Math.exp(-dt*(exposure<renderer.toneMappingExposure?2.2:.8)));
  uiTick+=dt;if(uiTick>.12){uiTick=0;if(playing)scanInteraction();updateHUD()}
- cardOrder.update(camera);displayFilter.render(scene,camera,now,()=>{performanceMeter.beforeRender();atmosphere.renderFog(camera);naturalShadows.update({now,originKey:`${state.cx},${state.cz}`,quality:settings.quality,rain:rainAmount,clear:weatherState.clear,dusk:weatherState.dusk})});performanceMeter.end();document.documentElement.dataset.bootState="ready";frameCount++;frameTime+=rawDt;
+ waterRipples.update(weatherDirector.delta,{state,chunks,active:playing&&!teleportJob,lightDirection:weatherLight});
+ cardOrder.update(camera);displayFilter.render(scene,camera,now,()=>{performanceMeter.beforeRender();waterRipples.render();atmosphere.renderFog(camera);naturalShadows.update({now,originKey:`${state.cx},${state.cz}`,quality:settings.quality,rain:rainAmount,clear:weatherState.clear,dusk:weatherState.dusk})});performanceMeter.end();document.documentElement.dataset.bootState="ready";frameCount++;frameTime+=rawDt;
  if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;if(playing&&!queue.length&&!activeBuild&&['pixel','native'].includes(settings.filter)){qualityTimer+=1.5;if(qualityTimer>4.5){let next=autoScale;if(fps<35)next=Math.max(.6,autoScale-.08);else if(fps>57)next=Math.min(1,autoScale+.025);if(next!==autoScale){autoScale=next;resize()}qualityTimer=0}}}
 }
-addEventListener('pagehide',event=>{if(!event.persisted){displayFilter.dispose();rainEffects.dispose();weatherFlare.dispose();lensWater.dispose();atmosphere.dispose();waterImpact.dispose();naturalShadows.dispose();irradiance.dispose()}});
+addEventListener('pagehide',event=>{if(!event.persisted){displayFilter.dispose();rainEffects.dispose();weatherFlare.dispose();lensWater.dispose();atmosphere.dispose();waterImpact.dispose();waterRipples.dispose();naturalShadows.dispose();irradiance.dispose()}});
 requestAnimationFrame(animate);

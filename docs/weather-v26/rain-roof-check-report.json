@@ -1,0 +1,7 @@
+{
+  "pass": true,
+  "authoredBarnSamples": 1800,
+  "minConservativeRoofMargin": 0.03992827062863036,
+  "exteriorImpacts": 42,
+  "roofInteriorImpactLeaks": 0
+}

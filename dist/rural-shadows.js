@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {CSM} from './vendor/csm/CSM.js';
-import {SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=25';
+import {SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=26';
 
 // Contact-hardening filtering: four blocker samples and eight PCF samples.
 // Fixed spatial samples avoid adding another temporal noise reconstruction pass.

@@ -1,7 +1,7 @@
-import {weatherTextures} from './weather-textures.js?v=25';
+import {weatherTextures} from './weather-textures.js?v=26';
 import * as T from './vendor/three.module.min.js';
-import { random, height, surfaceHeight, roadDistance } from './world.js?v=25';
-import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=25';
+import { random, height, surfaceHeight, roadDistance } from './world.js?v=26';
+import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=26';
 
 // Reference-led irregular rural lake: shared shapes, cross-tile water, and dense
 // broken banks. The original layered wind-ripple / sky-reflection water is retained.
@@ -19,7 +19,7 @@ const rippleMap=keep(weatherTextures.ripples);rippleMap.wrapS=rippleMap.wrapT=T.
 export const WATER_WAVES=[{k:.938,a:.016,dir:[.342,.940],w:1.233},{k:.576,a:.017,dir:[-.800,.600],w:.976},{k:.385,a:.009,dir:[.940,.342],w:.743}];
 export function waterDisplacement(x,z,r,time,wind=.32){time=Math.floor(time*12)/12;const edge=1-Math.max(0,Math.min(1,(r-.94)/.06))**2*(3-2*Math.max(0,Math.min(1,(r-.94)/.06)));return WATER_WAVES.reduce((h,v)=>h+v.a*Math.sin((x*v.dir[0]+z*v.dir[1])*v.k-time*v.w),0)*edge*(.76+wind*.42);}
 function waterMaterial(wind) {
- const mat=new T.MeshBasicMaterial({name:'PS1 low-poly detailed ripple water',color:0xffffff,transparent:false,depthWrite:true});
+ const mat=new T.MeshBasicMaterial({name:'PS1 low-poly detailed ripple water',color:0xffffff,transparent:false,depthWrite:true,side:T.DoubleSide});
  mat.onBeforeCompile=shader=>{
   shader.uniforms.uLakeTime=wind.time;shader.uniforms.uLakeWind=wind.strength;shader.uniforms.uLakeTexture={value:rippleMap};
   shader.vertexShader=`uniform float uLakeTime;uniform float uLakeWind;attribute float lakeRadius;attribute vec2 lakeCoord;attribute float facetTone;varying vec2 vLakeXZ;varying float vLakeRadius;varying float vFacetTone;\n`+shader.vertexShader;

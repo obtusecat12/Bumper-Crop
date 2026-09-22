@@ -1,1 +1,11 @@
-{"name":"level10-abundance","version":"1.0.1","private":true,"type":"module","scripts":{"dev":"node scripts/preview.mjs","check":"node scripts/check.mjs"}}
+{
+  "name": "level10-abundance",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/preview.mjs",
+    "check": "node scripts/check.mjs",
+    "test:water": "node tests/water-v26/run.mjs"
+  }
+}

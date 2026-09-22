@@ -1,0 +1,58 @@
+[
+  {
+    "frame": 0,
+    "maxHeight": 0.0,
+    "rms": 0.0,
+    "supportRadius": 0,
+    "changedPixels": 0,
+    "maxPixelDiff": 0.0
+  },
+  {
+    "frame": 8,
+    "maxHeight": 0.10241645558030946,
+    "rms": 0.0022426709332106116,
+    "supportRadius": 0.4780330793993236,
+    "changedPixels": 5128,
+    "maxPixelDiff": 80.0
+  },
+  {
+    "frame": 20,
+    "maxHeight": 0.052994170964690085,
+    "rms": 0.002639888292825377,
+    "supportRadius": 0.7868548945008857,
+    "changedPixels": 12488,
+    "maxPixelDiff": 32.0
+  },
+  {
+    "frame": 40,
+    "maxHeight": 0.03301980651264992,
+    "rms": 0.0026677768548182142,
+    "supportRadius": 1.299789646442839,
+    "changedPixels": 31405,
+    "maxPixelDiff": 29.0
+  },
+  {
+    "frame": 80,
+    "maxHeight": 0.018846400341807307,
+    "rms": 0.002380646297608244,
+    "supportRadius": 2.2985219435541615,
+    "changedPixels": 83921,
+    "maxPixelDiff": 17.0
+  },
+  {
+    "frame": 160,
+    "maxHeight": 0.00847987304300058,
+    "rms": 0.0017323728367501766,
+    "supportRadius": 4.260327525554813,
+    "changedPixels": 27764,
+    "maxPixelDiff": 10.0
+  },
+  {
+    "frame": 360,
+    "maxHeight": 0.0015710928678243355,
+    "rms": 0.000626380284875807,
+    "supportRadius": 9.082198419160418,
+    "changedPixels": 1571,
+    "maxPixelDiff": 4.0
+  }
+]
