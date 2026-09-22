@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {CHUNK,pondShoreDistance} from './world.js?v=26';
+import {CHUNK,pondShoreDistance} from './world.js?v=27';
 
 // A moving, shore-masked 256² shallow-wave field. Impacts change the lake's
 // normals only; the existing low-poly wind animation and world layout remain.

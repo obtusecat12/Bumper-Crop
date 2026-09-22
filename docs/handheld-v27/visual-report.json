@@ -1,0 +1,21 @@
+{
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "version": "OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+  "glErrors": 0,
+  "frames": 120,
+  "durationSeconds": 4,
+  "cameraSimulationHz": 60,
+  "offlineVideoHz": 30,
+  "executionSeconds": 34.335997598000176,
+  "limitations": "Native manual GLES state. V15 static exported barn geometry/shaders/textures/GI and frozen shadows/wind; actual V27 camera module + Three matrices. Input movement scripted, no collision or terrain adaptation. No browser, runtime frame-pacing, current V27 world content, VHS, clouds or in-game benchmark claim.",
+  "cameraModuleSha256AtReviewEnd": "5412164536841f9b60d1e8f0c4ab8b6a43ff498b543bfac32b904414e701a53d",
+  "artReview": {
+    "reviewed": "Nine native rendered frames in contact sheet (0.00, 1.00, 1.40, 1.80, 2.40, 2.70, 2.93, 3.27, 3.97 seconds).",
+    "findings": [
+      "Architecture stays upright through walk and turn; no conspicuous roll at this scale.",
+      "Stop at 2.70 seconds and settled pose at 2.93 seconds show no conspicuous snap in the inspected samples.",
+      "Sway is restrained at this wide scene scale; fine cadence needs moving playback and browser playtesting for a stronger aesthetic judgment."
+    ],
+    "tuning": "No camera edits made; no change justified by this bounded offline fixture."
+  }
+}

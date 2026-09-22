@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {createLensWater} from '../../dist/lens-water.js?v=26';
+import {createLensWater} from '../../dist/lens-water.js?v=27';
 let target=null;const calls=[];
 const state={autoClear:true,xr:{enabled:true},outputColorSpace:'srgb',viewport:{x:0,y:0,z:1440,w:1080},scissor:{x:4,y:5,z:1400,w:1000},scissorTest:true};
 const renderer={...state,

@@ -1,0 +1,21 @@
+{
+  "pass": true,
+  "checks": [
+    "shipped move() with real world.rebase",
+    "camera body clearance",
+    "footstep audio synchrony",
+    "stop",
+    "crouch height",
+    "locked photo",
+    "jump exits photo",
+    "one landing",
+    "paused pose",
+    "reduced motion",
+    "huge coordinate reset",
+    "lens and compass visual pose"
+  ],
+  "maxVelocity": 3.0706134755460863,
+  "maxCameraBody": 0.018450046494056967,
+  "rebases": 1,
+  "footsteps": 9
+}

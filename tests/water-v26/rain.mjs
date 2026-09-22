@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 
 import * as T from '../../dist/vendor/three.module.min.js';
-import {createRainRenderer} from '../../dist/rain-render.js?v=26';
+import {createRainRenderer} from '../../dist/rain-render.js?v=27';
 let seed=381;const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 const scene=new T.Scene(),camera=new T.PerspectiveCamera(60,1.6,.1,100);
 camera.position.set(32,2,32);const state={cx:100000000000000000001n,cz:-100000000000000000002n,x:32,z:32,yaw:0,velocity:{x:3,z:2}};

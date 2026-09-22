@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from '../../dist/lens-physics.js?v=26';
+import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from '../../dist/lens-physics.js?v=27';
 const rng=()=>{let x=44321;return()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296;};};
 const results=[];
 function massCheck(p,label){const error=Math.abs(p.injected-p.evaporated-p.runoff-p.mass());assert(error<.004,`${label} mass drift ${error}`);return error;}

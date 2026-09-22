@@ -1,0 +1,306 @@
+{
+  "source": "dist/handheld-camera.js",
+  "sha256": "5412164536841f9b60d1e8f0c4ab8b6a43ff498b543bfac32b904414e701a53d",
+  "tests": [
+    {
+      "name": "Analytic damped spring is equal at 30, 60, 120, 144 Hz for constant targets",
+      "status": "pass"
+    },
+    {
+      "name": "Zero and negative dt leave spring state unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "A dropped-frame spring interval remains finite and settles",
+      "status": "pass"
+    },
+    {
+      "name": "Look spring takes shortest path through ±π yaw seam",
+      "status": "pass"
+    },
+    {
+      "name": "Pitch stops retain hard bounds and cancel outward spring velocity",
+      "status": "pass"
+    },
+    {
+      "name": "Gait emits exactly one contact per travelled stride across frame rates",
+      "status": "pass"
+    },
+    {
+      "name": "Gait does not duplicate contacts on adjacent frames",
+      "status": "pass"
+    },
+    {
+      "name": "Event-timed heel response matches across FPS after the same constant-speed distance",
+      "status": "pass"
+    },
+    {
+      "name": "Blocked movement emits no contacts and does not advance phase",
+      "status": "pass"
+    },
+    {
+      "name": "Airborne traversal freezes gait and reports one landing event",
+      "status": "pass"
+    },
+    {
+      "name": "Disabled motion gives exact input heading and zero camera noise or gait offsets",
+      "status": "pass"
+    },
+    {
+      "name": "Photo lock gives exact reference pose, zero velocity, no contacts, and frozen clock",
+      "status": "pass"
+    },
+    {
+      "name": "64m x/z rebasing at huge BigInt coordinates preserves the physical camera velocity",
+      "status": "pass"
+    },
+    {
+      "name": "Resume clears velocity and look spring derivative while retaining frozen pose",
+      "status": "pass"
+    },
+    {
+      "name": "Gait path closes continuously at full stride",
+      "status": "pass"
+    },
+    {
+      "name": "Perlin seed is deterministic and independent coordinate bands remain bounded",
+      "status": "pass"
+    },
+    {
+      "name": "Ten minutes of locomotion keep offsets, rotations, springs and velocity finite and bounded",
+      "status": "pass"
+    },
+    {
+      "name": "Long-clock samples stay finite and bounded without accumulated positional drift",
+      "status": "pass"
+    }
+  ],
+  "measurements": {
+    "springSettle": [
+      {
+        "zeta": 0.88,
+        "t": 0.5,
+        "fps": 30,
+        "position": 1.1999862691229348,
+        "velocity": -0.00009176115210084625
+      },
+      {
+        "zeta": 0.88,
+        "t": 0.5,
+        "fps": 60,
+        "position": 1.1999862691229346,
+        "velocity": -0.0000917611520978825
+      },
+      {
+        "zeta": 0.88,
+        "t": 0.5,
+        "fps": 120,
+        "position": 1.1999862691229346,
+        "velocity": -0.0000917611520981059
+      },
+      {
+        "zeta": 0.88,
+        "t": 0.5,
+        "fps": 144,
+        "position": 1.1999862691229348,
+        "velocity": -0.00009176115210290206
+      }
+    ],
+    "yawSeamMaxDegrees": 0.4011863998562131,
+    "gaitAcrossFps": [
+      {
+        "mode": "walk",
+        "fps": 30,
+        "contacts": 44,
+        "expected": 44,
+        "nearDuplicates": 0,
+        "phase": 2.438251014726477,
+        "heelY": -0.000014267227084073223,
+        "heelYVelocity": 0.000015905513831835158
+      },
+      {
+        "mode": "walk",
+        "fps": 60,
+        "contacts": 44,
+        "expected": 44,
+        "nearDuplicates": 0,
+        "phase": 2.4382510147264975,
+        "heelY": -0.000014267227084073182,
+        "heelYVelocity": 0.000015905513831862307
+      },
+      {
+        "mode": "walk",
+        "fps": 120,
+        "contacts": 44,
+        "expected": 44,
+        "nearDuplicates": 0,
+        "phase": 2.438251014726382,
+        "heelY": -0.00001426722708407346,
+        "heelYVelocity": 0.00001590551383170194
+      },
+      {
+        "mode": "walk",
+        "fps": 144,
+        "contacts": 44,
+        "expected": 44,
+        "nearDuplicates": 0,
+        "phase": 2.438251014726781,
+        "heelY": -0.000014267227084072504,
+        "heelYVelocity": 0.00001590551383226127
+      },
+      {
+        "mode": "aligned-walk",
+        "fps": 30,
+        "contacts": 40,
+        "expected": 40,
+        "nearDuplicates": 0,
+        "phase": 1.9539925233402755e-14,
+        "heelY": 0.0000010388162449399395,
+        "heelYVelocity": -0.15000247839784692
+      },
+      {
+        "mode": "aligned-walk",
+        "fps": 60,
+        "contacts": 40,
+        "expected": 40,
+        "nearDuplicates": 0,
+        "phase": 0,
+        "heelY": 0.0000010388162453989534,
+        "heelYVelocity": -0.1500024783978628
+      },
+      {
+        "mode": "aligned-walk",
+        "fps": 120,
+        "contacts": 40,
+        "expected": 40,
+        "nearDuplicates": 0,
+        "phase": 1.6253665080512292e-13,
+        "heelY": 0.0000010388162415259518,
+        "heelYVelocity": -0.15000247839772898
+      },
+      {
+        "mode": "aligned-walk",
+        "fps": 144,
+        "contacts": 40,
+        "expected": 40,
+        "nearDuplicates": 0,
+        "phase": 0,
+        "heelY": 0.0000010388162453989494,
+        "heelYVelocity": -0.1500024783978628
+      },
+      {
+        "mode": "run",
+        "fps": 30,
+        "contacts": 62,
+        "expected": 62,
+        "nearDuplicates": 0,
+        "phase": 2.4840500051641143,
+        "heelY": 0.00010747338431625321,
+        "heelYVelocity": -0.0031156547307481107
+      },
+      {
+        "mode": "run",
+        "fps": 60,
+        "contacts": 62,
+        "expected": 62,
+        "nearDuplicates": 0,
+        "phase": 2.4840500051641428,
+        "heelY": 0.00010747338431624458,
+        "heelYVelocity": -0.0031156547307480296
+      },
+      {
+        "mode": "run",
+        "fps": 120,
+        "contacts": 62,
+        "expected": 62,
+        "nearDuplicates": 0,
+        "phase": 2.4840500051639913,
+        "heelY": 0.00010747338431629208,
+        "heelYVelocity": -0.0031156547307484763
+      },
+      {
+        "mode": "run",
+        "fps": 144,
+        "contacts": 62,
+        "expected": 62,
+        "nearDuplicates": 0,
+        "phase": 2.4840500051640126,
+        "heelY": 0.00010747338431628515,
+        "heelYVelocity": -0.0031156547307484074
+      },
+      {
+        "mode": "crouch",
+        "fps": 30,
+        "contacts": 35,
+        "expected": 35,
+        "nearDuplicates": 0,
+        "phase": 4.795062471268677,
+        "heelY": 0.0000029048507069122317,
+        "heelYVelocity": -0.0004898208864073546
+      },
+      {
+        "mode": "crouch",
+        "fps": 60,
+        "contacts": 35,
+        "expected": 35,
+        "nearDuplicates": 0,
+        "phase": 4.795062471268741,
+        "heelY": 0.0000029048507069067937,
+        "heelYVelocity": -0.0004898208864071898
+      },
+      {
+        "mode": "crouch",
+        "fps": 120,
+        "contacts": 35,
+        "expected": 35,
+        "nearDuplicates": 0,
+        "phase": 4.795062471268773,
+        "heelY": 0.000002904850706903866,
+        "heelYVelocity": -0.000489820886407102
+      },
+      {
+        "mode": "crouch",
+        "fps": 144,
+        "contacts": 35,
+        "expected": 35,
+        "nearDuplicates": 0,
+        "phase": 4.795062471268602,
+        "heelY": 0.00000290485070691852,
+        "heelYVelocity": -0.0004898208864075436
+      }
+    ],
+    "rebaseVelocity": [
+      2.7177148340144077,
+      -0.14904858212135608,
+      1.506483527752067
+    ],
+    "maxPerlinSample": 0.9310908469023966,
+    "tenMinuteBounds": {
+      "maxTranslationMetres": 0.033620070106239366,
+      "maxRotationDegrees": 0.6749701526688987,
+      "maxVelocityMetresPerSecond": 5.664743009895503,
+      "maxHeelMetres": 0.003551920775198759
+    },
+    "longClockMaxRotationDegrees": 0.14949031076163993,
+    "cpuMillisecondsPerUpdate": {
+      "median": 0.0019181178666666633,
+      "batches": [
+        0.0018779564000000013,
+        0.001901520633333333,
+        0.0019181178666666633,
+        0.0019194764000000002,
+        0.0019240478333333348
+      ],
+      "node": "v24.19.0",
+      "includes": "Rig math and real Three camera updateMatrixWorld; excludes renderer, UI, GPU, and game simulation"
+    }
+  },
+  "notes": [
+    "DampedSpring tested for underdamped and critically damped parameters used by the product; implementation is not a generic overdamped solver for zeta > 1.",
+    "Position and rotation bounds are tuning observations under constant heading, not clinical comfort guarantees. Dynamic input is discretized per frame; only constant-target spring integration is mathematically exact."
+  ],
+  "summary": {
+    "passed": 18,
+    "failed": 0
+  }
+}

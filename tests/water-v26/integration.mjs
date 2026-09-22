@@ -2,12 +2,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
-import {field,stringSeed,surfaceHeight,pondShoreDistance} from '../../dist/world.js?v=26';
-import {CameraWaterTracker} from '../../dist/lens-physics.js?v=26';
+import {field,stringSeed,surfaceHeight,pondShoreDistance} from '../../dist/world.js?v=27';
+import {CameraWaterTracker} from '../../dist/lens-physics.js?v=27';
 const directory=new URL('../../dist/',import.meta.url),report={};
 const baseline=JSON.parse(fs.readFileSync(new URL('./baseline.json',import.meta.url)));
 for(const [name,hash] of Object.entries(baseline)){
- const source=fs.readFileSync(new URL(name+'.js',directory),'utf8').replaceAll('?v=26','?v=VERSION');
+ const source=fs.readFileSync(new URL(name+'.js',directory),'utf8').replace(/\?v=\d+/g,'?v=VERSION');
  assert.equal(createHash('sha256').update(source).digest('hex'),hash,`${name}: world/UI/VHS changed`);
 }
 report.unchanged=Object.keys(baseline);

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import {LensDropletPhysics} from '../../dist/lens-physics.js?v=26';
+import {LensDropletPhysics} from '../../dist/lens-physics.js?v=27';
 function random(seed=4421){return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
 function representative(radius,rain=0){
  const p=new LensDropletPhysics(64,random(4421)),d=p.add(.44,.03,radius,0,.06),uid=d.uid;

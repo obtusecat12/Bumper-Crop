@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import * as T from '../../dist/vendor/three.module.min.js';
-import {createWaterImpact} from '../../dist/water-impact.js?v=26';
+import {createWaterImpact} from '../../dist/water-impact.js?v=27';
 const scene=new T.Scene(), pulses=[];
 const impact=createWaterImpact(scene,{rng:()=>.5,onRipple:p=>pulses.push(p)});
 const state={cx:10n**45n,cz:-(10n**45n),x:2,z:3,yaw:0,velocity:{x:0,z:-1},waterDepth:.20};

@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=26';
+import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=27';
 export {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker};
 
 // Thin convex water lenses, a 0.5x optical field, and local close-focus blur.

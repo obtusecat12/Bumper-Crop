@@ -1,35 +1,36 @@
-import {WeatherDirector,WEATHER_LABELS} from './weather-state.js?v=26';
-import {createRainRenderer} from './rain-render.js?v=26';
-import {weatherSurface} from './weather-surfaces.js?v=26';
-import {createWetGround} from './wet-ground.js?v=26';
-import {createWeatherFlare} from './weather-flare.js?v=26';
-import {initializeWeatherTextures} from './weather-textures.js?v=26';
-import {createWaterImpact} from './water-impact.js?v=26';
-import {createWaterRipples} from './water-ripples.js?v=26';
-import {createLensWater} from './lens-water.js?v=26';
-import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=26';
-import {updateBarnDoors} from './reference-barn.js?v=26';
-import {initializeLandmarkTextures} from './landmark-textures.js?v=26';
-import {loadInstrumentParts} from './retro-instruments.js?v=26';
-import {createUIRaster} from './ui-raster.js?v=26';
-import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=26';
-import {createUIThemes} from './ui-themes.js?v=26';
-import {createMaterialFinish} from './material-finish.js?v=26';
-import {createRuralShadows} from './rural-shadows.js?v=26';
-import {createIrradianceField} from './irradiance-field.js?v=26';
-import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=26';
-import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=26';
-import {createCardOrderController} from './instance-order.js?v=26';
-import {createPerformanceMeter} from './performance-meter.js?v=26';
-import {createChunkStream} from './world-stream.js?v=26';
+import {HandheldCameraRig,angleDelta} from './handheld-camera.js?v=27';
+import {WeatherDirector,WEATHER_LABELS} from './weather-state.js?v=27';
+import {createRainRenderer} from './rain-render.js?v=27';
+import {weatherSurface} from './weather-surfaces.js?v=27';
+import {createWetGround} from './wet-ground.js?v=27';
+import {createWeatherFlare} from './weather-flare.js?v=27';
+import {initializeWeatherTextures} from './weather-textures.js?v=27';
+import {createWaterImpact} from './water-impact.js?v=27';
+import {createWaterRipples} from './water-ripples.js?v=27';
+import {createLensWater} from './lens-water.js?v=27';
+import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=27';
+import {updateBarnDoors} from './reference-barn.js?v=27';
+import {initializeLandmarkTextures} from './landmark-textures.js?v=27';
+import {loadInstrumentParts} from './retro-instruments.js?v=27';
+import {createUIRaster} from './ui-raster.js?v=27';
+import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=27';
+import {createUIThemes} from './ui-themes.js?v=27';
+import {createMaterialFinish} from './material-finish.js?v=27';
+import {createRuralShadows} from './rural-shadows.js?v=27';
+import {createIrradianceField} from './irradiance-field.js?v=27';
+import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=27';
+import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=27';
+import {createCardOrderController} from './instance-order.js?v=27';
+import {createPerformanceMeter} from './performance-meter.js?v=27';
+import {createChunkStream} from './world-stream.js?v=27';
 import * as T from './vendor/three.module.min.js';
-import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=26';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=26';
-import {createWheatDetailLayer} from './dense-wheat.js?v=26';
-import {createAtmosphere} from './atmosphere.js?v=26';
-import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=26';
-import {initializeRuralTextures} from './rural-textures.js?v=26';
-import {createNavigationMap} from './map-ui.js?v=26';
+import {CHUNK,field,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=27';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=27';
+import {createWheatDetailLayer} from './dense-wheat.js?v=27';
+import {createAtmosphere} from './atmosphere.js?v=27';
+import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=27';
+import {initializeRuralTextures} from './rural-textures.js?v=27';
+import {createNavigationMap} from './map-ui.js?v=27';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -51,7 +52,7 @@ game.innerHTML=`
  <label class="setting"><span>视野 <b id="fov-value">72°</b></span><input id="fov" type="range" min="55" max="95" step="1" value="72"></label>
  <label class="setting"><span>鼠标灵敏度</span><input id="sensitivity" type="range" min="20" max="180" value="75"></label>
  <label class="setting"><span>环境音量</span><input id="volume" type="range" min="0" max="100" value="65"></label>
- <label class="setting"><span>行走镜头晃动</span><input id="bob" type="checkbox" checked></label>
+ <label class="setting"><span>手持摄像机运动</span><input id="bob" type="checkbox" checked></label>
  <label class="setting"><span>显示帧率</span><input id="showfps" type="checkbox"></label>
  <label class="setting"><span>开发者模式<small>F2 打开天气、传送与坐标</small></span><input id="devMode" type="checkbox"></label>
  <div class="panel-note">VHS 为 1080 行、4:3 录像画面；PS1 为 320 行复古色阶。设置自动保存在当前浏览器。</div>
@@ -59,12 +60,12 @@ game.innerHTML=`
 <div class="modal" id="journal" data-ui-part="journal" role="dialog" aria-modal="true" aria-labelledby="journal-title" hidden><div class="panel"><div class="panel-header"><h2 id="journal-title">层级档案 / <span data-ui-copy="number">010</span></h2><button class="close" data-close aria-label="关闭">×</button></div><div class="journal-meta">M.E.G. FIELD NOTES · <span data-ui-copy="name">丰裕</span></div><div class="journal-body"><p><strong>你正站在一片没有尽头的麦田。</strong><br>树木与高度近似的灌木将麦田分割成小块。天空始终阴沉，偶有短暂细雨与雾气，白昼从未结束。</p><p>沿着两条轮胎碾痕前行。中间的草仍在生长，但车辙里的种子永远不会发芽。这里没有被发现过的车辆。</p><p>低地的湖水清澈，带有泥土的气味。靠近湖岸时，可按 <strong>E</strong> 饮水。</p><p>谷仓、马厩和木棚大多空无一人。里面偶尔能找到木料、钉子和遗落的杏仁水。拾起杏仁水后，按 <strong>Q</strong> 饮用。</p><p>麦丛会拖慢脚步。回到小径可以更快前进。没有任务期限，沿着风走下去。</p><p>出生点东北侧有一处固定农场。按 <strong>F2</strong> 可前往两处照片机位；移动或环顾即可恢复探索镜头。</p><p class="reference-credit">农场影像参考：Edmund Garman，<a href="https://www.flickr.com/photos/3cl/3718833796" target="_blank" rel="noopener noreferrer">Kephart Farm</a> / <a href="https://www.flickr.com/photos/3cl/3719218226" target="_blank" rel="noopener noreferrer">Kephart Farm 2</a>，2009，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。场景为依据照片重新制作的三维重建。</p></div><div class="panel-note" id="expedition">尚未开始探索。</div></div></div>
 <div class="modal" id="controls" data-ui-part="controls" role="dialog" aria-modal="true" aria-labelledby="controls-title" hidden><div class="panel"><div class="panel-header"><h2 id="controls-title">操作指南</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="controls-list"><div><span class="key">W A S D</span>移动</div><div><span class="key">鼠标</span>环顾四周</div><div><span class="key">SHIFT</span>按住奔跑</div><div><span class="key">SPACE</span>跳跃</div><div><span class="key">C</span>按住蹲下</div><div><span class="key">E</span>拾取 / 湖边饮水</div><div><span class="key">Q</span>饮用杏仁水</div><div><span class="key">J</span>层级档案</div><div><span class="key">ESC</span>暂停 / 释放鼠标</div><div><span class="key">F</span>地图 / 点击传送</div><div><span class="key">F10</span>切换全屏</div><div><span class="key">F2</span>开发者天气 / 传送</div></div><div class="panel-note">点击「进入麦田」后即可用鼠标观察。若浏览器不允许锁定鼠标，按住鼠标拖动也可以环顾。触屏设备使用左侧摇杆移动、右侧滑动观察。</div></div></div>`;
 
-game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" data-ui-part="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="barn">砖砌谷仓</button><button data-teleport="barn-photo">谷仓 · 照片机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V26</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
+game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" data-ui-part="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="barn">砖砌谷仓</button><button data-teleport="barn-photo">谷仓 · 照片机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V27</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
 
 $('#developer .developer-caption').insertAdjacentHTML('beforebegin',`<p class="developer-caption">天气与异常</p><div class="developer-actions"><button data-weather="rain">触发下雨</button><button data-weather="fog">触发浓雾</button><button data-weather="blackout">天空断电</button><button data-weather="wallpaper">重复蓝天</button><button data-weather="sunbreak">晴空转黄昏</button><button data-weather="normal">恢复正常天气</button></div><div class="developer-status" id="weather-status">阴天 · 概率按每轮天气判定</div>`);
 const instrumentParts=await loadInstrumentParts();
 const survivalDisplay=createSurvivalDisplay(game,instrumentParts);survivalDisplay.update(100,100,0);
-const touchDevice=matchMedia('(pointer:coarse)').matches;
+const touchDevice=matchMedia('(pointer:coarse)').matches,reduceCameraMotion=matchMedia('(prefers-reduced-motion:reduce)');
 document.body.classList.toggle('touch-mode',touchDevice);
 let settings={quality:touchDevice?'low':'balanced',filter:'vhs',fov:72,sensitivity:75,volume:65,bob:!matchMedia('(prefers-reduced-motion:reduce)').matches,showfps:false,devMode:false};
 try{const saved=JSON.parse(localStorage.getItem('level10.preferences.v1')||'null');if(saved&&typeof saved==='object')settings={...settings,...saved}}catch{}
@@ -89,13 +90,15 @@ const materialFinish=createMaterialFinish(),wetGround=createWetGround();
 let lightingReady=false;
 const wheatDetail=createWheatDetailLayer(wind,{onMesh:mesh=>{atmosphere.attachFog(mesh);if(lightingReady){materialFinish.attach(mesh);naturalShadows.attach(mesh);irradiance.attach(mesh)}}});scene.add(wheatDetail.object);atmosphere.attachFog(wheatDetail.object);
 const camera=new T.PerspectiveCamera(settings.fov,innerWidth/innerHeight,.075,480);camera.rotation.order='YXZ';
+const cameraRig=new HandheldCameraRig(camera),mapView={cx:0n,cz:0n,x:0,z:0,yaw:0};
+function mapPose(){mapView.cx=state.cx;mapView.cz=state.cz;mapView.x=state.x;mapView.z=state.z;mapView.yaw=camera.rotation.y;return mapView;}
 const naturalShadows=createRuralShadows({renderer,scene,camera,quality:settings.quality}),irradiance=createIrradianceField();
 lightingReady=true;materialFinish.attach(wheatDetail.object);naturalShadows.attach(wheatDetail.object);irradiance.attach(wheatDetail.object);
 function releaseChunk(chunk){naturalShadows.detach(chunk.group);irradiance.remove(chunk);disposeChunk(chunk);}
 const state={cx:0n,cz:0n,x:.6,z:52,y:0,yaw:-.37,pitch:-.025,velocity:new T.Vector3(),jump:0,vy:0,grounded:true,stamina:100,hydration:100,health:100,sanity:100,bottles:0,distance:0,elapsed:0};
 const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),chunks=new Map(),collected=new Set();
 const wheatView={value:new T.Vector3()},chunkStream=createChunkStream({wind,viewUniform:wheatView});
-let queue=[],activeBuild=null,playing=false,started=false,ready=false,lastFrame=performance.now(),time=0,uiTick=0,step=0,footTimer=0,toastTimer,activeModal=null,lastFocus=null,hadMovement=false,lastWeather='',qualityTimer=0,frameCount=0,frameTime=0,fps=60,autoScale=1,contextLost=false,streamFailed=false;
+let queue=[],activeBuild=null,playing=false,started=false,ready=false,lastFrame=performance.now(),time=0,uiTick=0,step=0,toastTimer,activeModal=null,lastFocus=null,hadMovement=false,lastWeather='',qualityTimer=0,frameCount=0,frameTime=0,fps=60,autoScale=1,contextLost=false,streamFailed=false;
 let developerSearch=null,teleportJob=null,coverageRadius=0,referenceView=null,mapWasPlaying=false;
 let interaction=null;const keys=new Set(),joy={x:0,z:0};let touchRun=false,mouseDragging=false;
 const navigationMap=createNavigationMap({host:game,parts:instrumentParts,seed,onOpen:toggleMap,onClose:()=>closeModal(),onTeleport:teleportFromMap});
@@ -105,7 +108,7 @@ uiThemes.applyLevel('10');window.levelUI=uiThemes;
 const waterRipples=createWaterRipples(renderer);
 const waterImpact=createWaterImpact(scene,{onRipple:waterRipples.emit});atmosphere.attachFog(waterImpact.group);
 const rainEffects=createRainRenderer(scene,{onRipple:waterRipples.emit});atmosphere.attachFog(rainEffects.rain);atmosphere.attachFog(rainEffects.rings);
-const rainWind=new T.Vector3(.85,0,.30),weatherLight=new T.Vector3(-.45,.84,-.30),duskLight=new T.Vector3(-.86,.065,-.45),wetCameraVelocity=new T.Vector3();let wetLastCameraY=0;
+const rainWind=new T.Vector3(.85,0,.30),weatherLight=new T.Vector3(-.45,.84,-.30),duskLight=new T.Vector3(-.86,.065,-.45),wetCameraVelocity=new T.Vector3();let wetPoseFresh=true;
 const weatherFlare=createWeatherFlare(renderer);
 const lensWater=createLensWater(renderer);displayFilter.setLensEffect({render(w,h){weatherFlare.render();return lensWater.render(w,h);},contextLost(){weatherFlare.reset();lensWater.contextLost();}});let barnDoorAngle=0,barnDoorGoal=0,wetLastYaw=0,wetLastVx=0,wetLastVz=0;
 const uiRaster=createUIRaster(game,{survival:survivalDisplay,navigation:navigationMap});displayFilter.setCompositor(uiRaster);
@@ -192,12 +195,12 @@ const weatherDirector=new WeatherDirector({onCue:kind=>audio.powerCue(kind)});le
 for(const button of document.querySelectorAll('[data-weather]'))button.onclick=()=>{if(!ready||teleportJob)return;audio.start();const kind=button.dataset.weather;weatherDirector.start(kind,{manual:true});if(kind==='normal'){weatherDirector.wetness=0;rainEffects.clear();lensWater.reset();waterRipples.reset();waterImpact.clear();weatherFlare.reset();}weatherState=weatherDirector.update(0);closeModal(false);start();toast(kind==='sunbreak'?'晴空已触发 · 4 秒后开始转入黄昏':WEATHER_LABELS[kind]+' · 已触发');};
 
 function toast(text){$('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),3600)}
-function setPlay(value){if(value!==playing)weatherDirector.resetClock();survivalDisplay.resetMotion();playing=value;$('#menu').hidden=value;$('#hud').hidden=!value;$('#touch').hidden=!value||!touchDevice;if(value){audio.start();if(!started){started=true;toast('沿着小径前行。地上的瓶子可以按 E 拾取。')}$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';$('#eyebrow').textContent='PAUSED';}else{pointerLockHeld=false;audio.ctx?.suspend().catch(()=>{});keys.clear();joy.x=joy.z=0;touchRun=false;$('#stick').style.transform='';if(document.pointerLockElement)document.exitPointerLock();}}
+function setPlay(value){if(value!==playing){weatherDirector.resetClock();cameraRig.resume();wetPoseFresh=true;lastFrame=performance.now();}survivalDisplay.resetMotion();playing=value;$('#menu').hidden=value;$('#hud').hidden=!value;$('#touch').hidden=!value||!touchDevice;if(value){audio.start();if(!started){started=true;toast('沿着小径前行。地上的瓶子可以按 E 拾取。')}$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';$('#eyebrow').textContent='PAUSED';}else{pointerLockHeld=false;audio.ctx?.suspend().catch(()=>{});keys.clear();joy.x=joy.z=0;touchRun=false;$('#stick').style.transform='';if(document.pointerLockElement)document.exitPointerLock();}}
 function start(){if(!ready||teleportJob||developerSearch)return;setPlay(true);if(!touchDevice){try{const p=renderer.domElement.requestPointerLock?.();if(p&&p.catch)p.catch(()=>toast('按住鼠标拖动环顾，W A S D 移动。'))}catch{toast('按住鼠标拖动环顾，W A S D 移动。')}}}
 $('#start').onclick=start;$('#pause-button').onclick=()=>setPlay(false);
 document.addEventListener('pointerlockchange',()=>{const held=document.pointerLockElement===renderer.domElement,lost=pointerLockHeld&&!held;pointerLockHeld=held;if(lost&&playing&&!touchDevice&&!activeModal)setPlay(false);});
 document.addEventListener('pointerlockerror',()=>{if(playing)toast('按住鼠标拖动环顾，W A S D 移动。')});
-function openModal(id){if(navigationMap.isOpen)navigationMap.hide();if(activeModal)activeModal.hidden=true;lastFocus=document.activeElement;if(playing)setPlay(false);activeModal=$('#'+id);activeModal.hidden=false;if(id==='world-map')navigationMap.show(state);if(id==='developer'){settings.devMode=true;$('#devMode').checked=true;$('#developer-button').hidden=false;savePreferences();updateDeveloperCoordinates();}if(id==='journal')$('#expedition').textContent=started?`已探索 ${Math.round(state.distance)} 米 · ${Math.floor(state.elapsed/60)} 分钟 · 杏仁水 ${state.bottles} 瓶`:'尚未开始探索。';activeModal.querySelector('button,select,input')?.focus()}
+function openModal(id){if(navigationMap.isOpen)navigationMap.hide();if(activeModal)activeModal.hidden=true;lastFocus=document.activeElement;if(playing)setPlay(false);activeModal=$('#'+id);activeModal.hidden=false;if(id==='world-map')navigationMap.show(mapPose());if(id==='developer'){settings.devMode=true;$('#devMode').checked=true;$('#developer-button').hidden=false;savePreferences();updateDeveloperCoordinates();}if(id==='journal')$('#expedition').textContent=started?`已探索 ${Math.round(state.distance)} 米 · ${Math.floor(state.elapsed/60)} 分钟 · 杏仁水 ${state.bottles} 瓶`:'尚未开始探索。';activeModal.querySelector('button,select,input')?.focus()}
 function closeModal(resume=true){if(!activeModal||teleportJob)return;const wasMap=activeModal.id==='world-map';if(developerSearch){developerSearch.return();developerSearch=null;developerBusy(false);$('#developer-status').textContent='已取消搜索。';}if(wasMap)navigationMap.hide();activeModal.hidden=true;activeModal=null;lastFocus?.focus();if(wasMap&&resume&&mapWasPlaying&&ready)start();}
 function toggleMap(){if(teleportJob||developerSearch||!ready)return;if(activeModal?.id==='world-map'){closeModal();return;}if(activeModal)return;mapWasPlaying=playing;openModal('world-map');}
 function teleportFromMap(point){if(teleportJob||developerSearch)return;if(streamFailed){navigationMap.setStatus('场景加载失败，请刷新后重试。');return;}try{const target=createMapTarget(point,seed);if(!target){navigationMap.setStatus('附近没有可用落点，请点击另一处地面。');return;}beginTeleport(target);}catch(error){console.error('Map destination failed',error);navigationMap.setBusy(false,'无法准备此处落点，请选择另一处地面。');}}
@@ -234,12 +237,12 @@ function leaveReferenceView(){
  if(!referenceView)return;referenceView=null;resize();scene.fog.near=60;scene.fog.far=Math.min(225,Math.max(.2,coverageRadius*64+Math.min(state.x,state.z,64-state.x,64-state.z)-8));updateQueue();
 }
 function beginTeleport(target){
- lensWater.reset();waterImpact.clear();waterRipples.reset();rainEffects.clear();weatherFlare.reset();wetLastCameraY=0;
+ lensWater.reset();waterImpact.clear();waterRipples.reset();rainEffects.clear();weatherFlare.reset();wetPoseFresh=true;
  if(streamFailed){developerBusy(false);$('#developer-status').textContent='场景加载失败，请刷新页面重试。';return;}
  const previous={};for(const key of ['cx','cz','x','z','y','yaw','pitch'])previous[key]=state[key];
  const previousReference=referenceView;referenceView=target.kind==='photo'?target:null;resize();
  teleportJob={target,previous,previousReference};developerBusy(true);setPlay(false);interaction=null;$('#interact').hidden=true;
- applyTeleport(state,{cx:target.cx,cz:target.cz,x:target.x,z:target.z,y:surfaceHeight(target.x,target.z,target.field)+1.77,yaw:state.yaw,pitch:-.045});
+ applyTeleport(state,{cx:target.cx,cz:target.cz,x:target.x,z:target.z,y:surfaceHeight(target.x,target.z,target.field)+1.77,yaw:state.yaw,pitch:-.045});resetCameraRig();
  ready=false;$('#start').disabled=true;$('#loading').hidden=false;$('#load-number').textContent='0%';$('#load-bar').style.width='0%';
  updateQueue();updateDeveloperCoordinates();
 }
@@ -257,12 +260,11 @@ function completeTeleport(){
  if(!teleportJob||queue.length||activeBuild||!neighbourhoodReady())return;
  const job=teleportJob,landing=job.restoring?job.previous:findSafeLanding(job.target,teleportColliders());
  if(!landing){
-  referenceView=job.previousReference;resize();applyTeleport(state,job.previous);job.restoring=true;job.target={...job.target,label:'原位置'};updateQueue();return;
+  referenceView=job.previousReference;resize();applyTeleport(state,job.previous);resetCameraRig();job.restoring=true;job.target={...job.target,label:'原位置'};updateQueue();return;
  }
- applyTeleport(state,landing);teleportJob=null;developerBusy(false);ready=true;$('#start').disabled=false;$('#loading').hidden=true;
+ applyTeleport(state,landing);resetCameraRig();teleportJob=null;developerBusy(false);ready=true;$('#start').disabled=false;$('#loading').hidden=true;
  $('#developer-status').textContent=job.restoring?'目的地没有安全落点，已返回原位置。':`已抵达${job.target.label}。`;
  $('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';
- camera.position.set(state.x,state.y,state.z);camera.rotation.set(state.pitch,state.yaw,0);
  if(!document.hasFocus()||document.hidden)return;
  closeModal(false);setPlay(true);
  toast(job.restoring?'未找到安全落点，已回到原位置。':(job.target.kind==='photo'?`已抵达${job.target.label}。移动或转动视角恢复常规镜头。`:`已抵达${job.target.label}。点击画面继续环顾；F 打开地图。`));
@@ -279,7 +281,7 @@ document.querySelectorAll('[data-teleport]').forEach(button=>button.addEventList
 
 function drink(){if(state.bottles<1){toast('没有杏仁水。可以在路边或建筑内寻找。');return}state.bottles--;state.hydration=Math.min(100,state.hydration+45);state.stamina=Math.min(100,state.stamina+35);state.sanity=Math.min(100,state.sanity+20);audio.chime();toast('饮用了杏仁水。杏仁的气味让人安心。');updateHUD()}
 function use(){if(!interaction)return;if(interaction.kind==='barn-door'){const f=currentChunk()?.field;const x=state.x+(f?.barn?.x||0)-REFERENCE_BARN.doorX,z=state.z+(f?.barn?.z||0)-REFERENCE_BARN.depth/2;if(barnDoorGoal>0&&Math.abs(x)<2.4&&z>-.35&&z<2.5){toast('请先离开门扇的转动范围。');return;}barnDoorGoal=barnDoorGoal>0?0:1.47;interaction=null;return;}if(interaction.kind==='bottle'){const {p,chunk}=interaction;if(collected.has(p.id))return;collected.add(p.id);state.bottles++;chunk.group.remove(p.mesh);p.mesh.traverse(o=>{if(o.geometry)o.geometry.dispose()});p.mesh=null;audio.chime();toast('拾取了杏仁水 · 按 Q 饮用');interaction=null}else{state.hydration=100;toast('喝了一口清水。有一点泥土的味道。');audio.footstep(false,true)}updateHUD()}
-function jump(){if(state.grounded&&state.stamina>5){state.vy=4.8;state.grounded=false;state.stamina-=4}}
+function jump(){if(state.grounded&&state.stamina>5){leaveReferenceView();state.vy=4.8;state.grounded=false;state.stamina-=4}}
 async function fullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{toast('此浏览器暂不支持全屏。')}}
 document.addEventListener('keydown',e=>{if(e.code==='KeyF'){e.preventDefault();if(!e.repeat)toggleMap();return;}if(e.code==='F2'){e.preventDefault();if(e.repeat)return;if(activeModal?.id==='developer')closeModal();else if(!teleportJob)openModal('developer');return}if(activeModal){if(e.code==='Escape'){e.preventDefault();closeModal()}if(e.code==='Tab'){const items=[...activeModal.querySelectorAll('button,input,select,[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');if(!items.length){e.preventDefault();return}if(e.shiftKey&&document.activeElement===items[0]){e.preventDefault();items.at(-1).focus()}else if(!e.shiftKey&&document.activeElement===items.at(-1)){e.preventDefault();items[0].focus()}}return}if(!playing){
  const buttons=[...document.querySelectorAll('.menu-button')].filter(button=>!button.disabled);
@@ -311,6 +313,10 @@ $('#touch-run').addEventListener('pointerdown',e=>{touchRun=true;e.currentTarget
 
 function currentChunk(){return chunks.get(`${state.cx},${state.cz}`)}
 function cameraFloor(){const f=currentChunk()?.field;return f?surfaceHeight(state.x,state.z,f):height(state.x,state.z,state.cx,state.cz)}
+function resetCameraRig(){
+ const eyeY=cameraFloor()+(referenceView?.eye??1.77);state.y=eyeY;
+ cameraRig.reset({x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,eyeY,jump:state.jump});wetPoseFresh=true;
+}
 function contactWheat(chunk,x,z){if(!chunk)return 0;let contact=0,bx=Math.floor(x/2),bz=Math.floor(z/2);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const stems=chunk.wheatBuckets.get(`${bx+dx},${bz+dz}`);if(!stems)continue;for(const w of stems){const vx=x-w.x,vz=z-w.z,dist=Math.hypot(vx,vz);if(dist<.33)contact+=1-dist/.33;}}return Math.min(1,contact)}
 function move(dt){const c=currentChunk(),inWheat=contactWheat(c,state.x,state.z),f=c?.field;let sx=(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0)+joy.x,sz=(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-(keys.has('KeyW')||keys.has('ArrowUp')?1:0)+joy.z;
  const l=Math.hypot(sx,sz);if(l>1){sx/=l;sz/=l}const moving=l>.09,crouch=keys.has('KeyC'),running=(keys.has('ShiftLeft')||keys.has('ShiftRight')||touchRun)&&state.stamina>1&&moving&&!crouch;
@@ -323,11 +329,14 @@ function move(dt){const c=currentChunk(),inWheat=contactWheat(c,state.x,state.z)
  if(c&&state.jump<.85){let bx=Math.floor(next.x/2),bz=Math.floor(next.z/2);for(let iz=-1;iz<=1;iz++)for(let ix=-1;ix<=1;ix++){for(const w of c.wheatBuckets.get(`${bx+ix},${bz+iz}`)||[]){let dx=next.x-w.x,dz=next.z-w.z,d=Math.hypot(dx,dz);if(d<.105&&d>.0001){const push=Math.min(.012,(.105-d)*.25);next.x+=dx/d*push;next.z+=dz/d*push}}}}
  // Never enter an unstreamed field; it will be ready before the next normal step.
  const ncx=state.cx+BigInt(Math.floor(next.x/CHUNK)),ncz=state.cz+BigInt(Math.floor(next.z/CHUNK));if(chunks.has(`${ncx},${ncz}`)){state.x=next.x;state.z=next.z}
- const moved=Math.hypot(state.x-oldX,state.z-oldZ);state.distance+=moved;const shift=rebase(state);if(shift.dx||shift.dz)updateQueue();
- if(!state.grounded){state.vy-=12.2*dt;state.jump+=state.vy*dt;if(state.jump<=0){state.jump=0;state.vy=0;state.grounded=true;audio.footstep(!!inWheat,water)}}
+ const movedX=state.x-oldX,movedZ=state.z-oldZ,moved=Math.hypot(movedX,movedZ);state.distance+=moved;const shift=rebase(state);if(shift.dx||shift.dz)updateQueue();
+ let landingSpeed=0;if(!state.grounded){state.vy-=12.2*dt;state.jump+=state.vy*dt;if(state.jump<=0){landingSpeed=-state.vy;state.jump=0;state.vy=0;state.grounded=true;audio.footstep(!!inWheat,water)}}
  state.stamina=T.MathUtils.clamp(state.stamina+(running?-17:12)*dt,0,100);state.hydration=Math.max(0,state.hydration-dt*(moving?.029:.009));state.elapsed+=dt;
- const floor=cameraFloor();let camH=referenceView?.eye??(crouch?1.06:1.77);state.y=T.MathUtils.lerp(state.y||floor+camH,floor+camH,1-Math.exp(-dt*12));step+=moved*2.8;const bob=settings.bob&&moving&&state.grounded?Math.sin(step*2)*.021*(running?1.5:1):0;camera.position.set(state.x,state.y+state.jump+bob,state.z);camera.rotation.set(state.pitch,state.yaw,settings.bob&&moving?Math.cos(step)*.003:0);wind.player.value.set(state.x,state.y,state.z);
- if(moved>.002&&state.grounded){footTimer+=moved;if(footTimer>(running?1.5:1.4)){audio.footstep(!!inWheat,water);footTimer=0}}audio.update(moving,inWheat,rainAmount);hadMovement=moving;
+ const eyeY=cameraFloor()+(referenceView?.eye??(crouch?1.06:1.77));
+ const rig=cameraRig.update(dt,{x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,eyeY,jump:state.jump,moved,dx:movedX,dz:movedZ,grounded:state.grounded,running,crouch,stamina:state.stamina,landingSpeed,enabled:settings.bob&&!reduceCameraMotion.matches,locked:!!referenceView});
+ state.y=rig.eyeHeight;step=rig.phase;wind.player.value.set(state.x,state.y,state.z);
+ for(let i=0;i<rig.contacts;i++)audio.footstep(!!inWheat,water);
+ audio.update(moving,inWheat,rainAmount);hadMovement=moving;
 }
 function scanInteraction(){
  interaction=null;
@@ -353,7 +362,7 @@ function scanInteraction(){
  prompt.hidden=!interaction;
  if(interaction)prompt.innerHTML=interaction.kind==='barn-door'?`<kbd>E</kbd> ${barnDoorGoal>0?'关闭':'打开'}谷仓双门`:interaction.kind==='bottle'?'<kbd>E</kbd> 拾取杏仁水':'<kbd>E</kbd> 饮用湖水';
 }
-function updateHUD(){if(activeModal?.id==='developer')updateDeveloperCoordinates();const degrees=((Math.round(-state.yaw*180/Math.PI)%360)+360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(degrees/45)%8];$('#bearing').textContent=`${dir}  ${String(degrees).padStart(3,'0')}°`;survivalDisplay.update(state.stamina,state.hydration,state.bottles,state.health,state.sanity);const c=currentChunk();let location=c&&roadDistance(state.x,state.z,c.field)>2.2?'田间草地':'泥土小径';if(c){const f=c.field;if(f.type==='pond'&&pondShoreDistance(state.x,state.z,f)<7)location='湖泊 · 未开垦的低地';else if(f.type==='building'){const[w,d]=buildingSize(f);const bp=buildingLocal(state.x,state.z,f);if(Math.abs(bp.x)<w/2&&Math.abs(bp.z)<d/2)location=BUILDING_NAMES[f.variant];else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}if(c&&barnFootprintDistance(state.x,state.z,c.field)<0)location='砖砌谷仓 · 临时栖身处';$('#location').textContent=`${location}  /  ${Math.round(state.distance)} m`;$('#fps').textContent=`${Math.round(fps)} FPS${settings.filter==='vhs'?' · VHS '+Math.round(displayFilter.values.fps):''} · ${chunks.size} 区块${settings.devMode?'\n'+performanceText():''}`;}
+function updateHUD(){if(activeModal?.id==='developer')updateDeveloperCoordinates();const degrees=((Math.round(-camera.rotation.y*180/Math.PI)%360)+360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(degrees/45)%8];$('#bearing').textContent=`${dir}  ${String(degrees).padStart(3,'0')}°`;survivalDisplay.update(state.stamina,state.hydration,state.bottles,state.health,state.sanity);const c=currentChunk();let location=c&&roadDistance(state.x,state.z,c.field)>2.2?'田间草地':'泥土小径';if(c){const f=c.field;if(f.type==='pond'&&pondShoreDistance(state.x,state.z,f)<7)location='湖泊 · 未开垦的低地';else if(f.type==='building'){const[w,d]=buildingSize(f);const bp=buildingLocal(state.x,state.z,f);if(Math.abs(bp.x)<w/2&&Math.abs(bp.z)<d/2)location=BUILDING_NAMES[f.variant];else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}if(c&&barnFootprintDistance(state.x,state.z,c.field)<0)location='砖砌谷仓 · 临时栖身处';$('#location').textContent=`${location}  /  ${Math.round(state.distance)} m`;$('#fps').textContent=`${Math.round(fps)} FPS${settings.filter==='vhs'?' · VHS '+Math.round(displayFilter.values.fps):''} · ${chunks.size} 区块${settings.devMode?'\n'+performanceText():''}`;}
 
 const normalFog=new T.Color('#acb6b1'),clearFog=new T.Color('#b4cbd2'),duskFog=new T.Color('#b9a4a0'),duskFill=new T.Color('#8998b2'),normalFill=new T.Color('#c9d2d4');
 function weather(dt,renderDt=dt){
@@ -385,18 +394,18 @@ function animate(now){requestAnimationFrame(animate);const rawDt=(now-lastFrame)
 $('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请刷新</span><small>↻</small>';return}const total=(radius()*2+1)**2,progress=Math.round(chunks.size/total*100);if(teleportJob&&navigationMap.isOpen)navigationMap.setStatus(`正在准备${teleportJob.target.label} · ${Math.min(100,progress)}%`);$('#load-number').textContent=progress+'%';$('#load-bar').style.width=progress+'%';if(!ready&&!teleportJob&&neighbourhoodReady()){ready=true;$('#start').disabled=false;$('#start').innerHTML='<span>进入麦田</span><small>ENTER ↵</small>'}if(!queue.length&&!activeBuild)$('#loading').hidden=true;}
  completeTeleport();
  weatherState=weatherDirector.tick(now,playing&&!teleportJob&&!navigationMap.isOpen);rainAmount=weatherState.rain;
- navigationMap.update(state,now,playing,!teleportJob);
  // The opaque map covers the scene. Stop 3D rendering/detail updates while
  // reading it; world streaming continues when a map teleport is in progress.
- if(navigationMap.isOpen){rainEffects.clear();waterImpact.clear();waterRipples.reset();lensWater.update(0,{enabled:false});irradiance.pause();displayFilter.render(scene,camera,now,undefined,true);performanceMeter.end();return;}
+ if(navigationMap.isOpen){navigationMap.update(mapPose(),now,false,!teleportJob);rainEffects.clear();waterImpact.clear();waterRipples.reset();lensWater.update(0,{enabled:false});irradiance.pause();displayFilter.render(scene,camera,now,undefined,true);performanceMeter.end();return;}
  const wetDistance=state.distance,wetFall=state.vy;
- if(playing){move(dt);survivalDisplay.animate(dt,state,step);}else{camera.position.set(state.x,(cameraFloor()+(referenceView?.eye??1.94))+(referenceView?0:Math.sin(time*.23)*.009),state.z);camera.rotation.set(state.pitch,state.yaw+(started?0:Math.sin(time*.07)*.015),0);wind.player.value.set(10000,0,10000)}
+ if(playing){move(dt);survivalDisplay.animate(dt,state,step);}else{if(!cameraRig.initialized||(!started&&Math.abs(cameraRig.height.position-cameraFloor()-1.77)>.001))resetCameraRig();wind.player.value.set(10000,0,10000)}
+ navigationMap.update(mapPose(),now,playing,!teleportJob);
  const wf=currentChunk()?.field,wa=wf?.type==='pond';
  const lampNear=state.cx>=-1n&&state.cx<=3n&&state.cz>=-4n&&state.cz<=0n;shelterLamp.intensity=lampNear?.05:0;if(lampNear)shelterLamp.position.set(Number(1n-state.cx)*64+16.32,1.28,Number(-2n-state.cz)*64+47.91);
  const weatherCover=weatherSurface(state.x,state.z,state,chunks);
- wetCameraVelocity.set(state.velocity.x,wetLastCameraY?T.MathUtils.clamp((camera.position.y-wetLastCameraY)/dt,-9,9):0,state.velocity.z);wetLastCameraY=camera.position.y;
+ wetCameraVelocity.copy(cameraRig.velocity);if(!playing)wetCameraVelocity.set(0,0,0);wetCameraVelocity.y=T.MathUtils.clamp(wetCameraVelocity.y,-9,9);
  const priorLensSubmersion=lensWater.cameraEntry.wet;
- const splashPower=lensWater.update(weatherDirector.delta,{rain:rainAmount,humidity:T.MathUtils.clamp(.22+rainAmount*.72+weatherState.mist*.65,0,1),sheltered:!!weatherCover&&weatherCover.roof>camera.position.y,enabled:playing&&!teleportJob,aspect:camera.aspect,shore:wa?pondShoreDistance(state.x,state.z,wf):Infinity,hasWater:wa,cameraHeight:camera.position.y,feet:wf?cameraFloor()+state.jump:Infinity,level:wa?wf.lakeY:0,moved:state.distance-wetDistance,speed:(state.distance-wetDistance)/dt,grounded:state.grounded,fallSpeed:wetFall,pitch:state.pitch,yaw:state.yaw,cameraVelocity:wetCameraVelocity,wind:rainWind,lightDirection:weatherLight,roll:camera.rotation.z,accelX:((state.velocity.x-wetLastVx)*Math.cos(state.yaw)-(state.velocity.z-wetLastVz)*Math.sin(state.yaw))/dt*.025+Math.sin(state.yaw-wetLastYaw)/dt*.055});wetLastVx=state.velocity.x;wetLastVz=state.velocity.z;wetLastYaw=state.yaw;
+ const splashPower=lensWater.update(weatherDirector.delta,{rain:rainAmount,humidity:T.MathUtils.clamp(.22+rainAmount*.72+weatherState.mist*.65,0,1),sheltered:!!weatherCover&&weatherCover.roof>camera.position.y,enabled:playing&&!teleportJob,aspect:camera.aspect,shore:wa?pondShoreDistance(state.x,state.z,wf):Infinity,hasWater:wa,cameraHeight:camera.position.y,feet:wf?cameraFloor()+state.jump:Infinity,level:wa?wf.lakeY:0,moved:state.distance-wetDistance,speed:(state.distance-wetDistance)/dt,grounded:state.grounded,fallSpeed:wetFall,pitch:camera.rotation.x,yaw:camera.rotation.y,cameraVelocity:wetCameraVelocity,wind:rainWind,lightDirection:weatherLight,roll:camera.rotation.z,accelX:wetPoseFresh?0:((wetCameraVelocity.x-wetLastVx)*Math.cos(camera.rotation.y)-(wetCameraVelocity.z-wetLastVz)*Math.sin(camera.rotation.y))/dt*.025+angleDelta(camera.rotation.y,wetLastYaw)/dt*.055});wetLastVx=wetCameraVelocity.x;wetLastVz=wetCameraVelocity.z;wetLastYaw=camera.rotation.y;wetPoseFresh=false;
  const enteredLensWater=priorLensSubmersion===false&&lensWater.cameraEntry.wet===true,emergedLensWater=priorLensSubmersion===true&&lensWater.cameraEntry.wet===false;
  let surfacePower=splashPower;
  if(enteredLensWater&&wetCameraVelocity.y<-.45)surfacePower=Math.max(surfacePower,.8+Math.min(.8,-wetCameraVelocity.y*.12));

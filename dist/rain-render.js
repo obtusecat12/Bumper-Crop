@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {weatherSurface} from './weather-surfaces.js?v=26';
+import {weatherSurface} from './weather-surfaces.js?v=27';
 
 // One immutable seed buffer drives the whole rain volume. Surface particles
 // upload origin/launch data only on birth; all trajectories and billboard
