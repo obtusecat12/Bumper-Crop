@@ -43,7 +43,7 @@ export class LensDropletPhysics{
  }
  clear(){
   for(const d of this._heads)d.active=false;for(const d of this._beads)d.active=false;
-  this.drops.length=this.beads.length=0;this._freeHeads=this._heads.slice();this._freeBeads=this._beads.slice();
+  this.drops.length=this.beads.length=0;this._freeHeads.length=this._freeBeads.length=0;for(let i=0;i<this._heads.length;i++)this._freeHeads.push(this._heads[i]);for(let i=0;i<this._beads.length;i++)this._freeBeads.push(this._beads[i]);
   for(const s of this.sheets){s.active=false;s.volume=0;s.targets.fill(null);}
   this.film.fill(0);this.filmLife.fill(0);this.heightField.fill(0);this.pixels.fill(0);
   this.time=this.accumulator=this.rainBudget=this.filmTotal=this.injected=this.evaporated=this.runoff=0;
@@ -70,7 +70,7 @@ export class LensDropletPhysics{
   const b=this._init(this._freeBeads.pop(),x,y,r,0,0);this.beads.push(b);return b;
  }
  _release(list,index,isBead=false){
-  const d=list[index];d.active=false;list.splice(index,1);(isBead?this._freeBeads:this._freeHeads).push(d);
+  const d=list[index];d.active=false;for(let j=index;j<list.length-1;j++)list[j]=list[j+1];list.pop();(isBead?this._freeBeads:this._freeHeads).push(d);
  }
  _combine(a,b){
   const av=a.volume,bv=b.volume,v=av+bv;if(v<=0)return;
@@ -143,12 +143,12 @@ export class LensDropletPhysics{
   if(submerged){
    if(!s.submerged){
     if(s.volume>0)this.deposit(.5,.5,.4,s.volume,7);
-    Object.assign(s,{active:true,submerged:true,age:0,life:.3+this.rng()*.4,seed:this.rng()*6.28,volume:24,total:24,spawned:false});
+    s.active=s.submerged=true;s.age=0;s.life=.3+this.rng()*.4;s.seed=this.rng()*6.28;s.volume=s.total=24;s.spawned=false;
     this.injected+=24;this.blueTransient=.07;changed=true;
    }
    s.active=true;
   }else if(s.submerged||crossing===-1){
-   s.submerged=false;s.active=true;s.age=0;s.life=.3+this.rng()*.4;s.spawned=false;
+   s.submerged=false;s.active=true;s.age=0;s.life=.68;s.spawned=false;
    this.blueTransient=Math.max(this.blueTransient,.045);changed=true;
   }
   if(s.active){this.wet=true;if(changed)this.version++;}
@@ -157,7 +157,7 @@ export class LensDropletPhysics{
   let ring=this.rings.find(r=>!r.active);
   if(!ring)ring=this.rings.reduce((a,b)=>a.age/a.life>b.age/b.life?a:b);
   if(ring.active&&ring.volume>0)this.deposit(ring.x,ring.y,ring.r*RADIUS*.7,ring.volume,4);
-  Object.assign(ring,{active:true,x,y,r,age:0,life:.3+this.rng()*.5,volume:r*r*r});
+  ring.active=true;ring.x=x;ring.y=y;ring.r=r;ring.age=0;ring.life=.3+this.rng()*.5;ring.volume=r*r*r;
   this.injected+=ring.volume;this.wet=true;this.version++;return ring;
  }
  _transferredBead(x,y,volume){
@@ -175,13 +175,13 @@ export class LensDropletPhysics{
     const portion=Math.min(s.volume,s.total*dt/s.life);s.volume-=portion;
     const count=7;
     for(let i=0;i<count;i++){
-     const x=.06+(i+.5)*.88/count+.023*Math.sin(s.seed+i*4.1),y=.19+.57*(.5+.5*Math.sin(s.seed+i*2.3));
+     const x=.06+(i+.5)*.88/count+.023*Math.sin(s.seed+i*4.1),y=.025+Math.min(.9,s.age/s.life)*.83;
      this.deposit(x,y,.036,portion/count,5);
     }
     if(!s.spawned&&s.age>s.life*.36){
      s.spawned=true;const mass=Math.min(s.volume,s.total*.38);s.volume-=mass;
      for(let i=0;i<7;i++){
-      const x=.10+(i+.5)*.8/7+.024*Math.sin(s.seed+i),y=.14+.62*(.5+.5*Math.sin(s.seed+i*2.3));
+      const x=.10+(i+.5)*.8/7+.024*Math.sin(s.seed+i),y=.08+s.age/s.life*.53;
       const before=this.injected,d=this.add(x,y,Math.cbrt(mass/7),(this.rng()-.5)*.045,.06+this.rng()*.12);this.injected=before;
       if(!d)this.deposit(x,y,.03,mass/7,4);
      }
@@ -348,14 +348,14 @@ export class LensDropletPhysics{
    if(q<1)this.heightField[y*w+x]+=d.r*.30*(.10+.9*t)*Math.sqrt(1-q)*neck;
   }
  }
- buildTexture(){
+ buildTexture(includeSheet=true){
   if(this.textureVersion===this.version)return false;
   const w=this.fieldWidth,h=this.fieldHeight,H=this.heightField,C=this.coverageField,out=this.pixels,filmScale=1/(this.cellArea*520);
   C.fill(0);
   for(let i=0;i<H.length;i++)H[i]=Math.max(0,Math.min(1.6,this.film[i]*filmScale)-.011);
   for(const b of this.beads)this._cap(b);for(const d of this.drops)this._cap(d);
   const sheet=this.sheet;
-  if(sheet.active){
+  if(sheet.active&&includeSheet){
    const progress=sheet.submerged?0:clamp(sheet.age/sheet.life,0,1),threshold=-.18+progress*1.5;
    for(let y=0;y<h;y++)for(let x=0;x<w;x++){
     const u=(x+.5)/w,v=(y+.5)/h,seed=sheet.seed;
@@ -399,12 +399,12 @@ export class WaterEntryTracker{
 
 // Camera height, never foot height, drives the continuous lens-water film.
 export class CameraWaterTracker{
- constructor(){this.wet=null;}
+ constructor(){this.wet=null;this.result={submerged:false,crossing:0};}
  reset(){this.wet=null;}
  update({cameraHeight=Infinity,level=0,hasWater=false,shore=-Infinity}={}){
   const valid=hasWater&&Number.isFinite(cameraHeight)&&Number.isFinite(level)&&shore<.10;
   const next=valid&&(this.wet?cameraHeight<level+.028:cameraHeight<level-.018);
   const crossing=this.wet===null?0:next!==this.wet?(next?1:-1):0;
-  this.wet=next;return{submerged:next,crossing};
+  this.wet=next;this.result.submerged=next;this.result.crossing=crossing;return this.result;
  }
 }

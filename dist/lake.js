@@ -1,7 +1,6 @@
-import {weatherTextures} from './weather-textures.js?v=27';
 import * as T from './vendor/three.module.min.js';
-import { random, height, surfaceHeight, roadDistance } from './world.js?v=27';
-import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=27';
+import { random, height, surfaceHeight, roadDistance } from './world.js?v=28';
+import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=28';
 
 // Reference-led irregular rural lake: shared shapes, cross-tile water, and dense
 // broken banks. The original layered wind-ripple / sky-reflection water is retained.
@@ -14,36 +13,12 @@ const tint = new T.Color();
 const keep = resource => { shared.add(resource); return resource; };
 export const isSharedLakeResource = resource => !!resource && shared.has(resource);
 
-// Detailed continuous ripple albedo on the existing low-poly animated surface.
-const rippleMap=keep(weatherTextures.ripples);rippleMap.wrapS=rippleMap.wrapT=T.MirroredRepeatWrapping;
-export const WATER_WAVES=[{k:.938,a:.016,dir:[.342,.940],w:1.233},{k:.576,a:.017,dir:[-.800,.600],w:.976},{k:.385,a:.009,dir:[.940,.342],w:.743}];
-export function waterDisplacement(x,z,r,time,wind=.32){time=Math.floor(time*12)/12;const edge=1-Math.max(0,Math.min(1,(r-.94)/.06))**2*(3-2*Math.max(0,Math.min(1,(r-.94)/.06)));return WATER_WAVES.reduce((h,v)=>h+v.a*Math.sin((x*v.dir[0]+z*v.dir[1])*v.k-time*v.w),0)*edge*(.76+wind*.42);}
-function waterMaterial(wind) {
- const mat=new T.MeshBasicMaterial({name:'PS1 low-poly detailed ripple water',color:0xffffff,transparent:false,depthWrite:true,side:T.DoubleSide});
- mat.onBeforeCompile=shader=>{
-  shader.uniforms.uLakeTime=wind.time;shader.uniforms.uLakeWind=wind.strength;shader.uniforms.uLakeTexture={value:rippleMap};
-  shader.vertexShader=`uniform float uLakeTime;uniform float uLakeWind;attribute float lakeRadius;attribute vec2 lakeCoord;attribute float facetTone;varying vec2 vLakeXZ;varying float vLakeRadius;varying float vFacetTone;\n`+shader.vertexShader;
-  shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
-   vLakeXZ=lakeCoord;vLakeRadius=lakeRadius;vFacetTone=facetTone;
-   float tick=floor(uLakeTime*12.)/12.;
-   float lakeH=sin(dot(lakeCoord,vec2(.342,.940))*.938-tick*1.233)*.016
-     +sin(dot(lakeCoord,vec2(-.800,.600))*.576-tick*.976)*.017
-     +sin(dot(lakeCoord,vec2(.940,.342))*.385-tick*.743)*.009;
-   transformed.y+=lakeH*(1.-smoothstep(.94,1.,lakeRadius))*(.76+uLakeWind*.42);
-  `);
-  shader.fragmentShader=`uniform float uLakeTime;uniform sampler2D uLakeTexture;varying vec2 vLakeXZ;varying float vLakeRadius;varying float vFacetTone;\n`+shader.fragmentShader;
-  shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
-   float tick=floor(uLakeTime*12.)/12.;
-   vec2 uv=vLakeXZ/10.+vec2(.014,.009)*uLakeTime;
-   uv+=vec2(sin(vLakeXZ.y*.27+uLakeTime*.51),cos(vLakeXZ.x*.21-uLakeTime*.38))*.018;
-   vec3 ripple=texture2D(uLakeTexture,uv).rgb;
-   vec3 crossing=texture2D(uLakeTexture,uv*vec2(.73,1.12)+vec2(-.010,.014)*uLakeTime+.31).rgb;
-   ripple=mix(ripple,crossing,.22);
-   float bank=smoothstep(.87,1.,vLakeRadius);
-   diffuseColor.rgb=mix(ripple*vFacetTone,vec3(.115,.173,.141),bank*.46);
-  `);
- };
- mat.customProgramCacheKey=()=> 'ps1-detailed-water-v23';return keep(mat);
+// Surface inputs (opaque depth and world normals) are bound by the main-thread
+// water pipeline after worker transfer. Never serialize a render-target texture.
+export const WATER_WAVES=[];
+export function waterDisplacement(){return 0;}
+function waterMaterial() {
+ return keep(new T.MeshBasicMaterial({name:'PS1 low-poly detailed ripple water',color:0x526d71,side:T.DoubleSide,depthWrite:true}));
 }
 
 function dryGrassMaterial(wind) {
@@ -300,7 +275,7 @@ export function makeLake(f,level=0,wind=stillWind){
   const lod=Math.max(0,Math.min(2,Math.floor(level))),set=resources(wind),group=new T.Group();
   group.name='large irregular rural lake';
   const y=Number.isFinite(f.lakeY)?f.lakeY:height(f.cx,f.cz,f.x,f.z)-.45;
-  const geometry=waterGeometry(f,y+.008);
+  const geometry=waterGeometry(f,y);
   if(geometry.index.count){
     const water=new T.Mesh(geometry,set.water);water.name='irregular slate-blue water';water.receiveShadow=true;group.add(water);
   }else geometry.dispose();

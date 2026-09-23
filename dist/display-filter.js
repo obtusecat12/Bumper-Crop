@@ -1,14 +1,15 @@
 import * as T from './vendor/three.module.min.js';
-import {createFrameReadback} from './frame-readback.js?v=27';
+import {createFrameReadback} from './frame-readback.js?v=28';
 
-export const VHS_SIGNAL_SIZE=Object.freeze({width:1440,height:1080});
+export const VHS_SIGNAL_SIZE=Object.freeze({width:960,height:720});
+export const VHS_OUTPUT_SIZE=Object.freeze({width:1440,height:1080});
 export const FILTERS = Object.freeze(['vhs', 'pixel', 'ps1', 'native']);
 export function displayFrame(filter,width,height){
   const w=filter==='vhs'?Math.min(width,height*4/3):width,h=filter==='vhs'?w*3/4:height;
   return {width:w,height:h,left:(width-w)/2,top:(height-h)/2,aspect:w/Math.max(1,h)};
 }
 export function displaySize(filter, quality, width, height, autoScale = 1) {
-  // 1080 progressive lines, square pixels, with the existing 4:3 camera.
+  // Output canvas only. Scene, fused optics and official NTSC run at <=720 lines.
   if(filter==='vhs')return {width:1440,height:1080};
   const aspect = Math.max(.2, width / Math.max(1, height));
   if (filter === 'ps1') {
@@ -31,10 +32,10 @@ in vec2 vUv;out vec4 outColor;
 const int dither[16]=int[16](-4,0,-3,1,2,-2,3,-1,-3,1,-4,0,3,-1,2,-2);
 void main(){
  vec2 uv=(filterMode==0||filterMode==2)?vec2(vUv.x,1.0-vUv.y):vUv;
- // Slight 900-line raster stepping, then official 1080-line VHS processing.
+ // All processing is internal 720p or below; output enlargement is nearest.
  // The scene and HUD share one source frame; no sharp layer is added afterward.
  vec3 c=texture(picture,uv).rgb;
- if(filterMode==2){vec2 grid=vec2(1200.,900.);vec2 stepped=(floor(uv*grid)+.5)/grid;c=mix(c,texture(picture,stepped).rgb,.16);}
+
  if(filterMode==2){
   // Exact byte-domain equivalent of the established 1.16 input saturation.
   // Flip here too: asynchronous bottom-up GL readback is now top-down.
@@ -63,6 +64,7 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  const uiScene=new T.Scene(),uiQuad=new T.Mesh(geometry,uiMaterial);uiQuad.frustumCulled=false;uiScene.add(uiQuad);
  renderer.info.autoReset=false;
  let mode='native',width=0,height=0,epoch=0,disposed=false,failed=false,readJob=null;
+ let scenePipeline=null,internal=null,outputWidth=0,outputHeight=0;
  let source=null,texture=null,spare=null,lastCapture=-Infinity,lastOutput=0,sequence=0,displayed=-1,compositor=null,lensEffect=null,uiTexture=null,uiWidth=0,uiHeight=0;
  const workers=[],cores=globalThis.navigator?.hardwareConcurrency||2,poolSize=cores>=8?3:cores>=4?2:1;
  const values={ms:null,latency:null,fps:0,workers:poolSize};
@@ -71,7 +73,7 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  function fail(error){if(failed||disposed)return;failed=true;epoch++;readback.cancel();readJob=null;stopWorkers();console.error('VHS filter failed',error);onError(error);}
  function startWorkers(){if(workers.length||failed||disposed)return;
   for(let i=0;i<poolSize;i++)try{
-   const worker=new Worker(new URL('./vhs-worker.js?v=27',import.meta.url),{type:'module',name:'ntsc-rs-'+i});
+   const worker=new Worker(new URL('./vhs-worker.js?v=28',import.meta.url),{type:'module',name:'ntsc-rs-'+i});
    const slot={worker,ready:false,busy:false,timer:setTimeout(()=>fail(new Error('VHS initialization timed out')),20000)};workers.push(slot);
    worker.onerror=e=>{e.preventDefault?.();if(!workers.includes(slot))return;fail(new Error(e.message||'VHS worker failed'));};worker.onmessageerror=()=>{if(workers.includes(slot))fail(new Error('VHS transfer failed'));};
    worker.onmessage=({data})=>{
@@ -86,34 +88,39 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
     if(data.sequence<=displayed){if(!spare)spare=new Uint8Array(data.buffer);return;}
     displayed=data.sequence;const now=performance.now();values.ms=smooth(values.ms,data.ms);values.latency=smooth(values.latency,now-data.capturedAt);
     if(lastOutput&&now-lastOutput<1000)values.fps=values.fps?values.fps*.85+1000/(now-lastOutput)*.15:1000/(now-lastOutput);lastOutput=now;
-    if(!texture){texture=new T.DataTexture(new Uint8Array(data.buffer),width,height,T.RGBAFormat);texture.colorSpace=T.NoColorSpace;texture.minFilter=texture.magFilter=T.LinearFilter;texture.generateMipmaps=false;}
+    if(!texture){texture=new T.DataTexture(new Uint8Array(data.buffer),width,height,T.RGBAFormat);texture.colorSpace=T.NoColorSpace;texture.minFilter=texture.magFilter=T.NearestFilter;texture.generateMipmaps=false;}
     else{spare=texture.image.data;texture.image.data=new Uint8Array(data.buffer);}texture.needsUpdate=true;
    };
   }catch(error){fail(error);break;}
  }
- function configure(next,w,h){if(disposed||(mode===next&&width===w&&height===h))return;
+ function configure(next,w,h){if(disposed||(mode===next&&outputWidth===w&&outputHeight===h))return;
   epoch++;readback.cancel();if(readJob){readJob.slot.busy=false;readJob=null;}
-  mode=next;if(mode!=='vhs')stopWorkers();width=w;height=h;lastCapture=-Infinity;lastOutput=0;displayed=-1;
-  source?.dispose();texture?.dispose();source=texture=null;spare=null;values.ms=values.latency=null;values.fps=0;
-  if(mode==='vhs'||mode==='ps1'){source=new T.FramebufferTexture(w,h);source.colorSpace=T.NoColorSpace;source.minFilter=source.magFilter=T.NearestFilter;source.generateMipmaps=false;}
+  mode=next;if(mode!=='vhs')stopWorkers();outputWidth=w;outputHeight=h;const scale=Math.min(1,720/h);width=Math.max(2,Math.round(w*scale/2)*2);height=Math.max(2,Math.round(h*scale/2)*2);lastCapture=-Infinity;lastOutput=0;displayed=-1;
+  source?.dispose();texture?.dispose();internal?.dispose();source=texture=null;
+  internal=new T.WebGLRenderTarget(width,height,{depthBuffer:false,minFilter:T.NearestFilter,magFilter:T.NearestFilter});internal.texture.colorSpace=T.NoColorSpace;
+  spare=null;values.ms=values.latency=null;values.fps=0;
   if(mode==='vhs'){failed=false;startWorkers();}
  }
  function setLensEffect(next){lensEffect=next;}
+ function setScenePipeline(next){scenePipeline=next;}
  function setCompositor(next){compositor=next;uiTexture?.dispose();uiTexture=new T.CanvasTexture(next.canvas);uiWidth=next.canvas.width;uiHeight=next.canvas.height;uiTexture.flipY=true;uiTexture.colorSpace=T.NoColorSpace;uiTexture.minFilter=uiTexture.magFilter=T.LinearFilter;uiTexture.generateMipmaps=false;uiMaterial.uniforms.picture.value=uiTexture;}
  function compose(scene,view,beforeScene,skipScene){
   // Upload changed UI before 3D draw submission, not in the middle of it.
   if(compositor){const changed=compositor.paint(width,height);if(uiWidth!==compositor.canvas.width||uiHeight!==compositor.canvas.height)setCompositor(compositor);else if(changed)uiTexture.needsUpdate=true;renderer.initTexture(uiTexture);}
+  renderer.setRenderTarget(internal);
+  if(scenePipeline){if(skipScene)scenePipeline.renderUI(width,height,internal,uiTexture,mode==='vhs'?2:0);else scenePipeline.render(scene,view,beforeScene,width,height,internal,uiTexture,mode==='vhs'?2:0);return;}
   if(skipScene)renderer.clear();else{beforeScene?.();renderer.render(scene,view);lensEffect?.render(width,height);}
+  renderer.setRenderTarget(internal);
   if(uiTexture){const old=renderer.autoClear;renderer.autoClear=false;renderer.render(uiScene,camera);renderer.autoClear=old;}
  }
  function present(picture,kind){material.uniforms.picture.value=picture;material.uniforms.filterMode.value=kind;material.uniforms.frameHeight.value=height;renderer.render(screen,camera);}
  function render(scene,view,now,beforeScene,skipScene=false){
   renderer.info.reset();
-  if(mode==='native'||mode==='pixel'||failed){compose(scene,view,beforeScene,skipScene);return;}
-  if(mode==='ps1'){compose(scene,view,beforeScene,skipScene);renderer.copyFramebufferToTexture(source);present(source,1);return;}
+  if(mode==='native'||mode==='pixel'||failed){compose(scene,view,beforeScene,skipScene);renderer.setRenderTarget(null);present(internal.texture,3);return;}
+  if(mode==='ps1'){compose(scene,view,beforeScene,skipScene);renderer.setRenderTarget(null);present(internal.texture,1);return;}
   const slot=workers.find(s=>s.ready&&!s.busy);
-  if(slot&&!readJob&&now-lastCapture>=1000/30){
-   compose(scene,view,beforeScene,skipScene);renderer.copyFramebufferToTexture(source);present(source,2);
+  if(slot&&!readJob&&now-lastCapture>=1000/60-.25){
+   compose(scene,view,beforeScene,skipScene);renderer.setRenderTarget(internal);
    const pixels=spare?.byteLength===width*height*4?spare:new Uint8Array(width*height*4);spare=null;
    const job={slot,epoch,width,height,capturedAt:now,sequence:++sequence};readJob=job;slot.busy=true;lastCapture=now;
    readback.capture(width,height,pixels).then(bytes=>{
@@ -122,11 +129,11 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
     slot.worker.postMessage({type:'frame',buffer:bytes.buffer,width:job.width,height:job.height,epoch:job.epoch,capturedAt:job.capturedAt,sequence:job.sequence,
       frame:Math.floor(job.capturedAt*60/1001),pregradedTopDown:true},[bytes.buffer]);
    }).catch(error=>{if(readJob===job){readJob=null;slot.busy=false;}if(error.name!=='AbortError')fail(error);});
-   if(!texture)renderer.clear();
-  }else if(!texture)renderer.clear();
-  if(texture)present(texture,0);
+   renderer.setRenderTarget(null);if(!texture)renderer.clear();
+  }else if(!texture){renderer.setRenderTarget(null);renderer.clear();}
+  renderer.setRenderTarget(null);if(texture)present(texture,0);
  }
- function contextLost(){lensEffect?.contextLost();epoch++;readback.cancel(true);if(readJob){readJob.slot.busy=false;readJob=null;}width=height=0;compositor?.invalidate();}
- function dispose(){lensEffect?.dispose();disposed=true;epoch++;readback.cancel(renderer.getContext().isContextLost());stopWorkers();source?.dispose();texture?.dispose();uiTexture?.dispose();geometry.dispose();material.dispose();uiMaterial.dispose();compositor?.dispose();}
- return{configure,render,contextLost,dispose,setCompositor,setLensEffect,values};
+ function contextLost(){scenePipeline?.contextLost();lensEffect?.contextLost();epoch++;readback.cancel(true);if(readJob){readJob.slot.busy=false;readJob=null;}width=height=outputWidth=outputHeight=0;compositor?.invalidate();}
+ function dispose(){scenePipeline?.dispose();lensEffect?.dispose();disposed=true;epoch++;readback.cancel(renderer.getContext().isContextLost());stopWorkers();source?.dispose();texture?.dispose();internal?.dispose();uiTexture?.dispose();geometry.dispose();material.dispose();uiMaterial.dispose();compositor?.dispose();}
+ return{configure,render,contextLost,dispose,setCompositor,setLensEffect,setScenePipeline,values};
 }

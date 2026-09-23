@@ -1,10 +1,10 @@
-import {landmarkTextures} from './landmark-textures.js?v=27';
-import {meadowEnvironment} from './meadow-layout.js?v=27';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=27';
-import {pondShapeGLSL} from './lake-shape.js?v=27';
+import {landmarkTextures} from './landmark-textures.js?v=28';
+import {meadowEnvironment} from './meadow-layout.js?v=28';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=28';
+import {pondShapeGLSL} from './lake-shape.js?v=28';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=27';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=27';
+import {ruralTextures} from './rural-textures.js?v=28';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=28';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;

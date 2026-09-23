@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {weatherSurface} from './weather-surfaces.js?v=27';
+import {weatherSurface} from './weather-surfaces.js?v=28';
 
 // One immutable seed buffer drives the whole rain volume. Surface particles
 // upload origin/launch data only on birth; all trajectories and billboard
@@ -208,8 +208,8 @@ varying float vMistAge,vMistSeed,vMistFade,vMistLight;
    statistics.waterHits++;
   }
  }
- function update(dt,{state,camera,chunks,rain:amount=0,active=true,wind:windInput=null,cameraVelocity=null,lightDirection=null}){
-  if(!active){rain.visible=rings.visible=false;lastY=null;return;}
+ function update(dt,{state,camera,chunks,rain:amount=0,active=true,wind:windInput=null,cameraVelocity=null,lightDirection=null,submerged=false}){
+  if(!active||submerged){rain.visible=rings.visible=false;lastY=null;return;}
   dt=Math.max(0,Number.isFinite(dt)?dt:0);amount=clamp(amount,0,1);clock+=dt;gridTimer+=dt;
   if(baseCX===null){baseCX=state.cx;baseCZ=state.cz;}
   let dx=baseCX-state.cx,dz=baseCZ-state.cz;
@@ -226,7 +226,7 @@ varying float vMistAge,vMistSeed,vMistFade,vMistLight;
   u.uRainCameraVelocity.value.copy(velocity);u.uRainWind.value.copy(wind);u.uRainDrift.value.addScaledVector(wind,dt);
   // Derive right from orientation (matrixWorld may not have been refreshed yet).
   u.uRainRight.value.set(1,0,0).applyQuaternion(camera.quaternion).normalize();
-  rain.visible=amount>.005;
+  rain.visible=amount>.005&&!submerged;
   const minX=Math.floor(state.x/4)*4-SPAN/2,minZ=Math.floor(state.z/4)*4-SPAN/2;
   const key=`${state.cx},${state.cz},${minX},${minZ}`;
   if(rain.visible&&(lastGrid!==key||gridTimer>.75)){

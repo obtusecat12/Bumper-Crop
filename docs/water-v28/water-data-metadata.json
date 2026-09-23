@@ -1,0 +1,115 @@
+{
+  "normal_a": {
+    "seed": 28101,
+    "size": [
+      256,
+      256
+    ],
+    "low_frequency_cycles_per_tile": 3.0,
+    "high_frequency_taper_cycles_per_tile": 39,
+    "slope_rms": 0.255,
+    "mean_encoded_rgb": [
+      127.4576416015625,
+      127.48362731933594,
+      251.217041015625
+    ],
+    "unit_length_error_after_8bit_decode_max": 0.005597559347107595,
+    "edge_delta_mean": 2.8483072916666665
+  },
+  "normal_b": {
+    "seed": 28102,
+    "size": [
+      256,
+      256
+    ],
+    "low_frequency_cycles_per_tile": 4.4,
+    "high_frequency_taper_cycles_per_tile": 48,
+    "slope_rms": 0.215,
+    "mean_encoded_rgb": [
+      127.52520751953125,
+      127.49630737304688,
+      252.25
+    ],
+    "unit_length_error_after_8bit_decode_max": 0.005291650887873978,
+    "edge_delta_mean": 3.4537760416666665
+  },
+  "normal_cross_correlation": -0.005849157972810939,
+  "caustics": {
+    "atlas_size": [
+      1024,
+      1024
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "frame_size": [
+      256,
+      256
+    ],
+    "frames": 16,
+    "order": "row-major from top-left in PNG; frame index f has col=f%4,row=f//4",
+    "loop_period_suggested_seconds": 2.0,
+    "photon_grid_per_frame": [
+      1536,
+      1536
+    ],
+    "photon_count_per_frame": 2359296,
+    "internal_raster": [
+      512,
+      512
+    ],
+    "surface_slope_rms_at_t0": 0.3,
+    "depth_tile_units": 0.3,
+    "water_ior": 1.333,
+    "exposure_constant": 2.5,
+    "irradiance_baseline_subtraction": 0.85,
+    "linear_channel_range": [
+      0,
+      1
+    ],
+    "frame_mean": [
+      0.08128578335631127,
+      0.08144722732843138,
+      0.08166312423406863,
+      0.08179458917356004,
+      0.08183360380284926,
+      0.0816763485179228,
+      0.08118393841911764,
+      0.08203424191942402,
+      0.08250343472349878,
+      0.08224702722886029,
+      0.08235970291436888,
+      0.0825237797755821,
+      0.08284409466911764,
+      0.08267768411075367,
+      0.0810052609911152,
+      0.08091047698376226
+    ],
+    "consecutive_frame_mae_including_wrap": [
+      0.061226878446691176,
+      0.06474717084099264,
+      0.06491657331878063,
+      0.06313249176623774,
+      0.058896173215379904,
+      0.05202810250076593,
+      0.04711734547334559,
+      0.0499026429419424,
+      0.05629721248851103,
+      0.05921134200750613,
+      0.05972720875459559,
+      0.05921588972503064,
+      0.05431392894071691,
+      0.04868313658471201,
+      0.04926303040747549,
+      0.055997242647058826
+    ],
+    "wrap_mae": 0.055997242647058826,
+    "surface_loop_gradient_max_error": 4.440892098500626e-16
+  },
+  "texture_color_space": "NoColorSpace/linear; disable sRGB decoding for all textures",
+  "normal_sampling": "RepeatWrapping both axes; mipmaps permitted; encode RGB=0.5*(normalized(-dh/dpixelX,+dh/dpixelY,1)+1), because PNG rows point down. OpenGL positive tangent Y with flipY=true. If using flipY=false, invert green. No PNG ICC/sRGB/gAMA tags.",
+  "caustic_sampling": "Do not use global atlas repeat for in-frame boundaries. Manually fract tile UV and wrap bilinear samples inside the chosen 256px tile; interpolate adjacent frames including 15->0; disable mipmaps on atlas to avoid frame bleeding. Standard texel-center inset sampling is a simpler near-seam approximation.",
+  "primary_reference": "https://developer.nvidia.com/gpugems/gpugems/part-i-natural-effects/chapter-2-rendering-water-caustics",
+  "algorithm": "Periodic radially weighted Gaussian Fourier height fields; exact vector Snell refraction of 1536\u00b2 vertical photons per frame; floor intersection; periodic bilinear energy accumulation; global contrast mapping. No Voronoi or line drawing."
+}

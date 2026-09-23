@@ -1,0 +1,25 @@
+{
+  "gles": "OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "half_resolution": [
+    480,
+    360
+  ],
+  "dry_identity": true,
+  "absorption_expected_8bit": [
+    56.898190837849604,
+    170.93161173908803,
+    230.73354159916968
+  ],
+  "absorption_actual_8bit": [
+    57,
+    171,
+    231
+  ],
+  "software_ms_per_fused_draw": {
+    "dry": 10.521590000053038,
+    "rain": 18.826104500021756,
+    "submerged": 16.702075749890355
+  },
+  "not_device_fps": true
+}

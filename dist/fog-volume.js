@@ -79,7 +79,7 @@ export function createFogVolume(renderer,noise){
  function update({mist=0,time=0,originX=0,originZ=0,quality:q='balanced',color}={}){uniforms.uFogVolumeAmount.value=Math.max(0,Math.min(1,mist));values.uTime.value=time;values.uOrigin.value.set(wrap(originX),wrap(originZ));quality=q;if(color)values.uFogColor.value.copy(color);}
  function render(view){
   if(uniforms.uFogVolumeAmount.value<.001)return false;
-  renderer.getDrawingBufferSize(size);uniforms.uFogViewport.value.copy(size);
+  const source=renderer.getRenderTarget();if(source)size.set(source.width,source.height);else renderer.getDrawingBufferSize(size);uniforms.uFogViewport.value.copy(size);
   const h={low:108,balanced:144,high:180}[quality]||144,w=Math.max(96,Math.min(320,Math.round(h*size.x/size.y)));
   if(target.width!==w*4||target.height!==h*2)target.setSize(w*4,h*2);uniforms.uFogTileSize.value.set(w,h);
   view.updateMatrixWorld(true);values.uInvProjection.value.copy(view.projectionMatrixInverse);values.uViewWorld.value.copy(view.matrixWorld);

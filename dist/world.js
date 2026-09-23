@@ -1,8 +1,9 @@
-import {barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=27';
-import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=27';
-import {farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=27';
-import {createSettlementPlanner} from './rural-settlements.js?v=27';
-import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=27';
+import {lakeBedDepth} from './water-profile.js?v=28';
+import {barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=28';
+import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=28';
+import {farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=28';
+import {createSettlementPlanner} from './rural-settlements.js?v=28';
+import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=28';
 export {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance};
 // Infinite signed BigInt cells with deterministic seed-based generation.
 export const CHUNK=64;
@@ -83,8 +84,9 @@ export function roadSample(x,z,f,includeDrive=true){
 }
 export function roadRelief(x,z,f){return roadProfile(x,z,f,roadState).relief}
 
-export function surfaceHeight(x,z,f){let y=height(x,z,f.x,f.z);if(f.type==='pond'){const m=pondMetrics(x,z,f),water=f.lakeY;if(m.metres<=0)return water-.045*(1-smooth(-.5,0,m.metres))-(f.depth||1.7)*smooth(0,12,-m.metres);if(m.bank<1){const rise=smooth(0,1,m.bank);return water+(y-water)*rise+Math.sin(m.bank*Math.PI)*(.10+.16*f.hill)+roadRelief(x,z,f)*smooth(.65,1,m.bank)}}
- if(f.type==='building'){const p=buildingLocal(x,z,f),[w,d]=buildingSize(f),edge=Math.max(Math.abs(p.x)-w/2,Math.abs(p.z)-d/2),a=smooth(.2,3.3,edge);y=(f.buildingY-.04)*(1-a)+y*a}return barnGroundHeight(x,z,f,farmGroundHeight(x,z,f,y))+roadRelief(x,z,f);}
+const heightMetrics={};
+export function surfaceHeight(x,z,f){let y=height(x,z,f.x,f.z);if(f.type==='pond'){const m=pondMetrics(x,z,f,heightMetrics),water=f.lakeY;if(m.metres<=0)return water-lakeBedDepth(-m.metres,x-f.cx,z-f.cz,f.depth);if(m.bank<1){const rise=smooth(0,1,m.bank);return water+(y-water)*rise+Math.sin(m.bank*Math.PI)*(.10+.16*f.hill)+roadRelief(x,z,f)*smooth(.65,1,m.bank)}}
+ if(f.type==='building'){const angle=f.buildingAngle||0,dx=x-f.cx,dz=z-f.cz,px=Math.cos(angle)*dx-Math.sin(angle)*dz,pz=Math.sin(angle)*dx+Math.cos(angle)*dz,size=SIZES[f.variant%8],scale=f.buildingScale||1,edge=Math.max(Math.abs(px)-size[0]*scale/2,Math.abs(pz)-size[1]*scale/2),a=smooth(.2,3.3,edge);y=(f.buildingY-.04)*(1-a)+y*a}return barnGroundHeight(x,z,f,farmGroundHeight(x,z,f,y))+roadRelief(x,z,f);}
 export function inClearing(x,z,f){if(barnEntrance(x,z,f)||barnFootprintDistance(x,z,f)<.7)return true;if(farmClearing(x,z,f))return true;if(f.type==='pond'){const m=pondMetrics(x,z,f);return m.metres<m.width+1.5;}if(f.type==='building'){const p=buildingLocal(x,z,f),[w,d]=buildingSize(f);return Math.abs(p.x)<w/2+3.4&&Math.abs(p.z)<d/2+4.3}return false}
 function vegetationCover(f){const buckets=new Map();for(const t of [...f.trees.map(t=>({x:t.x,z:t.z,r:1.15*t.scale})),...f.shrubs.map(s=>({x:s.x,z:s.z,r:s.width*s.scale*.46}))]){for(let z=Math.floor((t.z-t.r)/4);z<=Math.floor((t.z+t.r)/4);z++)for(let x=Math.floor((t.x-t.r)/4);x<=Math.floor((t.x+t.r)/4);x++){const key=z*17+x;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(t)}}f.cover=buckets}
 function addVegetation(f,r){const valid=(x,z,margin=0)=>x>2.5&&x<61.5&&z>2.5&&z<61.5&&roadDistance(x,z,f)>2.7+margin&&!inClearing(x,z,f),addTree=(x,z,v,scale)=>{if(!valid(x,z))return;f.trees.push({x,z,variant:v,scale,rotation:r()*Math.PI*2,seed:Math.floor(r()*4294967296)})};const mode=r();f.vegetationMode=mode<.021?'windbreak':mode<.080?'grove':'scattered';

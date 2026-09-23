@@ -42,10 +42,10 @@ export function pondBankPoint(f,a,metres=0){
  const r=pondRadius(f,a)*Math.hypot(f.rx*Math.cos(a),f.rz*Math.sin(a));
  return pondPoint(f,a,1+metres/Math.max(.001,r));
 }
-export function pondMetrics(x,z,f){
+export function pondMetrics(x,z,f,out={}){
  const a=pondAngle(x,z,f),d=pondDistance(x,z,f),width=pondShoreWidth(f,a);
  const metres=(d-1)*pondRadius(f,a)*Math.hypot(f.rx*Math.cos(a),f.rz*Math.sin(a));
- return {angle:a,distance:d,metres,width,bank:metres/width};
+ out.angle=a;out.distance=d;out.metres=metres;out.width=width;out.bank=metres/width;return out;
 }
 
 // Import this string into ground.js; uniforms preserve the old uPond/uShore

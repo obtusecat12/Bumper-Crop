@@ -1,0 +1,132 @@
+import * as T from './vendor/three.module.min.js';
+import {createWaterSurface} from './water-surface.js?v=28';
+import {createCameraFocus} from './camera-focus.js?v=28';
+export const INTERNAL_HEIGHT=720,DOF_SCALE=.5,DOF_TAPS=10;
+export const passVertex=`precision highp float;precision highp sampler2D;in vec3 position;out vec2 uv;void main(){uv=position.xy*.5+.5;gl_Position=vec4(position,1.);}`;
+export const copyDepthFragment=`precision highp float;precision highp sampler2D;uniform sampler2D picture,depth;in vec2 uv;out vec4 outColor;void main(){outColor=texture(picture,uv);gl_FragDepth=texture(depth,uv).r;}`;
+export const fusedFragment=`precision highp float;precision highp sampler2D;
+ uniform sampler2D picture,depth,wetHeight,washNoise;
+ uniform vec2 resolution,fieldSize;uniform mat4 inverseProjection,cameraWorld;
+ uniform float nearPlane,farPlane,focusDist,aperture,wet,submerged,washWeight,washAge,exiting,time,level,exitFlash;
+ uniform vec2 flareSun;uniform float flareStrength,flareAspect;uniform vec3 eye,screenLight;in vec2 uv;out vec4 outColor;
+ const vec2 poisson[10]=vec2[10](vec2(-.326,-.406),vec2(-.840,-.074),vec2(-.696,.457),vec2(-.203,.621),vec2(.962,-.195),vec2(.473,-.480),vec2(.519,.767),vec2(.185,-.893),vec2(.507,.064),vec2(-.092,-.057));
+ float linearZ(float d){return nearPlane*farPlane/(farPlane-d*(farPlane-nearPlane));}
+ vec2 safe(vec2 p){return clamp(p,1./resolution,1.-1./resolution);}
+ // CPU finite derivatives are baked only on wet-field changes, no extra pass.
+ // RG signed normals, B thickness, A coverage; linear data, sampled once.
+ vec4 fieldAt(vec2 q){
+  if(wet<.5&&washWeight<.001)return vec4(0.);
+  vec4 h=texture(wetHeight,vec2(q.x,1.-q.y));vec2 xy=(h.rg*255.-128.)/127.;
+  vec3 rainN=normalize(vec3(xy,sqrt(max(.001,1.-dot(xy,xy)))));
+  float coverage=smoothstep(.025,.92,h.a)*wet,thickness=h.b*3.*wet;
+  if(washWeight<.001)return vec4(rainN.xy,coverage,thickness);
+  vec3 wn=texture(washNoise,q*vec2(1.1,1.47)+vec2(time*.025,time*.19)).xyz*2.-1.;
+  wn.xy*=.36;vec3 washN=normalize(vec3(wn.xy,1.));
+  // Fisheye sheet at crossing; holes open, then a curtain drains TOP -> bottom.
+  float radial=max(0.,1.-washAge*3.);washN.xy+=(q-.5)*radial*.50;
+  float front=1.-washAge/ .64,curtain=1.-smoothstep(front-.04,front+.16,q.y);
+  float opening=texture(washNoise,q*2.7+vec2(0.,time*.11)).r;
+  float rupture=1.-smoothstep(.14,.68,washAge)*smoothstep(.46,.63,opening);
+  float weight=washWeight*mix(1.,curtain*rupture,exiting);
+  vec3 n=normalize(mix(rainN,washN,weight));coverage=max(coverage,weight);thickness=mix(thickness,1.1,weight);
+  return vec4(n.xy,coverage,thickness);
+ }
+ vec2 warp(vec2 q,vec4 field,float dispersion){
+  vec2 xy=field.xy;float l=dot(xy,xy);if(l>.999)xy*=sqrt(.999/l);
+  vec3 n=vec3(xy,sqrt(max(.001,1.-dot(xy,xy))));
+  vec3 r=refract(refract(vec3(0.,0.,-1.),n,1./1.333),vec3(0.,0.,1.),1.333);
+  vec2 shift=clamp(r.xy/max(.35,-r.z)*(.10+.032*sqrt(clamp(field.w,0.,2.))),vec2(-.085),vec2(.085));
+  shift.x*=resolution.y/resolution.x;return safe(q+shift*field.z*dispersion);
+ }
+ vec3 absorbAt(vec2 q){
+  vec3 color=texture(picture,q).rgb;if(submerged<.5)return color;
+  float z=linearZ(texture(depth,q).r);vec4 view=inverseProjection*vec4(q*2.-1.,1.,1.);vec3 ray=normalize(view.xyz/view.w);
+  float d=min(140.,z/max(.04,-ray.z));vec3 worldRay=mat3(cameraWorld)*ray;
+  if(worldRay.y>.0001)d=min(d,max(0.,(level-eye.y)/worldRay.y));
+  return color*exp(-vec3(.3,.08,.02)*d);
+ }
+ vec3 opticalFlare(vec2 q){
+ if(flareStrength<.001)return vec3(0.);vec2 aspect=vec2(flareAspect,1.),v=(q-flareSun)*aspect,axis=vec2(.5)-flareSun;
+ float rr=dot(v,v);vec3 c=vec3(1.,.75,.38)*(exp(-rr/.011025)*.36+exp(-rr/.000784)*.70);
+ for(int i=0;i<3;i++){float f=.55+float(i)*.62;vec2 g=(q-(flareSun+axis*f))*aspect;float r=.025+float(i)*.013;float ring=exp(-pow((length(g)-r)/.008,2.));c+=mix(vec3(.28,.42,.20),vec3(.36,.22,.42),float(i)*.5)*(exp(-dot(g,g)/(r*r))*.16+ring*.08);}
+ c+=vec3(.30,.20,.10)*exp(-abs(v.y)*80.)*exp(-abs(v.x)*2.3)*.11;
+ return c*flareStrength;
+ }
+ vec3 lensSample(vec2 q,float chroma){
+  vec4 f=fieldAt(q);vec2 p=warp(q,f,chroma);vec3 c=absorbAt(p)+opticalFlare(q);
+  if(f.z>.002){vec3 n=normalize(vec3(f.xy,sqrt(max(.001,1.-dot(f.xy,f.xy))))),light=normalize(screenLight),halfV=normalize(vec3(0,0,1)+light);
+   float fresnel=.02037+.97963*pow(1.-n.z,5.),edge=smoothstep(.52,.88,length(f.xy));
+   float dark=edge*max(0.,-dot(f.xy,normalize(light.xy+vec2(.0001))))*.18;
+   vec3 reflected=absorbAt(safe(q+f.xy*.025));
+   c=mix(c*(1.-dark),reflected,clamp(fresnel*(.45+.25*edge),0.,.30)*f.z);
+   c+=vec3(.84,.91,1.)*pow(max(0.,dot(n,halfV)),70.)*(.10+.18*edge)*max(.1,fresnel*3.)*f.z;
+  }
+  return c;
+ }
+ void main(){
+  vec4 central=fieldAt(uv);vec2 warped=warp(uv,central,1.);float z=linearZ(texture(depth,warped).r);
+  float coc=clamp(abs(z-focusDist)/max(z,.001)*aperture,0.,1.);
+  // Droplets are on the front glass: they remain slightly out of focus even
+  // when the world behind them is perfectly focused.
+  float wetBlur=central.z*clamp(.18+central.w*.30,.18,.65);
+  float radius=max(coc*5.5,wetBlur*4.0);radius=max(radius,exitFlash*5.);
+  float signFocus=z<focusDist?-1.:1.;vec3 sum=vec3(0.);float weights=0.;vec3 bloom=vec3(0.);
+  for(int i=0;i<10;i++){
+   vec2 offset=poisson[i]*radius/resolution;
+   vec2 q=safe(uv+offset);vec4 f=fieldAt(q);float sampleZ=linearZ(texture(depth,warp(q,f,1.)).r);
+   float w=1.;if(sampleZ<z*.80&&coc<.08)w=.12;
+   // Coaxial R/B radius changes; no full-frame lateral chromatic ghost.
+   vec3 g=lensSample(q,1.);
+   vec3 c=vec3(lensSample(safe(uv+offset*(1.+.055*signFocus)),.989).r,g.g,lensSample(safe(uv+offset*(1.-.055*signFocus)),1.014).b);
+   sum+=c*w;weights+=w;bloom+=max(c-vec3(.65),vec3(0.));
+  }
+  vec3 color=sum/max(weights,.001);color=color*(1.+exitFlash*.72)+bloom*.10*exitFlash*.62;
+  // A encodes only whether the cheap resolve may preserve sharp 720p pixels.
+  outColor=vec4(color,max(max(clamp(radius*.65,0.,1.),central.z),max(submerged,exitFlash)));
+ }`;
+export const resolveFragment=`precision highp float;precision highp sampler2D;uniform sampler2D fused,sharp,uiPicture;uniform float exposure;uniform int displayMode;uniform bool hasUI,uiOnly;in vec2 uv;out vec4 outColor;
+ vec3 encode(vec3 x){return mix(x*12.92,1.055*pow(max(x,vec3(0.)),vec3(1./2.4))-.055,step(vec3(.0031308),x));}
+ vec3 aces(vec3 c){mat3 inM=mat3(vec3(.59719,.07600,.02840),vec3(.35458,.90834,.13383),vec3(.04823,.01566,.83777));mat3 outM=mat3(vec3(1.60475,-.10208,-.00327),vec3(-.53108,1.10813,-.07276),vec3(-.07367,-.00605,1.07602));c=inM*(c*exposure/.6);c=(c*(c+.0245786)-.000090537)/(c*(.983729*c+.4329510)+.238081);return clamp(outM*c,0.,1.);}
+ void main(){vec2 p=displayMode==2?vec2(uv.x,1.-uv.y):uv;vec3 c=vec3(0.);
+ if(!uiOnly){vec4 f=texture(fused,p);c=encode(aces(mix(texture(sharp,p).rgb,f.rgb,f.a)));}
+ if(hasUI){vec4 ui=texture(uiPicture,p);c=mix(c,ui.rgb,ui.a);}
+ if(displayMode==2){ivec3 rgb=ivec3(floor(c*255.+.5));int l=299*rgb.r+587*rgb.g+114*rgb.b;
+ ivec3 graded=(clamp(29000*rgb-ivec3(4*l),ivec3(0),ivec3(6375000))+12500)/25000;
+ if(all(equal(rgb,ivec3(5,74,153))))graded.b=167;if(all(equal(rgb,ivec3(99,20,156))))graded.b=171;c=vec3(graded)/255.;}
+ outColor=vec4(c,1.);
+ }`;
+export function createWaterPipeline(renderer,{ripples,lens,waterState,flare}){
+ const surface=createWaterSurface(ripples),focus=createCameraFocus();
+ const geometry=new T.BufferGeometry().setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3)),scene=new T.Scene(),screenCamera=new T.Camera();
+ const mat=(f,u,depth=false)=>new T.RawShaderMaterial({glslVersion:T.GLSL3,vertexShader:passVertex,fragmentShader:f,uniforms:u,depthTest:depth,depthFunc:T.AlwaysDepth,depthWrite:depth,blending:T.NoBlending,toneMapped:false});
+ const copy=mat(copyDepthFragment,{picture:{value:null},depth:{value:null}},true);
+ const u={picture:{value:null},depth:{value:null},wetHeight:{value:null},washNoise:{value:surface.normalA},resolution:{value:new T.Vector2()},fieldSize:{value:new T.Vector2()},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},nearPlane:{value:.1},farPlane:{value:480},focusDist:{value:18},aperture:{value:.13},wet:{value:0},submerged:{value:0},washWeight:{value:0},washAge:{value:0},exiting:{value:0},time:{value:0},level:{value:0},exitFlash:{value:0},eye:{value:new T.Vector3()},screenLight:{value:new T.Vector3(-.42,.67,.83)},flareSun:flare?.uniforms.uSun||{value:new T.Vector2()},flareStrength:flare?.uniforms.uStrength||{value:0},flareAspect:flare?.uniforms.uAspect||{value:4/3}};
+ const fused=mat(fusedFragment,u),resolve=mat(resolveFragment,{fused:{value:null},sharp:{value:null},exposure:{value:1.23},uiPicture:{value:null},hasUI:{value:false},uiOnly:{value:false},displayMode:{value:0}}),quad=new T.Mesh(geometry,copy);quad.frustumCulled=false;scene.add(quad);
+ let opaque=null,water=null,half=null,width=0,height=0,clock=0;const waterMeshes=new Set();
+ const stats={internalWidth:0,internalHeight:0,compositeWidth:0,compositeHeight:0,fusedPasses:0,depthCopies:0,taps:10};
+ function target(w,h,depth){const rt=new T.WebGLRenderTarget(w,h,{type:renderer.extensions.has('EXT_color_buffer_float')?T.HalfFloatType:T.UnsignedByteType,depthBuffer:depth,minFilter:T.LinearFilter,magFilter:T.LinearFilter,generateMipmaps:false});rt.texture.colorSpace=T.NoColorSpace;if(depth){rt.depthTexture=new T.DepthTexture(w,h,T.UnsignedIntType);rt.depthTexture.minFilter=rt.depthTexture.magFilter=T.NearestFilter;}return rt;}
+ function allocate(w,h){if(width===w&&height===h&&opaque)return;disposeTargets();width=w;height=h;opaque=target(w,h,true);water=target(w,h,true);half=target(Math.max(1,Math.ceil(w*.5)),Math.max(1,Math.ceil(h*.5)),false);
+  stats.internalWidth=w;stats.internalHeight=h;stats.compositeWidth=half.width;stats.compositeHeight=half.height;u.resolution.value.set(w,h);surface.uniforms.size.value.set(w,h);
+ }
+ function disposeTargets(){opaque?.dispose();water?.dispose();half?.dispose();opaque=water=half=null;width=height=0;}
+ function attach(chunk){surface.attach(chunk);focus.attach(chunk);chunk.group.traverse(o=>{if(o.userData.waterSurface)waterMeshes.add(o);});}
+ function detach(chunk){focus.detach(chunk);chunk.group.traverse(o=>{if(o.userData.waterSurface){waterMeshes.delete(o);if(o.userData.originalWaterMaterial)o.material=o.userData.originalWaterMaterial;}});}
+ function update(dt,camera,state,active,locked,color,sun,mist,level){if(active)clock+=dt;focus.update(dt,camera,active,locked);surface.update(clock,camera,color,sun,mist);u.time.value=clock;u.level.value=level||0;u.focusDist.value=focus.result.distance;u.aperture.value=locked?0:.13;u.nearPlane.value=camera.near;u.farPlane.value=camera.far;u.eye.value.copy(camera.position);u.inverseProjection.value.copy(camera.projectionMatrixInverse);u.cameraWorld.value.copy(camera.matrixWorld);
+  u.submerged.value=waterState.wet?1:0;u.washWeight.value=waterState.washWeight;u.washAge.value=waterState.age;u.exiting.value=waterState.state==='exitRupture'?1:0;u.exitFlash.value=waterState.flash;
+  if(sun){u.screenLight.value.copy(sun).transformDirection(camera.matrixWorldInverse);u.screenLight.value.z=Math.abs(u.screenLight.value.z)+.16;}
+ }
+ function draw(m,target){quad.material=m;renderer.setRenderTarget(target);renderer.render(scene,screenCamera);}
+ function render(world,camera,beforeScene,w,h,output,uiTexture=null,mode=0){allocate(w,h);const saved=renderer.getRenderTarget(),auto=renderer.autoClear,mask=camera.layers.mask,bg=world.background;
+  try{resolve.uniforms.uiOnly.value=false;resolve.uniforms.uiPicture.value=uiTexture;resolve.uniforms.hasUI.value=!!uiTexture;resolve.uniforms.displayMode.value=mode;beforeScene?.();renderer.autoClear=true;camera.layers.set(0);renderer.setRenderTarget(opaque);renderer.render(world,camera);let source=opaque;
+   if(waterMeshes.size){copy.uniforms.picture.value=opaque.texture;copy.uniforms.depth.value=opaque.depthTexture;draw(copy,water);stats.depthCopies++;
+    surface.uniforms.sceneColor.value=opaque.texture;surface.uniforms.sceneDepth.value=opaque.depthTexture;
+    renderer.autoClear=false;world.background=null;camera.layers.set(2);renderer.setRenderTarget(water);renderer.render(world,camera);source=water;}
+   world.background=bg;camera.layers.mask=mask;renderer.autoClear=true;
+   u.picture.value=source.texture;u.depth.value=source.depthTexture;if(!waterState.wet||waterState.washWeight>0||!u.wetHeight.value)u.wetHeight.value=lens.prepareField();u.fieldSize.value.set(lens.physics.fieldWidth,lens.physics.fieldHeight);u.wet.value=lens.physics.wet&&!waterState.wet?1:0;
+   draw(fused,half);stats.fusedPasses++;
+   resolve.uniforms.fused.value=half.texture;resolve.uniforms.sharp.value=source.texture;resolve.uniforms.exposure.value=renderer.toneMappingExposure;draw(resolve,output);
+  }finally{world.background=bg;camera.layers.mask=mask;renderer.autoClear=auto;renderer.setRenderTarget(saved);}
+ }
+ function renderUI(w,h,output,texture,mode){allocate(w,h);resolve.uniforms.uiOnly.value=true;resolve.uniforms.hasUI.value=!!texture;resolve.uniforms.uiPicture.value=texture;resolve.uniforms.displayMode.value=mode;draw(resolve,output);}
+ return {render,renderUI,attach,detach,update,focus,surface,stats,reset(camera){focus.reset(camera);},contextLost(){disposeTargets();lens.contextLost();u.wetHeight.value=null;},dispose(){disposeTargets();surface.dispose();geometry.dispose();copy.dispose();fused.dispose();resolve.dispose();waterMeshes.clear();}};
+}

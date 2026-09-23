@@ -22,6 +22,9 @@ float sat(float x) { return clamp(x, 0.0, 1.0); }
 float ease(float x) { x=sat(x); return x*x*(3.0-2.0*x); }
 `;
 const vertexFinish = `
+  float proximity=distance((modelMatrix*vec4(transformed,1.)).xyz,cameraPosition);
+  vAlpha*=clamp((proximity-.25)/.30,0.,1.);
+  if(proximity<.25){transformed=vec3(0.0);vAlpha=0.;gl_Position=vec4(2.,2.,2.,1.);return;}
   vec4 mvPosition = modelViewMatrix * vec4(transformed, 1.0);
   vWaterView = -mvPosition.xyz;
   vWaterWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;
@@ -41,6 +44,7 @@ varying float vSeed;
 void main() {
   float t=uTime-iBirth;
   if(t<0.0 || t>max(iShape.w,iJet.x+iJet.z)){vAlpha=0.0;gl_Position=vec4(2.0,2.0,2.0,1.0);return;}
+  if(distance((modelMatrix*vec4(iOrigin,1.)).xyz,cameraPosition)<.25){vec3 transformed=vec3(0.0);vAlpha=0.;gl_Position=vec4(2.,2.,2.,1.);return;}
   float theta=uv.x*6.28318530718;
   vec2 radial=vec2(cos(theta),sin(theta));
   float forward=max(0.0,dot(radial,iMotion.xy));
@@ -91,6 +95,10 @@ void main() {
 }`;
 
 const waterFragment = `
+float bayer4(vec2 p){ivec2 q=ivec2(mod(floor(p),4.));int x=q.x,y=q.y;
+ int a=((x&1)^(y&1))*2+(y&1),b=(((x>>1)&1)^((y>>1)&1))*2+((y>>1)&1);
+ return (float(a*4+b)+.5)/16.;}
+
 varying vec3 vWaterView;
 varying vec3 vWaterWorld;
 varying float vAlpha;
@@ -140,9 +148,10 @@ void main() {
   if(dot(n,v)<0.0) n=-n;
   float fresnel=0.0204+0.9796*pow(1.0-max(0.0,dot(n,v)),5.0);
   float rim=smoothstep(0.86,1.0,vWaterUv.y)*(1.0-vPart);
-  float alpha=vAlpha*(0.10+fresnel*0.58+rim*0.12+vPart*0.08);
+  float alpha=vAlpha*(0.34+fresnel*0.48+rim*0.18+vPart*0.08);
   float roughness=mix(uRoughness,0.28,rim)+vBreak*0.08;
   gl_FragColor=vec4(waterLight(n,v,roughness),min(0.78,alpha));
+  if(gl_FragColor.a<bayer4(gl_FragCoord.xy))discard;gl_FragColor.a=1.;
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
   #include <fog_fragment>
@@ -152,20 +161,16 @@ const ballistic = `
 attribute vec3 iVelocity;
 attribute vec4 iData; // radius, lifetime, drag rate, opacity
 attribute vec2 iSurface; // water level, seed
-vec3 flight(float t) {
-  float k=max(0.001,iData.z), e=exp(-k*t), a=(1.0-e)/k;
-  return iOrigin+iVelocity*a+vec3(0.0,-9.81*(t-a)/k,0.0);
-}
-vec3 velocityAt(float t) {
-  float k=max(0.001,iData.z), e=exp(-k*t);
-  return iVelocity*e+vec3(0.0,-9.81*(1.0-e)/k,0.0);
-}
+vec3 flight(float t) {return iOrigin+iVelocity*t+0.5*vec3(0.,-9.81,0.)*t*t;}
+vec3 velocityAt(float t) {return iVelocity+vec3(0.,-9.81,0.)*t;}
+
 `;
 const dropVertex = commonVertex + ballistic + `
 void main() {
   float age=uTime-iBirth, t=max(age,0.0);
   if(age<0.0 || age>iData.y){vAlpha=0.0;gl_Position=vec4(2.0,2.0,2.0,1.0);return;}
   vec3 center=flight(t), vel=velocityAt(t);
+  if(distance((modelMatrix*vec4(center,1.)).xyz,cameraPosition)<.25){vec3 transformed=vec3(0.0);vAlpha=0.;gl_Position=vec4(2.,2.,2.,1.);return;}
   vec3 direction=normalize(vel+vec3(0.0001));
   vec3 reference=abs(direction.y)>0.92?vec3(1.0,0.0,0.0):vec3(0.0,1.0,0.0);
   vec3 right=normalize(cross(reference,direction)), forward=cross(direction,right);
@@ -173,7 +178,7 @@ void main() {
   vec3 transformed=center+iData.x*(right*position.x+direction*position.y*stretch+forward*position.z);
   vWaterUv=uv;
   vAlpha=iData.w*ease(age/0.012)*ease((iData.y-age)/0.085);
-  if(age<0.0 || age>iData.y || center.y<iSurface.x+0.001) vAlpha=0.0;
+  if(age<0.0 || age>iData.y) vAlpha=0.0;
   ${vertexFinish}
 }`;
 const dropFragment = waterFragment + `
@@ -183,7 +188,8 @@ void main() {
   vec3 v=normalize(cameraPosition-vWaterWorld);
   if(dot(n,v)<0.0)n=-n;
   float F=0.0204+0.9796*pow(1.0-max(0.0,dot(n,v)),5.0);
-  gl_FragColor=vec4(waterLight(n,v,uRoughness),vAlpha*(0.36+F*0.46));
+  gl_FragColor=vec4(waterLight(n,v,uRoughness),vAlpha*(0.62+F*0.38));
+  if(gl_FragColor.a<bayer4(gl_FragCoord.xy))discard;gl_FragColor.a=1.;
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
   #include <fog_fragment>
@@ -193,6 +199,7 @@ void main() {
   float age=uTime-iBirth, t=max(age,0.0);
   if(age<0.0 || age>iData.y){vAlpha=0.0;gl_Position=vec4(2.0,2.0,2.0,1.0);return;}
   vec3 center=flight(t);
+  if(distance((modelMatrix*vec4(center,1.)).xyz,cameraPosition)<.25){vec3 transformed=vec3(0.0);vAlpha=0.;gl_Position=vec4(2.,2.,2.,1.);return;}
   float growth=1.0+0.80*sat(t/max(iData.y,0.01));
   float angle=iSurface.y, c=cos(angle), s=sin(angle);
   vec2 quad=mat2(c,-s,s,c)*position.xy;
@@ -201,10 +208,14 @@ void main() {
   vec3 transformed=center+(cameraRight*quad.x+cameraUp*quad.y)*iData.x*growth;
   vWaterUv=uv;
   vAlpha=iData.w*ease(age/0.010)*pow(1.0-sat(age/max(iData.y,0.001)),1.65);
-  if(age<0.0 || age>iData.y || center.y<iSurface.x+0.004) vAlpha=0.0;
+  if(age<0.0 || age>iData.y) vAlpha=0.0;
   ${vertexFinish}
 }`;
 const mistFragment = `
+float bayer4(vec2 p){ivec2 q=ivec2(mod(floor(p),4.));int x=q.x,y=q.y;
+ int a=((x&1)^(y&1))*2+(y&1),b=(((x>>1)&1)^((y>>1)&1))*2+((y>>1)&1);
+ return (float(a*4+b)+.5)/16.;}
+
 varying vec3 vWaterView;
 varying float vAlpha;
 varying vec2 vWaterUv;
@@ -217,6 +228,7 @@ void main() {
   float coverage=exp(-r2*4.5)*(1.0-smoothstep(0.65,1.0,r2));
   // Small neutral translucent flecks, not luminous smoke or a white torus.
   gl_FragColor=vec4(vec3(0.39,0.425,0.415),vAlpha*coverage);
+  if(gl_FragColor.a<bayer4(gl_FragCoord.xy))discard;gl_FragColor.a=1.;
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
   #include <fog_fragment>
@@ -244,244 +256,56 @@ function crownColumnGeometry() {
   return g;
 }
 
-export function createWaterImpact(scene,{limit=1536,rng=Math.random,onRipple=null}={}) {
-  const capacity=clamp(Math.floor(finite(limit,1536)),32,2048);
-  const group=new T.Group(); group.name='GPU crown, collapse jet, ballistic drops and fine spray';
-  scene.add(group);
-  const clock={value:0};
-  const lightUniforms={uLightDirection:{value:new T.Vector3(-.38,.81,.45).normalize()},
-    uLightColor:{value:new T.Color(1,1,1)},uLightIntensity:{value:1},uAmbientIntensity:{value:1}};
-  let now=0, anchorX=null, anchorZ=null, disposed=false, side=1;
-  const scheduled=[];
-  const diagnostics={capacity,eventCapacity:EVENTS,mistCapacity:MIST,drawCalls:3,
-    spawnUploads:0,rebaseUploads:0,emitted:0,rippleCallbacks:0};
-
-  function material(name,vertexShader,fragmentShader,roughness) {
-    const m=new T.ShaderMaterial({name,uniforms:{...T.UniformsUtils.clone(T.UniformsLib.fog),...lightUniforms,uTime:clock,uRoughness:{value:roughness}},
-      vertexShader,fragmentShader,transparent:true,depthTest:true,depthWrite:false,
-      side:T.DoubleSide,fog:true,toneMapped:true});
-    m.forceSinglePass=true;
-    // Both fog hooks and mvPosition remain available to atmosphere.attachFog().
-    return m;
+export function createWaterImpact(scene,{limit=1536,rng=Math.random,onRipple=null}={}){
+ const group=new T.Group();group.name='World-space Bayer splash';scene.add(group);
+ const clock={value:0},light={uLightDirection:{value:new T.Vector3(-.4,.8,.4).normalize()},uLightColor:{value:new T.Color(1,1,1)},uLightIntensity:{value:1},uAmbientIntensity:{value:1}};
+ const diagnostics={emitted:0,capacity:limit,drawCalls:3,spawnUploads:0,rebaseUploads:0,rippleCallbacks:0};
+ let now=0,cx=null,cz=null,disposed=false;
+ function pool(g,vs,fs,count,schema,name){
+  const m=new T.ShaderMaterial({name,vertexShader:vs,fragmentShader:fs,uniforms:{...T.UniformsUtils.clone(T.UniformsLib.fog),...light,uTime:clock,uRoughness:{value:.14}},transparent:false,blending:T.NoBlending,depthWrite:true,depthTest:true,side:T.DoubleSide,fog:true});
+  const attributes={};for(const key in schema){const a=new T.InstancedBufferAttribute(new Float32Array(count*schema[key]),schema[key]);a.setUsage(T.DynamicDrawUsage);g.setAttribute(key,a);attributes[key]=a;}
+  attributes.iBirth.array.fill(-1e6);g.instanceCount=count;
+  const mesh=new T.InstancedMesh(g,m,count);mesh.frustumCulled=false;mesh.name=name;group.add(mesh);
+  return {g,m,mesh,attributes,count,cursor:0,end:0};
+ }
+ const sheets=pool(crownColumnGeometry(),sheetVertex,sheetFragment,10,{iOrigin:3,iBirth:1,iShape:4,iMotion:4,iJet:4},'Bayer water crown and Worthington jet');
+ const base=new T.IcosahedronGeometry(1,0),dg=new T.InstancedBufferGeometry().copy(base);base.dispose();
+ const drops=pool(dg,dropVertex,dropFragment,limit,{iOrigin:3,iBirth:1,iVelocity:3,iData:4,iSurface:2},'Bayer ballistic world droplets');
+ const plane=new T.PlaneGeometry(2,2),mg=new T.InstancedBufferGeometry().copy(plane);plane.dispose();
+ const mist=pool(mg,mistVertex,mistFragment,384,{iOrigin:3,iBirth:1,iVelocity:3,iData:4,iSurface:2},'Bayer spray mist');
+ const pools=[sheets,drops,mist],event={cx:0n,cz:0n,x:0,z:0,radius:.2,strength:.04};
+ const scheduled=new Float64Array(32*5);scheduled.fill(-99);let nextReturn=0;
+ function write(p,i,key,a,b=0,c=0,d=0){const at=p.attributes[key],o=i*at.itemSize;at.array[o]=a;if(at.itemSize>1)at.array[o+1]=b;if(at.itemSize>2)at.array[o+2]=c;if(at.itemSize>3)at.array[o+3]=d;}
+ function upload(p){for(const key in p.attributes)p.attributes[key].needsUpdate=true;diagnostics.spawnUploads++;}
+ function acquire(p,birth,life){const i=p.cursor;p.cursor=(i+1)%p.count;p.end=Math.max(p.end,birth+life);write(p,i,'iBirth',birth);return i;}
+ function sync(s){if(cx===null){cx=s.cx;cz=s.cz;return;}const bx=cx-s.cx,bz=cz-s.cz;if(!bx&&!bz)return;
+  if(bx < -16n||bx>16n||bz < -16n||bz>16n)clear();
+  else {const dx=Number(bx)*64,dz=Number(bz)*64;for(let k=0;k<3;k++){const p=pools[k],a=p.attributes.iOrigin.array;for(let i=0;i<a.length;i+=3){a[i]+=dx;a[i+2]+=dz;}p.attributes.iOrigin.needsUpdate=true;}for(let i=0;i<32;i++){scheduled[i*5+1]+=dx;scheduled[i*5+2]+=dz;}diagnostics.rebaseUploads++;}
+  cx=s.cx;cz=s.cz;
+ }
+ function ripple(x,z,strength,radius=.2){if(!onRipple)return;event.cx=cx;event.cz=cz;event.x=x;event.z=z;event.strength=strength;event.radius=radius;onRipple(event);diagnostics.rippleCallbacks++;}
+ function spawn(p,x,y,z,vx,vy,vz,size,birth,life,opacity,level,seed){const i=acquire(p,birth,life);write(p,i,'iOrigin',x,y,z);write(p,i,'iVelocity',vx,vy,vz);write(p,i,'iData',size,life,0,opacity);write(p,i,'iSurface',level,seed);}
+ function emit(power,s,level){if(disposed||!(power>0)||!Number.isFinite(level))return;sync(s);
+  const energy=clamp(power,.1,2.5),strong=energy>.3,n=strong?Math.round(260+energy*180):48,x=s.x,z=s.z;
+  const seed=rng()*TAU,dx=-Math.sin(s.yaw||0),dz=-Math.cos(s.yaw||0),i=acquire(sheets,now,.85);
+  write(sheets,i,'iOrigin',x,level+.006,z);write(sheets,i,'iShape',.085,.6+energy*.38,1.5+energy*.65,.55+energy*.09);
+  write(sheets,i,'iMotion',dx,dz,.16,seed);write(sheets,i,'iJet',.18,.32+energy*.32,.52,.03+energy*.009);upload(sheets);
+  ripple(x,z,.028+energy*.015);
+  for(let j=0;j<n;j++){const a=rng()*TAU,r=.08+rng()*.09,speed=.65+rng()*1.3*energy,vy=1.1+rng()*2.2*energy,delay=rng()*.13;
+   const vx=Math.cos(a)*speed,vz=Math.sin(a)*speed,ox=x+Math.cos(a)*r,oz=z+Math.sin(a)*r;
+   spawn(drops,ox,level+.02,oz,vx,vy,vz,.009+rng()**3*.045,now+delay,1.5+rng(),.92,level,a);
+   if(j<4){const fall=(vy+Math.sqrt(vy*vy+2*9.81*.02))/9.81,k=nextReturn*5;scheduled[k]=now+delay+fall;scheduled[k+1]=ox+vx*fall;scheduled[k+2]=oz+vz*fall;scheduled[k+3]=.004+energy*.002;nextReturn=(nextReturn+1)%32;}
   }
-  function pool(g,m,size,schema) {
-    const attributes={};
-    for(const [name,width] of Object.entries(schema)) {
-      const a=new T.InstancedBufferAttribute(new Float32Array(size*width),width);
-      a.setUsage(T.DynamicDrawUsage); g.setAttribute(name,a); attributes[name]=a;
-    }
-    attributes.iBirth.array.fill(-1e6);
-    g.instanceCount=size;
-    const mesh=new T.Mesh(g,m); mesh.frustumCulled=false; mesh.name=m.name;
-    group.add(mesh);
-    return {g,m,mesh,size,attributes,cursor:0,until:new Float64Array(size),lastEnd:0};
-  }
-  const common={iOrigin:3,iBirth:1};
-  const sheets=pool(crownColumnGeometry(),material('GPU connected crown and delayed column',sheetVertex,sheetFragment,.11),EVENTS,
-    {...common,iShape:4,iMotion:4,iJet:4});
-  const dropBase=new T.IcosahedronGeometry(1,0);
-  const dropGeometry=new T.InstancedBufferGeometry().copy(dropBase); dropBase.dispose();
-  const drops=pool(dropGeometry,material('GPU analytic ballistic droplets',dropVertex,dropFragment,.12),capacity,
-    {...common,iVelocity:3,iData:4,iSurface:2});
-  const mistBase=new T.PlaneGeometry(2,2);
-  const mistGeometry=new T.InstancedBufferGeometry().copy(mistBase); mistBase.dispose();
-  const mist=pool(mistGeometry,material('GPU short lived fine spray',mistVertex,mistFragment,.5),MIST,
-    {...common,iVelocity:3,iData:4,iSurface:2});
-  const pools=[sheets,drops,mist];
-
-  function write(p,slot,name,values) {
-    const a=p.attributes[name], offset=slot*a.itemSize;
-    a.array.set(values,offset);
-    // Three merges these ranges before bufferSubData; unchanged slots stay on GPU.
-    a.addUpdateRange(offset,a.itemSize); a.needsUpdate=true;
-  }
-  function acquire(p,birth,life) {
-    const slot=p.cursor; p.cursor=(p.cursor+1)%p.size;
-    p.until[slot]=birth+life; p.lastEnd=Math.max(p.lastEnd,birth+life);
-    write(p,slot,'iBirth',[birth]); diagnostics.spawnUploads++;
-    return slot;
-  }
-  function callback(event) {
-    if(typeof onRipple==='function') {
-      onRipple({cx:event.cx,cz:event.cz,x:event.x,z:event.z,radius:event.radius,strength:event.strength});
-      diagnostics.rippleCallbacks++;
-    }
-  }
-  function schedule(event,due,radius,strength,x=event.x,z=event.z) {
-    // Fixed cap also protects a caller that emits repeatedly without update().
-    if(scheduled.length>=EVENTS*5) scheduled.shift();
-    scheduled.push({cx:event.cx,cz:event.cz,x,z,due,radius,strength});
-  }
-  function clear() {
-    scheduled.length=0;
-    for(const p of pools) {
-      p.until.fill(0); p.lastEnd=0; p.cursor=0;
-      p.attributes.iBirth.array.fill(-1e6); p.attributes.iBirth.clearUpdateRanges();
-      p.attributes.iBirth.needsUpdate=true; p.mesh.visible=false;
-    }
-    group.visible=false;
-  }
-  function syncOrigin(state) {
-    const cx=asChunk(state.cx), cz=asChunk(state.cz);
-    if(anchorX===null) {anchorX=cx;anchorZ=cz;return;}
-    if(cx===anchorX && cz===anchorZ)return;
-    const bx=anchorX-cx, bz=anchorZ-cz;
-    // Compare BigInts before conversion: a teleport cannot overflow to Infinity.
-    if(bx < -16n || bx > 16n || bz < -16n || bz > 16n) clear();
-    else {
-      const dx=Number(bx)*CHUNK,dz=Number(bz)*CHUNK;
-      for(const p of pools) {
-        const a=p.attributes.iOrigin;
-        for(let i=0;i<p.size;i++) if(p.until[i]>now) {
-          a.array[i*3]+=dx; a.array[i*3+2]+=dz;
-        }
-        a.clearUpdateRanges();a.needsUpdate=true;diagnostics.rebaseUploads++;
-      }
-    }
-    anchorX=cx;anchorZ=cz;
-  }
-  function rebaseTime() {
-    if(now<128)return;
-    const offset=Math.floor(now/120)*120;
-    now-=offset;
-    for(const p of pools) {
-      const a=p.attributes.iBirth;
-      for(let i=0;i<p.size;i++) { a.array[i]-=offset;p.until[i]-=offset; }
-      p.lastEnd-=offset;a.clearUpdateRanges();a.needsUpdate=true;diagnostics.rebaseUploads++;
-    }
-    for(const e of scheduled)e.due-=offset;
-  }
-  function flightY(y,vy,k,t) {
-    const a=-Math.expm1(-k*t)/k;
-    return y+vy*a-9.81*(t-a)/k;
-  }
-  function flightDuration(y,vy,k,level,cap) {
-    let lo=0,hi=cap;
-    if(flightY(y,vy,k,hi)>level+.001)return cap;
-    for(let j=0;j<14;j++) {
-      const mid=(lo+hi)*.5;
-      if(flightY(y,vy,k,mid)>level+.001)lo=mid;else hi=mid;
-    }
-    return Math.max(.025,hi);
-  }
-  function addParticle(p,event,birth,origin,velocity,radius,drag,maxLife,opacity,seed) {
-    const life=flightDuration(origin[1],velocity[1],drag,event.level,maxLife);
-    const slot=acquire(p,birth,life);
-    write(p,slot,'iOrigin',origin);write(p,slot,'iVelocity',velocity);
-    write(p,slot,'iData',[radius,life,drag,opacity]);write(p,slot,'iSurface',[event.level,seed]);
-    return life;
-  }
-  function crownPoint(e,theta,t) {
-    const c=Math.cos(theta),s=Math.sin(theta),forward=Math.max(0,c*e.dx+s*e.dz);
-    const shape=1+.065*Math.sin(theta*3+e.seed)+.033*Math.cos(theta*7-e.seed)+forward*e.skew;
-    const rise=Math.max(0,e.launch*t-4.905*t*t);
-    const radius=(e.r0+e.radial*t/(1+1.4*t)+.020+e.launch*.021)*shape;
-    const fingers=.88+.09*Math.sin(theta*11+e.seed)+.05*Math.sin(theta*17-e.seed);
-    return [e.x+c*radius+e.dx*e.skew*t*.22,e.level+.008+rise*(.60+forward*.42)*fingers,
-      e.z+s*radius+e.dz*e.skew*t*.22];
-  }
-  function emit(power,state,level) {
-    if(disposed || !(power>0) || !Number.isFinite(level) || !state)return;
-    syncOrigin(state);
-    const energy=clamp(power,.06,2.5),strong=energy>.30;
-    const intensity=clamp((energy-.30)/1.5,0,1);
-    const vx=finite(state.velocity?.x),vz=finite(state.velocity?.z),speed=Math.hypot(vx,vz);
-    const yaw=finite(state.yaw),dx=speed>.08?vx/speed:-Math.sin(yaw),dz=speed>.08?vz/speed:-Math.cos(yaw);
-    // Foot-scale offset remains visible looking down from a 1.3 m wading eye.
-    side=-side;
-    const ahead=strong?.46:.30, lateral=strong?0:side*.115;
-    const e={cx:asChunk(state.cx),cz:asChunk(state.cz),level,
-      x:finite(state.x)+dx*ahead-dz*lateral,z:finite(state.z)+dz*ahead+dx*lateral,
-      dx,dz,seed:rng()*TAU,skew:strong?.12+.12*Math.min(speed/3,1):.43,
-      r0:strong?.105+.035*intensity:.047,
-      radial:strong?.62+.50*intensity:.32+.10*rng(),
-      launch:strong?1.65+1.05*intensity:1.05+.22*rng(),
-      crownLife:strong?.43+.12*intensity:.26+.025*rng()};
-    const depth=Number.isFinite(state.waterDepth)?Math.max(0,state.waterDepth):null;
-    // Optional actual depth suppresses deep-cavity jets in a very thin puddle.
-    const depthGate=depth===null?1:smooth((depth-.035)/.115);
-    const jetHeight=energy>.70?(.22+.39*intensity)*depthGate:0;
-    const jetDelay=.16+.07*intensity,jetLife=.35+.14*intensity,jetWidth=.025+.016*intensity;
-    const slot=acquire(sheets,now,Math.max(e.crownLife,jetDelay+jetLife));
-    write(sheets,slot,'iOrigin',[e.x,level+.008,e.z]);
-    write(sheets,slot,'iShape',[e.r0,e.radial,e.launch,e.crownLife]);
-    write(sheets,slot,'iMotion',[dx,dz,e.skew,e.seed]);
-    write(sheets,slot,'iJet',[jetDelay,jetHeight,jetLife,jetWidth]);
-    callback({...e,radius:strong?.18+.10*intensity:.105,strength:strong?-.011-.012*intensity:-.0045});
-    schedule(e,now+jetDelay,strong?.17+.08*intensity:.095,strong?.006+.008*intensity:.0022);
-
-    const count=strong?Math.round(280+500*intensity):54+Math.floor(rng()*30);
-    for(let i=0;i<count;i++) {
-      const theta=strong?rng()*TAU:Math.atan2(dz,dx)+(rng()-.5)*2.9;
-      const delay=(strong?.025:.012)+rng()*(strong?.15:.065);
-      const origin=crownPoint(e,theta,delay),c=Math.cos(theta),s=Math.sin(theta);
-      const speedOut=(strong?.55+1.0*intensity:.34)*(.45+1.2*rng());
-      const vy=(strong?1.0+1.6*intensity:.72)*(.55+.70*rng());
-      const velocity=[c*speedOut+dx*Math.min(speed,4)*.16,vy,s*speedOut+dz*Math.min(speed,4)*.16];
-      const size=rng(),radius=(strong?.0024:.0019)+Math.pow(size,3)*(strong?.013:.0055);
-      const drag=.10+.14/(.15+size),birth=now+delay;
-      const life=addParticle(drops,e,birth,origin,velocity,radius,drag,1.35,.65+.26*rng(),theta);
-      // Only three representative return impulses; no GPU readback or per-drop CPU motion.
-      if(i<3) {
-        const travel=-Math.expm1(-drag*life)/drag;
-        schedule(e,birth+life,.0625+.025*size,.0007+.0013*size,
-          origin[0]+velocity[0]*travel,origin[2]+velocity[2]*travel);
-      }
-    }
-    if(jetHeight>.006) {
-      for(let i=0;i<24+Math.round(32*intensity);i++) {
-        const jt=.080+rng()*.15,phase=jt/jetLife;
-        const h=jetHeight*smooth(jt/.045)*(1-smooth((phase-.30)/.70));
-        const angle=rng()*TAU,rad=.003+.013*rng();
-        const origin=[e.x+dx*h*.075+Math.cos(angle)*rad,level+.008+h,e.z+dz*h*.075+Math.sin(angle)*rad];
-        const velocity=[dx*.15+(rng()-.5)*.32,.50+rng()*(1+intensity),dz*.15+(rng()-.5)*.32];
-        addParticle(drops,e,now+jetDelay+jt,origin,velocity,.0025+Math.pow(rng(),2)*.009,.12+.20*rng(),1.0,.76,angle);
-      }
-    }
-    const mistCount=strong?58+Math.round(78*intensity):10;
-    for(let i=0;i<mistCount;i++) {
-      const theta=strong?rng()*TAU:Math.atan2(dz,dx)+(rng()-.5)*2.8;
-      const delay=.015+rng()*(strong?.15:.055),origin=crownPoint(e,theta,delay);
-      const spraySpeed=(strong?.65+intensity:.35)*(.45+rng());
-      const velocity=[Math.cos(theta)*spraySpeed+dx*.25,.45+rng()*.90,Math.sin(theta)*spraySpeed+dz*.25];
-      addParticle(mist,e,now+delay,origin,velocity,.007+Math.pow(rng(),2)*.022,3.0+5*rng(),
-        .13+rng()*.20,.045+rng()*.085,rng()*TAU);
-    }
-    diagnostics.emitted++;
-    for(const p of pools)p.mesh.visible=p.lastEnd>now;
-    group.visible=true;
-  }
-  function update(dt,state,camera,enabled=true,lighting=null) {
-    if(disposed)return;
-    if(!enabled) {clear();return;}
-    if(state)syncOrigin(state);
-    // Optional world-space sun direction/weather values; uniform-only updates.
-    // Accept either {sunDirection,color,intensity,ambientIntensity} or a Vector3.
-    const light=lighting||state?.weatherLight;
-    const direction=light?.sunDirection||light?.direction||light;
-    if(direction && Number.isFinite(direction.x) && Number.isFinite(direction.y) && Number.isFinite(direction.z)
-      && direction.x*direction.x+direction.y*direction.y+direction.z*direction.z>1e-8) {
-      lightUniforms.uLightDirection.value.set(direction.x,direction.y,direction.z).normalize();
-    }
-    if(light?.color?.isColor)lightUniforms.uLightColor.value.copy(light.color);
-    if(Number.isFinite(light?.intensity))lightUniforms.uLightIntensity.value=clamp(light.intensity,0,4);
-    if(Number.isFinite(light?.ambientIntensity))lightUniforms.uAmbientIntensity.value=clamp(light.ambientIntensity,0,2);
-    now+=Math.max(0,finite(dt));rebaseTime();clock.value=now;
-    // Scheduling at most 50 feedback impulses is unrelated to particle animation.
-    let keep=0;
-    for(let i=0;i<scheduled.length;i++) {
-      const event=scheduled[i];
-      if(event.due<=now)callback(event);else scheduled[keep++]=event;
-    }
-    scheduled.length=keep;
-    for(const p of pools)p.mesh.visible=p.lastEnd>now;
-    group.visible=pools.some(p=>p.mesh.visible);
-  }
-  function dispose() {
-    if(disposed)return;
-    clear();disposed=true;scene.remove(group);
-    for(const p of pools){p.g.dispose();p.m.dispose();}
-  }
-  clear();
-  return {group,emit,update,clear,dispose,diagnostics};
+  // Fine spray has the same exact ballistic law, smaller and shorter visible fade.
+  for(let j=0;j<70;j++){const a=rng()*TAU,speed=.35+rng()*1.3;spawn(mist,x,level+.12,z,Math.cos(a)*speed,.7+rng(),Math.sin(a)*speed,.025+rng()*.05,now+rng()*.12,1.5+rng(),.14+rng()*.16,level,a);}
+  upload(drops);upload(mist);diagnostics.emitted++;group.visible=true;for(let k=0;k<3;k++)pools[k].mesh.visible=pools[k].end>now;
+ }
+ function update(dt,s,camera,enabled=true,lighting){if(disposed)return;if(s)sync(s);if(!enabled)return;now+=Math.max(0,Math.min(.1,dt));clock.value=now;
+  if(lighting?.sunDirection)light.uLightDirection.value.copy(lighting.sunDirection);if(lighting?.color)light.uLightColor.value.copy(lighting.color);
+  if(lighting){light.uLightIntensity.value=lighting.intensity??1;light.uAmbientIntensity.value=lighting.ambientIntensity??1;}
+  for(let i=0;i<32;i++){const j=i*5;if(scheduled[j]>0&&scheduled[j]<=now){ripple(scheduled[j+1],scheduled[j+2],scheduled[j+3],.1);scheduled[j]=-99;}}
+  let visible=false;for(let k=0;k<3;k++){pools[k].mesh.visible=pools[k].end>now;visible||=pools[k].mesh.visible;}group.visible=visible;
+ }
+ function clear(){for(let k=0;k<3;k++){const p=pools[k];p.attributes.iBirth.array.fill(-1e6);p.attributes.iBirth.needsUpdate=true;p.mesh.visible=false;p.end=0;}scheduled.fill(-99);group.visible=false;}
+ return {group,emit,update,clear,diagnostics,dispose(){if(disposed)return;disposed=true;scene.remove(group);for(let k=0;k<3;k++){pools[k].mesh.dispose();pools[k].g.dispose();pools[k].m.dispose();}}};
 }
