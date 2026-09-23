@@ -2,9 +2,10 @@ export const WATER_STATES=Object.freeze(['dry','rain','entryWash','submerged','e
 // One authoritative head arbiter; the body crossing detector is independent.
 export class WaterState {
  constructor(){this.result={submerged:false,crossing:0};this.reset();}
- reset(){this.state='dry';this.wet=null;this.age=0;this.washWeight=0;this.exitAge=99;this.flash=0;this.result.submerged=false;this.result.crossing=0;}
+ reset(){this.state='dry';this.hasWater=false;this.wet=null;this.age=0;this.washWeight=0;this.exitAge=99;this.flash=0;this.result.submerged=false;this.result.crossing=0;}
  update(dt,s){
   const valid=s.hasWater&&s.shore<.1&&Number.isFinite(s.level+s.cameraHeight);
+  this.hasWater=valid;
   const wet=valid&&(this.wet?s.cameraHeight<s.level+.028:s.cameraHeight<s.level-.018);
   const crossing=this.wet===null?0:wet!==this.wet?(wet?1:-1):0;
   this.wet=wet;this.result.submerged=wet;this.result.crossing=crossing;

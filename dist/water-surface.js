@@ -4,45 +4,80 @@ in vec3 position;in vec2 lakeCoord;in float facetTone;
 uniform mat4 modelMatrix,viewMatrix,projectionMatrix;
 out vec3 worldP;out vec2 waterXZ;out float tone;
 void main(){worldP=(modelMatrix*vec4(position,1.)).xyz;waterXZ=lakeCoord;tone=facetTone;gl_Position=projectionMatrix*viewMatrix*vec4(worldP,1.);}`;
-export const surfaceFragment=`precision highp float;precision highp sampler2D;
+export const surfaceFragment=`precision highp float;precision highp sampler2D;precision highp samplerCube;
 uniform sampler2D normalA,normalB,sceneColor,sceneDepth,uImpactNormals;
+uniform samplerCube environment;uniform float environmentReady;
+uniform mat4 viewMatrix,projectionMatrix,inverseProjection,cameraWorld;
 uniform vec2 size,uImpactOrigin;uniform float time,nearPlane,farPlane,fadeDistance,uImpactActive;
 uniform vec3 eye,sun,skyColor;uniform float mist;
 in vec3 worldP;in vec2 waterXZ;in float tone;out vec4 outColor;
 float linearZ(float d){return nearPlane*farPlane/(farPlane-d*(farPlane-nearPlane));}
+vec3 scenePoint(vec2 q){vec4 p=inverseProjection*vec4(q*2.-1.,texture(sceneDepth,q).r*2.-1.,1.);return (cameraWorld*vec4(p.xyz/p.w,1.)).xyz;}
+vec3 extinction(vec3 color,float d){vec3 transmission=exp(-vec3(.4,.15,.05)*max(0.,d));return color*transmission+vec3(.024,.061,.054)*(1.-transmission);}
+vec3 skyReflection(vec3 direction,float roughness){
+ if(environmentReady>.5)return textureLod(environment,direction,roughness*4.).rgb;
+ return skyColor*mix(.42,1.,smoothstep(-.2,.4,direction.y));
+}
+vec3 underwaterReflection(vec3 direction,vec2 uv){
+ // Screen-space reflected bed retains real geometry, including caustics.
+ // Off-screen rays fall back to a dim blurred scene, never a solid blue dome.
+ vec3 result=texture(sceneColor,clamp(vec2(uv.x,1.-uv.y),.002,.998)).rgb*.32;
+ float stride=.32;
+ for(int i=0;i<10;i++){
+  vec3 p=worldP+direction*stride;vec4 clip=projectionMatrix*viewMatrix*vec4(p,1.);
+  vec2 q=clip.xy/max(.001,clip.w)*.5+.5;
+  if(clip.w>0.&&all(greaterThan(q,vec2(.001)))&&all(lessThan(q,vec2(.999)))){
+   float z=linearZ(texture(sceneDepth,q).r),rayZ=-(viewMatrix*vec4(p,1.)).z;
+   if(rayZ>=z&&rayZ-z<max(.35,stride*.16)){result=extinction(texture(sceneColor,q).rgb,stride);break;}
+  }
+  stride*=1.55;
+ }
+ return result;
+}
 void main(){
- vec2 base=waterXZ*.10;
+ // Metre-scale, mip-filtered ripples; no directional sine wave field.
+ vec2 base=waterXZ*.038;
  vec3 a=texture(normalA,base+vec2(.03,.02)*time).xyz*2.-1.;
  vec3 b=texture(normalB,base*1.37+vec2(-.02,.04)*time).xyz*2.-1.;
  vec3 n=normalize(vec3(a.xy+b.xy,a.z*b.z));
+ float distanceToEye=length(worldP-eye);
+ n.xy*=.31*(1.-smoothstep(8.,100.,distanceToEye));
  vec2 rip=(worldP.xz-uImpactOrigin)/24.;
- if(uImpactActive>.5&&all(greaterThan(rip,vec2(0)))&&all(lessThan(rip,vec2(1))))n.xy+=(texture(uImpactNormals,rip).rg*2.-1.)*.8;
- vec3 N=normalize(vec3(n.x,n.z,n.y));
- vec3 V=normalize(worldP-eye),view=-V;
- vec2 uv=gl_FragCoord.xy/size;float sceneZ=linearZ(texture(sceneDepth,uv).r),waterZ=linearZ(gl_FragCoord.z);
- float thickness=max(0.,sceneZ-waterZ),shore=clamp(thickness/fadeDistance,0.,1.);
- vec2 offset=N.xz*.013*shore;vec2 bentUV=clamp(uv+offset,vec2(.001),vec2(.999));
- // Do not refract a foreground bank into the water.
- if(linearZ(texture(sceneDepth,bentUV).r)<waterZ)bentUV=uv;
+ if(uImpactActive>.5&&all(greaterThan(rip,vec2(0)))&&all(lessThan(rip,vec2(1))))n.xy+=(texture(uImpactNormals,rip).rg*2.-1.)*.46;
+ vec3 N=normalize(vec3(n.x,n.z,n.y)),V=normalize(worldP-eye),view=-V;
+ vec3 faceN=gl_FrontFacing?N:-N;
+ float NoV=max(0.,dot(faceN,view));float F=.02+.98*pow(1.-NoV,5.);
+ // Geometric normal variance widens highlights instead of making white sparks.
+ float variance=max(dot(dFdx(N),dFdx(N)),dot(dFdy(N),dFdy(N)));
+ float roughness=clamp(sqrt(.22*.22+min(.014,variance*.8)),.15,.25);
+ vec2 uv=gl_FragCoord.xy/size;float waterZ=linearZ(gl_FragCoord.z);
+ float sceneZ=linearZ(texture(sceneDepth,uv).r),thickness=max(0.,sceneZ-waterZ);
+ float shore=clamp(thickness/fadeDistance,0.,1.);
+ vec2 bentUV=clamp(uv+N.xz*.025*shore,vec2(.001),vec2(.999));
+ vec3 bed=scenePoint(bentUV);
+ if(linearZ(texture(sceneDepth,bentUV).r)<waterZ||bed.y>worldP.y){bentUV=uv;bed=scenePoint(uv);}
  vec3 bottom=texture(sceneColor,bentUV).rgb;
- vec3 reflection=mix(skyColor,vec3(.26,.34,.37),clamp(N.y*.5,0.,1.));
- float fresnel=.0204+.9796*pow(1.-abs(dot(N,view)),5.);
- float spec=pow(max(0.,dot(N,normalize(view+sun))),68.);
- float quantized=floor(spec*4.)/4.;
- vec3 absorbed=bottom*exp(-vec3(.3,.08,.02)*min(thickness,18.)) + vec3(.035,.085,.092)*(1.-exp(-thickness*.18));
- vec3 water=mix(absorbed,reflection,clamp(.16+fresnel*.72,0.,.92))*mix(.93,1.05,clamp(tone,0.,1.));
- water+=quantized*vec3(.56,.61,.58);
+ float path=length(bed-worldP);
+ vec3 refracted=extinction(bottom,path),reflected=skyReflection(reflect(V,N),roughness);
  if(!gl_FrontFacing){
-  vec3 R=refract(V,-N,1.33);
-  if(length(R)==0.)water=vec3(.026,.065,.078)+vec3(.024,.03,.035)*abs(N.x+N.z);
-  else {vec2 windowUV=clamp(uv+R.xz*.022,vec2(.001),vec2(.999));water=mix(texture(sceneColor,windowUV).rgb,skyColor,.20);}
-  shore=1.;
+  vec3 R=refract(V,-N,1.33);float tir=1.-step(.0001,length(R));
+  vec2 windowUV=clamp(uv+R.xz*.010,vec2(.001),vec2(.999));
+  refracted=texture(sceneColor,windowUV).rgb;
+  reflected=underwaterReflection(reflect(V,-N),uv);F=mix(F,1.,tir);shore=1.;
  }
- float noise=texture(normalA,base*2.4+vec2(.017,-.021)*time).r;
- float foam=step(.0001,thickness)*(1.-step(.3,thickness))*smoothstep(.50,.64,noise)*smoothstep(0.,.035,thickness);
- water=mix(water,vec3(.66,.70,.64),foam*.75);
- float fog=1.-exp(-length(worldP-eye)*(.003+mist*.025));water=mix(water,skyColor,clamp(fog,0.,.95));
- // Manual shore alpha avoids transparent sorting and preserves the opaque depth.
+ float exponent=max(2.,2./(roughness*roughness)-2.);
+ float spec=pow(max(0.,dot(faceN,normalize(view+sun))),exponent);
+ spec=floor(spec*4.)/4.*.38;
+ vec3 water=mix(refracted,reflected,F)+vec3(.93,.96,1.)*spec*F;
+ float noise=texture(normalA,base*1.8+vec2(.017,-.021)*time).r;
+ float foam=step(.0001,thickness)*(1.-step(.3,thickness))*smoothstep(.52,.62,noise)*smoothstep(0.,.035,thickness);
+ if(gl_FrontFacing)water=mix(water,vec3(.42,.46,.43),foam*.32);
+ // Reflection already contains sky fog. Applying fog to transmitted lakebed
+ // again would create an opaque grey sheet, so only blend at distant horizon.
+ float fog=(1.-exp(-distanceToEye*(.001+mist*.012)))*smoothstep(30.,150.,distanceToEye);
+ if(gl_FrontFacing)water=mix(water,skyColor,clamp(fog,0.,.65));
+ // Transparent material, premixed physical transmission. Alpha feather is
+ // already resolved against the immutable scene to avoid double transmission.
  outColor=vec4(mix(bottom,water,shore),1.);
 }`;
 export function createWaterSurface(ripples){
@@ -51,8 +86,8 @@ export function createWaterSurface(ripples){
  const normalA=load(new URL('./textures/v28/water-normal-a.png',import.meta.url).href),normalB=load(new URL('./textures/v28/water-normal-b.png',import.meta.url).href),atlas=load(new URL('./textures/v28/water-caustics-atlas.png',import.meta.url).href);
  for(const t of [normalA,normalB]){t.colorSpace=T.NoColorSpace;t.wrapS=t.wrapT=T.RepeatWrapping;t.minFilter=T.LinearMipmapLinearFilter;t.magFilter=T.LinearFilter;}
  atlas.colorSpace=T.NoColorSpace;atlas.minFilter=atlas.magFilter=T.LinearFilter;atlas.generateMipmaps=false;atlas.flipY=false;
- const time={value:0};const u={normalA:{value:normalA},normalB:{value:normalB},sceneColor:{value:null},sceneDepth:{value:null},size:{value:new T.Vector2()},time,nearPlane:{value:.1},farPlane:{value:480},fadeDistance:{value:.65},eye:{value:new T.Vector3()},sun:{value:new T.Vector3(-.45,.84,-.30).normalize()},skyColor:{value:new T.Color(.40,.47,.49)},mist:{value:0},...ripples.binding};
- const material=new T.RawShaderMaterial({name:'V28 depth-softened two-sided lake',glslVersion:T.GLSL3,vertexShader:surfaceVertex,fragmentShader:surfaceFragment,uniforms:u,side:T.DoubleSide,depthTest:true,depthWrite:true,transparent:false,blending:T.NoBlending,toneMapped:false});
+ const time={value:0};const u={normalA:{value:normalA},normalB:{value:normalB},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},environment:{value:null},environmentReady:{value:0},sceneColor:{value:null},sceneDepth:{value:null},size:{value:new T.Vector2()},time,nearPlane:{value:.1},farPlane:{value:480},fadeDistance:{value:.65},eye:{value:new T.Vector3()},sun:{value:new T.Vector3(-.45,.84,-.30).normalize()},skyColor:{value:new T.Color(.40,.47,.49)},mist:{value:0},...ripples.binding};
+ const material=new T.RawShaderMaterial({name:'V29 Fresnel transmission and two-sided lake',glslVersion:T.GLSL3,vertexShader:surfaceVertex,fragmentShader:surfaceFragment,uniforms:u,side:T.DoubleSide,depthTest:true,depthWrite:true,transparent:true,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1,blending:T.NormalBlending,toneMapped:false});
  const attached=new WeakSet();
  function attach(chunk){chunk.group.traverse(o=>{
   if(o.material?.name==='PS1 low-poly detailed ripple water'){o.userData.originalWaterMaterial=o.material;o.material=material;o.layers.set(2);o.userData.waterSurface=true;}
@@ -69,6 +104,6 @@ export function createWaterSurface(ripples){
    diffuseColor.rgb*=1.+c*.72*exp(-depthBelow*.19)*smoothstep(0.,.18,depthBelow);}`);
   };m.customProgramCacheKey=()=>key()+'|v28-caustics';m.needsUpdate=true;
  });}
- function update(clock,camera,color,sun,mist){time.value=clock;u.eye.value.copy(camera.position);u.nearPlane.value=camera.near;u.farPlane.value=camera.far;if(color)u.skyColor.value.copy(color);if(sun)u.sun.value.copy(sun).normalize();u.mist.value=mist||0;}
+ function update(clock,camera,color,sun,mist){time.value=clock;u.inverseProjection.value.copy(camera.projectionMatrixInverse);u.cameraWorld.value.copy(camera.matrixWorld);u.eye.value.copy(camera.position);u.nearPlane.value=camera.near;u.farPlane.value=camera.far;if(color)u.skyColor.value.copy(color);if(sun)u.sun.value.copy(sun).normalize();u.mist.value=mist||0;}
  return {ready:Promise.all(pending),material,uniforms:u,normalA,normalB,atlas,time,attach,update,dispose(){material.dispose();normalA.dispose();normalB.dispose();atlas.dispose();}};
 }

@@ -1,19 +1,37 @@
 import * as T from './vendor/three.module.min.js';
-import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=28';
+import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=29';
 export {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker};
 // V28: simulation + cached data texture only. All screen optics live in the
 // single half-resolution water-pipeline shader; no capture/blur ping-pong here.
-export function createLensWater(renderer,{limit=64}={}){
- const physics=new LensDropletPhysics(limit),entry=new WaterEntryTracker(),cameraEntry=new CameraWaterTracker();
- let texture=null,normals=null,width=0,height=0,uploaded=-1,enabled=true,disposed=false;
+export function createLensWater(renderer,{limit=64,rng=Math.random}={}){
+ const physics=new LensDropletPhysics(limit,rng),entry=new WaterEntryTracker(),cameraEntry=new CameraWaterTracker();
+ let texture=null,normals=null,width=0,height=0,uploaded=-1,enabled=true,disposed=false,drainAge=99,washAge=99,submerged=false,raining=false;
  const diagnostics={normalUploads:0,wetPasses:0,copies:0};
- function reset(){physics.clear();entry.reset();cameraEntry.reset();uploaded=-1;}
- function update(dt,state){if(disposed)return 0;enabled=state.enabled!==false;if(!enabled){physics.accumulator=physics.rainBudget=0;return 0;}
-  physics.setAspect(state.aspect||physics.aspect);const crossed=state.waterCrossing||cameraEntry.update(state);cameraEntry.wet=crossed.submerged;physics.setCameraWet(crossed.submerged,crossed.crossing);
-  const burst=entry.update(state);if(burst>.2&&!crossed.submerged)physics.splash(burst);
-  else if(burst>0&&!crossed.submerged)for(let i=0;i<2;i++)physics.add(.24+physics.rng()*.52,.60+physics.rng()*.27,.70+physics.rng()*.7,0,-.055);
-  physics.step(dt,state);return burst;
+ function reset(){physics.clear();entry.reset();cameraEntry.reset();uploaded=-1;drainAge=washAge=99;submerged=raining=false;}
+ function runoff(power=1){
+  // An exiting lens carries a sheet of water: broad heads and connected trails,
+  // with conserved volume in the existing stick-slip/coalescence simulation.
+  for(let i=0;i<12;i++){
+   const x=.04+physics.rng()*.92,y=.07+physics.rng()*.58,r=2.7+physics.rng()*1.9;
+   const d=physics.add(x,y,r,(physics.rng()-.5)*.10,.10+physics.rng()*.16);
+   if(d){d.tailX=x+(physics.rng()-.5)*.025;d.tailY=Math.max(-.02,y-.14-physics.rng()*.16);}
+  }
  }
+ function impact(power=1){if(disposed||submerged)return;runoff(power);drainAge=0;washAge=0;}
+ function update(dt,state){if(disposed)return 0;enabled=state.enabled!==false;if(!enabled){physics.accumulator=physics.rainBudget=0;return 0;}
+  const step=Math.max(0,Math.min(dt,.1));drainAge+=step;washAge+=step;
+  physics.setAspect(state.aspect||physics.aspect);const crossed=state.waterCrossing||cameraEntry.update(state);cameraEntry.wet=crossed.submerged;submerged=crossed.submerged;
+  physics.setCameraWet(submerged,crossed.crossing);
+  // Body/stride crossings do not wet the lens. Only exit, a real spray contact,
+  // or ongoing exposed rain can activate optical droplets.
+  raining=state.rain>.005&&!state.sheltered&&!submerged;
+  if(crossed.crossing===-1){runoff();drainAge=washAge=0;}
+  if(raining)drainAge=0;
+  physics.step(dt,state);
+  if(!raining&&!submerged&&drainAge>=3&&physics.wet){physics.clear();uploaded=-1;}
+  return 0;
+ }
+ function fade(){const t=Math.max(0,Math.min(1,(drainAge-2.1)/.9));return 1-t*t*(3-2*t);}
  function prepareField(){
   if(!texture||width!==physics.fieldWidth||height!==physics.fieldHeight){texture?.dispose();width=physics.fieldWidth;height=physics.fieldHeight;normals=new Uint8Array(width*height*4);
    for(let i=0;i<normals.length;i+=4){normals[i]=normals[i+1]=128;}
@@ -27,5 +45,5 @@ export function createLensWater(renderer,{limit=64}={}){
   }return texture;
  }
  function contextLost(){texture?.dispose();texture=null;width=height=0;uploaded=-1;reset();}
- return {physics,entry,cameraEntry,diagnostics,update,prepareField,reset,contextLost,dispose(){if(disposed)return;disposed=true;texture?.dispose();physics.clear();}};
+ return {physics,entry,cameraEntry,diagnostics,update,impact,prepareField,reset,contextLost,get washAge(){return washAge;},get washWeight(){return submerged?0:Math.max(0,1-washAge/.8);},get wetWeight(){return physics.wet&&!submerged?fade():0;},dispose(){if(disposed)return;disposed=true;texture?.dispose();physics.clear();}};
 }

@@ -1,5 +1,5 @@
-import {meadowSample} from './meadow-layout.js?v=28';
-import {FARM_TREES,farmRoadWeight} from './farm-layout.js?v=28';
+import {meadowSample} from './meadow-layout.js?v=29';
+import {FARM_TREES,farmRoadWeight} from './farm-layout.js?v=29';
 
 // The interactive map never generates procedural fields on the main thread
 // unless Canvas fallback is required. Normal requests remain worker-batched.
@@ -25,7 +25,7 @@ export function createMapAtlas({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   // Requeue only the current view. Old epochs never leak back into the map.
   for(const j of inFlight.values())if(j.epoch===epoch&&!pending.has(j.key))pending.set(j.key,j);
   inFlight.clear();releaseTiles();revision++;
-  Promise.resolve().then(()=>fallbackLoader?fallbackLoader():import('./map-tiles.js?v=28')).then(module=>{
+  Promise.resolve().then(()=>fallbackLoader?fallbackLoader():import('./map-tiles.js?v=29')).then(module=>{
    if(disposed)return;fallback=module.createMapTiles(options);mode='fallback';
    for(const j of pending.values())fallback.request(j.cx,j.cz,j.priority);pending.clear();revision++;
   }).catch(error=>{if(disposed)return;mode='failed';pending.clear();counters.failures++;workerStats.error=String(error?.message||error)});
@@ -109,7 +109,7 @@ export function createMapAtlas({seed,maxTiles=192,tilePixels=128,maxPending=maxT
  }
  try{
   if(workerFactory||typeof Worker!=='undefined'&&typeof OffscreenCanvas!=='undefined'&&typeof createImageBitmap==='function'){
-   worker=workerFactory?workerFactory(new URL('./map-worker.js?v=28',import.meta.url)):new Worker(new URL('./map-worker.js?v=28',import.meta.url),{type:'module',name:'geography-map'});
+   worker=workerFactory?workerFactory(new URL('./map-worker.js?v=29',import.meta.url)):new Worker(new URL('./map-worker.js?v=29',import.meta.url),{type:'module',name:'geography-map'});
    worker.onmessage=receive;worker.onerror=event=>{event.preventDefault?.();useFallback(event.message||'Map worker failed')};worker.onmessageerror=()=>useFallback('Map worker message could not be read');
    startupTimer=setTimeout(()=>useFallback('Map worker initialization timed out'),8000);startupTimer?.unref?.();
    send({type:'init',options:{seed,maxTiles:Math.min(48,maxTiles),tilePixels,maxPending:maxInFlight}});

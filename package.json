@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/preview.mjs",
     "check": "node scripts/check.mjs",
-    "test:water": "node tests/water-v28/run.mjs",
+    "test:water": "node tests/water-v29/run.mjs",
     "test:camera": "node tests/handheld-v27/run.mjs"
   }
 }

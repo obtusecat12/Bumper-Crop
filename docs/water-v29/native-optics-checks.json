@@ -1,0 +1,39 @@
+{
+  "gles": "OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "half_resolution": [
+    480,
+    360
+  ],
+  "dry_identity": true,
+  "absorption_expected_8bit": [
+    39.802245291928166,
+    128.66080922107227,
+    201.64011290031502
+  ],
+  "absorption_actual_8bit": [
+    40,
+    129,
+    202
+  ],
+  "time_seconds": [
+    0.04,
+    0.2,
+    0.5,
+    1.1,
+    1.8,
+    2.5,
+    3.1
+  ],
+  "mean_refractive_pixel_difference": [
+    13.963148148148148,
+    7.08261574074074,
+    3.1522087191358024,
+    2.8556385030864195,
+    3.189442515432099,
+    2.3441589506172837,
+    0.0
+  ],
+  "final_dry_byte_identical": true,
+  "not_device_fps": true
+}

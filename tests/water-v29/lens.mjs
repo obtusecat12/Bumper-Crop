@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {createLensWater} from '../../dist/lens-water.js';
+const lens=createLensWater({}),s={enabled:true,aspect:4/3,rain:0,humidity:.8,hasWater:true,shore:-1,level:0,cameraHeight:1.7,feet:-.1,fallSpeed:4,moved:.3,speed:3,grounded:false,waterCrossing:{submerged:false,crossing:0}};
+for(let i=0;i<30;i++)lens.update(1/60,s);assert.equal(lens.wetWeight,0,'feet wading alone never puts a fake mark on lens');
+lens.impact(1);assert.equal(lens.washWeight,1);assert(lens.wetWeight>0);
+for(let i=0;i<190;i++)lens.update(1/60,s);assert.equal(lens.wetWeight,0);assert.equal(lens.physics.wet,false,'contact water entirely retired by 3 seconds');
+s.waterCrossing.submerged=true;s.waterCrossing.crossing=1;lens.update(1/60,s);assert.equal(lens.wetWeight,0);assert.equal(lens.washWeight,0);
+s.waterCrossing.submerged=false;s.waterCrossing.crossing=-1;lens.update(1/60,s);assert.equal(lens.washWeight,1);s.waterCrossing.crossing=0;
+for(let i=0;i<190;i++)lens.update(1/60,s);assert.equal(lens.wetWeight,0);
+s.rain=1;for(let i=0;i<360;i++)lens.update(1/60,s);assert(lens.wetWeight>0,'ongoing rain continues to replenish droplets');lens.dispose();
+console.log(JSON.stringify({pass:true,bodyDoesNotWetLens:true,impactAndExitDrainSeconds:3,rainRetained:true}));
