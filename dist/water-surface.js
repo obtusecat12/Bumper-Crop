@@ -1,11 +1,12 @@
 import * as T from './vendor/three.module.min.js';
+import {ruralTextures} from './rural-textures.js?v=30';
 export const surfaceVertex=`precision highp float;precision highp sampler2D;
 in vec3 position;in vec2 lakeCoord;in float facetTone;
 uniform mat4 modelMatrix,viewMatrix,projectionMatrix;
 out vec3 worldP;out vec2 waterXZ;out float tone;
 void main(){worldP=(modelMatrix*vec4(position,1.)).xyz;waterXZ=lakeCoord;tone=facetTone;gl_Position=projectionMatrix*viewMatrix*vec4(worldP,1.);}`;
 export const surfaceFragment=`precision highp float;precision highp sampler2D;precision highp samplerCube;
-uniform sampler2D normalA,normalB,sceneColor,sceneDepth,uImpactNormals;
+uniform sampler2D normalA,normalB,sceneColor,sceneDepth,uImpactNormals,bottomSoil;
 uniform samplerCube environment;uniform float environmentReady;
 uniform mat4 viewMatrix,projectionMatrix,inverseProjection,cameraWorld;
 uniform vec2 size,uImpactOrigin;uniform float time,nearPlane,farPlane,fadeDistance,uImpactActive;
@@ -18,19 +19,24 @@ vec3 skyReflection(vec3 direction,float roughness){
  if(environmentReady>.5)return textureLod(environment,direction,roughness*4.).rgb;
  return skyColor*mix(.42,1.,smoothstep(-.2,.4,direction.y));
 }
-vec3 underwaterReflection(vec3 direction,vec2 uv){
- // Screen-space reflected bed retains real geometry, including caustics.
- // Off-screen rays fall back to a dim blurred scene, never a solid blue dome.
- vec3 result=texture(sceneColor,clamp(vec2(uv.x,1.-uv.y),.002,.998)).rgb*.32;
- float stride=.32;
- for(int i=0;i<10;i++){
-  vec3 p=worldP+direction*stride;vec4 clip=projectionMatrix*viewMatrix*vec4(p,1.);
-  vec2 q=clip.xy/max(.001,clip.w)*.5+.5;
-  if(clip.w>0.&&all(greaterThan(q,vec2(.001)))&&all(lessThan(q,vec2(.999)))){
-   float z=linearZ(texture(sceneDepth,q).r),rayZ=-(viewMatrix*vec4(p,1.)).z;
-   if(rayZ>=z&&rayZ-z<max(.35,stride*.16)){result=extinction(texture(sceneColor,q).rgb,stride);break;}
+vec3 underwaterReflection(vec3 direction){
+ // An underwater ray reflected at the ceiling travels DOWN to the lakebed.
+ // A screen-space vertical flip would instead mirror the sky and paint its
+ // clouds as enormous dark patches on the underside of the lake.
+ float reach=clamp((2.7+0.18*sin(worldP.x*.18+worldP.z*.12))/max(.14,-direction.y),1.5,26.);
+ vec3 bedP=worldP+direction*reach;
+ vec3 silt=texture(bottomSoil,bedP.xz*.25).rgb*vec3(1.08,1.58,2.10);
+ vec3 result=extinction(silt,reach);
+ // One projected-bed probe instead of a per-pixel raymarch: real lakebed
+ // detail if it is on screen, texture fallback if occluded/off screen.
+ vec4 clip=projectionMatrix*viewMatrix*vec4(bedP,1.);
+ vec2 q=clip.xy/max(.001,clip.w)*.5+.5;
+ if(clip.w>0.&&all(greaterThan(q,vec2(.001)))&&all(lessThan(q,vec2(.999)))){
+  float sampleD=texture(sceneDepth,q).r;
+  if(sampleD<.9998){vec3 hit=scenePoint(q);
+   if(hit.y<worldP.y-.08&&distance(hit,bedP)<1.2)
+    result=extinction(texture(sceneColor,q).rgb,reach);
   }
-  stride*=1.55;
  }
  return result;
 }
@@ -58,12 +64,16 @@ void main(){
  if(linearZ(texture(sceneDepth,bentUV).r)<waterZ||bed.y>worldP.y){bentUV=uv;bed=scenePoint(uv);}
  vec3 bottom=texture(sceneColor,bentUV).rgb;
  float path=length(bed-worldP);
- vec3 refracted=extinction(bottom,path),reflected=skyReflection(reflect(V,N),roughness);
+ vec3 refracted=extinction(bottom,min(path,24.)),reflected=skyReflection(reflect(V,N),roughness);
  if(!gl_FrontFacing){
-  vec3 R=refract(V,-N,1.33);float tir=1.-step(.0001,length(R));
-  vec2 windowUV=clamp(uv+R.xz*.010,vec2(.001),vec2(.999));
-  refracted=texture(sceneColor,windowUV).rgb;
-  reflected=underwaterReflection(reflect(V,-N),uv);F=mix(F,1.,tir);shore=1.;
+  vec3 R=refract(V,-N,1.333);float tir=1.-step(.0001,dot(R,R));
+  vec2 windowUV=clamp(uv+(R.xz-V.xz)*.008,vec2(.001),vec2(.999));
+  // The sky is an infinitely distant radiance source, so sample it by the
+  // refracted WORLD direction. Keep opaque geometry (especially droplets)
+  // from the actual scene capture when present at the window's screen UV.
+  refracted=texture(sceneDepth,windowUV).r<.9998?
+   texture(sceneColor,windowUV).rgb:skyReflection(R,roughness);
+  reflected=underwaterReflection(reflect(V,-N));F=mix(F,1.,tir);shore=1.;
  }
  float exponent=max(2.,2./(roughness*roughness)-2.);
  float spec=pow(max(0.,dot(faceN,normalize(view+sun))),exponent);
@@ -83,10 +93,11 @@ void main(){
 export function createWaterSurface(ripples){
  const loader=new T.TextureLoader(),pending=[];
  const load=url=>{let yes,no;pending.push(new Promise((resolve,reject)=>{yes=resolve;no=reject;}));return loader.load(url,yes,undefined,no);};
- const normalA=load(new URL('./textures/v28/water-normal-a.png',import.meta.url).href),normalB=load(new URL('./textures/v28/water-normal-b.png',import.meta.url).href),atlas=load(new URL('./textures/v28/water-caustics-atlas.png',import.meta.url).href);
+ const normalA=load(new URL('./textures/v28/water-normal-a.png',import.meta.url).href),normalB=load(new URL('./textures/v28/water-normal-b.png',import.meta.url).href),atlas=load(new URL('./textures/v28/water-caustics-atlas.png',import.meta.url).href),bottomSoil=ruralTextures.soil;
  for(const t of [normalA,normalB]){t.colorSpace=T.NoColorSpace;t.wrapS=t.wrapT=T.RepeatWrapping;t.minFilter=T.LinearMipmapLinearFilter;t.magFilter=T.LinearFilter;}
  atlas.colorSpace=T.NoColorSpace;atlas.minFilter=atlas.magFilter=T.LinearFilter;atlas.generateMipmaps=false;atlas.flipY=false;
- const time={value:0};const u={normalA:{value:normalA},normalB:{value:normalB},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},environment:{value:null},environmentReady:{value:0},sceneColor:{value:null},sceneDepth:{value:null},size:{value:new T.Vector2()},time,nearPlane:{value:.1},farPlane:{value:480},fadeDistance:{value:.65},eye:{value:new T.Vector3()},sun:{value:new T.Vector3(-.45,.84,-.30).normalize()},skyColor:{value:new T.Color(.40,.47,.49)},mist:{value:0},...ripples.binding};
+ // One already-loaded terrain albedo is shared with the lake material.
+ const time={value:0};const u={normalA:{value:normalA},normalB:{value:normalB},bottomSoil:{value:bottomSoil},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},environment:{value:null},environmentReady:{value:0},sceneColor:{value:null},sceneDepth:{value:null},size:{value:new T.Vector2()},time,nearPlane:{value:.1},farPlane:{value:480},fadeDistance:{value:.65},eye:{value:new T.Vector3()},sun:{value:new T.Vector3(-.45,.84,-.30).normalize()},skyColor:{value:new T.Color(.40,.47,.49)},mist:{value:0},...ripples.binding};
  const material=new T.RawShaderMaterial({name:'V29 Fresnel transmission and two-sided lake',glslVersion:T.GLSL3,vertexShader:surfaceVertex,fragmentShader:surfaceFragment,uniforms:u,side:T.DoubleSide,depthTest:true,depthWrite:true,transparent:true,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1,blending:T.NormalBlending,toneMapped:false});
  const attached=new WeakSet();
  function attach(chunk){chunk.group.traverse(o=>{
@@ -105,5 +116,5 @@ export function createWaterSurface(ripples){
   };m.customProgramCacheKey=()=>key()+'|v28-caustics';m.needsUpdate=true;
  });}
  function update(clock,camera,color,sun,mist){time.value=clock;u.inverseProjection.value.copy(camera.projectionMatrixInverse);u.cameraWorld.value.copy(camera.matrixWorld);u.eye.value.copy(camera.position);u.nearPlane.value=camera.near;u.farPlane.value=camera.far;if(color)u.skyColor.value.copy(color);if(sun)u.sun.value.copy(sun).normalize();u.mist.value=mist||0;}
- return {ready:Promise.all(pending),material,uniforms:u,normalA,normalB,atlas,time,attach,update,dispose(){material.dispose();normalA.dispose();normalB.dispose();atlas.dispose();}};
+ return {ready:Promise.all(pending),material,uniforms:u,normalA,normalB,bottomSoil,atlas,time,attach,update,dispose(){material.dispose();normalA.dispose();normalB.dispose();atlas.dispose();}};
 }

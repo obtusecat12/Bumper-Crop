@@ -1,12 +1,12 @@
 import * as T from './vendor/three.module.min.js';
-import {createWaterSurface} from './water-surface.js?v=29';
-import {createWaterEnvironment} from './water-environment.js?v=29';
-import {createCameraFocus} from './camera-focus.js?v=29';
+import {createWaterSurface} from './water-surface.js?v=30';
+import {createWaterEnvironment} from './water-environment.js?v=30';
+import {createCameraFocus} from './camera-focus.js?v=30';
 export const INTERNAL_HEIGHT=720,DOF_SCALE=.5,DOF_TAPS=10;
 export const passVertex=`precision highp float;precision highp sampler2D;in vec3 position;out vec2 uv;void main(){uv=position.xy*.5+.5;gl_Position=vec4(position,1.);}`;
 export const copyDepthFragment=`precision highp float;precision highp sampler2D;uniform sampler2D picture,depth;in vec2 uv;out vec4 outColor;void main(){outColor=texture(picture,uv);gl_FragDepth=texture(depth,uv).r;}`;
 export const fusedFragment=`precision highp float;precision highp sampler2D;
- uniform sampler2D picture,depth,wetHeight,washNoise;
+ uniform sampler2D picture,depth,wetHeight,washNoise,bottomSoil;
  uniform vec2 resolution,fieldSize;uniform mat4 inverseProjection,cameraWorld;
  uniform float nearPlane,farPlane,focusDist,aperture,wet,waterActive,washWeight,washAge,exiting,time,level,exitFlash;
  uniform vec2 flareSun;uniform float flareStrength,flareAspect;uniform vec3 eye,screenLight;in vec2 uv;out vec4 outColor;
@@ -33,7 +33,12 @@ export const fusedFragment=`precision highp float;precision highp sampler2D;
  float waterPath(vec2 q){
   if(waterActive<.5||eye.y-level>.4)return 0.;
   vec4 p=inverseProjection*vec4(q*2.-1.,-1.,1.);vec3 v=normalize(p.xyz/p.w),ray=mat3(cameraWorld)*v;
-  float distanceToScene=min(180.,linearZ(texture(depth,q).r)/max(.0001,-v.z));
+  float rawDepth=texture(depth,q).r;
+  // The far-plane depth value belongs to the background sky, not a lakebed
+  // 480 m away. Sending it through 180 m of absorption made the entire lower
+  // screen a featureless cyan slab whenever ground was clipped/missing.
+  float distanceToScene=rawDepth>=.9998?18.:
+   min(180.,linearZ(rawDepth)/max(.0001,-v.z));
   float a=eye.y-level,b=a+ray.y*distanceToScene;
   // Clip the optical ray segment against the water half-space. The surface
   // already owns interface -> bed; source depth ends at that interface.
@@ -70,7 +75,21 @@ export const fusedFragment=`precision highp float;precision highp sampler2D;
   shift.x*=resolution.y/resolution.x;return safe(q+shift*field.z*dispersion);
  }
  vec3 absorbAt(vec2 q){
+  float rawDepth=texture(depth,q).r;
   vec3 color=texture(picture,q).rgb;float d=waterPath(q);
+  if(rawDepth>=.9998&&waterActive>.5&&eye.y<level+.02){
+   vec3 ray=normalize(nearPoint(q)-eye);
+   // A downward ray in a lake must meet lakebed, even if the streamed ground
+   // tile missed this pixel for a frame. A world-anchored silt sample keeps
+   // spatial detail rather than allowing sky color to become solid blue.
+   if(ray.y<-.06){float bedDist=(level-3.1-eye.y)/ray.y;
+    if(bedDist>0.&&bedDist<18.){
+     vec2 bedXZ=eye.xz+ray.xz*bedDist;
+     color=texture(bottomSoil,bedXZ*.25).rgb*vec3(1.08,1.58,2.10);
+     d=bedDist;
+    }
+   }
+  }
   vec3 transmission=exp(-vec3(.4,.15,.05)*d);
   return color*transmission+vec3(.024,.061,.054)*(1.-transmission);
  }
@@ -133,7 +152,7 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky}
  const geometry=new T.BufferGeometry().setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3)),scene=new T.Scene(),screenCamera=new T.Camera();
  const mat=(f,u,depth=false)=>new T.RawShaderMaterial({glslVersion:T.GLSL3,vertexShader:passVertex,fragmentShader:f,uniforms:u,depthTest:depth,depthFunc:T.AlwaysDepth,depthWrite:depth,blending:T.NoBlending,toneMapped:false});
  const copy=mat(copyDepthFragment,{picture:{value:null},depth:{value:null}},true);
- const u={picture:{value:null},depth:{value:null},wetHeight:{value:null},washNoise:{value:surface.normalA},resolution:{value:new T.Vector2()},fieldSize:{value:new T.Vector2()},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},nearPlane:{value:.1},farPlane:{value:480},focusDist:{value:18},aperture:{value:.13},wet:{value:0},waterActive:{value:0},washWeight:{value:0},washAge:{value:0},exiting:{value:0},time:{value:0},level:{value:0},exitFlash:{value:0},eye:{value:new T.Vector3()},screenLight:{value:new T.Vector3(-.42,.67,.83)},flareSun:flare?.uniforms.uSun||{value:new T.Vector2()},flareStrength:flare?.uniforms.uStrength||{value:0},flareAspect:flare?.uniforms.uAspect||{value:4/3}};
+ const u={picture:{value:null},depth:{value:null},wetHeight:{value:null},washNoise:{value:surface.normalA},bottomSoil:{value:surface.bottomSoil},resolution:{value:new T.Vector2()},fieldSize:{value:new T.Vector2()},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},nearPlane:{value:.1},farPlane:{value:480},focusDist:{value:18},aperture:{value:.13},wet:{value:0},waterActive:{value:0},washWeight:{value:0},washAge:{value:0},exiting:{value:0},time:{value:0},level:{value:0},exitFlash:{value:0},eye:{value:new T.Vector3()},screenLight:{value:new T.Vector3(-.42,.67,.83)},flareSun:flare?.uniforms.uSun||{value:new T.Vector2()},flareStrength:flare?.uniforms.uStrength||{value:0},flareAspect:flare?.uniforms.uAspect||{value:4/3}};
  const fused=mat(fusedFragment,u),resolve=mat(resolveFragment,{fused:{value:null},sharp:{value:null},exposure:{value:1.23},uiPicture:{value:null},hasUI:{value:false},uiOnly:{value:false},displayMode:{value:0}}),quad=new T.Mesh(geometry,copy);quad.frustumCulled=false;scene.add(quad);
  let opaque=null,water=null,half=null,width=0,height=0,clock=0;const waterMeshes=new Set();
  const stats={internalWidth:0,internalHeight:0,compositeWidth:0,compositeHeight:0,fusedPasses:0,depthCopies:0,taps:10};

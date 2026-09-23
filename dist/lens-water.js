@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=29';
+import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=30';
 export {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker};
 // V28: simulation + cached data texture only. All screen optics live in the
 // single half-resolution water-pipeline shader; no capture/blur ping-pong here.

@@ -1,6 +1,6 @@
-import {surfaceHeight,buildingLocal,pondShoreDistance} from './world.js?v=29';
-import {REFERENCE_BARN as B} from './reference-barn-layout.js?v=29';
-import {farmRainRoof} from './weather-farm-roofs.js?v=29';
+import {surfaceHeight,buildingLocal,pondShoreDistance} from './world.js?v=30';
+import {REFERENCE_BARN as B} from './reference-barn-layout.js?v=30';
+import {farmRainRoof} from './weather-farm-roofs.js?v=30';
 const roofRecords=new WeakMap();
 function roofs(chunk){if(roofRecords.has(chunk))return roofRecords.get(chunk);let found=[];chunk.group?.traverse(o=>{if(o.userData?.rainRoofs)found=o.userData.rainRoofs;});roofRecords.set(chunk,found);return found;}
 // Queries only loaded, authoritative chunks. Missing terrain produces no impacts.

@@ -1,10 +1,10 @@
-import {landmarkTextures} from './landmark-textures.js?v=29';
-import {meadowEnvironment} from './meadow-layout.js?v=29';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=29';
-import {pondShapeGLSL} from './lake-shape.js?v=29';
+import {landmarkTextures} from './landmark-textures.js?v=30';
+import {meadowEnvironment} from './meadow-layout.js?v=30';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=30';
+import {pondShapeGLSL} from './lake-shape.js?v=30';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=29';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=29';
+import {ruralTextures} from './rural-textures.js?v=30';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=30';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -165,7 +165,12 @@ if(uBuilding.w>.5){
 
    if(uShore.w>.5){
     vec3 outside=base;vec4 shore=pondMetricsV6(p,uPond,uShore);float bank=shore.w;
-    vec3 silt=mix(vec3(.105,.099,.077),vec3(.205,.199,.157),soilTone);
+    // Preserve the resident granular loam under water. The earlier lakebed
+    // overwrote it with nearly constant mud, hiding all nearby geometry.
+    vec3 silt=soilAlbedo*vec3(1.36,2.00,2.80)*(.84+soilTone*.36);
+    // Reuse near-field clods/specks already calculated above; no additional
+    // noise octave or sampler is paid for by the water surface.
+    silt+=stoneSpeck*vec3(.055,.051,.044)-darkGrain*vec3(.018,.019,.015);
     vec3 loam=mix(vec3(.34,.313,.228),vec3(.47,.433,.321),soilTone);
     vec3 drygrass=mix(vec3(.12,.141,.067),vec3(.245,.252,.134),.26+broad*.44+soilPatch*.18);
     base=mix(silt,loam,smoothstep(-.22,.55,shore.y));

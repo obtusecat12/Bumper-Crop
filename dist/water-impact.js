@@ -54,10 +54,10 @@ void main() {
   if (aPart < 0.5) {
     float q=min(uv.y,1.0);
     float breakup=ease((t-iShape.w*0.36)/(iShape.w*0.48));
-    float rise=max(.045*(1.-t/2.),iShape.z*t-4.905*t*t);
-    float radius=mix(.2,1.5,ease(t/.64));
-    float fingers=0.88+0.09*sin(theta*11.0+iMotion.w)+0.05*sin(theta*17.0-iMotion.w);
-    float flare=(0.020+iShape.z*0.021)*q*q;
+    float rise=max(0.,iShape.z*t-4.7*t*t);
+    float radius=mix(.2,1.5,ease(t/.56));
+    float fingers=0.77+0.17*sin(theta*5.0+iMotion.w)+0.085*sin(theta*13.0-iMotion.w);
+    float flare=(0.014+iShape.z*0.012)*q*q;
     float curl=ease((q-0.72)/0.28)*breakup;
     float r=(radius+flare-0.025*curl)*shape;
     float y=rise*(0.60+forward*0.42)*pow(q,1.45)*mix(1.0,fingers,q*q);
@@ -68,9 +68,13 @@ void main() {
     r+=lip*sin(lipAngle); y+=lip*(cos(lipAngle)-1.0);
     transformed+=vec3(radial.x*r,y,radial.y*r);
     transformed.xz+=iMotion.xy*iMotion.z*q*max(t,0.0)*0.22;
-    vAlpha=ease(t/0.018)*ease((iShape.w-t)/0.12);
+    // A thin crown ruptures in under 0.6 s. Droplets and ripples carry the
+    // remaining two-second impact; the old shell lingered as a large bowl.
+    vAlpha=ease(t/0.018)*ease((iShape.w-t)/0.17);
     // Large asymmetry is a walking sheet: heel/back edge is visibly quieter.
     vAlpha*=mix(1.0,0.24+0.76*forward,sat(iMotion.z*2.0));
+    float arc=.54+.27*sin(theta*5.0+iMotion.w)+.19*sin(theta*13.0-iMotion.w);
+    vAlpha*=mix(1.0,smoothstep(.18,.72,arc),ease((t-.21)/.25));
     vBreak=breakup;
     if(t<0.0 || t>iShape.w) vAlpha=0.0;
   } else {
@@ -128,7 +132,7 @@ vec3 waterLight(vec3 n, vec3 v, float roughness) {
   // Neutral sky/ground reflection; water has no white diffuse/foam component.
   vec3 reflected=mix(vec3(0.075,0.085,0.083),vec3(0.52,0.56,0.55),
     smoothstep(-0.35,0.75,reflect(-v,n).y));
-  return reflected*(0.40+edge*0.75)*uAmbientIntensity+uLightColor*spec*uLightIntensity;
+  return reflected*(0.31+edge*0.45)*uAmbientIntensity+uLightColor*spec*.48*uLightIntensity;
 }
 `;
 const sheetFragment = waterFragment + `
@@ -137,6 +141,7 @@ varying float vBreak;
 varying float vSeed;
 void main() {
   if(vAlpha<0.003) discard;
+  if(vPart<.5 && vWaterUv.y<.69) discard;
   float theta=vWaterUv.x*6.28318530718;
   float tear=sin(theta*13.0+vSeed)*sin(theta*7.0-vSeed*0.7);
   float rupture=vBreak*smoothstep(0.58,1.0,vWaterUv.y);
@@ -147,10 +152,15 @@ void main() {
   if(dot(n,v)<0.0) n=-n;
   float fresnel=0.0204+0.9796*pow(1.0-max(0.0,dot(n,v)),5.0);
   float rim=smoothstep(0.86,1.0,vWaterUv.y)*(1.0-vPart);
-  float alpha=vAlpha*(0.34+fresnel*0.48+rim*0.18+vPart*0.08);
+  // The dither is sparse coverage of a refractive sheet, not a solid opaque
+  // wall with a white diffuse color on every surviving Bayer pixel.
+  // Almost all of the raised wall remains optically transparent. Only its
+  // torn, upper capillary rim makes the short-lived broken crown legible.
+  float wall=pow(smoothstep(.36,.93,vWaterUv.y),2.0);
+  float alpha=vAlpha*(wall*(.035+fresnel*.11)+rim*(.42+fresnel*.17)+vPart*.015);
   float roughness=mix(uRoughness,0.28,rim)+vBreak*0.08;
-  gl_FragColor=vec4(waterLight(n,v,roughness)+vec3(.26,.29,.29)*rim,min(0.78,alpha));
-  if(gl_FragColor.a<bayer4(gl_FragCoord.xy))discard;gl_FragColor.a=1.;
+  gl_FragColor=vec4(waterLight(n,v,roughness)+vec3(.31,.36,.37)*rim,min(.69,alpha));
+  if(gl_FragColor.a<bayer4(gl_FragCoord.xy+vec2(floor(vSeed*7.),floor(vSeed*11.))))discard;gl_FragColor.a=1.;
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
   #include <fog_fragment>
@@ -170,6 +180,10 @@ void main() {
  float age=uTime-iBirth,t=max(age,0.);
  if(age<0.||age>iData.y){vAlpha=0.;gl_Position=vec4(2.,2.,2.,1.);return;}
  vec3 center=flight(t);
+ // An airborne droplet ceases to be a separate optical object the instant it
+ // falls back through the interface. The corresponding wake is handled by
+ // the water-normal ripple field rather than a white streak below the lake.
+ if(center.y<iSurface.x-.018){vAlpha=0.;gl_Position=vec4(2.,2.,2.,1.);return;}
  float centerDistance=distance((modelMatrix*vec4(center,1.)).xyz,cameraPosition);
  // Continuous projected-area cap instead of deleting a splash at .25 m.
  // A close droplet hands off to lens optics and never covers the whole screen.
@@ -189,16 +203,21 @@ void main(){
  vec2 q=vWaterUv*2.-1.;
  // A .3–.6 m billboard carries a torn, elongated sheet/drop silhouette,
  // not a hollow soap-bubble ring. Orientation follows its ballistic velocity.
- float breadth=mix(.09,.26,.5+.5*sin(vSpraySeed*7.));
- float neck=breadth*(.42+.58*smoothstep(-.7,.3,q.y));
+ float bead=mix(3.7,5.3,.5+.5*sin(vSpraySeed*11.3));
+ float ligament=step(.92,fract(vSpraySeed*.6180339));
+ float neck=mix(.17,.29,.5+.5*sin(vSpraySeed*7.));
  float bent=q.x-.055*sin(q.y*4.+vSpraySeed);
- float r2=bent*bent/(neck*neck)+q.y*q.y;
+ // Most impact fragments are near-round 4–10 cm beads inside their .3–.6 m
+ // quads; only a few stretch into torn ligaments. Uniform elongated shards
+ // used to read as a rigid bicycle-wheel burst after VHS sampling.
+ float aspect=mix(bead,1.85,ligament);
+ float r2=bent*bent/(neck*neck)+q.y*q.y*aspect*aspect;
  if(r2>1.||vAlpha<.003)discard;
  vec3 n=normalize(vec3(bent/neck,q.y*.3,sqrt(max(.001,1.-r2))));
  float highlight=pow(max(0.,dot(n,normalize(vec3(-.45,.65,.72)))),14.);
- float alpha=vAlpha*(.46+highlight*.30)*(1.-smoothstep(.80,1.,r2));
- if(alpha<bayer4(gl_FragCoord.xy))discard;
- gl_FragColor=vec4((vec3(.58,.66,.66)+vec3(.50)*highlight)*uAmbientIntensity,1.);
+ float alpha=vAlpha*(.28+highlight*.23)*(1.-smoothstep(.74,1.,r2));
+ if(alpha<bayer4(gl_FragCoord.xy+vec2(floor(vSpraySeed*7.),floor(vSpraySeed*11.))))discard;
+ gl_FragColor=vec4((vec3(.34,.43,.42)+vec3(.40)*highlight)*uAmbientIntensity,1.);
  #include <tonemapping_fragment>
  #include <colorspace_fragment>
  #include <fog_fragment>
@@ -208,6 +227,7 @@ void main() {
   float age=uTime-iBirth, t=max(age,0.0);
   if(age<0.0 || age>iData.y){vAlpha=0.0;gl_Position=vec4(2.0,2.0,2.0,1.0);return;}
   vec3 center=flight(t);
+  if(center.y<iSurface.x-.018){vAlpha=0.;gl_Position=vec4(2.,2.,2.,1.);return;}
   if(distance((modelMatrix*vec4(center,1.)).xyz,cameraPosition)<.25){vec3 transformed=vec3(0.0);vAlpha=0.;gl_Position=vec4(2.,2.,2.,1.);return;}
   float growth=1.0+0.80*sat(t/max(iData.y,0.01));
   float angle=iSurface.y, c=cos(angle), s=sin(angle);
@@ -299,12 +319,13 @@ export function createWaterImpact(scene,{limit=1536,rng=Math.random,onRipple=nul
  function emit(power,s,level){if(disposed||!(power>0)||!Number.isFinite(level))return;sync(s);
   const energy=clamp(power,.1,2.5),strong=energy>.3,n=strong?240:200,x=s.x,z=s.z;
   const seed=rng()*TAU,dx=-Math.sin(s.yaw||0),dz=-Math.cos(s.yaw||0),i=acquire(sheets,now,2.);
-  write(sheets,i,'iOrigin',x,level+.006,z);write(sheets,i,'iShape',.2,1.3,4.4+energy*.9,2.);
-  write(sheets,i,'iMotion',dx,dz,.16,seed);write(sheets,i,'iJet',.18,.85+energy*.45,.9,.055+energy*.012);upload(sheets);
+  write(sheets,i,'iOrigin',x,level+.006,z);write(sheets,i,'iShape',.2,1.3,2.45+energy*.32,.64);
+  write(sheets,i,'iMotion',dx,dz,.16,seed);write(sheets,i,'iJet',.19,.26+energy*.14,.64,.045+energy*.009);upload(sheets);
   ripple(x,z,.028+energy*.015);
-  for(let j=0;j<n;j++){const a=rng()*TAU,r=.08+rng()*.09,speed=.9+rng()*1.7*energy,vy=1.8+rng()*5.2*Math.min(energy,1.5),delay=0;
+  for(let j=0;j<n;j++){const a=rng()*TAU,r=.08+rng()*.09,speed=.55+rng()*1.15*energy,vy=.65+rng()*2.25*Math.min(energy,1.5),delay=0;
    const vx=Math.cos(a)*speed,vz=Math.sin(a)*speed,ox=x+Math.cos(a)*r,oz=z+Math.sin(a)*r;
-   spawn(drops,ox,level+.02,oz,vx,vy,vz,.15+rng()*.15,now+delay,2.,.88,level,a);
+   const beadOpacity=j%7===0?.62+rng()*.22:.10+rng()*.20;
+   spawn(drops,ox,level+.02,oz,vx,vy,vz,.15+rng()*.15,now+delay,2.,beadOpacity,level,rng()*TAU);
    if(j<4){const fall=(vy+Math.sqrt(vy*vy+2*9.81*.02))/9.81,k=nextReturn*5;scheduled[k]=now+delay+fall;scheduled[k+1]=ox+vx*fall;scheduled[k+2]=oz+vz*fall;scheduled[k+3]=.004+energy*.002;nextReturn=(nextReturn+1)%32;}
   }
   // Fine spray has the same exact ballistic law, smaller and shorter visible fade.

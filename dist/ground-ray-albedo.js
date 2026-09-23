@@ -67,7 +67,7 @@ export function createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironm
    const dry=smooth(.50,.82,soilPatch)*(1-smooth(.15,2.45,e));for(let i=0;i<3;i++)yd[i]+=dry*[.014,.012,.008][i];blend(out,yd,yard);
   }
   if(f.type==='pond'){
-   const outside=Array.from(out),m=pondMetrics(x,z,f),silt=blend([.105,.099,.077],[.205,.199,.157],soilTone),loam=blend([.34,.313,.228],[.47,.433,.321],soilTone),drygrass=blend([.12,.141,.067],[.245,.252,.134],.26+broad*.44+soilPatch*.18);
+   const outside=Array.from(out),m=pondMetrics(x,z,f),silt=soil.map((c,i)=>c*[1.36,2.00,2.80][i]*(.84+soilTone*.36)),loam=blend([.34,.313,.228],[.47,.433,.321],soilTone),drygrass=blend([.12,.141,.067],[.245,.252,.134],.26+broad*.44+soilPatch*.18);
    blend(silt,loam,smooth(-.22,.55,m.metres),out);blend(out,drygrass,smooth(.11,.40,m.bank));blend(out,outside,smooth(.65,1.12,m.bank));
   }
   if(f.farm){const e=farmFootprintDistance(x,z,f),edge=(soilPatch-.5)*1.7+(broad-.5)*1.1,yard=1-smooth(.35,3.4,e+edge);blend(out,scale(dirt.slice(),.94+soilPatch*.08),yard)}

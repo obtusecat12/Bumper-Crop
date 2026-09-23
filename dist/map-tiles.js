@@ -1,8 +1,8 @@
-import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=29';
-import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=29';
-import {field,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=29';
-import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=29';
-import {pondShoreWidth} from './lake-shape.js?v=29';
+import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=30';
+import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=30';
+import {field,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=30';
+import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=30';
+import {pondShoreWidth} from './lake-shape.js?v=30';
 
 // A geography-only view of the existing world. Never imports Three, terrain,
 // textures, vegetation geometry, or the streamed chunk manager.
