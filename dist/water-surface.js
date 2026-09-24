@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=30';
+import {ruralTextures} from './rural-textures.js?v=31';
 export const surfaceVertex=`precision highp float;precision highp sampler2D;
 in vec3 position;in vec2 lakeCoord;in float facetTone;
 uniform mat4 modelMatrix,viewMatrix,projectionMatrix;
@@ -108,12 +108,21 @@ export function createWaterSurface(ripples){
    s.vertexShader='varying vec3 vCausticLocal;\n'+s.vertexShader;s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvCausticLocal=position;');
    s.fragmentShader=`uniform sampler2D v28Caustics;uniform float v28Time;uniform vec3 v28Lake;varying vec3 vCausticLocal;
    vec2 causticUV(vec2 p,float frame){vec2 tile=vec2(mod(frame,4.),floor(frame/4.));return (tile+(fract(p)*255.+.5)/256.)/4.;}\n`+s.fragmentShader;
-   s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+   // Apply to radiance after the terrain and lighting have finished. Injecting
+   // at color_fragment gets overwritten by ground.js's diffuseColor.rgb=base.
+   s.fragmentShader=s.fragmentShader.replace('#include <opaque_fragment>',`
    float depthBelow=v28Lake.y-vCausticLocal.y;
-   if(depthBelow>0.){float frame=mod(v28Time*8.,16.);vec2 p=(vCausticLocal.xz-v28Lake.xz)*.27;
-   float c=mix(texture2D(v28Caustics,causticUV(p,floor(frame))).r,texture2D(v28Caustics,causticUV(p,mod(floor(frame)+1.,16.))).r,fract(frame));
-   diffuseColor.rgb*=1.+c*.72*exp(-depthBelow*.19)*smoothstep(0.,.18,depthBelow);}`);
-  };m.customProgramCacheKey=()=>key()+'|v28-caustics';m.needsUpdate=true;
+   if(depthBelow>0.){
+    float frame=mod(v28Time*5.,16.);vec2 p=(vCausticLocal.xz-v28Lake.xz)*.24;
+    float c=mix(texture2D(v28Caustics,causticUV(p,floor(frame))).r,texture2D(v28Caustics,causticUV(p,mod(floor(frame)+1.,16.))).r,fract(frame));
+    float wash=smoothstep(0.,.22,depthBelow)*exp(-depthBelow*.105);
+    // Soft skylight supplies a visible bed; the moving network is intentionally
+    // more pronounced than diffuse overcast caustics to match the reference.
+    outgoingLight=max(outgoingLight,diffuseColor.rgb*vec3(.38,.46,.49));
+    outgoingLight+=vec3(.48,.66,.65)*pow(c,.72)*wash*.88;
+   }
+   #include <opaque_fragment>`);
+  };m.customProgramCacheKey=()=>key()+'|v31-caustics-after-lighting';m.needsUpdate=true;
  });}
  function update(clock,camera,color,sun,mist){time.value=clock;u.inverseProjection.value.copy(camera.projectionMatrixInverse);u.cameraWorld.value.copy(camera.matrixWorld);u.eye.value.copy(camera.position);u.nearPlane.value=camera.near;u.farPlane.value=camera.far;if(color)u.skyColor.value.copy(color);if(sun)u.sun.value.copy(sun).normalize();u.mist.value=mist||0;}
  return {ready:Promise.all(pending),material,uniforms:u,normalA,normalB,bottomSoil,atlas,time,attach,update,dispose(){material.dispose();normalA.dispose();normalB.dispose();atlas.dispose();}};

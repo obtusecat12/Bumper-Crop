@@ -1,4 +1,4 @@
-import {createVhsCore} from './vhs-core.js?v=30';
+import {createVhsCore} from './vhs-core.js?v=31';
 
 let core;
 try {

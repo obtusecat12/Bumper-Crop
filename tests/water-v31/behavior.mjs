@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import * as T from '../../dist/vendor/three.module.min.js';
+import {field,stringSeed,surfaceHeight,pondShoreDistance} from '../../dist/world.js';
+import {WaterState} from '../../dist/water-state.js';
+import {WaterContactEffects} from '../../dist/water-contact-effects.js';
+import {createLensWater} from '../../dist/lens-water.js';
+import {createWaterImpact} from '../../dist/water-impact.js';
+const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),events=[],arb=new WaterState();
+let clock=0;const contact=new WaterContactEffects({emit(power,s,level){events.push({clock,power,x:Number(s.cx)*64+s.x,z:Number(s.cz)*64+s.z,level});}});
+// Walk across actual shore/shallows/shelf through multiple streamed chunks.
+const state={cx:0n,cz:0n,x:0,z:32,grounded:true},input={rain:0,cameraVelocity:{y:0},grounded:true,fallSpeed:0,moved:.04};
+let headX=null;
+for(let x=-25;x>-106;x-=.04){state.cx=BigInt(Math.floor(x/64));state.x=x-Number(state.cx)*64;
+ const f=field(state.cx,0n,seed,false),feet=surfaceHeight(state.x,32,f);
+ Object.assign(input,{hasWater:f.type==='pond',shore:pondShoreDistance(state.x,32,f),level:f.lakeY||0,feet,cameraHeight:feet+1.77});
+ const cross=arb.update(1/60,input);const event=contact.update(1/60,state,input,cross.crossing);if(event==='head')headX=x;clock+=1/60;
+}
+assert(events.some(e=>e.power>.6),'actual shoreline foot impact');assert(headX!==null,'walk reaches submerged head');assert(events.some(e=>Math.abs(e.x-headX)<.001&&e.power>=1.05),'independent head-entry world splash after long bank');
+const splash=createWaterImpact(new T.Scene(),{rng:()=>.5});splash.emit(1.1,state,0);const ds=splash.group.children[1].geometry.attributes;
+assert.equal(ds.iBirth.array.filter(t=>t>=0).length,240);assert(ds.iData.array[1]>2.3);
+const age=1.2-ds.iBirth.array[0];const endY=ds.iOrigin.array[1]+ds.iVelocity.array[1]*age-4.905*age**2;assert(endY>0,'substantial droplets survive through 1.2s, not only records');
+const origin=ds.iOrigin.array.slice(0,3);state.x+=6;splash.update(.1,state,null,true);assert.deepEqual(ds.iOrigin.array.slice(0,3),origin);splash.dispose();
+const lens=createLensWater({},{rng:()=>.45}),wet={enabled:true,aspect:4/3,humidity:.8,rain:0,waterCrossing:{submerged:false,crossing:0}};
+lens.update(.016,wet);assert.equal(lens.wetWeight,0);assert.equal(lens.microbubbles.weight,0);
+wet.waterCrossing={submerged:true,crossing:1};lens.update(.016,wet);assert(lens.washWeight>.9);wet.waterCrossing.crossing=0;
+for(let i=0;i<60;i++)lens.update(1/60,wet);assert(lens.microbubbles.weight>0);assert(lens.microbubbles.texture.image.data.some((x,i)=>i%4===3&&x>0));
+wet.waterCrossing={submerged:false,crossing:-1};lens.update(.016,wet);assert.equal(lens.microbubbles.weight,0);wet.waterCrossing.crossing=0;
+for(let i=0;i<72;i++)lens.update(1/60,wet);assert(lens.washWeight>.45,'exit curtain persists after 1.2s');
+for(let i=0;i<150;i++)lens.update(1/60,wet);assert(lens.wetWeight>0,'runoff survives after 3.7s');
+for(let i=0;i<250;i++)lens.update(1/60,wet);assert.equal(lens.wetWeight,0);lens.dispose();
+console.log(JSON.stringify({pass:true,routeEvents:events.length,headEntryX:headX,worldDroplets:240,airborneAfter:1.2,attachedLensBubbles:260,exitCurtain:2.4,runoff:7.5}));

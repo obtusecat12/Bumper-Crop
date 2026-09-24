@@ -13,7 +13,7 @@ export class WaterState {
   else if(crossing===-1){this.state='exitRupture';this.age=0;this.exitAge=0;this.washWeight=1;}
   else {this.age+=Math.max(0,dt);this.exitAge+=Math.max(0,dt);}
   if(wet){if(this.state!=='entryWash'||this.age>=.28)this.state='submerged';this.washWeight=this.state==='entryWash'?1:0;}
-  else if(this.state==='exitRupture'&&this.age<.78)this.washWeight=Math.max(0,1-this.age/.78);
+  else if(this.state==='exitRupture'&&this.age<2.4)this.washWeight=Math.max(0,1-this.age/2.4);
   else {this.state=s.rain>.005&&!s.sheltered?'rain':'dry';this.washWeight=0;}
   this.flash=this.exitAge<.15?Math.pow(1-this.exitAge/.15,2):0;
   return this.result;

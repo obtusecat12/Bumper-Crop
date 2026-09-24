@@ -54,13 +54,13 @@ void main() {
   if (aPart < 0.5) {
     float q=min(uv.y,1.0);
     float breakup=ease((t-iShape.w*0.36)/(iShape.w*0.48));
-    float rise=max(0.,iShape.z*t-4.7*t*t);
-    float radius=mix(.2,1.5,ease(t/.56));
+    float rise=max(0.,iShape.z*t-1.65*t*t);
+    float radius=mix(iShape.x,iShape.x+iShape.y,ease(t/1.35));
     float fingers=0.77+0.17*sin(theta*5.0+iMotion.w)+0.085*sin(theta*13.0-iMotion.w);
     float flare=(0.014+iShape.z*0.012)*q*q;
     float curl=ease((q-0.72)/0.28)*breakup;
-    float r=(radius+flare-0.025*curl)*shape;
-    float y=rise*(0.60+forward*0.42)*pow(q,1.45)*mix(1.0,fingers,q*q);
+    float r=(radius*(.58+.42*q)+flare+.10*curl)*shape;
+    float y=rise*(0.56+forward*0.20)*pow(q,1.45)*mix(1.0,fingers,q*q);
     y-=min(rise*0.16,0.025)*curl;
     // Extra rows fold the upper edge continuously into a rounded, curling lip.
     float lipAngle=max(0.0,(uv.y-1.0)/0.07)*3.14159265359;
@@ -68,13 +68,13 @@ void main() {
     r+=lip*sin(lipAngle); y+=lip*(cos(lipAngle)-1.0);
     transformed+=vec3(radial.x*r,y,radial.y*r);
     transformed.xz+=iMotion.xy*iMotion.z*q*max(t,0.0)*0.22;
-    // A thin crown ruptures in under 0.6 s. Droplets and ripples carry the
-    // remaining two-second impact; the old shell lingered as a large bowl.
-    vAlpha=ease(t/0.018)*ease((iShape.w-t)/0.17);
+    // The rim expands and overturns while its irregular sheet drains.
+    // It remains readable through head immersion, then fragments into spray.
+    vAlpha=ease(t/.045)*ease((iShape.w-t)/.55);
     // Large asymmetry is a walking sheet: heel/back edge is visibly quieter.
     vAlpha*=mix(1.0,0.24+0.76*forward,sat(iMotion.z*2.0));
     float arc=.54+.27*sin(theta*5.0+iMotion.w)+.19*sin(theta*13.0-iMotion.w);
-    vAlpha*=mix(1.0,smoothstep(.18,.72,arc),ease((t-.21)/.25));
+    vAlpha*=mix(1.0,smoothstep(.18,.72,arc),ease((t-.55)/.75));
     vBreak=breakup;
     if(t<0.0 || t>iShape.w) vAlpha=0.0;
   } else {
@@ -141,7 +141,7 @@ varying float vBreak;
 varying float vSeed;
 void main() {
   if(vAlpha<0.003) discard;
-  if(vPart<.5 && vWaterUv.y<.69) discard;
+  if(vPart<.5 && vWaterUv.y<.10) discard;
   float theta=vWaterUv.x*6.28318530718;
   float tear=sin(theta*13.0+vSeed)*sin(theta*7.0-vSeed*0.7);
   float rupture=vBreak*smoothstep(0.58,1.0,vWaterUv.y);
@@ -154,12 +154,12 @@ void main() {
   float rim=smoothstep(0.86,1.0,vWaterUv.y)*(1.0-vPart);
   // The dither is sparse coverage of a refractive sheet, not a solid opaque
   // wall with a white diffuse color on every surviving Bayer pixel.
-  // Almost all of the raised wall remains optically transparent. Only its
-  // torn, upper capillary rim makes the short-lived broken crown legible.
-  float wall=pow(smoothstep(.36,.93,vWaterUv.y),2.0);
-  float alpha=vAlpha*(wall*(.035+fresnel*.11)+rim*(.42+fresnel*.17)+vPart*.015);
+  // Partially covered refractive sheet with a brighter folded rim; rupture
+  // opens holes as the crown collapses, rather than vanishing all at once.
+  float wall=smoothstep(.10,.60,vWaterUv.y);
+  float alpha=vAlpha*(wall*(.045+fresnel*.085)+rim*(.52+fresnel*.12)+vPart*.24);
   float roughness=mix(uRoughness,0.28,rim)+vBreak*0.08;
-  gl_FragColor=vec4(waterLight(n,v,roughness)+vec3(.31,.36,.37)*rim,min(.69,alpha));
+  gl_FragColor=vec4(waterLight(n,v,roughness)+vec3(.44,.49,.48)*(rim+.20*wall),min(.69,alpha));
   if(gl_FragColor.a<bayer4(gl_FragCoord.xy+vec2(floor(vSeed*7.),floor(vSeed*11.))))discard;gl_FragColor.a=1.;
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
@@ -203,21 +203,20 @@ void main(){
  vec2 q=vWaterUv*2.-1.;
  // A .3–.6 m billboard carries a torn, elongated sheet/drop silhouette,
  // not a hollow soap-bubble ring. Orientation follows its ballistic velocity.
- float bead=mix(3.7,5.3,.5+.5*sin(vSpraySeed*11.3));
+ float bead=mix(2.2,3.8,.5+.5*sin(vSpraySeed*11.3));
  float ligament=step(.92,fract(vSpraySeed*.6180339));
- float neck=mix(.17,.29,.5+.5*sin(vSpraySeed*7.));
+ float neck=mix(.12,.25,.5+.5*sin(vSpraySeed*7.));
  float bent=q.x-.055*sin(q.y*4.+vSpraySeed);
- // Most impact fragments are near-round 4–10 cm beads inside their .3–.6 m
- // quads; only a few stretch into torn ligaments. Uniform elongated shards
- // used to read as a rigid bicycle-wheel burst after VHS sampling.
- float aspect=mix(bead,1.85,ligament);
+ // Varied rounded drops and a small minority of torn ligaments.
+ // Coverage survives the 720p -> VHS signal without forming a solid wall.
+ float aspect=mix(bead,1.4,ligament);
  float r2=bent*bent/(neck*neck)+q.y*q.y*aspect*aspect;
  if(r2>1.||vAlpha<.003)discard;
  vec3 n=normalize(vec3(bent/neck,q.y*.3,sqrt(max(.001,1.-r2))));
  float highlight=pow(max(0.,dot(n,normalize(vec3(-.45,.65,.72)))),14.);
- float alpha=vAlpha*(.28+highlight*.23)*(1.-smoothstep(.74,1.,r2));
+ float alpha=vAlpha*(.65+highlight*.32)*(1.-smoothstep(.74,1.,r2));
  if(alpha<bayer4(gl_FragCoord.xy+vec2(floor(vSpraySeed*7.),floor(vSpraySeed*11.))))discard;
- gl_FragColor=vec4((vec3(.34,.43,.42)+vec3(.40)*highlight)*uAmbientIntensity,1.);
+ gl_FragColor=vec4((vec3(.53,.62,.61)+vec3(.46)*highlight)*uAmbientIntensity,1.);
  #include <tonemapping_fragment>
  #include <colorspace_fragment>
  #include <fog_fragment>
@@ -318,14 +317,14 @@ export function createWaterImpact(scene,{limit=1536,rng=Math.random,onRipple=nul
  function spawn(p,x,y,z,vx,vy,vz,size,birth,life,opacity,level,seed){const i=acquire(p,birth,life);write(p,i,'iOrigin',x,y,z);write(p,i,'iVelocity',vx,vy,vz);write(p,i,'iData',size,life,0,opacity);write(p,i,'iSurface',level,seed);if(p===drops){touched[i]=0;previousSide[i]=99;}}
  function emit(power,s,level){if(disposed||!(power>0)||!Number.isFinite(level))return;sync(s);
   const energy=clamp(power,.1,2.5),strong=energy>.3,n=strong?240:200,x=s.x,z=s.z;
-  const seed=rng()*TAU,dx=-Math.sin(s.yaw||0),dz=-Math.cos(s.yaw||0),i=acquire(sheets,now,2.);
-  write(sheets,i,'iOrigin',x,level+.006,z);write(sheets,i,'iShape',.2,1.3,2.45+energy*.32,.64);
-  write(sheets,i,'iMotion',dx,dz,.16,seed);write(sheets,i,'iJet',.19,.26+energy*.14,.64,.045+energy*.009);upload(sheets);
-  ripple(x,z,.028+energy*.015);
-  for(let j=0;j<n;j++){const a=rng()*TAU,r=.08+rng()*.09,speed=.55+rng()*1.15*energy,vy=.65+rng()*2.25*Math.min(energy,1.5),delay=0;
+  const seed=rng()*TAU,dx=-Math.sin(s.yaw||0),dz=-Math.cos(s.yaw||0),i=acquire(sheets,now,2.4);
+  write(sheets,i,'iOrigin',x,level+.006,z);write(sheets,i,'iShape',strong?.28:.16,strong?1.34:.58,strong?2.50+energy*.20:1.10,strong?1.72:.74);
+  write(sheets,i,'iMotion',dx,dz,.16,seed);write(sheets,i,'iJet',.25,strong?.45+energy*.22:.08,strong?1.25:.32,.065+energy*.015);upload(sheets);
+  ripple(x,z,.075+energy*.035,.38);
+  for(let j=0;j<n;j++){const a=rng()*TAU,r=.24+rng()*.18,speed=.70+rng()*1.05*energy,vy=(strong?3.2:.75)+rng()*(strong?4.4:1.8)*Math.min(energy,1.4),delay=rng()*.22;
    const vx=Math.cos(a)*speed,vz=Math.sin(a)*speed,ox=x+Math.cos(a)*r,oz=z+Math.sin(a)*r;
-   const beadOpacity=j%7===0?.62+rng()*.22:.10+rng()*.20;
-   spawn(drops,ox,level+.02,oz,vx,vy,vz,.15+rng()*.15,now+delay,2.,beadOpacity,level,rng()*TAU);
+   const beadOpacity=.56+rng()*.36;
+   spawn(drops,ox,level+.02,oz,vx,vy,vz,.15+rng()*.15,now+delay,2.4,beadOpacity,level,rng()*TAU);
    if(j<4){const fall=(vy+Math.sqrt(vy*vy+2*9.81*.02))/9.81,k=nextReturn*5;scheduled[k]=now+delay+fall;scheduled[k+1]=ox+vx*fall;scheduled[k+2]=oz+vz*fall;scheduled[k+3]=.004+energy*.002;nextReturn=(nextReturn+1)%32;}
   }
   // Fine spray has the same exact ballistic law, smaller and shorter visible fade.

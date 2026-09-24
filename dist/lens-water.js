@@ -1,13 +1,15 @@
 import * as T from './vendor/three.module.min.js';
-import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=30';
+import {createLensMicrobubbles} from './lens-microbubbles.js?v=31';
+import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=31';
 export {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker};
 // V28: simulation + cached data texture only. All screen optics live in the
 // single half-resolution water-pipeline shader; no capture/blur ping-pong here.
 export function createLensWater(renderer,{limit=64,rng=Math.random}={}){
+ const microbubbles=createLensMicrobubbles(rng);
  const physics=new LensDropletPhysics(limit,rng),entry=new WaterEntryTracker(),cameraEntry=new CameraWaterTracker();
  let texture=null,normals=null,width=0,height=0,uploaded=-1,enabled=true,disposed=false,drainAge=99,washAge=99,submerged=false,raining=false;
  const diagnostics={normalUploads:0,wetPasses:0,copies:0};
- function reset(){physics.clear();entry.reset();cameraEntry.reset();uploaded=-1;drainAge=washAge=99;submerged=raining=false;}
+ function reset(){microbubbles.reset();physics.clear();entry.reset();cameraEntry.reset();uploaded=-1;drainAge=washAge=99;submerged=raining=false;}
  function runoff(power=1){
   // An exiting lens carries a sheet of water: broad heads and connected trails,
   // with conserved volume in the existing stick-slip/coalescence simulation.
@@ -25,13 +27,15 @@ export function createLensWater(renderer,{limit=64,rng=Math.random}={}){
   // Body/stride crossings do not wet the lens. Only exit, a real spray contact,
   // or ongoing exposed rain can activate optical droplets.
   raining=state.rain>.005&&!state.sheltered&&!submerged;
+  if(crossed.crossing===1){washAge=0;microbubbles.emit(state.aspect||4/3);}
   if(crossed.crossing===-1){runoff();drainAge=washAge=0;}
+  microbubbles.update(step,submerged,state.aspect||4/3);
   if(raining)drainAge=0;
   physics.step(dt,state);
-  if(!raining&&!submerged&&drainAge>=3&&physics.wet){physics.clear();uploaded=-1;}
+  if(!raining&&!submerged&&drainAge>=7.5&&physics.wet){physics.clear();uploaded=-1;}
   return 0;
  }
- function fade(){const t=Math.max(0,Math.min(1,(drainAge-2.1)/.9));return 1-t*t*(3-2*t);}
+ function fade(){const t=Math.max(0,Math.min(1,(drainAge-5.0)/2.5));return 1-t*t*(3-2*t);}
  function prepareField(){
   if(!texture||width!==physics.fieldWidth||height!==physics.fieldHeight){texture?.dispose();width=physics.fieldWidth;height=physics.fieldHeight;normals=new Uint8Array(width*height*4);
    for(let i=0;i<normals.length;i+=4){normals[i]=normals[i+1]=128;}
@@ -45,5 +49,5 @@ export function createLensWater(renderer,{limit=64,rng=Math.random}={}){
   }return texture;
  }
  function contextLost(){texture?.dispose();texture=null;width=height=0;uploaded=-1;reset();}
- return {physics,entry,cameraEntry,diagnostics,update,impact,prepareField,reset,contextLost,get washAge(){return washAge;},get washWeight(){return submerged?0:Math.max(0,1-washAge/.8);},get wetWeight(){return physics.wet&&!submerged?fade():0;},dispose(){if(disposed)return;disposed=true;texture?.dispose();physics.clear();}};
+ return {microbubbles,physics,entry,cameraEntry,diagnostics,update,impact,prepareField,reset,contextLost,get washAge(){return washAge;},get washWeight(){return submerged?Math.max(0,1-washAge/.38):Math.max(0,1-washAge/2.4);},get submerged(){return submerged;},get wetWeight(){return physics.wet&&!submerged?fade():0;},dispose(){if(disposed)return;disposed=true;texture?.dispose();microbubbles.dispose();physics.clear();}};
 }

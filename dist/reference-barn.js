@@ -1,8 +1,8 @@
 import * as T from './vendor/three.module.min.js';
-import {REFERENCE_BARN as B,BARN_ROOFLIGHTS,barnFootprintDistance,barnLandscape} from './reference-barn-layout.js?v=30';
-import {landmarkTextures as tex} from './landmark-textures.js?v=30';
-import {surfaceHeight,random,roadDistance} from './world.js?v=30';
-import {makeNature} from './nature.js?v=30';
+import {REFERENCE_BARN as B,BARN_ROOFLIGHTS,barnFootprintDistance,barnLandscape} from './reference-barn-layout.js?v=31';
+import {landmarkTextures as tex} from './landmark-textures.js?v=31';
+import {surfaceHeight,random,roadDistance} from './world.js?v=31';
+import {makeNature} from './nature.js?v=31';
 const shared=new Set(),keep=x=>(shared.add(x),x);
 export const isSharedReferenceBarnResource=x=>shared.has(x);
 const mat=(name,color,map=null)=>keep(new T.MeshStandardMaterial({name,color,map,roughness:.94,side:T.DoubleSide}));

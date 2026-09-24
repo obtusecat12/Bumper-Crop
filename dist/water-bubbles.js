@@ -19,7 +19,7 @@ export const bubbleFragment=`precision highp float;in vec2 tex;in float alpha;ou
  ivec2 p=ivec2(gl_FragCoord.xy)&3;if(alpha*(.25+rim*.65)<(b[p.y*4+p.x]+.5)/16.)discard;
  outColor=vec4(vec3(.19,.33,.36)+vec3(.43,.48,.44)*(rim*.55+highlight),1.);}`;
 export function createWaterBubbles(scene){
- const count=60,g=new T.PlaneGeometry(2,2),birth=new T.InstancedBufferAttribute(new Float32Array(count*4),4),motion=new T.InstancedBufferAttribute(new Float32Array(count*4),4);
+ const count=96,g=new T.PlaneGeometry(2,2),birth=new T.InstancedBufferAttribute(new Float32Array(count*4),4),motion=new T.InstancedBufferAttribute(new Float32Array(count*4),4);
  g.setAttribute('originBirth',birth);g.setAttribute('velocitySize',motion);birth.array.fill(-99);
  const u={time:{value:0},level:{value:0},eye:{value:new T.Vector3()}};
  const m=new T.RawShaderMaterial({glslVersion:T.GLSL3,vertexShader:bubbleVertex,fragmentShader:bubbleFragment,uniforms:u,depthTest:true,depthWrite:true,transparent:false,blending:T.NoBlending,side:T.DoubleSide});
@@ -30,7 +30,7 @@ export function createWaterBubbles(scene){
    birth.array[o]=camera.position.x+forward.x*depth+(right.x*Math.cos(a)+up.x*Math.sin(a))*r;
    birth.array[o+1]=Math.min(level-.02,camera.position.y+forward.y*depth+(right.y*Math.cos(a)+up.y*Math.sin(a))*r);
    birth.array[o+2]=camera.position.z+forward.z*depth+(right.z*Math.cos(a)+up.z*Math.sin(a))*r;birth.array[o+3]=clock+Math.random()*.12;
-   motion.array[o]=(Math.random()-.5)*.08;motion.array[o+1]=.12+Math.random()*.28;motion.array[o+2]=(Math.random()-.5)*.08;motion.array[o+3]=.008+Math.random()**2*.028;
+   motion.array[o]=(Math.random()-.5)*.08;motion.array[o+1]=.12+Math.random()*.28;motion.array[o+2]=(Math.random()-.5)*.08;motion.array[o+3]=.0015+Math.random()**2*.006;
   }u.level.value=level;birth.needsUpdate=motion.needsUpdate=true;end=clock+5;mesh.visible=true;
  }
  function update(dt,camera,s,active){if(active)clock+=dt;u.time.value=clock;u.eye.value.copy(camera.position);mesh.visible=clock<end;

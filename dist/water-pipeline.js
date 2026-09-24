@@ -1,14 +1,14 @@
 import * as T from './vendor/three.module.min.js';
-import {createWaterSurface} from './water-surface.js?v=30';
-import {createWaterEnvironment} from './water-environment.js?v=30';
-import {createCameraFocus} from './camera-focus.js?v=30';
+import {createWaterSurface} from './water-surface.js?v=31';
+import {createWaterEnvironment} from './water-environment.js?v=31';
+import {createCameraFocus} from './camera-focus.js?v=31';
 export const INTERNAL_HEIGHT=720,DOF_SCALE=.5,DOF_TAPS=10;
 export const passVertex=`precision highp float;precision highp sampler2D;in vec3 position;out vec2 uv;void main(){uv=position.xy*.5+.5;gl_Position=vec4(position,1.);}`;
 export const copyDepthFragment=`precision highp float;precision highp sampler2D;uniform sampler2D picture,depth;in vec2 uv;out vec4 outColor;void main(){outColor=texture(picture,uv);gl_FragDepth=texture(depth,uv).r;}`;
 export const fusedFragment=`precision highp float;precision highp sampler2D;
- uniform sampler2D picture,depth,wetHeight,washNoise,bottomSoil;
+ uniform sampler2D picture,depth,wetHeight,bubbleField,washNoise,bottomSoil;
  uniform vec2 resolution,fieldSize;uniform mat4 inverseProjection,cameraWorld;
- uniform float nearPlane,farPlane,focusDist,aperture,wet,waterActive,washWeight,washAge,exiting,time,level,exitFlash;
+ uniform float nearPlane,farPlane,focusDist,aperture,wet,bubbleWeight,waterActive,washWeight,washAge,exiting,time,level,exitFlash;
  uniform vec2 flareSun;uniform float flareStrength,flareAspect;uniform vec3 eye,screenLight;in vec2 uv;out vec4 outColor;
  const vec2 poisson[10]=vec2[10](vec2(-.326,-.406),vec2(-.840,-.074),vec2(-.696,.457),vec2(-.203,.621),vec2(.962,-.195),vec2(.473,-.480),vec2(.519,.767),vec2(.185,-.893),vec2(.507,.064),vec2(-.092,-.057));
  float linearZ(float d){return nearPlane*farPlane/(farPlane-d*(farPlane-nearPlane));}
@@ -50,24 +50,26 @@ export const fusedFragment=`precision highp float;precision highp sampler2D;
  // CPU finite derivatives are baked only on wet-field changes, no extra pass.
  // RG signed normals, B thickness, A coverage; linear data, sampled once.
  vec4 fieldAt(vec2 q){
+  float air=waterActive>.5?smoothstep(-.0015,.0015,lensHeight(q)):1.;
+  if(bubbleWeight>.001&&air<.5&&washWeight<.02){vec4 b=texture(bubbleField,vec2(q.x,1.-q.y));return vec4((b.rg*255.-128.)/127.,b.a*bubbleWeight,-1.);}
   if(wet<.001&&washWeight<.001)return vec4(0.);
   vec4 h=texture(wetHeight,vec2(q.x,1.-q.y));vec2 xy=(h.rg*255.-128.)/127.;
   vec3 rainN=normalize(vec3(xy,sqrt(max(.001,1.-dot(xy,xy)))));
-  float air=waterActive>.5?smoothstep(-.0015,.0015,lensHeight(q)):1.;
   float coverage=smoothstep(.025,.92,h.a)*wet*air,thickness=h.b*3.*wet;
   if(washWeight<.001)return vec4(rainN.xy,coverage,thickness);
   vec3 wn=texture(washNoise,q*vec2(1.1,1.47)+vec2(time*.025,time*.19)).xyz*2.-1.;
   wn.xy*=1.35;vec3 washN=normalize(vec3(wn.xy,1.));
   // Fisheye sheet at crossing; holes open, then a curtain drains TOP -> bottom.
   float radial=max(0.,1.-washAge*3.);washN.xy+=(q-.5)*radial*.50;
-  float front=1.-washAge/ .64,curtain=1.-smoothstep(front-.04,front+.16,q.y);
+  float front=1.-washAge/2.0,curtain=1.-smoothstep(front-.04,front+.16,q.y);
   float opening=texture(washNoise,q*2.7+vec2(0.,time*.11)).r;
-  float rupture=1.-smoothstep(.14,.68,washAge)*smoothstep(.46,.63,opening);
-  float weight=washWeight*mix(1.,curtain*rupture,exiting)*air;
+  float rupture=1.-smoothstep(.45,2.1,washAge)*smoothstep(.46,.63,opening);
+  float weight=washWeight*mix(1.,curtain*rupture,exiting)*mix(1.,air,exiting);
   vec3 n=normalize(mix(rainN,washN,weight));coverage=max(coverage,weight);thickness=mix(thickness,1.1,weight);
   return vec4(n.xy,coverage,thickness);
  }
  vec2 warp(vec2 q,vec4 field,float dispersion){
+  if(field.w<0.)return safe(q+field.xy*field.z*.006*dispersion*vec2(resolution.y/resolution.x,1.));
   vec2 xy=field.xy;float l=dot(xy,xy);if(l>.999)xy*=sqrt(.999/l);
   vec3 n=vec3(xy,sqrt(max(.001,1.-dot(xy,xy))));
   vec3 r=refract(refract(vec3(0.,0.,-1.),n,1./1.333),vec3(0.,0.,1.),1.333);
@@ -100,40 +102,36 @@ export const fusedFragment=`precision highp float;precision highp sampler2D;
  c+=vec3(.30,.20,.10)*exp(-abs(v.y)*80.)*exp(-abs(v.x)*2.3)*.11;
  return c*flareStrength;
  }
- vec3 lensSample(vec2 q,float chroma){
-  vec4 f=fieldAt(q),meniscus=meniscusAt(q);vec2 p=warp(q,f,chroma);
-  p=safe(p+meniscus.xy*meniscus.z*chroma);
-  vec3 c=absorbAt(p)+opticalFlare(q);
-  c*=1.-meniscus.z*.08;c+=vec3(.20,.23,.21)*meniscus.w;
-  if(f.z>.002){vec3 n=normalize(vec3(f.xy,sqrt(max(.001,1.-dot(f.xy,f.xy))))),light=normalize(screenLight),halfV=normalize(vec3(0,0,1)+light);
-   float fresnel=.02037+.97963*pow(1.-n.z,5.),edge=smoothstep(.52,.88,length(f.xy));
-   float dark=edge*max(0.,-dot(f.xy,normalize(light.xy+vec2(.0001))))*.18;
-   vec3 reflected=absorbAt(safe(q+f.xy*.025));
-   c=mix(c*(1.-dark),reflected,clamp(fresnel*(.45+.25*edge),0.,.30)*f.z);
-   c+=vec3(.84,.91,1.)*pow(max(0.,dot(n,halfV)),70.)*(.10+.18*edge)*max(.1,fresnel*3.)*f.z;
-  }
-  return c;
- }
  void main(){
-  vec4 central=fieldAt(uv);vec2 warped=warp(uv,central,1.);float z=linearZ(texture(depth,warped).r);
+  vec4 central=fieldAt(uv),meniscus=meniscusAt(uv);
+  vec2 warped=safe(warp(uv,central,1.)+meniscus.xy*meniscus.z);
+  float z=linearZ(texture(depth,warped).r);
   float coc=clamp(abs(z-focusDist)/max(z,.001)*aperture,0.,1.);
-  // Droplets are on the front glass: they remain slightly out of focus even
-  // when the world behind them is perfectly focused.
-  float wetBlur=central.z*clamp(.18+central.w*.30,.18,.65);
-  float radius=max(coc*5.5,wetBlur*4.0);radius=max(radius,exitFlash*5.);
+  float wetBlur=central.z*(central.w<0.?.10:clamp(.18+central.w*.30,.18,.65));
+  float radius=max(max(coc*5.5,wetBlur*4.),exitFlash*5.);
   float signFocus=z<focusDist?-1.:1.;vec3 sum=vec3(0.);float weights=0.;vec3 bloom=vec3(0.);
   for(int i=0;i<10;i++){
    vec2 offset=poisson[i]*radius/resolution;
-   vec2 q=safe(uv+offset);vec4 f=fieldAt(q);float sampleZ=linearZ(texture(depth,warp(q,f,1.)).r);
-   float w=1.;if(sampleZ<z*.80&&coc<.08)w=.12;
-   // Coaxial R/B radius changes; no full-frame lateral chromatic ghost.
-   vec3 g=lensSample(q,1.);
-   vec3 c=vec3(lensSample(safe(uv+offset*(1.+.055*signFocus)),.989).r,g.g,lensSample(safe(uv+offset*(1.-.055*signFocus)),1.014).b);
+   vec2 q=safe(warped+offset);float sampleZ=linearZ(texture(depth,q).r);
+   float w=sampleZ<z*.80&&coc<.08?.12:1.;
+   // Ten Poisson positions. Optical normal/warp is shared; R/B samples vary
+   // radius by 5.5% for genuine axial dispersion, not a second offset image.
+   vec3 c=vec3(absorbAt(safe(warped+offset*(1.+.055*signFocus))).r,
+    absorbAt(q).g,absorbAt(safe(warped+offset*(1.-.055*signFocus))).b);
    sum+=c*w;weights+=w;bloom+=max(c-vec3(.65),vec3(0.));
   }
-  vec3 color=sum/max(weights,.001);color=color*(1.+exitFlash*.72)+bloom*.10*exitFlash*.62;
-  // A encodes only whether the cheap resolve may preserve sharp 720p pixels.
-  outColor=vec4(color,max(max(clamp(radius*.65,0.,1.),central.z),max(max(smoothstep(.0002,.005,waterPath(uv)),meniscusAt(uv).z),exitFlash)));
+  vec3 color=sum/max(weights,.001)+opticalFlare(uv);
+  color*=1.-meniscus.z*.06;color+=vec3(.16,.19,.18)*meniscus.w;
+  if(central.z>.002){
+   vec3 n=normalize(vec3(central.xy,sqrt(max(.001,1.-dot(central.xy,central.xy)))));
+   vec3 light=normalize(screenLight),halfV=normalize(vec3(0,0,1)+light);
+   float edge=smoothstep(.36,.76,length(central.xy));
+   float dark=max(0.,-dot(central.xy,normalize(light.xy+vec2(.0001))));
+   color*=1.-dark*edge*.26*central.z;
+   color+=vec3(.68,.79,.81)*pow(max(0.,dot(n,halfV)),48.)*central.z*.19;
+  }
+  color=color*(1.+exitFlash*.72)+bloom*.10*exitFlash*.62;
+  outColor=vec4(color,max(max(clamp(radius*.65,0.,1.),central.z),max(max(smoothstep(.0002,.005,waterPath(uv)),meniscus.z),exitFlash)));
  }`;
 export const resolveFragment=`precision highp float;precision highp sampler2D;uniform sampler2D fused,sharp,uiPicture;uniform float exposure;uniform int displayMode;uniform bool hasUI,uiOnly;in vec2 uv;out vec4 outColor;
  vec3 encode(vec3 x){return mix(x*12.92,1.055*pow(max(x,vec3(0.)),vec3(1./2.4))-.055,step(vec3(.0031308),x));}
@@ -152,7 +150,7 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky}
  const geometry=new T.BufferGeometry().setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3)),scene=new T.Scene(),screenCamera=new T.Camera();
  const mat=(f,u,depth=false)=>new T.RawShaderMaterial({glslVersion:T.GLSL3,vertexShader:passVertex,fragmentShader:f,uniforms:u,depthTest:depth,depthFunc:T.AlwaysDepth,depthWrite:depth,blending:T.NoBlending,toneMapped:false});
  const copy=mat(copyDepthFragment,{picture:{value:null},depth:{value:null}},true);
- const u={picture:{value:null},depth:{value:null},wetHeight:{value:null},washNoise:{value:surface.normalA},bottomSoil:{value:surface.bottomSoil},resolution:{value:new T.Vector2()},fieldSize:{value:new T.Vector2()},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},nearPlane:{value:.1},farPlane:{value:480},focusDist:{value:18},aperture:{value:.13},wet:{value:0},waterActive:{value:0},washWeight:{value:0},washAge:{value:0},exiting:{value:0},time:{value:0},level:{value:0},exitFlash:{value:0},eye:{value:new T.Vector3()},screenLight:{value:new T.Vector3(-.42,.67,.83)},flareSun:flare?.uniforms.uSun||{value:new T.Vector2()},flareStrength:flare?.uniforms.uStrength||{value:0},flareAspect:flare?.uniforms.uAspect||{value:4/3}};
+ const u={picture:{value:null},depth:{value:null},wetHeight:{value:null},bubbleField:{value:null},bubbleWeight:{value:0},washNoise:{value:surface.normalA},bottomSoil:{value:surface.bottomSoil},resolution:{value:new T.Vector2()},fieldSize:{value:new T.Vector2()},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},nearPlane:{value:.1},farPlane:{value:480},focusDist:{value:18},aperture:{value:.13},wet:{value:0},waterActive:{value:0},washWeight:{value:0},washAge:{value:0},exiting:{value:0},time:{value:0},level:{value:0},exitFlash:{value:0},eye:{value:new T.Vector3()},screenLight:{value:new T.Vector3(-.42,.67,.83)},flareSun:flare?.uniforms.uSun||{value:new T.Vector2()},flareStrength:flare?.uniforms.uStrength||{value:0},flareAspect:flare?.uniforms.uAspect||{value:4/3}};
  const fused=mat(fusedFragment,u),resolve=mat(resolveFragment,{fused:{value:null},sharp:{value:null},exposure:{value:1.23},uiPicture:{value:null},hasUI:{value:false},uiOnly:{value:false},displayMode:{value:0}}),quad=new T.Mesh(geometry,copy);quad.frustumCulled=false;scene.add(quad);
  let opaque=null,water=null,half=null,width=0,height=0,clock=0;const waterMeshes=new Set();
  const stats={internalWidth:0,internalHeight:0,compositeWidth:0,compositeHeight:0,fusedPasses:0,depthCopies:0,taps:10};
@@ -164,7 +162,7 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky}
  function attach(chunk){surface.attach(chunk);focus.attach(chunk);chunk.group.traverse(o=>{if(o.userData.waterSurface)waterMeshes.add(o);});}
  function detach(chunk){focus.detach(chunk);chunk.group.traverse(o=>{if(o.userData.waterSurface){waterMeshes.delete(o);if(o.userData.originalWaterMaterial)o.material=o.userData.originalWaterMaterial;}});}
  function update(dt,camera,state,active,locked,color,sun,mist,level){if(active)clock+=dt;focus.update(dt,camera,active,locked);camera.updateMatrixWorld();surface.update(clock,camera,color,sun,mist);u.time.value=clock;u.level.value=level||0;u.focusDist.value=focus.result.distance;u.aperture.value=locked?0:.13;u.nearPlane.value=camera.near;u.farPlane.value=camera.far;u.eye.value.copy(camera.position);u.inverseProjection.value.copy(camera.projectionMatrixInverse);u.cameraWorld.value.copy(camera.matrixWorld);
-  u.waterActive.value=waterState.hasWater?1:0;u.washWeight.value=lens.washWeight;u.washAge.value=lens.washAge;u.exiting.value=1;u.exitFlash.value=waterState.flash;
+  u.waterActive.value=waterState.hasWater?1:0;u.washWeight.value=lens.washWeight;u.washAge.value=lens.washAge;u.exiting.value=lens.submerged?0:1;u.bubbleField.value=lens.microbubbles.texture;u.bubbleWeight.value=lens.microbubbles.weight;u.exitFlash.value=waterState.flash;
   if(sun){u.screenLight.value.copy(sun).transformDirection(camera.matrixWorldInverse);u.screenLight.value.z=Math.abs(u.screenLight.value.z)+.16;}
  }
  function draw(m,target){quad.material=m;renderer.setRenderTarget(target);renderer.render(scene,screenCamera);}
