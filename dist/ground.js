@@ -1,14 +1,18 @@
-import {landmarkTextures} from './landmark-textures.js?v=31';
-import {meadowEnvironment} from './meadow-layout.js?v=31';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=31';
-import {pondShapeGLSL} from './lake-shape.js?v=31';
+import {landmarkTextures} from './landmark-textures.js?v=32';
+import {meadowEnvironment} from './meadow-layout.js?v=32';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=32';
+import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=32';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=31';
-import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=31';
+import {ruralTextures} from './rural-textures.js?v=32';
+import {surfaceHeight,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=32';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
 varying vec4 vMeadow;
+varying vec4 vShoreData;
+uniform float uWaterHeight;
+uniform sampler2D uShoreRock;
+uniform sampler2D uShoreSilt;
 uniform sampler2D uRuralSoil;
 uniform sampler2D uRuralPath;
 uniform sampler2D uRuralTurf;
@@ -69,6 +73,9 @@ ${pondShapeGLSL}
 function groundMaterial(f){
  const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1});
  m.onBeforeCompile=s=>{
+  s.uniforms.uWaterHeight={value:f.lakeY||0};
+  s.uniforms.uShoreRock={value:ruralTextures.shoreRock};
+  s.uniforms.uShoreSilt={value:ruralTextures.shoreSilt};
   s.uniforms.uRuralSoil={value:ruralTextures.soil};
   s.uniforms.uRuralPath={value:ruralTextures.path};
   s.uniforms.uRuralTurf={value:ruralTextures.turf};
@@ -85,8 +92,8 @@ function groundMaterial(f){
   const [w,depth]=buildingSize(f);
   s.uniforms.uSize={value:new T.Vector2(w/2,depth/2)};
   s.uniforms.uWorldOffset={value:new T.Vector2(periodOrigin(f.x),periodOrigin(f.z))};
-  s.vertexShader='varying vec3 vTerrain;\nvarying vec4 vMeadow;\n'+(f.meadow?'attribute vec4 meadowData;\n':'')+s.vertexShader;
-  s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvTerrain=position; vMeadow='+(f.meadow?'meadowData':'vec4(0.)')+';');
+  s.vertexShader='varying vec3 vTerrain;\nvarying vec4 vMeadow;\nvarying vec4 vShoreData;\n'+(f.type==='pond'?'attribute vec4 shoreData;\n':'')+(f.meadow?'attribute vec4 meadowData;\n':'')+s.vertexShader;
+  s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvTerrain=position; vMeadow='+(f.meadow?'meadowData':'vec4(0.)')+'; vShoreData='+(f.type==='pond'?'shoreData':'vec4(0.)')+';');
   // Keep this newline: Three's shader begins with a preprocessor directive.
   s.fragmentShader=terrainDecl+'\n'+s.fragmentShader;
   s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
@@ -164,19 +171,29 @@ if(uBuilding.w>.5){
 }
 
    if(uShore.w>.5){
-    vec3 outside=base;vec4 shore=pondMetricsV6(p,uPond,uShore);float bank=shore.w;
-    // Preserve the resident granular loam under water. The earlier lakebed
-    // overwrote it with nearly constant mud, hiding all nearby geometry.
-    vec3 silt=soilAlbedo*vec3(1.36,2.00,2.80)*(.84+soilTone*.36);
-    // Reuse near-field clods/specks already calculated above; no additional
-    // noise octave or sampler is paid for by the water surface.
-    silt+=stoneSpeck*vec3(.055,.051,.044)-darkGrain*vec3(.018,.019,.015);
-    vec3 loam=mix(vec3(.34,.313,.228),vec3(.47,.433,.321),soilTone);
-    vec3 drygrass=mix(vec3(.12,.141,.067),vec3(.245,.252,.134),.26+broad*.44+soilPatch*.18);
-    base=mix(silt,loam,smoothstep(-.22,.55,shore.y));
-    base=mix(base,drygrass,smoothstep(.11,.40,bank));
-    // Restore the actual local road/field material across the entire outer bank.
-    base=mix(base,outside,smoothstep(.65,1.12,bank));
+    // Height + final geometric slope, not a constant-width distance outline.
+    float h=vTerrain.y-uWaterHeight;
+    vec3 terrainN=normalize(cross(dFdx(vTerrain),dFdy(vTerrain)));
+    float slope=length(terrainN.xz)/max(.035,abs(terrainN.y));
+    float lowSlope=1.-clamp(slope*2.8,0.,1.);
+    float shoreGate=1.-smoothstep(12.,25.,max(0.,vShoreData.x));
+    float beach=smoothstep(-.20,.13,h)*(1.-smoothstep(.34,.63,h))*lowSlope*shoreGate;
+    float wet=smoothstep(-.16,.02,h)*(1.-smoothstep(.14,.48,h))*lowSlope*shoreGate;
+    vec3 sediment=texture2D(uShoreSilt,q*.5).rgb*(.83+soilPatch*.20);
+    float wetDark=(1.-smoothstep(-.1,.19,h))*.20;
+    sediment*=1.-wetDark;
+    float rockMask=clamp(vShoreData.y*.80+smoothstep(.23,.85,slope)*shoreGate,0.,1.);
+    // Blended triplanar projection preserves detail without axis-switch seams.
+    vec3 triWeights=pow(abs(terrainN),vec3(4.));triWeights/=max(.001,triWeights.x+triWeights.y+triWeights.z);
+    vec3 rock=(texture2D(uShoreRock,vec2(q.y,vTerrain.y)*.32).rgb*triWeights.x+
+      texture2D(uShoreRock,q*.32).rgb*triWeights.y+
+      texture2D(uShoreRock,vec2(q.x,vTerrain.y)*.32).rgb*triWeights.z)*(.82+soilPatch*.16);
+    float underwater=1.-smoothstep(-.025,.025,h);
+    base=mix(base,sediment,underwater);
+    base=mix(base,sediment,beach*.94);
+    base=mix(base,mix(sediment,grass,.60),wet*.60);
+    base=mix(base,rock,rockMask*shoreGate*(1.-smoothstep(.85,1.7,h)));
+
    }
    if(uFarm.z>.5){
     float e=farmYard(p),edge=(soilPatch-.5)*1.7+(broad-.5)*1.1+(clods-.5)*.25;
@@ -196,7 +213,7 @@ if(uBuilding.w>.5){
    normal=normalize(max(abs(soilDet),.00000001)*normal-soilGradient);
   `);
  };
- m.customProgramCacheKey=()=> 'rural-ground-v12-meadow-'+!!f.meadow;
+ m.customProgramCacheKey=()=> 'rural-ground-v32-slope-shore-'+!!f.meadow+'-'+(f.type==='pond');
  return m;
 }
 function samples(step,edges){
@@ -205,8 +222,10 @@ function samples(step,edges){
  for(const edge of edges){if(!edge.enabled)continue;for(let n=0;n<=20;n++)values.add(edge.edge===0?n*.16:64-n*.16)}
  return [...values].sort((a,b)=>a-b);
 }
-export function makeGround(f,level){
- const step=f.type==='pond'?(level===2?1:.65):f.type==='building'?1.5:2;
+const groundGeometryCache=new WeakMap();
+export function terrainGeometry(f,level){
+ const old=groundGeometryCache.get(f);if(old?.level===level)return old.geo;
+ const step=f.type==='pond'?1:f.type==='building'?1.5:2;
  const refine=(values,a,b)=>{
   if(!f.driveway)return values;
   const set=new Set(values),spacing=level===2?.64:level===1?.40:.26;
@@ -224,8 +243,16 @@ export function makeGround(f,level){
  const geo=new T.BufferGeometry();
  geo.setAttribute('position',new T.BufferAttribute(p,3));
  geo.setAttribute('uv',new T.BufferAttribute(uv,2));
+ if(f.type==='pond'){const data=new Float32Array(nx*nz*4),m={};let n=0;for(const z of zs)for(const x of xs){pondHabitat(x,z,f,m);data[n++]=m.metres;data[n++]=m.rock;data[n++]=m.sediment;data[n++]=m.wetland}geo.setAttribute('shoreData',new T.BufferAttribute(data,4));}
+
  if(f.meadow){const data=new Float32Array(nx*nz*4),sample={};let n=0;for(const z of zs)for(const x of xs){meadowEnvironment(x,z,f.meadow,sample);data[n++]=sample.cover;data[n++]=sample.moisture;data[n++]=sample.shade;data[n++]=sample.patchDensity;}geo.setAttribute('meadowData',new T.BufferAttribute(data,4));}
- geo.setIndex(new T.BufferAttribute(idx,1));geo.computeVertexNormals();geo.computeBoundingBox();geo.computeBoundingSphere();
+ geo.setIndex(new T.BufferAttribute(idx,1));geo.computeVertexNormals();
+ if(f.type==='pond'){const normal=geo.attributes.normal.array;let n=0;for(const z of zs)for(const x of xs){const dx=(surfaceHeight(x+.35,z,f)-surfaceHeight(x-.35,z,f))/.70,dz=(surfaceHeight(x,z+.35,f)-surfaceHeight(x,z-.35,f))/.70,len=Math.hypot(dx,1,dz);normal[n++]=-dx/len;normal[n++]=1/len;normal[n++]=-dz/len}}
+ geo.computeBoundingBox();geo.computeBoundingSphere();
+ groundGeometryCache.set(f,{level,geo});return geo;
+}
+export function makeGround(f,level){
+ const geo=terrainGeometry(f,level);
  const mesh=new T.Mesh(geo,groundMaterial(f));
  mesh.name='sculpted-ground-and-wheel-ruts';mesh.receiveShadow=true;
  return mesh;

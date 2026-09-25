@@ -1,8 +1,8 @@
 // Golden mature wheat: varied silhouette clumps plus three bounded grain meshes.
 // Geometry/materials/textures are shared; per-chunk meshes and canopy are owned by the chunk.
 import * as T from './vendor/three.module.min.js';
-import { exactIndexGeometry } from './exact-index.js?v=31';
-import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js?v=31';
+import { exactIndexGeometry } from './exact-index.js?v=32';
+import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js?v=32';
 
 const dummy = new T.Object3D(), tint = new T.Color(), shared = new Set();
 const TAU = Math.PI * 2, DETAIL_CAPACITY = 12000, DETAIL_VARIANTS = 3;

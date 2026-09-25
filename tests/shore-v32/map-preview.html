@@ -1,0 +1,7 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>V32 湖岸地图核对</title><style>body{margin:0;background:#171d1a;color:#dacfac;font:16px Georgia,serif}main{width:min(900px,92vw);margin:18px auto}h1{font-size:24px;font-weight:400;margin:0 0 8px}p{font:14px sans-serif;color:#b5b9ab}canvas{width:min(900px,70vh);height:auto;display:block;margin:auto}small{font:12px sans-serif;color:#a3aaa0}</style><main><h1>LEVEL 10 · V32 湖岸地图核对</h1><p id="status">正在读取游戏地图生成器…</p><canvas width="900" height="900"></canvas><p>固定世界 · 出生点西侧湖泊 · 320 × 320 米</p><small>此页面调用游戏中的地图绘制模块；是二维地图验证，非完整 3D 实机截图。</small></main><script type="module">
+import {createMapTiles} from '/map-tiles.js?v=32';
+import {stringSeed} from '/world.js?v=32';
+const tiles=createMapTiles({seed:stringSeed('CHLORINE / ABUNDANCE / 10'),maxTiles:32,tilePixels:256}),ctx=document.querySelector('canvas').getContext('2d');
+for(let z=-2;z<=2;z++)for(let x=-4;x<=0;x++)tiles.request(BigInt(x),BigInt(z));
+function frame(){tiles.pump(12,2);for(let z=-2;z<=2;z++)for(let x=-4;x<=0;x++){const tile=tiles.get(BigInt(x),BigInt(z));if(tile)ctx.drawImage(tile,(x+4)*180,(z+2)*180,180,180)}const s=tiles.stats();document.querySelector('#status').textContent=s.pending?'生成中 '+s.completed+'/25':'地图完成 · 25 个相邻区块 · 共用湖岸地形数据';if(s.pending)requestAnimationFrame(frame)}frame();
+</script></html>

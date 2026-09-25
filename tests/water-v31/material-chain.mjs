@@ -18,4 +18,6 @@ assert(base>0&&ca>base&&out>ca,'caustic must run AFTER worker terrain base, wet-
 assert(text.includes('outgoingLight+=vec3(.48,.66,.65)'));assert.equal(s.uniforms.v28Lake.value.y,f.lakeY);
 assert(!text.slice(ca,out).includes('diffuseColor.rgb='),'caustics modulate light, not overwrite the soil');
 assert(s.uniforms.uRuralSoil.value.isTexture,'worker transfer retained underlying terrain albedo');
+assert(s.uniforms.uShoreRock.value.isTexture&&s.uniforms.uShoreSilt.value.isTexture,'worker retained shoreline textures');
+assert(chunk.group.children[0].geometry.attributes.shoreData,'worker retained shoreline habitat attributes');
 console.log(JSON.stringify({pass:true,workerRoundtrip:true,terrainThenRadiance:true,soilPreserved:true,causticBeforeOpaque:true}));surface.dispose();unpack.dispose(chunk);unpack.disposeShared();

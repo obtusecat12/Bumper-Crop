@@ -1,9 +1,9 @@
-import {lakeBedDepth} from './water-profile.js?v=31';
-import {barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=31';
-import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=31';
-import {farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=31';
-import {createSettlementPlanner} from './rural-settlements.js?v=31';
-import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=31';
+import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=32';
+import {barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=32';
+import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=32';
+import {farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=32';
+import {createSettlementPlanner} from './rural-settlements.js?v=32';
+import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=32';
 export {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance};
 // Infinite signed BigInt cells with deterministic seed-based generation.
 export const CHUNK=64;
@@ -85,7 +85,7 @@ export function roadSample(x,z,f,includeDrive=true){
 export function roadRelief(x,z,f){return roadProfile(x,z,f,roadState).relief}
 
 const heightMetrics={};
-export function surfaceHeight(x,z,f){let y=height(x,z,f.x,f.z);if(f.type==='pond'){const m=pondMetrics(x,z,f,heightMetrics),water=f.lakeY;if(m.metres<=0)return water-lakeBedDepth(-m.metres,x-f.cx,z-f.cz,f.depth);if(m.bank<1){const rise=smooth(0,1,m.bank);return water+(y-water)*rise+Math.sin(m.bank*Math.PI)*(.10+.16*f.hill)+roadRelief(x,z,f)*smooth(.65,1,m.bank)}}
+export function surfaceHeight(x,z,f){let y=height(x,z,f.x,f.z);if(f.type==='pond'){const m=pondMetrics(x,z,f,heightMetrics);if(m.rawMetres<28)return pondTerrainHeight(x,z,f,y)+roadRelief(x,z,f)*smooth(.75,1.05,m.bank)}
  if(f.type==='building'){const angle=f.buildingAngle||0,dx=x-f.cx,dz=z-f.cz,px=Math.cos(angle)*dx-Math.sin(angle)*dz,pz=Math.sin(angle)*dx+Math.cos(angle)*dz,size=SIZES[f.variant%8],scale=f.buildingScale||1,edge=Math.max(Math.abs(px)-size[0]*scale/2,Math.abs(pz)-size[1]*scale/2),a=smooth(.2,3.3,edge);y=(f.buildingY-.04)*(1-a)+y*a}return barnGroundHeight(x,z,f,farmGroundHeight(x,z,f,y))+roadRelief(x,z,f);}
 export function inClearing(x,z,f){if(barnEntrance(x,z,f)||barnFootprintDistance(x,z,f)<.7)return true;if(farmClearing(x,z,f))return true;if(f.type==='pond'){const m=pondMetrics(x,z,f);return m.metres<m.width+1.5;}if(f.type==='building'){const p=buildingLocal(x,z,f),[w,d]=buildingSize(f);return Math.abs(p.x)<w/2+3.4&&Math.abs(p.z)<d/2+4.3}return false}
 function vegetationCover(f){const buckets=new Map();for(const t of [...f.trees.map(t=>({x:t.x,z:t.z,r:1.15*t.scale})),...f.shrubs.map(s=>({x:s.x,z:s.z,r:s.width*s.scale*.46}))]){for(let z=Math.floor((t.z-t.r)/4);z<=Math.floor((t.z+t.r)/4);z++)for(let x=Math.floor((t.x-t.r)/4);x<=Math.floor((t.x+t.r)/4);x++){const key=z*17+x;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(t)}}f.cover=buckets}
@@ -143,9 +143,10 @@ function macroLake(mx,mz,seed){
   const ax=mx*8n+BigInt(Math.floor(wx/64)),az=mz*8n+BigInt(Math.floor(wz/64)),lx=wx%64,lz=wz%64;
   lake={lakeId:key,lakeSeed:stringSeed('shore:'+key),lakeOwnerX:ax,lakeOwnerZ:az,lakeLocalX:lx,lakeLocalZ:lz,rx:forced?66:44+r()*46,rz:forced?49:33+r()*36,angle:forced?-.14:(r()-.5)*Math.PI,shorePhase:forced?.73:r()*6.283,shoreAmplitude:forced?.28:.24+r()*.12,hill:forced?.63:r(),depth:1.8+r()*1.6};
   lake.lakeY=height(lx,lz,ax,az)-.48;
-  const shape={...lake,cx:0,cz:0};let minX=Infinity,maxX=-Infinity,minZ=Infinity,maxZ=-Infinity;
-  for(let i=0;i<320;i++){const q=pondBankPoint(shape,i*Math.PI*2/320,10);minX=Math.min(minX,q.x);maxX=Math.max(maxX,q.x);minZ=Math.min(minZ,q.z);maxZ=Math.max(maxZ,q.z)}
-  lake.bounds=[minX-1,maxX+1,minZ-1,maxZ+1];
+  lake.bounds=pondBounds(lake);
+  // Water must sit below the surrounding undisturbed terrain on every side.
+  let rim=lake.lakeY+.48;for(let z=lake.bounds[2];z<=lake.bounds[3];z+=12)for(let x=lake.bounds[0];x<=lake.bounds[1];x+=12)rim=Math.min(rim,height(lx+x,lz+z,ax,az));
+  lake.lakeY=Math.min(lake.lakeY,rim-.18);
  }
  lakeMacros.set(key,lake);if(lakeMacros.size>128)lakeMacros.delete(lakeMacros.keys().next().value);
  return lake;

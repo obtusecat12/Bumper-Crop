@@ -1,5 +1,5 @@
-import {meadowSample} from './meadow-layout.js?v=31';
-import {FARM_TREES,farmRoadWeight} from './farm-layout.js?v=31';
+import {meadowSample} from './meadow-layout.js?v=32';
+import {FARM_TREES,farmRoadWeight} from './farm-layout.js?v=32';
 
 // The interactive map never generates procedural fields on the main thread
 // unless Canvas fallback is required. Normal requests remain worker-batched.
@@ -25,7 +25,7 @@ export function createMapAtlas({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   // Requeue only the current view. Old epochs never leak back into the map.
   for(const j of inFlight.values())if(j.epoch===epoch&&!pending.has(j.key))pending.set(j.key,j);
   inFlight.clear();releaseTiles();revision++;
-  Promise.resolve().then(()=>fallbackLoader?fallbackLoader():import('./map-tiles.js?v=31')).then(module=>{
+  Promise.resolve().then(()=>fallbackLoader?fallbackLoader():import('./map-tiles.js?v=32')).then(module=>{
    if(disposed)return;fallback=module.createMapTiles(options);mode='fallback';
    for(const j of pending.values())fallback.request(j.cx,j.cz,j.priority);pending.clear();revision++;
   }).catch(error=>{if(disposed)return;mode='failed';pending.clear();counters.failures++;workerStats.error=String(error?.message||error)});
@@ -81,7 +81,7 @@ export function createMapAtlas({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   if(disposed)return null;if(fallback)return fallback.hitTest(cx,cz,x,z);cx=coordinate(cx);cz=coordinate(cz);const m=getMetadata(cx,cz);if(!m)return null;
   for(const p of m.footprints||[]){const dx=x-p.x,dz=z-p.z,c=Math.cos(p.angle),s=Math.sin(p.angle);if(Math.abs(c*dx-s*dz)<=p.hx&&Math.abs(s*dx+c*dz)<=p.hz)return{...p}}
   const result=(kind,label,extra={})=>({kind,label,cx,cz,x,z,...extra});
-  if(m.lake&&inside(x,z,m.lake.outline))return result('water','湖泊',{lakeId:m.lake.id});
+  if(m.lake&&(m.lake.outlines||[m.lake.outline]).reduce((odd,loop)=>inside(x,z,loop)?!odd:odd,false))return result('water','湖泊',{lakeId:m.lake.id});
   if(m.farm){
    const px=x+m.farm.x,pz=z+m.farm.z;
    for(const t of FARM_TREES)if(Math.hypot(px-t.x,pz-t.z)<t.crownWidth*.5)return result('tree','Kephart 农场 · 树木');
@@ -109,7 +109,7 @@ export function createMapAtlas({seed,maxTiles=192,tilePixels=128,maxPending=maxT
  }
  try{
   if(workerFactory||typeof Worker!=='undefined'&&typeof OffscreenCanvas!=='undefined'&&typeof createImageBitmap==='function'){
-   worker=workerFactory?workerFactory(new URL('./map-worker.js?v=31',import.meta.url)):new Worker(new URL('./map-worker.js?v=31',import.meta.url),{type:'module',name:'geography-map'});
+   worker=workerFactory?workerFactory(new URL('./map-worker.js?v=32',import.meta.url)):new Worker(new URL('./map-worker.js?v=32',import.meta.url),{type:'module',name:'geography-map'});
    worker.onmessage=receive;worker.onerror=event=>{event.preventDefault?.();useFallback(event.message||'Map worker failed')};worker.onmessageerror=()=>useFallback('Map worker message could not be read');
    startupTimer=setTimeout(()=>useFallback('Map worker initialization timed out'),8000);startupTimer?.unref?.();
    send({type:'init',options:{seed,maxTiles:Math.min(48,maxTiles),tilePixels,maxPending:maxInFlight}});

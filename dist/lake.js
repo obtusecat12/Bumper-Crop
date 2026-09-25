@@ -1,6 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import { random, height, surfaceHeight, roadDistance } from './world.js?v=31';
-import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth } from './lake-shape.js?v=31';
+import {terrainGeometry} from './ground.js?v=32';
+import { random, height, surfaceHeight, roadDistance } from './world.js?v=32';
+import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth, pondHabitat, pondShoreDistance, pondContours } from './lake-shape.js?v=32';
 
 // Reference-led irregular rural lake: shared shapes, cross-tile water, and dense
 // broken banks. The original layered wind-ripple / sky-reflection water is retained.
@@ -68,40 +69,14 @@ function clipPolygon(poly,axis,bound,keepGreater){
   }
   return out;
 }
-export function waterGeometry(f,y){
-  const count=Math.ceil(Math.max(f.rx,f.rz)*1.35/4.5),scales=Array.from({length:count+1},(_,i)=>i/count),rings=[];
+export function waterGeometry(f,y,level=0){
   const positions=[],normals=[],radius=[],coords=[],tones=[],indices=[];
-  for(const scale of scales){
-    const sectors=scale===0?1:scale===1?320:Math.max(12,Math.min(312,Math.ceil(scale*Math.max(f.rx,f.rz)*1.35*Math.PI/9.6)*4));
-    const ring=[];
-    for(let i=0;i<sectors;i++){
-      const q=pondPoint(f,i/sectors*TAU,scale);ring.push({...q,d:scale});
-    }
-    rings.push(ring);
-  }
-  const emit=(a,b,c)=>{
-    if(Math.max(a.x,b.x,c.x)<0||Math.min(a.x,b.x,c.x)>64||Math.max(a.z,b.z,c.z)<0||Math.min(a.z,b.z,c.z)>64)return;
-    let poly=[a,b,c];
-    for(const [axis,bound,greater] of [['x',0,true],['x',64,false],['z',0,true],['z',64,false]]){
-      poly=clipPolygon(poly,axis,bound,greater);if(poly.length<3)return;
-    }
-    const base=positions.length/3,tone=.94+.075*Math.sin(((a.x+b.x+c.x)/3-f.cx)*.33+((a.z+b.z+c.z)/3-f.cz)*.27);
-    for(const v of poly){
-      positions.push(v.x,y,v.z);normals.push(0,1,0);radius.push(v.d);
-      coords.push(v.x-f.cx,v.z-f.cz);tones.push(tone);
-    }
-    for(let i=1;i<poly.length-1;i++)indices.push(base,base+i,base+i+1);
-  };
-  for(let i=0;i<rings[1].length;i++)emit(rings[0][0],rings[1][(i+1)%rings[1].length],rings[1][i]);
-  // Progressively fewer angular samples toward the centre avoid the old dense
-  // starburst of sliver triangles. The outer shoreline retains all 320 points.
-  for(let ring=1;ring<rings.length-1;ring++){
-    const a=rings[ring],b=rings[ring+1],na=a.length,nb=b.length;let i=0,j=0;
-    while(i<na||j<nb){
-      if((i+1)/na<=(j+1)/nb){emit(a[i%na],a[(i+1)%na],b[j%nb]);i++;}
-      else{emit(a[i%na],b[(j+1)%nb],b[j%nb]);j++;}
-    }
-  }
+  const emit=(poly)=>{const base=positions.length/3;for(const v of poly){positions.push(v.x,y,v.z);normals.push(0,1,0);radius.push(1);coords.push(v.x-f.cx,v.z-f.cz);tones.push(.975)}for(let i=1;i<poly.length-1;i++)indices.push(base,base+i,base+i+1);};
+  const clip=points=>{const out=[];for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length];if(a.d<=0)out.push(a);if((a.d<=0)!==(b.d<=0)){const t=a.d/(a.d-b.d);out.push({x:a.x+(b.x-a.x)*t,z:a.z+(b.z-a.z)*t,d:0})}}if(out.length>=3)emit(out)};
+  // Clip the EXACT ground triangles at water height, including road refinements.
+  // No independent water grid, SDF diagonal or camera-dependent boundary.
+  const terrain=terrainGeometry(f,level),p=terrain.attributes.position.array,idx=terrain.index.array;
+  for(let i=0;i<idx.length;i+=3){const poly=[];for(let j=0;j<3;j++){const k=idx[i+j]*3;poly.push({x:p[k],z:p[k+2],d:p[k+1]-y})}clip(poly)}
   const g=new T.BufferGeometry();
   g.setAttribute('position',new T.Float32BufferAttribute(positions,3));
   g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));
@@ -172,7 +147,7 @@ function shoreCandidates(f){
         const aa=a+(r()+r()-1)*span/Math.max(1,speed);
         const dd=centre+(r()+r()-1)*depth;
         const q=pondBankPoint(origin,aa,dd),m=pondMetrics(q.x,q.z,origin);
-        if(m.metres<.045||m.bank>1.18)continue;
+        if(m.metres<.045||m.bank>1.18||m.rock>.48||m.slope>.26)continue;
         const choice=r(),kind=(family<.21&&m.metres<2.2&&choice<.82)?2:choice<.30?0:1;
         items.push({x:q.x,z:q.z,kind,angle:r()*TAU,scale:.66+r()*.73,
           wide:.72+r()*.82,shade:r(),priority:r()});
@@ -196,6 +171,7 @@ function addTufts(group,f,lod,material){
   for(const p of shoreCandidates(f)){
     const x=p.x+f.cx,z=p.z+f.cz;
     if(p.priority>density||!inTile(x,z))continue;
+    const habitat=pondHabitat(x,z,f);if(habitat.rock>.5||habitat.slope>.28||habitat.metres<.05)continue;
     // Road cuts are enforced in terrain generation; allow natural bank grasses
     // at disabled lake crossings and keep active tracks genuinely passable.
     if(roadDistance(x,z,f)<1.68)continue;
@@ -275,11 +251,11 @@ export function makeLake(f,level=0,wind=stillWind){
   const lod=Math.max(0,Math.min(2,Math.floor(level))),set=resources(wind),group=new T.Group();
   group.name='large irregular rural lake';
   const y=Number.isFinite(f.lakeY)?f.lakeY:height(f.cx,f.cz,f.x,f.z)-.45;
-  const geometry=waterGeometry(f,y);
+  const geometry=waterGeometry(f,y,lod);
   if(geometry.index.count){
     const water=new T.Mesh(geometry,set.water);water.name='irregular slate-blue water';water.receiveShadow=true;group.add(water);
   }else geometry.dispose();
-  addMudPatches(group,f,lod);addShoreStones(group,f,lod);addTufts(group,f,lod,set.grass);
-  group.userData.lake={level:lod,waterY:y+.008,outlineSamples:320,shoreline:'lake-shape.js',lakeId:f.lakeId??null};
+  addShoreStones(group,f,lod);addTufts(group,f,lod,set.grass);
+  group.userData.lake={level:lod,waterY:y,shoreline:'shared height-field contours',lakeId:f.lakeId??null};
   return group;
 }

@@ -1,8 +1,8 @@
-import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=31';
-import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=31';
-import {field,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=31';
-import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=31';
-import {pondShoreWidth} from './lake-shape.js?v=31';
+import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=32';
+import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=32';
+import {field,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=32';
+import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=32';
+import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=32';
 
 // A geography-only view of the existing world. Never imports Three, terrain,
 // textures, vegetation geometry, or the streamed chunk manager.
@@ -50,7 +50,7 @@ export function mapFootprints(f){
  return result;
 }
 function metadata(f){
- return {cx:f.x,cz:f.z,type:f.type,label:f.type==='pond'?'湖泊':f.type==='building'?BUILDING_NAMES[f.variant%8]:'麦田',vegetationMode:f.vegetationMode,footprints:mapFootprints(f),roads:f.roads,driveway:f.driveway||null,lake:f.type==='pond'?{id:f.lakeId,x:f.cx,z:f.cz,outline:Array.from({length:160},(_,i)=>pondPoint(f,i*TAU/160))}:null,trees:f.trees.map(t=>({x:t.x,z:t.z,r:TREE_RADII[t.variant%6]*t.scale,variant:t.variant})),shrubs:f.shrubs.map(s=>({x:s.x,z:s.z,r:s.width*s.scale*.50})),farm:f.farm?{x:f.farm.x,z:f.farm.z}:null,meadow:f.meadow?{size:f.meadow.size,step:f.meadow.step,grid:f.meadow.grid}:null};
+ return {cx:f.x,cz:f.z,type:f.type,label:f.type==='pond'?'湖泊':f.type==='building'?BUILDING_NAMES[f.variant%8]:'麦田',vegetationMode:f.vegetationMode,footprints:mapFootprints(f),roads:f.roads,driveway:f.driveway||null,lake:f.type==='pond'?{id:f.lakeId,x:f.cx,z:f.cz,outline:pondContours(f)[0],outlines:pondContours(f)}:null,trees:f.trees.map(t=>({x:t.x,z:t.z,r:TREE_RADII[t.variant%6]*t.scale,variant:t.variant})),shrubs:f.shrubs.map(s=>({x:s.x,z:s.z,r:s.width*s.scale*.50})),farm:f.farm?{x:f.farm.x,z:f.farm.z}:null,meadow:f.meadow?{size:f.meadow.size,step:f.meadow.step,grid:f.meadow.grid}:null};
 }
 
 function drawMeadow(ctx,f){
@@ -92,12 +92,11 @@ function drawDrive(ctx,d){
  for(const sign of [-1,1])line(ctx,points.map(p=>({x:p.x-uz*.77*sign,z:p.z+ux*.77*sign})),COLORS.rut,.47);
 }
 function drawBank(ctx,f,fraction,color){
- const points=[];for(let i=0;i<160;i++){const a=i*TAU/160;points.push(pondBankPoint(f,a,pondShoreWidth(f,a)*fraction))}
- path(ctx,points);ctx.fillStyle=color;ctx.fill();
+ // Slope/height masks, sampled from the same final profile as terrain.
+ for(let z=0;z<64;z+=1)for(let x=0;x<64;x+=1){const m=pondHabitat(x+.5,z+.5,f);if(m.metres<0||m.rock>.5||m.slope>.30)continue;const w=fraction>.5?m.wetland:m.beach;if(w>.10){ctx.globalAlpha=Math.min(1,w*1.8);ctx.fillStyle=color;ctx.fillRect(x,z,1,1)}}ctx.globalAlpha=1;
 }
 function drawPond(ctx,f){
- const points=[];for(let i=0;i<160;i++)points.push(pondPoint(f,i*TAU/160));path(ctx,points);ctx.fillStyle=COLORS.water;ctx.fill();
- ctx.strokeStyle='#527f86';ctx.lineWidth=.30;ctx.stroke();
+ ctx.beginPath();for(const loop of pondContours(f)){if(!loop.length)continue;ctx.moveTo(loop[0].x,loop[0].z);for(let i=1;i<loop.length;i++)ctx.lineTo(loop[i].x,loop[i].z);ctx.closePath()}ctx.fillStyle=COLORS.water;ctx.fill('evenodd');
 }
 function drawBuilding(ctx,p,variant=0){
  ctx.save();ctx.translate(p.x,p.z);ctx.rotate(-p.angle);

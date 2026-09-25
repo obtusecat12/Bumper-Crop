@@ -1,3 +1,4 @@
+import {pondHabitat} from './lake-shape.js?v=32';
 /* Low-frequency CPU counterpart of ground.js's material, for diffuse rays.
  * Use initialized texture means in linear RGB. Spatial masks, macro noise,
  * meadow mix, yards, and shore colors follow the actual visible shader.
@@ -30,6 +31,7 @@ export function linearTextureMean(texture){
 // meadowData for an exact match to the mesh's vertex interpolation when handy.
 export function createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics}){
  const soil=linearTextureMean(ruralTextures.soil),path=linearTextureMean(ruralTextures.path),turf=linearTextureMean(ruralTextures.turf);
+ const shoreRock=linearTextureMean(ruralTextures.shoreRock),shoreSilt=linearTextureMean(ruralTextures.shoreSilt);
  const env={};
  function lanes(f,x,z){
   const info=[10000,0,0,0],roadWeight=farmRoadWeight(x,z,f);
@@ -67,8 +69,12 @@ export function createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironm
    const dry=smooth(.50,.82,soilPatch)*(1-smooth(.15,2.45,e));for(let i=0;i<3;i++)yd[i]+=dry*[.014,.012,.008][i];blend(out,yd,yard);
   }
   if(f.type==='pond'){
-   const outside=Array.from(out),m=pondMetrics(x,z,f),silt=soil.map((c,i)=>c*[1.36,2.00,2.80][i]*(.84+soilTone*.36)),loam=blend([.34,.313,.228],[.47,.433,.321],soilTone),drygrass=blend([.12,.141,.067],[.245,.252,.134],.26+broad*.44+soilPatch*.18);
-   blend(silt,loam,smooth(-.22,.55,m.metres),out);blend(out,drygrass,smooth(.11,.40,m.bank));blend(out,outside,smooth(.65,1.12,m.bank));
+   const m=pondHabitat(x,z,f),gate=1-smooth(12,25,Math.max(0,m.metres));
+   const sediment=shoreSilt.map(v=>v*(.83+soilPatch*.20)*(m.metres<0?.80:1)),rock=shoreRock.map(v=>v*(.82+soilPatch*.16));
+   if(m.metres<0)blend(out,sediment,1);blend(out,sediment,m.beach*.94);
+   blend(out,blend(sediment.slice(),turf,.60),m.wetland*.60);
+   blend(out,rock,clamp(m.rock*.80+smooth(.23,.85,m.slope)*gate)*gate);
+
   }
   if(f.farm){const e=farmFootprintDistance(x,z,f),edge=(soilPatch-.5)*1.7+(broad-.5)*1.1,yard=1-smooth(.35,3.4,e+edge);blend(out,scale(dirt.slice(),.94+soilPatch*.08),yard)}
   for(let i=0;i<3;i++)out[i]=clamp(out[i],.005,.9);return out;
