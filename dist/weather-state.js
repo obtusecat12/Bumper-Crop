@@ -5,9 +5,11 @@ const clamp=x=>Math.max(0,Math.min(1,x));
 const smooth=x=>{x=clamp(x);return x*x*(3-2*x)};
 export function chooseWeather(value){let total=0;for(const [kind,chance] of Object.entries(WEATHER_CHANCES)){total+=chance;if(value<total)return kind;}return 'normal';}
 export function weatherEnvelope(kind,t,duration,{manual=false}={}){
- const v={kind,rain:0,mist:0,blackout:0,wallpaper:0,clear:0,dusk:0,flare:0,stageAge:0,stageReveal:0,stageRestore:0};
+ const v={kind,rain:0,mist:0,fogProgress:0,blackout:0,wallpaper:0,clear:0,dusk:0,flare:0,stageAge:0,stageReveal:0,stageRestore:0};
  if(kind==='rain')v.rain=(manual ? .45+.55*smooth(t/1.2):smooth(t/5))*smooth((duration-t)/8);
- if(kind==='fog')v.mist=(manual ? .35+.65*smooth(t/1.8):smooth(t/7))*smooth((duration-t)/10);
+ // Manual and natural fog share the same 90-second spatial arrival. Density
+ // is not a whole-screen fade-in. Allow a long hold before a 24-second retreat.
+ if(kind==='fog'){v.fogProgress=clamp(t/90);v.mist=smooth((duration-t)/24);}
  if(kind==='blackout'){
   // Reveal the lighting rig in haze, then drop lamp banks. Ground illumination
   // is not part of this anomaly. One false-start during restoration, no strobe.
@@ -26,8 +28,8 @@ export function weatherEnvelope(kind,t,duration,{manual=false}={}){
 export class WeatherDirector{
  constructor({rng=Math.random,onCue=()=>{}}={}){this.rng=rng;this.onCue=onCue;this.kind='normal';this.age=0;this.duration=0;this.wait=80+rng()*70;this.wetness=0;this.restoreCued=false;this.cutCued=false;this.rounds=0;this.manual=false;this.elapsed=0;this.delta=0;this.lastTimestamp=null;this.clockActive=false;this.value=weatherEnvelope('normal',0,1);}
  start(kind,{manual=false}={}){if(!Object.hasOwn(WEATHER_LABELS,kind))return false;
-  this.kind=kind;this.age=0;this.restoreCued=false;this.cutCued=false;this.manual=manual;
-  this.duration=kind==='rain'?95+this.rng()*55:kind==='fog'?90+this.rng()*55:kind==='blackout'?14+this.rng()*6:kind==='wallpaper'?22+this.rng()*14:kind==='sunbreak'?18:0;
+  this.serial=(this.serial||0)+1;this.kind=kind;this.age=0;this.restoreCued=false;this.cutCued=false;this.manual=manual;
+  this.duration=kind==='rain'?95+this.rng()*55:kind==='fog'?210+this.rng()*60:kind==='blackout'?14+this.rng()*6:kind==='wallpaper'?22+this.rng()*14:kind==='sunbreak'?18:0;
   this.wait=100+this.rng()*70;return true;
  }
  // Weather follows active wall time. Movement keeps its separate bounded step.
@@ -37,6 +39,7 @@ export class WeatherDirector{
   if(this.kind==='normal'){this.wait-=dt;if(this.wait<=0){this.rounds++;this.start(chooseWeather(this.rng()));}}
   else{this.age+=dt;if(this.kind==='blackout'&&!this.cutCued&&this.age>=1.5){this.cutCued=true;this.onCue('power-off');}if(this.kind==='blackout'&&!this.restoreCued&&this.age>=this.duration-1.3){this.restoreCued=true;this.onCue('power-on');}if(this.age>=this.duration)this.start('normal');}
   this.value=weatherEnvelope(this.kind,this.age,this.duration,{manual:this.manual});
+  this.value.serial=this.serial||0;
   const target=this.value.rain>.03?this.value.rain:0;
   this.wetness+=(target-this.wetness)*(1-Math.exp(-dt/(target>this.wetness?24:80)));
   this.value.wetness=this.wetness;return this.value;

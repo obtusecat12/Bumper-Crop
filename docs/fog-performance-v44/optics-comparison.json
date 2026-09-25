@@ -1,0 +1,38 @@
+{
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "hardware_fps_test": false,
+  "cases": {
+    "wide": {
+      "max_channel_error_255": 0.0,
+      "mean_channel_error_255": 0.0,
+      "software_chain_ms_before_after": [
+        13.284623499203008,
+        13.009211997996317
+      ]
+    },
+    "tele": {
+      "max_channel_error_255": 0.0,
+      "mean_channel_error_255": 0.0,
+      "software_chain_ms_before_after": [
+        45.637734001502395,
+        28.242877495358698
+      ]
+    },
+    "macro": {
+      "max_channel_error_255": 0.0,
+      "mean_channel_error_255": 0.0,
+      "software_chain_ms_before_after": [
+        13.125946497893892,
+        12.507993502367754
+      ]
+    },
+    "near": {
+      "max_channel_error_255": 0.0,
+      "mean_channel_error_255": 0.0,
+      "software_chain_ms_before_after": [
+        14.430085000640247,
+        12.981732998014195
+      ]
+    }
+  }
+}

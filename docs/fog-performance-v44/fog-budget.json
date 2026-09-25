@@ -1,0 +1,28 @@
+{
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "hardware_fps_test": false,
+  "fixture": "depth discontinuities, near silhouettes and distant sky",
+  "resolutions": [
+    {
+      "divisor": 2,
+      "old_ms": 51.78631799935829,
+      "new_ms": 58.68059199929121,
+      "mean_linear_error_to_half": 0.0,
+      "max_linear_error_to_half": 0.0
+    },
+    {
+      "divisor": 3,
+      "old_ms": 46.39817250063061,
+      "new_ms": 32.5558739968983,
+      "mean_linear_error_to_half": 0.00012368656462058425,
+      "max_linear_error_to_half": 0.010986328125
+    },
+    {
+      "divisor": 4,
+      "old_ms": 54.465286499180365,
+      "new_ms": 29.98802349975449,
+      "mean_linear_error_to_half": 0.0001925928081618622,
+      "max_linear_error_to_half": 0.0277099609375
+    }
+  ]
+}

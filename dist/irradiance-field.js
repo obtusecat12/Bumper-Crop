@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=43';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=44';
 
 const pars=`
 precision highp sampler3D;
@@ -118,7 +118,7 @@ export function createIrradianceField() {
   const values={status:'准备中',computed:0,reused:0,rays:0,ms:0,triangles:0,bytes:0};
   function fail(error){if(failed)return;failed=true;worker?.terminate();uniforms.uProbeReady.value=0;values.status='柔阴影模式';console.warn('Indirect ray cache unavailable',error)}
   try{
-    worker=new Worker(new URL('./irradiance-worker.js?v=43',import.meta.url),{type:'module',name:'rural-ray-cache'});
+    worker=new Worker(new URL('./irradiance-worker.js?v=44',import.meta.url),{type:'module',name:'rural-ray-cache'});
     worker.onerror=e=>{e.preventDefault?.();fail(new Error(e.message||'Ray worker failed'))};
     worker.onmessageerror=()=>fail(new Error('Ray cache transfer failed'));
     worker.onmessage=({data})=>{

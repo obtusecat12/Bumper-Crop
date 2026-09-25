@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import * as T from '../../dist/vendor/three.module.min.js';
+import {WeatherDirector} from '../../dist/weather-state.js';
+import {FogFront} from '../../dist/fog-front.js';
+import {createAdvancingFog} from '../../dist/advancing-fog.js';
+import {createWaterVisibility} from '../../dist/water-visibility.js';
+const weather=new WeatherDirector({rng:()=>.5}),camera=new T.PerspectiveCamera(72,4/3,.08,228);camera.position.set(63,1.77,52);
+const front=new FogFront();weather.start('fog',{manual:true});
+const update=(cx=0n)=>front.update({event:weather.value,mist:weather.value.mist,camera,originX:cx,originZ:0n});
+weather.update(0);update();assert.equal(front.progress,0);
+weather.tick(0,true);weather.tick(30000,true);update();assert.equal(front.progress,1/3);assert.equal(front.amount,1);
+const worldBefore=camera.position.x+front.offsetX;camera.position.x-=64;update(1n);assert.equal(camera.position.x+front.offsetX,worldBefore,'front survives origin rebase');
+weather.tick(60000,false);weather.tick(120000,false);assert.equal(weather.value.fogProgress,1/3);
+weather.resetClock();weather.tick(120000,true);weather.tick(180000,true);update(1n);assert.equal(front.progress,1);assert.equal(front.amount,1);assert(weather.duration>=210);
+const anchored=front.offsetX;camera.position.x+=10;update(1n);assert.equal(front.offsetX,anchored,'walking does not drag front');
+weather.start('fog',{manual:true});weather.update(0);update(1n);assert.equal(front.progress,0);assert.equal(camera.position.x+front.offsetX,0,'retrigger anchors new bank');
+weather.start('normal');weather.update(0);update();assert.equal(front.amount,0);
+// Huge signed BigInt origins retain local precision; no converting absolute IDs.
+weather.start('fog');weather.update(45);const big=10n**35n;update(big);const before=camera.position.x+front.offsetX;camera.position.x-=64;update(big+1n);assert.equal(camera.position.x+front.offsetX,before);
+const visibility=createWaterVisibility(),parent=new T.Group(),mesh=new T.Mesh(new T.PlaneGeometry(10,10),new T.MeshBasicMaterial());parent.add(mesh);const meshes=new Set([mesh]);camera.position.set(0,2,0);mesh.position.set(0,0,-20);
+assert(visibility.any(meshes,camera));mesh.position.z=20;assert(!visibility.any(meshes,camera));mesh.position.set(0,0,-20);parent.visible=false;assert(!visibility.any(meshes,camera));parent.visible=true;parent.position.x=1000;assert(!visibility.any(meshes,camera));parent.position.x=0;assert(visibility.any(meshes,camera));
+let target=null,draws=0;const renderer={extensions:{has:()=>true},autoClear:false,getRenderTarget:()=>target,setRenderTarget:t=>target=t,render(s){draws++;for(const u of Object.values(s.children[0].material.uniforms))assert(!u.value?.isTexture||u.value!==target.texture,'no read/write feedback');}};
+const fog=createAdvancingFog(renderer,new T.Data3DTexture(new Uint8Array(32),2,2,2)),source=new T.WebGLRenderTarget(960,720,{depthBuffer:true});source.depthTexture=new T.DepthTexture(960,720);
+fog.update({camera,event:{kind:'normal'}});assert.equal(fog.compose(source,camera),source.texture);assert.equal(draws,0,'normal weather adds zero fog passes');
+fog.update({camera,event:{kind:'fog',serial:1,fogProgress:0},mist:1});assert.equal(fog.compose(source,camera),source.texture);assert.equal(draws,0);
+fog.update({camera,event:{kind:'fog',serial:1,fogProgress:.7},mist:1,time:63});assert.notEqual(fog.compose(source,camera),source.texture);assert.equal(draws,2);assert.equal(fog.stats.fieldPixels,320*240);assert.equal(renderer.autoClear,false);assert.equal(target,null);
+fog.contextLost();fog.compose(source,camera);assert.equal(draws,4);fog.dispose();source.dispose();mesh.geometry.dispose();mesh.material.dispose();
+console.log('PASS 90s clock, pause, rebase, retrigger, huge origins; conservative water visibility; zero dry fog passes, no feedback, context restoration');

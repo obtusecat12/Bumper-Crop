@@ -1,5 +1,6 @@
-import {weatherTextures} from './weather-textures.js?v=43';
-import {createFogVolume,fogVolumePars} from './fog-volume.js?v=43';
+import {weatherTextures} from './weather-textures.js?v=44';
+import {fogVolumePars} from './fog-volume.js?v=44';
+import {createAdvancingFog} from './advancing-fog.js?v=44';
 import * as T from './vendor/three.module.min.js';
 
 // World-ray projected cellular decks; optical column depth gives dark cores
@@ -448,10 +449,13 @@ export function installLayeredFog({scene,noiseTexture=null,volumeUniforms={}} = 
  */
 export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'balanced'} = {}) {
   const texture = makeCloudNoise();
-  const volume=createFogVolume(renderer,texture);
-  const fogController = installLayeredFog({scene,noiseTexture:texture,volumeUniforms:volume.uniforms});
+  const volume=createAdvancingFog(renderer,texture);
+  // Dense weather is composited once after opaque + water, before optics.
+  // Keep legacy material fog disabled; the ordinary distant haze is unchanged.
+  const volumeUniforms={uFogVolume:{value:null},uFogViewport:{value:new T.Vector2(1,1)},uFogTileSize:{value:new T.Vector2(1,1)},uFogVolumeAmount:{value:0}};
+  const fogController = installLayeredFog({scene,noiseTexture:texture,volumeUniforms});
   const uniforms = {
-    ...volume.uniforms,
+    ...volumeUniforms,
     uStageEvent:{value:new T.Vector3()},
     uSkyEvent: {value:new T.Vector4()},
     uSkyWallpaper: {value:weatherTextures['cloud-wallpaper']},
@@ -504,7 +508,9 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
     uniforms.uStageEvent.value.set(event.stageAge||0,event.stageReveal||0,event.stageRestore||0);
     uniforms.uSkyEvent.value.set(event.blackout||0,event.wallpaper||0,event.clear||0,event.dusk||0);
     uniforms.uCloudTime.value = Number(time) || 0;
-    uniforms.uCloudMist.value = clamp01(mist);
+    // The arriving bank obscures the sky along its world-space ray; changing
+    // the whole sky's density here would reveal fog before its front arrives.
+    uniforms.uCloudMist.value = 0;
     uniforms.uCloudRain.value = clamp01(rain);
     uniforms.uCloudOrigin.value.set(worldOrigin(originX), worldOrigin(originZ));
     uniforms.uSkyOrigin.value.set(skyOrigin(originX),skyOrigin(originZ));
@@ -516,7 +522,7 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
     volume.update({...options,color:currentFog?.color});
   }
   return {
-    sky, update, volume, renderFog:volume.render, attachFog: fogController.attach, fog: fogController,
+    sky, update, volume, attachFog: fogController.attach, fog: fogController,
     dispose() {volume.dispose();fogController.dispose();cloudTarget.dispose();cloudGeometry.dispose();cloudPassMaterial.dispose(); sky.geometry.dispose(); material.dispose(); texture.dispose();}
   };
 }

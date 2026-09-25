@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';import * as T from '../../dist/vendor/three.module.min.js';
+import {createWaterPipeline} from '../../dist/water-pipeline.js';import {createAdvancingFog} from '../../dist/advancing-fog.js';
+T.TextureLoader.prototype.load=function(url,onLoad){const t=new T.Texture();queueMicrotask(()=>onLoad?.(t));return t;};
+let target=null;const draws=[];const renderer={autoClear:true,capabilities:{maxSamples:4},extensions:{has:()=>true},toneMappingExposure:1.23,getRenderTarget:()=>target,setRenderTarget(t){target=t;},render(scene,camera){const m=scene.children[0]?.material;draws.push({target,layer:camera.layers.mask,name:m?.fragmentShader});for(const u of Object.values(m?.uniforms||{}))assert(!u.value?.isTexture||u.value!==target?.texture&&u.value!==target?.depthTexture);}};
+const tex=new T.Texture();const lens={washWeight:0,washAge:0,submerged:false,wetWeight:0,microbubbles:{texture:tex,weight:0},physics:{fieldWidth:1,fieldHeight:1},prepareField:()=>tex,contextLost(){}};
+const fog=createAdvancingFog(renderer,new T.Data3DTexture(new Uint8Array(32),2,2,2));
+const pipe=createWaterPipeline(renderer,{ripples:{binding:{}},lens,waterState:{hasWater:false,wet:false,flash:0},fog});await pipe.surface.ready;
+const world=new T.Scene(),camera=new T.PerspectiveCamera(72,4/3,.08,228),output=new T.WebGLRenderTarget(960,720),group=new T.Group();world.add(group);camera.position.set(0,2,0);
+const m=new T.Mesh(new T.PlaneGeometry(20,20),new T.MeshBasicMaterial({name:'PS1 low-poly detailed ripple water'}));m.position.z=30;group.add(m);const chunk={group,field:{type:'pond',cx:0,cz:30,lakeY:0},colliders:[]};pipe.attach(chunk);
+pipe.update(0,camera,{},false,false,null,null,0,0);pipe.render(world,camera,null,960,720,output);assert.equal(pipe.stats.depthCopies,0);assert.equal(pipe.stats.waterVisible,false);assert.equal(draws.length,6);assert.equal(target,null);
+m.position.z=-30;draws.length=0;pipe.render(world,camera,null,960,720,output);assert.equal(pipe.stats.depthCopies,1);assert.equal(draws.length,8);assert.equal(draws[2].layer,4);
+fog.update({camera,event:{kind:'fog',serial:1,fogProgress:.8},mist:1});draws.length=0;pipe.render(world,camera,null,960,720,output);assert.equal(draws.length,10);assert.equal(fog.stats.passes,2);assert.equal(camera.layers.mask,1);assert.equal(target,null);assert.equal(renderer.autoClear,true);
+pipe.dispose();fog.dispose();output.dispose();m.geometry.dispose();tex.dispose();console.log('PASS complete opaque / visible water / fog / CoC / optics / resolve ordering, skip invisible water, no framebuffer feedback');

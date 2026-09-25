@@ -1,6 +1,6 @@
-import {barnFootprintDistance} from './reference-barn-layout.js?v=43';
-import {compoundAt,CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=43';
-import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=43';
+import {barnFootprintDistance} from './reference-barn-layout.js?v=44';
+import {compoundAt,CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=44';
+import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=44';
 
 const titles={pond:'湖泊',building:'建筑',grove:'树林'};
 const COMPOUND_BUILDINGS=new Set(['building','barn','shed','stable','cabin','outhouse']);

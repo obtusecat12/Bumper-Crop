@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=43';
+import {ruralTextures} from './rural-textures.js?v=44';
 
 const shared=new Set(),layouts=new WeakMap();let templates,mat;
 // Bent, intersecting strips show many fine leaves with a small geometry budget.

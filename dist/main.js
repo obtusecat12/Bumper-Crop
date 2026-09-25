@@ -1,43 +1,43 @@
-import {initializeVergeTextures} from './verge-cards.js?v=43';
-import {createSceneBatches} from './scene-batches.js?v=43';
-import {updateCropGroundTime} from './ground.js?v=43';
-import {bindTroughWater} from './trough-water.js?v=43';
-import {createWaterPipeline} from './water-pipeline.js?v=43';
-import {WaterState} from './water-state.js?v=43';
-import {WaterContactEffects} from './water-contact-effects.js?v=43';
-import {createWaterBubbles} from './water-bubbles.js?v=43';
-import {HandheldCameraRig,angleDelta} from './handheld-camera.js?v=43';
-import {WeatherDirector,WEATHER_LABELS} from './weather-state.js?v=43';
-import {createRainRenderer} from './rain-render.js?v=43';
-import {weatherSurface} from './weather-surfaces.js?v=43';
-import {createWetGround} from './wet-ground.js?v=43';
-import {createWeatherFlare} from './weather-flare.js?v=43';
-import {initializeWeatherTextures} from './weather-textures.js?v=43';
-import {createWaterImpact} from './water-impact.js?v=43';
-import {createWaterRipples} from './water-ripples.js?v=43';
-import {createLensWater} from './lens-water.js?v=43';
-import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=43';
-import {updateBarnDoors} from './reference-barn.js?v=43';
-import {initializeLandmarkTextures} from './landmark-textures.js?v=43';
-import {loadInstrumentParts} from './retro-instruments.js?v=43';
-import {createUIRaster} from './ui-raster.js?v=43';
-import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=43';
-import {createUIThemes} from './ui-themes.js?v=43';
-import {createMaterialFinish} from './material-finish.js?v=43';
-import {createRuralShadows} from './rural-shadows.js?v=43';
-import {createIrradianceField} from './irradiance-field.js?v=43';
-import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=43';
-import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=43';
-import {createPerformanceMeter} from './performance-meter.js?v=43';
-import {createChunkStream} from './world-stream.js?v=43';
+import {initializeVergeTextures} from './verge-cards.js?v=44';
+import {createSceneBatches} from './scene-batches.js?v=44';
+import {updateCropGroundTime} from './ground.js?v=44';
+import {bindTroughWater} from './trough-water.js?v=44';
+import {createWaterPipeline} from './water-pipeline.js?v=44';
+import {WaterState} from './water-state.js?v=44';
+import {WaterContactEffects} from './water-contact-effects.js?v=44';
+import {createWaterBubbles} from './water-bubbles.js?v=44';
+import {HandheldCameraRig,angleDelta} from './handheld-camera.js?v=44';
+import {WeatherDirector,WEATHER_LABELS} from './weather-state.js?v=44';
+import {createRainRenderer} from './rain-render.js?v=44';
+import {weatherSurface} from './weather-surfaces.js?v=44';
+import {createWetGround} from './wet-ground.js?v=44';
+import {createWeatherFlare} from './weather-flare.js?v=44';
+import {initializeWeatherTextures} from './weather-textures.js?v=44';
+import {createWaterImpact} from './water-impact.js?v=44';
+import {createWaterRipples} from './water-ripples.js?v=44';
+import {createLensWater} from './lens-water.js?v=44';
+import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=44';
+import {updateBarnDoors} from './reference-barn.js?v=44';
+import {initializeLandmarkTextures} from './landmark-textures.js?v=44';
+import {loadInstrumentParts} from './retro-instruments.js?v=44';
+import {createUIRaster} from './ui-raster.js?v=44';
+import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=44';
+import {createUIThemes} from './ui-themes.js?v=44';
+import {createMaterialFinish} from './material-finish.js?v=44';
+import {createRuralShadows} from './rural-shadows.js?v=44';
+import {createIrradianceField} from './irradiance-field.js?v=44';
+import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=44';
+import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=44';
+import {createPerformanceMeter} from './performance-meter.js?v=44';
+import {createChunkStream} from './world-stream.js?v=44';
 import * as T from './vendor/three.module.min.js';
-import {compoundAt,CHUNK,field,cropSample,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=43';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=43';
-import {createWheatDetailLayer,initializeCerealTextures} from './dense-wheat.js?v=43';
-import {createAtmosphere} from './atmosphere.js?v=43';
-import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=43';
-import {initializeRuralTextures} from './rural-textures.js?v=43';
-import {createNavigationMap} from './map-ui.js?v=43';
+import {compoundAt,CHUNK,field,cropSample,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=44';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=44';
+import {createWheatDetailLayer,initializeCerealTextures} from './dense-wheat.js?v=44';
+import {createAtmosphere} from './atmosphere.js?v=44';
+import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=44';
+import {initializeRuralTextures} from './rural-textures.js?v=44';
+import {createNavigationMap} from './map-ui.js?v=44';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -119,7 +119,7 @@ const rainEffects=createRainRenderer(scene,{onRipple:waterRipples.emit});atmosph
 const rainWind=new T.Vector3(.85,0,.30),weatherLight=new T.Vector3(-.45,.84,-.30),duskLight=new T.Vector3(-.86,.065,-.45),wetCameraVelocity=new T.Vector3();let wetPoseFresh=true;
 const weatherFlare=createWeatherFlare(renderer);
 const lensWater=createLensWater(renderer),waterState=new WaterState(),bodyWater=new WaterContactEffects(waterImpact),waterBubbles=createWaterBubbles(scene);
-const waterPipeline=createWaterPipeline(renderer,{ripples:waterRipples,lens:lensWater,waterState,flare:weatherFlare,sky:atmosphere.sky});displayFilter.setScenePipeline(waterPipeline);
+const waterPipeline=createWaterPipeline(renderer,{ripples:waterRipples,lens:lensWater,waterState,flare:weatherFlare,sky:atmosphere.sky,fog:atmosphere.volume});displayFilter.setScenePipeline(waterPipeline);
 try{await waterPipeline.surface.ready;}catch(error){error.userTitle="水体材质未能加载";error.userMessage="请检查连接后重新加载。";throw error;}
 const wetInput={},rigInput={},moveNext={x:0,z:0},moveLocal={x:0,z:0},impactLighting={sunDirection:weatherLight,color:scene.fog.color,intensity:1,ambientIntensity:1},rippleInput={state,chunks,active:false,lightDirection:weatherLight};
 let barnDoorAngle=0,barnDoorGoal=0,wetLastYaw=0,wetLastVx=0,wetLastVz=0;
@@ -221,7 +221,7 @@ $('#open-settings').onclick=()=>openModal('settings');$('#open-journal').onclick
 for(const key of Object.keys(settings)){const el=$('#'+key);if(!el)continue;if(el.type==='checkbox')el.checked=Boolean(settings[key]);else el.value=settings[key];el.addEventListener('input',()=>{settings[key]=el.type==='checkbox'?el.checked:el.type==='range'?Number(el.value):el.value;try{localStorage.setItem('level10.preferences.v1',JSON.stringify(settings))}catch{}if(key==='quality'){autoScale=1;updateQueue()}if(key==='fov')leaveReferenceView();if(['quality','filter','fov'].includes(key))resize();if(key==='volume')audio.setVolume();if(key==='devMode')$('#developer-button').hidden=!settings.devMode;$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;})}$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;$('#developer-button').hidden=!settings.devMode;
 
 function savePreferences(){try{localStorage.setItem('level10.preferences.v1',JSON.stringify(settings))}catch{}}
-function performanceText(){const v=performanceMeter.values,f=displayFilter.values,gi=irradiance.values,ms=n=>n===null?'—':n.toFixed(1)+' ms';return `CPU ${ms(v.cpu)} · GPU ${v.supported===false?'浏览器未提供计时':ms(v.gpu)} · ${v.calls} 批次 · ${Math.round(v.triangles/1000)}k 三角形\n逻辑 ${ms(v.simulation)} · 提交 ${ms(v.submission)} · 麦丛 ${wheatDetail.object.userData.wheat.activeStems} / ${wheatDetail.object.userData.wheat.triangles} 面\n光照 ${gi.status} · ${Math.round(gi.rays/1000)}k 射线 · 复用 ${gi.reused} 探针${settings.filter==='vhs'?`\nVHS ${f.fps.toFixed(1)} FPS · 后台 ${ms(f.ms)} · 处理延迟 ${ms(f.latency)}`:''}`;}
+function performanceText(){const v=performanceMeter.values,f=displayFilter.values,gi=irradiance.values,ms=n=>n===null?'—':n.toFixed(1)+' ms';return `CPU ${ms(v.cpu)} · GPU ${v.supported===false?'浏览器未提供计时':ms(v.gpu)} · ${v.calls} 批次 · ${Math.round(v.triangles/1000)}k 三角形\n逻辑 ${ms(v.simulation)} · 提交 ${ms(v.submission)} · 麦丛 ${wheatDetail.object.userData.wheat.activeStems} / ${wheatDetail.object.userData.wheat.triangles} 面\n光照 ${gi.status} · ${Math.round(gi.rays/1000)}k 射线 · 复用 ${gi.reused} 探针\n天气通道：雾 ${atmosphere.volume.stats.active?'1/3 尺寸积分 + 深度合成':'跳过'} · 水面 ${waterPipeline.stats.waterVisible?'可见':'跳过'}${settings.filter==='vhs'?`\nVHS ${f.fps.toFixed(1)} FPS · 后台 ${ms(f.ms)} · 处理延迟 ${ms(f.latency)}`:''}`;}
 function updateDeveloperCoordinates(){
  $('#developer-performance').textContent=performanceText();
  $('#developer-cell').textContent=`${state.cx} / ${state.cz}`;
@@ -392,13 +392,14 @@ function weather(dt,renderDt=dt){
  scene.fog.color.copy(normalFog).lerp(clearFog,clear).lerp(duskFog,dusk);scene.background.copy(scene.fog.color);
  skyFill.color.copy(normalFill).lerp(duskFill,dusk);skyFill.intensity=1.4*(1-dusk*.42)*(1-rainAmount*.12);
  wind.strength.value=.60+Math.sin(time*.15)*.23+rainAmount*.4;
- atmosphere.update({time:weatherDirector.elapsed,quality:settings.quality,camera,originX:state.cx,originZ:state.cz,mist,rain:rainAmount,event:weatherState});
+ atmosphere.update({time:weatherDirector.elapsed,quality:settings.quality,camera,originX:state.cx,originZ:state.cz,groundHeight:cameraFloor(),mist,rain:rainAmount,event:weatherState});
+ waterPipeline.focus.setMist(atmosphere.volume.localAmount(camera));
  weatherLight.set(-.45,.84,-.30).lerp(duskLight,dusk).normalize();
  rainWind.set(.85+Math.sin(weatherDirector.elapsed*.075)*.26,0,.30+Math.cos(weatherDirector.elapsed*.06)*.18);
  rainEffects.update(dt,{state,camera,chunks,rain:rainAmount,active:playing&&!teleportJob,wind:rainWind,cameraVelocity:wetCameraVelocity,lightDirection:weatherLight,submerged:waterState.wet});
  wetGround.update({rain:rainAmount,wetness:weatherDirector.wetness,time:weatherDirector.elapsed,state,sky:scene.fog.color});
  weatherFlare.update(playing?dt:0,{weather:weatherState,camera,state,chunks});
- const label=WEATHER_LABELS[weatherState.kind];const phase=weatherState.kind==='rain'?` · 雨量 ${Math.round(rainAmount*100)}%`:weatherState.kind==='fog'?` · 雾量 ${Math.round(mist*100)}%`:weatherState.kind==='sunbreak'?(dusk>.1?' · 转入黄昏':' · 天空放晴'):'';
+ const label=WEATHER_LABELS[weatherState.kind];const phase=weatherState.kind==='rain'?` · 雨量 ${Math.round(rainAmount*100)}%`:weatherState.kind==='fog'?` · 雾锋 ${Math.round(weatherState.fogProgress*100)}%`:weatherState.kind==='sunbreak'?(dusk>.1?' · 转入黄昏':' · 天空放晴'):'';
  if(label!==lastWeather){$('#weather-label').textContent=label;lastWeather=label;}
  if(activeModal?.id==='developer'){const status=$('#weather-status'),text=label+phase+(weatherDirector.kind==='normal'?' · 等待下一轮判定':` · ${Math.ceil(Math.max(0,weatherDirector.duration-weatherDirector.age))} 秒`)+' · 自然判定：雨 / 雾各 10%，异常各 1%';if(status.textContent!==text)status.textContent=text;}
 }
@@ -420,7 +421,7 @@ $('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请
  const lampNear=state.cx>=-1n&&state.cx<=3n&&state.cz>=-4n&&state.cz<=0n;shelterLamp.intensity=lampNear?.05:0;if(lampNear)shelterLamp.position.set(Number(1n-state.cx)*64+16.32,1.28,Number(-2n-state.cz)*64+47.91);
  const weatherCover=weatherSurface(state.x,state.z,state,chunks);
  wetCameraVelocity.copy(cameraRig.velocity);if(!playing)wetCameraVelocity.set(0,0,0);wetCameraVelocity.y=T.MathUtils.clamp(wetCameraVelocity.y,-9,9);
- wetInput.rain=rainAmount;wetInput.humidity=T.MathUtils.clamp(.22+rainAmount*.72+weatherState.mist*.65,0,1);wetInput.sheltered=!!weatherCover&&weatherCover.roof>camera.position.y;wetInput.enabled=playing&&!teleportJob;wetInput.aspect=camera.aspect;wetInput.shore=wa?pondShoreDistance(state.x,state.z,wf):Infinity;wetInput.hasWater=wa;wetInput.cameraHeight=camera.position.y;wetInput.feet=wf?cameraFloor()+state.jump:Infinity;wetInput.level=wa?wf.lakeY:0;wetInput.moved=state.distance-wetDistance;wetInput.speed=(state.distance-wetDistance)/dt;wetInput.grounded=state.grounded;wetInput.fallSpeed=wetFall;wetInput.pitch=camera.rotation.x;wetInput.yaw=camera.rotation.y;wetInput.cameraVelocity=wetCameraVelocity;wetInput.wind=rainWind;wetInput.lightDirection=weatherLight;wetInput.roll=camera.rotation.z;wetInput.accelX=wetPoseFresh?0:((wetCameraVelocity.x-wetLastVx)*Math.cos(camera.rotation.y)-(wetCameraVelocity.z-wetLastVz)*Math.sin(camera.rotation.y))/dt*.025+angleDelta(camera.rotation.y,wetLastYaw)/dt*.055;
+ wetInput.rain=rainAmount;wetInput.humidity=T.MathUtils.clamp(.22+rainAmount*.72+atmosphere.volume.localAmount(camera)*.65,0,1);wetInput.sheltered=!!weatherCover&&weatherCover.roof>camera.position.y;wetInput.enabled=playing&&!teleportJob;wetInput.aspect=camera.aspect;wetInput.shore=wa?pondShoreDistance(state.x,state.z,wf):Infinity;wetInput.hasWater=wa;wetInput.cameraHeight=camera.position.y;wetInput.feet=wf?cameraFloor()+state.jump:Infinity;wetInput.level=wa?wf.lakeY:0;wetInput.moved=state.distance-wetDistance;wetInput.speed=(state.distance-wetDistance)/dt;wetInput.grounded=state.grounded;wetInput.fallSpeed=wetFall;wetInput.pitch=camera.rotation.x;wetInput.yaw=camera.rotation.y;wetInput.cameraVelocity=wetCameraVelocity;wetInput.wind=rainWind;wetInput.lightDirection=weatherLight;wetInput.roll=camera.rotation.z;wetInput.accelX=wetPoseFresh?0:((wetCameraVelocity.x-wetLastVx)*Math.cos(camera.rotation.y)-(wetCameraVelocity.z-wetLastVz)*Math.sin(camera.rotation.y))/dt*.025+angleDelta(camera.rotation.y,wetLastYaw)/dt*.055;
  const waterCrossing=playing&&!teleportJob?waterState.update(weatherDirector.delta,wetInput):waterState.result;wetInput.waterCrossing=waterCrossing;
  lensWater.update(weatherDirector.delta,wetInput);
  if(waterCrossing.crossing===1&&playing)waterBubbles.emit(camera,state,wetInput.level);
@@ -438,7 +439,7 @@ $('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请
  const exposure=irradiance.exposure(camera.position);renderer.toneMappingExposure=T.MathUtils.lerp(renderer.toneMappingExposure,exposure,1-Math.exp(-dt*(exposure<renderer.toneMappingExposure?2.2:.8)));
  uiTick+=dt;if(uiTick>.12){uiTick=0;if(playing)scanInteraction();updateHUD()}
  rippleInput.active=playing&&!teleportJob;waterRipples.update(weatherDirector.delta,rippleInput);
- sceneBatches.updateView(camera);performanceMeter.markSimulation();displayFilter.render(scene,camera,now,()=>{performanceMeter.beforeRender();waterRipples.render();atmosphere.renderFog(camera);naturalShadows.update({now,originKey:`${state.cx},${state.cz}`,quality:settings.quality,rain:rainAmount,clear:weatherState.clear,dusk:weatherState.dusk});sceneBatches.enforceBudget(camera,naturalShadows.csm.lights,wheatDetail.object,235000,renderer.shadowMap.needsUpdate);});performanceMeter.end();document.documentElement.dataset.bootState="ready";frameCount++;frameTime+=rawDt;
+ sceneBatches.updateView(camera);performanceMeter.markSimulation();displayFilter.render(scene,camera,now,()=>{performanceMeter.beforeRender();waterRipples.render();naturalShadows.update({now,originKey:`${state.cx},${state.cz}`,quality:settings.quality,rain:rainAmount,clear:weatherState.clear,dusk:weatherState.dusk});sceneBatches.enforceBudget(camera,naturalShadows.csm.lights,wheatDetail.object,235000,renderer.shadowMap.needsUpdate);});performanceMeter.end();document.documentElement.dataset.bootState="ready";frameCount++;frameTime+=rawDt;
  if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;if(playing&&!queue.length&&!activeBuild&&['pixel','native'].includes(settings.filter)){qualityTimer+=1.5;if(qualityTimer>4.5){let next=autoScale;if(fps<35)next=Math.max(.6,autoScale-.08);else if(fps>57)next=Math.min(1,autoScale+.025);if(next!==autoScale){autoScale=next;resize()}qualityTimer=0}}}
 }
 addEventListener('pagehide',event=>{if(!event.persisted){sceneBatches.dispose();wheatDetail.dispose();displayFilter.dispose();waterBubbles.dispose();rainEffects.dispose();weatherFlare.dispose();lensWater.dispose();atmosphere.dispose();waterImpact.dispose();waterRipples.dispose();naturalShadows.dispose();irradiance.dispose()}});
