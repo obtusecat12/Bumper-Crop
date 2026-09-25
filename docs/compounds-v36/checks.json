@@ -1,0 +1,13 @@
+{
+  "seed": 4244718517,
+  "pass": true,
+  "protectedSamples": 5160,
+  "overlappingWheatSamples": 0,
+  "seamSamples": 2322,
+  "maxSeam": 2.5646151868841116e-14,
+  "arrivalVertices": 70410,
+  "arrivalColliders": 60,
+  "packetRoundtrip": true,
+  "mapLanding": true,
+  "nearestBuilding": true
+}

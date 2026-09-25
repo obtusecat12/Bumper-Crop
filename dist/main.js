@@ -1,40 +1,40 @@
-import {createWaterPipeline} from './water-pipeline.js?v=35';
-import {WaterState} from './water-state.js?v=35';
-import {WaterContactEffects} from './water-contact-effects.js?v=35';
-import {createWaterBubbles} from './water-bubbles.js?v=35';
-import {HandheldCameraRig,angleDelta} from './handheld-camera.js?v=35';
-import {WeatherDirector,WEATHER_LABELS} from './weather-state.js?v=35';
-import {createRainRenderer} from './rain-render.js?v=35';
-import {weatherSurface} from './weather-surfaces.js?v=35';
-import {createWetGround} from './wet-ground.js?v=35';
-import {createWeatherFlare} from './weather-flare.js?v=35';
-import {initializeWeatherTextures} from './weather-textures.js?v=35';
-import {createWaterImpact} from './water-impact.js?v=35';
-import {createWaterRipples} from './water-ripples.js?v=35';
-import {createLensWater} from './lens-water.js?v=35';
-import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=35';
-import {updateBarnDoors} from './reference-barn.js?v=35';
-import {initializeLandmarkTextures} from './landmark-textures.js?v=35';
-import {loadInstrumentParts} from './retro-instruments.js?v=35';
-import {createUIRaster} from './ui-raster.js?v=35';
-import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=35';
-import {createUIThemes} from './ui-themes.js?v=35';
-import {createMaterialFinish} from './material-finish.js?v=35';
-import {createRuralShadows} from './rural-shadows.js?v=35';
-import {createIrradianceField} from './irradiance-field.js?v=35';
-import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=35';
-import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=35';
-import {createCardOrderController} from './instance-order.js?v=35';
-import {createPerformanceMeter} from './performance-meter.js?v=35';
-import {createChunkStream} from './world-stream.js?v=35';
+import {createWaterPipeline} from './water-pipeline.js?v=36';
+import {WaterState} from './water-state.js?v=36';
+import {WaterContactEffects} from './water-contact-effects.js?v=36';
+import {createWaterBubbles} from './water-bubbles.js?v=36';
+import {HandheldCameraRig,angleDelta} from './handheld-camera.js?v=36';
+import {WeatherDirector,WEATHER_LABELS} from './weather-state.js?v=36';
+import {createRainRenderer} from './rain-render.js?v=36';
+import {weatherSurface} from './weather-surfaces.js?v=36';
+import {createWetGround} from './wet-ground.js?v=36';
+import {createWeatherFlare} from './weather-flare.js?v=36';
+import {initializeWeatherTextures} from './weather-textures.js?v=36';
+import {createWaterImpact} from './water-impact.js?v=36';
+import {createWaterRipples} from './water-ripples.js?v=36';
+import {createLensWater} from './lens-water.js?v=36';
+import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=36';
+import {updateBarnDoors} from './reference-barn.js?v=36';
+import {initializeLandmarkTextures} from './landmark-textures.js?v=36';
+import {loadInstrumentParts} from './retro-instruments.js?v=36';
+import {createUIRaster} from './ui-raster.js?v=36';
+import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=36';
+import {createUIThemes} from './ui-themes.js?v=36';
+import {createMaterialFinish} from './material-finish.js?v=36';
+import {createRuralShadows} from './rural-shadows.js?v=36';
+import {createIrradianceField} from './irradiance-field.js?v=36';
+import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=36';
+import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=36';
+import {createCardOrderController} from './instance-order.js?v=36';
+import {createPerformanceMeter} from './performance-meter.js?v=36';
+import {createChunkStream} from './world-stream.js?v=36';
 import * as T from './vendor/three.module.min.js';
-import {CHUNK,field,cropSample,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=35';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=35';
-import {createWheatDetailLayer} from './dense-wheat.js?v=35';
-import {createAtmosphere} from './atmosphere.js?v=35';
-import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=35';
-import {initializeRuralTextures} from './rural-textures.js?v=35';
-import {createNavigationMap} from './map-ui.js?v=35';
+import {compoundAt,CHUNK,field,cropSample,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=36';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=36';
+import {createWheatDetailLayer} from './dense-wheat.js?v=36';
+import {createAtmosphere} from './atmosphere.js?v=36';
+import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=36';
+import {initializeRuralTextures} from './rural-textures.js?v=36';
+import {createNavigationMap} from './map-ui.js?v=36';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -371,7 +371,7 @@ function scanInteraction(){
  prompt.hidden=!interaction;
  if(interaction)prompt.innerHTML=interaction.kind==='barn-door'?`<kbd>E</kbd> ${barnDoorGoal>0?'关闭':'打开'}谷仓双门`:interaction.kind==='bottle'?'<kbd>E</kbd> 拾取杏仁水':'<kbd>E</kbd> 饮用湖水';
 }
-function updateHUD(){if(activeModal?.id==='developer')updateDeveloperCoordinates();const degrees=((Math.round(-camera.rotation.y*180/Math.PI)%360)+360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(degrees/45)%8];$('#bearing').textContent=`${dir}  ${String(degrees).padStart(3,'0')}°`;survivalDisplay.update(state.stamina,state.hydration,state.bottles,state.health,state.sanity);const c=currentChunk();let location=c&&roadDistance(state.x,state.z,c.field)>2.2?'田间草地':'泥土小径';if(c){const f=c.field;if(f.type==='pond'&&pondShoreDistance(state.x,state.z,f)<7)location='湖泊 · 未开垦的低地';else if(f.type==='building'){const[w,d]=buildingSize(f);const bp=buildingLocal(state.x,state.z,f);if(Math.abs(bp.x)<w/2&&Math.abs(bp.z)<d/2)location=BUILDING_NAMES[f.variant];else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}if(c&&roadDistance(state.x,state.z,c.field)>2.5&&location.includes('麦田'))location=['麦田 · 成熟小麦','麦田 · 枯褐大麦','收割后的麦茬地'][cropSample(state.x,state.z,c.field,{}).crop];if(c&&location==='田间草地'&&cropSample(state.x,state.z,c.field,{}).crop===2)location='收割后的麦茬地';if(c&&barnFootprintDistance(state.x,state.z,c.field)<0)location='砖砌谷仓 · 临时栖身处';$('#location').textContent=`${location}  /  ${Math.round(state.distance)} m`;$('#fps').textContent=`${Math.round(fps)} FPS${settings.filter==='vhs'?' · VHS '+Math.round(displayFilter.values.fps):''} · ${chunks.size} 区块${settings.devMode?'\n'+performanceText():''}`;}
+function updateHUD(){if(activeModal?.id==='developer')updateDeveloperCoordinates();const degrees=((Math.round(-camera.rotation.y*180/Math.PI)%360)+360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(degrees/45)%8];$('#bearing').textContent=`${dir}  ${String(degrees).padStart(3,'0')}°`;survivalDisplay.update(state.stamina,state.hydration,state.bottles,state.health,state.sanity);const c=currentChunk();let location=c&&roadDistance(state.x,state.z,c.field)>2.2?'田间草地':'泥土小径';if(c){const f=c.field;if(f.type==='pond'&&pondShoreDistance(state.x,state.z,f)<7)location='湖泊 · 未开垦的低地';else if(f.type==='building'){const[w,d]=buildingSize(f);const bp=buildingLocal(state.x,state.z,f);if(Math.abs(bp.x)<w/2&&Math.abs(bp.z)<d/2)location=BUILDING_NAMES[f.variant];else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}if(c&&roadDistance(state.x,state.z,c.field)>2.5&&location.includes('麦田'))location=['麦田 · 成熟小麦','麦田 · 枯褐大麦','收割后的麦茬地'][cropSample(state.x,state.z,c.field,{}).crop];if(c&&location==='田间草地'&&cropSample(state.x,state.z,c.field,{}).crop===2)location='收割后的麦茬地';if(c&&barnFootprintDistance(state.x,state.z,c.field)<0)location='砖砌谷仓 · 临时栖身处';if(c){const a=compoundAt(state.x,state.z,c.field,{});if(a.footprint<0)location=a.component?.kind==='silo'?'农庄 · 筒仓':a.component?.kind==='outhouse'?'农庄 · 木质外屋':'农庄 · 旧木建筑';else if(a.yard>.35)location=a.plan?.kind==='hamlet'?'农庄聚落 · 前院':'农庄 · 院落';}$('#location').textContent=`${location}  /  ${Math.round(state.distance)} m`;$('#fps').textContent=`${Math.round(fps)} FPS${settings.filter==='vhs'?' · VHS '+Math.round(displayFilter.values.fps):''} · ${chunks.size} 区块${settings.devMode?'\n'+performanceText():''}`;}
 
 const normalFog=new T.Color('#acb6b1'),clearFog=new T.Color('#b4cbd2'),duskFog=new T.Color('#b9a4a0'),duskFill=new T.Color('#8998b2'),normalFill=new T.Color('#c9d2d4');
 function weather(dt,renderDt=dt){

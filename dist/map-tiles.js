@@ -1,8 +1,8 @@
-import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=35';
-import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=35';
-import {shoreGrassCover,field,cropSample,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=35';
-import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=35';
-import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=35';
+import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=36';
+import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=36';
+import {compoundAt,shoreGrassCover,field,cropSample,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=36';
+import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=36';
+import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=36';
 
 // A geography-only view of the existing world. Never imports Three, terrain,
 // textures, vegetation geometry, or the streamed chunk manager.
@@ -41,6 +41,8 @@ function footprint(f,x,z,hx,hz,angle,label,kind='building'){
 function overlaps(points,margin=0){return points.some(p=>p.x>=-margin&&p.x<=SIZE+margin&&p.z>=-margin&&p.z<=SIZE+margin)||!(Math.max(...points.map(p=>p.x))<0||Math.min(...points.map(p=>p.x))>SIZE||Math.max(...points.map(p=>p.z))<0||Math.min(...points.map(p=>p.z))>SIZE)}
 export function mapFootprints(f){
  const result=[];
+ const names={barn:'谷仓',shed:'开敞农具棚',outhouse:'木质外屋',silo:'筒仓',windmill:'抽水风车',trough:'水槽'};
+ for(const plan of f.compounds||[])for(const p of plan.components){if(!names[p.kind])continue;const q=footprint(f,p.x,p.z,p.r??p.width/2,p.r??p.depth/2,p.angle||0,(plan.kind==='hamlet'?'农庄聚落 · ':'农庄 · ')+names[p.kind],p.kind==='silo'?'silo':'compound-building');if(overlaps(q.corners,4))result.push(q);}
  if(f.type==='building'){const [w,d]=buildingSize(f);result.push(footprint(f,f.cx,f.cz,w/2,d/2,f.buildingAngle||0,BUILDING_NAMES[f.variant%8]))}
  if(f.farm)FARM_FOOTPRINTS.forEach((p,i)=>{
   const q=footprint(f,p.x-f.farm.x,p.z-f.farm.z,p.hx,p.hz,p.angle,`Kephart 农场 · ${FARM_NAMES[i]||'农舍'}`,'farm-building');
@@ -60,6 +62,7 @@ function drawParcels(ctx,f,n){
   let color=colors[crop.crop],v=crop.tone*(crop.crop===2?(1+(Math.cos(crop.row*1.57)>.55?.025:-.01)):1),kind=crop.crop;
   const margin=shoreGrassCover(x,z,f);if(margin>.23){color=[113,131,81];v=.92+margin*.08;kind=4;}
   if(road.distance<2.1){color=road.rut>.13?[132,111,79]:[107,122,74];v=1;kind=road.rut>.13?3:4;}
+  if(road.yard>.1){color=[139,119,89];v=.92+road.yard*.08;kind=5;}
   const k=j*n+i;classes[k]=kind;pixels.data[k*4]=color[0]*v;pixels.data[k*4+1]=color[1]*v;pixels.data[k*4+2]=color[2]*v;pixels.data[k*4+3]=255;
  }g.putImageData(pixels,0,0);ctx.drawImage(layer,0,0,64,64);return{size:n,classes};
 }
@@ -68,7 +71,7 @@ function drawMeadow(ctx,f){
  const n=128,layer=makeCanvas(n),g=layer.getContext('2d'),pixels=g.createImageData(n,n),env={};
  for(let z=0;z<n;z++)for(let x=0;x<n;x++){
   meadowEnvironment((x+.5)*64/n,(z+.5)*64/n,f.meadow,env);
-  const c=env.cover*(roadProfile((x+.5)*64/n,(z+.5)*64/n,f,{}).distance<2.5?0:1);if(c<=.001)continue;const i=(z*n+x)*4,wet=env.moisture,d=env.patchDensity;
+  const c=env.cover*(roadProfile((x+.5)*64/n,(z+.5)*64/n,f,{}).distance<2.5||compoundAt((x+.5)*64/n,(z+.5)*64/n,f,{}).clearing?0:1);if(c<=.001)continue;const i=(z*n+x)*4,wet=env.moisture,d=env.patchDensity;
   pixels.data[i]=Math.round(122-wet*15+d*8);pixels.data[i+1]=Math.round(133+wet*7+d*7);pixels.data[i+2]=Math.round(78+wet*10+d*6);pixels.data[i+3]=Math.round(Math.min(1,c*1.25)*255);
  }
  g.putImageData(pixels,0,0);ctx.drawImage(layer,0,0,64,64);
@@ -109,6 +112,7 @@ function drawPond(ctx,f){
  ctx.beginPath();for(const loop of pondContours(f)){if(!loop.length)continue;ctx.moveTo(loop[0].x,loop[0].z);for(let i=1;i<loop.length;i++)ctx.lineTo(loop[i].x,loop[i].z);ctx.closePath()}ctx.fillStyle=COLORS.water;ctx.fill('evenodd');
 }
 function drawBuilding(ctx,p,variant=0){
+ if(p.kind==='silo'){ctx.beginPath();ctx.arc(p.x,p.z,p.hx,0,TAU);ctx.fillStyle='#9ca197';ctx.fill();ctx.strokeStyle='#585c54';ctx.lineWidth=.35;ctx.stroke();return;}
  ctx.save();ctx.translate(p.x,p.z);ctx.rotate(-p.angle);
  const shade=p.kind==='farm-building'?'#9b7968':['#857761','#8c8371','#a46e59','#916d59','#8b7364','#817663','#8c7d67','#8f806a'][variant%8];
  ctx.fillStyle=shade;ctx.fillRect(-p.hx,-p.hz,p.hx*2,p.hz*2);
@@ -116,7 +120,7 @@ function drawBuilding(ctx,p,variant=0){
  ctx.strokeStyle='#5e5847';ctx.lineWidth=.35;ctx.strokeRect(-p.hx,-p.hz,p.hx*2,p.hz*2);
  line(ctx,[{x:0,z:-p.hz},{x:0,z:p.hz}],'#c0a58a',.30);ctx.restore();
 }
-function drawYard(ctx,p){path(ctx,corners(p.x,p.z,p.hx+3.4,p.hz+4.3,p.angle));ctx.fillStyle=COLORS.yard;ctx.fill()}
+function drawYard(ctx,p){if(p.kind==='compound-building'||p.kind==='silo')return;path(ctx,corners(p.x,p.z,p.hx+3.4,p.hz+4.3,p.angle));ctx.fillStyle=COLORS.yard;ctx.fill()}
 function drawTree(ctx,t,dx=0,dz=0,isPhoto=false){
  const x=t.x+dx,z=t.z+dz,r=isPhoto?t.crownWidth*.50:TREE_RADII[t.variant%6]*t.scale;if(x+r<0||z+r<0||x-r>64||z-r>64)return;
  const phase=(t.seed??0)%997/997*TAU;
@@ -217,6 +221,7 @@ export function createMapTiles({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   for(const t of tile.metadata.trees)if(Math.hypot(x-t.x,z-t.z)<t.r)return {kind:'tree',label:f.vegetationMode==='grove'?'小树林':f.vegetationMode==='windbreak'?'防风林':'树木',cx,cz,x,z};
   for(const s of tile.metadata.shrubs)if(Math.hypot(x-s.x,z-s.z)<s.r)return {kind:'hedge',label:'田边树篱',cx,cz,x,z};
   const road=roadProfile(x,z,f,{});
+  if(road.yard>.25)return {kind:'yard',label:'农庄院落',cx,cz,x,z};
   if(road.rut>.1)return {kind:'path',label:'田间双辙路',cx,cz,x,z};
   if(road.distance<2.05)return {kind:'grass',label:'路边草地',cx,cz,x,z};
   if(meadowSample(x,z,f.meadow)>.32)return {kind:'grass',label:'田间草地',cx,cz,x,z};

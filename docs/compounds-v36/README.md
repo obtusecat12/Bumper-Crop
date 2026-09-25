@@ -1,0 +1,21 @@
+# V36 — roadside compounds and aligned arrival ruts
+
+Buildings now originate from the existing routed road network. Deterministic road stations are projected along its tangent, then set back 25–40 m along either normal. Local priority thinning keeps compound centers at least 120 m apart. Whole building footprints, driveways, fixed landmarks, the protected arrival disk and lake clearance participate in placement rejection. The previous sparse per-tile building roll remains a frozen topology input for V35 fields, but no longer emits isolated visible buildings.
+
+Independent farms combine a 15×25 m gabled barn, adjoining silo, mirrored L/U tool sheds, outhouse, broken rear fences and a windbreak. Suitable junctions occasionally select two opposing barns, three sheds, a windpump and trough. Existing detailed barn construction is reused with gray timber or new weathered red timber; the new silo uses generated galvanized metal. Static windpump geometry and progressively simplified building LODs retain silhouettes, collision and roof coverage.
+
+Every compound shares one cubic driveway/courtyard sampler across ground materials, wheat exclusion, vegetation, the map and indirect ground albedo. Complete adjacent-tile context prevents driveways from stopping at chunk boundaries; component ownership prevents duplicate building geometry. Foundations flatten only dry ground under their footprints. The fixed Kephart farm has a continuous authored connector into the old road at (0,106). A new near-spawn farm begins outside the protected 20 m disk; its closest solid footprint is 36.76 m from the spawn point.
+
+The arrival alignment defect was a physical-clearance error: the old road blend could still show a strong rut while artificially increasing its distance enough to admit wheat roots. Clearance now follows actual occupancy while preserving the visible road center. Wheat also rejects strong rut samples explicitly. Near ground masks use 512 px and finer terrain sampling, with shared LOD edge heights. The 380 erroneous roots were removed; all 9,120 retained roots match their original transforms. Nearby original vegetation is preserved with its original random stream. No lake or mudflat geometry changed.
+
+## Verification
+
+- `node tests/compounds-v36/check.mjs`: protected layout, no wheat on strong ruts, 2,322 shared-edge samples (maximum error 2.57e-14 m), finite models, collision metadata, worker packet round trip, safe map landing and nearest-building navigation passed.
+- Independent integration review: 125,663 spawn-disk samples preserve the corrected road, height and crop baseline; generated/fixed access seams pass; 3,498 water/shore samples and lake parameters remain identical.
+- Integrated planner audit: 43 compounds in 12 macros / 1.92 km², including two **naturally generated** hamlets. Minimum center separation is 122.43 m. Across 7,522 road samples the maximum distance to the nearest compound is 180.94 m. Natural hamlets occur near world (1198.69,179.10) and (622.56,833.03).
+- Walking-lookahead metadata uses 3 m/s and 20–35 s. These distance/placement checks are not a universal guarantee of visibility under every fog setting, camera direction or infinite-world route.
+- Native GLES rendered actual terrain, cereal, compound geometry and real material shaders/textures: 11 spawn, 27 farm and 30 hamlet material programs linked, zero GL errors. The farm image shows an actual planner-selected farm. The hamlet image is explicitly a forced asset pose; natural selection is proved separately by the planner audit. Diagnostic renders omit game fog/postprocessing/UI; the compound views also omit cereal/nature batches.
+- Managed browser checked the real map generator over the arrival/Kephart area and a naturally generated hamlet area. `tests/compounds-v36/map-preview.html` is a local inspection route, excluded from the published static site.
+- Full first-person browser gameplay and frame rate remain unverified because the managed browser cannot create WebGL2, including on the unchanged earlier game.
+
+`checks.json`, `integration-review.json`, `alignment-review.json` and `planner-report.json` retain bounded test evidence. `texture-prompts.txt` records generated material prompts. All subagents used Astra with the highest reasoning setting.

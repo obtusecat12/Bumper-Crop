@@ -1,7 +1,7 @@
-import {createLakeAccess} from './lake-access.js?v=35';
-import {pondShoreDistance,pondBankPoint,pondMetrics} from './lake-shape.js?v=35';
+import {createLakeAccess} from './lake-access.js?v=36';
+import {pondShoreDistance,pondBankPoint,pondMetrics} from './lake-shape.js?v=36';
 // Hierarchical agricultural ownership, independent of the 64m streaming cells.
-import {parcelSample as legacyParcel} from './patchwork-legacy.js?v=35';
+import {parcelSample as legacyParcel} from './patchwork-legacy.js?v=36';
 const SIZE=400,macros=new Map(),contexts=new Map();let sources=()=>({lakes:[],buildings:[]}),route=null;
 export const PARCEL_SIZE=SIZE;
 export function configurePatchwork(provider,router){sources=provider;route=router;macros.clear();contexts.clear();}

@@ -1,0 +1,26 @@
+Custom prompt source downloaded before generation:
+https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md
+
+BARN TEXTURE
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: tiling game diffuse texture for Level10 farm compound barn siding.
+subject and material: weathered faded oxide-red vertical barn timber siding, wood exposed at lower edges.
+style: Source Engine 2004–2007 photographic low-frequency realism; subdued diffuse palette, real wood and weathered paint, not painterly.
+composition: exact square fully-filled albedo tile; orthographic flat surface; seamless repeat on both axes; all pixels are surface texture.
+lighting: neutral even diffuse albedo, no light gradients or baked directional shadows.
+output: 1024 by 1024 pixel target.
+aspect ratio: 1:1.
+Avoid: perspective, depicted barn object or building, background, text, frames, painterly texture, directional shadows, illumination gradients, oversharpening.
+
+METAL TEXTURE
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: tiling game diffuse texture for Level10 farm compound cylindrical silos and windmill surfaces.
+subject and material: aged galvanized corrugated steel, gray zinc with sparse dark rust.
+style: Source Engine 2004–2007 photographic low-frequency realism; subdued diffuse palette, real worn zinc and metal, not painterly.
+composition: exact square fully-filled albedo tile; orthographic flat surface; seamless repeat on both axes; all pixels are surface texture.
+lighting: neutral even diffuse albedo, no light gradients or baked directional shadows.
+output: 1024 by 1024 pixel target.
+aspect ratio: 1:1.
+Avoid: perspective, depicted silo or windmill object, background, text, frames, painterly texture, directional shadows, illumination gradients, metallic glare, oversharpening.

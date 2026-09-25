@@ -1,0 +1,14 @@
+{
+  "scope": "20m radius around world spawn (0.6,52), seed CHLORINE / ABUNDANCE / 10",
+  "snapshots": ["baseline-dist", "current-dist"],
+  "rootCause": "Legacy arrival-road distance is increased by (1-opacity)*16 while rut retains substantial opacity. Vegetation consumes inflated distance; terrain paint and relief consume rut. Lake fade therefore permits wheat on strong ruts.",
+  "baselineCounterexample": {"x": 1, "z": 53.5, "distance": 2.0843973057148357, "rut": 0.9233176674415269, "wheatAllowed": true, "lakeClearance": 34.151132583618164},
+  "baselineGrid": {"spacing": 0.05, "points": 502652, "eligibleCropOnRutAbove0_14": 4355, "eligibleCropOnBilinearPaintAbove0_14": 5127, "maxAtlasRutError": 0.3912129820669711, "maxAtlasDistanceError": 1.4608262005965749, "maxTerrainHeightErrorMetres": 0.05339005062112279},
+  "currentGrid": {"spacing": 0.1, "points": 125663, "rutAbove0_10": 3829, "eligibleCropOnRutAbove0_10": 0},
+  "actualBalancedNearWheat": {"baselineRoots": 9500, "baselineRootsOnRutAbove0_14": 89, "baselineMaxRutAtRoot": 0.9144401404014829, "currentRoots": 9120, "currentRootsOnRutAbove0_10": 0, "removedRoots": 380, "addedRoots": 0, "survivingTransformChanges": 0},
+  "preservation": {"cropIdGridSpacing": 0.5, "changedCropIds": 0, "maxMathematicalSurfaceHeightChangeMetres": 0},
+  "atlasExperiment": [{"size": 256, "maxRutError": 0.39121298206698685, "meanRutError": 0.03590563449462761}, {"size": 512, "maxRutError": 0.16374610309538007, "meanRutError": 0.009700821262918444}, {"size": 1024, "maxRutError": 0.055506524517967906, "meanRutError": 0.0026411362062761764}],
+  "uniformMeshExperiment": [{"spacing": 0.25, "maxHeightError": 0.031661261298279425, "meanHeightError": 0.010302337052945245}, {"spacing": 0.125, "maxHeightError": 0.013169126547833032, "meanHeightError": 0.0026648362456021366}, {"spacing": 0.0625, "maxHeightError": 0.003703475214137719, "meanHeightError": 0.0006890584369773207}],
+  "packetFinding": "No packet or module-version offset defect found. Byte-exact owned patch atlases, flipY=false, per-chunk materials/uniforms, BigInt field metadata and shader hashes preserved in baseline roundtrip.",
+  "visualEvidenceLimitation": "Native GLES diagnostic scenes use actual ground, cereal and verge geometry/material shaders. They are not browser gameplay or performance measurements."
+}

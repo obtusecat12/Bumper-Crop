@@ -1,18 +1,19 @@
-import {makeReferenceBarn,isSharedReferenceBarnResource} from './reference-barn.js?v=35';
-import {isSharedLandmarkTexture} from './landmark-textures.js?v=35';
-import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=35';
-import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=35';
-import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=35';
+import {makeCompoundChunk,isSharedCompoundResource} from './compound-models.js?v=36';
+import {makeReferenceBarn,isSharedReferenceBarnResource} from './reference-barn.js?v=36';
+import {isSharedLandmarkTexture} from './landmark-textures.js?v=36';
+import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=36';
+import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=36';
+import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=36';
 import * as T from './vendor/three.module.min.js';
-import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=35';
-import {makeNature,isSharedNatureResource} from './nature.js?v=35';
-import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=35';
-import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=35';
-import {isSharedRuralTexture} from './rural-textures.js?v=35';
-import {makeLake,isSharedLakeResource} from './lake.js?v=35';
-import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=35';
-import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=35';
-import {createPowerLinePlanner,POWER_POLE_HEIGHT} from './power-lines.js?v=35';
+import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=36';
+import {makeNature,isSharedNatureResource} from './nature.js?v=36';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=36';
+import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=36';
+import {isSharedRuralTexture} from './rural-textures.js?v=36';
+import {makeLake,isSharedLakeResource} from './lake.js?v=36';
+import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=36';
+import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=36';
+import {createPowerLinePlanner,POWER_POLE_HEIGHT} from './power-lines.js?v=36';
 const powerLines=createPowerLinePlanner({CHUNK,field,laneOffset,surfaceHeight,pondShoreDistance});
 const UP=new T.Vector3(0,1,0),dummy=new T.Object3D();
 const box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,7);
@@ -63,6 +64,7 @@ export function* createChunkTask(f,level,quality,collected){
    const building=makeRuralBuilding(f,level);group.add(building.group);colliders.push(...building.colliders);pickups.push(...building.pickups);yield 'building';
    const yard=makeYardProps(f,level);group.add(yard.group);colliders.push(...yard.colliders);yield 'yard-props';
   }
+  if(f.compounds?.length){const compounds=makeCompoundChunk(f,level,wind);group.add(compounds.group);colliders.push(...compounds.colliders);pickups.push(...compounds.pickups);yield 'farm-compounds';}
   const barn=makeReferenceBarn(f,level,wind);if(barn){group.add(barn.group);colliders.push(...barn.colliders);yield 'reference-barn'}
   const farm=makePhotoFarmChunk(f,wind);if(farm){group.add(farm.group);colliders.push(...farm.colliders);yield 'photo-farm'}
   if(f.type==='pond'){group.add(makeLake(f,level,wind));yield 'lake'}
@@ -76,7 +78,7 @@ export function* createChunkTask(f,level,quality,collected){
 }
 // Offline validation can construct synchronously; gameplay advances one phase per frame.
 export function makeChunk(...args){const task=createChunkTask(...args);let step;do{step=task.next()}while(!step.done);return step.value}
-const isShared=r=>isSharedReferenceBarnResource(r)||isSharedLandmarkTexture(r)||isSharedMeadowResource(r)||isSharedPhotoFarmResource(r)||isSharedWheatResource(r)||isSharedNatureResource(r)||isSharedBuildingResource(r)||isSharedYardPropResource(r)||isSharedRuralTexture(r)||isSharedLakeResource(r)||isSharedGroundResource(r);
+const isShared=r=>isSharedCompoundResource(r)||isSharedReferenceBarnResource(r)||isSharedLandmarkTexture(r)||isSharedMeadowResource(r)||isSharedPhotoFarmResource(r)||isSharedWheatResource(r)||isSharedNatureResource(r)||isSharedBuildingResource(r)||isSharedYardPropResource(r)||isSharedRuralTexture(r)||isSharedLakeResource(r)||isSharedGroundResource(r);
 export const isSharedModelResource=r=>isShared(r)||[box,cylinder,glass,woodTex,brickTex,roofTex,...Object.values(materials)].includes(r);
 export function disposeChunk(chunk){if(chunk.disposePacketResources){chunk.disposePacketResources();return}const disposed=new Set();chunk.group.traverse(o=>{
  if(o.isInstancedMesh)o.dispose();

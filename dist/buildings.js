@@ -1,9 +1,11 @@
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=35';
+import {height,random} from './world.js?v=36';
+import {ruralTextures} from './rural-textures.js?v=36';
 
 // Main-wall dimensions; roof overhangs/optional porch are described by footprint.
 export const RURAL_BUILDING_SIZES = Object.freeze([[7,9,3],[2.8,3.2,2.7],[12,17,4.9],[13,19,5.1],[11,15,4.3],[13,9,3.7],[13,18,3.8],[8,11,3.2]].map(Object.freeze));
-export function buildingDimensions(f){return RURAL_BUILDING_SIZES[((f.variant||0)%8+8)%8].map(n=>n*(f.buildingScale||1));}
+export function unscaledBuildingDimensions(f){const d=RURAL_BUILDING_SIZES[((f.variant||0)%8+8)%8];return [f.buildingDimensions?.[0]||f.buildingWidth||d[0],f.buildingDimensions?.[1]||f.buildingDepth||d[1],f.buildingDimensions?.[2]||f.buildingHeight||d[2]];}
+export function buildingDimensions(f){return unscaledBuildingDimensions(f).map(n=>n*(f.buildingScale||1));}
 export function variantSize(v){return [...RURAL_BUILDING_SIZES[((v||0)%8+8)%8]];}
 const unitBox=new T.BoxGeometry(1,1,1).toNonIndexed();
 // The dusty floor grid is the sole top surface. Removing the slab's covered
@@ -67,6 +69,7 @@ const shared=new Set([unitBox,floorSlabGeo,barrelGeo,hoopGeo,stoneGeo,cylinder,w
 function material(color,map=null){let m=new T.MeshStandardMaterial({color,map,vertexColors:true,roughness:1,side:T.DoubleSide});shared.add(m);return m;}
 const M={wood:material('#938b7c',woodTex),red:material('#914e40',woodTex),darkRed:material('#72483d',woodTex),dark:material('#514b40',woodTex),trim:material('#bfbaa5',woodTex),brick:material('#956950',brickTex),brickDark:material('#71584b',brickTex),stone:material('#817b6c',stoneTex),roof:material('#4c5350',roofTex),tin:material('#7b827a',roofTex),rust:material('#795b45',roofTex),black:material('#202e2a'),metal:material('#515950'),floor:material('#867b61',floorTex),hay:material('#92815a')};
 export function isSharedBuildingResource(resource){return shared.has(resource);}
+M.farmRed=material('#c4bbb1',ruralTextures.barnRed);
 
 // Every board, brace, shingle-course and prop is merged by material. Vertex
 // colour gives deterministic wear without one material or draw call per board.
@@ -111,10 +114,11 @@ class Batch{
  finish(group){for(const [mat,a]of this.parts){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(a.p,3));g.setAttribute('normal',new T.Float32BufferAttribute(a.n,3));g.setAttribute('uv',new T.Float32BufferAttribute(a.u,2));g.setAttribute('color',new T.Float32BufferAttribute(a.c,3));g.computeBoundingSphere();g.computeBoundingBox();const mesh=new T.Mesh(g,mat);mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);}}
 }
 export function makeRuralBuilding(f,level=0){
- const v=((f.variant||0)%8+8)%8,[w,d,h]=variantSize(v),s=f.buildingScale||1,angle=f.buildingAngle||0;
+ const v=((f.variant||0)%8+8)%8,[w,d,h]=unscaledBuildingDimensions(f),s=f.buildingScale||1,angle=f.buildingAngle||0;
  const r=random((f.seed||1)^0x8a7e551),weather=.35+r()*.65,b=new Batch(r,weather),group=new T.Group(),colliders=[],pickups=[],rainRoofs=[];
  const y=f.buildingY??height(f.cx,f.cz,f.x,f.z),c=Math.cos(angle),sn=Math.sin(angle),isBrick=v===4;
- const wallMat=isBrick?(r()<.5?M.brick:M.brickDark):(v===2?M.red:v===3?(r()<.65?M.red:M.wood):v===6?M.darkRed:M.wood);
+ const defaultWall=isBrick?(r()<.5?M.brick:M.brickDark):(v===2?M.red:v===3?(r()<.65?M.red:M.wood):v===6?M.darkRed:M.wood);
+ const wallMat=f.buildingFinish==='red'?M.farmRed:f.buildingFinish==='gray'?M.wood:defaultWall;
  const roofMat=r()<.2?M.rust:r()<.55?M.roof:M.tin,trim=(v===2||v===3||v===6)?M.trim:M.dark;
  const front=d/2,back=-d/2,wallRuns=[],detailRandom=random((f.seed||1)^0x41c6f93b);b.halfWidth=w/2;b.halfDepth=d/2;
  function world(x,z){return{x:f.cx+s*(c*x+sn*z),z:f.cz+s*(-sn*x+c*z)};}

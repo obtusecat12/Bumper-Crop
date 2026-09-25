@@ -1,7 +1,9 @@
-import {surfaceHeight,buildingLocal,pondShoreDistance} from './world.js?v=35';
-import {REFERENCE_BARN as B} from './reference-barn-layout.js?v=35';
-import {farmRainRoof} from './weather-farm-roofs.js?v=35';
-const roofRecords=new WeakMap();
+import {compoundRainRoof} from './compound-models.js?v=36';
+import {surfaceHeight,buildingLocal,pondShoreDistance} from './world.js?v=36';
+import {REFERENCE_BARN as B} from './reference-barn-layout.js?v=36';
+import {farmRainRoof} from './weather-farm-roofs.js?v=36';
+const roofRecords=new WeakMap(),compoundRoofRecords=new WeakMap();
+function compoundRoofs(chunk){if(compoundRoofRecords.has(chunk))return compoundRoofRecords.get(chunk);const found=[];chunk.group?.traverse(o=>{if(o.userData?.compoundRainRoofs)found.push(...o.userData.compoundRainRoofs)});compoundRoofRecords.set(chunk,found);return found;}
 function roofs(chunk){if(roofRecords.has(chunk))return roofRecords.get(chunk);let found=[];chunk.group?.traverse(o=>{if(o.userData?.rainRoofs)found=o.userData.rainRoofs;});roofRecords.set(chunk,found);return found;}
 // Queries only loaded, authoritative chunks. Missing terrain produces no impacts.
 export function weatherSurface(x,z,state,chunks,pad=0){
@@ -10,6 +12,7 @@ export function weatherSurface(x,z,state,chunks,pad=0){
  let y=surfaceHeight(px,pz,f),roof=-1000,water=false;
  if(f.type==='pond'&&pondShoreDistance(px,pz,f)<0){y=Math.max(y,f.lakeY);water=true;}
  if(f.type==='building'){const p=buildingLocal(px,pz,f),scale=f.buildingScale||1,lx=p.x/scale,lz=p.z/scale;for(const r of roofs(chunk)){if(lx>=r.minX-pad/scale&&lx<=r.maxX+pad/scale&&lz>=r.minZ-pad/scale&&lz<=r.maxZ+pad/scale){const rx=Math.max(r.minX,Math.min(r.maxX,lx+Math.sign(r.yx)*pad/scale)),rz=Math.max(r.minZ,Math.min(r.maxZ,lz+Math.sign(r.yz)*pad/scale));roof=Math.max(roof,(f.buildingY??y)+.035+scale*(r.y0+r.yx*rx+r.yz*rz));}}}
+ if(f.compounds?.length)roof=Math.max(roof,compoundRainRoof(px,pz,compoundRoofs(chunk),pad));
  if(f.farm)roof=Math.max(roof,farmRainRoof(px+f.farm.x,pz+f.farm.z,pad));
  if(state.cx>=-1n&&state.cx<=3n&&state.cz>=-4n&&state.cz<=0n){
   const bx=x-(B.x-Number(state.cx)*64),bz=z-(B.z-Number(state.cz)*64);

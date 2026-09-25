@@ -1,0 +1,23 @@
+{
+  "version": 36,
+  "scope": "Bounded read-only integrated-world verification; no Site files edited by reviewer",
+  "resolvedFindings": [
+    "Arrival context now includes west neighbor: driveway mouth previously caused a 10.17cm terrain seam at world (0,12).",
+    "Arrival silo relocated from (40,2.85) to (50.2,9), clearing the existing horizontal road.",
+    "Arrival vegetation stream preserved: original tree seed 2447522595 restored at (6.0785538503,53.3368819207)."
+  ],
+  "protectedSpawnDisk": {
+    "center": [0.6,52], "radius": 20, "spacing": 0.1, "samples": 125663,
+    "comparison": "Frozen current-dist after road/wheat alignment fix, before compound integration",
+    "roadChanges": 0, "surfaceHeightChanges": 0, "cropIdChanges": 0,
+    "wheatEligibilityChanges": 0, "wheatRutContradictions": 0,
+    "actualBalancedDetailRoots": 9120, "actualRootsOnRutAbove0_1": 0,
+    "nearestNewSolidDistance": 36.76390893253871, "nearestNewSolid": "arrival barn"
+  },
+  "arrivalSeam": {"worldX": 0, "zRange": [8,18], "spacing": 0.125, "samples": 81, "failures": 0, "maxHeightDelta": 2.5646151868841116e-14},
+  "generatedDrivewaySeams": {"plans": 6, "crossings": 4, "failures": 0, "maxHeightDelta": 0},
+  "fixedFarmAccessSeams": {"worldXs": [0,64,128,192], "worldZRange": [98,121], "failures": 0},
+  "relocatedSilo": {"x": 50.2, "z": 9, "radiusIncludingRoofMargin": 3.05, "minBaseRoadClearance": 5.772894359831742, "maxRut": 0},
+  "lakePreservation": {"comparison": "V35 baseline", "waterAndShoreSamples": 3498, "maxSurfaceHeightDelta": 0, "lakePropertiesChanged": 0},
+  "visibleBuildings": "world.field disables old random building rendering outside the authored origin; immutable old topology interests remain downstream planning inputs intentionally"
+}
