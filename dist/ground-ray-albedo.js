@@ -1,4 +1,5 @@
-import {pondHabitat} from './lake-shape.js?v=34';
+import {shoreGrassCover} from './world.js?v=35';
+import {pondHabitat} from './lake-shape.js?v=35';
 /* Low-frequency CPU counterpart of ground.js's material, for diffuse rays.
  * Use initialized texture means in linear RGB. Spatial masks, macro noise,
  * meadow mix, yards, and shore colors follow the actual visible shader.
@@ -51,9 +52,11 @@ export function createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironm
   if(f.meadow){const m=meadow||meadowEnvironment(x,z,f.meadow,env),mg=grass.map((c,i)=>mix(c*[1.05,.96,.83][i],c*[.88,1.06,.91][i],m.moisture));scale(mg,.91+m.patchDensity*.15);
    const litter=smooth(.32,.70,1-m.patchDensity)*(.20+clods*.35);blend(mg,soil.map((c,i)=>c*[.80,.73,.57][i]),litter);blend(out,mg,smooth(.06,.76,m.cover));
   }
+  blend(out,grass.map((c,i)=>c*[.94,1.035,.96][i]),smooth(.04,.75,shoreGrassCover(x,z,f)));
   // Keep lane crossing and broad wheel coverage; the sub-metre scuff mask is
   // sampled at the triangle centre because its duty cycle is not fifty percent.
   let scuff=(1-smooth(.30,1.45,rd))*smooth(.57,.80,noise(qx*1.8,qz*1.8))*.36;scuff=Math.max(scuff,tracks[2]*(.54+soilPatch*.35));blend(out,dirt,scuff);blend(out,dirt,rut);
+  blend(out,dirt.map((c,i)=>c*[.57,.56,.50][i]),(roadProfile(x,z,f,{}).mud||0)*(.75+soilPatch*.25));
   if(f.type==='building'){
    const local=buildingLocal(x,z,f),size=buildingSize(f),hx=size[0]/2,hz=size[1]/2,a=Math.abs(local.x)-hx,b=Math.abs(local.z)-hz,e=Math.hypot(Math.max(a,0),Math.max(b,0))+Math.min(Math.max(a,b),0);
    const edge=(soilPatch-.5)*1.60+(broad-.5)*1.20+Math.sin(local.x*.43+local.z*.27)*.20,yard=1-smooth(.65,3.35,e+edge),yd=scale(dirt.slice(),.94+soilPatch*.08);

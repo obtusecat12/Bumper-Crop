@@ -1,0 +1,28 @@
+{
+  "seed": 4244718517,
+  "pass": true,
+  "birthSamples": 648,
+  "seamSamples": 2176,
+  "maxSeamError": 7.105427357601002e-15,
+  "unchangedShoreSamples": 1465,
+  "macroSpans": [
+    343.4923742013052,
+    449.31694500148296
+  ],
+  "parcels": 317,
+  "depths": {
+    "1": 17,
+    "2": 26,
+    "3": 158,
+    "4": 116
+  },
+  "smallParcels": 213,
+  "largeParcels": 19,
+  "roads": 117,
+  "turnarounds": 2,
+  "mainLaneReconnectionErrors": [
+    5.789025880084347e-11,
+    1.1550759494510729e-13
+  ],
+  "contextBytes": 13441
+}

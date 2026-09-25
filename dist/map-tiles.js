@@ -1,8 +1,8 @@
-import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=34';
-import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=34';
-import {field,cropSample,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=34';
-import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=34';
-import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=34';
+import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=35';
+import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=35';
+import {shoreGrassCover,field,cropSample,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=35';
+import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=35';
+import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=35';
 
 // A geography-only view of the existing world. Never imports Three, terrain,
 // textures, vegetation geometry, or the streamed chunk manager.
@@ -58,6 +58,7 @@ function drawParcels(ctx,f,n){
  const colors=[[184,164,108],[149,121,84],[116,96,72]];
  for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=(i+.5)*64/n,z=(j+.5)*64/n;cropSample(x,z,f,crop);roadProfile(x,z,f,road);
   let color=colors[crop.crop],v=crop.tone*(crop.crop===2?(1+(Math.cos(crop.row*1.57)>.55?.025:-.01)):1),kind=crop.crop;
+  const margin=shoreGrassCover(x,z,f);if(margin>.23){color=[113,131,81];v=.92+margin*.08;kind=4;}
   if(road.distance<2.1){color=road.rut>.13?[132,111,79]:[107,122,74];v=1;kind=road.rut>.13?3:4;}
   const k=j*n+i;classes[k]=kind;pixels.data[k*4]=color[0]*v;pixels.data[k*4+1]=color[1]*v;pixels.data[k*4+2]=color[2]*v;pixels.data[k*4+3]=255;
  }g.putImageData(pixels,0,0);ctx.drawImage(layer,0,0,64,64);return{size:n,classes};

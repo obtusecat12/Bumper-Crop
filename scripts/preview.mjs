@@ -18,6 +18,7 @@ createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://terminal.local');
   if(url.pathname==='/__visual-check.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await visualCheck(url));return;}
+  if(url.pathname==='/__roads-v35.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/roads-v35/map-preview.html')));return;}
   if(url.pathname==='/__repair-v34.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/repair-v34/map-preview.html')));return;}
   if(url.pathname==='/__crops-v33.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/patchwork-v33/crop-preview.html')));return;}
   if(url.pathname==='/__patchwork-v33.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/patchwork-v33/map-preview.html')));return;}
