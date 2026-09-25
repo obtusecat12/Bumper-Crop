@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "wideFocalMM": 2.4774874568481127,
+  "sixMMHyperfocalMeters": 2.5774285714285714,
+  "wideFarRadiusPixels": 0.08459054077260471,
+  "teleNearFocusRadiusPixels": 3.413849093786328,
+  "maxAFQueriesPerSecond": 8,
+  "normalSkySamples": 14,
+  "highSkySamples": 17,
+  "halfResolutionPasses": 4,
+  "cloudAltitudes": [
+    3000,
+    1200,
+    400
+  ]
+}

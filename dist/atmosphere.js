@@ -1,15 +1,16 @@
-import {weatherTextures} from './weather-textures.js?v=41';
-import {createFogVolume,fogVolumePars} from './fog-volume.js?v=41';
+import {weatherTextures} from './weather-textures.js?v=42';
+import {createFogVolume,fogVolumePars} from './fog-volume.js?v=42';
 import * as T from './vendor/three.module.min.js';
 
 // One generated, periodic 3D texture, genuine bounded volume integration, and
 // material fog. There is no screen-space noise, flat cloud layer or fog plane.
 const PERIOD = 65536;
-const QUALITY_STEPS = {low: 16, balanced: 32, high: 48};
-const MARCH_STEPS=Object.fromEntries(Object.values(QUALITY_STEPS).map(count=>[count,Array.from({length:48},(_,i)=>{
-  const a=(Math.min(i,count)/count)**1.55,b=(Math.min(i+1,count)/count)**1.55;
-  return new T.Vector2(a,b-a);
-})]));
+export const CLOUD_LAYERS=Object.freeze([
+ {name:'altostratus',altitude:3000,bottom:2800,top:3200,wind:[2.56,1.024]},
+ {name:'stratocumulus',altitude:1200,bottom:1000,top:1500,wind:[5.6,-1.8]},
+ {name:'scud',altitude:400,bottom:340,top:460,wind:[10.24,2.56]}
+]);
+const QUALITY_STEPS={low:6,balanced:8,high:10};
 const clamp01 = x => Math.min(1, Math.max(0, Number(x) || 0));
 function worldOrigin(value) {
   // BigInt values are 64 m world-cell indices; numbers are offsets in metres.
@@ -62,7 +63,7 @@ function cellularNoise(points,x,y,z) {
   }
   return 1-Math.min(1,Math.sqrt(nearest)*.85);
 }
-function makeCloudNoise(size = 64) {
+export function makeCloudNoise(size = 64) {
   const coarse = makeLattice(4, 912), fine = makeLattice(8, 1921), erosion = makeLattice(16, 8173);
   const data = new Uint8Array(size * size * size * 4);
   const cells = makeCellPoints(8);
@@ -88,7 +89,7 @@ function makeCloudNoise(size = 64) {
   return texture;
 }
 
-const cloudVertex = `
+export const cloudVertex = `
 varying vec3 vCloudDirection;
 void main() {
   vCloudDirection = position;
@@ -96,7 +97,7 @@ void main() {
   gl_Position.z=gl_Position.w*.999999;
 }`;
 
-const cloudFragment = `
+export const cloudFragment = `
 precision highp sampler3D;
 varying vec3 vCloudDirection;
 uniform sampler3D uCloudNoise;
@@ -109,42 +110,65 @@ uniform float uCloudRain;
 uniform int uCloudSteps;
 uniform vec4 uSkyEvent;
 uniform sampler2D uSkyWallpaper;
-uniform vec2 uCloudMarch[48];
+
 uniform vec3 uStageEvent;
 ${fogVolumePars}
 
-// Integer-period spatial scales keep the BigInt origin wrap invisible.
-// Two 3D fetches, as before: a rounded low deck and a faster upper field.
-// Their relative advection and RGBA warp deform the volume continuously.
-float cloudDensity(vec3 p, float footprint) {
-  float h = (p.y - 92.0) / 124.0;
-  if (h <= 0.0 || h >= 1.0) return 0.0;
-  vec3 lower = p + vec3(uCloudTime * 1.35, uCloudTime * .065, uCloudTime * .46);
-  lower.x += (p.y - 92.0) * .18;
-  vec4 shape = textureLod(uCloudNoise, lower / 512.0, max(0.0, log2(footprint / 8.0)));
-  // The upper layer slips across the lower billows. Slow vertical evolution
-  // and the local warp prevent either erosion or highlights moving as a card.
-  vec3 upper = p + vec3(uCloudTime * 2.75, -uCloudTime * .095, -uCloudTime * .38);
-  upper.x += (p.y - 92.0) * .65;
-  upper += (shape.gbr - .5) * vec3(20.0, 11.0, 20.0);
-  vec4 detail = textureLod(uCloudNoise, upper / vec3(512.0, 128.0, 256.0) + vec3(.17, .31, .11), max(0.0, log2(footprint / 2.0)));
-  // Broad cellular lobes carry the lower surface; independent detail is a
-  // restrained edge erosion, preserving soft, rounded marshmallow volumes.
-  float feather = .14 + min(.18, footprint * .003);
-  float roundness = smoothstep(.12, .85, shape.a);
-  float base = .025 + .31 * (1.0 - roundness) + .035 * (1.0 - shape.r);
-  float lowProfile = smoothstep(base - feather * .5, base + feather, h)
-    * (1.0 - smoothstep(.54, .83, h));
-  float billows = shape.r * .40 + shape.a * .60;
-  float erosion = (1.0 - detail.a) * .090 + (1.0 - detail.b) * .045;
-  float lowerBody = max(0.0, billows - (.30 - uCloudRain * .025) - erosion);
-  // A high, smoother overcast lid remains behind the lower rounded masses.
-  // Separate density/altitude kernels make the two wind speeds perceptible.
-  float highBase = .36 + .18 * (1.0 - detail.r);
-  float highProfile = smoothstep(highBase - feather * .2, highBase + feather, h)
-    * (1.0 - smoothstep(.78, 1.0, h));
-  float upperBody = .06 + .23 * smoothstep(.23, .72, detail.r * .7 + detail.a * .3);
-  return (lowerBody * lowProfile * 1.30 + upperBody * highProfile) * (1.0 + uCloudRain * .24);
+// Three real world-height slabs. All spatial periods divide 65536 m, so
+// rebasing an arbitrarily large BigInt world coordinate never jumps the sky.
+vec4 volumeNoise(vec3 p,vec3 scale,float lod){return textureLod(uCloudNoise,p/scale,lod);}
+float cloudDensity(vec3 p,int layer,float lod){
+ float bottom=layer==0?2800.:layer==1?1000.:340.;
+ float top=layer==0?3200.:layer==1?1500.:460.;
+ float h=clamp((p.y-bottom)/(top-bottom),0.,1.);
+ vec3 scale=layer==0?vec3(8192.,2048.,8192.):layer==1?vec3(4096.,2048.,4096.):vec3(2048.,1024.,1024.);
+ vec2 velocity=layer==0?vec2(2.56,1.024):layer==1?vec2(5.6,-1.8):vec2(10.24,2.56);
+ p.xz+=velocity*uCloudTime;
+ // Slow evolution in Y changes the density, not just a scrolling wallpaper.
+ p.y+=sin(uCloudTime*.008+float(layer)*2.)*24.;
+ vec4 warp1=volumeNoise(p,scale,1.);
+ vec3 warped=p+(warp1.gbr-.5)*scale*.18;
+ vec4 warp2=volumeNoise(warped+vec3(139.,47.,271.),scale*.5,1.);
+ warped+=(warp2.brg-.5)*scale*.085;
+ vec4 shape=volumeNoise(warped,scale,lod);
+ if(layer==0)return (.20+.16*shape.r)*smoothstep(0.,.15,h)*(1.-smoothstep(.84,1.,h));
+ vec4 detail=volumeNoise(warped+vec3(211.,-97.,401.),scale*.25,min(3.,lod+.5));
+ // Worley erosion of fBm yields rounded cores and ragged, wind-sheared edges.
+ float body=shape.r*.67+shape.a*.33-(1.-detail.a)*.14;
+ float evolution=.018*sin(uCloudTime*.013+shape.g*5.);
+ float threshold=layer==1?.26:.40;
+ float density=max(0.,body-threshold+evolution+uCloudRain*.025);
+ float base=layer==1?.015+.22*(1.-shape.a):.03;
+ float profile=smoothstep(base,base+.17,h)*(1.-smoothstep(.62,1.,h));
+ return density*profile*(layer==1?1.8:2.4);
+}
+vec3 integrateLayer(vec3 background,vec3 ro,vec3 rd,int layer){
+ float bottom=layer==0?2800.:layer==1?1000.:340.;
+ float top=layer==0?3200.:layer==1?1500.:460.;
+ float entry=max(0.,(bottom-ro.y)/rd.y),finish=(top-ro.y)/rd.y;
+ if(finish<=entry)return background;
+ int count=layer==0?2:layer==1?uCloudSteps:(uCloudSteps/2);
+ float ds=(finish-entry)/float(count),Tview=1.;vec3 L=vec3(0.);
+ float lod=clamp(log2(max(1.,ds/95.)),0.,2.5);
+ for(int i=0;i<10;i++){
+  if(i>=count||Tview<.015)break;
+  vec3 p=ro+rd*(entry+(float(i)+.5)*ds);float D=cloudDensity(p,layer,lod);
+  float h=clamp((p.y-bottom)/(top-bottom),0.,1.);
+  // Vertical optical thickness: diffuse light enters from the whole sky,
+  // no sun-facing bright rim or directional hotspot in normal overcast.
+  float tau=D*(1.-h)*12.;
+  float beer=exp(-tau),powder=1.-exp(-2.*D);
+  float multiple=.10*(1.-exp(-tau*.45));
+  float diffuse=clamp(.09+.68*beer+.21*beer*powder+multiple,0.,1.);
+  vec3 shade=mix(vec3(.045,.057,.069),vec3(.42,.455,.48),diffuse);
+  if(layer==0)shade=mix(vec3(.35,.378,.398),vec3(.47,.49,.51),beer);
+  if(layer==2)shade*=.78;
+  shade*=1.-uCloudRain*.14;
+  float extinction=layer==0?.018:layer==1?.018:.030;
+  float opacity=1.-exp(-D*ds*extinction);
+  L+=Tview*opacity*shade;Tview*=1.-opacity;
+ }
+ return L+Tview*background;
 }
 
 void main() {
@@ -153,48 +177,13 @@ void main() {
   float elevation = max(rd.y, 0.0);
   vec3 upperSky = vec3(.445, .473, .484) - uCloudRain * .055;
   vec3 skyColor = mix(uCloudFogColor, upperSky, smoothstep(.01, .62, elevation));
-  if (rd.y > .025 && uSkyEvent.x<.995 && uSkyEvent.y<.995 && uSkyEvent.z<.995 && uCloudMist<.88) {
-    float entry = max(0.0, (92.0 - ro.y) / rd.y);
-    float finish = min(2600.0, (216.0 - ro.y) / rd.y);
-    if (finish > entry) {
-      float rayLength = finish - entry;
-      // A coherent phase from the same WORLD-space field breaks up repeated
-      // altitude samples. This adds no screen-space grain or temporal jitter.
-      float phase = .25 + .5 * textureLod(uCloudNoise, (ro + rd * entry) / 128.0, 0.0).b;
-      vec3 rayLight = vec3(0.0);
-      float transmittance = 1.0;
-      vec3 lightDirection = normalize(vec3(-.45, .84, -.30));
-      for (int i = 0; i < 48; i++) {
-        if (i >= uCloudSteps || transmittance < .004) break;
-        // Identical altitude distribution, computed once for each quality tier.
-        // Avoid two repeated pow() operations in every cloud integration step.
-        float start = rayLength * uCloudMarch[i].x;
-        float stepSize = rayLength * uCloudMarch[i].y;
-        float t = entry + start + phase * stepSize;
-        vec3 p = ro + rd * t;
-        float density = cloudDensity(p, max(1.0, stepSize * .65));
-        if (density > .001) {
-          float h = clamp((p.y - 92.0) / 124.0, 0.0, 1.0);
-          // Low uses an analytic overhead extinction estimate; other tiers
-          // take one forward density sample, never a nested light raymarch.
-          float towardLight = uCloudSteps <= 16 ? density * (1.12 - h * .6) : cloudDensity(p + lightDirection * 18.0, max(1.0, stepSize * .80));
-          float lightVisibility = exp(-towardLight * 16.0);
-          float gradientLight = clamp((density - towardLight) * 2.2, -.14, .20);
-          float diffuse = clamp(.14 + .26 * h + .64 * lightVisibility + gradientLight, 0.0, 1.0);
-          float innerScatter = (1.0 - exp(-density * 12.0)) * .05;
-          vec3 illumination = mix(vec3(.11, .139, .155), vec3(.57, .592, .596), diffuse + innerScatter);
-          illumination *= 1.0 - uCloudRain * .12;
-          float sampleOpacity = 1.0 - exp(-density * stepSize * .22);
-          rayLight += transmittance * sampleOpacity * illumination;
-          transmittance *= 1.0 - sampleOpacity;
-        }
-      }
-      vec3 clouds = rayLight + transmittance * skyColor;
-      // Atmospheric perspective erases the volume's finite range below the
-      // visible horizon; the lower sky exactly meets Three's scene-fog color.
-      float cloudVisibility = smoothstep(.025, .115, rd.y) * exp(-entry * (.00040 + uCloudMist * .00045));
-      skyColor = mix(skyColor, clouds, cloudVisibility);
-    }
+  if(rd.y>.012 && uSkyEvent.x<.995 && uSkyEvent.y<.995 && uSkyEvent.z<.995 && uCloudMist<.95){
+   // Composite distant -> close. The high deck never opens onto blue sky.
+   vec3 layers=integrateLayer(skyColor,ro,rd,0);
+   layers=integrateLayer(layers,ro,rd,1);
+   layers=integrateLayer(layers,ro,rd,2);
+   float visibility=smoothstep(.012,.13,rd.y)*(1.-uCloudMist*.8);
+   skyColor=mix(skyColor,layers,visibility);
   }
   vec3 sunDir=normalize(mix(vec3(-.45,.84,-.30),vec3(-.86,.065,-.45),uSkyEvent.w));
   float sunDot=max(0.,dot(rd,sunDir));
@@ -213,8 +202,8 @@ void main() {
   clearSky+=solar*(pow(sunDot,90.)*.18+pow(sunDot,900.)*.16+smoothstep(.99988,.99998,sunDot)*2.0);
   // Thin remnants of cloud catch the last light and retain spatial scale.
   if(rd.y>.03 && uSkyEvent.z>.01){
-   vec3 cloudP=ro+rd*(165./max(rd.y,.06));
-   vec4 veil=textureLod(uCloudNoise,(cloudP+vec3(uCloudTime*.7,0.,0.))/vec3(512.,128.,512.),1.);
+   vec3 cloudP=ro+rd*((1200.-ro.y)/max(rd.y,.06));
+   vec4 veil=textureLod(uCloudNoise,(cloudP+vec3(uCloudTime*5.6,0.,uCloudTime*-1.8))/vec3(4096.,2048.,4096.),1.);
    float veilAmount=smoothstep(.53,.72,veil.g)*.24*smoothstep(.035,.16,rd.y);
    vec3 veilColor=mix(vec3(.79,.82,.83),mix(vec3(.20,.22,.29),vec3(.88,.52,.34),sunward),uSkyEvent.w);
    clearSky=mix(clearSky,veilColor,veilAmount);
@@ -423,7 +412,7 @@ export function installLayeredFog({scene,noiseTexture=null,volumeUniforms={}} = 
 /**
  * createAtmosphere({scene, quality}) -> {sky, update, attachFog, dispose}
  * update({time,quality,camera,originX:state.cx,originZ:state.cz,mist,rain})
- * Quality: low=16 / balanced=32 / high=48 bounded samples, early termination.
+ * Quality: low=11 / balanced=14 / high=17 total slab samples, early termination.
  * Call attachFog(group) once for each completed streaming chunk/detail layer.
  * The original scene.fog near/far/color remain controlled by weather().
  */
@@ -443,18 +432,17 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
     uCloudTime: {value: 0},
     uCloudMist: {value: 0},
     uCloudRain: {value: 0},
-    uCloudSteps: {value: QUALITY_STEPS[quality] || QUALITY_STEPS.balanced},
-    uCloudMarch: {value:MARCH_STEPS[QUALITY_STEPS[quality] || QUALITY_STEPS.balanced]}
+    uCloudSteps: {value: QUALITY_STEPS[quality] || QUALITY_STEPS.balanced}
   };
   // Three r180 converts ShaderMaterial to GLSL ES 3 automatically. Keeping its
   // normal prefix preserves gl_FragColor and output color-space handling.
   const material = new T.ShaderMaterial({
-    name: 'bounded-overcast-volume',
+    name: 'three-altitude-overcast-v42',
     side: T.BackSide, depthWrite: false, depthTest: true, fog: false,
     toneMapped: false, uniforms, vertexShader: cloudVertex, fragmentShader: cloudFragment
   });
   const sky = new T.Mesh(new T.SphereGeometry(420, 24, 16), material);
-  sky.name = 'moving-volumetric-overcast';
+  sky.name = 'three-layer-dynamic-overcast';
   // Draw after opaque scenery so the depth buffer rejects hidden sky pixels.
   sky.renderOrder = 1000;
   sky.frustumCulled = false;
@@ -466,7 +454,7 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
     uniforms.uCloudMist.value = clamp01(mist);
     uniforms.uCloudRain.value = clamp01(rain);
     uniforms.uCloudOrigin.value.set(worldOrigin(originX), worldOrigin(originZ));
-    if (q){uniforms.uCloudSteps.value = QUALITY_STEPS[q] || QUALITY_STEPS.balanced;uniforms.uCloudMarch.value=MARCH_STEPS[uniforms.uCloudSteps.value];}
+    if (q){uniforms.uCloudSteps.value = QUALITY_STEPS[q] || QUALITY_STEPS.balanced;}
     if (camera) {sky.position.copy(camera.position); uniforms.uCloudCamera.value.copy(camera.position);}
     const currentFog = scene?.fog || fog;
     if (currentFog?.color) uniforms.uCloudFogColor.value.copy(currentFog.color);

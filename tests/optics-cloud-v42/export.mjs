@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import * as T from '../../dist/vendor/three.module.min.js';
+import {cloudVertex,cloudFragment,makeCloudNoise,CLOUD_LAYERS} from '../../dist/atmosphere.js';
+import {cocFragment,dilateFragment} from '../../dist/dof-shaders.js';
+import {passVertex,fusedFragment,resolveFragment} from '../../dist/water-pipeline.js';
+const dir=process.argv[2];fs.mkdirSync(dir,{recursive:true});
+const expand=s=>s.replace(/#include <([^>]+)>/g,(_,k)=>expand(T.ShaderChunk[k]));
+const vp='#version 300 es\nprecision highp float;precision highp int;\n#define varying out\nin vec3 position;uniform mat4 projectionMatrix,modelViewMatrix;\n';
+const fp='#version 300 es\nprecision highp float;precision highp int;\n#define varying in\n#define texture2D texture\nout vec4 result;\n#define gl_FragColor result\nvec4 linearToOutputTexel(vec4 c){return c;}\n';
+const shaders={sky:{vertex:vp+expand(cloudVertex),fragment:fp+expand(cloudFragment)}};
+for(const [k,fragment]of Object.entries({coc:cocFragment,dilate:dilateFragment,fused:fusedFragment,resolve:resolveFragment}))shaders[k]={vertex:'#version 300 es\n'+passVertex,fragment:'#version 300 es\n'+fragment};
+fs.writeFileSync(dir+'/shaders.json',JSON.stringify(shaders));
+const noise=makeCloudNoise();fs.writeFileSync(dir+'/noise.bin',noise.image.data);
+fs.writeFileSync(dir+'/layers.json',JSON.stringify(CLOUD_LAYERS,null,2));noise.dispose();
+console.log('Exported production sky, separated CoC/dilate/bokeh/resolve shaders and noise.');
