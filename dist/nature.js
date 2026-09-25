@@ -1,14 +1,16 @@
+import {twigTexture} from './photo-trees.js?v=39';
 import * as T from './vendor/three.module.min.js';
-import {attachRuralDetail} from './rural-textures.js?v=38';
-import {JoinedWood} from './joined-wood.js?v=38';
-import {height} from './world.js?v=38';
+import {attachRuralDetail} from './rural-textures.js?v=39';
+import {JoinedWood} from './joined-wood.js?v=39';
+import {height} from './world.js?v=39';
 
 // Open-grown eastern/central US farm trees. The crown follows the woody branch
 // hierarchy; every foliage instance is a little open spray of individual leaves.
 // width on a shrub is its approximate full spread in metres, before scale.
 const TAU=Math.PI*2, UP=new T.Vector3(0,1,0), V=(x=0,y=0,z=0)=>new T.Vector3(x,y,z);
 const shared=new Set(), leafGeometries=new Map(), windMaterials=new WeakMap();
-const depthMaterials=new WeakMap();
+const depthMaterials=new WeakMap();let leafAtlas;
+function getLeafAtlas(){if(leafAtlas)return leafAtlas;const shapes=['broad','maple','narrow','willow','needle'],data=new Uint8Array(256*256*4*5);shapes.forEach((shape,i)=>data.set(twigTexture(shape).image.data,i*256*256*4));leafAtlas=new T.DataArrayTexture(data,256,256,5);Object.assign(leafAtlas,{colorSpace:T.SRGBColorSpace,magFilter:T.LinearFilter,minFilter:T.LinearMipmapLinearFilter,generateMipmaps:true,anisotropy:4});leafAtlas.needsUpdate=true;shared.add(leafAtlas);return leafAtlas;}
 const fallbackWind={time:{value:0},strength:{value:.5}};
 const woodMaterial=new T.MeshStandardMaterial({color:0xffffff,vertexColors:true,roughness:1});
 attachRuralDetail(woodMaterial,'bark');
@@ -19,10 +21,10 @@ function rng(seed){let a=seed>>>0;return()=>{a+=0x6D2B79F5;let t=a;t=Math.imul(t
 function seedFor(item,f,index,salt){return (item.seed??((f.seed||1)^Math.imul(index+1,2654435761)^salt))>>>0}
 function leafMaterial(wind,species){
  const key=wind&&typeof wind==='object'?wind:fallbackWind;
- const kind=species===5||species===6?'fineleaf':'broadleaf';
+ const shape=species===5?'needle':species===3?'maple':species===4||species===6?'narrow':'broad',kind=shape;
  if(!windMaterials.has(key))windMaterials.set(key,new Map());
  const variants=windMaterials.get(key);if(variants.has(kind))return variants.get(kind);
- const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1,side:T.DoubleSide});
+ const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1,side:T.DoubleSide,map:twigTexture(shape),alphaTest:.33});
  m.name='Nature / softly lit moving leaves';
  // The material stays white. The only green tint is instanceColor; there is no
  // second dark material multiplier or shadow baked into the spray geometry.
@@ -35,65 +37,28 @@ function leafMaterial(wind,species){
     transformed.x+=sin(uNatureTime*1.42+nphase+position.y*2.1)*.046*uNatureWind*nflex;
     transformed.z+=cos(uNatureTime*1.13+nphase*1.4)*.027*uNatureWind*nflex;
    #endif`);
- };m.customProgramCacheKey=()=> 'nature-leaves-v5-attached';
- const depth=new T.MeshDepthMaterial({side:T.DoubleSide,depthPacking:T.RGBADepthPacking});
+ };const windCompile=m.onBeforeCompile;
+ m.onBeforeCompile=s=>{windCompile(s);s.uniforms.uNatureAtlas={value:getLeafAtlas()};s.vertexShader='attribute float natureSpecies;flat varying float vNatureSpecies;\n'+s.vertexShader;s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvNatureSpecies=natureSpecies;');s.fragmentShader='uniform highp sampler2DArray uNatureAtlas;flat varying float vNatureSpecies;\n'+s.fragmentShader;s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>','diffuseColor*=texture(uNatureAtlas,vec3(vMapUv,vNatureSpecies));');};
+ m.customProgramCacheKey=()=> 'unified-alpha-nature-v39';
+ const depth=new T.MeshDepthMaterial({side:T.DoubleSide,map:m.map,alphaTest:.33,depthPacking:T.RGBADepthPacking});
  depth.onBeforeCompile=m.onBeforeCompile;depth.customProgramCacheKey=()=> 'nature-moving-depth-v15';
  depthMaterials.set(m,depth);shared.add(depth);
- attachRuralDetail(m,kind);variants.set(kind,m);shared.add(m);return m;
+ variants.set(kind,m);shared.add(m);return m;
 }
 
 function foliageGeometry(species,level,attached=false){
  const key=species+':'+level+(attached?':attached':'');if(leafGeometries.has(key))return leafGeometries.get(key);
- const p=[],r=rng(3001+species*727);
- function tri(a,b,c){for(const v of[a,b,c])p.push(v.x,v.y,v.z)}
- // Small green shoots are part of the same instanced mesh as their leaves.
- // Crossed stem ribbons join every tier; petioles share the leaf-base vertex. Their
- // shared vertices receive exactly the same wind, with the woody base pinned.
- function shoot(){
-  const nodes=level===2?[0,.12,.825]:level===1?[0,.12,.59,.825]:[0,.12,.355,.59,.825];
-  for(let j=1;j<nodes.length;j++)for(let plane=0;plane<2;plane++){
-   const a=plane*Math.PI*.5,side=V(Math.cos(a),0,Math.sin(a)),lo=V(0,nodes[j-1],0),hi=V(0,nodes[j],0),rw=.009*(1-nodes[j-1]*.55),tw=.009*(1-nodes[j]*.55);
-   const al=lo.clone().addScaledVector(side,-rw),ar=lo.clone().addScaledVector(side,rw),bl=hi.clone().addScaledVector(side,-tw),br=hi.clone().addScaledVector(side,tw);
-   tri(al,ar,bl);tri(ar,br,bl);
-  }
+ const p=[],uv=[],n=[],index=[];
+ // Preserve every branch endpoint and spray transform. Resolve its small leaves
+ // in alpha, instead of submitting 50-150 triangles for each little shoot.
+ const width=species===5?1.05:species===6?.93:1.25,top=species===5?1.48:1.28;
+ for(let plane=0;plane<2;plane++){
+  const base=p.length/3;for(const [side,y,u,v] of [[-1,0,0,0],[1,0,1,0],[1,1,1,1],[-1,1,0,1]]){
+   p.push(plane?0:side*width*.5,y*top,plane?side*width*.5:0);uv.push(u,v);
+   const norm=V(plane?0:side*.24,.75,plane?side*.24:0).normalize();n.push(norm.x,norm.y,norm.z);
+  }index.push(base,base+1,base+2,base,base+2,base+3);
  }
- if(attached)shoot();
- function leaf(center,axis,side,len,w,shape){
-  const tip=center.clone().addScaledVector(axis,len*.62),base=center.clone().addScaledVector(axis,-len*.38);
-  const l=center.clone().addScaledVector(side,w),rr=center.clone().addScaledVector(side,-w);
-  // Fold along the midrib so different little leaves catch the overcast light.
-  l.z+=w*.20;rr.z+=w*.16;
-  if(shape===0||shape===3){
-   const lt=center.clone().addScaledVector(axis,len*.34).addScaledVector(side,w*.70),rt=center.clone().addScaledVector(axis,len*.34).addScaledVector(side,-w*.70);
-   lt.z+=w*.12;rt.z+=w*.15;tri(base,l,tip);tri(l,lt,tip);tri(base,tip,rr);tri(rr,tip,rt);
-  }else{tri(base,l,tip);tri(base,tip,rr)}
- }
- if(species===5){
-  // Three interleaved flat cedar fans; each needle-scale is a tapered blade.
-  const tiers=level===0?7:level===1?5:4;
-  for(let plane=0;plane<3;plane++)for(let j=0;j<tiers;j++)for(const sign of[-1,1]){
-   const a=plane*Math.PI/3,side=V(Math.cos(a)*sign,.22,Math.sin(a)*sign),y=.04+j/tiers*1.16;
-   const spread=(1-y*.63)*(.37+r()*.12),c=V(0,y,0),e=c.clone().addScaledVector(side,spread);e.y+=.27;
-   tri(c,e,c.clone().add(V(Math.cos(a)*sign*.085,.28,Math.sin(a)*sign*.085)));
-  }
- }else{
-  // Attached LODs retain a subset of the same four tiers, using the same RNG
-  // samples and endpoints. Never enlarge or move leaves to disguise a gap.
-  const tiers=attached?4:level===0?4:level===1?3:2,planes=species===6?2:3;
-  for(let plane=0;plane<planes;plane++)for(let j=0;j<tiers;j++)for(const sign of[-1,1]){
-   const a=plane*Math.PI*2/planes+.37*(r()-.5),rad=(species===6?.16:.22)+.09*j,side=V(Math.cos(a)*sign,0,Math.sin(a)*sign);
-   const y=.12+j/tiers*.94+r()*.075,c=V(side.x*rad,y,side.z*rad),axis=side.clone().multiplyScalar(.84).add(V(0,.45+(r()-.5)*.45,0)).normalize();
-   const across=V(-Math.sin(a),.18*(r()-.5),Math.cos(a)).normalize(),enlarge=attached||level===0?1:level===1?1.14:1.43;
-   const len=(species===4?.27:species===6?.34:.40)*enlarge*(.87+r()*.27),w=len*(species===1?.53:species===2?.36:species===4?.42:.48);
-   if(attached){
-    if(level===1&&j===1||level===2&&(j===1||j===2))continue;
-    const node=V(0,.12+j*.235,0),base=c.clone().addScaledVector(axis,-len*.38),petioleSide=V(-Math.sin(a),0,Math.cos(a)).multiplyScalar(.006);
-    tri(node.clone().sub(petioleSide),node.clone().add(petioleSide),base);
-   }
-   leaf(c,axis,across,len,w,species);
-  }
- }
- const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('natureFlex',new T.Float32BufferAttribute(p.filter((_,i)=>i%3===1).map(y=>Math.max(0,Math.min(1.4,y+(attached?0:.14)))),1));g.computeVertexNormals();g.computeBoundingSphere();g.name='Individual leaf spray '+key;leafGeometries.set(key,g);shared.add(g);return g;
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('normal',new T.Float32BufferAttribute(n,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setAttribute('natureFlex',new T.Float32BufferAttribute(p.filter((_,i)=>i%3===1),1));g.setIndex(index);g.computeBoundingSphere();g.name='Alpha-cut leaf spray '+key;leafGeometries.set(key,g);shared.add(g);return g;
 }
 
 class NatureBatch{
@@ -104,6 +69,8 @@ class NatureBatch{
  beam(a,b,ra,rb,tint,depth=0,phase=0,keepAtDistance=false){this.path([a,b],[ra,rb],tint,depth,phase,keepAtDistance);}
  path(points,radii,tint,depth=0,phase=0,keepAtDistance=false){
   if(!keepAtDistance&&((this.level===2&&depth>2)||(this.level===1&&depth>3)))return;
+  if(depth>=3&&Math.max(...radii)<[.025,.035,.045][this.level])return;
+  if(points.length>2&&depth>=2){points=[points[0],points.at(-1)];radii=[radii[0],radii.at(-1)];}
   const sides=depth<1?7:depth<3?5:3,colors=[];
   for(let i=0;i<sides;i++)colors.push(tint.clone().multiplyScalar(.90+.12*(.5+.5*Math.sin(i*2.1+phase))));
   this.wood.add(points,radii,sides,points.slice(1).map(()=>colors),.08,phase);
@@ -121,11 +88,14 @@ class NatureBatch{
    const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(this.positions,3));g.setAttribute('color',new T.Float32BufferAttribute(this.colors,3));g.computeVertexNormals();g.computeBoundingSphere();
    const m=new T.Mesh(g,woodMaterial);m.name='Merged trunks, limbs and shrub stems';m.castShadow=true;m.receiveShadow=true;group.add(m);drawCalls++;
   }
-  for(const [key,items]of this.sprays){
-   const attached=typeof key==='string',species=attached?Number(key.split(':')[0]):key;
-   const g=foliageGeometry(species,this.level,attached),m=new T.InstancedMesh(g,leafMaterial(this.wind,species),items.length);m.customDepthMaterial=depthMaterials.get(m.material);m.name='Open foliage sprays / '+['oak','cottonwood','elm','maple','birch','conifer','compound'][species]+(attached?' / attached shrub shoots':'');
-   items.forEach((a,i)=>{m.setMatrixAt(i,a.mat);m.setColorAt(i,a.color)});m.instanceMatrix.needsUpdate=true;m.instanceColor.needsUpdate=true;m.computeBoundingSphere();m.castShadow=true;m.receiveShadow=true;group.add(m);
-   triangles+=g.attributes.position.count/3*items.length;drawCalls++;leafSprays+=items.length;
+  const all=[];for(const [key,items]of this.sprays){const attached=typeof key==='string',species=attached?Number(key.split(':')[0]):key;for(const item of items)all.push({...item,species});}
+  if(all.length){
+   const g=foliageGeometry(0,0).clone(),kinds=new Float32Array(all.length),mat=leafMaterial(this.wind,0);
+   g.setAttribute('natureSpecies',new T.InstancedBufferAttribute(kinds,1));
+   const m=new T.InstancedMesh(g,mat,all.length);m.customDepthMaterial=depthMaterials.get(mat);m.name='Unified static tree and hedgerow foliage';
+   const scaled=new T.Matrix4(),scale=new T.Matrix4();
+   all.forEach((a,i)=>{const sp=a.species;scale.makeScale((sp===5?1.05:sp===6?.93:1.25)/1.25,(sp===5?1.48:1.28)/1.28,(sp===5?1.05:sp===6?.93:1.25)/1.25);scaled.multiplyMatrices(a.mat,scale);m.setMatrixAt(i,scaled);m.setColorAt(i,a.color);kinds[i]=sp===5?4:sp===3?1:sp===4||sp===6?2:0;});
+   m.computeBoundingSphere();m.castShadow=true;m.receiveShadow=true;group.add(m);triangles+=all.length*4;drawCalls++;leafSprays+=all.length;
   }
   group.userData.natureStats={triangles,drawCalls,leafSprays,level:this.level};return group;
  }

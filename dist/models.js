@@ -1,20 +1,23 @@
-import {consolidateStaticArchitecture,mergeArchitectureParts} from './architecture-batch.js?v=38';
-import {makeCompoundChunk,isSharedCompoundResource} from './compound-models.js?v=38';
-import {makeReferenceBarn,isSharedReferenceBarnResource} from './reference-barn.js?v=38';
-import {isSharedLandmarkTexture} from './landmark-textures.js?v=38';
-import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=38';
-import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=38';
-import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=38';
+import {bakeStaticLeafLOD} from './static-leaf-lod.js?v=39';
+import {bakeStaticMeshLOD} from './static-mesh-lod.js?v=39';
+import {bakeStaticSelection} from './static-selection.js?v=39';
+import {isSharedVergeResource,consolidatePlantCards} from './verge-cards.js?v=39';
+import {consolidateStaticArchitecture,mergeArchitectureParts} from './architecture-batch.js?v=39';
+import {makeCompoundChunk,isSharedCompoundResource} from './compound-models.js?v=39';
+import {makeReferenceBarn,isSharedReferenceBarnResource} from './reference-barn.js?v=39';
+import {isSharedLandmarkTexture} from './landmark-textures.js?v=39';
+import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=39';
+import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=39';
 import * as T from './vendor/three.module.min.js';
-import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=38';
-import {makeNature,isSharedNatureResource} from './nature.js?v=38';
-import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=38';
-import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=38';
-import {isSharedRuralTexture} from './rural-textures.js?v=38';
-import {makeLake,isSharedLakeResource} from './lake.js?v=38';
-import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=38';
-import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=38';
-import {createPowerLinePlanner,POWER_POLE_HEIGHT} from './power-lines.js?v=38';
+import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=39';
+import {makeNature,isSharedNatureResource} from './nature.js?v=39';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=39';
+import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=39';
+import {isSharedRuralTexture} from './rural-textures.js?v=39';
+import {makeLake,isSharedLakeResource} from './lake.js?v=39';
+import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=39';
+import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=39';
+import {createPowerLinePlanner,POWER_POLE_HEIGHT} from './power-lines.js?v=39';
 const powerLines=createPowerLinePlanner({CHUNK,field,laneOffset,surfaceHeight,pondShoreDistance});
 const UP=new T.Vector3(0,1,0),dummy=new T.Object3D();
 const box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,7);
@@ -67,11 +70,10 @@ export function* createChunkTask(f,level,quality,collected){
  const group=new T.Group(),b=new Batch(),colliders=[],pickups=[],wheatBuckets=new Map();let complete=false;
  try{
   group.add(makeGround(f,level));yield 'ground';
-  group.add(makeVerge(f,level));yield 'verges';
+  group.add(makeVerge(f,level,wind));yield 'verges';
   if(f.meadow){group.add(makeMeadowVegetation(f,level,wind));yield 'meadow';}
   const wheat=buildDenseWheat(f,level,quality,wind);group.add(wheat.mesh);yield 'wheat';
-  // A separate staged phase also keeps this cache off ordinary movement frames.
-  // Camera-local cereal pool owns ordering and submission; no eight full-tile sort copies.yield 'wheat-order';
+  // The independent 40 m cereal worker owns frozen near-field submissions.
   const nature=makeNature(f,level,wind);group.add(nature.group);colliders.push(...nature.colliders);yield 'nature';
   poles(f,b,colliders,group);b.finish(group);yield 'poles';
   if(f.type==='building'){
@@ -90,15 +92,24 @@ export function* createChunkTask(f,level,quality,collected){
   const doors=[];group.traverse(o=>{if(o.userData.dynamicDoor)doors.push(o);});
   for(const door of doors)consolidateStaticArchitecture(door,level);
   consolidateStaticArchitecture(group,level,new Set(pickups.map(p=>p.mesh).filter(Boolean)));yield 'static-batch';
+  consolidatePlantCards(group,wind);
+  group.traverse(m=>{
+   if(m.isMesh&&!m.isInstancedMesh&&(m.material?.userData.architectureBatch||/bark|Merged trunks/.test(m.name)))bakeStaticMeshLOD(m);
+   if(m.isInstancedMesh&&/Unified static tree|Individual leaves on small branch sprays/.test(m.name))bakeStaticLeafLOD(m);
+   if(!m.isInstancedMesh||Object.values(m.geometry.attributes).some(a=>a.isInstancedBufferAttribute))return;
+   if(/photographic-trackside|photographic-shade|bank grass|straw colonies|rush stands|verge-daisies|rut-gravel|bank pebbles/.test(m.name)){
+    bakeStaticSelection(m,{radius:/daisies|gravel|pebbles/.test(m.name)?18:34,step:4,padding:1.2});
+   }
+  });yield 'freeze-selection';
   complete=true;return {group,colliders,pickups,wheatBuckets,softVolumes:[...nature.softVolumes,...(barn?.softVolumes||[])],field:f,level,quality};
  }finally{if(!complete)disposeChunk({group})}
 }
 // Offline validation can construct synchronously; gameplay advances one phase per frame.
 export function makeChunk(...args){const task=createChunkTask(...args);let step;do{step=task.next()}while(!step.done);return step.value}
-const isShared=r=>isSharedCompoundResource(r)||isSharedReferenceBarnResource(r)||isSharedLandmarkTexture(r)||isSharedMeadowResource(r)||isSharedPhotoFarmResource(r)||isSharedWheatResource(r)||isSharedNatureResource(r)||isSharedBuildingResource(r)||isSharedYardPropResource(r)||isSharedRuralTexture(r)||isSharedLakeResource(r)||isSharedGroundResource(r);
+const isShared=r=>isSharedVergeResource(r)||isSharedCompoundResource(r)||isSharedReferenceBarnResource(r)||isSharedLandmarkTexture(r)||isSharedMeadowResource(r)||isSharedPhotoFarmResource(r)||isSharedWheatResource(r)||isSharedNatureResource(r)||isSharedBuildingResource(r)||isSharedYardPropResource(r)||isSharedRuralTexture(r)||isSharedLakeResource(r)||isSharedGroundResource(r);
 export const isSharedModelResource=r=>bottleResources.has(r)||isShared(r)||[box,cylinder,glass,woodTex,brickTex,roofTex,...Object.values(materials)].includes(r);
 export function disposeChunk(chunk){if(chunk.disposePacketResources){chunk.disposePacketResources();return}const disposed=new Set();chunk.group.traverse(o=>{
  if(o.isInstancedMesh)o.dispose();
  if(o.geometry&&!disposed.has(o.geometry)&&!isShared(o.geometry)&&![box,cylinder].includes(o.geometry)){disposed.add(o.geometry);o.geometry.dispose()}
- if(o.material&&!disposed.has(o.material)&&!isShared(o.material)&&!Object.values(materials).includes(o.material)&&o.material!==glass){disposed.add(o.material);o.material.userData.ownedParcelTexture?.dispose();o.material.dispose()}
+ if(o.material&&!disposed.has(o.material)&&!isShared(o.material)&&!Object.values(materials).includes(o.material)&&o.material!==glass){disposed.add(o.material);o.material.userData.ownedParcelTexture?.dispose();o.material.staticTextures?.forEach(t=>t.dispose());o.material.dispose()}
 });}

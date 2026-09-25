@@ -1,10 +1,11 @@
-import {landmarkTextures} from './landmark-textures.js?v=38';
-import {meadowEnvironment} from './meadow-layout.js?v=38';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=38';
-import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=38';
+import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=39';
+import {landmarkTextures} from './landmark-textures.js?v=39';
+import {meadowEnvironment} from './meadow-layout.js?v=39';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=39';
+import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=39';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=38';
-import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=38';
+import {ruralTextures} from './rural-textures.js?v=39';
+import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=39';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -133,7 +134,7 @@ function groundMaterial(f,level){
    }
    // The same ground carries distant wheat; no raised, z-fighting canopy.
    float cropRange=length(vCropWorld.xz-cameraPosition.xz);
-   float farCrop=smoothstep(32.,45.,cropRange)*(1.-step(1.5,cropKind));
+   float farCrop=smoothstep(24.,33.,cropRange)*(1.-step(1.5,cropKind));
    float wheatWave=.5+.5*sin(dot(q,vec2(.22,.17))-uTime*1.3+noise2(q*.11)*2.);
    vec3 cropGold=mix(vec3(.29,.205,.094),vec3(.43,.332,.168),.28+broad*.45+wheatWave*.20);
    if(cropKind>.5)cropGold*=vec3(.67,.59,.62);
@@ -237,22 +238,28 @@ function samples(step,edges){
 const groundGeometryCache=new WeakMap();
 export function terrainGeometry(f,level){
  const old=groundGeometryCache.get(f);if(old?.level===level)return old.geo;
- const roadStep=level===0?.125:.25,step=f.type==='pond'?1:2,n=64/step,cells=new Uint8Array(n*n),sample={};
+ const roadStep=[.5,1,2][level],step=(f.type==='pond'?1:2)*[1,2,4][level],n=64/step,cells=new Uint8Array(n*n),sample={};
  for(let j=0;j<n;j++)for(let i=0;i<n;i++){
-  const x=(i+.5)*step,z=(j+.5)*step;roadProfile(x,z,f,sample);cells[j*n+i]=sample.distance<5.0||sample.rut>.01?1:0;
+  const x=(i+.5)*step,z=(j+.5)*step;roadProfile(x,z,f,sample);cells[j*n+i]=sample.distance<2.1||sample.rut>.01?1:0;
  }
  const positions=[],tex=[],indices=[],lookup=new Map(),coordinates=[];
  const vertex=(x,z)=>{const key=x+','+z;let i=lookup.get(key);if(i!==undefined)return i;i=positions.length/3;lookup.set(key,i);let y=surfaceHeight(x,z,f);
- // Fine near-road vertices share the same .25m boundary polyline as far LOD.
- if(level===0&&(x===0||x===64||z===0||z===64)){const along=x===0||x===64?z:x,lo=Math.floor(along*4)/4,hi=Math.min(64,lo+.25),t=(along-lo)*4;if(t>0){y=x===0||x===64?surfaceHeight(x,lo,f)*(1-t)+surfaceHeight(x,hi,f)*t:surfaceHeight(lo,z,f)*(1-t)+surfaceHeight(hi,z,f)*t;}}
+
  positions.push(x,y,z);tex.push(x/64,z/64);coordinates.push([x,z]);return i;};
  const tri=(a,b,c)=>indices.push(vertex(...a),vertex(...b),vertex(...c));
  for(let j=0;j<n;j++)for(let i=0;i<n;i++){
   const x=i*step,z=j*step,refined=cells[j*n+i],div=refined?Math.round(step/roadStep):1,h=step/div;
-  if(refined){for(let b=0;b<div;b++)for(let a=0;a<div;a++){const xx=x+a*h,zz=z+b*h;tri([xx,zz],[xx,zz+h],[xx+h,zz]);tri([xx+h,zz],[xx,zz+h],[xx+h,zz+h])}continue;}
+  if(refined){for(let b=0;b<div;b++)for(let a=0;a<div;a++){
+   const xx=x+a*h,zz=z+b*h;
+   if(h>.5&&(xx===0||zz===0||xx+h===64||zz+h===64)){
+    const ring=[],edge=(ax,az,bx,bz,boundary)=>{const n=boundary?h/.5:1;for(let k=0;k<n;k++)ring.push([ax+(bx-ax)*k/n,az+(bz-az)*k/n]);};
+    edge(xx,zz,xx,zz+h,xx===0);edge(xx,zz+h,xx+h,zz+h,zz+h===64);edge(xx+h,zz+h,xx+h,zz,xx+h===64);edge(xx+h,zz,xx,zz,zz===0);
+    for(let k=0;k<ring.length;k++)tri([xx+h/2,zz+h/2],ring[k],ring[(k+1)%ring.length]);
+   }else{tri([xx,zz],[xx,zz+h],[xx+h,zz]);tri([xx+h,zz],[xx,zz+h],[xx+h,zz+h]);}
+  }continue;}
   // Stitch a coarse cell to a refined neighbor with an edge fan; no T junctions.
   const around=[];
-  const edge=(ax,az,bx,bz,fine)=>{const count=fine?Math.round(step/roadStep):1;for(let k=0;k<count;k++)around.push([ax+(bx-ax)*k/count,az+(bz-az)*k/count]);};
+  const edge=(ax,az,bx,bz,fine)=>{const boundary=ax===bx&&(ax===0||ax===64)||az===bz&&(az===0||az===64),count=boundary?step/.5:fine?Math.round(step/roadStep):1;for(let k=0;k<count;k++)around.push([ax+(bx-ax)*k/count,az+(bz-az)*k/count]);};
   edge(x,z,x,z+step,i===0||cells[j*n+i-1]);edge(x,z+step,x+step,z+step,j===n-1||cells[(j+1)*n+i]);edge(x+step,z+step,x+step,z,i===n-1||cells[j*n+i+1]);edge(x+step,z,x,z,j===0||cells[(j-1)*n+i]);
   if(around.length===4){tri(around[0],around[1],around[3]);tri(around[3],around[1],around[2]);}
   else for(let k=0;k<around.length;k++)tri([x+step/2,z+step/2],around[k],around[(k+1)%around.length]);
@@ -373,9 +380,9 @@ function addInstances(group,geo,mat,points,f,name){
  group.add(mesh);
 }
 // Dense turf uses packed numeric streams rather than thousands of point objects.
-function addTurfInstances(group,geo,points,f,name){
+function addTurfInstances(group,geo,points,f,name,material=plantMat){
  const count=points.length/6;if(!count)return;
- const mesh=new T.InstancedMesh(geo,plantMat,count),tint=new T.Color();
+ const mesh=new T.InstancedMesh(geo,material,count),tint=new T.Color();
  for(let i=0,j=0;i<count;i++,j+=6){
   const x=points[j],z=points[j+1],s=points[j+2];
   dummy.position.set(x,surfaceHeight(x,z,f)-.005,z);
@@ -392,7 +399,7 @@ function turfNoise(x,z){
  const a=turfHash(ix,iz),b=turfHash(ix+1,iz),c=turfHash(ix,iz+1),d=turfHash(ix+1,iz+1);
  return(a+(b-a)*u)*(1-v)+(c+(d-c)*u)*v;
 }
-export function makeVerge(f,level){
+export function makeVerge(f,level,wind){
  const group=new T.Group(),r=random(f.seed^0x11bad),grass=[[],[],[]],stones=[],ferns=[],daisies=[],road={};
  const near=level===0,far=level>=2,worldX=periodOrigin(f.x)%2048,worldZ=periodOrigin(f.z)%2048;
  const size=buildingSize(f),halfW=size[0]/2,halfD=size[1]/2,co=Math.cos(f.buildingAngle||0),si=Math.sin(f.buildingAngle||0);
@@ -486,10 +493,15 @@ export function makeVerge(f,level){
    grass[far?0:Math.floor(sr()*3)].push(px,pz,.68+sr()*.62,sr()*TAU,.80+sr()*.27,.85+sr()*.42);
   }
  }
- if(far){addTurfInstances(group,farGrassGeo,grass[0],f,'distant-dense-fine-grass')}
- else{
-  for(let v=0;v<3;v++)addTurfInstances(group,(near?grassGeos:midGrassGeos)[v],grass[v],f,'dense-fine-grass-variant-'+v);
-  addInstances(group,fernGeos[near?0:1],plantMat,ferns.filter(p=>near||p.lod<.55),f,'small-feathered-ferns');
+ const photo=plantCardMaterial(wind);
+ // Same positions, rut/shore masks and clump distribution; four real triangles.
+ for(let v=0;v<3;v++){
+  const points=grass[v],parts=[[],[]];
+  for(let i=0;i<points.length;i+=6){const patch=turfNoise((points[i]+worldX)*.22,(points[i+1]+worldZ)*.22);const k=patch>.63?1:0;parts[k].push(...points.slice(i,i+6));}
+  for(let k=0;k<2;k++)addTurfInstances(group,plantCardGeometry([0,5,2,1,3,5][v*2+k]),parts[k],f,'photographic-trackside-grass-'+v+'-'+k,photo);
+ }
+ if(!far){
+  addInstances(group,plantCardGeometry(4),photo,ferns.filter(p=>near||p.lod<.55),f,'photographic-shade-ferns');
   addInstances(group,daisyGeo,plantMat,daisies.filter(p=>near||p.lod<.25),f,'rare-tiny-verge-daisies');
   addInstances(group,stoneGeo,stoneMat,stones.filter(p=>near||p.lod<.37),f,'scattered-fine-rut-gravel');
  }

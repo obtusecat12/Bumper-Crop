@@ -1,4 +1,4 @@
-import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=38';
+import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=39';
 // Scene packet codec for procedural Three.js chunks. No DOM or Worker globals.
 // Supply the same Three.js revision on both sides. Pack before attachFog().
 const VERSION=1;
@@ -146,7 +146,7 @@ export function createUnpacker({T,wind={},viewUniform,uniformBindings={}}={}){
   for(const[k,u]of Object.entries(r.uniforms)){uniforms[k]=u.binding?(bindings[u.binding]||{value:decode(u.value,lookup)}):{value:decode(u.value,lookup)}}
   if(m.isShaderMaterial){m.vertexShader=r.vertexShader;m.fragmentShader=r.fragmentShader;m.uniforms=uniforms}
   m.onBeforeCompile=shader=>{shader.vertexShader=r.vertexShader;shader.fragmentShader=r.fragmentShader;Object.assign(shader.uniforms,uniforms)};
-  m.customProgramCacheKey=()=>r.cacheKey;return m;
+  Object.defineProperty(m,'staticUniforms',{value:uniforms,configurable:true});m.customProgramCacheKey=()=>r.cacheKey;return m;
  }
  function load(records,target,lookup){
   for(const r of records.textures||[])if(!target.has(r.id))target.set(r.id,makeTexture(r,lookup));

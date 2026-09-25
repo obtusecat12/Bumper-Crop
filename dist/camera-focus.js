@@ -1,13 +1,13 @@
 import * as T from './vendor/three.module.min.js';
-import {DampedSpring} from './handheld-camera.js?v=38';
-import {surfaceHeight,pondShoreDistance} from './world.js?v=38';
+import {DampedSpring} from './handheld-camera.js?v=39';
+import {surfaceHeight,pondShoreDistance} from './world.js?v=39';
 // Reused center ray, vectors, interval slab and critically bounded cadence.
 // Uses existing collision proxies plus authoritative terrain, not allocation-
 // heavy Mesh.raycast() intersection arrays across the entire wheat field.
 export function createCameraFocus(){
- const spring=new DampedSpring(18),ray=new T.Ray(),point=new T.Vector3(),local=new T.Ray(),box=new T.Box3(),chunks=[];
+ const groundCache=new WeakMap();const spring=new DampedSpring(18),ray=new T.Ray(),point=new T.Vector3(),local=new T.Ray(),box=new T.Box3(),chunks=[];
  let delay=0,target=18,baseFov=72;const result={distance:18,target:18,breathing:0};
- function attach(c){if(!chunks.includes(c))chunks.push(c);}
+ function attach(c){if(!chunks.includes(c)){chunks.push(c);groundCache.set(c,(c.colliders||[]).map(b=>surfaceHeight(b.x||0,b.z||0,c.field)));}}
  function detach(c){const i=chunks.indexOf(c);if(i>=0){for(let j=i;j<chunks.length-1;j++)chunks[j]=chunks[j+1];chunks.pop();}}
  function trace(camera){ray.origin.copy(camera.position);camera.getWorldDirection(ray.direction);let best=120;
   for(let j=0;j<chunks.length;j++){const c=chunks[j],ox=c.group.position.x,oz=c.group.position.z,f=c.field;
@@ -15,7 +15,7 @@ export function createCameraFocus(){
    const colliders=c.colliders||[];
    for(let i=0;i<colliders.length;i++){const b=colliders[i],co=Math.cos(b.angle||0),si=Math.sin(b.angle||0),px=camera.position.x-ox-(b.x||0),pz=camera.position.z-oz-(b.z||0);
     local.origin.set(px*co-pz*si,camera.position.y,px*si+pz*co);local.direction.set(ray.direction.x*co-ray.direction.z*si,ray.direction.y,ray.direction.x*si+ray.direction.z*co);
-    const y=surfaceHeight(b.x||0,b.z||0,f),hx=b.hx??b.r??Math.abs((b.x2??1)-(b.x1??0))*.5,hz=b.hz??b.r??Math.abs((b.z2??1)-(b.z1??0))*.5;
+    const y=groundCache.get(c)[i],hx=b.hx??b.r??Math.abs((b.x2??1)-(b.x1??0))*.5,hz=b.hz??b.r??Math.abs((b.z2??1)-(b.z1??0))*.5;
     if(b.kind==='box'){local.origin.x=camera.position.x-ox;local.origin.z=camera.position.z-oz;local.direction.copy(ray.direction);box.min.set(b.x1,y,b.z1);box.max.set(b.x2,y+(f.type==='building'?5:2.8),b.z2);}
     else {box.min.set(-hx,y,-hz);box.max.set(hx,y+(f.type==='building'?5:b.kind==='circle'?5:2.8),hz);}
     if(local.intersectBox(box,point)){const d=point.distanceTo(local.origin);if(d>.24&&d<best)best=d;}

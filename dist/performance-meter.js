@@ -1,14 +1,14 @@
 // Opt-in local diagnostics. One asynchronous GPU query at a time, at most once
 // per 60 frames. Never wait for a result or change the scene/quality settings.
 export function createPerformanceMeter(renderer, clock = () => performance.now()) {
-  let gl, ext, initialized = false, frame = 0, lastQueryFrame = -60, pending = null, active = false, enabled = false, start = 0;
-  const values = {cpu: null, gpu: null, calls: 0, triangles: 0, supported: null};
+  let gl, ext, initialized = false, frame = 0, lastQueryFrame = -60, pending = null, active = false, enabled = false, start = 0, renderStart = 0;
+  const values = {cpu: null, gpu: null, calls: 0, triangles: 0, supported: null, simulation: null, submission: null};
   const average = (old, next) => old === null ? next : old * .9 + next * .1;
   function drop() { if (pending) gl.deleteQuery(pending); pending = null; active = false; }
   function begin(value) {
     enabled = value; frame++;
     if (!enabled) { if (pending) drop(); return; }
-    start = clock();
+    start = clock();renderStart=start;
     if (!initialized) {
       gl = renderer.getContext(); ext = gl.getExtension('EXT_disjoint_timer_query_webgl2');
       initialized = true; values.supported = !!ext;
@@ -34,10 +34,11 @@ export function createPerformanceMeter(renderer, clock = () => performance.now()
     pending = gl.createQuery();
     if (pending) { gl.beginQuery(ext.TIME_ELAPSED_EXT, pending); active = true; lastQueryFrame = frame; }
   }
+  function markSimulation(){if(enabled){renderStart=clock();values.simulation=average(values.simulation,renderStart-start);}}
   function end() {
     if (active) { gl.endQuery(ext.TIME_ELAPSED_EXT); active = false; }
     if (!enabled) return;
-    values.cpu = average(values.cpu, clock() - start);
+    const end=clock();values.cpu = average(values.cpu, end - start);values.submission=average(values.submission,end-renderStart);
     values.calls = renderer.info.render.calls; values.triangles = renderer.info.render.triangles;
   }
   function reset() {
@@ -45,5 +46,5 @@ export function createPerformanceMeter(renderer, clock = () => performance.now()
     pending = null; active = false; initialized = false; ext = null;
     values.cpu = values.gpu = values.supported = null;
   }
-  return {begin, beforeRender, end, reset, values};
+  return {begin, beforeRender, markSimulation, end, reset, values};
 }

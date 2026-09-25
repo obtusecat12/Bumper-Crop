@@ -1,5 +1,5 @@
-import {weatherTextures} from './weather-textures.js?v=38';
-import {createFogVolume,fogVolumePars} from './fog-volume.js?v=38';
+import {weatherTextures} from './weather-textures.js?v=39';
+import {createFogVolume,fogVolumePars} from './fog-volume.js?v=39';
 import * as T from './vendor/three.module.min.js';
 
 // One generated, periodic 3D texture, genuine bounded volume integration, and
@@ -93,6 +93,7 @@ varying vec3 vCloudDirection;
 void main() {
   vCloudDirection = position;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  gl_Position.z=gl_Position.w*.999999;
 }`;
 
 const cloudFragment = `

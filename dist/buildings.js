@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=38';
-import {ruralTextures} from './rural-textures.js?v=38';
+import {height,random} from './world.js?v=39';
+import {ruralTextures} from './rural-textures.js?v=39';
 
 // Main-wall dimensions; roof overhangs/optional porch are described by footprint.
 export const RURAL_BUILDING_SIZES = Object.freeze([[7,9,3],[2.8,3.2,2.7],[12,17,4.9],[13,19,5.1],[11,15,4.3],[13,9,3.7],[13,18,3.8],[8,11,3.2]].map(Object.freeze));
@@ -127,7 +127,7 @@ class Batch{
 }
 export function makeRuralBuilding(f,level=0){
  // Existing authored landmarks retain their exact historical geometry.
- level=f.compoundLod?Math.max(0,Math.min(2,level|0)):0;
+ level=Math.max(0,Math.min(2,level|0));
  const v=((f.variant||0)%8+8)%8,[w,d,h]=unscaledBuildingDimensions(f),s=f.buildingScale||1,angle=f.buildingAngle||0;
  const r=random((f.seed||1)^0x8a7e551),weather=.35+r()*.65,b=new Batch(r,weather,level),group=new T.Group(),colliders=[],pickups=[],rainRoofs=[];
  const y=f.buildingY??height(f.cx,f.cz,f.x,f.z),c=Math.cos(angle),sn=Math.sin(angle),isBrick=v===4;

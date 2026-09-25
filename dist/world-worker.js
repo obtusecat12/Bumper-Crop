@@ -1,20 +1,20 @@
-import {readChunkCache,writeChunkCache} from './chunk-cache.js?v=38';
-import {snapshotGround,restoreGround} from './ground.js?v=38';
-import {copyLakeAtlas} from './lake-shape.js?v=38';
-import {initializeWeatherTextures} from './weather-textures.js?v=38';
-import {initializeLandmarkTextures} from './landmark-textures.js?v=38';
-import {buildRayGeometry} from './ray-geometry.js?v=38';
+import {initializeVergeTextures} from './verge-cards.js?v=39';
+import {readChunkCache,writeChunkCache} from './chunk-cache.js?v=39';
+import {snapshotGround,restoreGround} from './ground.js?v=39';
+import {copyLakeAtlas} from './lake-shape.js?v=39';
+import {initializeWeatherTextures} from './weather-textures.js?v=39';
+import {initializeLandmarkTextures} from './landmark-textures.js?v=39';
+import {buildRayGeometry} from './ray-geometry.js?v=39';
 // The render thread never constructs field geometry. Procedural templates remain
 // in this worker; unique geometry and instance arrays transfer without copies.
 import * as T from './vendor/three.module.min.js';
-import {field} from './world.js?v=38';
-import {createPacker} from './scene-packets.js?v=38';
-import {initializeRuralTextures} from './rural-textures.js?v=38';
+import {field} from './world.js?v=39';
+import {createPacker} from './scene-packets.js?v=39';
+import {initializeRuralTextures} from './rural-textures.js?v=39';
 if(typeof OffscreenCanvas==='undefined')throw Error('OffscreenCanvas is unavailable');
 globalThis.document={createElement(tag){if(tag==='canvas')return new OffscreenCanvas(1,1);throw Error('Unsupported worker element '+tag)}};
-const models=await import('./models.js?v=38');
-const wheat=await import('./dense-wheat.js?v=38');
-await Promise.all([initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures()]);
+const models=await import('./models.js?v=39');
+await Promise.all([initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeVergeTextures()]);
 const packer=createPacker({T,isSharedResource:models.isSharedModelResource,wind:models.wind});
 self.onmessage=async event=>{
  const {id,cx,cz,seed,level,quality,collected,knownLakes}=event.data;let chunk;
@@ -22,9 +22,8 @@ self.onmessage=async event=>{
   const begin=performance.now(),cacheKey=`${seed}:${cx},${cz}:${level}:${quality}`,cached=await readChunkCache(cacheKey),f=cached?.field||field(cx,cz,seed);
   if(cached?.ground)restoreGround(f,cached.ground);
   chunk=models.makeChunk(f,level,quality,new Set(collected));
-  if(level===0)chunk.detailPatches=cached?.detailPatches||wheat.prepareWheatDetail(f,quality);
   // Commit CPU arrays before the packet transfers their backing buffers.
-  if(!cached)await writeChunkCache({key:cacheKey,field:f,ground:snapshotGround(f,level),detailPatches:chunk.detailPatches});
+  if(!cached)await writeChunkCache({key:cacheKey,field:f,ground:snapshotGround(f,level)});
   chunk.group.traverse(o=>{o.updateMatrix();if(o!==chunk.group)o.matrixAutoUpdate=false});
   if(level<=1)chunk.rayGeometry=buildRayGeometry(chunk.group,f);
   const generated=performance.now(),result=packer.packChunk(chunk);

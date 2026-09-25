@@ -1,0 +1,31 @@
+{
+  "commit": "c6427f14b5a8052fc3e8bc1dd0bfcd52ef6974e3",
+  "seed": 4244718517,
+  "grid": {
+    "start": 2,
+    "end": 64,
+    "step": 6
+  },
+  "fields": [
+    {
+      "cx": "0",
+      "cz": "0",
+      "sha256": "0ad53dd5d16279d03d8e1ebed6538a35d42fb73588a6a91be4bbf4b5f7970146"
+    },
+    {
+      "cx": "-1",
+      "cz": "0",
+      "sha256": "f4bd5252526b1acd67ab1e7d8d0aa94fec2eab3831dd70bc36372386236d088d"
+    },
+    {
+      "cx": "1",
+      "cz": "-2",
+      "sha256": "3dbf7ac0b7e9d5902c23f460b16b8459aef3fcfe45ea5da11edd72bcea8c745b"
+    },
+    {
+      "cx": "4",
+      "cz": "2",
+      "sha256": "646b762a3ff32b75146db734f49e1d1e653f45f71df77d669e2ecf278220affc"
+    }
+  ]
+}

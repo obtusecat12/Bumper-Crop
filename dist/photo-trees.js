@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {JoinedWood} from './joined-wood.js?v=38';
-import {attachRuralDetail} from './rural-textures.js?v=38';
+import {JoinedWood} from './joined-wood.js?v=39';
+import {attachRuralDetail} from './rural-textures.js?v=39';
 
 // Photo-specific Kephart Farm trees. Trunks and branch scaffolds are merged;
 // foliage is individual small leaves drawn into shared alpha-cut twig cards.
@@ -30,7 +30,7 @@ function nameFor(kind) {const k = String(kind || 'broad').toLowerCase(); return 
 
 // Deterministic rasterization works both in the browser and the world worker:
 // no Canvas, image loads, data URLs, or external textures are required.
-function twigTexture(shape) {
+export function twigTexture(shape) {
   if (textures.has(shape)) return textures.get(shape);
   const n = 256, data = new Uint8Array(n * n * 4), r = random(7821 + shape.length * 917);
   // Keep transparent texels light too: black RGB in empty texels bleeds into

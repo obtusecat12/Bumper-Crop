@@ -1,12 +1,11 @@
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=38';
-import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=38';
+import {ruralTextures} from './rural-textures.js?v=39';
 
 const shared=new Set(),layouts=new WeakMap();let templates,mat;
 // Bent, intersecting strips show many fine leaves with a small geometry budget.
 // Only alpha-tested pixels write depth; there is no transparent-object sorting.
 function cardGeometry(level){
- const p=[],uv=[],normal=[],idx=[],planes=level===0?3:2,rows=level===0?3:2;
+ const p=[],uv=[],normal=[],idx=[],planes=2,rows=1;
  for(let c=0;c<planes;c++){
   const a=c*Math.PI/planes,dx=Math.cos(a),dz=Math.sin(a),base=p.length/3;
   for(let row=0;row<=rows;row++)for(let side=0;side<2;side++){
@@ -67,9 +66,7 @@ export function makeSward(f,points,level,wind){
    bounds.expandByPoint(point.set(p.x-extent,p.y-.04,p.z-extent));bounds.expandByPoint(point.set(p.x+extent,p.y+p.height+.04,p.z+extent));
   });
   mesh.instanceMatrix.needsUpdate=true;mesh.boundingBox=bounds;mesh.boundingSphere=bounds.getBoundingSphere(new T.Sphere());mesh.receiveShadow=true;
-  if(!layout.orders[i])layout.orders[i]=prepareCardDrawOrder(mesh);
-  // Transfer only copies: cached permutations must survive worker packets.
-  mesh.userData[CARD_ORDER_KEY]={...layout.orders[i],orders:layout.orders[i].orders.map(a=>a.slice())};group.add(mesh);
+  group.add(mesh);
  }
  group.userData.swardCount=points.length;return group;
 }

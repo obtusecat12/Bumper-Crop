@@ -1,7 +1,7 @@
-import {createLakeAccess} from './lake-access.js?v=38';
-import {pondShoreDistance,pondBankPoint,pondMetrics} from './lake-shape.js?v=38';
+import {createLakeAccess} from './lake-access.js?v=39';
+import {pondShoreDistance,pondBankPoint,pondMetrics} from './lake-shape.js?v=39';
 // Hierarchical agricultural ownership, independent of the 64m streaming cells.
-import {parcelSample as legacyParcel,patchworkContext as legacyContext} from './patchwork-legacy.js?v=38';
+import {parcelSample as legacyParcel,patchworkContext as legacyContext} from './patchwork-legacy.js?v=39';
 const legacyFields=new WeakMap();
 function oldParcelField(f){let v=legacyFields.get(f);if(!v){v={x:f.x,z:f.z,worldSeed:f.worldSeed,patch:legacyContext(f.x,f.z,f.worldSeed)};legacyFields.set(f,v);}return v;}
 const SIZE=400,macros=new Map(),contexts=new Map();let sources=()=>({lakes:[],buildings:[]}),route=null;

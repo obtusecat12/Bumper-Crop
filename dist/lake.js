@@ -1,7 +1,8 @@
+import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=39';
 import * as T from './vendor/three.module.min.js';
-import {terrainGeometry} from './ground.js?v=38';
-import { random, height, surfaceHeight, roadDistance } from './world.js?v=38';
-import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth, pondHabitat, pondShoreDistance, pondContours } from './lake-shape.js?v=38';
+import {terrainGeometry} from './ground.js?v=39';
+import { random, height, surfaceHeight, roadDistance } from './world.js?v=39';
+import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth, pondHabitat, pondShoreDistance, pondContours } from './lake-shape.js?v=39';
 
 // Reference-led irregular rural lake: shared shapes, cross-tile water, and dense
 // broken banks. The original layered wind-ripple / sky-reflection water is retained.
@@ -46,7 +47,7 @@ transformed.z+=lakeBend*.38+sin(uLakeTime*2.1+lakeRoot.z)*lakeFlex*.018;
 function resources(wind) {
   let set = materialSets.get(wind);
   if (!set) {
-    set = { water: waterMaterial(wind), grass: dryGrassMaterial(wind) };
+    set = { water: waterMaterial(wind), grass: plantCardMaterial(wind) };
     materialSets.set(wind, set);
   }
   return set;
@@ -180,7 +181,7 @@ function addTufts(group,f,lod,material){
   let total=0;
   for(let kind=0;kind<3;kind++){
     const items=points[kind];if(!items.length)continue;total+=items.length;
-    const mesh=new T.InstancedMesh(tuftGeometries[lod][kind],material,items.length);
+    const mesh=new T.InstancedMesh(plantCardGeometry([1,2,3][kind]),material,items.length);
     mesh.name=['low mixed bank grass','overlapping bent straw colonies','broken pale rush stands'][kind];
     items.forEach((p,i)=>{
       dummy.position.set(p.x,p.y,p.z);dummy.rotation.set(0,p.angle,0);
