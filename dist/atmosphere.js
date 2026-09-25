@@ -1,16 +1,18 @@
-import {weatherTextures} from './weather-textures.js?v=42';
-import {createFogVolume,fogVolumePars} from './fog-volume.js?v=42';
+import {weatherTextures} from './weather-textures.js?v=43';
+import {createFogVolume,fogVolumePars} from './fog-volume.js?v=43';
 import * as T from './vendor/three.module.min.js';
 
-// One generated, periodic 3D texture, genuine bounded volume integration, and
-// material fog. There is no screen-space noise, flat cloud layer or fog plane.
+// World-ray projected cellular decks; optical column depth gives dark cores
+// and thin scattering edges. A shared periodic 3D noise volume also serves fog.
 const PERIOD = 65536;
 export const CLOUD_LAYERS=Object.freeze([
  {name:'altostratus',altitude:3000,bottom:2800,top:3200,wind:[2.56,1.024]},
- {name:'stratocumulus',altitude:1200,bottom:1000,top:1500,wind:[5.6,-1.8]},
+ {name:'stratocumulus',altitude:1500,bottom:1080,top:1800,wind:[5.6,-1.8]},
  {name:'scud',altitude:400,bottom:340,top:460,wind:[10.24,2.56]}
 ]);
 const QUALITY_STEPS={low:6,balanced:8,high:10};
+const SKY_PERIOD=80000;
+function skyOrigin(value){return typeof value==='bigint'?Number((value%1250n+1250n)%1250n)*64:((Number(value)||0)%SKY_PERIOD+SKY_PERIOD)%SKY_PERIOD;}
 const clamp01 = x => Math.min(1, Math.max(0, Number(x) || 0));
 function worldOrigin(value) {
   // BigInt values are 64 m world-cell indices; numbers are offsets in metres.
@@ -103,6 +105,7 @@ varying vec3 vCloudDirection;
 uniform sampler3D uCloudNoise;
 uniform vec3 uCloudCamera;
 uniform vec2 uCloudOrigin;
+uniform vec2 uSkyOrigin;
 uniform vec3 uCloudFogColor;
 uniform float uCloudTime;
 uniform float uCloudMist;
@@ -110,78 +113,105 @@ uniform float uCloudRain;
 uniform int uCloudSteps;
 uniform vec4 uSkyEvent;
 uniform sampler2D uSkyWallpaper;
+uniform bool uCloudCached;
+uniform sampler2D uCloudScreen;
+uniform vec2 uCloudViewport;
 
 uniform vec3 uStageEvent;
 ${fogVolumePars}
 
-// Three real world-height slabs. All spatial periods divide 65536 m, so
-// rebasing an arbitrarily large BigInt world coordinate never jumps the sky.
-vec4 volumeNoise(vec3 p,vec3 scale,float lod){return textureLod(uCloudNoise,p/scale,lod);}
-float cloudDensity(vec3 p,int layer,float lod){
- float bottom=layer==0?2800.:layer==1?1000.:340.;
- float top=layer==0?3200.:layer==1?1500.:460.;
- float h=clamp((p.y-bottom)/(top-bottom),0.,1.);
- vec3 scale=layer==0?vec3(8192.,2048.,8192.):layer==1?vec3(4096.,2048.,4096.):vec3(2048.,1024.,1024.);
- vec2 velocity=layer==0?vec2(2.56,1.024):layer==1?vec2(5.6,-1.8):vec2(10.24,2.56);
- p.xz+=velocity*uCloudTime;
- // Slow evolution in Y changes the density, not just a scrolling wallpaper.
- p.y+=sin(uCloudTime*.008+float(layer)*2.)*24.;
- vec4 warp1=volumeNoise(p,scale,1.);
- vec3 warped=p+(warp1.gbr-.5)*scale*.18;
- vec4 warp2=volumeNoise(warped+vec3(139.,47.,271.),scale*.5,1.);
- warped+=(warp2.brg-.5)*scale*.085;
- vec4 shape=volumeNoise(warped,scale,lod);
- if(layer==0)return (.20+.16*shape.r)*smoothstep(0.,.15,h)*(1.-smoothstep(.84,1.,h));
- vec4 detail=volumeNoise(warped+vec3(211.,-97.,401.),scale*.25,min(3.,lod+.5));
- // Worley erosion of fBm yields rounded cores and ragged, wind-sheared edges.
- float body=shape.r*.67+shape.a*.33-(1.-detail.a)*.14;
- float evolution=.018*sin(uCloudTime*.013+shape.g*5.);
- float threshold=layer==1?.26:.40;
- float density=max(0.,body-threshold+evolution+uCloudRain*.025);
- float base=layer==1?.015+.22*(1.-shape.a):.03;
- float profile=smoothstep(base,base+.17,h)*(1.-smoothstep(.62,1.,h));
- return density*profile*(layer==1?1.8:2.4);
+// 1,250 m cellular period, 64 periodic cells = 80 km; each world rebase
+// is an exact integer-cell translation. No azimuth/polar UVs in normal weather.
+vec2 cloudHash(vec2 p){
+ p=mod(p,64.);
+ vec3 q=fract(vec3(p.xyx)*vec3(.1031,.1030,.0973));
+ q+=dot(q,q.yzx+33.33);
+ return fract((q.xx+q.yz)*q.zy);
 }
-vec3 integrateLayer(vec3 background,vec3 ro,vec3 rd,int layer){
- float bottom=layer==0?2800.:layer==1?1000.:340.;
- float top=layer==0?3200.:layer==1?1500.:460.;
- float entry=max(0.,(bottom-ro.y)/rd.y),finish=(top-ro.y)/rd.y;
- if(finish<=entry)return background;
- int count=layer==0?2:layer==1?uCloudSteps:(uCloudSteps/2);
- float ds=(finish-entry)/float(count),Tview=1.;vec3 L=vec3(0.);
- float lod=clamp(log2(max(1.,ds/95.)),0.,2.5);
- for(int i=0;i<10;i++){
-  if(i>=count||Tview<.015)break;
-  vec3 p=ro+rd*(entry+(float(i)+.5)*ds);float D=cloudDensity(p,layer,lod);
-  float h=clamp((p.y-bottom)/(top-bottom),0.,1.);
-  // Vertical optical thickness: diffuse light enters from the whole sky,
-  // no sun-facing bright rim or directional hotspot in normal overcast.
-  float tau=D*(1.-h)*12.;
-  float beer=exp(-tau),powder=1.-exp(-2.*D);
-  float multiple=.10*(1.-exp(-tau*.45));
-  float diffuse=clamp(.09+.68*beer+.21*beer*powder+multiple,0.,1.);
-  vec3 shade=mix(vec3(.045,.057,.069),vec3(.42,.455,.48),diffuse);
-  if(layer==0)shade=mix(vec3(.35,.378,.398),vec3(.47,.49,.51),beer);
-  if(layer==2)shade*=.78;
-  shade*=1.-uCloudRain*.14;
-  float extinction=layer==0?.018:layer==1?.018:.030;
-  float opacity=1.-exp(-D*ds*extinction);
-  L+=Tview*opacity*shade;Tview*=1.-opacity;
+float worley(vec2 p){
+ vec2 cell=floor(p),f=fract(p);float nearest=4.;
+ for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++){
+  vec2 o=vec2(float(x),float(y));
+  vec2 d=o+.16+.68*cloudHash(cell+o)-f;
+  nearest=min(nearest,dot(d,d));
  }
- return L+Tview*background;
+ return clamp(sqrt(nearest),0.,1.);
+}
+float cloudNoise2(vec2 p){return textureLod(uCloudNoise,vec3(p.x*.125,.3125,p.y*.125),0.).g;}
+float cloudFBM4(vec2 p){
+ // Four actual octaves, from kilometre-wide bellies down to torn rims.
+ float sum=0.,weight=.5333333;
+ for(int i=0;i<4;i++){sum+=weight*cloudNoise2(p);p=p*2.+vec2(17.,11.);weight*=.5;}
+ return sum;
+}
+vec2 cloudPlane(vec3 ro,vec3 rd,float H){
+ return ro.xz+rd.xz*((H-ro.y)/max(rd.y,.04));
+}
+vec2 cellularColumn(vec2 projected,float H){
+ vec2 p=projected*.0008+vec2(5.6,-1.8)*uCloudTime*.0008;
+ // Isotropic world X/Z sampling; two small domain warps, no horizontal stretch.
+ vec2 w=vec2(cloudNoise2(p*2.),cloudNoise2(p*2.+vec2(5.2,1.3)))-.5;
+ p+=.70*w;
+ p+=.14*(vec2(cloudNoise2(p*4.+9.),cloudNoise2(p*4.-13.))-.5);
+ float cells=1.-worley(p),f=0.,weight=.5333333;
+ vec3 volumeP=vec3(p.x*2.,(H-1050.)*.003,p.y*2.);
+ for(int octave=0;octave<4;octave++){f+=weight*textureLod(uCloudNoise,volumeP*.125,0.).g;volumeP=volumeP*2.+vec3(17.,5.,11.);weight*=.5;}
+ float billows=textureLod(uCloudNoise,vec3(p.x,(H-900.)*.0018,p.y)*.125,0.).a;
+ float evolve=.018*sin(uCloudTime*.013+f*6.);
+ float body=f*.60+cells*.20+billows*.20;
+ float density=clamp((body-.29+evolve+uCloudRain*.035)*2.2,0.,1.);
+ return vec2(density,cells);
+}
+vec3 projectedOvercast(vec3 background,vec3 ro,vec3 rd){
+ // Always overcast: continuous high altostratus, broad main cloud columns,
+ // and disconnected quicker scud 1,100 m below them.
+ vec2 highP=cloudPlane(ro,rd,3000.)*.0004+vec2(2.56,1.024)*uCloudTime*.0004;
+ float high=cloudFBM4(highP);
+ vec3 veil=mix(vec3(.32,.345,.38),vec3(.43,.455,.49),high);
+ // The 1500 m intersection anchors the column. Six to ten bounded samples
+ // through its finite thickness reveal rounded, lower-hanging cloud bellies.
+ vec2 anchor=cloudPlane(ro,rd,1500.);
+ vec3 core=vec3(.0835,.0946,.1065),edge=vec3(.3801,.4064,.4480);
+ float ds=720./float(uCloudSteps)/max(rd.y,.04),Tview=1.;vec3 light=vec3(0.);
+ for(int i=0;i<10;i++){
+  if(i>=uCloudSteps||Tview<.002)break;
+  float H=1080.+(float(i)+.5)*720./float(uCloudSteps);
+  vec2 column=cellularColumn(anchor+rd.xz*((H-1500.)/max(rd.y,.04)),H);
+  float bottom=1110.+230.*(1.-column.y),top=1690.+column.x*130.;
+  float profile=smoothstep(bottom,bottom+135.,H)*(1.-smoothstep(top-170.,top,H));
+  float D=column.x*profile;
+  float tau=column.x*max(0.,top-H)*.012;
+  float beer=exp(-tau),powder=1.-exp(-2.*D);
+  float transmission=clamp(beer*(1.+powder*.65)+.065*(1.-beer),0.,1.);
+  vec3 body=mix(core,edge,transmission);
+  float opacity=1.-exp(-D*ds*.019);
+  light+=Tview*opacity*body;Tview*=1.-opacity;
+ }
+ vec3 color=light+veil*Tview;
+ vec2 scudP=cloudPlane(ro,rd,400.)*.0016+vec2(10.24,2.56)*uCloudTime*.0016;
+ float scud=cloudFBM4(scudP);
+ float scraps=smoothstep(.56,.76,scud)*(1.-smoothstep(.30,.62,cloudNoise2(scudP*.5+4.)));
+ color=mix(color,core*.83,scraps*.50);
+ return color*(1.-uCloudRain*.12);
 }
 
 void main() {
+  if(uCloudCached){
+   vec3 cached=texture2D(uCloudScreen,gl_FragCoord.xy/uCloudViewport).rgb;
+   if(uFogVolumeAmount>.001){vec4 v=fogVolumeAt(48.);float trans=pow(v.a,3.);cached=cached*trans+v.rgb/max(1.-v.a,.0001)*(1.-trans);}
+   gl_FragColor=vec4(cached,1.);
+   #include <colorspace_fragment>
+   return;
+  }
   vec3 rd = normalize(vCloudDirection);
-  vec3 ro = uCloudCamera + vec3(uCloudOrigin.x, 0.0, uCloudOrigin.y);
+  vec3 ro = uCloudCamera;
+  ro.xz=mod(ro.xz+uSkyOrigin,80000.);
   float elevation = max(rd.y, 0.0);
   vec3 upperSky = vec3(.445, .473, .484) - uCloudRain * .055;
   vec3 skyColor = mix(uCloudFogColor, upperSky, smoothstep(.01, .62, elevation));
   if(rd.y>.012 && uSkyEvent.x<.995 && uSkyEvent.y<.995 && uSkyEvent.z<.995 && uCloudMist<.95){
    // Composite distant -> close. The high deck never opens onto blue sky.
-   vec3 layers=integrateLayer(skyColor,ro,rd,0);
-   layers=integrateLayer(layers,ro,rd,1);
-   layers=integrateLayer(layers,ro,rd,2);
+   vec3 layers=projectedOvercast(skyColor,ro,rd);
    float visibility=smoothstep(.012,.13,rd.y)*(1.-uCloudMist*.8);
    skyColor=mix(skyColor,layers,visibility);
   }
@@ -425,9 +455,11 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
     uStageEvent:{value:new T.Vector3()},
     uSkyEvent: {value:new T.Vector4()},
     uSkyWallpaper: {value:weatherTextures['cloud-wallpaper']},
+    uCloudCached:{value:false},uCloudScreen:{value:null},uCloudViewport:{value:new T.Vector2(1,1)},
     uCloudNoise: {value: texture},
     uCloudCamera: {value: new T.Vector3()},
     uCloudOrigin: {value: new T.Vector2()},
+    uSkyOrigin: {value: new T.Vector2()},
     uCloudFogColor: {value: fog?.color?.clone() || new T.Color('#acb6b1')},
     uCloudTime: {value: 0},
     uCloudMist: {value: 0},
@@ -437,7 +469,7 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
   // Three r180 converts ShaderMaterial to GLSL ES 3 automatically. Keeping its
   // normal prefix preserves gl_FragColor and output color-space handling.
   const material = new T.ShaderMaterial({
-    name: 'three-altitude-overcast-v42',
+    name: 'ray-projected-cellular-overcast-v43',
     side: T.BackSide, depthWrite: false, depthTest: true, fog: false,
     toneMapped: false, uniforms, vertexShader: cloudVertex, fragmentShader: cloudFragment
   });
@@ -446,6 +478,27 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
   // Draw after opaque scenery so the depth buffer rejects hidden sky pixels.
   sky.renderOrder = 1000;
   sky.frustumCulled = false;
+  // Smooth weather density is evaluated at half width/height (capped at 640px
+  // wide), then composited only on sky fragments after opaque depth testing.
+  // Recompute from the current camera every frame: no stale rotational cache.
+  const cloudTarget=new T.WebGLRenderTarget(1,1,{depthBuffer:false,type:renderer.extensions.has('EXT_color_buffer_float')?T.HalfFloatType:T.UnsignedByteType,minFilter:T.LinearFilter,magFilter:T.LinearFilter,generateMipmaps:false});
+  cloudTarget.texture.colorSpace=T.NoColorSpace;
+  const cloudPassMaterial=new T.ShaderMaterial({depthTest:false,depthWrite:false,toneMapped:false,uniforms:{...uniforms,uCloudCached:{value:false},uCloudScreen:{value:null},uFogVolumeAmount:{value:0},uCloudInverseProjection:{value:new T.Matrix4()},uCloudWorldMatrix:{value:new T.Matrix4()}},fragmentShader:cloudFragment,vertexShader:`
+   varying vec3 vCloudDirection;uniform mat4 uCloudInverseProjection,uCloudWorldMatrix;
+   void main(){vec4 p=uCloudInverseProjection*vec4(position.xy,1.,1.);vCloudDirection=mat3(uCloudWorldMatrix)*p.xyz;gl_Position=vec4(position.xy,0.,1.);}`});
+  const cloudGeometry=new T.BufferGeometry().setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));
+  const cloudScene=new T.Scene(),cloudCamera=new T.Camera(),cloudQuad=new T.Mesh(cloudGeometry,cloudPassMaterial);cloudQuad.frustumCulled=false;cloudScene.add(cloudQuad);
+  sky.userData.renderClouds=(camera,width,height)=>{
+   // Rare sharp sky events retain their original resolution.
+   const event=uniforms.uSkyEvent.value;uniforms.uCloudCached.value=false;
+   if(event.x+event.y+event.z+uniforms.uStageEvent.value.y>.001)return;
+   const w=Math.max(1,Math.ceil(Math.min(width*.5,640))),h=Math.max(1,Math.ceil(w*height/width));
+   if(cloudTarget.width!==w||cloudTarget.height!==h)cloudTarget.setSize(w,h);
+   camera.updateMatrixWorld(true);cloudPassMaterial.uniforms.uCloudInverseProjection.value.copy(camera.projectionMatrixInverse);cloudPassMaterial.uniforms.uCloudWorldMatrix.value.copy(camera.matrixWorld);
+   const previous=renderer.getRenderTarget(),auto=renderer.autoClear;
+   try{renderer.autoClear=true;renderer.setRenderTarget(cloudTarget);renderer.render(cloudScene,cloudCamera);}finally{renderer.setRenderTarget(previous);renderer.autoClear=auto;}
+   uniforms.uCloudScreen.value=cloudTarget.texture;uniforms.uCloudViewport.value.set(width,height);uniforms.uCloudCached.value=true;
+  };
   function update(options = {}) {
     const {time = 0, quality: q, camera, originX = 0, originZ = 0, mist = 0, rain = 0, event={}} = options;
     uniforms.uStageEvent.value.set(event.stageAge||0,event.stageReveal||0,event.stageRestore||0);
@@ -454,6 +507,7 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
     uniforms.uCloudMist.value = clamp01(mist);
     uniforms.uCloudRain.value = clamp01(rain);
     uniforms.uCloudOrigin.value.set(worldOrigin(originX), worldOrigin(originZ));
+    uniforms.uSkyOrigin.value.set(skyOrigin(originX),skyOrigin(originZ));
     if (q){uniforms.uCloudSteps.value = QUALITY_STEPS[q] || QUALITY_STEPS.balanced;}
     if (camera) {sky.position.copy(camera.position); uniforms.uCloudCamera.value.copy(camera.position);}
     const currentFog = scene?.fog || fog;
@@ -463,6 +517,6 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
   }
   return {
     sky, update, volume, renderFog:volume.render, attachFog: fogController.attach, fog: fogController,
-    dispose() {volume.dispose();fogController.dispose(); sky.geometry.dispose(); material.dispose(); texture.dispose();}
+    dispose() {volume.dispose();fogController.dispose();cloudTarget.dispose();cloudGeometry.dispose();cloudPassMaterial.dispose(); sky.geometry.dispose(); material.dispose(); texture.dispose();}
   };
 }

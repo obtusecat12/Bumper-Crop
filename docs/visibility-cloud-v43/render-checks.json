@@ -1,0 +1,8 @@
+{
+  "gl_errors": 0,
+  "wide_far_identity": true,
+  "tele_changes": true,
+  "rebase_identity": true,
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "hardware_fps_test": false
+}

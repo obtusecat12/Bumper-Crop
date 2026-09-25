@@ -1,0 +1,10 @@
+{
+  "closedLODRanges": 10,
+  "nearGeometryPreservedUnderPressure": true,
+  "packetRoundTrip": true,
+  "fenceCases": 15,
+  "colliderSamples": 4344,
+  "vertexSamples": 4968,
+  "openedRoadCrossings": 3,
+  "farCanopyCompleteBeforeCardFade": true
+}

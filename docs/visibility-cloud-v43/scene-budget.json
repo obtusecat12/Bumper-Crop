@@ -1,0 +1,335 @@
+{
+  "version": "43",
+  "batched": true,
+  "generatedMs": 42698.493309000005,
+  "batchMs": 0.1190240000069025,
+  "camera": [
+    0.6,
+    1.77,
+    52
+  ],
+  "poses": [
+    {
+      "yaw": -0.37,
+      "draws": 104,
+      "triangles": 184335,
+      "shadowTriangles": 52601,
+      "shadowDraws": 118,
+      "shadowNames": {
+        "Merged trunks, limbs and shrub stems": 7680,
+        "Unified static tree and hedgerow foliage": 9428,
+        "Rural architecture / unified original surfaces": 30963,
+        "warm lantern mantle": 40,
+        "small blue burner flame": 8,
+        "warm flour paste": 180,
+        "Individual leaves on small branch sprays / tile foliage": 3372,
+        "Photo trees / shared rough bark / clipped tile": 928,
+        "kephart-sign-annex-sign / clipped tile": 2
+      },
+      "fullSceneTriangles": 236936,
+      "shadowUpperBound": 90042,
+      "names": {
+        "sculpted-ground-and-wheel-ruts": {
+          "calls": 19,
+          "triangles": 69678
+        },
+        "Merged trunks, limbs and shrub stems": {
+          "calls": 15,
+          "triangles": 8092
+        },
+        "Unified static tree and hedgerow foliage": {
+          "calls": 17,
+          "triangles": 4848
+        },
+        "power-lines": {
+          "calls": 15,
+          "triangles": 0
+        },
+        "pickup-bottle-opaque": {
+          "calls": 5,
+          "triangles": 380
+        },
+        "pickup-bottle-glass": {
+          "calls": 5,
+          "triangles": 320
+        },
+        "Rural architecture / unified original surfaces": {
+          "calls": 8,
+          "triangles": 43959
+        },
+        "gently simmering low-poly flour paste": {
+          "calls": 1,
+          "triangles": 24
+        },
+        "pot vapour": {
+          "calls": 1,
+          "triangles": 30
+        },
+        "aged translucent rear rooflight": {
+          "calls": 1,
+          "triangles": 4
+        },
+        "warm lantern mantle": {
+          "calls": 1,
+          "triangles": 40
+        },
+        "small blue burner flame": {
+          "calls": 1,
+          "triangles": 8
+        },
+        "warm flour paste": {
+          "calls": 1,
+          "triangles": 180
+        },
+        "yard-empty-glass": {
+          "calls": 1,
+          "triangles": 816
+        },
+        "Individual leaves on small branch sprays / tile foliage": {
+          "calls": 2,
+          "triangles": 36
+        },
+        "Photo trees / shared rough bark / clipped tile": {
+          "calls": 1,
+          "triangles": 20
+        },
+        "scattered-fine-rut-gravel": {
+          "calls": 2,
+          "triangles": 60
+        },
+        "Unified photographic roadside and bank plants": {
+          "calls": 4,
+          "triangles": 5576
+        },
+        "Frozen 40m cereal cell": {
+          "calls": 4,
+          "triangles": 50264
+        }
+      }
+    },
+    {
+      "yaw": 0.9,
+      "draws": 75,
+      "triangles": 149682,
+      "shadowTriangles": 49667,
+      "shadowDraws": 111,
+      "shadowNames": {
+        "Unified static tree and hedgerow foliage": 9808,
+        "Merged trunks, limbs and shrub stems": 7780,
+        "Rural architecture / unified original surfaces": 29829,
+        "warm lantern mantle": 40,
+        "small blue burner flame": 8,
+        "warm flour paste": 180,
+        "Individual leaves on small branch sprays / tile foliage": 1152,
+        "Photo trees / shared rough bark / clipped tile": 870
+      },
+      "fullSceneTriangles": 199349,
+      "shadowUpperBound": 90042,
+      "names": {
+        "sculpted-ground-and-wheel-ruts": {
+          "calls": 17,
+          "triangles": 76004
+        },
+        "Merged trunks, limbs and shrub stems": {
+          "calls": 8,
+          "triangles": 8620
+        },
+        "Unified static tree and hedgerow foliage": {
+          "calls": 8,
+          "triangles": 2420
+        },
+        "power-lines": {
+          "calls": 12,
+          "triangles": 0
+        },
+        "pickup-bottle-opaque": {
+          "calls": 4,
+          "triangles": 304
+        },
+        "pickup-bottle-glass": {
+          "calls": 4,
+          "triangles": 256
+        },
+        "Rural architecture / unified original surfaces": {
+          "calls": 4,
+          "triangles": 496
+        },
+        "irregular slate-blue water": {
+          "calls": 7,
+          "triangles": 5182
+        },
+        "scattered-fine-rut-gravel": {
+          "calls": 2,
+          "triangles": 60
+        },
+        "Unified photographic roadside and bank plants": {
+          "calls": 4,
+          "triangles": 5576
+        },
+        "Frozen 40m cereal cell": {
+          "calls": 5,
+          "triangles": 50764
+        }
+      }
+    },
+    {
+      "yaw": 2.1,
+      "draws": 71,
+      "triangles": 123259,
+      "shadowTriangles": 39663,
+      "shadowDraws": 84,
+      "shadowNames": {
+        "Merged trunks, limbs and shrub stems": 4634,
+        "Unified static tree and hedgerow foliage": 6068,
+        "Rural architecture / unified original surfaces": 24715,
+        "Individual leaves on small branch sprays / tile foliage": 3336,
+        "Photo trees / shared rough bark / clipped tile": 908,
+        "kephart-sign-annex-sign / clipped tile": 2
+      },
+      "fullSceneTriangles": 162922,
+      "shadowUpperBound": 90042,
+      "names": {
+        "sculpted-ground-and-wheel-ruts": {
+          "calls": 15,
+          "triangles": 62424
+        },
+        "Merged trunks, limbs and shrub stems": {
+          "calls": 7,
+          "triangles": 2158
+        },
+        "Unified static tree and hedgerow foliage": {
+          "calls": 9,
+          "triangles": 1800
+        },
+        "power-lines": {
+          "calls": 11,
+          "triangles": 0
+        },
+        "irregular slate-blue water": {
+          "calls": 6,
+          "triangles": 4977
+        },
+        "Rural architecture / unified original surfaces": {
+          "calls": 4,
+          "triangles": 496
+        },
+        "scattered-fine-rut-gravel": {
+          "calls": 2,
+          "triangles": 60
+        },
+        "Unified photographic roadside and bank plants": {
+          "calls": 4,
+          "triangles": 5576
+        },
+        "pickup-bottle-opaque": {
+          "calls": 4,
+          "triangles": 304
+        },
+        "pickup-bottle-glass": {
+          "calls": 4,
+          "triangles": 256
+        },
+        "Frozen 40m cereal cell": {
+          "calls": 5,
+          "triangles": 45208
+        }
+      }
+    },
+    {
+      "yaw": 3.4,
+      "draws": 67,
+      "triangles": 155241,
+      "shadowTriangles": 40131,
+      "shadowDraws": 90,
+      "shadowNames": {
+        "Merged trunks, limbs and shrub stems": 4830,
+        "Unified static tree and hedgerow foliage": 6340,
+        "Rural architecture / unified original surfaces": 24715,
+        "Individual leaves on small branch sprays / tile foliage": 3336,
+        "Photo trees / shared rough bark / clipped tile": 908,
+        "kephart-sign-annex-sign / clipped tile": 2
+      },
+      "fullSceneTriangles": 195372,
+      "shadowUpperBound": 90042,
+      "names": {
+        "sculpted-ground-and-wheel-ruts": {
+          "calls": 18,
+          "triangles": 66920
+        },
+        "scattered-fine-rut-gravel": {
+          "calls": 2,
+          "triangles": 60
+        },
+        "Unified photographic roadside and bank plants": {
+          "calls": 4,
+          "triangles": 5576
+        },
+        "Merged trunks, limbs and shrub stems": {
+          "calls": 8,
+          "triangles": 9418
+        },
+        "Unified static tree and hedgerow foliage": {
+          "calls": 8,
+          "triangles": 1768
+        },
+        "power-lines": {
+          "calls": 7,
+          "triangles": 0
+        },
+        "pickup-bottle-opaque": {
+          "calls": 4,
+          "triangles": 304
+        },
+        "pickup-bottle-glass": {
+          "calls": 4,
+          "triangles": 256
+        },
+        "Rural architecture / unified original surfaces": {
+          "calls": 5,
+          "triangles": 28479
+        },
+        "Individual leaves on small branch sprays / tile foliage": {
+          "calls": 1,
+          "triangles": 384
+        },
+        "Photo trees / shared rough bark / clipped tile": {
+          "calls": 1,
+          "triangles": 376
+        },
+        "yard-empty-glass": {
+          "calls": 1,
+          "triangles": 816
+        },
+        "Frozen 40m cereal cell": {
+          "calls": 4,
+          "triangles": 40884
+        }
+      }
+    }
+  ],
+  "batch": {
+    "sourceDraws": 302,
+    "draws": 6,
+    "instances": 1397,
+    "matrixWrites": 0,
+    "uploadBytes": 0,
+    "selectionChanges": 1,
+    "budgetTriangles": 195372,
+    "budgetExceeded": false
+  },
+  "detail": {
+    "geometryRadius": 35,
+    "activeStems": 12906,
+    "triangles": 51624,
+    "draws": 6,
+    "uploadBytes": 0,
+    "matrixWrites": 0,
+    "selectionChanges": 1,
+    "pending": 0,
+    "cards": 12906
+  },
+  "batchBudgetMedianMs": 0.11452200000348967,
+  "batchBudgetP95Ms": 0.29735700000310317,
+  "detailUpdateMedianMs": 0.0016679999971529469,
+  "detailUpdateP95Ms": 0.03039100000023609
+}

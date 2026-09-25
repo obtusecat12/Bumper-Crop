@@ -6,7 +6,7 @@ export function createWaterEnvironment(renderer,sky){
  const target=new T.WebGLCubeRenderTarget(64,{type:renderer.extensions.has('EXT_color_buffer_float')?T.HalfFloatType:T.UnsignedByteType,minFilter:T.LinearMipmapLinearFilter,magFilter:T.LinearFilter,generateMipmaps:true});
  target.texture.colorSpace=T.NoColorSpace;
  const scene=new T.Scene(),material=sky.material.clone();
- material.uniforms={...sky.material.uniforms,uFogVolumeAmount:{value:0}};
+ material.uniforms={...sky.material.uniforms,uFogVolumeAmount:{value:0},uCloudCached:{value:false}};
  const dome=new T.Mesh(sky.geometry,material);dome.frustumCulled=false;scene.add(dome);
  const cameras=new T.CubeCamera(.1,600,target);cameras.coordinateSystem=T.WebGLCoordinateSystem;cameras.updateCoordinateSystem();
  let face=0,next=0,ready=false;const stats={faces:0,size:64};

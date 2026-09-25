@@ -1,12 +1,12 @@
-import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=42';
-import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=42';
-import {landmarkTextures} from './landmark-textures.js?v=42';
-import {meadowEnvironment} from './meadow-layout.js?v=42';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=42';
-import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=42';
+import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=43';
+import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=43';
+import {landmarkTextures} from './landmark-textures.js?v=43';
+import {meadowEnvironment} from './meadow-layout.js?v=43';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=43';
+import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=43';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=42';
-import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=42';
+import {ruralTextures} from './rural-textures.js?v=43';
+import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=43';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -148,10 +148,17 @@ function groundMaterial(f,level){
    }
    // The same ground carries distant wheat; no raised, z-fighting canopy.
    float cropRange=length(vCropWorld.xz-cameraPosition.xz);
-   float farCrop=smoothstep(24.,33.,cropRange)*(1.-step(1.5,cropKind));
+   float farCrop=smoothstep(15.,25.,cropRange)*(1.-step(1.5,cropKind));
    float wheatWave=.5+.5*sin(dot(q,vec2(.22,.17))-uTime*1.3+noise2(q*.11)*2.);
-   vec3 cropGold=mix(vec3(.29,.205,.094),vec3(.43,.332,.168),.28+broad*.45+wheatWave*.20);
-   if(cropKind>.5)cropGold*=vec3(.67,.59,.62);
+   // Dense canopy coverage reaches 100% BEFORE the last physical cards fade.
+   // Low-frequency maturity and filtered seed-head flecks replace bare dirt;
+   // no extra field meshes, instance uploads, or distant alpha overdraw.
+   float headAA=1.-smoothstep(.05,.25,length(fwidth(q)));
+   float canopyHeads=(noise2(q*8.)-.5)*headAA;
+   float maturity=clamp(.30+broad*.40+noise2(g*.025)*.22,0.,1.);
+   vec3 cropGold=mix(vec3(.245,.148,.037),vec3(.435,.294,.090),maturity);
+   cropGold*=.88+wheatWave*.17+canopyHeads*.20;
+   if(cropKind>.5)cropGold*=vec3(.86,.87,.77);
    field=mix(field,cropGold,farCrop);
    float vergeBreak=(noise2(g*.5)-.5)*.63+(clods-.5)*.18;
    float roadExtent=1.-smoothstep(1.55,2.25,rd+vergeBreak);

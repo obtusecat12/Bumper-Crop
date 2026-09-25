@@ -1,5 +1,5 @@
-import {paintCompass} from './retro-instruments.js?v=42';
-import {createMapAtlas} from './map-atlas.js?v=42';
+import {paintCompass} from './retro-instruments.js?v=43';
+import {createMapAtlas} from './map-atlas.js?v=43';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
 export function mapPoint(center,dx,dz){

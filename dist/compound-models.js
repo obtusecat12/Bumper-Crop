@@ -1,10 +1,10 @@
-import {mergeArchitectureParts,isSharedArchitectureResource} from './architecture-batch.js?v=42';
-import {makeTroughWater,isSharedTroughWaterResource} from './trough-water.js?v=42';
+import {mergeArchitectureParts,isSharedArchitectureResource} from './architecture-batch.js?v=43';
+import {makeTroughWater,isSharedTroughWaterResource} from './trough-water.js?v=43';
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=42';
-import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=42';
-import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=42';
-import {ruralTextures} from './rural-textures.js?v=42';
+import {height,random,roadDistance} from './world.js?v=43';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=43';
+import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=43';
+import {ruralTextures} from './rural-textures.js?v=43';
 
 // Plans use tile-local component centres. The owner tile renders a component;
 // every intersecting tile retains its complete collision and rain metadata.
@@ -202,28 +202,32 @@ function trough(batch,c,level){
  if(level===0){batch.box(M.rust,-w/2+.23,h+.19,0,.045,.43,.045);batch.box(M.rust,-w/2+.35,h+.38,0,.27,.045,.045);}
 }
 
-function damagedFence(batch,c,level,colliders){
+function damagedFence(batch,c,level,colliders,field){
  const length=c.width||12,n=Math.max(1,Math.ceil(length/3.3)),step=length/n,r=random((c.seed||1)^0x319ffa);
+ // A gate is an actual gap in both the rails and their collision. Sample the
+ // complete span, not just its midpoint: a diagonal road can clip one end.
+ const clear=(a,b=a)=>{const count=Math.max(1,Math.ceil(Math.abs(b-a)/.25));for(let i=0;i<=count;i++){const p=point(c,a+(b-a)*i/count,0);if(roadDistance(p.x,p.z,field)<2.85)return false;}return true;};
  const posts=[];
  for(let i=0;i<=n;i++){
   const x=-length/2+i*step,lean=(r()-.5)*.13,broken=i>0&&i<n&&r()<.16,top=broken?.55:1.18+r()*.09;
-  posts.push({x,top,lean});batch.beam(M.wood,[x,-.15,0],[x+lean,top,.025],.14,.13,.81+r()*.14);
-  colliders.push({kind:'circle',x,z:0,r:.15});
+  const tone=.81+r()*.14,allowed=clear(x-.2,x+.2);posts.push({x,top,lean,allowed});
+  if(allowed){batch.beam(M.wood,[x,-.15,0],[x+lean,top,.025],.14,.13,tone);colliders.push({kind:'circle',x,z:0,r:.15});}
  }
  for(let i=1;i<posts.length;i++){
-  const a=posts[i-1],b=posts[i],missing=r()<.24,broken=r()<.18;
+  const a=posts[i-1],b=posts[i],missing=r()<.24,broken=r()<.18,allowed=a.allowed&&b.allowed&&clear(a.x-.15,b.x+.15);
   for(const y of[.46,.93]){
    if(missing&&(y>.6||r()<.5))continue;
+   if(!allowed)continue;
    if(broken){
     const end=a.x+step*.64;batch.beam(M.wood,[a.x,y,.04],[end,y-.35,.06],.115,.066,.79);
     colliders.push({kind:'obb',x:(a.x+end)/2,z:.04,hx:(end-a.x)/2,hz:.08,angle:0});
    }else{batch.beam(M.wood,[a.x,y,.025],[b.x,y+(b.top<.8?-.29:0),.025],.12,.065,.92);colliders.push({kind:'obb',x:(a.x+b.x)/2,z:.025,hx:step/2,hz:.085,angle:0});}
   }
-  if(level===0&&!missing&&i%4===1)batch.beam(M.dark,[a.x+.15,.2,.075],[b.x-.15,.95,.075],.075,.043,.85);
+  if(allowed&&level===0&&!missing&&i%4===1)batch.beam(M.dark,[a.x+.15,.2,.075],[b.x-.15,.95,.075],.075,.043,.85);
  }
 }
 
-function prop(c,level){
+function prop(c,level,field){
  const batch=new Batch(level),group=new T.Group(),colliders=[],roofs=[];
  if(c.kind==='silo'){
   silo(batch,c,level);colliders.push({kind:'circle',x:0,z:0,r:(c.r||2.85)+.04});
@@ -237,7 +241,7 @@ function prop(c,level){
   colliders.push({kind:'obb',x:0,z:0,hx:2.10,hz:2.10,angle:0});
  }else if(c.kind==='trough'){
   trough(batch,c,level);colliders.push({kind:'obb',x:0,z:0,hx:(c.width||3.7)/2+.05,hz:(c.depth||1.35)/2+.05,angle:0});
- }else if(c.kind==='fence')damagedFence(batch,c,level,colliders);
+ }else if(c.kind==='fence')damagedFence(batch,c,level,colliders,field);
  const stats=batch.finish(group);return {group,colliders,roofs,stats};
 }
 
@@ -265,7 +269,7 @@ export function makeCompoundChunk(f,level=0,wind=null){
    }
   }else{
    // Fence damage uses its own stable seed; far and near collisions coincide.
-   const result=prop(c,belongs?level:2);
+   const result=prop(c,belongs?level:2,f);
    colliders.push(...result.colliders.map(s=>transformCollider(c,s)));
    if(result.roofs.length)rainRoofs.push({x:c.x,z:c.z,angle:c.angle||0,y:groundY,roofs:result.roofs});
    if(belongs){batch.absorb(result.group,transform);props++;}

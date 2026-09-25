@@ -1,0 +1,9 @@
+{
+  "halfResolution": true,
+  "widthCap": 640,
+  "currentViewAndZoom": true,
+  "noFramebufferFeedback": true,
+  "reflectionUsesRawWorldSky": true,
+  "sharpEventsBypass": true,
+  "resourcesDisposed": true
+}

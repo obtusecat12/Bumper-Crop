@@ -1,6 +1,6 @@
 // Best-effort local cache of deterministic CPU products. Never cache materials,
 // GPU handles or worker resource IDs. A new release gets an isolated database.
-const DB='level10-cpu-v40',STORE='tiles',LIMIT=64;let connection;
+const DB='level10-cpu-v43',STORE='tiles',LIMIT=64;let connection;
 async function database(){
  if(typeof indexedDB==='undefined')return null;
  if(!connection)connection=new Promise(resolve=>{const request=indexedDB.open(DB,1);request.onupgradeneeded=()=>request.result.createObjectStore(STORE,{keyPath:'key'}).createIndex('time','time');request.onsuccess=()=>resolve(request.result);request.onerror=()=>resolve(null);request.onblocked=()=>resolve(null);});

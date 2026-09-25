@@ -1,0 +1,8 @@
+{
+  "mean_channel_error_255": 0.2811347415123457,
+  "software_render_ms": {
+    "full": 141.28124049966573,
+    "half": 41.14061550171755
+  },
+  "hardware_fps_test": false
+}
