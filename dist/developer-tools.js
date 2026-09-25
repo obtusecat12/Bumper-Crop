@@ -1,10 +1,11 @@
-import {barnFootprintDistance} from './reference-barn-layout.js?v=36';
-import {compoundAt,CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=36';
-import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=36';
+import {barnFootprintDistance} from './reference-barn-layout.js?v=37';
+import {compoundAt,CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=37';
+import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=37';
 
 const titles={pond:'湖泊',building:'建筑',grove:'树林'};
-function marker(f,kind){
- if(kind==='building'&&f.type!=='building'){for(const plan of f.compounds||[])for(const c of plan.components){if(c.belongs&&c.kind==='barn')return{x:c.x,z:c.z,label:plan.kind==='hamlet'?'农庄聚落':'路边农庄',component:c,compoundId:plan.id};}}
+const COMPOUND_BUILDINGS=new Set(['building','barn','shed','stable','cabin','outhouse']);
+function marker(f,kind,position){
+ if(kind==='building'&&f.type!=='building'){let best=null,bestD=Infinity;for(const plan of f.compounds||[])for(const c of plan.components){if(!c.belongs||!COMPOUND_BUILDINGS.has(c.kind))continue;const d=Math.hypot(c.x-position.x,c.z-position.z);if(d<bestD){bestD=d;best={x:c.x,z:c.z,label:BUILDING_NAMES[(c.variant??2)%8],component:c,compoundId:plan.id};}}return best;}
  if(kind==='grove'){
   if(!['grove','windbreak'].includes(f.vegetationMode)||f.trees.length<4)return null;
   return {x:f.trees.reduce((s,t)=>s+t.x,0)/f.trees.length,z:f.trees.reduce((s,t)=>s+t.z,0)/f.trees.length,label:f.vegetationMode==='windbreak'?'防风林':'树丛'};
@@ -66,7 +67,7 @@ export function* findNearestLandmark(position,seed,kind,maxRadius=32){
  for(let radius=0;radius<=maxRadius;radius++){
   for(let dz=-radius;dz<=radius;dz++)for(let dx=-radius;dx<=radius;dx++){
    if(radius&&Math.max(Math.abs(dx),Math.abs(dz))!==radius)continue;
-   const f=field(position.cx+BigInt(dx),position.cz+BigInt(dz),seed),m=marker(f,kind);
+   const f=field(position.cx+BigInt(dx),position.cz+BigInt(dz),seed),m=marker(f,kind,{x:position.x-dx*CHUNK,z:position.z-dz*CHUNK});
    if(m&&!(kind==='pond'&&f.lakeId&&seenLakes.has(f.lakeId))){
     if(kind==='pond'&&f.lakeId)seenLakes.add(f.lakeId);
     const distance=Math.hypot(dx*CHUNK+m.x-position.x,dz*CHUNK+m.z-position.z);
@@ -152,7 +153,7 @@ export function createMapTarget(point,seed){
  }else if(farm){candidates=farm.points;label=farm.label;mapMode='building';
  }else if(compoundAt(clicked.x,clicked.z,source,{}).footprint<.65){
   const c=compoundAt(clicked.x,clicked.z,source,{}).component;
-  if(c&&['barn','shed','outhouse'].includes(c.kind)){for(const extra of [2.2,3.2,4.5,6])for(const lateral of [0,-1,1,-2,2])candidates.push(worldPoint({cx:c.x,cz:c.z,buildingAngle:c.angle},lateral,c.depth/2+extra));label='农庄建筑门外';mapMode='building';}
+  if(c&&COMPOUND_BUILDINGS.has(c.kind)){for(const extra of [2.2,3.2,4.5,6])for(const lateral of [0,-1,1,-2,2])candidates.push(worldPoint({cx:c.x,cz:c.z,buildingAngle:c.angle},(c.variant===0?-1.15:c.variant===7?-.55:0)+lateral,c.depth/2+extra));label=BUILDING_NAMES[(c.variant??2)%8]+'门外';mapMode='building';}
  }else if(source.type==='building'){
   const q=buildingLocal(clicked.x,clicked.z,source),[w,d]=buildingSize(source);
   if(Math.abs(q.x)<w/2+.65&&Math.abs(q.z)<d/2+.65){
@@ -197,7 +198,7 @@ export function findSafeLanding(target,colliders){
   const approach=target.shoreAngle??pondMetrics(target.x,target.z,lake).angle;
   for(const metres of [1.8,2.6,3.6,5.2,7.0])for(const angle of shoreAngles(approach))points.push(pondBankPoint(lake,angle,metres));
  }else if(target.kind==='building'&&target.component){
-  const c=target.component;for(const extra of [2.2,3.2,4.5,6])for(const lateral of [0,-1,1,-2,2])points.push(worldPoint({cx:c.x,cz:c.z,buildingAngle:c.angle},lateral,c.depth/2+extra));
+  const c=target.component;for(const extra of [2.2,3.2,4.5,6])for(const lateral of [0,-1,1,-2,2])points.push(worldPoint({cx:c.x,cz:c.z,buildingAngle:c.angle},(c.variant===0?-1.15:c.variant===7?-.55:0)+lateral,c.depth/2+extra));
  }else if(target.kind==='building'){
   const [,d]=buildingSize(f),door=f.variant===0?-1.15:f.variant===7?-.55:0;
   for(const extra of [2.2,3.2,4.5,6])for(const lateral of [0,-1,1,-2,2])points.push(worldPoint(f,door*(f.buildingScale||1)+lateral,d/2+extra));

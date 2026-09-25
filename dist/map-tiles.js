@@ -1,8 +1,8 @@
-import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=36';
-import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=36';
-import {compoundAt,shoreGrassCover,field,cropSample,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=36';
-import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=36';
-import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=36';
+import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=37';
+import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=37';
+import {compoundAt,shoreGrassCover,field,cropSample,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=37';
+import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=37';
+import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=37';
 
 // A geography-only view of the existing world. Never imports Three, terrain,
 // textures, vegetation geometry, or the streamed chunk manager.
@@ -41,8 +41,8 @@ function footprint(f,x,z,hx,hz,angle,label,kind='building'){
 function overlaps(points,margin=0){return points.some(p=>p.x>=-margin&&p.x<=SIZE+margin&&p.z>=-margin&&p.z<=SIZE+margin)||!(Math.max(...points.map(p=>p.x))<0||Math.min(...points.map(p=>p.x))>SIZE||Math.max(...points.map(p=>p.z))<0||Math.min(...points.map(p=>p.z))>SIZE)}
 export function mapFootprints(f){
  const result=[];
- const names={barn:'谷仓',shed:'开敞农具棚',outhouse:'木质外屋',silo:'筒仓',windmill:'抽水风车',trough:'水槽'};
- for(const plan of f.compounds||[])for(const p of plan.components){if(!names[p.kind])continue;const q=footprint(f,p.x,p.z,p.r??p.width/2,p.r??p.depth/2,p.angle||0,(plan.kind==='hamlet'?'农庄聚落 · ':'农庄 · ')+names[p.kind],p.kind==='silo'?'silo':'compound-building');if(overlaps(q.corners,4))result.push(q);}
+ const names={building:'田间建筑',barn:'谷仓',shed:'开敞农具棚',stable:'马厩',cabin:'木屋',outhouse:'木质外屋',silo:'筒仓',windmill:'抽水风车',trough:'水槽'};
+ for(const plan of f.compounds||[])for(const p of plan.components){if(!names[p.kind])continue;const q=footprint(f,p.x,p.z,p.r??p.width/2,p.r??p.depth/2,p.angle||0,(plan.kind==='hamlet'?'农庄聚落 · ':plan.kind==='farm'||plan.kind==='extension'?'农庄 · ':'')+(p.variant!==undefined&&['building','barn','shed','stable','cabin','outhouse'].includes(p.kind)?BUILDING_NAMES[p.variant%8]:names[p.kind]),p.kind==='silo'?'silo':'compound-building');q.variant=p.variant;q.finish=p.finish;if(overlaps(q.corners,4))result.push(q);}
  if(f.type==='building'){const [w,d]=buildingSize(f);result.push(footprint(f,f.cx,f.cz,w/2,d/2,f.buildingAngle||0,BUILDING_NAMES[f.variant%8]))}
  if(f.farm)FARM_FOOTPRINTS.forEach((p,i)=>{
   const q=footprint(f,p.x-f.farm.x,p.z-f.farm.z,p.hx,p.hz,p.angle,`Kephart 农场 · ${FARM_NAMES[i]||'农舍'}`,'farm-building');
@@ -114,7 +114,7 @@ function drawPond(ctx,f){
 function drawBuilding(ctx,p,variant=0){
  if(p.kind==='silo'){ctx.beginPath();ctx.arc(p.x,p.z,p.hx,0,TAU);ctx.fillStyle='#9ca197';ctx.fill();ctx.strokeStyle='#585c54';ctx.lineWidth=.35;ctx.stroke();return;}
  ctx.save();ctx.translate(p.x,p.z);ctx.rotate(-p.angle);
- const shade=p.kind==='farm-building'?'#9b7968':['#857761','#8c8371','#a46e59','#916d59','#8b7364','#817663','#8c7d67','#8f806a'][variant%8];
+ variant=p.variant??variant;const shade=({red:'#995f4e',ochre:'#9c8a60',whitewash:'#b7b7a5',olive:'#747d5e',darkwood:'#655c4d'})[p.finish]||(p.kind==='farm-building'?'#9b7968':['#857761','#8c8371','#a46e59','#916d59','#8b7364','#817663','#8c7d67','#8f806a'][variant%8]);
  ctx.fillStyle=shade;ctx.fillRect(-p.hx,-p.hz,p.hx*2,p.hz*2);
  ctx.fillStyle='rgba(40,34,28,.16)';ctx.fillRect(0,-p.hz,p.hx,p.hz*2);
  ctx.strokeStyle='#5e5847';ctx.lineWidth=.35;ctx.strokeRect(-p.hx,-p.hz,p.hx*2,p.hz*2);

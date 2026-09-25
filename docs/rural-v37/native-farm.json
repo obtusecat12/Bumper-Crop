@@ -1,0 +1,498 @@
+{
+  "version": "37",
+  "kind": "farm",
+  "generatedLocation": true,
+  "forcedAssetLayout": false,
+  "seed": 4244718517,
+  "sourcePlan": "v37:4244718517:3:0:split:r:0:1:0",
+  "worldCenter": [
+    1414.270312894556,
+    140.3782387736044
+  ],
+  "origin": [
+    "22",
+    "2"
+  ],
+  "rot": 0.03418054617473734,
+  "tiles": [
+    "21,1",
+    "22,1",
+    "23,1",
+    "21,2",
+    "22,2",
+    "23,2",
+    "21,3",
+    "22,3",
+    "23,3"
+  ],
+  "grade": [
+    {
+      "id": "rear-store",
+      "kind": "shed",
+      "plan": "v37:4244718517:3:0:split:r:0:1:0",
+      "x": 1.6233453578125818,
+      "z": 57.5260321995067,
+      "tile": "22,1",
+      "base": 0.05514451675354036,
+      "surface": 0.015144516753540359,
+      "gap": 0.04,
+      "sampleComponent": "rear-store"
+    },
+    {
+      "id": "main",
+      "kind": "barn",
+      "plan": "v37:4244718517:3:0:split:r:0:1:0",
+      "x": 6.577877913430257,
+      "z": 21.37298189162422,
+      "tile": "22,2",
+      "base": -0.09330119325362504,
+      "surface": -0.13330119325362505,
+      "gap": 0.04000000000000001,
+      "sampleComponent": "main"
+    },
+    {
+      "id": "side-hut",
+      "kind": "outhouse",
+      "plan": "v37:4244718517:3:0:split:r:0:1:0",
+      "x": 20.988160296700755,
+      "z": 3.870303192796314,
+      "tile": "22,2",
+      "base": -0.11890104983223992,
+      "surface": -0.15890104983223993,
+      "gap": 0.04000000000000001,
+      "sampleComponent": "side-hut"
+    },
+    {
+      "id": "grain-silo",
+      "kind": "silo",
+      "plan": "v37:4244718517:3:0:split:r:0:1:0",
+      "x": 18.617413547431113,
+      "z": 18.756352004049745,
+      "tile": "22,2",
+      "base": -0.16407033862156123,
+      "surface": -0.20407033862156124,
+      "gap": 0.04000000000000001,
+      "sampleComponent": "grain-silo"
+    }
+  ],
+  "stats": [
+    {
+      "tile": "21,1",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "22,1",
+      "triangles": 8015,
+      "drawCalls": 10,
+      "buildings": 1,
+      "props": 0,
+      "level": 0,
+      "yards": [
+        {
+          "component": "rear-store",
+          "variant": 5,
+          "objects": 2,
+          "triangles": 4135,
+          "compositionHash": "f574f4a0"
+        }
+      ],
+      "yardObjects": 2
+    },
+    {
+      "tile": "23,1",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "21,2",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "22,2",
+      "triangles": 40238,
+      "drawCalls": 22,
+      "buildings": 2,
+      "props": 1,
+      "level": 0,
+      "yards": [
+        {
+          "component": "main",
+          "variant": 6,
+          "objects": 8,
+          "triangles": 13985,
+          "compositionHash": "cb95b129"
+        },
+        {
+          "component": "side-hut",
+          "variant": 1,
+          "objects": 2,
+          "triangles": 3277,
+          "compositionHash": "182b4693"
+        }
+      ],
+      "yardObjects": 10
+    },
+    {
+      "tile": "23,2",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "21,3",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "22,3",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "23,3",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    }
+  ],
+  "cereals": [
+    {
+      "tile": "21,1",
+      "clumps": 6104,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        6104,
+        0,
+        0
+      ]
+    },
+    {
+      "tile": "22,1",
+      "clumps": 6037,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        6037,
+        0,
+        0
+      ]
+    },
+    {
+      "tile": "23,1",
+      "clumps": 6241,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        6241,
+        0,
+        0
+      ]
+    },
+    {
+      "tile": "21,2",
+      "clumps": 5827,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        5827,
+        0,
+        0
+      ]
+    },
+    {
+      "tile": "22,2",
+      "clumps": 4756,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        4756,
+        0,
+        0
+      ]
+    },
+    {
+      "tile": "23,2",
+      "clumps": 5900,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        5900,
+        0,
+        0
+      ]
+    },
+    {
+      "tile": "21,3",
+      "clumps": 6241,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        6241,
+        0,
+        0
+      ]
+    },
+    {
+      "tile": "22,3",
+      "clumps": 6241,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        6241,
+        0,
+        0
+      ]
+    },
+    {
+      "tile": "23,3",
+      "clumps": 6241,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        6241,
+        0,
+        0
+      ]
+    }
+  ],
+  "natureStats": [
+    {
+      "tile": "21,1",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "22,1",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "23,1",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "21,2",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "22,2",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "23,2",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "21,3",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "22,3",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "23,3",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "main",
+      "kind": "barn",
+      "x": 214.57787791343026,
+      "z": 149.37298189162422,
+      "width": 12.494025967400521,
+      "depth": 18.78047671333188,
+      "height": 3.7091395451435814,
+      "angle": -0.06915580748116718,
+      "variant": 6,
+      "main": true,
+      "role": "stable",
+      "grammar": "tandem",
+      "finish": "darkwood",
+      "roofOverhang": 0.65,
+      "hx": 6.897012983700261,
+      "hz": 10.04023835666594,
+      "ground": true,
+      "yardDensity": 0.7378844881942496,
+      "roofFinish": "iron",
+      "seed": 1708639264
+    },
+    {
+      "id": "rear-store",
+      "kind": "shed",
+      "x": 209.62334535781258,
+      "z": 121.5260321995067,
+      "width": 13.709039949798026,
+      "depth": 9.516739595116816,
+      "height": 3.858662002735771,
+      "angle": -0.04344065644780298,
+      "variant": 5,
+      "main": false,
+      "role": "implement-shelter",
+      "grammar": "tandem",
+      "finish": "olive",
+      "roofOverhang": 0.65,
+      "hx": 7.504519974899013,
+      "hz": 5.408369797558408,
+      "ground": true,
+      "yardDensity": 0.2870123960170895,
+      "roofFinish": "iron",
+      "seed": 1811205176
+    },
+    {
+      "id": "side-hut",
+      "kind": "outhouse",
+      "x": 228.98816029670076,
+      "z": 131.8703031927963,
+      "width": 2.9634149812553074,
+      "depth": 3.3076422852054237,
+      "height": 2.74647440225305,
+      "angle": -0.34461919436233246,
+      "variant": 1,
+      "main": false,
+      "role": "privy",
+      "grammar": "tandem",
+      "finish": "whitewash",
+      "roofOverhang": 0.65,
+      "hx": 2.1317074906276536,
+      "hz": 2.303821142602712,
+      "ground": true,
+      "yardDensity": 0.4791520174406469,
+      "roofFinish": "tin",
+      "seed": 185940256
+    },
+    {
+      "id": "grain-silo",
+      "kind": "silo",
+      "x": 226.6174135474311,
+      "z": 146.75635200404975,
+      "r": 2.659039181191474,
+      "height": 11.273582782247104,
+      "angle": 0.4542988761281396,
+      "ground": true,
+      "grammar": "tandem",
+      "seed": 3828279726
+    },
+    {
+      "id": "tree-0",
+      "kind": "tree",
+      "x": 197.07393235661135,
+      "z": 136.73326888319968,
+      "r": 2.76007174316328,
+      "height": 7.19198352927342,
+      "angle": -0.13919252716472494,
+      "ground": false,
+      "grammar": "tandem",
+      "variant": 1,
+      "crownWidth": 4.925040332181379,
+      "seed": 2070028875
+    }
+  ]
+}

@@ -1,7 +1,9 @@
+import {makeTroughWater,isSharedTroughWaterResource} from './trough-water.js?v=37';
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=36';
-import {makeRuralBuilding} from './buildings.js?v=36';
-import {ruralTextures} from './rural-textures.js?v=36';
+import {height,random} from './world.js?v=37';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=37';
+import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=37';
+import {ruralTextures} from './rural-textures.js?v=37';
 
 // Plans use tile-local component centres. The owner tile renders a component;
 // every intersecting tile retains its complete collision and rain metadata.
@@ -21,10 +23,9 @@ const M={
  roof:material('Compound / aged metal cap','#969e94',ruralTextures.siloMetal||null,.12),
  rust:material('Compound / iron and oxide','#795e45',ruralTextures.siloMetal||null,.12),
  stone:material('Compound / worn concrete','#868579'),
- water:material('Compound / trough water','#556b61'),
  black:material('Compound / deep recess','#262d28')
 };
-export function isSharedCompoundResource(resource){return shared.has(resource);}
+export function isSharedCompoundResource(resource){return shared.has(resource)||isSharedBuildingResource(resource)||isSharedYardPropResource(resource)||isSharedTroughWaterResource(resource);}
 // Optional injection for applications that maintain another shared texture pool.
 // Existing geometries keep the same material and texture object references.
 export function setCompoundTextureMaps({red,metal}={}){
@@ -69,7 +70,7 @@ class Batch{
     g.setAttribute(name,new T.BufferAttribute(array,size));
    }
    for(const part of parts)part.dispose();g.computeBoundingBox();g.computeBoundingSphere();
-   const mesh=new T.Mesh(g,mat);mesh.name=mat.name||'Compound / merged architecture';mesh.castShadow=this.level<2;mesh.receiveShadow=true;group.add(mesh);triangles+=count/3;
+   const mesh=new T.Mesh(g,mat);mesh.name=mat.name||'Compound / merged architecture';mesh.castShadow=this.level<2&&!mat.transparent;mesh.receiveShadow=true;if(mat.transparent)mesh.renderOrder=1;group.add(mesh);triangles+=count/3;
   }
   this.parts.clear();return {triangles,drawCalls:group.children.length};
  }
@@ -79,74 +80,46 @@ function componentTransform(c,y){return new T.Matrix4().compose(new T.Vector3(c.
 function point(c,x,z){const a=c.angle||0,cc=Math.cos(a),ss=Math.sin(a);return {x:c.x+cc*x+ss*z,z:c.z-ss*x+cc*z};}
 function transformCollider(c,solid){const p=point(c,solid.x,solid.z);return {...solid,x:p.x,z:p.z,...(solid.kind==='obb'?{angle:(solid.angle||0)+(c.angle||0)}:{})};}
 function disposeGeometry(group){group.traverse(o=>{if(o.geometry)o.geometry.dispose();});}
-function componentFinish(plan,c){return c.finish||(c.kind==='barn'?(plan.finish||((plan.seed||0)&1?'red':'gray')):'gray');}
+const BUILDING_KINDS=new Set(['barn','shed','stable','cabin','outhouse','building']);
+function componentFinish(plan,c){return c.finish??(c.main?plan.finish:undefined);}
 function buildingField(f,plan,c){
  return {...f,cx:0,cz:0,buildingY:0,buildingAngle:0,buildingScale:1,
   buildingDimensions:[c.width,c.depth,c.height],buildingWidth:c.width,buildingDepth:c.depth,buildingHeight:c.height,
-  buildingFinish:componentFinish(plan,c),variant:c.variant??(c.kind==='outhouse'?1:c.kind==='shed'?5:2),
+  buildingFinish:componentFinish(plan,c),buildingRoofFinish:c.roofFinish,compoundLod:true,variant:c.variant??(c.kind==='outhouse'?1:c.kind==='shed'?5:c.kind==='stable'?6:c.kind==='cabin'?0:2),
   seed:c.seed??plan.seed,key:(plan.key||plan.id||'compound')+':'+c.id};
 }
-function localBuilding(f,plan,c,needGeometry){
- const bf=buildingField(f,plan,c),key=[bf.seed,bf.variant,c.width,c.depth,c.height,bf.buildingFinish].join(':');
+function localBuilding(f,plan,c,needGeometry,level=0){
+ const bf=buildingField(f,plan,c),key=[bf.seed,bf.variant,c.width,c.depth,c.height,bf.buildingFinish,bf.buildingRoofFinish].join(':');
  let metadata=metaCache.get(key),source=null;
  if(needGeometry||!metadata){
-  source=makeRuralBuilding(bf,0);
+  source=makeRuralBuilding(bf,needGeometry?level:2);
   if(!metadata){
-   // Keep the original seed's tin/iron/rust roof at every LOD. Selecting by
-   // upper-facing roof vertices excludes small rusty barrels on the floor.
-   let roofMaterial=M.roof,roofScore=-1;
-   for(const mesh of source.group.children){
-    if(!['4c5350','7b827a','795b45'].includes(mesh.material.color.getHexString()))continue;
-    const p=mesh.geometry.attributes.position,n=mesh.geometry.attributes.normal;let score=0;
-    for(let i=0;i<p.count;i++)if(p.getY(i)>c.height-.55&&n.getY(i)>.5)score++;
-    if(score>roofScore){roofScore=score;roofMaterial=mesh.material;}
-   }
-   metadata={colliders:source.colliders,roofs:source.group.userData.rainRoofs||[],pickups:source.pickups,roofMaterial};metaCache.set(key,metadata);if(metaCache.size>512)metaCache.delete(metaCache.keys().next().value);
+   metadata={colliders:source.colliders,roofs:source.group.userData.rainRoofs||[],pickups:source.pickups};metaCache.set(key,metadata);if(metaCache.size>512)metaCache.delete(metaCache.keys().next().value);
   }
  }
  if(!needGeometry&&source){disposeGeometry(source.group);source=null;}
  return {metadata,source};
 }
 
-// At distance, roofs, open doorways, three open shelter bays, posts and gables
-// remain actual geometry. Tiny plank gaps, nails, clutter and hidden trusses go.
-function distantBuilding(batch,c,finish,roofMaterial=M.roof){
- const w=c.width,d=c.depth,h=c.height,v=c.variant??(c.kind==='outhouse'?1:c.kind==='shed'?5:2),hw=w/2,hd=d/2;
- const wall=finish==='red'?M.red:M.wood,trim=(v===2||v===3)?M.trim:M.dark,dw=v===1?1.12:4.4,dh=v===1?2.32:3.9;
- batch.box(M.dark,0,-.03,0,w,.10,d);
- if(v===5){
-  batch.box(wall,0,(h-.9)/2,-hd,w,h-.9,.15);
-  for(const side of[-1,1]){
-   batch.box(wall,side*hw,(h-.9)/2,0,.15,h-.9,d);
-   batch.poly(wall,[[side*hw,h-.9,-hd],[side*hw,h-.9,hd],[side*hw,h,hd]]);
-  }
-  for(const x of[-hw,-w/6,w/6,hw])batch.box(M.dark,x,h/2,hd,.23,h,.23);
-  batch.box(M.dark,0,h-.2,hd,w,.30,.23);
-  batch.box(roofMaterial,0,h-.40,0,w+.85,.12,Math.hypot(d+1,.9),-Math.atan2(.9,d));
-  for(const x of[-w/6,w/6])for(const side of[-1,1])batch.beam(M.wood,[x,h-.95,hd],[x+side*.7,h-.2,hd],.14);
-  return;
+function yardField(f,plan,c,groundY){
+ const exclusions=[],main=c.main??(c===plan.components.find(p=>BUILDING_KINDS.has(p.kind)));
+ for(const p of f.compounds||[])for(const q of p.components||[]){
+  if(q===c)continue;
+  const hx=q.kind==='tree'?.48:q.r??q.hx??(q.width||4)/2+.15,hz=q.kind==='tree'?.48:q.r??q.hz??(q.depth||4)/2+.15;
+  exclusions.push({x:q.x,z:q.z,hx,hz,a:q.angle||0});
  }
- for(const x of[-hw,hw])batch.box(wall,x,h/2,0,.15,h,d);
- batch.box(wall,0,h/2,-hd,w,h,.15);
- for(const side of[-1,1])batch.box(wall,side*(hw+dw/2)/2,h/2,hd,hw-dw/2,h,.15);
- batch.box(wall,0,(h+dh)/2,hd,dw,Math.max(.05,h-dh),.15);
- let profile=v===3?[[-hw-.4,h-.15],[-w*.29,h+2.9],[0,h+4.1],[w*.29,h+2.9],[hw+.4,h-.15]]:
-  [[-hw-.42,h-.42*(v===1?.95:3.2)/hw],[0,h+(v===1?.95:3.2)],[hw+.42,h-.42*(v===1?.95:3.2)/hw]];
- for(let j=1;j<profile.length;j++){
-  const [ax,ay]=profile[j-1],[bx,by]=profile[j];batch.box(roofMaterial,(ax+bx)/2,(ay+by)/2,0,Math.hypot(bx-ax,by-ay),.12,d+.85,0,0,Math.atan2(by-ay,bx-ax));
+ if(f.type==='building'){
+  const [w,d]=f.buildingDimensions||[[7,9],[2.8,3.2],[12,17],[13,19],[11,15],[13,9],[13,18],[8,11]][f.variant%8],s=f.buildingScale||1;
+  exclusions.push({x:f.cx,z:f.cz,hx:w*s/2+.6,hz:d*s/2+2,a:f.buildingAngle||0});
  }
- for(const z of[-hd,hd]){
-  const cap=profile.map(([x,y])=>[Math.max(-hw,Math.min(hw,x)),Math.max(h,y),z]);
-  batch.poly(wall,[[-hw,h,z],...cap,[hw,h,z]]);
-  for(let j=1;j<profile.length;j++)batch.beam(trim,[profile[j-1][0],profile[j-1][1],z+.04],[profile[j][0],profile[j][1],z+.04],.13);
- }
- for(const side of[-1,1]){
-  batch.box(trim,side*(dw/2+.06),dh/2,hd+.06,.15,dh,.19);
-  if(v!==1){const x=side*(dw*.75+.04);batch.box(wall,x,dh/2,hd+.21,dw/2-.09,dh-.09,.10);batch.beam(trim,[x-dw*.22,.25,hd+.27],[x+dw*.22,dh-.25,hd+.27],.07);}
- }
- batch.box(trim,0,dh+.06,hd+.1,dw+.3,.19,.2);
- if(v!==1){batch.box(M.black,0,h+.75,hd+.04,2.12,1.52,.04);batch.box(trim,0,h+1.54,hd+.10,2.3,.10,.12);}
+ for(const tree of f.trees||[])exclusions.push({x:tree.x,z:tree.z,hx:.46,hz:.46,a:0});
+ return {...buildingField(f,plan,c),type:'building',cx:c.x,cz:c.z,buildingY:groundY,buildingAngle:c.angle||0,
+  yardTerrainField:f,yardExclusions:exclusions,yardMain:main,
+  yardDensity:c.yardDensity??(c.kind==='outhouse'?.28:main?.85:.46),yardProps:c.yardProps};
 }
+
+// All eight legacy silhouettes use the same generator at every distance.
+// Coarse plank panels and omitted subpixel repairs are handled in buildings.js.
 
 function cylinderGeometry(radius,height,segments=32){const g=new T.CylinderGeometry(radius,radius,height,segments,1,false).toNonIndexed(),uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*Math.PI*2*radius*.35,uv.getY(i)*height*.35);return g;}
 function ring(batch,r,y,thickness,segments,mat=M.metal,tone=1){
@@ -233,7 +206,7 @@ function trough(batch,c,level){
  batch.box(M.dark,0,.14,0,w-.12,.12,d-.12);
  for(const side of[-1,1]){batch.box(M.metal,side*(w/2-t/2),h/2,0,t,h,d);batch.box(M.metal,0,h/2,side*(d/2-t/2),w,h,t);}
  for(const side of[-1,1]){batch.box(M.rust,side*(w/2+.018),h+.025,0,.075,.065,d+.08);batch.box(M.rust,0,h+.025,side*(d/2+.018),w+.09,.065,.075);}
- batch.box(M.water,0,h-.12,0,w-.22,.014,d-.22);
+ const water=makeTroughWater(w-.202,d-.202,c.seed??1,{waterDepth:h-.325,level});water.position.y=h-.12;batch.absorb(water);disposeGeometry(water);
  for(const x of[-w*.32,w*.32])batch.box(M.stone,x,.055,0,.29,.13,d+.18);
  if(level===0){batch.box(M.rust,-w/2+.23,h+.19,0,.045,.43,.045);batch.box(M.rust,-w/2+.35,h+.38,0,.27,.045,.045);}
 }
@@ -279,20 +252,25 @@ function prop(c,level){
 
 export function makeCompoundChunk(f,level=0,wind=null){
  level=Math.max(0,Math.min(2,level|0));const group=new T.Group(),batch=new Batch(level),colliders=[],pickups=[],rainRoofs=[];
- group.name='Rural farm compounds';let buildings=0,props=0;
+ group.name='Rural farm compounds';let buildings=0,props=0;const yards=[];
  for(const plan of f.compounds||[])for(const c of plan.components||[]){
   if(c.kind==='tree')continue; // Incorporated into the existing nature batch.
   const belongs=c.belongs??(c.x>=0&&c.x<64&&c.z>=0&&c.z<64),groundY=c.groundY??plan.groundY??height(c.x,c.z,f.x,f.z);
   const transform=componentTransform(c,groundY);
-  if(c.kind==='barn'||c.kind==='shed'||c.kind==='outhouse'){
-   const {metadata,source}=localBuilding(f,plan,c,belongs&&level<2);
+  if(BUILDING_KINDS.has(c.kind)){
+   const {metadata,source}=localBuilding(f,plan,c,belongs,level);
    colliders.push(...metadata.colliders.map(s=>transformCollider(c,s)));
    rainRoofs.push({x:c.x,z:c.z,angle:c.angle||0,y:groundY+.035,roofs:metadata.roofs});
    if(belongs){
     buildings++;
     for(const p of metadata.pickups){const q=point(c,p.x,p.z);pickups.push({...p,id:(plan.key||plan.id||'compound')+':'+c.id+':barn',x:q.x,z:q.z,y:groundY+p.y});}
-    if(source){batch.absorb(source.group,transform);disposeGeometry(source.group);}
-    else{const coarse=new Batch(level),proxy=new T.Group();distantBuilding(coarse,c,componentFinish(plan,c),metadata.roofMaterial);coarse.finish(proxy);proxy.position.y=.035;batch.absorb(proxy,transform);disposeGeometry(proxy);}
+    batch.absorb(source.group,transform);disposeGeometry(source.group);
+    // Yard generation samples the ORIGINAL tile terrain. Its group already
+    // contains component translation/yaw and absolute ground height, so it is
+    // absorbed directly once, never transformed a second time with the barn.
+    const yard=makeYardProps(yardField(f,plan,c,groundY),level);
+    batch.absorb(yard.group);colliders.push(...yard.colliders);disposeGeometry(yard.group);
+    yards.push({component:c.id,variant:c.variant,objects:yard.stats.objectCount||0,triangles:yard.stats.triangles||0,compositionHash:yard.stats.compositionHash});
    }
   }else{
    // Fence damage uses its own stable seed; far and near collisions coincide.
@@ -303,7 +281,7 @@ export function makeCompoundChunk(f,level=0,wind=null){
    disposeGeometry(result.group);
   }
  }
- const stats=batch.finish(group);group.userData.compoundStats={...stats,buildings,props,level};
+ const stats=batch.finish(group);group.userData.compoundStats={...stats,buildings,props,level,yards,yardObjects:yards.reduce((n,y)=>n+y.objects,0)};
  group.userData.compoundRainRoofs=rainRoofs;
  return {group,colliders,pickups,softVolumes:[],rainRoofs};
 }

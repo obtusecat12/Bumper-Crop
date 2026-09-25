@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=36';
-import {ruralTextures} from './rural-textures.js?v=36';
+import {height,random} from './world.js?v=37';
+import {ruralTextures} from './rural-textures.js?v=37';
 
 // Main-wall dimensions; roof overhangs/optional porch are described by footprint.
 export const RURAL_BUILDING_SIZES = Object.freeze([[7,9,3],[2.8,3.2,2.7],[12,17,4.9],[13,19,5.1],[11,15,4.3],[13,9,3.7],[13,18,3.8],[8,11,3.2]].map(Object.freeze));
@@ -70,17 +70,27 @@ function material(color,map=null){let m=new T.MeshStandardMaterial({color,map,ve
 const M={wood:material('#938b7c',woodTex),red:material('#914e40',woodTex),darkRed:material('#72483d',woodTex),dark:material('#514b40',woodTex),trim:material('#bfbaa5',woodTex),brick:material('#956950',brickTex),brickDark:material('#71584b',brickTex),stone:material('#817b6c',stoneTex),roof:material('#4c5350',roofTex),tin:material('#7b827a',roofTex),rust:material('#795b45',roofTex),black:material('#202e2a'),metal:material('#515950'),floor:material('#867b61',floorTex),hay:material('#92815a')};
 export function isSharedBuildingResource(resource){return shared.has(resource);}
 M.farmRed=material('#c4bbb1',ruralTextures.barnRed);
+// Finishes share finite material/texture pools. Masonry keeps its brick map
+// and jamb construction when painted, rather than turning into timber boards.
+const FINISH={gray:M.wood,red:M.farmRed,ochre:material('#a79866',woodTex),whitewash:material('#cec7b0',woodTex),olive:material('#78836a',woodTex),darkwood:material('#65584b',woodTex)};
+const BRICK_FINISH={gray:material('#8b8b7c',brickTex),red:M.brick,ochre:material('#a49466',brickTex),whitewash:material('#c5c0a8',brickTex),olive:material('#858769',brickTex),darkwood:material('#665849',brickTex)};
+for(const [finish,mat]of Object.entries(FINISH))mat.name='Rural timber / '+finish;
+for(const [finish,mat]of Object.entries(BRICK_FINISH))mat.name='Rural masonry / '+finish;
+for(const [name,mat]of Object.entries({dark:M.roof,tin:M.tin,rust:M.rust}))mat.name='Rural roof / '+name;
 
 // Every board, brace, shingle-course and prop is merged by material. Vertex
 // colour gives deterministic wear without one material or draw call per board.
 class Batch{
- constructor(r,weather){this.parts=new Map();this.r=r;this.weather=weather;this.boxes=0;this.halfWidth=0;this.halfDepth=0;}
+ constructor(r,weather,level=0){this.parts=new Map();this.r=r;this.weather=weather;this.level=level;this.boxes=0;this.halfWidth=0;this.halfDepth=0;}
  add(geo,mat,x,y,z,sx=1,sy=1,sz=1,rx=0,ry=0,rz=0,shade=null){
   tmp.position.set(x,y,z);tmp.rotation.set(rx,ry,rz);tmp.scale.set(sx,sy,sz);tmp.updateMatrix();this.matrix(geo,mat,tmp.matrix,shade);
  }
  matrix(geo,mat,matrix,shade=null){
-  if(!this.parts.has(mat))this.parts.set(mat,{p:[],n:[],u:[],c:[]});const a=this.parts.get(mat),p=geo.attributes.position,n=geo.attributes.normal;
-  const shade0=shade===null?1-this.weather*.23+this.r()*.15:shade;mat3.getNormalMatrix(matrix);
+  // Consume exactly the same random values even when subpixel details are
+  // omitted. Doors, porch choices, stored equipment and colliders stay stable.
+  const shade0=shade===null?1-this.weather*.23+this.r()*.15:shade;
+  if(this.level&&geo===unitBox){const e=matrix.elements,spans=[Math.hypot(e[0],e[1],e[2]),Math.hypot(e[4],e[5],e[6]),Math.hypot(e[8],e[9],e[10])].sort((a,b)=>b-a);if(spans[1]<(this.level===2?.115:.035)||spans[0]<(this.level===2?.24:.10))return;}
+  if(!this.parts.has(mat))this.parts.set(mat,{p:[],n:[],u:[],c:[]});const a=this.parts.get(mat),p=geo.attributes.position,n=geo.attributes.normal;mat3.getNormalMatrix(matrix);
   for(let i=0;i<p.count;i++){
    vv.fromBufferAttribute(p,i).applyMatrix4(matrix);nn.fromBufferAttribute(n,i).applyNormalMatrix(mat3);
    a.p.push(vv.x,vv.y,vv.z);a.n.push(nn.x,nn.y,nn.z);
@@ -106,6 +116,7 @@ class Batch{
   }
  }
  box(mat,x,y,z,w,h,d,rx=0,ry=0,rz=0,shade=null){if(w<=.0001||h<=.0001||d<=.0001)return;this.boxes++;this.add(unitBox,mat,x,y,z,w,h,d,rx,ry,rz,shade);}
+ boardPanel(mat,x,y,z,w,h,d,count){let shade=0;for(let i=0;i<count;i++)shade+=1-this.weather*.23+this.r()*.15;this.box(mat,x,y,z,w,h,d,0,0,0,shade/count);}
  beam(mat,a,b,w=.12,d=w){const av=new T.Vector3(...a),bv=new T.Vector3(...b),delta=bv.clone().sub(av);tmp.position.copy(av).add(bv).multiplyScalar(.5);tmp.quaternion.setFromUnitVectors(up,delta.clone().normalize());tmp.scale.set(w,delta.length(),d);tmp.updateMatrix();this.matrix(unitBox,mat,tmp.matrix);}
  polygon(mat,points,shade=1){
   let p=[];for(let i=1;i<points.length-1;i++)p.push(...points[0],...points[i],...points[i+1]);
@@ -114,12 +125,14 @@ class Batch{
  finish(group){for(const [mat,a]of this.parts){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(a.p,3));g.setAttribute('normal',new T.Float32BufferAttribute(a.n,3));g.setAttribute('uv',new T.Float32BufferAttribute(a.u,2));g.setAttribute('color',new T.Float32BufferAttribute(a.c,3));g.computeBoundingSphere();g.computeBoundingBox();const mesh=new T.Mesh(g,mat);mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);}}
 }
 export function makeRuralBuilding(f,level=0){
+ // Existing authored landmarks retain their exact historical geometry.
+ level=f.compoundLod?Math.max(0,Math.min(2,level|0)):0;
  const v=((f.variant||0)%8+8)%8,[w,d,h]=unscaledBuildingDimensions(f),s=f.buildingScale||1,angle=f.buildingAngle||0;
- const r=random((f.seed||1)^0x8a7e551),weather=.35+r()*.65,b=new Batch(r,weather),group=new T.Group(),colliders=[],pickups=[],rainRoofs=[];
+ const r=random((f.seed||1)^0x8a7e551),weather=.35+r()*.65,b=new Batch(r,weather,level),group=new T.Group(),colliders=[],pickups=[],rainRoofs=[];
  const y=f.buildingY??height(f.cx,f.cz,f.x,f.z),c=Math.cos(angle),sn=Math.sin(angle),isBrick=v===4;
  const defaultWall=isBrick?(r()<.5?M.brick:M.brickDark):(v===2?M.red:v===3?(r()<.65?M.red:M.wood):v===6?M.darkRed:M.wood);
- const wallMat=f.buildingFinish==='red'?M.farmRed:f.buildingFinish==='gray'?M.wood:defaultWall;
- const roofMat=r()<.2?M.rust:r()<.55?M.roof:M.tin,trim=(v===2||v===3||v===6)?M.trim:M.dark;
+ const wallMat=(isBrick?BRICK_FINISH:FINISH)[f.buildingFinish]||defaultWall;
+ const defaultRoof=r()<.2?M.rust:r()<.55?M.roof:M.tin,roofMat=({rust:M.rust,tin:M.tin,dark:M.roof,iron:M.roof})[f.buildingRoofFinish]||defaultRoof,trim=(v===2||v===3||v===6)?M.trim:M.dark;
  const front=d/2,back=-d/2,wallRuns=[],detailRandom=random((f.seed||1)^0x41c6f93b);b.halfWidth=w/2;b.halfDepth=d/2;
  function world(x,z){return{x:f.cx+s*(c*x+sn*z),z:f.cz+s*(-sn*x+c*z)};}
  function solid(x,z,hx,hz,localAngle=0){const p=world(x,z);colliders.push({kind:'obb',x:p.x,z:p.z,hx:hx*s,hz:hz*s,angle:angle+localAngle});}
@@ -134,12 +147,15 @@ export function makeRuralBuilding(f,level=0){
   const ys=[base,hh,...openings.flatMap(o=>[o.bottom,o.bottom+o.height]).filter(a=>a>base&&a<hh)].sort((a,b)=>a-b);
   for(let xi=0;xi<xs.length-1;xi++)for(let yi=0;yi<ys.length-1;yi++){
    const a=xs[xi],e=xs[xi+1],low=ys[yi],high=ys[yi+1],mx=(a+e)/2,my=(low+high)/2;
+   if(e-a<=.0001||high-low<=.0001)continue;
    if(openings.some(o=>Math.abs(mx-o.at)<o.width/2-.001&&my>o.bottom&&my<o.bottom+o.height))continue;
-   const stone=mat===M.brick||mat===M.brickDark;
+   const stone=mat===M.brick||mat===M.brickDark||(isBrick&&mat===wallMat);
    if(stone){if(axis==='z')b.box(mat,mx,my,fixed,e-a,high-low,thickness);else b.box(mat,fixed,my,mx,thickness,high-low,e-a);continue;}
    if(siding==='horizontal'){
+    if(level){const count=Math.max(1,Math.ceil((high-low)/.235));if(axis==='z')b.boardPanel(mat,mx,my,fixed,e-a,high-low,thickness,count);else b.boardPanel(mat,fixed,my,mx,thickness,high-low,e-a,count);continue;}
     const n=Math.max(1,Math.ceil((high-low)/.235));for(let j=0;j<n;j++){const bh=(high-low)/n,yy=low+(j+.5)*bh;if(axis==='z')b.box(mat,mx,yy,fixed,e-a,bh-.012,thickness,0,0,0);else b.box(mat,fixed,yy,mx,thickness,bh-.012,e-a);}
    }else{
+    if(level){const count=Math.max(1,Math.ceil((e-a)/(v===1?.16:.30)));if(axis==='z')b.boardPanel(mat,mx,my,fixed,e-a,high-low,thickness,count);else b.boardPanel(mat,fixed,my,mx,thickness,high-low,e-a,count);continue;}
     const n=Math.max(1,Math.ceil((e-a)/(v===1?.16:.30)));for(let j=0;j<n;j++){const bw=(e-a)/n,at=a+(j+.5)*bw;if(axis==='z')b.box(mat,at,my,fixed,bw-.011,high-low,thickness);else b.box(mat,fixed,my,at,thickness,high-low,bw-.011);}
    }
   }
@@ -161,7 +177,7 @@ export function makeRuralBuilding(f,level=0){
   // The old explicit-shade seam boxes consumed no generation random numbers.
   // An inexpensive low grid lets corner grime and tracked dust vary across the
   // floor; it is merged into its existing material draw. Floor height is intact.
-  const nx=Math.max(2,Math.ceil(w/1.7)),nz=Math.max(2,Math.ceil(d/1.7));
+  const nx=level===2?2:Math.max(2,Math.ceil(w/1.7)),nz=level===2?2:Math.max(2,Math.ceil(d/1.7));
   for(let iz=0;iz<nz;iz++)for(let ix=0;ix<nx;ix++){
    const x0=-w/2+.078+(w-.156)*ix/nx,x1=-w/2+.078+(w-.156)*(ix+1)/nx;
    const z0=back+.064+(d-.128)*iz/nz,z1=back+.064+(d-.128)*(iz+1)/nz;
@@ -263,7 +279,7 @@ export function makeRuralBuilding(f,level=0){
  }else if(v===4){ // Brick barn: deep masonry jambs, brick vents, shallow roof.
   floor(false);const dw=3.6,dh=3.25;wall('z',front,-w/2,w/2,h,[{at:0,width:dw,bottom:0,height:dh}]);wall('z',back,-w/2,w/2,h);
   for(const side of[-1,1])wall('x',side*w/2,back,front,h,[-3.6,1.7].map(at=>({at,width:1.05,bottom:1.58,height:1.15})));
-  gableProfile(w,h,2.0,M.roof);entrance(0,dw,dh);roofBeamPosts();
+  gableProfile(w,h,2.0,f.buildingRoofFinish?roofMat:M.roof);entrance(0,dw,dh);roofBeamPosts();
   // Soldier course around doorway and dentil cornice carry the masonry silhouette.
   for(let xx=-dw/2-.12;xx<dw/2+.18;xx+=.22)b.box(M.brick,xx,dh+.20,front+.17,.18,.34,.12,0,0,0,.95+r()*.14);
   for(const zz of[front,back]){b.box(M.brick,0,h-.10,zz,w+.2,.20,.38);for(let xx=-w/2+.2;xx<w/2;xx+=.49)b.box(M.brick,xx,h-.29,zz,.24,.16,.41);for(let row=0;row<3;row++)for(let col=-row;col<=row;col++)b.box(M.black,col*.30,h+1.45-row*.29,zz+.155,.15,.15,.03);}

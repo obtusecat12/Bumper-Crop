@@ -1,0 +1,79 @@
+{
+  "total": 48000,
+  "components": 180706,
+  "layoutMs": 5226.416744,
+  "averageLayoutMs": 0.10888368216666666,
+  "counts": {
+    "single": {
+      "1": 12000
+    },
+    "pair": {
+      "2": 12000
+    },
+    "farm": {
+      "2": 1421,
+      "3": 7062,
+      "4": 3253,
+      "5": 264
+    },
+    "hamlet": {
+      "4": 4005,
+      "5": 6688,
+      "6": 1307
+    }
+  },
+  "grammars": {
+    "single": 12000,
+    "smallholding": 1560,
+    "back-to-back": 1528,
+    "oblique": 2534,
+    "side-wing": 2518,
+    "field-satellites": 1428,
+    "tandem": 2352,
+    "loose-neighbours": 1466,
+    "staggered": 2600,
+    "crop-islands": 1022,
+    "partial-yard": 989,
+    "linear": 1026,
+    "fan": 1035,
+    "dogleg": 957,
+    "parallel": 985,
+    "open-l": 983,
+    "expanded-holding": 1017,
+    "broken-court": 2941,
+    "facing-barns": 2972,
+    "grown-row": 3076,
+    "working-lane": 3011
+  },
+  "variants": {
+    "0": 25328,
+    "1": 11403,
+    "2": 13330,
+    "3": 13435,
+    "4": 10040,
+    "5": 18081,
+    "6": 8809,
+    "7": 31236
+  },
+  "finishes": {
+    "gray": 22667,
+    "olive": 20321,
+    "darkwood": 20305,
+    "red": 22737,
+    "whitewash": 22941,
+    "ochre": 22691
+  },
+  "maxAbsoluteExtent": {
+    "single": 25.961967096810305,
+    "pair": 38.18877880559057,
+    "farm": 45.292399158281434,
+    "hamlet": 52.69688161193659
+  },
+  "overlapErrors": [],
+  "yardPlans": 2000,
+  "yardMs": 572.9344310000006,
+  "averageYardMs": 0.2864709204999999,
+  "laneCount": 9330,
+  "maxLanes": 16,
+  "yardIssues": []
+}

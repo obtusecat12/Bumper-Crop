@@ -1,15 +1,15 @@
-import {createLakeRoadRouter} from './lake-routing.js?v=36';
-import {createCompoundPlanner,compoundSample} from './road-compounds.js?v=36';
-import {ARRIVAL_COMPONENTS,arrivalCompound} from './arrival-compound.js?v=36';
-import {farmAccessContext,farmAccessSample} from './farm-access.js?v=36';
-import {field as frozenArrivalField,roadProfile as legacyRoadProfile,cropSample as legacyCropSample} from './world-legacy.js?v=36';
-import {macroPlan,patchworkContext,parcelSample,configurePatchwork} from './patchwork.js?v=36';
-import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=36';
-import {REFERENCE_BARN,barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=36';
-import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=36';
-import {FARM,FARM_FOOTPRINTS,farmFootprintDistance,farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=36';
-import {createSettlementPlanner} from './rural-settlements.js?v=36';
-import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=36';
+import {createLakeRoadRouter} from './lake-routing.js?v=37';
+import {createCompoundPlanner,compoundSample} from './road-compounds.js?v=37';
+import {ARRIVAL_COMPONENTS,arrivalCompound} from './arrival-compound.js?v=37';
+import {farmAccessContext,farmAccessSample} from './farm-access.js?v=37';
+import {field as frozenArrivalField,roadProfile as legacyRoadProfile,cropSample as legacyCropSample} from './world-legacy.js?v=37';
+import {macroPlan,patchworkContext,parcelSample,configurePatchwork} from './patchwork.js?v=37';
+import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=37';
+import {REFERENCE_BARN,barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=37';
+import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=37';
+import {FARM,FARM_FOOTPRINTS,farmFootprintDistance,farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=37';
+import {createSettlementPlanner} from './rural-settlements.js?v=37';
+import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=37';
 export {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance};
 // Infinite signed BigInt cells with deterministic seed-based generation.
 export const CHUNK=64;

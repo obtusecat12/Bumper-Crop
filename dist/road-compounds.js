@@ -1,6 +1,6 @@
-import {compoundComponents,componentDistance,componentBounds,hash} from './compound-layout.js?v=36';
+import {compoundComponents,compoundYard,compoundEntrance,componentDistance,componentBounds,hash} from './compound-layout.js?v=37';
 
-const SIZE=400,CHUNK=64,MIN_SEPARATION=120,STATION=144;
+const SIZE=400,CHUNK=64,MIN_SEPARATION=120,STATION=176;
 const floor=(v,n)=>v>=0n?v/n:(v-n+1n)/n;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const unit=key=>hash(key)/4294967296;
@@ -37,6 +37,19 @@ function partsOverlap(a,b,padding=3){
   return true;
 }
 function transformPart(p,plan){const c=Math.cos(plan.rot),s=Math.sin(plan.rot);return {...p,x:plan.x+c*p.x+s*p.z,z:plan.z-s*p.x+c*p.z,angle:plan.rot+p.angle};}
+// Local working surfaces follow doors and worn tracks. Never clear a group AABB.
+function prepareYard(yard){return {patches:(yard.patches||[]).map(p=>({...p,angle:p.angle||0,cos:Math.cos(p.angle||0),sin:Math.sin(p.angle||0)})),lanes:yard.lanes||[]};}
+function yardBounds(plan){const bounds=[];for(const p of plan.yard.patches)bounds.push(componentBounds(transformPart({...p,hx:p.rx,hz:p.rz},plan),3));for(const lane of plan.yard.lanes){const a=transformPart({x:lane.x1,z:lane.z1,angle:0},plan),b=transformPart({x:lane.x2,z:lane.z2,angle:0},plan),r=lane.width*.5+3;bounds.push([Math.min(a.x,b.x)-r,Math.max(a.x,b.x)+r,Math.min(a.z,b.z)-r,Math.max(a.z,b.z)+r]);}return bounds;}
+function yardSample(x,z,yard,seed){
+ let value=0;const phase=(seed%997)*.017;
+ for(const p of yard.patches){const dx=x-p.x,dz=z-p.z,extent=Math.max(p.rx,p.rz)+2;if(Math.abs(dx)>extent||Math.abs(dz)>extent)continue;
+  const c=p.cos??Math.cos(p.angle||0),s=p.sin??Math.sin(p.angle||0),u=c*dx-s*dz,v=s*dx+c*dz;
+  let d=(Math.hypot(u/p.rx,v/p.rz)-1)*Math.min(p.rx,p.rz);d+=.19*Math.sin(x*1.07+phase)+.13*Math.sin(z*.83+x*.39-phase);
+  value=Math.max(value,(p.intensity??1)*(1-smooth(-.35,1.2,d)));
+ }
+ for(const lane of yard.lanes){const d=pointSegment(x,z,lane).d-lane.width*.5;value=Math.max(value,(lane.intensity??.68)*(1-smooth(-.2,.8,d)));}
+ return value;
+}
 function drivewayCurve(anchor,end,normal,tangent,handed){
   const distance=Math.hypot(end.x-anchor.x,end.z-anchor.z),a={x:anchor.x+normal.x*distance*.34,z:anchor.z+normal.z*distance*.34},b={x:end.x-normal.x*distance*.32+tangent.x*handed*3,z:end.z-normal.z*distance*.32+tangent.z*handed*3};
   const points=[],segments=[];let along=0;const count=Math.max(4,Math.ceil(distance/2.5));
@@ -65,7 +78,7 @@ export function createCompoundPlanner({macroPlan,shoreDistance,componentsFor=com
   if(typeof macroPlan!=='function'||typeof shoreDistance!=='function')throw Error('Road compounds require macroPlan and shoreDistance');
   const cfg={stationMetres:STATION,minSeparationMetres:MIN_SEPARATION,minSetback:25,maxSetback:40,
     walkSpeed:3,lookaheadSecondsMin:20,lookaheadSecondsMax:35,lakeClearance:6,roadClearance:2.5,
-    hamletChance:.18,infill:false,...settings};
+    hamletChance:.035,singleShare:.75,pairShare:.15,occupancyMin:.32,occupancyRange:.26,infill:false,...settings};
   const networkCache=new Map(),rawCache=new Map(),primaryCache=new Map(),eligibleCache=new Map(),planCache=new Map(),contextCache=new Map();
   const keyOf=(ix,iz,seed)=>`${seed}:${ix}:${iz}`;
   function network(ix,iz,seed){
@@ -84,7 +97,7 @@ export function createCompoundPlanner({macroPlan,shoreDistance,componentsFor=com
     // adjacent cells; no source road may smuggle candidates across distant cells.
     if(plan.x<0||plan.z<0||plan.x>=SIZE||plan.z>=SIZE)return false;
     if(!roadVisible(plan.access.x,plan.access.z,n.ox,n.oz,seed))return false;
-    const relevantLakes=n.lakes.filter(l=>{const b=l.bounds||[-l.rx*1.8,l.rx*1.8,-l.rz*1.8,l.rz*1.8];return overlaps([plan.x-65,plan.x+65,plan.z-65,plan.z+65],[l.cx+b[0]-10,l.cx+b[1]+10,l.cz+b[2]-10,l.cz+b[3]+10]);});
+    const relevantLakes=n.lakes.filter(l=>{const b=l.bounds||[-l.rx*1.8,l.rx*1.8,-l.rz*1.8,l.rz*1.8];return overlaps(plan.bounds,[l.cx+b[0]-10,l.cx+b[1]+10,l.cz+b[2]-10,l.cz+b[3]+10]);});
     for(const lake of relevantLakes)if(shoreDistance(plan.x,plan.z,lake)<40)return false;
     for(const p of plan.components){
       const bounds=componentBounds(p);
@@ -102,40 +115,58 @@ export function createCompoundPlanner({macroPlan,shoreDistance,componentsFor=com
     }
     // A clear approach into the yard is part of the compound, too.
     for(const {x,z} of plan.driveway.points){
-      if(defaultProtected(x,z,n.ox,n.oz)<2||protectedDistance(x,z,n.ox,n.oz,seed)<2)return false;
+      if(defaultProtected(x,z,n.ox,n.oz)<4||protectedDistance(x,z,n.ox,n.oz,seed)<4)return false;
       for(const lake of relevantLakes)if(shoreDistance(x,z,lake)<cfg.lakeClearance+2)return false;
     }
+    // Every visible working patch must stay outside the unchanged wet shore.
+    for(const patch of plan.yard.patches){const part=transformPart({...patch,hx:patch.rx+2,hz:patch.rz+2},plan),bounds=componentBounds(part);
+      for(let z=bounds[2];z<=bounds[3]+1;z+=3)for(let x=bounds[0];x<=bounds[1]+1;x+=3){
+        if(componentDistance(x,z,part)>1.5)continue;
+        if(defaultProtected(x,z,n.ox,n.oz)<2.2)return false;
+        for(const lake of relevantLakes)if(shoreDistance(x,z,lake)<8.2)return false;
+      }
+    }
+    for(const lane of plan.yard.lanes){const a=transformPart({x:lane.x1,z:lane.z1,angle:0},plan),b=transformPart({x:lane.x2,z:lane.z2,angle:0},plan),length=Math.hypot(b.x-a.x,b.z-a.z),count=Math.max(1,Math.ceil(length/3)),pad=lane.width*.5+2.3;
+      for(let i=0;i<=count;i++){const x=a.x+(b.x-a.x)*i/count,z=a.z+(b.z-a.z)*i/count;if(defaultProtected(x,z,n.ox,n.oz)<pad)return false;for(const lake of relevantLakes)if(shoreDistance(x,z,lake)<6+pad)return false;}
+    }
+    // A source-road approach may not cut through another member of its group.
+    for(const ds of plan.driveway.segments)for(const part of plan.components){if(part.kind==='tree'||part.kind==='fence')continue;const keepOut=part.main&&part.width?{...part,hx:part.width*.5,hz:part.depth*.5}:part;if(roadDistanceToPart(ds,keepOut)<plan.driveway.width*.5+.25)return false;}
     return true;
   }
   function raw(ix,iz,seed){
     const key=keyOf(ix,iz,seed);if(rawCache.has(key))return rawCache.get(key);
     const own=macroPlan(ix,iz,seed),n=network(ix,iz,seed),groups=new Map(),candidates=[];
-    for(const s of own.segments){if(s.noRelief||s.kind==='dead-end'||String(s.kind).includes('access'))continue;
+    for(const s of own.segments){if(s.noRelief||String(s.kind).includes('access'))continue;
       const id=`${s.id}:${s.part||0}`;if(!groups.has(id))groups.set(id,[]);groups.get(id).push(s);}
     for(const [roadKey,segments] of groups){
       segments.sort((a,b)=>a.along-b.along);const lo=segments[0].along,hi=Math.max(...segments.map(s=>s.along+s.length));
       if(hi-lo<40)continue;
-      const phase=unit(`v36:phase:${roadKey}`)*cfg.stationMetres;
+      const phase=unit(`v37:phase:${roadKey}`)*cfg.stationMetres;
       for(let slot=Math.floor((lo-phase)/cfg.stationMetres)-1;slot<=Math.ceil((hi-phase)/cfg.stationMetres)+1;slot++)for(let tier=0;tier<2;tier++){
         if(tier&&!cfg.infill)continue;
-        const id=`v36:${roadKey}:${slot}:${tier}`,along=phase+slot*cfg.stationMetres+tier*cfg.stationMetres/2+(unit(id+':jitter')-.5)*16;
+        const id=`v37:${roadKey}:${slot}:${tier}`,along=phase+slot*cfg.stationMetres+tier*cfg.stationMetres/2+(unit(id+':jitter')-.5)*48;
         if(along<lo+8||along>hi-8)continue;
+        const occupancy=cfg.occupancyMin+cfg.occupancyRange*unit(`v37:inhabited-run:${roadKey}:${Math.floor(slot/4)}`);
+        if(unit(id+':occupied')>occupancy)continue;
         const anchor=atAlong(segments,along),ahead=atAlong(segments,along+5),behind=atAlong(segments,along-5),length=distance(ahead,behind)||1,tx=(ahead.x-behind.x)/length,tz=(ahead.z-behind.z)/length;
         const junction=n.segments.some(s=>s.id!==segments[0].id&&s.corridor!==segments[0].corridor&&Math.abs(tx*(s.z2-s.z1)-tz*(s.x2-s.x1))/(s.length||1)>.35&&pointSegment(anchor.x,anchor.z,s).d<24);
-        const kind=junction&&unit(id+':hamlet')<cfg.hamletChance?'hamlet':'farm';
+        const use=unit(id+':use'),kind=segments[0].kind==='dead-end'?'single':junction&&unit(id+':hamlet')<cfg.hamletChance?'hamlet':use<cfg.singleShare?'single':use<cfg.singleShare+cfg.pairShare?'pair':'farm';
         for(const side of [unit(id+':side')<.5?-1:1,unit(id+':side')<.5?1:-1]){
-          const setback=cfg.minSetback+unit(id+':setback')*(cfg.maxSetback-cfg.minSetback),nx=-tz*side,nz=tx*side;
+          const setbacks=kind==='single'?[16,40]:kind==='pair'?[22,44]:kind==='hamlet'?[38,52]:[30,50],setback=setbacks[0]+unit(id+':setback')*(setbacks[1]-setbacks[0]),nx=-tz*side,nz=tx*side;
           const plan={id,key:id,sourceKey:key,seed:hash(id),rank:hash(id+':rank'),kind,tier,x:anchor.x+nx*setback,z:anchor.z+nz*setback,
-            rot:Math.atan2(-nx,-nz),handed:unit(id+':handed')<.5?-1:1,uShape:unit(id+':u')<.46,barnVariant:2,
+            rot:Math.atan2(-nx,-nz),handed:unit(id+':handed')<.5?-1:1,
             setback,access:{x:anchor.x,z:anchor.z,roadId:segments[0].id,along},roadTangent:{x:tx,z:tz},junction,
             lookaheadMetres:cfg.walkSpeed*(cfg.lookaheadSecondsMin+unit(id+':lookahead')*(cfg.lookaheadSecondsMax-cfg.lookaheadSecondsMin))};
-          plan.components=componentsFor(plan).map(p=>transformPart(p,plan));
-          const front=kind==='hamlet'?25:17,fx=Math.sin(plan.rot),fz=Math.cos(plan.rot);
-          plan.driveway=drivewayCurve(anchor,{x:plan.x+fx*front,z:plan.z+fz*front},{x:nx,z:nz},{x:tx,z:tz},plan.handed);
+          const localParts=componentsFor(plan);plan.components=localParts.map(p=>transformPart(p,plan));
+          plan.yard=prepareYard(compoundYard(plan,localParts));
+          const entry=transformPart({...compoundEntrance(plan,localParts),angle:0},plan);
+          plan.driveway=drivewayCurve(anchor,entry,{x:nx,z:nz},{x:tx,z:tz},plan.handed);
+          plan.driveway.width=kind==='single'?(localParts.find(p=>p.main)?.variant===1?1.25:2.65):3.3;
           plan.sightApproaches=[-1,1].map(sign=>{const station=clamp(along+sign*plan.lookaheadMetres,lo,hi),metres=Math.abs(station-along);return {...atAlong(segments,station),metres,seconds:metres/cfg.walkSpeed,targetSeconds:plan.lookaheadMetres/cfg.walkSpeed,clippedByRoadEnd:metres+1e-5<plan.lookaheadMetres};});
+          const bounds=[...plan.components.map(p=>componentBounds(p,4)),...yardBounds(plan)];
+          for(const point of plan.driveway.points)bounds.push([point.x-5,point.x+5,point.z-5,point.z+5]);
+          plan.bounds=[Math.min(...bounds.map(b=>b[0])),Math.max(...bounds.map(b=>b[1])),Math.min(...bounds.map(b=>b[2])),Math.max(...bounds.map(b=>b[3]))];
           if(!valid(plan,n,seed))continue;
-          const yard=transformPart({x:0,z:kind==='hamlet'?-6:-5,hx:kind==='hamlet'?34:26,hz:kind==='hamlet'?30:27,angle:0},plan);
-          const bounds=[componentBounds(yard,4),...plan.components.map(p=>componentBounds(p,3))];plan.bounds=[Math.min(...bounds.map(b=>b[0]),anchor.x-4),Math.max(...bounds.map(b=>b[1]),anchor.x+4),Math.min(...bounds.map(b=>b[2]),anchor.z-4),Math.max(...bounds.map(b=>b[3]),anchor.z+4)];
           candidates.push(plan);break;
         }
       }
@@ -196,16 +227,17 @@ export function compoundSample(x,z,context,out={}){
   for(const p of Array.isArray(context)?context:context?.plans||context?.compounds||[]){
     const b=p.bounds;if(b&&(x<b[0]-4||x>b[1]+4||z<b[2]-4||z>b[3]+4))continue;
     const dx=x-p.x,dz=z-p.z,c=Math.cos(p.rot),s=Math.sin(p.rot),lx=c*dx-s*dz,lz=s*dx+c*dz;
-    const yardHalfX=p.yardHalfX??(p.kind==='hamlet'?34:26),yardHalfZ=p.yardHalfZ??(p.kind==='hamlet'?30:27),yardZ=p.yardZ??(p.kind==='hamlet'?-6:-5);
-    const yardD=Math.max(Math.abs(lx)-yardHalfX,Math.abs(lz-yardZ)-yardHalfZ);
-    out.yard=Math.max(out.yard,1-smooth(-2.5,3.5,yardD));
+    let yard=0;
+    if(p.yard){yard=yardSample(lx,lz,p.yard,p.seed);}else if(p.yardHalfX!==undefined){
+      const d=Math.max(Math.abs(lx)-p.yardHalfX,Math.abs(lz-(p.yardZ||0))-p.yardHalfZ);yard=1-smooth(-2.5,3.5,d);
+    }
+    out.yard=Math.max(out.yard,yard);if(yard>.12)out.clearing=true;
     for(const ds of p.driveway.segments||[p.driveway]){
       const drive=pointSegment(x,z,ds),along=(ds.along||0)+drive.t*(ds.length||Math.hypot(ds.x2-ds.x1,ds.z2-ds.z1)),width=p.driveway.width+2*(1-smooth(0,6,along)),driveD=drive.d-width*.5;
       if(driveD<out.driveway){out.driveway=out.drivewayDistance=driveD;out.drivewayAlong=along;out.drivewayWidth=width;}if(driveD<2)out.clearing=true;
     }
-    if(yardD<2)out.clearing=true;
     for(const v of p.components){if(v.kind==='tree'||v.kind==='fence')continue;const d=componentDistance(x,z,v);
-      if(d<out.footprint){out.footprint=out.footprintDistance=d;out.groundY=v.groundY;out.plan=p;out.component=v;}if(d<2.7)out.clearing=true;}
+      if(d<out.footprint){out.footprint=out.footprintDistance=d;out.groundY=v.groundY;out.plan=p;out.component=v;}if(d<(p.kind==='extension'?2.7:1.45))out.clearing=true;}
   }
   return out;
 }

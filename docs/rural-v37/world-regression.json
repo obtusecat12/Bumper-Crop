@@ -1,0 +1,83 @@
+{
+  "version": "37",
+  "seed": 4244718517,
+  "failures": [],
+  "distribution": {
+    "sites": 24,
+    "kinds": {
+      "pair": 6,
+      "single": 17,
+      "farm": 1
+    },
+    "variants": {
+      "0": 4,
+      "1": 1,
+      "2": 5,
+      "3": 4,
+      "4": 3,
+      "5": 9,
+      "6": 2,
+      "7": 4
+    },
+    "buildings": 32
+  },
+  "protectedDisk": {
+    "center": [
+      0.6,
+      52
+    ],
+    "radius": 20,
+    "spacing": 0.5,
+    "samples": 5025,
+    "heightChanges": 0,
+    "maxHeightDelta": 0,
+    "roadChanges": 0,
+    "cropChanges": 0,
+    "wheatChanges": 0,
+    "yardChanges": 0,
+    "plantChanges": 0
+  },
+  "masks": {
+    "samples": 11232,
+    "cropIntrusions": 0,
+    "workingPatchArea": 2488,
+    "totalClearingArea": 13836,
+    "areaInsideSiteBoundsLeftNatural": 31092
+  },
+  "ownership": {
+    "components": 42,
+    "uniqueOwners": true
+  },
+  "map": {
+    "buildings": 32,
+    "teleports": 32,
+    "teleportFailures": 0
+  },
+  "seams": {
+    "crossedLines": 32,
+    "samples": 3342,
+    "failures": 0,
+    "maxHeightDelta": 2.5646151868841116e-14
+  },
+  "lakes": {
+    "available": 9,
+    "tested": 2,
+    "samples": 640,
+    "descriptorChanges": 0,
+    "heightChanges": 0,
+    "maxHeightDelta": 0,
+    "yardIntrusions": 0
+  },
+  "actualCerealRoots": {
+    "tiles": [
+      "0,0",
+      "5,0",
+      "2,2",
+      "22,2"
+    ],
+    "count": 95318,
+    "intrusions": 0
+  },
+  "ms": 35265.524533,
+  "pass": true
+}

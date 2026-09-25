@@ -1,0 +1,27 @@
+[
+  {
+    "tile": "15,15",
+    "planKinds": [
+      "farm"
+    ],
+    "stats": {
+      "triangles": 28163,
+      "drawCalls": 17,
+      "buildings": 1,
+      "props": 1,
+      "level": 0,
+      "yards": [
+        {
+          "component": "main",
+          "variant": 3,
+          "objects": 7,
+          "triangles": 10811,
+          "compositionHash": "3894535d"
+        }
+      ],
+      "yardObjects": 7
+    },
+    "farTriangles": 4000,
+    "collidersStable": true
+  }
+]

@@ -1,4 +1,4 @@
-import {BodyWaterCrossing} from './water-state.js?v=36';
+import {BodyWaterCrossing} from './water-state.js?v=37';
 // The long shallow bank separates foot contact from head immersion. Both are
 // physical displacements; every impact is owned by the world event, not camera.
 export class WaterContactEffects {

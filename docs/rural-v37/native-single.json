@@ -1,0 +1,376 @@
+{
+  "version": "37",
+  "kind": "single",
+  "generatedLocation": true,
+  "forcedAssetLayout": false,
+  "seed": 4244718517,
+  "sourcePlan": "v37:4244718517:1:0:south:0:1:0",
+  "worldCenter": [
+    661.3389269942418,
+    30.700909642968327
+  ],
+  "origin": [
+    "10",
+    "0"
+  ],
+  "rot": 3.141592653589793,
+  "tiles": [
+    "9,-1",
+    "10,-1",
+    "11,-1",
+    "9,0",
+    "10,0",
+    "11,0",
+    "9,1",
+    "10,1",
+    "11,1"
+  ],
+  "grade": [
+    {
+      "id": "main",
+      "kind": "barn",
+      "plan": "v37:4244718517:1:0:south:0:1:0",
+      "x": 21.338926994241774,
+      "z": 30.700909642968327,
+      "tile": "10,0",
+      "base": -0.12525384284098026,
+      "surface": -0.16525384284098027,
+      "gap": 0.04000000000000001,
+      "sampleComponent": "main"
+    }
+  ],
+  "stats": [
+    {
+      "tile": "9,-1",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "10,-1",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "11,-1",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "9,0",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "10,0",
+      "triangles": 21134,
+      "drawCalls": 13,
+      "buildings": 1,
+      "props": 0,
+      "level": 0,
+      "yards": [
+        {
+          "component": "main",
+          "variant": 3,
+          "objects": 5,
+          "triangles": 9174,
+          "compositionHash": "e01ab8c5"
+        }
+      ],
+      "yardObjects": 5
+    },
+    {
+      "tile": "11,0",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "9,1",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "10,1",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    },
+    {
+      "tile": "11,1",
+      "triangles": 0,
+      "drawCalls": 0,
+      "buildings": 0,
+      "props": 0,
+      "level": 0,
+      "yards": [],
+      "yardObjects": 0
+    }
+  ],
+  "cereals": [
+    {
+      "tile": "9,-1",
+      "clumps": 9243,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        1,
+        9242,
+        0
+      ]
+    },
+    {
+      "tile": "10,-1",
+      "clumps": 9381,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        673,
+        8708,
+        0
+      ]
+    },
+    {
+      "tile": "11,-1",
+      "clumps": 6241,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        6241,
+        0,
+        0
+      ]
+    },
+    {
+      "tile": "9,0",
+      "clumps": 1282,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        0,
+        1282,
+        4977
+      ]
+    },
+    {
+      "tile": "10,0",
+      "clumps": 1292,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        64,
+        1228,
+        4214
+      ]
+    },
+    {
+      "tile": "11,0",
+      "clumps": 869,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        869,
+        0,
+        4977
+      ]
+    },
+    {
+      "tile": "9,1",
+      "clumps": 0,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        0,
+        0,
+        6241
+      ]
+    },
+    {
+      "tile": "10,1",
+      "clumps": 0,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        0,
+        0,
+        6241
+      ]
+    },
+    {
+      "tile": "11,1",
+      "clumps": 0,
+      "silhouettesPerClump": 39,
+      "detailLevel": 0,
+      "variants": 9,
+      "crops": [
+        0,
+        0,
+        6241
+      ]
+    }
+  ],
+  "natureStats": [
+    {
+      "tile": "9,-1",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "10,-1",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "11,-1",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "9,0",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "10,0",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "11,0",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "9,1",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "10,1",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    },
+    {
+      "tile": "11,1",
+      "natureStats": {
+        "triangles": 0,
+        "drawCalls": 0,
+        "leafSprays": 0,
+        "level": 0,
+        "trees": 0,
+        "shrubs": 0
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "main",
+      "kind": "barn",
+      "x": 261.3389269942418,
+      "z": 30.700909642968327,
+      "width": 13.503680434623965,
+      "depth": 20.176434958450262,
+      "height": 5.066846709215081,
+      "angle": 2.9701333100260277,
+      "variant": 3,
+      "main": true,
+      "role": "dairy-barn",
+      "grammar": "single",
+      "finish": "red",
+      "roofOverhang": 0.65,
+      "hx": 7.401840217311983,
+      "hz": 10.738217479225131,
+      "ground": true,
+      "yardDensity": 0.6334591666329652,
+      "seed": 2092104988
+    }
+  ]
+}

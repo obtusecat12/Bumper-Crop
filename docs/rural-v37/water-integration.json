@@ -1,0 +1,11 @@
+{
+  "pass": true,
+  "twoTroughsMergedToTwoMaterialBatches": true,
+  "rotatedSizedBatchAttributes": true,
+  "waterTransparentWithoutDepthWrite": true,
+  "waterNotShadowCaster": true,
+  "sharedResources": true,
+  "workerPacketClockAndNormalBindings": true,
+  "fogUniforms": true,
+  "sharedMaterialSurvivesChunkRelease": true
+}

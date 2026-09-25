@@ -1,5 +1,5 @@
-import {weatherTextures} from './weather-textures.js?v=36';
-import {createFogVolume,fogVolumePars} from './fog-volume.js?v=36';
+import {weatherTextures} from './weather-textures.js?v=37';
+import {createFogVolume,fogVolumePars} from './fog-volume.js?v=37';
 import * as T from './vendor/three.module.min.js';
 
 // One generated, periodic 3D texture, genuine bounded volume integration, and

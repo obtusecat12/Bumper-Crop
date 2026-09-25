@@ -1,6 +1,6 @@
-import {REFERENCE_BARN as B,BARN_ROOFLIGHTS} from './reference-barn-layout.js?v=36';
-import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=36';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=36';
+import {REFERENCE_BARN as B,BARN_ROOFLIGHTS} from './reference-barn-layout.js?v=37';
+import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=37';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=37';
 
 const chunks=new Map(),cache=new Map(),scene=new ChunkBVHScene();
 let revision=0,job=null,running=false,paused=false;

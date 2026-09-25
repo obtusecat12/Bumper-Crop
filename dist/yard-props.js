@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {surfaceHeight,buildingSize,roadDistance} from './world.js?v=36';
-import {getYardAsset,isSharedYardAssetResource} from './yard-assets.js?v=36';
+import {surfaceHeight,buildingSize,roadDistance,wheatAllowed,cropSample} from './world.js?v=37';
+import {getYardAsset,isSharedYardAssetResource} from './yard-assets.js?v=37';
 
 // Each independently seeded slot selects ONE cached object. Clusters describe
 // places, never fixed inventories: changing a rejection cannot change a later
@@ -8,7 +8,22 @@ import {getYardAsset,isSharedYardAssetResource} from './yard-assets.js?v=36';
 const TAU=Math.PI*2,UP=new T.Vector3(0,1,0),P=new T.Vector3(),N=new T.Vector3(),NM=new T.Matrix3();
 const TOOLS=new Set(['sickle','shovel','fork','scythe']),LARGE=new Set(['crate','sack','hay']);
 const TRIANGLE_BUDGET=25000;
-export function isSharedYardPropResource(resource){return isSharedYardAssetResource(resource);}
+const distantAssets=new Map(),distantResources=new Set();
+export function isSharedYardPropResource(resource){return distantResources.has(resource)||isSharedYardAssetResource(resource);}
+function distantAsset(kind,variant,asset){
+ const key=kind+':'+variant;if(distantAssets.has(key))return distantAssets.get(key);
+ const group=new T.Group(),box=asset.bounds,size=box.getSize(new T.Vector3()),center=box.getCenter(new T.Vector3());
+ const material=name=>asset.group.children.find(m=>m.material.name===name)?.material||asset.group.children[0].material;
+ const add=(g,mat,x,y,z)=>{g.translate(x,y,z);distantResources.add(g);group.add(new T.Mesh(g,mat));};
+ if(kind==='sack'){
+  const g=new T.SphereGeometry(.5,8,6);g.scale(size.x,size.y*.95,size.z);add(g,material('yard-canvas-and-willow'),center.x,center.y-.01,center.z);
+  add(new T.CylinderGeometry(size.x*.09,size.x*.15,size.y*.11,6),material('yard-twine-and-recesses'),center.x,box.max.y-size.y*.055,center.z);
+ }else{
+  add(new T.BoxGeometry(size.x,size.y,size.z),material(kind==='hay'?'yard-baled-straw':'yard-weathered-pine'),center.x,center.y,center.z);
+  for(const sign of[-1,1])add(new T.BoxGeometry(Math.max(.018,size.x*.025),size.y+.008,size.z+.012),material('yard-twine-and-recesses'),center.x+sign*size.x*.27,center.y,center.z);
+ }
+ const result={...asset,group};distantAssets.set(key,result);return result;
+}
 function hash(seed,key,index=0,attempt=0){
  let h=(seed^Math.imul(index+1,0x45d9f3b)^Math.imul(attempt+1,0x27d4eb2d))>>>0;
  for(let j=0;j<key.length;j++)h=Math.imul(h^key.charCodeAt(j),16777619);
@@ -101,12 +116,13 @@ function rectFor(asset,matrix,yaw){
 export function makeYardProps(f,level=0){
  const group=new T.Group();group.name='varied-working-yard';const colliders=[];
  const stats={version:10,level,props:[],clusters:[],workstations:[],rejected:0,rejections:{},draws:0,triangles:0,geometryBytes:0};
- if(f.type!=='building')return{group,colliders,stats};
+ if(f.type!=='building'||f.yardProps===false||f.yardDensity===0)return{group,colliders,stats};
+ const environment=f.yardTerrainField||f,compound=environment!==f,density=Math.max(.08,Math.min(1,f.yardDensity??1));
  const v=((f.variant||0)%8+8)%8,s=f.buildingScale||1,[w,d,h]=buildingSize({...f,variant:v}),hw=w/2,front=d/2,angle=f.buildingAngle||0,c=Math.cos(angle),sn=Math.sin(angle),seed=(f.seed??1)>>>0;
  const R=(key,index=0,attempt=0)=>hash(seed,key,index,attempt)/4294967296,toWorld=(x,z)=>({x:f.cx+c*x+sn*z,z:f.cz-sn*x+c*z});
- const terrain=(x,z)=>{const p=toWorld(x,z);return surfaceHeight(p.x,p.z,f);};
+ const terrain=(x,z)=>{const p=toWorld(x,z);return surfaceHeight(p.x,p.z,environment);};
  const segments=wallSegments(v,w/s,d/s,h/s,s),out=new Batch(),placed=[],supports=[];
- const buildingY=(f.buildingY??surfaceHeight(f.cx,f.cz,f))+.035,doorX=(v===0?-1.15:v===7?-.55:0)*s,dw=[1.55,1.12,4.4,4,3.6,13,3.4,3.6][v]*s;
+ const buildingY=(f.buildingY??surfaceHeight(f.cx,f.cz,environment))+.035,doorX=(v===0?-1.15:v===7?-.55:0)*s,dw=[1.55,1.12,4.4,4,3.6,13,3.4,3.6][v]*s;
  group.position.set(f.cx,0,f.cz);group.rotation.y=angle;
  const wallRect={x:0,z:0,hx:hw+(v===4?.20:.14)*s,hz:front+.14*s,a:0};
  const reserved=[{x:doorX,z:front+1.6*s,hx:dw/2+.58*s,hz:1.85*s,a:0}];
@@ -114,8 +130,10 @@ export function makeYardProps(f,level=0){
  if(v===1)reserved.push({x:.9*s,z:front+.65*s,hx:.85*s,hz:.80*s,a:0});
  if(v===6)reserved.push({x:0,z:-front-1.55*s,hx:dw/2+.58*s,hz:1.8*s,a:0});
  if(v===7)reserved.push({x:hw+1.05*s,z:front-2.4*s,hx:1.22*s,hz:1.78*s,a:0});
- const cap=v===1?3+Math.floor(R('count')*3):Math.min(19,Math.max(8,Math.round(6+Math.sqrt(w*d)*.46+R('count')*5)));
- const clusterCount=v===1?1+Math.floor(R('cluster-count')*2):2+Math.floor(R('cluster-count')*(v===0||v===7?2:4));
+ const originalCap=v===1?3+Math.floor(R('count')*3):Math.min(19,Math.max(8,Math.round(6+Math.sqrt(w*d)*.46+R('count')*5)));
+ const cap=compound?Math.min(v===1?3:f.yardMain?12:7,Math.max(v===1?1:f.yardMain?6:2,Math.round(originalCap*density))):originalCap;
+ const clusterCount=compound?(v===1?1:f.yardMain?2+Math.floor(R('cluster-count')*2):1+Math.floor(R('cluster-count')*2)):(v===1?1+Math.floor(R('cluster-count')*2):2+Math.floor(R('cluster-count')*(v===0||v===7?2:4)));
+ if(!segments.length)return{group,colliders,stats};
  for(let i=0;i<clusterCount;i++){
   const segment=pick(segments,R('cluster-wall',i),q=>(q.end-q.start)*q.weight);
   const t=segment.start+(segment.end-segment.start)*(.12+.76*R('cluster-along',i));
@@ -127,13 +145,20 @@ export function makeYardProps(f,level=0){
  const vessels=R('vessel-presence')<.65?1:.05;
  const weights=[['crate',v===1?1.8:3.5],['basket',1.35],['sack',v===1?.15:2.3],['hay',hayPreference*([.3,0,3.1,2.2,1.2,2.2,3.8,.7][v])],['bottle',.60*vessels],['jar',.46*vessels],['jug',.63*vessels],['sickle',v===1?.08:.34],['shovel',v===1?.30:.84],['fork',v===1?.06:.75],['scythe',v===1?0:.60]].map(([kind,weight])=>({kind,weight}));
  const reject=reason=>{stats.rejected++;stats.rejections[reason]=(stats.rejections[reason]||0)+1;return false;};
+ // Placement budget is independent of visible LOD. A distant omitted jar must
+ // never free a slot and change the positions/colliders of nearby equipment.
+ let placementTriangles=0;const triangleBudget=compound?(f.yardMain?15000:8500):TRIANGLE_BUDGET;
  function boundsAllowed(rect,tool=false){
   const pts=corners(rect),worldPts=pts.map(q=>toWorld(q.x,q.z));
   if(pts.some(q=>Math.abs(q.x)>hw+3.12||Math.abs(q.z)>front+3.12))return'yard-edge';
   if(worldPts.some(q=>q.x<.18||q.z<.18||q.x>63.82||q.z>63.82))return'tile-seam';
   if(reserved.some(q=>overlaps(rect,q,.065)))return'entrance';
   if(!tool&&overlaps(rect,wallRect,.055))return'building';
-  if(f.roads?.length&&worldPts.some(q=>roadDistance(q.x,q.z,f)<1.36))return'road';
+  const center=toWorld(rect.x,rect.z),worldRect={...rect,x:center.x,z:center.z,a:angle+rect.a};
+  if(f.yardExclusions?.some(q=>overlaps(worldRect,q,.10)))return'compound-component';
+  const samples=compound?[...worldPts,center,...worldPts.map((p,i)=>({x:(p.x+worldPts[(i+1)%4].x)/2,z:(p.z+worldPts[(i+1)%4].z)/2}))]:worldPts;
+  if(environment.roads?.length&&samples.some(q=>roadDistance(q.x,q.z,environment)<(compound?1.95:1.36)))return'road';
+  if(compound&&samples.some(q=>cropSample(q.x,q.z,environment,{}).crop!==2&&wheatAllowed(q.x,q.z,environment)))return'crop';
   return null;
  }
  function baseContact(asset,matrix){
@@ -168,8 +193,8 @@ export function makeYardProps(f,level=0){
   const bad=boundsAllowed(rect,tool);if(bad)return reject(bad);
   for(const q of placed){if(q.id===supportId)continue;if(box.min.y>=q.box.max.y-.004||box.max.y<=q.box.min.y+.004)continue;if(overlaps(rect,q.rect,tool||q.tool?.055:.075))return reject('object');}
   if(contact&&(contact.min<.0005||contact.min>.0015))return reject('ground-contact');
-  const tris=assetTriangles(asset);if(out.triangles+tris>TRIANGLE_BUDGET)return reject('triangle-budget');
-  out.add(asset,matrix);
+  const tris=assetTriangles(asset);if(placementTriangles+tris>triangleBudget)return reject('triangle-budget');
+  placementTriangles+=tris;if(!compound||level<2)out.add(asset,matrix);else if(LARGE.has(kind))out.add(distantAsset(kind,extra.assetVariant,asset),matrix);
   const p={id,kind,assetVariant:extra.assetVariant,mode,x:matrix.elements[12],z:matrix.elements[14],baseY:matrix.elements[13],angle:yaw,scale,solid:LARGE.has(kind)&&supportId===null,rect:{...rect},supportId,groundResidual:contact?{...contact}:null,matrix:[...matrix.elements],...extra};
   placed.push({id,asset,kind,matrix:matrix.clone(),rect,box,tool,scale,p});stats.props.push(p);
   if(p.solid){const center=toWorld(rect.x,rect.z);colliders.push({kind:'obb',x:center.x,z:center.z,hx:rect.hx+.025,hz:rect.hz+.025,angle:angle+yaw});}
@@ -221,7 +246,7 @@ export function makeYardProps(f,level=0){
    if(add(asset,kind,id,matrix,yaw,scale,'yard-cluster',contact,{assetVariant:variant,clusterId:cluster.id}))break;
   }
  }
- stats.targetCount=cap;stats.objectCount=stats.props.length;stats.exposedWalls=segments.map(({columns,rows,...q})=>q);stats.entranceReservations=reserved;stats.composition=stats.props.map(p=>`${p.kind}.${p.assetVariant}@${p.x.toFixed(2)},${p.z.toFixed(2)}:${p.mode}`).join('|');
+ stats.targetCount=cap;stats.objectCount=stats.props.length;stats.placementTriangles=placementTriangles;stats.exposedWalls=segments.map(({columns,rows,...q})=>q);stats.entranceReservations=reserved;stats.composition=stats.props.map(p=>`${p.kind}.${p.assetVariant}@${p.x.toFixed(2)},${p.z.toFixed(2)}:${p.mode}`).join('|');
  stats.compositionHash=hash(seed,stats.composition).toString(16);Object.assign(stats,out.finish(group));group.userData.yardProps={version:10,variant:v,decorativeOnly:true,compositionHash:stats.compositionHash};
  return{group,colliders,stats};
 }
