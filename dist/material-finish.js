@@ -6,7 +6,7 @@ export function createMaterialFinish(){
     if(!o.isMesh)return;
     for(const m of Array.isArray(o.material)?o.material:[o.material]){
       if(!m?.isMeshStandardMaterial||registered.has(m))continue;
-      registered.add(m);const previous=m.onBeforeCompile,key=m.customProgramCacheKey();
+      registered.add(m);if(m.alphaTest>0)m.alphaToCoverage=true;const previous=m.onBeforeCompile,key=m.customProgramCacheKey();
       m.onBeforeCompile=function(shader,renderer){
         previous.call(this,shader,renderer);
         const s=shader.fragmentShader;
@@ -15,7 +15,7 @@ export function createMaterialFinish(){
             float earthGrain=clamp(soilDetail*4.,0.,1.);
             float earthDry=mix(.97,.84,earthGrain)*(.98+soilPatch*.02);
             float earthDamp=clamp(vMeadow.y*vMeadow.x,0.,1.);
-            roughnessFactor=mix(earthDry,.68,earthDamp*.65)*(1.-rut*.055);`);
+            roughnessFactor=mix(mix(earthDry,.68,earthDamp*.65),.415,rut);`);
         }else if(s.includes('float ruralLuma=')){
           const bark=s.includes('vec2 barkUV=');
           shader.fragmentShader=s.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>

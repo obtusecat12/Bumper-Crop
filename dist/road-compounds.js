@@ -1,4 +1,4 @@
-import {compoundComponents,compoundYard,compoundEntrance,componentDistance,componentBounds,hash} from './compound-layout.js?v=39';
+import {compoundComponents,compoundYard,compoundEntrance,componentDistance,componentBounds,hash} from './compound-layout.js?v=40';
 
 const SIZE=400,CHUNK=64,MIN_SEPARATION=120,STATION=176;
 const floor=(v,n)=>v>=0n?v/n:(v-n+1n)/n;

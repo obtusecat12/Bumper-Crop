@@ -1,7 +1,8 @@
+import {plantTexture,plantAlpha} from './plant-texture.js?v=40';
 import * as T from './vendor/three.module.min.js';
-import {wheatCandidates,random,stringSeed} from './world.js?v=39';
-import {CEREAL_RADIUS,CEREAL_LIMIT,floorDiv} from './cereal-layout.js?v=39';
-import {bindStaticSelection,selectStaticInstances} from './static-selection.js?v=39';
+import {wheatCandidates,random,stringSeed} from './world.js?v=40';
+import {CEREAL_RADIUS,CEREAL_LIMIT,floorDiv} from './cereal-layout.js?v=40';
+import {bindStaticSelection,selectStaticInstances} from './static-selection.js?v=40';
 export const WHEAT_GEOMETRY_RADIUS=CEREAL_RADIUS;
 const shared=new Set();let atlas,loading,geometry;
 function stubbleImage(){
@@ -16,15 +17,15 @@ function stubbleImage(){
 }
 async function decode(url){
  const response=await fetch(url);if(!response.ok)throw Error('Cereal texture: '+response.status);
- const bitmap=await createImageBitmap(await response.blob()),c=document.createElement('canvas');c.width=256;c.height=512;
- const ctx=c.getContext('2d');ctx.drawImage(bitmap,0,0,256,512);bitmap.close();return new Uint8Array(ctx.getImageData(0,0,256,512).data);
+ const bitmap=await createImageBitmap(await response.blob()),c=document.createElement('canvas');c.width=c.height=1024;
+ const ctx=c.getContext('2d');ctx.drawImage(bitmap,0,0,1024,1024);bitmap.close();return new Uint8Array(ctx.getImageData(0,0,1024,1024).data);
 }
 export function initializeCerealTextures(decodeImage=decode){
- if(!loading)loading=Promise.all(['wheat','barley'].map(kind=>decodeImage(new URL(`./textures/${kind}-cutout-v39.png`,import.meta.url)))).then(images=>{
-  images.push(stubbleImage());const data=new Uint8Array(256*512*4*3);
-  for(let y=0;y<512;y++)for(let k=0;k<3;k++)data.set(images[k].subarray((511-y)*256*4,(512-y)*256*4),(y*768+k*256)*4);
-  atlas=new T.DataTexture(data,768,512);atlas.name='Photographic wheat / long-awn barley / cut straw';
-  atlas.colorSpace=T.SRGBColorSpace;atlas.magFilter=T.LinearFilter;atlas.minFilter=T.LinearMipmapLinearFilter;atlas.generateMipmaps=true;atlas.anisotropy=4;atlas.needsUpdate=true;shared.add(atlas);
+ if(!loading)loading=Promise.all(['wheat','barley'].map(kind=>decodeImage(new URL(`./textures/${kind}-atlas-v40.png`,import.meta.url)))).then(images=>{
+  const data=new Uint8Array(1024*3072*4),straw=stubbleImage();
+  for(let y=0;y<1024;y++)for(let k=0;k<2;k++)data.set(images[k].subarray((1023-y)*4096,(1024-y)*4096),((2-k)*1024+y)*4096);
+  for(let y=0;y<1024;y++)for(let k=0;k<4;k++)data.set(straw.subarray((511-Math.floor(y/2))*1024,(512-Math.floor(y/2))*1024),(y*1024+k*256)*4);
+  atlas=plantTexture(data,1024,3072,{columns:4,rows:3,name:'Four wheat / four barley forms / short cut straw'});shared.add(atlas);
  }).catch(e=>{loading=null;throw e;});return loading;
 }
 export function crossedCerealGeometry(){
@@ -33,26 +34,38 @@ export function crossedCerealGeometry(){
   const dx=plane?0:.5,dz=plane?.5:0;
   for(const [side,y,u,v]of [[-1,0,0,0],[1,0,1,0],[1,1,1,1],[-1,1,0,1]]){
    p.push(dx*side,y,dz*side);uv.push(u,v);
-   const normal=new T.Vector3(side*dx*.65,.68+y*.45,side*dz*.65).normalize();n.push(...normal.toArray());
+   const normal=new T.Vector3(side*dx*1.64,.574,side*dz*1.64).normalize();n.push(...normal.toArray());
   }
  }
  geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(p,3));geometry.setAttribute('normal',new T.Float32BufferAttribute(n,3));geometry.setAttribute('uv',new T.Float32BufferAttribute(uv,2));geometry.setIndex([0,1,2,0,2,3,4,5,6,4,6,7]);geometry.computeBoundingSphere();shared.add(geometry);return geometry;
 }
 function cerealMaterial(wind){
- const m=new T.MeshStandardMaterial({name:'Photographic crossed cereals',map:atlas,alphaTest:.29,side:T.DoubleSide,roughness:.97});
+ const m=new T.MeshStandardMaterial({name:'Photographic crossed cereals',map:atlas,alphaTest:.16,alphaToCoverage:true,side:T.DoubleSide,roughness:1});
  m.onBeforeCompile=s=>{
   s.uniforms.uCerealTime=wind.time;s.uniforms.uCerealWind=wind.strength;
-  s.vertexShader='uniform float uCerealTime,uCerealWind;varying float vCerealHeight;varying float vCerealKind;varying vec3 vCerealWorld;\n'+s.vertexShader;
+  s.vertexShader='uniform float uCerealTime,uCerealWind;varying float vCerealHeight;flat varying float vCerealKind;varying vec3 vCerealWorld;\n'+s.vertexShader;
+  s.vertexShader=s.vertexShader.replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\nobjectNormal*=vec3(length(instanceMatrix[0].xyz),length(instanceMatrix[1].xyz),length(instanceMatrix[2].xyz));');
   s.vertexShader=s.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
    vCerealHeight=uv.y;vCerealKind=frozenExtra;vCerealWorld=(modelMatrix*instanceMatrix*vec4(0.,0.,0.,1.)).xyz;
    float phase=instanceMatrix[3].x*.71+instanceMatrix[3].z*.53;
    transformed.x+=sin(uCerealTime*1.42+phase)*.055*min(uCerealWind,1.5)*uv.y*uv.y;
    transformed.z+=sin(uCerealTime*.97+phase*.73)*.025*min(uCerealWind,1.5)*uv.y*uv.y;`);
-  s.fragmentShader='varying float vCerealHeight;varying float vCerealKind;varying vec3 vCerealWorld;\n'+s.fragmentShader;
-  s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',`vec2 cerealUV=vec2((clamp(vMapUv.x,.004,.996)+vCerealKind)/3.,vMapUv.y);diffuseColor*=texture2D(map,cerealUV);diffuseColor.a*=1.-smoothstep(26.,28.,length(vCerealWorld.xz-cameraPosition.xz));`);
-  s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.rgb*=mix(.48,1.,smoothstep(0.,.68,vCerealHeight));');
+  s.fragmentShader='varying float vCerealHeight;flat varying float vCerealKind;varying vec3 vCerealWorld;\n'+s.fragmentShader;
+  s.fragmentShader=s.fragmentShader.replace('#include <alphatest_fragment>',plantAlpha);
+  s.fragmentShader=s.fragmentShader.replace('#include <lights_physical_fragment>','#include <lights_physical_fragment>\nmaterial.specularColor=vec3(0.);material.specularF90=0.;');
+  s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',`float cropType=floor(vCerealKind/8.),form=mod(floor(vCerealKind/2.),4.),mirror=mod(vCerealKind,2.);
+   float leafU=mix(vMapUv.x,1.-vMapUv.x,mirror);
+   vec2 cerealUV=vec2((clamp(leafU,.012,.988)+form)/4.,(clamp(vMapUv.y,.002,.998)+2.-cropType)/3.);
+   diffuseColor*=texture2D(map,cerealUV);diffuseColor.a*=1.-smoothstep(26.,28.,length(vCerealWorld.xz-cameraPosition.xz));`);
+  s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.rgb*=mix(vec3(.32,.36,.25),vec3(1.),pow(clamp(vCerealHeight,0.,1.),1.4));');
   s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_begin>','#include <normal_fragment_begin>\n#ifdef DOUBLE_SIDED\nnormal*=faceDirection;\n#endif');
- };m.customProgramCacheKey=()=> 'photo-cross-cereal-rounded-normal-v39';return m;
+  s.fragmentShader=s.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
+   #if NUM_DIR_LIGHTS > 0
+    float backLight=pow(max(0.,dot(-normalize(directionalLights[0].direction),normalize(vViewPosition))),2.);
+    float earLight=pow(clamp(vCerealHeight,0.,1.),2.)*backLight;
+    totalEmissiveRadiance+=diffuseColor.rgb*vec3(1.0,.69,.27)*directionalLights[0].color*earLight*.16;
+   #endif`);
+ };m.customProgramCacheKey=()=> 'slender-cereal-translucency-v40';return m;
 }
 export function createCerealMesh(cell,wind){
  const source=cerealMaterial(wind),mesh=new T.InstancedMesh(crossedCerealGeometry(),source,cell.matrices.length/16);
@@ -68,7 +81,7 @@ export function createWheatDetailLayer(wind,{onMesh,seed=stringSeed('CHLORINE / 
  const object=new T.Group(),cells=new Map(),pending=new Map(),wanted=new Set();object.name='Static 40m cereal chunks';
  const stats=object.userData.wheat={geometryRadius:35,activeStems:0,triangles:0,draws:0,uploadBytes:0,matrixWrites:0,selectionChanges:0,pending:0};
  let id=0,originX=0n,originZ=0n,lastOrigin='',cellX=null,cellZ=null,observerX=null,observerZ=null,dirty=true,disposed=false;
- const worker=workerFactory?workerFactory():typeof Worker!=='undefined'?new Worker(new URL('./cereal-worker.js?v=39',import.meta.url),{type:'module'}):null;
+ const worker=workerFactory?workerFactory():typeof Worker!=='undefined'?new Worker(new URL('./cereal-worker.js?v=40',import.meta.url),{type:'module'}):null;
  const discard=m=>{m.dispose();m.material.staticTextures?.forEach(t=>t.dispose());m.material.dispose();m.removeFromParent();};
  function accept(cell){if(disposed)return;const key=`${cell.cx},${cell.cz}`;pending.delete(key);
   const mesh=createCerealMesh(cell,wind);mesh.userData.cellX=cell.cx;mesh.userData.cellZ=cell.cz;mesh.matrixAutoUpdate=false;mesh.visible=false;
@@ -93,7 +106,7 @@ export function createWheatDetailLayer(wind,{onMesh,seed=stringSeed('CHLORINE / 
    m.position.set(Number(x-originX*64n),0,Number(z-originZ*64n));m.updateMatrix();
    const n=selectStaticInstances(m,Number(qx*4n-x)+2,Number(qz*4n-z)+2);count+=n;if(n)draws++;
   }
-  // The .5m stratified lattice bounds the full circle below 14k clumps.
+  // The .4m stratified lattice stays below the 25k / 100k triangle ceiling.
   if(count>CEREAL_LIMIT)throw Error('Cereal geometry budget exceeded');
   // Budget/frustum checks run before Three's render traversal. Refresh only
   // on a cell selection/origin change, never rewrite an instance transform.

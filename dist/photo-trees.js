@@ -1,6 +1,7 @@
+import {plantTexture} from './plant-texture.js?v=40';
 import * as T from './vendor/three.module.min.js';
-import {JoinedWood} from './joined-wood.js?v=39';
-import {attachRuralDetail} from './rural-textures.js?v=39';
+import {JoinedWood} from './joined-wood.js?v=40';
+import {attachRuralDetail} from './rural-textures.js?v=40';
 
 // Photo-specific Kephart Farm trees. Trunks and branch scaffolds are merged;
 // foliage is individual small leaves drawn into shared alpha-cut twig cards.
@@ -95,11 +96,11 @@ export function twigTexture(shape) {
     }
     leaf(129, 24, -Math.PI * .5, 33, thin ? 3.0 : narrow ? 6 : 10, 232);
   }
-  const texture = new T.DataTexture(data, n, n, T.RGBAFormat);
+  const texture = plantTexture(data,n,n);
   texture.name = 'Photo tree twig / ' + shape;
   texture.colorSpace = T.SRGBColorSpace;
   texture.magFilter = T.LinearFilter; texture.minFilter = T.LinearMipmapLinearFilter;
-  texture.generateMipmaps = true; texture.anisotropy = 4; texture.needsUpdate = true;
+  texture.generateMipmaps = false; texture.anisotropy = 4; texture.needsUpdate = true;
   shared.add(texture); textures.set(shape, texture); return texture;
 }
 

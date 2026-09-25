@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {createWaterSurface} from './water-surface.js?v=39';
-import {createWaterEnvironment} from './water-environment.js?v=39';
-import {createCameraFocus} from './camera-focus.js?v=39';
+import {createWaterSurface} from './water-surface.js?v=40';
+import {createWaterEnvironment} from './water-environment.js?v=40';
+import {createCameraFocus} from './camera-focus.js?v=40';
 export const INTERNAL_HEIGHT=720,DOF_SCALE=.5,DOF_TAPS=10;
 export const passVertex=`precision highp float;precision highp sampler2D;in vec3 position;out vec2 uv;void main(){uv=position.xy*.5+.5;gl_Position=vec4(position,1.);}`;
 export const copyDepthFragment=`precision highp float;precision highp sampler2D;uniform sampler2D picture,depth;in vec2 uv;out vec4 outColor;void main(){outColor=texture(picture,uv);gl_FragDepth=texture(depth,uv).r;}`;
@@ -155,7 +155,7 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky}
  let opaque=null,water=null,half=null,width=0,height=0,clock=0;const waterMeshes=new Set();
  const stats={internalWidth:0,internalHeight:0,compositeWidth:0,compositeHeight:0,fusedPasses:0,depthCopies:0,taps:10};
  function target(w,h,depth){const rt=new T.WebGLRenderTarget(w,h,{type:renderer.extensions.has('EXT_color_buffer_float')?T.HalfFloatType:T.UnsignedByteType,depthBuffer:depth,minFilter:T.LinearFilter,magFilter:T.LinearFilter,generateMipmaps:false});rt.texture.colorSpace=T.NoColorSpace;if(depth){rt.depthTexture=new T.DepthTexture(w,h,T.UnsignedIntType);rt.depthTexture.minFilter=rt.depthTexture.magFilter=T.NearestFilter;}return rt;}
- function allocate(w,h){if(width===w&&height===h&&opaque)return;disposeTargets();width=w;height=h;opaque=target(w,h,true);water=target(w,h,true);half=target(Math.max(1,Math.ceil(w*.5)),Math.max(1,Math.ceil(h*.5)),false);
+ function allocate(w,h){if(width===w&&height===h&&opaque)return;disposeTargets();width=w;height=h;opaque=target(w,h,true);opaque.samples=Math.min(4,renderer.capabilities.maxSamples);opaque.resolveDepthBuffer=true;water=target(w,h,true);half=target(Math.max(1,Math.ceil(w*.5)),Math.max(1,Math.ceil(h*.5)),false);
   stats.internalWidth=w;stats.internalHeight=h;stats.compositeWidth=half.width;stats.compositeHeight=half.height;u.resolution.value.set(w,h);surface.uniforms.size.value.set(w,h);
  }
  function disposeTargets(){opaque?.dispose();water?.dispose();half?.dispose();opaque=water=half=null;width=height=0;}

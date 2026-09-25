@@ -1,20 +1,21 @@
-import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=39';
-import {landmarkTextures} from './landmark-textures.js?v=39';
-import {meadowEnvironment} from './meadow-layout.js?v=39';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=39';
-import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=39';
+import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=40';
+import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=40';
+import {landmarkTextures} from './landmark-textures.js?v=40';
+import {meadowEnvironment} from './meadow-layout.js?v=40';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=40';
+import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=40';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=39';
-import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=39';
+import {ruralTextures} from './rural-textures.js?v=40';
+import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=40';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
 varying vec3 vCropWorld; uniform float uTime;
 varying vec4 vMeadow;
 varying vec4 vShoreData;
-varying float vShoreGrass; varying float vTrackMud; varying float vYard;
+varying float vShoreGrass; varying float vTrackMud; varying float vYard; varying float vTrackRelief;
 uniform float uWaterHeight;
-uniform sampler2D uPatchwork;
+uniform sampler2D uPatchwork; uniform sampler2D uRoadFrame;
 uniform float uPatchSize;
 uniform highp sampler2DArray uGroundAlbedo;
 uniform vec4 uLanes[4];
@@ -29,6 +30,7 @@ uniform vec3 uFarm;
 uniform vec4 uFarmBuildings[6];
 uniform vec2 uFarmSizes[6];
 ${FARM_MASK_GLSL}
+${ROAD_NOISE_GLSL}
 float farmRoadMask(vec2 p){
  return uFarm.z<.5?1.:1.-farmMaskAt(p+uFarm.xy);
 }
@@ -55,20 +57,22 @@ vec4 parcelData(vec2 p){return texture2D(uPatchwork,(clamp(p,vec2(0.),vec2(64.))
 vec3 laneData(vec2 p,float edgeOffset){vec4 d=parcelData(p);return vec3(d.r*16.,d.g,d.a);}
 ${pondShapeGLSL}
 `;
-const patchTextureCache=new WeakMap();
+const patchTextureCache=new WeakMap(),roadFrameCache=new WeakMap();
 function patchworkTexture(f,level){
  const old=patchTextureCache.get(f);if(old?.level===level)return old.texture;
- const size=level===0?512:256,data=new Uint8Array(size*size*4),road={},crop={};
+ const size=level===0?512:256,data=new Uint8Array(size*size*4),frames=new Uint8Array(size*size*4),road={},crop={};
  for(let j=0;j<size;j++)for(let i=0;i<size;i++){const x=i*64/(size-1),z=j*64/(size-1),k=(j*size+i)*4;
-  roadProfile(x,z,f,road);cropSample(x,z,f,crop);data[k]=Math.round(Math.max(0,Math.min(16,road.distance))*255/16);data[k+1]=Math.round(road.rut*255);data[k+2]=(crop.crop*3+crop.angleIndex)*28;data[k+3]=Math.round(road.junction*255);}
- const t=new T.DataTexture(data,size,size);t.name='parcel road/crop atlas';t.userData.chunkOwned=true;t.magFilter=t.minFilter=T.LinearFilter;t.generateMipmaps=false;t.needsUpdate=true;patchTextureCache.set(f,{level,texture:t});return t;
+  roadProfile(x,z,f,road);cropSample(x,z,f,crop);data[k]=Math.round(Math.max(0,Math.min(16,road.distance))*255/16);data[k+1]=Math.round(road.rut*255);data[k+2]=(crop.crop*3+crop.angleIndex)*28;data[k+3]=Math.round(road.junction*255);
+  const dist=Math.round(Math.min(16,Math.max(0,road.distance))*65535/16),along=Math.round(((road.along%64+64)%64)*65535/64);
+  frames[k]=dist>>8;frames[k+1]=dist&255;frames[k+2]=along>>8;frames[k+3]=along&255;}
+ const t=new T.DataTexture(data,size,size);t.name='parcel road/crop atlas';t.userData.chunkOwned=true;t.magFilter=t.minFilter=T.LinearFilter;t.generateMipmaps=false;t.needsUpdate=true;const frame=new T.DataTexture(frames,size,size);frame.userData.chunkOwned=true;frame.magFilter=frame.minFilter=T.LinearFilter;frame.generateMipmaps=false;frame.needsUpdate=true;roadFrameCache.set(f,frame);patchTextureCache.set(f,{level,texture:t});return t;
 }
 const cropTime={value:0};
 export function updateCropGroundTime(time){cropTime.value=time;}
 function groundMaterial(f,level){
  const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1}),patch=patchworkTexture(f,level);m.userData.ownedParcelTexture=patch;
  m.onBeforeCompile=s=>{
-  s.uniforms.uTime=cropTime;
+  s.uniforms.uTime=cropTime;s.uniforms.uRoadFrame={value:roadFrameCache.get(f)};
   s.uniforms.uPatchwork={value:patch};s.uniforms.uPatchSize={value:patch.image.width};
   s.uniforms.uGroundAlbedo={value:ruralTextures.groundArray};
   s.uniforms.uWaterHeight={value:f.lakeY||0};
@@ -85,23 +89,33 @@ function groundMaterial(f,level){
   const [w,depth]=buildingSize(f);
   s.uniforms.uSize={value:new T.Vector2(w/2,depth/2)};
   s.uniforms.uWorldOffset={value:new T.Vector2(periodOrigin(f.x),periodOrigin(f.z))};
-  s.vertexShader='varying vec3 vCropWorld; attribute float yardData; attribute float shoreGrass; attribute float trackMud; varying float vShoreGrass; varying float vTrackMud; varying float vYard;\nvarying vec3 vTerrain;\nvarying vec4 vMeadow;\nvarying vec4 vShoreData;\n'+(f.type==='pond'?'attribute vec4 shoreData;\n':'')+(f.meadow?'attribute vec4 meadowData;\n':'')+s.vertexShader;
-  s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvCropWorld=(modelMatrix*vec4(position,1.)).xyz; vTerrain=position; vShoreGrass=shoreGrass; vTrackMud=trackMud; vYard=yardData; vMeadow='+(f.meadow?'meadowData':'vec4(0.)')+'; vShoreData='+(f.type==='pond'?'shoreData':'vec4(0.)')+';');
+  s.vertexShader='varying vec3 vCropWorld; attribute float yardData; attribute float shoreGrass; attribute float trackMud; attribute float trackRelief; varying float vShoreGrass; varying float vTrackMud; varying float vYard; varying float vTrackRelief;\nvarying vec3 vTerrain;\nvarying vec4 vMeadow;\nvarying vec4 vShoreData;\n'+(f.type==='pond'?'attribute vec4 shoreData;\n':'')+(f.meadow?'attribute vec4 meadowData;\n':'')+s.vertexShader;
+  s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvCropWorld=(modelMatrix*vec4(position,1.)).xyz; vTerrain=position; vShoreGrass=shoreGrass; vTrackMud=trackMud;vTrackRelief=trackRelief; vYard=yardData; vMeadow='+(f.meadow?'meadowData':'vec4(0.)')+'; vShoreData='+(f.type==='pond'?'shoreData':'vec4(0.)')+';');
   // Keep this newline: Three's shader begins with a preprocessor directive.
   s.fragmentShader=terrainDecl+'\n'+s.fragmentShader;
   s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
    vec2 p=vTerrain.xz,g=p+uWorldOffset,q=p+mod(uWorldOffset,2048.);
    float broad=noise2(g*.125),soilPatch=noise2(g*.5),clods=noise2(q*5.);
+   vec4 roadFrame=texture2D(uRoadFrame,(clamp(p,vec2(0.),vec2(64.))*((uPatchSize-1.)/64.)+.5)/uPatchSize);
+   float roadAcross=dot(roadFrame.rg,vec2(256.,1.))*255.*16./65535.;
+   float roadAlong=dot(roadFrame.ba,vec2(256.,1.))*255.*64./65535.;
    float fineFade=1.-smoothstep(.004,.035,length(fwidth(q)));
    float grain=0.;if(fineFade>0.)grain=(noise2(q*43.)*.56+noise2(q*97.)*.44-.5)*fineFade;
-   // At most 6 cm of irregular soil at the rut edge; the authoritative recessed
-   // wheel geometry and collision height are unchanged. Integer noise scales
-   // preserve the same color at the repeating world-coordinate boundary.
+   // Shading micro-erosion is centred on the shared recessed wheel profile.
+   // The road layout stays fixed while the groove gains its requested relief.
    float roadEdgeOffset=(noise2(q*3.)-.5)*.080+(clods-.5)*.040;
-   vec3 tracks=laneData(p,roadEdgeOffset);float rd=tracks.x;
+   vec3 tracks=laneData(p,roadEdgeOffset);float rd=roadAcross;
    // Each pair survives intersections. Min distance is only used for the verge.
-   float edgeBreak=(noise2(q*11.)-.5)*.13+(clods-.5)*.11;
-   float rut=smoothstep(.015,.97,clamp(tracks.y+edgeBreak*tracks.y*(1.-tracks.y)*4.,0.,1.));
+   // Fractured edges are filtered in screen space; no white paint strips.
+   float erosion=0.;if(rd<2.7)erosion=(roadSimplex(q*6.)-.5)*.15+(roadVoronoi(q*18.)-.5)*.04;
+   float wheelX=abs(rd-.9)+erosion,edgeAA=max(.012,length(fwidth(q))*.32);
+   float rut=(1.-smoothstep(.155-edgeAA,.190+edgeAA,wheelX));
+   rut=max(rut,tracks.y*tracks.z*.82);rut*=1.-smoothstep(1.75,2.1,rd);
+   float berm=.04*exp(-pow((wheelX-.215)/.065,2.)*2.);
+   float grooveHeight=-.10*rut+berm;
+   float treadPhase=roadAlong*4.+abs(rd-.9)*6.928;
+   float treadWidth=max(.04,fwidth(treadPhase)*.8);
+   float tread=(1.-smoothstep(.11,.11+treadWidth,abs(fract(treadPhase)-.5)))*rut*fineFade;
    float soilTone=clamp(.43+broad*.22+(soilPatch-.5)*.26+(clods-.5)*.20+grain*.19,0.,1.);
    vec3 dirt=mix(vec3(.114,.094,.065),vec3(.237,.205,.147),soilTone);
    float stoneSpeck=0.,darkGrain=0.;if(fineFade>0.){stoneSpeck=smoothstep(.77,.91,noise2(q*29.))*smoothstep(.43,.69,clods)*fineFade;darkGrain=smoothstep(.75,.91,noise2(q*61.))*fineFade;}
@@ -140,7 +154,13 @@ function groundMaterial(f,level){
    if(cropKind>.5)cropGold*=vec3(.67,.59,.62);
    field=mix(field,cropGold,farCrop);
    float vergeBreak=(noise2(g*.5)-.5)*.63+(clods-.5)*.18;
-   vec3 base=mix(grass,field,smoothstep(1.42,2.32,rd+vergeBreak));
+   float roadExtent=1.-smoothstep(1.55,2.25,rd+vergeBreak);
+   float brokenMask=smoothstep(.45,.55,roadSimplex(q*1.7)*.7+roadSimplex(q*5.1+19.)*.3);
+   brokenMask*=1.-smoothstep(.03,.18,rut);brokenMask*=1.-tracks.z*.78;
+   vec3 roadSoil=mix(soilAlbedo,pathAlbedo,.56)*vec3(.90,.79,.59)*(.89+soilPatch*.18);
+   vec3 roadGrass=mix(grass*.68,turfAlbedo*vec3(.48,.56,.36),.40);
+   vec3 roadBase=mix(roadSoil,roadGrass,brokenMask*.67);
+   vec3 base=mix(field,roadBase,roadExtent);
    // A vertex-sampled ecological field adds no fragment texture fetches.
    float meadowCover=smoothstep(.06,.76,vMeadow.x);
    vec3 meadowGrass=mix(grass*vec3(1.05,.96,.83),grass*vec3(.88,1.06,.91),vMeadow.y);
@@ -151,8 +171,9 @@ function groundMaterial(f,level){
    base=mix(base,grass*vec3(.94,1.035,.96),smoothstep(.04,.75,vShoreGrass));
    float scuff=(1.-smoothstep(.30,1.45,rd))*smoothstep(.57,.80,noise2(q*1.8))*.36;
    scuff=max(scuff,tracks.z*(.54+soilPatch*.35));
-   base=mix(base,dirt,scuff);
-   base=mix(base,dirt,rut);
+   base=mix(base,roadSoil,scuff*roadExtent);
+   vec3 compacted=roadSoil*vec3(.54,.52,.48)*(1.-tread*.12);
+   base=mix(base,compacted,rut);
    base=mix(base,dirt*vec3(.57,.56,.50),vTrackMud*(.75+soilPatch*.25));
    base=mix(base,dirt*vec3(.76,.72,.66),vYard*(.90+soilPatch*.10));
 // Irregular aged soil around the existing building footprint.
@@ -218,7 +239,7 @@ if(uBuilding.w>.5){
    // Millimetre-scale soil relief, filtered away as a pixel covers more ground.
    // The visible wheel grooves remain the actual displaced terrain geometry.
    float cropBump=farCrop*smoothstep(2.3,3.1,rd)*(1.-meadowCover)*(1.-vShoreGrass)*(1.-vYard);
-   float soilMicroHeight=(clods*.0018+grain*.0006+soilDetail*.0060)*fineFade + cropBump*wheatWave*.016;
+   float soilMicroHeight=(clods*.0018+grain*.0006+soilDetail*.0060)*fineFade+cropBump*wheatWave*.016 + (grooveHeight-vTrackRelief)*roadExtent-tread*.009;
    vec3 soilDx=dFdx(-vViewPosition),soilDy=dFdy(-vViewPosition);
    vec3 soilRx=cross(soilDy,normal),soilRy=cross(normal,soilDx);
    float soilDet=dot(soilDx,soilRx);
@@ -226,7 +247,7 @@ if(uBuilding.w>.5){
    normal=normalize(max(abs(soilDet),.00000001)*normal-soilGradient);
   `);
  };
- m.customProgramCacheKey=()=> 'rural-ground-v38-distant-crops-'+!!f.meadow+'-'+(f.type==='pond');
+ m.customProgramCacheKey=()=> 'broken-earth-ruts-v40-'+!!f.meadow+'-'+(f.type==='pond');
  return m;
 }
 function samples(step,edges){
@@ -268,9 +289,9 @@ export function terrainGeometry(f,level){
  const geo=new T.BufferGeometry();
  geo.setAttribute('position',new T.BufferAttribute(p,3));
  geo.setAttribute('uv',new T.BufferAttribute(uv,2));
- const yardData=new Float32Array(coordinates.length),trackMud=new Float32Array(coordinates.length),roadSample={};
- for(let i=0;i<coordinates.length;i++){const [x,z]=coordinates[i];roadProfile(x,z,f,roadSample);yardData[i]=roadSample.yard||0;trackMud[i]=roadSample.mud||0;}
- geo.setAttribute('yardData',new T.BufferAttribute(yardData,1));geo.setAttribute('trackMud',new T.BufferAttribute(trackMud,1));
+ const yardData=new Float32Array(coordinates.length),trackMud=new Float32Array(coordinates.length),trackRelief=new Float32Array(coordinates.length),roadSample={};
+ for(let i=0;i<coordinates.length;i++){const [x,z]=coordinates[i];roadProfile(x,z,f,roadSample);yardData[i]=roadSample.yard||0;trackMud[i]=roadSample.mud||0;trackRelief[i]=roadSample.relief||0;}
+ geo.setAttribute('trackRelief',new T.BufferAttribute(trackRelief,1));geo.setAttribute('yardData',new T.BufferAttribute(yardData,1));geo.setAttribute('trackMud',new T.BufferAttribute(trackMud,1));
  geo.setAttribute('shoreGrass',new T.Float32BufferAttribute(coordinates.map(([x,z])=>shoreGrassCover(x,z,f)),1));
  if(f.type==='pond'){const data=new Float32Array(coordinates.length*4),m={};let n=0;for(const [x,z] of coordinates){pondHabitat(x,z,f,m);data[n++]=m.metres;data[n++]=m.rock;data[n++]=m.sediment;data[n++]=m.wetland}geo.setAttribute('shoreData',new T.BufferAttribute(data,4));}
 
@@ -413,7 +434,8 @@ export function makeVerge(f,level,wind){
   return false;
  };
  const addGrass=(x,z,s,kind=0)=>{
-  if(blocked(x,z))return;roadProfile(x,z,f,road);if(road.rut>.14||road.yard>.04)return;
+  if(blocked(x,z))return;roadProfile(x,z,f,road);if(road.rut>.035||road.yard>.04)return;
+  if(road.distance<1.6&&roadGrassNoise(x+worldX,z+worldZ)<.52)return;
   const lush=turfNoise((x+worldX)*.66,(z+worldZ)*.66),small=turfNoise((x+worldX)*2.5,(z+worldZ)*2.5);
   // Coherent gaps and a few flattened tufts read as trampling, not missing dots.
   const worn=turfClamp((.38-lush)*3.8)+road.junction*(.64+small*.30);
@@ -443,13 +465,13 @@ export function makeVerge(f,level,wind){
  };
  for(let z=.08;z<64;z+=spacing)for(let x=.08;x<64;x+=spacing){
   const xx=x+(r()-.5)*spacing*.8,zz=z+(r()-.5)*spacing*.8;roadProfile(xx,zz,f,road);
-  if(road.distance<2.32&&road.rut<.13)addGrass(xx,zz,.75+r()*.32);
+  if(road.distance<2.32&&road.rut<.035)addGrass(xx,zz,.75+r()*.32);
  }
  // Detached, uneven tufts soften the crop margin without filling wheel tracks.
  for(let i=0;i<1500;i++){
   const x=r()*64,z=r()*64,d=roadDistance(x,z,f);
   if(d>1.76&&d<2.50&&r()<.50)addGrass(x,z,.58+r()*.52);
-  if(Math.abs(d-.77)<.24&&r()<.70&&!blocked(x,z)){
+  if(Math.abs(d-.9)<.24&&r()<.70&&!blocked(x,z)){
    const s=.007+r()**2*.021;
    stones.push({x,z,s,a:r()*TAU,tilt:r()*.7,sx:s*(1.15+r()*.6),sy:s*(.36+r()*.28),sz:s,y:s*.12,tint:.77+r()*.36,lod:r()});
   }
@@ -489,7 +511,7 @@ export function makeVerge(f,level,wind){
  }
  // Independent stream leaves all original arrival vegetation draws untouched.
  if(f.roadLakes?.length){const sr=random(f.seed^0x357b19),step=near?.62:far?1.4:.95;
-  for(let z=.1;z<64;z+=step)for(let x=.1;x<64;x+=step){const px=x+(sr()-.5)*step*.9,pz=z+(sr()-.5)*step*.9,c=shoreGrassCover(px,pz,f);if(c<.05||sr()>c*.84||blocked(px,pz))continue;roadProfile(px,pz,f,road);if(road.rut>.1||road.yard>.04)continue;
+  for(let z=.1;z<64;z+=step)for(let x=.1;x<64;x+=step){const px=x+(sr()-.5)*step*.9,pz=z+(sr()-.5)*step*.9,c=shoreGrassCover(px,pz,f);if(c<.05||sr()>c*.84||blocked(px,pz))continue;roadProfile(px,pz,f,road);if(road.rut>.035||road.yard>.04)continue;
    grass[far?0:Math.floor(sr()*3)].push(px,pz,.68+sr()*.62,sr()*TAU,.80+sr()*.27,.85+sr()*.42);
   }
  }
@@ -498,7 +520,7 @@ export function makeVerge(f,level,wind){
  for(let v=0;v<3;v++){
   const points=grass[v],parts=[[],[]];
   for(let i=0;i<points.length;i+=6){const patch=turfNoise((points[i]+worldX)*.22,(points[i+1]+worldZ)*.22);const k=patch>.63?1:0;parts[k].push(...points.slice(i,i+6));}
-  for(let k=0;k<2;k++)addTurfInstances(group,plantCardGeometry([0,5,2,1,3,5][v*2+k]),parts[k],f,'photographic-trackside-grass-'+v+'-'+k,photo);
+  for(let k=0;k<2;k++)addTurfInstances(group,plantCardGeometry([0,1,2,0,0,1][v*2+k]),parts[k],f,'photographic-trackside-grass-'+v+'-'+k,photo);
  }
  if(!far){
   addInstances(group,plantCardGeometry(4),photo,ferns.filter(p=>near||p.lod<.55),f,'photographic-shade-ferns');
@@ -511,9 +533,10 @@ export const isSharedGroundResource=r=>shared.has(r);
 
 export function snapshotGround(f,level){
  const g=groundGeometryCache.get(f)?.geo,t=patchTextureCache.get(f)?.texture;if(!g||!t)return null;
- return {level,attributes:Object.fromEntries(Object.entries(g.attributes).map(([k,a])=>[k,{array:a.array,itemSize:a.itemSize}])),index:g.index.array,patch:{data:t.image.data,width:t.image.width,height:t.image.height}};
+ return {level,attributes:Object.fromEntries(Object.entries(g.attributes).map(([k,a])=>[k,{array:a.array,itemSize:a.itemSize}])),index:g.index.array,frame:{data:roadFrameCache.get(f).image.data,width:t.image.width,height:t.image.height},patch:{data:t.image.data,width:t.image.width,height:t.image.height}};
 }
 export function restoreGround(f,cached){
  if(!cached)return;const geo=new T.BufferGeometry();for(const [k,a]of Object.entries(cached.attributes))geo.setAttribute(k,new T.BufferAttribute(a.array,a.itemSize));geo.setIndex(new T.BufferAttribute(cached.index,1));geo.computeBoundingBox();geo.computeBoundingSphere();groundGeometryCache.set(f,{level:cached.level,geo});
+ const rf=cached.frame;if(!rf)return;const rt=new T.DataTexture(rf.data,rf.width,rf.height);rt.userData.chunkOwned=true;rt.magFilter=rt.minFilter=T.LinearFilter;rt.generateMipmaps=false;rt.needsUpdate=true;roadFrameCache.set(f,rt);
  const p=cached.patch,t=new T.DataTexture(p.data,p.width,p.height);t.name='parcel road/crop atlas';t.userData.chunkOwned=true;t.magFilter=t.minFilter=T.LinearFilter;t.generateMipmaps=false;t.needsUpdate=true;patchTextureCache.set(f,{level:cached.level,texture:t});
 }

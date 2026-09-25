@@ -1,8 +1,8 @@
-import {twigTexture} from './photo-trees.js?v=39';
+import {twigTexture} from './photo-trees.js?v=40';
 import * as T from './vendor/three.module.min.js';
-import {attachRuralDetail} from './rural-textures.js?v=39';
-import {JoinedWood} from './joined-wood.js?v=39';
-import {height} from './world.js?v=39';
+import {attachRuralDetail} from './rural-textures.js?v=40';
+import {JoinedWood} from './joined-wood.js?v=40';
+import {height} from './world.js?v=40';
 
 // Open-grown eastern/central US farm trees. The crown follows the woody branch
 // hierarchy; every foliage instance is a little open spray of individual leaves.
@@ -10,7 +10,8 @@ import {height} from './world.js?v=39';
 const TAU=Math.PI*2, UP=new T.Vector3(0,1,0), V=(x=0,y=0,z=0)=>new T.Vector3(x,y,z);
 const shared=new Set(), leafGeometries=new Map(), windMaterials=new WeakMap();
 const depthMaterials=new WeakMap();let leafAtlas;
-function getLeafAtlas(){if(leafAtlas)return leafAtlas;const shapes=['broad','maple','narrow','willow','needle'],data=new Uint8Array(256*256*4*5);shapes.forEach((shape,i)=>data.set(twigTexture(shape).image.data,i*256*256*4));leafAtlas=new T.DataArrayTexture(data,256,256,5);Object.assign(leafAtlas,{colorSpace:T.SRGBColorSpace,magFilter:T.LinearFilter,minFilter:T.LinearMipmapLinearFilter,generateMipmaps:true,anisotropy:4});leafAtlas.needsUpdate=true;shared.add(leafAtlas);return leafAtlas;}
+function getLeafAtlas(){if(leafAtlas)return leafAtlas;const shapes=['broad','maple','narrow','willow','needle'],textures=shapes.map(twigTexture),data=new Uint8Array(256*256*4*5);textures.forEach((t,i)=>data.set(t.image.data,i*256*256*4));leafAtlas=new T.DataArrayTexture(data,256,256,5);Object.assign(leafAtlas,{colorSpace:T.SRGBColorSpace,magFilter:T.LinearFilter,minFilter:T.LinearMipmapLinearFilter,generateMipmaps:true,anisotropy:4});/* r180 uploads only base level for DataArrayTexture; use its supported GPU mip chain over edge-bled RGB. */leafAtlas.needsUpdate=true;shared.add(leafAtlas);return leafAtlas;}
+
 const fallbackWind={time:{value:0},strength:{value:.5}};
 const woodMaterial=new T.MeshStandardMaterial({color:0xffffff,vertexColors:true,roughness:1});
 attachRuralDetail(woodMaterial,'bark');

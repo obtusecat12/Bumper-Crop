@@ -1,16 +1,17 @@
-import {patchworkContext as legacyPatchContext} from './patchwork-legacy.js?v=39';
-import {createLakeRoadRouter} from './lake-routing.js?v=39';
-import {createCompoundPlanner,compoundSample} from './road-compounds.js?v=39';
-import {ARRIVAL_COMPONENTS,arrivalCompound} from './arrival-compound.js?v=39';
-import {farmAccessContext,farmAccessSample} from './farm-access.js?v=39';
-import {field as frozenArrivalField,roadProfile as legacyRoadProfile,cropSample as legacyCropSample} from './world-legacy.js?v=39';
-import {macroPlan,patchworkContext,parcelSample,configurePatchwork} from './patchwork.js?v=39';
-import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=39';
-import {REFERENCE_BARN,barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=39';
-import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=39';
-import {FARM,FARM_FOOTPRINTS,farmFootprintDistance,farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=39';
-import {createSettlementPlanner} from './rural-settlements.js?v=39';
-import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=39';
+import {wheelProfile} from './road-surface.js?v=40';
+import {patchworkContext as legacyPatchContext} from './patchwork-legacy.js?v=40';
+import {createLakeRoadRouter} from './lake-routing.js?v=40';
+import {createCompoundPlanner,compoundSample} from './road-compounds.js?v=40';
+import {ARRIVAL_COMPONENTS,arrivalCompound} from './arrival-compound.js?v=40';
+import {farmAccessContext,farmAccessSample} from './farm-access.js?v=40';
+import {field as frozenArrivalField,roadProfile as legacyRoadProfile,cropSample as legacyCropSample} from './world-legacy.js?v=40';
+import {macroPlan,patchworkContext,parcelSample,configurePatchwork} from './patchwork.js?v=40';
+import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=40';
+import {REFERENCE_BARN,barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=40';
+import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=40';
+import {FARM,FARM_FOOTPRINTS,farmFootprintDistance,farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=40';
+import {createSettlementPlanner} from './rural-settlements.js?v=40';
+import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=40';
 export {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance};
 // Infinite signed BigInt cells with deterministic seed-based generation.
 export const CHUNK=64;
@@ -35,18 +36,15 @@ export function laneOffset(l,t){return l.amplitude*Math.sin(Math.PI*t/64)+l.harm
 // Uses the existing laneOffset, smooth and building helpers. No per-query allocations.
 // The terrain shader in ground.js mirrors these constants and equations.
 const roadState={distance:0,rut:0,junction:0,crown:0,relief:0};
+const roadCrossScratch={};
 function collectRoad(out,d,t,weight=1){
  if(weight<=0)return;
  const clearance=d+(1-weight)*2.6;if(clearance<out.distance){out.distance=clearance;out.along=t}
  if(d>2.65)return;
- const phase=t*Math.PI/32;
- const offset=.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11);
- const width=.235+.022*Math.sin(phase*3)+.012*Math.sin(phase*7);
- const rut=(1-smooth(width*.42,width+.075,Math.abs(d-offset)))*weight;
- const depth=.070+.011*Math.sin(phase*2)+.007*Math.sin(phase*5);
+ const profile=wheelProfile(d,t,roadCrossScratch),rut=profile.rut*weight;
  out.rut=Math.max(out.rut,rut);
- out.cut=Math.max(out.cut,rut*depth);
- out.crown=Math.max(out.crown,(1-smooth(.06,.49,d))*.014*weight);
+ out.cut=Math.max(out.cut,profile.cut*weight);
+ out.crown=Math.max(out.crown,profile.berm*weight);
  const cover=(1-smooth(.86,1.80,d))*weight;
  if(cover>out.first){out.second=out.first;out.first=cover}else out.second=Math.max(out.second,cover);
 }
