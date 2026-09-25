@@ -1,0 +1,109 @@
+{
+  "version": "38",
+  "chunks": [
+    {
+      "tile": "0,0",
+      "level": 0,
+      "generateMs": 10217,
+      "detailMs": 423,
+      "detailStems": 24345,
+      "detailBytes": 2239740,
+      "stages": {
+        "ground": 3377,
+        "verges": 282,
+        "wheat": 424,
+        "nature": 67,
+        "poles": 7,
+        "farm-compounds": 1378,
+        "reference-barn": 2,
+        "photo-farm": 563,
+        "lake": 81,
+        "static-batch": 7
+      },
+      "meshes": 20,
+      "triangles": 358653,
+      "instances": 8164,
+      "cerealInstances": 4176,
+      "geometryBytes": 14051833
+    },
+    {
+      "tile": "10,0",
+      "level": 0,
+      "generateMs": 3787,
+      "detailMs": 272,
+      "detailStems": 10228,
+      "detailBytes": 940976,
+      "stages": {
+        "ground": 2049,
+        "verges": 134,
+        "wheat": 127,
+        "nature": 29,
+        "poles": 55,
+        "farm-compounds": 831,
+        "static-batch": 2
+      },
+      "meshes": 19,
+      "triangles": 238556,
+      "instances": 8268,
+      "cerealInstances": 5476,
+      "geometryBytes": 7591494
+    },
+    {
+      "tile": "2,2",
+      "level": 1,
+      "generateMs": 1345,
+      "detailMs": 0,
+      "detailStems": 0,
+      "detailBytes": 0,
+      "stages": {
+        "ground": 706,
+        "verges": 103,
+        "wheat": 0,
+        "nature": 0,
+        "poles": 2,
+        "farm-compounds": 410,
+        "photo-farm": 100,
+        "static-batch": 23
+      },
+      "meshes": 12,
+      "triangles": 61157,
+      "instances": 1234,
+      "cerealInstances": 0,
+      "geometryBytes": 4186635
+    },
+    {
+      "tile": "3,3",
+      "level": 2,
+      "generateMs": 247,
+      "detailMs": 0,
+      "detailStems": 0,
+      "detailBytes": 0,
+      "stages": {
+        "ground": 217,
+        "verges": 22,
+        "wheat": 0,
+        "nature": 4,
+        "poles": 2,
+        "static-batch": 0
+      },
+      "meshes": 4,
+      "triangles": 9858,
+      "instances": 205,
+      "cerealInstances": 0,
+      "geometryBytes": 310208
+    }
+  ],
+  "nearSpawn": {
+    "detailDraws": 4,
+    "detailTriangles": 312606,
+    "updateMs": 20.87000899999839,
+    "geometryRadius": 45,
+    "activeStems": 1347,
+    "cards": 2711,
+    "sourceStems": 24345,
+    "draws": 4,
+    "maxRootDistance": 44.99819455099977,
+    "uploadBytes": 308408,
+    "originKey": "0,0"
+  }
+}

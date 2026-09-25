@@ -1,0 +1,18 @@
+{
+  "samples": 9600,
+  "heightMaxDelta": 0,
+  "roadMaxDelta": 7.105427357601002e-15,
+  "shoreMaxDelta": 1.7763568394002505e-15,
+  "plantChanges": 0,
+  "stemsUnchanged": 24345,
+  "groundCacheExact": true,
+  "packet": {
+    "surfaces": 4,
+    "arrays": 12
+  },
+  "rayBudget": {
+    "reservedPerProbe": 3744,
+    "cap": 24000,
+    "peak": 22464
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "exactVolumeMatch": true,
+  "pauseResume": true,
+  "current": {
+    "computed": 2527,
+    "reused": 0,
+    "rays": 80864,
+    "rayFrameCap": 24000,
+    "peakFrameRays": 7072,
+    "ms": 272.9288069999999,
+    "triangles": 0,
+    "bytes": 0
+  },
+  "cached": {
+    "computed": 0,
+    "reused": 2527,
+    "rays": 0,
+    "rayFrameCap": 24000,
+    "peakFrameRays": 7072,
+    "ms": 32.93459999999982,
+    "triangles": 0,
+    "bytes": 0
+  }
+}

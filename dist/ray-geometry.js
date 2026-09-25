@@ -1,9 +1,10 @@
+import {architectureRayTint} from './architecture-batch.js?v=38';
 import * as T from './vendor/three.module.min.js';
-import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=37';
-import {ruralTextures} from './rural-textures.js?v=37';
-import {periodOrigin,buildingSize,buildingLocal,pondMetrics,roadProfile,cropSample} from './world.js?v=37';
-import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=37';
-import {meadowEnvironment} from './meadow-layout.js?v=37';
+import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=38';
+import {ruralTextures} from './rural-textures.js?v=38';
+import {periodOrigin,buildingSize,buildingLocal,pondMetrics,roadProfile,cropSample} from './world.js?v=38';
+import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=38';
+import {meadowEnvironment} from './meadow-layout.js?v=38';
 
 // Runs in the existing generation worker, before its geometry is transferred.
 // True ground/building/prop/branch/leaf triangles; no solid canopy/house proxies.
@@ -69,6 +70,7 @@ export function buildRayGeometry(root,f=null) {
         colors[at*3]=color.r*d.tint[0]*tone[0]/3*(ic?ic.getX(item):1);
         colors[at*3+1]=color.g*d.tint[1]*tone[1]/3*(ic?ic.getY(item):1);
         colors[at*3+2]=color.b*d.tint[2]*tone[2]/3*(ic?ic.getZ(item):1);
+        if(g.attributes.surfaceParams){const tint=architectureRayTint(Math.round(g.attributes.surfaceParams.getX(index?index.getX(t):t)));for(let c=0;c<3;c++)colors[at*3+c]*=tint[c];}
         if(o.name==='sculpted-ground-and-wheel-ruts'){
           ground[at]=1;
           const k=at*9,x=(positions[k]+positions[k+3]+positions[k+6])/3,z=(positions[k+2]+positions[k+5]+positions[k+8])/3;

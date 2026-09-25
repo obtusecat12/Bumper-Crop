@@ -41,6 +41,7 @@ function surfaceMap(kind) {
   tex.generateMipmaps = true; tex.anisotropy = 4; tex.needsUpdate = true; shared.add(tex); return tex;
 }
 const wood = surfaceMap('wood'), tin = surfaceMap('tin'), shingle = surfaceMap('shingle'), stone = surfaceMap('stone');
+export const kephartSurfaceTextures=[wood,tin,shingle,stone];
 function material(color, map = null, more = {}) {
   const m = new T.MeshStandardMaterial({ color, map, roughness: .91, vertexColors: true, ...more });
   shared.add(m); return m;

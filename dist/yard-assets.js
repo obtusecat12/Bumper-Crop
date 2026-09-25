@@ -23,6 +23,7 @@ function texture(kind){
  const t=new T.DataTexture(data,n,n);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=T.LinearFilter;t.minFilter=T.LinearMipmapLinearFilter;t.generateMipmaps=true;t.anisotropy=4;t.colorSpace=T.SRGBColorSpace;t.needsUpdate=true;shared.add(t);return t;
 }
 const woodMap=texture('wood'),clothMap=texture('cloth'),strawMap=texture('straw');
+export const yardSurfaceTextures=[woodMap,clothMap,strawMap];
 function material(name,color,options={}){const m=new T.MeshStandardMaterial({name,color,vertexColors:true,roughness:.92,...options});shared.add(m);return m;}
 // Eight materials across all 88 templates. Wear and quiet colour variation use
 // vertex colours so the layout can merge the entire yard by material identity.

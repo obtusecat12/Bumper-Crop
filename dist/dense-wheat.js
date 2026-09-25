@@ -1,11 +1,12 @@
-import {createBarleyGeometry,createStubbleGeometry} from './crop-geometry.js?v=37';
+import {createBarleyGeometry,createStubbleGeometry} from './crop-geometry.js?v=38';
 // Golden mature wheat: varied silhouette clumps plus three bounded grain meshes.
 // Geometry/materials/textures are shared; per-chunk meshes and canopy are owned by the chunk.
 import * as T from './vendor/three.module.min.js';
-import { exactIndexGeometry } from './exact-index.js?v=37';
-import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, cropSample, random } from './world.js?v=37';
+import { exactIndexGeometry } from './exact-index.js?v=38';
+import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, cropSample, random } from './world.js?v=38';
 
 const dummy = new T.Object3D(), tint = new T.Color(), shared = new Set();
+export const WHEAT_GEOMETRY_RADIUS = 45;
 const TAU = Math.PI * 2, DETAIL_CAPACITY = 12000, DETAIL_VARIANTS = 9;
 let resources, detailTemplates;
 
@@ -271,7 +272,8 @@ function getResources(wind) {
   detailMaterial.name = 'Wheat detail / fading fringe'; detailCoreMaterial.name = 'Wheat detail / fully covered core';
   const canopyMaterial = new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, side: T.DoubleSide, roughness: 1 });
   const detailRadius = { value: 11 }, viewCenter = { value: new T.Vector3() };
-  animateMaterial(cardMaterial, wind, { cards: true });animateMaterial(barleyCards,wind,{cards:true});
+  animateMaterial(cardMaterial, wind, { cards: true, detail:true, detailRadius:{value:45}, viewCenter });animateMaterial(barleyCards,wind,{cards:true,detail:true,detailRadius:{value:45},viewCenter});
+  animateMaterial(stubbleMaterial,wind,{cards:true,detail:true,detailRadius:{value:45},viewCenter});
   animateMaterial(detailMaterial, wind, { detail: true, detailRadius, viewCenter });
   animateMaterial(detailCoreMaterial, wind, { detail: true, solidDetail: true, detailRadius, viewCenter });
   animateMaterial(canopyMaterial, wind, { canopy: true, viewCenter });
@@ -296,7 +298,9 @@ function canopyGeometry(f) {
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('color',new T.Float32BufferAttribute(c,3));g.computeVertexNormals();return g;
 }
 export function buildDenseWheat(f,level,quality,wind){
- const r=getResources(wind),group=new T.Group(),roots=[[],[],[]],crop={};
+ const group=new T.Group();
+ if(level>0){group.userData.wheat={clumps:0,crops:[0,0,0],detailLevel:level,geometryRadius:45};return {mesh:group,candidates:[]};}
+ const r=getResources(wind),roots=[[],[],[]],crop={};
  // Preserve V32's five random draws per wheat lattice point, before any masks.
  // Barley's independent denser stream cannot change a single wheat transform.
  for(let pass=0;pass<2;pass++){
@@ -312,7 +316,7 @@ export function buildDenseWheat(f,level,quality,wind){
   roots[kind].forEach((root,i)=>{dummy.position.set(root.x,surfaceHeight(root.x,root.z,f)-(kind===0?.025:.012),root.z);dummy.rotation.set(0,root.a,0);dummy.scale.set(stubble?1:width,stubble?1:root.s,stubble?1:width);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);tint.setRGB(root.tone,root.tone*.987,root.tone*.953);mesh.setColorAt(i,tint)});
   mesh.instanceMatrix.needsUpdate=true;mesh.instanceColor.needsUpdate=true;mesh.computeBoundingSphere();if(mesh.boundingSphere)mesh.boundingSphere.radius+=1.2;mesh.receiveShadow=true;mesh.name=['dense-wheat-cards','dense-barley-cards','harvested-stubble-and-straw'][kind];group.add(mesh);
  }
- const canopy=new T.Mesh(canopyGeometry(f),r.canopyMaterial);canopy.name='distant-cereal-canopy';group.add(canopy);
+ // Distant crop colour/waves are shaded on the existing ground, never another canopy mesh.
  group.userData.wheat={clumps:roots[0].length+roots[1].length,silhouettesPerClump:39,detailLevel:level,variants:9,crops:roots.map(a=>a.length)};
  return{mesh:group,candidates:wheatCandidates(f)};
 }
@@ -369,87 +373,62 @@ export function prepareWheatDetail(f, quality = 'balanced') {
   return { version: 1, quality, spacing: DETAIL_SPACING, barleySpacing:.245, patchSize: DETAIL_PATCH_SIZE, count, byteLength, patches: result };
 }
 
-// Patches retain their uploaded buffers for the lifetime of their chunk.
-// Ordinary movement only changes visibility; translations update once per rebase.
+// A finite global pool: three silhouette draws and nine detailed stem draws.
+// Source arrays remain CPU-only. Only roots inside the actual camera circle are
+// copied into GPU instance buffers; no hidden distant instance is submitted.
 export function createWheatDetailLayer(wind, { onMesh } = {}) {
-  const r = getResources(wind), object = new T.Group(), records = new Map();
-  const registeredMaterials = new WeakSet();
-  object.name = 'near-wheat-grains'; object.count = 0;
-  object.userData.wheat = { capacity: 0, baselineCapacity: DETAIL_CAPACITY, variants: DETAIL_VARIANTS,
-    trianglesPerStem: 220, patchSize: DETAIL_PATCH_SIZE, cachedPatches: 0, activePatches: 0 };
-  function discard(record) {
-    for (const mesh of record.meshes.values()) { object.remove(mesh); mesh.dispose(); }
-  }
-  function place(mesh, patch, ox, oz) {
-    const array = mesh.instanceMatrix.array;
-    for (let i = 0; i < patch.count; i++) {
-      // Original code stores Float32(rawRoot + offset), not Float32(root) + offset.
-      array[i * 16 + 12] = patch.roots[i * 2] + ox;
-      array[i * 16 + 14] = patch.roots[i * 2 + 1] + oz;
+ const r=getResources(wind),object=new T.Group(),pools=new Map();let lastSignature='';
+ object.name='camera-local-cereals';object.count=0;object.userData.wheat={geometryRadius:45};
+ const pool=(key,geometry,material,capacity)=>{
+  let m=pools.get(key);if(m)return m;
+  m=new T.InstancedMesh(geometry,material,capacity);m.count=0;
+  m.instanceMatrix.setUsage(T.DynamicDrawUsage);
+  m.instanceColor=new T.InstancedBufferAttribute(new Float32Array(capacity*3),3).setUsage(T.DynamicDrawUsage);
+  m.name=key;m.frustumCulled=false;m.receiveShadow=true;object.add(m);pools.set(key,m);onMesh?.(m);return m;
+ };
+ function push(mesh,matrices,colors,i,ox,oz){
+  const j=mesh.count++;if(j>=mesh.instanceMatrix.count)throw Error('Cereal radius pool capacity exceeded');
+  mesh.instanceMatrix.array.set(matrices.subarray(i*16,i*16+16),j*16);
+  mesh.instanceMatrix.array[j*16+12]+=ox;mesh.instanceMatrix.array[j*16+14]+=oz;
+  mesh.instanceColor.array.set(colors.subarray(i*3,i*3+3),j*3);
+ }
+ function update(chunks,player,quality,originKey){
+  r.viewCenter.value.copy(player);const {radius}=qualityDetail(quality);r.detailRadius.value=radius;
+  const signature=`${player.x}:${player.z}:${quality}:${originKey}:`+[...chunks.values()].map(c=>c.group.uuid).join(',');
+  if(signature===lastSignature)return;lastSignature=signature;
+  for(const m of pools.values())m.count=0;
+  let sourceStems=0,activeStems=0,cards=0,maxRootDistance=0;
+  for(const chunk of chunks.values()){
+   const ox=chunk.group.position.x,oz=chunk.group.position.z,px=player.x-ox,pz=player.z-oz;
+   // CPU-only silhouettes from near tiles. They must never be drawn separately.
+   chunk.group.traverse(m=>{
+    if(!m.isInstancedMesh||!['dense-wheat-cards','dense-barley-cards','harvested-stubble-and-straw'].includes(m.name))return;
+    m.visible=false;const a=m.instanceMatrix.array,c=m.instanceColor.array;
+    if(px< -45||px>109||pz< -45||pz>109)return;
+    let target;
+    for(let i=0;i<m.count;i++){const d=(a[i*16+12]-px)**2+(a[i*16+14]-pz)**2;if(d>2025)continue;
+     target ||= pool('local-'+m.name,m.geometry,m.material,22000);push(target,a,c,i,ox,oz);cards++;maxRootDistance=Math.max(maxRootDistance,Math.sqrt(d));
     }
-    mesh.instanceMatrix.addUpdateRange(0, patch.count * 16); mesh.instanceMatrix.needsUpdate = true;
-    mesh.boundingSphere = new T.Sphere(new T.Vector3(patch.center[0] + ox, patch.center[1], patch.center[2] + oz), patch.radius);
-    mesh.boundingBox = new T.Box3(new T.Vector3(patch.bounds[0] + ox, patch.bounds[1], patch.bounds[2] + oz),
-      new T.Vector3(patch.bounds[3] + ox, patch.bounds[4], patch.bounds[5] + oz));
-    mesh.userData.offsetX = ox; mesh.userData.offsetZ = oz;
-  }
-  function activate(record, patch, ox, oz, core) {
-    const material = core ? r.detailCoreMaterial : r.detailMaterial;
-    let mesh = record.meshes.get(patch.key);
-    if (!mesh) {
-      mesh = new T.InstancedMesh(r.detailed[patch.variant], material, patch.count);
-      mesh.instanceMatrix.array.set(patch.matrices);
-      mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
-      // Colors are immutable and share the received CPU array without copying.
-      mesh.instanceColor = new T.InstancedBufferAttribute(patch.colors, 3);
-      mesh.frustumCulled = true; mesh.receiveShadow = true; mesh.matrixAutoUpdate = false;
-      mesh.name = `near-wheat-grains-${patch.variant} / ${record.chunk.field.key} / ${patch.key}`;
-      mesh.userData.wheatPatch = { key: patch.key, variant: patch.variant, count: patch.count };
-      place(mesh, patch, ox, oz); record.meshes.set(patch.key, mesh); object.add(mesh); onMesh?.(mesh); registeredMaterials.add(material);
-    } else if (mesh.userData.offsetX !== ox || mesh.userData.offsetZ !== oz) place(mesh, patch, ox, oz);
-    if (mesh.material !== material) {
-      mesh.material = material;
-      // Existing callers attach fog in onMesh. Register each shared variant once,
-      // including when a cached patch first switches from fringe to core.
-      if (!registeredMaterials.has(material)) { onMesh?.(mesh); registeredMaterials.add(material); }
+   });
+   if(px< -radius||px>64+radius||pz< -radius||pz>64+radius)continue;
+   if(!chunk.detailPatches)chunk.detailPatches=prepareWheatDetail(chunk.field,chunk.quality||quality);
+   sourceStems+=chunk.detailPatches.count;
+   for(const patch of chunk.detailPatches.patches){
+    const b=patch.rootBounds,dx=Math.max(b[0]-px,0,px-b[2]),dz=Math.max(b[1]-pz,0,pz-b[3]);if(dx*dx+dz*dz>radius*radius)continue;
+    let target;for(let i=0;i<patch.count;i++){
+     if((patch.roots[i*2]-px)**2+(patch.roots[i*2+1]-pz)**2>radius*radius)continue;
+     target ||= pool('local-grain-'+patch.variant,r.detailed[patch.variant],r.detailMaterial,12000);
+     push(target,patch.matrices,patch.colors,i,ox,oz);activeStems++;
     }
-    mesh.visible = true; return mesh;
+   }
   }
-  function update(chunks, player, quality, originKey) {
-    r.viewCenter.value.copy(player); const { radius } = qualityDetail(quality); r.detailRadius.value = radius;
-    const current = new Set(chunks.values()); let activeCount = 0, activePatches = 0, corePatches = 0, coreStems = 0;
-    for (const [chunk, record] of records) {
-      if (!current.has(chunk) || (chunk.detailPatches && chunk.detailPatches !== record.data)) {
-        discard(record); records.delete(chunk);
-      } else for (const mesh of record.meshes.values()) mesh.visible = false;
-    }
-    for (const chunk of current) {
-      const ox = chunk.group.position.x, oz = chunk.group.position.z, px = player.x - ox, pz = player.z - oz;
-      if (px < -radius || px > CHUNK + radius || pz < -radius || pz > CHUNK + radius) continue;
-      // A quality change keeps the current chunk until its worker-built replacement
-      // arrives. Never synchronously regenerate that obsolete chunk on the render thread.
-      if (!chunk.detailPatches) chunk.detailPatches = prepareWheatDetail(chunk.field, chunk.quality || quality);
-      let record = records.get(chunk);
-      if (!record) { record = { chunk, data: chunk.detailPatches, meshes: new Map() }; records.set(chunk, record); }
-      for (const patch of record.data.patches) {
-        const bounds = patch.rootBounds, dx = Math.max(bounds[0] - px, 0, px - bounds[2]), dz = Math.max(bounds[1] - pz, 0, pz - bounds[3]);
-        if (dx * dx + dz * dz > (radius + .0001) ** 2) continue;
-        // The maximum root distance over an AABB occurs at one of its corners.
-        // Fully inside the original solid region, detailFade was exactly 1 for
-        // every fragment, so its stochastic discard is unnecessary.
-        const farX = Math.max(Math.abs(bounds[0] - px), Math.abs(bounds[2] - px));
-        const farZ = Math.max(Math.abs(bounds[1] - pz), Math.abs(bounds[3] - pz));
-        const coreRadius = radius - 2.5 - DETAIL_CORE_GUARD;
-        const core = farX * farX + farZ * farZ <= coreRadius * coreRadius;
-        activate(record, patch, ox, oz, core); activeCount += patch.count; activePatches++;
-        if (core) { corePatches++; coreStems += patch.count; }
-      }
-    }
-    let capacity = 0, cachedPatches = 0;
-    for (const record of records.values()) for (const mesh of record.meshes.values()) { capacity += mesh.count; cachedPatches++; }
-    object.count = activeCount; Object.assign(object.userData.wheat, { capacity, cachedPatches, activePatches, corePatches, coreStems, originKey });
+  let bytes=0,draws=0;for(const m of pools.values()){
+   m.visible=m.count>0;if(!m.visible)continue;draws++;
+   for(const a of [m.instanceMatrix,m.instanceColor]){a.clearUpdateRanges();a.addUpdateRange(0,m.count*a.itemSize);a.needsUpdate=true;bytes+=m.count*a.itemSize*4;}
   }
-  return { object, update, dispose() { for (const record of records.values()) discard(record); records.clear(); object.count = 0; } };
+  object.count=activeStems;Object.assign(object.userData.wheat,{activeStems,cards,sourceStems,draws,maxRootDistance,uploadBytes:bytes,originKey});
+ }
+ return {object,update,dispose(){for(const m of pools.values())m.dispose();pools.clear();object.clear();}};
 }
 
 export function isSharedWheatResource(resource) { return shared.has(resource); }

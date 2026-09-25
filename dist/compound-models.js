@@ -1,9 +1,10 @@
-import {makeTroughWater,isSharedTroughWaterResource} from './trough-water.js?v=37';
+import {mergeArchitectureParts,isSharedArchitectureResource} from './architecture-batch.js?v=38';
+import {makeTroughWater,isSharedTroughWaterResource} from './trough-water.js?v=38';
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=37';
-import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=37';
-import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=37';
-import {ruralTextures} from './rural-textures.js?v=37';
+import {height,random} from './world.js?v=38';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=38';
+import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=38';
+import {ruralTextures} from './rural-textures.js?v=38';
 
 // Plans use tile-local component centres. The owner tile renders a component;
 // every intersecting tile retains its complete collision and rain metadata.
@@ -25,7 +26,7 @@ const M={
  stone:material('Compound / worn concrete','#868579'),
  black:material('Compound / deep recess','#262d28')
 };
-export function isSharedCompoundResource(resource){return shared.has(resource)||isSharedBuildingResource(resource)||isSharedYardPropResource(resource)||isSharedTroughWaterResource(resource);}
+export function isSharedCompoundResource(resource){return isSharedArchitectureResource(resource)||shared.has(resource)||isSharedBuildingResource(resource)||isSharedYardPropResource(resource)||isSharedTroughWaterResource(resource);}
 // Optional injection for applications that maintain another shared texture pool.
 // Existing geometries keep the same material and texture object references.
 export function setCompoundTextureMaps({red,metal}={}){
@@ -62,18 +63,8 @@ class Batch{
  absorb(group,parentMatrix=new T.Matrix4()){
   group.updateMatrixWorld(true);group.traverse(o=>{if(o.isMesh){matrix.multiplyMatrices(parentMatrix,o.matrixWorld);this.matrix(o.geometry,o.material,matrix);}});
  }
- finish(group){
-  let triangles=0;for(const [mat,parts]of this.parts){
-   const count=parts.reduce((n,g)=>n+g.attributes.position.count,0),g=new T.BufferGeometry();
-   for(const [name,size]of [['position',3],['normal',3],['uv',2],['color',3]]){
-    const array=new Float32Array(count*size);let offset=0;for(const part of parts){array.set(part.attributes[name].array,offset);offset+=part.attributes[name].array.length;}
-    g.setAttribute(name,new T.BufferAttribute(array,size));
-   }
-   for(const part of parts)part.dispose();g.computeBoundingBox();g.computeBoundingSphere();
-   const mesh=new T.Mesh(g,mat);mesh.name=mat.name||'Compound / merged architecture';mesh.castShadow=this.level<2&&!mat.transparent;mesh.receiveShadow=true;if(mat.transparent)mesh.renderOrder=1;group.add(mesh);triangles+=count/3;
-  }
-  this.parts.clear();return {triangles,drawCalls:group.children.length};
- }
+ finish(group){const stats=mergeArchitectureParts(this.parts,group,this.level);this.parts.clear();return stats;}
+
 }
 
 function componentTransform(c,y){return new T.Matrix4().compose(new T.Vector3(c.x,y,c.z),new T.Quaternion().setFromAxisAngle(UP,c.angle||0),new T.Vector3(1,1,1));}

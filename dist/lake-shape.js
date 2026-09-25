@@ -12,7 +12,8 @@ function fbm(x,z,p){let v=0,a=1;for(let i=0;i<5;i++){v+=simplex(x,z,p)*a;x=x*2+3
 function worley(x,z,s){const ix=Math.floor(x),iz=Math.floor(z);let a=100,b=100;for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const xx=ix+i,zz=iz+j,dx=xx+.15+hash(xx,zz,s)*.7-x,dz=zz+.15+hash(xx,zz,s^0x1911)*.7-z,d=dx*dx+dz*dz;if(d<a){b=a;a=d}else if(d<b)b=d}return Math.sqrt(b)-Math.sqrt(a)}
 function union(a,b,k){const h=sat(.5+.5*(b-a)/k);return mix(b,a,h)-k*h*(1-h)}
 function capsule(x,z,ax,az,bx,bz,r){const dx=bx-ax,dz=bz-az,t=sat(((x-ax)*dx+(z-az)*dz)/(dx*dx+dz*dz));return Math.hypot(x-ax-dx*t,z-az-dz*t)-r}
-function key(f){return `${f.lakeSeed??f.seed}:${f.rx}:${f.rz}:${f.angle}`}
+const lakeKeys=new WeakMap();
+function key(f){let k=lakeKeys.get(f);if(k===undefined){k=`${f.lakeSeed??f.seed}:${f.rx}:${f.rz}:${f.angle}`;lakeKeys.set(f,k);}return k;}
 function config(f){const k=key(f);let c=configs.get(k);if(c)return c;
  const seed=(f.lakeSeed??f.seed)>>>0,r=random(seed^0x62a194),perm=new Uint16Array(512),v=Array.from({length:256},(_,i)=>i);for(let i=255;i>0;i--){const j=Math.floor(r()*(i+1));[v[i],v[j]]=[v[j],v[i]]}for(let i=0;i<512;i++)perm[i]=v[i&255];
  c={seed,perm,phase:r()*TAU,turn:r()*TAU,arm:.72+r()*.24,rockPhase:r()*31,ca:Math.cos(f.angle||0),sa:Math.sin(f.angle||0),rx:f.rx,rz:f.rz};
@@ -50,7 +51,7 @@ function raw(x,z,c,out){const p=c.perm,ux=(c.ca*x-c.sa*z)/c.rx,uz=(c.sa*x+c.ca*z
  h=d<0?Math.min(-.001,h):Math.max(.001,h);
  out.d=d;out.h=h;out.rock=rock;out.width=width;out.sed=0;return out;
 }
-function atlas(f){const k=key(f);let a=cache.get(k);if(a){cache.delete(k);cache.set(k,a);return a}const c=config(f),bounds=pondBounds(f),nx=Math.ceil(bounds[1]-bounds[0])+1,nz=Math.ceil(bounds[3]-bounds[2])+1,n=nx*nz;
+function atlas(f){const k=key(f);let a=cache.get(k);if(a)return a;const c=config(f),bounds=pondBounds(f),nx=Math.ceil(bounds[1]-bounds[0])+1,nz=Math.ceil(bounds[3]-bounds[2])+1,n=nx*nz;
  a={nx,nz,ox:bounds[0],oz:bounds[2],d:new Float32Array(n),h:new Float32Array(n),rock:new Float32Array(n),width:new Float32Array(n),sed:new Float32Array(n),gx:new Float32Array(n),gz:new Float32Array(n),contours:null};const sample={};
  for(let j=0;j<nz;j++)for(let i=0;i<nx;i++){const n=j*nx+i;raw(i+a.ox,j+a.oz,c,sample);a.d[n]=sample.d;a.h[n]=sample.h;a.rock[n]=sample.rock;a.width[n]=sample.width;}
  // Separable Gaussian convolution (sigma~1 m), positive concavity filling only.
@@ -71,7 +72,13 @@ export function pondMetrics(x,z,f,out={}){const a=atlas(f),xx=x-f.cx,zz=z-f.cz,r
  out.rawMetres=rawD;out.angle=Math.atan2(zz,xx);out.distance=1+d/Math.min(f.rx,f.rz);out.metres=d;out.width=width;out.bank=d/width;out.rock=bilinear(a,a.rock,xx,zz);out.sediment=bilinear(a,a.sed,xx,zz);out.relativeHeight=h;out.slope=slope;return out;}
 export function pondTerrainHeight(x,z,f,land){const m=pondMetrics(x,z,f,temp);return f.lakeY+m.relativeHeight+(land-f.lakeY-.5)*smooth(0,.5,Math.max(0,m.relativeHeight));}
 export function pondDistance(x,z,f){return pondMetrics(x,z,f,temp).distance}
-export function pondShoreDistance(x,z,f){return pondMetrics(x,z,f,temp).metres}
+export function pondShoreDistance(x,z,f){
+ const a=atlas(f),xx=x-f.cx,zz=z-f.cz,rawD=bilinear(a,a.d,xx,zz)+outside(a,xx,zz),h=bilinear(a,a.h,xx,zz);
+ // Beyond the blend band, the full metric's other five samples cancel exactly.
+ if(Math.abs(rawD)>=8)return Math.sign(h)*Math.abs(rawD);
+ const slope=Math.hypot(bilinear(a,a.gx,xx,zz),bilinear(a,a.gz,xx,zz));
+ return Math.sign(h)*mix(Math.min(Math.abs(h)/Math.max(.025,slope),Math.abs(rawD)+2),Math.abs(rawD),smooth(3,8,Math.abs(rawD)));
+}
 export function pondAngle(x,z,f){return Math.atan2(z-f.cz,x-f.cx)}
 export function pondHabitat(x,z,f,out={}){pondMetrics(x,z,f,out);const worldX=x+(typeof f.x==='bigint'?Number((f.x%1024n+1024n)%1024n)*64:0),worldZ=z+(typeof f.z==='bigint'?Number((f.z%1024n+1024n)%1024n)*64:0),p=TAU/65536,land=Math.sin(worldX*p*256)*.22+Math.cos(worldZ*p*128)*.20+Math.sin((worldX+worldZ)*p*64)*.27;
  const h=out.relativeHeight+(land-f.lakeY-.5)*smooth(0,.5,Math.max(0,out.relativeHeight)),low=1-sat(out.slope*2.8),gate=1-smooth(12,25,Math.max(0,out.metres));out.wetland=smooth(-.16,.02,h)*(1-smooth(.14,.48,h))*low*gate;out.beach=smooth(-.20,.13,h)*(1-smooth(.34,.63,h))*low*gate;return out;}

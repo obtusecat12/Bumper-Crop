@@ -1,6 +1,6 @@
 // Stable agricultural parcels are independent of the 64m streaming grid.
 // Correlated jitter keeps rectangles; occasional independent jitter clips corners.
-const SIZE=216,sites=new Map(),contexts=new Map();
+const SIZE=216,sites=new Map(),contexts=new Map(),fieldContexts=new WeakMap();
 const floor=(x,n)=>x>=0n?x/n:(x-n+1n)/n;
 const mod=(x,n)=>(x%n+n)%n;
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}h^=h>>>16;h=Math.imul(h,0x7feb352d);h^=h>>>15;return h>>>0}
@@ -19,7 +19,7 @@ export function patchworkContext(cx,cz,seed){const k=`${seed}:${cx}:${cz}`;let c
  for(const a of points)for(const b of points){const dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz);if(a===b||len>SIZE*1.65)continue;const nx=dx/len,nz=dz/len,h=hash(a.key<b.key?a.key+'/'+b.key:b.key+'/'+a.key);a.edges.push({nx,nz,c:(a.x+b.x)*.5*nx+(a.z+b.z)*.5*nz,width:3.5+(h%1001)/1000,mx:(a.x+b.x)*.5,mz:(a.z+b.z)*.5,sign:a.key<b.key?1:-1})}
  c={points,seed,nx:Number(mod(wx,55296n)),nz:Number(mod(wz,55296n))};contexts.set(k,c);if(contexts.size>192)contexts.delete(contexts.keys().next().value);return c;
 }
-export function parcelSample(x,z,f,out={}){const c=f.patch||patchworkContext(f.x,f.z,f.worldSeed),px=(x+c.nx)/216,pz=(z+c.nz)/216;
+export function parcelSample(x,z,f,out={}){let c=f.patch||fieldContexts.get(f);if(!c){c=patchworkContext(f.x,f.z,f.worldSeed);fieldContexts.set(f,c);}const px=(x+c.nx)/216,pz=(z+c.nz)/216;
  const qx=x+2.6*(noise(px,pz,c.seed)+.5*noise(px*2+13,pz*2-7,c.seed)),qz=z+2.6*(noise(px+51,pz-19,c.seed)+.5*noise(px*2-5,pz*2+31,c.seed));
  let a=null,best=Infinity;for(const s of c.points){const d=(qx-s.x)**2+(qz-s.z)**2;if(d<best){best=d;a=s}}
  let d=Infinity,d2=Infinity,w=4,w2=4,nx=1,nz=0,nx2=0,nz2=1,t=0,t2=0;

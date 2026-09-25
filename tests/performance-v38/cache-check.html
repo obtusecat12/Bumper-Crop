@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><title>Local cache verification</title>
+<h1>Local cache verification</h1><button id="run">Run persistence check</button><pre id="result">Ready</pre>
+<script type="module">
+import {readChunkCache,writeChunkCache} from './chunk-cache.js?v=38';
+run.onclick=async()=>{run.disabled=true;result.textContent='Checking';try{
+const saved=await readChunkCache('verification:roundtrip');
+if(saved){if(saved.field.x!==12345678901234567890n||saved.samples[2]!==3.5)throw Error('Roundtrip data mismatch');result.textContent='PASS: persisted BigInt and Float32Array survived page reload';return;}
+for(let i=0;i<66;i++)await writeChunkCache({key:'verification:'+i,field:{x:BigInt(i)},samples:new Float32Array([1,2,3.5])});
+if(await readChunkCache('verification:0'))throw Error('Eviction failed');
+if(!(await readChunkCache('verification:65')))throw Error('Latest entry missing');
+await writeChunkCache({key:'verification:roundtrip',field:{x:12345678901234567890n},samples:new Float32Array([1,2,3.5])});
+result.textContent='PASS: cache reads, writes and 64-entry eviction; reload and run again to verify persistence';
+}catch(e){result.textContent='FAIL: '+e.message}finally{run.disabled=false}};
+</script>

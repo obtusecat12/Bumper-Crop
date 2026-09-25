@@ -1,7 +1,9 @@
-import {createLakeAccess} from './lake-access.js?v=37';
-import {pondShoreDistance,pondBankPoint,pondMetrics} from './lake-shape.js?v=37';
+import {createLakeAccess} from './lake-access.js?v=38';
+import {pondShoreDistance,pondBankPoint,pondMetrics} from './lake-shape.js?v=38';
 // Hierarchical agricultural ownership, independent of the 64m streaming cells.
-import {parcelSample as legacyParcel} from './patchwork-legacy.js?v=37';
+import {parcelSample as legacyParcel,patchworkContext as legacyContext} from './patchwork-legacy.js?v=38';
+const legacyFields=new WeakMap();
+function oldParcelField(f){let v=legacyFields.get(f);if(!v){v={x:f.x,z:f.z,worldSeed:f.worldSeed,patch:legacyContext(f.x,f.z,f.worldSeed)};legacyFields.set(f,v);}return v;}
 const SIZE=400,macros=new Map(),contexts=new Map();let sources=()=>({lakes:[],buildings:[]}),route=null;
 export const PARCEL_SIZE=SIZE;
 export function configurePatchwork(provider,router){sources=provider;route=router;macros.clear();contexts.clear();}
@@ -115,7 +117,7 @@ export function parcelSample(x,z,f,out={}){
  if(!a)a=c.leaves.reduce((best,l)=>!best||(x-l.x)**2+(z-l.z)**2<(x-best.x)**2+(z-best.z)**2?l:best,null);
  if(!a)throw Error('Missing hierarchical agricultural parcel');
  const arrival=f.x>=-3n&&f.x<=3n&&f.z>=-4n&&f.z<=3n,wx=arrival?Number(f.x)*64+x:1e6,wz=arrival?Number(f.z)*64+z:1e6;
- if(arrival&&wx>=-40&&wx<=128&&wz>=-144&&wz<=128)legacyParcel(x,z,{x:f.x,z:f.z,worldSeed:f.worldSeed},out);
+ if(arrival&&wx>=-40&&wx<=128&&wz>=-144&&wz<=128)legacyParcel(x,z,oldParcelField(f),out);
  else{out.centerX=a.x;out.centerZ=a.z;out.id=a.key;out.crop=a.crop;out.angleIndex=a.angleIndex;out.angle=a.angleIndex*Math.PI/4;out.tone=a.tone;const co=Math.cos(out.angle),si=Math.sin(out.angle);out.row=(x-a.x)*co+(z-a.z)*si;out.along=-(x-a.x)*si+(z-a.z)*co;}
  let d=1e4,d2=1e4,first=null,second=null,t=0,t2=0;
  const list=c.bins[clamp(Math.floor(z/8),0,7)*8+clamp(Math.floor(x/8),0,7)];

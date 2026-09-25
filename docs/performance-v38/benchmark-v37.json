@@ -1,0 +1,111 @@
+{
+  "version": "37",
+  "chunks": [
+    {
+      "tile": "0,0",
+      "level": 0,
+      "generateMs": 15450,
+      "detailMs": 735,
+      "detailStems": 24345,
+      "detailBytes": 2239740,
+      "stages": {
+        "ground": 6629,
+        "verges": 547,
+        "wheat": 643,
+        "wheat-order": 13,
+        "nature": 80,
+        "poles": 7,
+        "farm-compounds": 1741,
+        "reference-barn": 2,
+        "photo-farm": 582,
+        "lake": 223
+      },
+      "meshes": 51,
+      "triangles": 360783,
+      "instances": 8158,
+      "cerealInstances": 4176,
+      "geometryBytes": 12276844
+    },
+    {
+      "tile": "10,0",
+      "level": 0,
+      "generateMs": 4023,
+      "detailMs": 217,
+      "detailStems": 10228,
+      "detailBytes": 940976,
+      "stages": {
+        "ground": 2177,
+        "verges": 137,
+        "wheat": 158,
+        "wheat-order": 15,
+        "nature": 29,
+        "poles": 55,
+        "farm-compounds": 860
+      },
+      "meshes": 40,
+      "triangles": 238958,
+      "instances": 8264,
+      "cerealInstances": 5476,
+      "geometryBytes": 6540204
+    },
+    {
+      "tile": "2,2",
+      "level": 1,
+      "generateMs": 1427,
+      "detailMs": 0,
+      "detailStems": 0,
+      "detailBytes": 0,
+      "stages": {
+        "ground": 612,
+        "verges": 100,
+        "wheat": 197,
+        "wheat-order": 17,
+        "nature": 0,
+        "poles": 3,
+        "farm-compounds": 402,
+        "photo-farm": 89
+      },
+      "meshes": 40,
+      "triangles": 97699,
+      "instances": 6893,
+      "cerealInstances": 5663,
+      "geometryBytes": 3955136
+    },
+    {
+      "tile": "3,3",
+      "level": 2,
+      "generateMs": 347,
+      "detailMs": 0,
+      "detailStems": 0,
+      "detailBytes": 0,
+      "stages": {
+        "ground": 173,
+        "verges": 21,
+        "wheat": 118,
+        "wheat-order": 19,
+        "nature": 6,
+        "poles": 3
+      },
+      "meshes": 8,
+      "triangles": 56076,
+      "instances": 7586,
+      "cerealInstances": 7381,
+      "geometryBytes": 1080660
+    }
+  ],
+  "nearSpawn": {
+    "detailDraws": 27,
+    "detailTriangles": 459580,
+    "updateMs": 2.3759549999995215,
+    "capacity": 2089,
+    "baselineCapacity": 12000,
+    "variants": 9,
+    "trianglesPerStem": 220,
+    "patchSize": 6,
+    "cachedPatches": 27,
+    "activePatches": 27,
+    "corePatches": 3,
+    "coreStems": 196,
+    "originKey": "0,0"
+  }
+}

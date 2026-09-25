@@ -1,10 +1,11 @@
-import {REFERENCE_BARN as B,BARN_ROOFLIGHTS} from './reference-barn-layout.js?v=37';
-import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=37';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=37';
+import {RayFrameBudget,probeRayUpperBound,RAY_FRAME_BUDGET,RAY_SLICE_MS} from './ray-budget.js?v=38';
+import {REFERENCE_BARN as B,BARN_ROOFLIGHTS} from './reference-barn-layout.js?v=38';
+import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=38';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=38';
 
+const budget=new RayFrameBudget();
 const chunks=new Map(),cache=new Map(),scene=new ChunkBVHScene();
 let revision=0,job=null,running=false,paused=false;
-const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const linear=n=>n<=.04045?n/12.92:((n+.055)/1.055)**2.4;
 const sun=[1,3,5].map(i=>linear(parseInt(SUN_COLOR.slice(i,i+2),16)/255)*SUN_INTENSITY);
 const lighting={rays:PROBE_RAYS,maxDistance:PROBE_FAR,skyTop:SKY_TOP,skyBottom:SKY_BOTTOM,
@@ -39,23 +40,28 @@ async function run() {
           const px=baseX+x*STEP[0],py=baseY+y*STEP[1],pz=baseZ+z*STEP[2];
           // Keep samples stable in absolute integer-grid coordinates.
           const seed=Number(BigInt.asUintN(32,(gx+BigInt(x))*73856093n^(gz+BigInt(z))*19349663n^BigInt(y*83492791)));
+          // The reserved bound includes the possible 96-ray interior refinement,
+          // all three portals, secondary visibility and one relocation attempt.
+          const reserve=await budget.reserve(probeRayUpperBound(PROBE_RAYS,1)+probeRayUpperBound(96,4,3));
+          if(paused||job||revision!==rev){budget.settle(reserve,0);break;}
+          let probeRays=0;
           p=traceRelocatedProbe(scene,px,py,pz,{...lighting,seed});
           // Narrow doorways need more visibility samples; cache this work once.
           // Open fields retain the inexpensive 32-ray path.
-          if(p.valid&&p.visibility<.18&&p.closestObstacle<12){const coarse=p;rays+=coarse.rayCount;p=traceRelocatedProbe(scene,px,py,pz,{...lighting,seed,rays:96,bounceSkyRays:4,skyPortals:portal&&Math.abs(px-shelter.x)<12&&Math.abs(pz-shelter.z)<5.8&&py>B.y&&py<B.y+B.ridge?[portal,...roofPortals]:[]});if(p.valid&&p.position.every((v,i)=>Math.abs(v-coarse.position[i])<.00001)){for(let i=0;i<12;i++){p.sh[i]=coarse.sh[i]*.25+p.sh[i]*.75;p.moments[i]=coarse.moments[i]*.25+p.moments[i]*.75;}}}
+          if(p.valid&&p.visibility<.18&&p.closestObstacle<12){const coarse=p;rays+=coarse.rayCount;probeRays+=coarse.rayCount;p=traceRelocatedProbe(scene,px,py,pz,{...lighting,seed,rays:96,bounceSkyRays:4,skyPortals:portal&&Math.abs(px-shelter.x)<12&&Math.abs(pz-shelter.z)<5.8&&py>B.y&&py<B.y+B.ridge?[portal,...roofPortals]:[]});if(p.valid&&p.position.every((v,i)=>Math.abs(v-coarse.position[i])<.00001)){for(let i=0;i<12;i++){p.sh[i]=coarse.sh[i]*.25+p.sh[i]*.75;p.moments[i]=coarse.moments[i]*.25+p.moments[i]*.75;}}}
           p.offset=[p.position[0]-px,p.position[1]-py,p.position[2]-pz];
           cache.set(key,p);if(cache.size>10000)cache.delete(cache.keys().next().value);
-          computed++;rays+=p.rayCount;
+          computed++;rays+=p.rayCount;budget.settle(reserve,probeRays+p.rayCount);
         }
         sh.set(p.sh,index*12);moments.set(p.moments,index*12);
         positions.set(p.offset,index*4);
         const near=p.closestObstacle<8||Math.min(p.moments[0],p.moments[2],p.moments[8],p.moments[10])<8||p.moments[4]<4;
         positions[index*4+3]=p.valid?(near?1:2):0;
-        if(performance.now()-slice>=6){await sleep(12);slice=performance.now();}
+        if(performance.now()-slice>=RAY_SLICE_MS){await budget.yieldFrame();slice=performance.now();}
       }
       if(!paused&&!job&&revision===rev){
         self.postMessage({type:'volume',id,cx,cz,baseX,baseY,baseZ,sh,moments,positions,
-          stats:{computed,reused,rays,ms:performance.now()-start,triangles:entries.reduce((a,e)=>a+e.bvh.count,0),bytes:entries.reduce((a,e)=>a+e.bvh.byteLength,0)}},[sh.buffer,moments.buffer,positions.buffer]);
+          stats:{computed,reused,rays,rayFrameCap:RAY_FRAME_BUDGET,peakFrameRays:budget.peak,ms:performance.now()-start,triangles:entries.reduce((a,e)=>a+e.bvh.count,0),bytes:entries.reduce((a,e)=>a+e.bvh.byteLength,0)}},[sh.buffer,moments.buffer,positions.buffer]);
       } else if(!job) job=current;
     }
   } catch(error){self.postMessage({type:'error',message:String(error?.stack||error)});}
@@ -75,6 +81,7 @@ function invalidate(cx,cz){
 }
 self.onmessage=({data})=>{
   try{
+    if(data.type==='budget'){budget.grant(data.frame);return;}
     if(data.type==='put'){
       const {geometry:g,key,cx,cz}=data;
       chunks.set(key,{cx,cz,bvh:new TriangleBVH(g.positions,g.colors,g)});

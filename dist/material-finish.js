@@ -32,7 +32,7 @@ export function createMaterialFinish(){
           // Subtle weathering follows the material's existing stains and grain.
           // The shared water material already defines its own roughness field.
           shader.fragmentShader=s.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
-            roughnessFactor=clamp(roughnessFactor*(.87+.13*(1.-clamp(dot(diffuseColor.rgb,vec3(.2126,.7152,.0722))*2.,0.,1.))),.45,1.);`);
+            ${m.userData.architectureBatch?'if(vSurface.y>=.6)':''}roughnessFactor=clamp(roughnessFactor*(.87+.13*(1.-clamp(dot(diffuseColor.rgb,vec3(.2126,.7152,.0722))*2.,0.,1.))),.45,1.);`);
         }
       };
       m.customProgramCacheKey=()=>key+'|material-finish-v16';m.needsUpdate=true;

@@ -1,15 +1,16 @@
-import {createLakeRoadRouter} from './lake-routing.js?v=37';
-import {createCompoundPlanner,compoundSample} from './road-compounds.js?v=37';
-import {ARRIVAL_COMPONENTS,arrivalCompound} from './arrival-compound.js?v=37';
-import {farmAccessContext,farmAccessSample} from './farm-access.js?v=37';
-import {field as frozenArrivalField,roadProfile as legacyRoadProfile,cropSample as legacyCropSample} from './world-legacy.js?v=37';
-import {macroPlan,patchworkContext,parcelSample,configurePatchwork} from './patchwork.js?v=37';
-import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=37';
-import {REFERENCE_BARN,barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=37';
-import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=37';
-import {FARM,FARM_FOOTPRINTS,farmFootprintDistance,farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=37';
-import {createSettlementPlanner} from './rural-settlements.js?v=37';
-import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=37';
+import {patchworkContext as legacyPatchContext} from './patchwork-legacy.js?v=38';
+import {createLakeRoadRouter} from './lake-routing.js?v=38';
+import {createCompoundPlanner,compoundSample} from './road-compounds.js?v=38';
+import {ARRIVAL_COMPONENTS,arrivalCompound} from './arrival-compound.js?v=38';
+import {farmAccessContext,farmAccessSample} from './farm-access.js?v=38';
+import {field as frozenArrivalField,roadProfile as legacyRoadProfile,cropSample as legacyCropSample} from './world-legacy.js?v=38';
+import {macroPlan,patchworkContext,parcelSample,configurePatchwork} from './patchwork.js?v=38';
+import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=38';
+import {REFERENCE_BARN,barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=38';
+import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=38';
+import {FARM,FARM_FOOTPRINTS,farmFootprintDistance,farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=38';
+import {createSettlementPlanner} from './rural-settlements.js?v=38';
+import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=38';
 export {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance};
 // Infinite signed BigInt cells with deterministic seed-based generation.
 export const CHUNK=64;
@@ -50,7 +51,7 @@ function collectRoad(out,d,t,weight=1){
  if(cover>out.first){out.second=out.first;out.first=cover}else out.second=Math.max(out.second,cover);
 }
 const parcelRoad={},cropScratch={},legacyFields=new WeakMap();
-function legacyField(f){let old=legacyFields.get(f);if(!old){old={...f,patch:null};legacyFields.set(f,old)}return old;}
+function legacyField(f){let old=legacyFields.get(f);if(!old){old={...f,patch:legacyPatchContext(f.x,f.z,f.worldSeed)};legacyFields.set(f,old)}return old;}
 const landmarkCropParcels=new Map();
 function reservedCrops(seed){let ids=landmarkCropParcels.get(seed);if(ids)return ids;ids=new Set();
  for(const landmark of [FARM,REFERENCE_BARN]){const x=BigInt(Math.floor(landmark.x/64)),z=BigInt(Math.floor(landmark.z/64));ids.add(parcelSample(landmark.x-Number(x)*64,landmark.z-Number(z)*64,{x,z,worldSeed:seed},{}).id);}
@@ -75,10 +76,10 @@ function baseRoadProfile(x,z,f,out=roadState,includeDrive=true){
  out.mud=0;
  if(arrivalRoadWeight(x,z,f)===1){
   legacyRoadProfile(x,z,legacyField(f),out,includeDrive);
-  const end=smooth(30,35,lakeRoadClearance(x,z,f));
+  const lakeD=lakeRoadClearance(x,z,f),end=smooth(30,35,lakeD);
   for(const l of f.roads){if(!l.enabled)continue;const t=l.axis==='x'?z:x,d=Math.abs((l.axis==='x'?x:z)-l.edge-laneOffset(l,t)),w=farmRoadWeight(x,z,f)*end;out.distance=Math.min(out.distance,d+(1-smooth(0,.10,w))*16);}
   if(includeDrive&&f.driveway){const a=f.driveway,vx=a.x2-a.x1,vz=a.z2-a.z1,len=Math.hypot(vx,vz);if(len>.01){const dx=x-a.x1,dz=z-a.z1,t=(dx*vx+dz*vz)/len,across=Math.abs(dx*vz-dz*vx)/len,w=smooth(-4.6,-2.2,t)*(1-smooth(len-.04,len+.72,t))*end*smooth(0,.26,Math.min(x,z,64-x,64-z))*smooth(-1.6,3.4,t);out.distance=Math.min(out.distance,across+(1-smooth(0,.10,w))*16);}}
-  out.distance=Math.max(out.distance,32.1-lakeRoadClearance(x,z,f));return out;
+  out.distance=Math.max(out.distance,32.1-lakeD);return out;
  }
  out.distance=1e4;out.along=z;out.rut=0;out.cut=0;out.crown=0;out.first=0;out.second=0;out.mud=0;
  const p=parcelSample(x,z,f,parcelRoad),lakeD=lakeRoadClearance(x,z,f),arrival=arrivalRoadWeight(x,z,f);

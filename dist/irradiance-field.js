@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=37';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=38';
 
 const pars=`
 precision highp sampler3D;
@@ -118,7 +118,7 @@ export function createIrradianceField() {
   const values={status:'准备中',computed:0,reused:0,rays:0,ms:0,triangles:0,bytes:0};
   function fail(error){if(failed)return;failed=true;worker?.terminate();uniforms.uProbeReady.value=0;values.status='柔阴影模式';console.warn('Indirect ray cache unavailable',error)}
   try{
-    worker=new Worker(new URL('./irradiance-worker.js?v=37',import.meta.url),{type:'module',name:'rural-ray-cache'});
+    worker=new Worker(new URL('./irradiance-worker.js?v=38',import.meta.url),{type:'module',name:'rural-ray-cache'});
     worker.onerror=e=>{e.preventDefault?.();fail(new Error(e.message||'Ray worker failed'))};
     worker.onmessageerror=()=>fail(new Error('Ray cache transfer failed'));
     worker.onmessage=({data})=>{
@@ -219,6 +219,9 @@ export function createIrradianceField() {
     latestState=state;updateOrigin();uniforms.uProbeWeather.value=(1-rain*.18)*(1+clear*.12-dusk*.25);uniforms.uWeatherTint.value.setRGB(1-dusk*.16,1-dusk*.07,1+dusk*.055);
     if(failed||!ready)return;
     pause(!enabled);
+    // One worker credit per displayed animation frame; no full/half-resolution
+    // screen-space tracing pass competes with the original rendering pipeline.
+    if(enabled)worker.postMessage({type:'budget',frame:Math.floor(now)});
     if(!enabled||!sent.size||now-lastChange<300)return;
     const baseX=Math.floor((state.x-36)/8)*8,baseZ=Math.floor((state.z-36)/8)*8,baseY=-1.5;
     const signature=`${state.cx}:${state.cz}:${baseX}:${baseZ}`;

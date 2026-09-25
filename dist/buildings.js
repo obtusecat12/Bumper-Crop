@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=37';
-import {ruralTextures} from './rural-textures.js?v=37';
+import {height,random} from './world.js?v=38';
+import {ruralTextures} from './rural-textures.js?v=38';
 
 // Main-wall dimensions; roof overhangs/optional porch are described by footprint.
 export const RURAL_BUILDING_SIZES = Object.freeze([[7,9,3],[2.8,3.2,2.7],[12,17,4.9],[13,19,5.1],[11,15,4.3],[13,9,3.7],[13,18,3.8],[8,11,3.2]].map(Object.freeze));
@@ -65,6 +65,7 @@ function texture(kind){
  const tex=new T.DataTexture(data,n,n);tex.wrapS=tex.wrapT=T.RepeatWrapping;tex.magFilter=T.LinearFilter;tex.minFilter=T.LinearMipmapLinearFilter;tex.anisotropy=4;tex.generateMipmaps=true;tex.colorSpace=T.SRGBColorSpace;tex.needsUpdate=true;return tex;
 }
 const woodTex=texture('wood'),roofTex=texture('roof'),brickTex=texture('brick'),floorTex=texture('floor'),stoneTex=texture('stone');
+export const buildingSurfaceTextures=[woodTex,roofTex,brickTex,floorTex,stoneTex];
 const shared=new Set([unitBox,floorSlabGeo,barrelGeo,hoopGeo,stoneGeo,cylinder,woodTex,roofTex,brickTex,floorTex,stoneTex]);
 function material(color,map=null){let m=new T.MeshStandardMaterial({color,map,vertexColors:true,roughness:1,side:T.DoubleSide});shared.add(m);return m;}
 const M={wood:material('#938b7c',woodTex),red:material('#914e40',woodTex),darkRed:material('#72483d',woodTex),dark:material('#514b40',woodTex),trim:material('#bfbaa5',woodTex),brick:material('#956950',brickTex),brickDark:material('#71584b',brickTex),stone:material('#817b6c',stoneTex),roof:material('#4c5350',roofTex),tin:material('#7b827a',roofTex),rust:material('#795b45',roofTex),black:material('#202e2a'),metal:material('#515950'),floor:material('#867b61',floorTex),hay:material('#92815a')};

@@ -1,0 +1,72 @@
+import fs from 'node:fs';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),{createCanvas,loadImage}=require('/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/@napi-rs/canvas');
+globalThis.document={createElement:()=>createCanvas(1,1)};
+const ROOT=process.argv[2]||'/tmp/v38-native',SITE=(process.argv[3]||new URL('../../dist',import.meta.url).pathname)+'/',B='file://'+SITE;
+const version=fs.readFileSync(SITE+'world.js','utf8').match(/road-compounds\.js\?v=(\d+)/)[1];let P;
+const T=await import(B+'vendor/three.module.min.js');
+const {field,stringSeed,surfaceHeight,height,compoundPlanner,compoundAt}=await import(B+'world.js?v='+version);
+const {makeGround,makeVerge}=await import(B+'ground.js?v='+version),{makeCompoundChunk}=await import(B+'compound-models.js?v='+version);
+const {buildDenseWheat}=await import(B+'dense-wheat.js?v='+version),{makeNature}=await import(B+'nature.js?v='+version);
+const {initializeRuralTextures}=await import(B+'rural-textures.js?v='+version);
+await initializeRuralTextures(async url=>{const im=await loadImage(SITE+'textures/'+url.pathname.split('/').at(-1)),cn=createCanvas(512,512),cx=cn.getContext('2d');cx.drawImage(im,0,0,512,512);return {data:new Uint8Array(cx.getImageData(0,0,512,512).data),width:512,height:512};});
+const {initializeLandmarkTextures}=await import(B+'landmark-textures.js?v='+version);
+await initializeLandmarkTextures(async url=>{const im=await loadImage(url.pathname),cn=createCanvas(256,256),cx=cn.getContext('2d');cx.drawImage(im,0,0,256,256);return {data:new Uint8Array(cx.getImageData(0,0,256,256).data),width:256,height:256};});
+const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),selected=[
+ {kind:'single',macro:[1n,0n],id:'v37:4244718517:1:0:south:0:1:0'},
+
+];
+const wind={time:{value:1.25},player:{value:new T.Vector3(-1000,-1000,-1000)},strength:{value:.32}};
+const includes=s=>s.replace(/#include <([^>]+)>/g,(_,k)=>includes(T.ShaderChunk[k]));
+const defs='\n#define NUM_DIR_LIGHTS 1\n#define NUM_POINT_LIGHTS 0\n#define NUM_SPOT_LIGHTS 0\n#define NUM_RECT_AREA_LIGHTS 0\n#define NUM_HEMI_LIGHTS 0\n#define NUM_DIR_LIGHT_SHADOWS 0\n#define NUM_POINT_LIGHT_SHADOWS 0\n#define NUM_SPOT_LIGHT_SHADOWS 0\n#define NUM_SPOT_LIGHT_MAPS 0\n#define NUM_SPOT_LIGHT_COORDS 0\n#define NUM_SPOT_LIGHT_SHADOWS_WITH_MAPS 0\n#define NUM_CLIPPING_PLANES 0\n#define UNION_CLIPPING_PLANES 0\n';
+const vp='#version 300 es\nprecision highp float;precision highp int;\n#define attribute in\n#define varying out\nuniform mat4 modelMatrix,viewMatrix,modelViewMatrix,projectionMatrix;uniform mat3 normalMatrix;uniform vec3 cameraPosition;uniform bool isOrthographic;in vec3 position;in vec2 uv;in vec3 normal;\n';
+const fp='#version 300 es\nprecision highp float;precision highp int;\n#define varying in\n#define texture2D texture\nout vec4 pc_fragColor;\n#define gl_FragColor pc_fragColor\nuniform vec3 cameraPosition;uniform mat4 viewMatrix;uniform bool isOrthographic;\nvec4 linearToOutputTexel(vec4 c){return c;}\n';
+let meshes=[],shaders={},textures=[],textureIds=new Map(),materialIds=new Map();
+function bytes(file,a){fs.writeFileSync(P+'/'+file,Buffer.from(a.buffer,a.byteOffset,a.byteLength));return file;}
+function texture(t){if(textureIds.has(t))return textureIds.get(t);const id=textures.length;textureIds.set(t,id);let a=t.image.data;if(!ArrayBuffer.isView(a))a=t.image.getContext('2d').getImageData(0,0,t.image.width,t.image.height).data;textures.push({id,file:bytes('tex-'+id+'.bin',a),type:t.type,depth:t.image.depth||0,width:t.image.width,height:t.image.height,name:t.name,wrapS:t.wrapS,wrapT:t.wrapT,magFilter:t.magFilter,minFilter:t.minFilter,flipY:t.flipY,srgb:t.colorSpace===T.SRGBColorSpace,mip:t.generateMipmaps});return id;}
+function exportMesh(m){if(!m.isMesh||!m.visible)return;const mat=m.material,id=meshes.length;let key=materialIds.get(mat),shader;
+ if(key===undefined){key='mat'+materialIds.size;materialIds.set(mat,key);let s=mat.isShaderMaterial?{vertexShader:mat.vertexShader,fragmentShader:mat.fragmentShader,uniforms:mat.uniforms}:{vertexShader:T.ShaderLib.standard.vertexShader,fragmentShader:T.ShaderLib.standard.fragmentShader,uniforms:T.UniformsUtils.clone(T.ShaderLib.standard.uniforms)};mat.onBeforeCompile(s,{});
+ let d=defs+(m.isInstancedMesh?'#define USE_INSTANCING\n':'')+(m.instanceColor?'#define USE_INSTANCING_COLOR\n':'')+(mat.vertexColors?'#define USE_COLOR\n':'')+(mat.side===T.DoubleSide?'#define DOUBLE_SIDED\n':'')+(mat.map?'#define USE_MAP\n#define MAP_UV uv\n':'')+(mat.alphaTest?'#define USE_ALPHATEST\n':'');
+ const vin=(m.isInstancedMesh?'in mat4 instanceMatrix;\n':'')+(m.instanceColor?'in vec3 instanceColor;\n':'')+(mat.vertexColors?'in vec3 color;\n':'');
+ const uniforms={};for(const [k,u]of Object.entries(s.uniforms)){const v=u.value;if(typeof v==='number'||typeof v==='boolean')uniforms[k]=v;else if(v?.toArray)uniforms[k]=v.toArray();else if(Array.isArray(v)&&v[0]?.toArray)uniforms[k]=v.map(x=>x.toArray());}
+ uniforms.diffuse=mat.color?.toArray()||[1,1,1];uniforms.metalness=mat.metalness||0;uniforms.roughness=mat.roughness;uniforms.alphaTest=mat.alphaTest;uniforms.opacity=mat.opacity;if(mat.map)mat.map.updateMatrix();uniforms.mapTransform=mat.map?.matrix.toArray()||[1,0,0,0,1,0,0,0,1];
+ shader=shaders[key]={vertex:vp+d+vin+includes(s.vertexShader),fragment:fp+d+includes(s.fragmentShader),uniforms,textures:{}};
+ if(mat.map)shader.textures.map=texture(mat.map);for(const[k,u]of Object.entries(s.uniforms))if(u.value?.isTexture)shader.textures[k]=texture(u.value);
+ }
+ const attrs={};for(const[k,a]of Object.entries(m.geometry.attributes))attrs[k]={file:bytes('mesh-'+id+'-'+k+'.bin',new Float32Array(a.array)),size:a.itemSize,divisor:a.isInstancedBufferAttribute?1:0};
+ if(m.instanceColor)attrs.instanceColor={file:bytes('mesh-'+id+'-instanceColor.bin',new Float32Array(m.instanceColor.array)),size:3,divisor:1};
+ if(m.instanceMatrix)attrs.instanceMatrix={file:bytes('mesh-'+id+'-instanceMatrix.bin',new Float32Array(m.instanceMatrix.array)),size:16,divisor:1};
+ const ix=m.geometry.index?new Uint32Array(m.geometry.index.array):null;meshes.push({name:m.name,transparent:mat.transparent,depthWrite:mat.depthWrite,material:mat.name,model:m.matrixWorld.elements,shaderKey:key,attrs,index:ix?bytes('mesh-'+id+'-index.bin',ix):null,count:ix?ix.length:m.geometry.attributes.position.count,instances:m.isInstancedMesh?m.count:0});
+}
+
+
+for(const selection of selected){
+ const {kind,macro,id}=selection,plan=compoundPlanner.plansForMacro(...macro,seed).find(p=>p.id===id);
+ if(!plan||plan.kind!==kind)throw Error('Missing actual '+kind+' plan '+id);
+ P=ROOT+'/'+kind;fs.mkdirSync(P,{recursive:true});meshes=[];shaders={};textures=[];textureIds=new Map();materialIds=new Map();
+ const worldX=Number(plan.originX)+plan.x,worldZ=Number(plan.originZ)+plan.z,originX=BigInt(Math.floor(worldX/64)),originZ=BigInt(Math.floor(worldZ/64));
+ const centerX=worldX-Number(originX)*64,centerZ=worldZ-Number(originZ)*64;
+ const group=new T.Group(),tiles=[],grade=[],stats=[],cereals=[],natureStats=[];
+ for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+  const cx=originX+BigInt(dx),cz=originZ+BigInt(dz),f=field(cx,cz,seed,false),gg=new T.Group();
+  gg.position.set(dx*64,0,dz*64);gg.add(makeGround(f,0));gg.add(makeVerge(f,0));
+  const compound=makeCompoundChunk(f,0,wind);gg.add(compound.group);stats.push({tile:f.key,...compound.group.userData.compoundStats});
+  const wheat=buildDenseWheat(f,0,'balanced',wind);gg.add(wheat.mesh);cereals.push({tile:f.key,...wheat.mesh.userData.wheat});
+  const nature=makeNature(f,0,wind);gg.add(nature.group);natureStats.push({tile:f.key,...nature.group.userData});
+  group.add(gg);tiles.push(f.key);
+  for(const q of f.compounds||[])for(const v of q.components||[])if(v.belongs&&v.ground){const r=compoundAt(v.x,v.z,f,{});grade.push({id:v.id,kind:v.kind,plan:q.id,x:v.x,z:v.z,tile:f.key,base:v.groundY,surface:surfaceHeight(v.x,v.z,f),gap:v.groundY-surfaceHeight(v.x,v.z,f),sampleComponent:r.component?.id});}
+ }
+
+ const ct=Math.cos(plan.rot),sn=Math.sin(plan.rot),baseY=height(centerX,centerZ,originX,originZ),tr=(x,y,z)=>[centerX+ct*x+sn*z,baseY+y,centerZ-sn*x+ct*z];
+ const poses=kind==='farm'?[['overview',tr(48,30,55),tr(0,3,-7)],['yard',tr(20,5,33),tr(-2,3,-5)]]:kind==='pair'?[['overview',tr(36,23,39),tr(2,2,-5)],['yard',tr(20,5,26),tr(3,2,-3)]]:[['first-person',tr(17,1.72,25),tr(0,1.65,-1)],['yard',tr(17,4.7,25),tr(0,2,-1)]];
+ const cameras=[];for(const[label,pos,look]of poses){const cam=new T.PerspectiveCamera(label==='overview'?57:58,4/3,.06,350);cam.position.fromArray(pos);cam.lookAt(...look);cam.updateMatrixWorld();cameras.push({label,eye:pos,look,projection:cam.projectionMatrix.elements,view:cam.matrixWorldInverse.elements});}
+ if(fs.existsSync(SITE+'scene-batches.js')){
+  const {createSceneBatches}=await import(B+'scene-batches.js?v='+version),{createWheatDetailLayer}=await import(B+'dense-wheat.js?v='+version),batch=createSceneBatches(),chunks=new Map();
+  group.children.forEach((g,i)=>{const [x,z]=tiles[i].split(',').map(BigInt),f=field(x,z,seed,false),c={group:g,field:f,quality:'balanced'};chunks.set(f.key,c);batch.register(c);});batch.update('0,0');group.add(batch.object);
+  const wheatLayer=createWheatDetailLayer(wind);wheatLayer.update(chunks,new T.Vector3(...cameras.find(c=>c.label==='yard').eye),'balanced','native');group.add(wheatLayer.object);
+ }
+ group.updateMatrixWorld();group.traverseVisible(exportMesh);meshes.sort((a,b)=>Number(a.transparent)-Number(b.transparent));
+ const report={version,kind,generatedLocation:true,forcedAssetLayout:false,seed,sourcePlan:plan.id,worldCenter:[worldX,worldZ],origin:[String(originX),String(originZ)],rot:plan.rot,tiles,grade,stats,cereals,natureStats,components:plan.components};
+ fs.writeFileSync(P+'/fullscene-shaders.json',JSON.stringify(shaders));fs.writeFileSync(P+'/fullscene.json',JSON.stringify({meshes,textures,cameras,report}));fs.writeFileSync(P+'/report.json',JSON.stringify(report,null,2));
+ console.log(JSON.stringify({kind,id,meshes:meshes.length,programs:Object.keys(shaders).length,textures:textures.length,stats:stats.reduce((a,b)=>({triangles:a.triangles+b.triangles,buildings:a.buildings+b.buildings,props:a.props+b.props,yardObjects:a.yardObjects+b.yardObjects}),{triangles:0,buildings:0,props:0,yardObjects:0}),cereals:cereals.reduce((a,b)=>a+b.clumps,0),gradeGaps:grade.map(x=>[x.id,x.gap])}));
+}

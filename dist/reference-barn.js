@@ -1,8 +1,8 @@
 import * as T from './vendor/three.module.min.js';
-import {REFERENCE_BARN as B,BARN_ROOFLIGHTS,barnFootprintDistance,barnLandscape} from './reference-barn-layout.js?v=37';
-import {landmarkTextures as tex} from './landmark-textures.js?v=37';
-import {surfaceHeight,random,roadDistance} from './world.js?v=37';
-import {makeNature} from './nature.js?v=37';
+import {REFERENCE_BARN as B,BARN_ROOFLIGHTS,barnFootprintDistance,barnLandscape} from './reference-barn-layout.js?v=38';
+import {landmarkTextures as tex} from './landmark-textures.js?v=38';
+import {surfaceHeight,random,roadDistance} from './world.js?v=38';
+import {makeNature} from './nature.js?v=38';
 const shared=new Set(),keep=x=>(shared.add(x),x);
 export const isSharedReferenceBarnResource=x=>shared.has(x);
 const mat=(name,color,map=null)=>keep(new T.MeshStandardMaterial({name,color,map,roughness:.94,side:T.DoubleSide}));
@@ -124,7 +124,7 @@ function interior(b,group,wind){
  for(let i=0;i<850;i++){const x=-11.5+rr()*23,z=-5.45+rr()*10.9;if(Math.abs(x-3.1)<2.3&&z>-.5)continue;if(Math.abs(x)<5&&Math.abs(z)<2&&rr()<.78)continue;const a=rr()*6.283,len=.12+rr()*.35,y=.019;const dx=Math.cos(a)*len,dz=Math.sin(a)*len;b.quad(M.straw,[x,y,z],[x+.014,y,z+.006],[x+dx,y+.018,z+dz],[x+dx-.010,y+.011,z+dz],.52);}
  const steam=new T.MeshBasicMaterial({color:'#d1d5cb',transparent:true,opacity:.22,depthWrite:false,side:T.DoubleSide});steam.defines={USE_UV:''};
  steam.onBeforeCompile=s=>{s.uniforms.uTime=wind.time;s.vertexShader='uniform float uTime;\n'+s.vertexShader;s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\ntransformed.x+=sin(uTime*1.4+position.y*8.)*position.y*.10;');s.fragmentShader=s.fragmentShader.replace('#include <alphamap_fragment>','#include <alphamap_fragment>\ndiffuseColor.a*=pow(max(0.,1.-abs(vUv.x-.5)*2.),2.)*sin(vUv.y*3.14159);');};steam.customProgramCacheKey=()=> 'v22-pot-steam';
- for(let i=0;i<3;i++){const s=new T.Mesh(new T.PlaneGeometry(.12,.68,1,5),steam);s.name='pot vapour';s.position.set(px+(i-1)*.07,1.00,pz);s.rotation.y=i*2.1;group.add(s);}
+ const vapour=new T.InstancedMesh(new T.PlaneGeometry(.12,.68,1,5),steam,3);vapour.name='pot vapour';for(let i=0;i<3;i++){dummy.position.set(px+(i-1)*.07,1.00,pz);dummy.rotation.set(0,i*2.1,0);dummy.scale.set(1,1,1);dummy.updateMatrix();vapour.setMatrixAt(i,dummy.matrix);}vapour.computeBoundingSphere();group.add(vapour);
 }
 export function updateBarnDoors(chunk,angle){if(!chunk?.field.barn)return;for(const side of[-1,1]){const name=side<0?'barn-door-left':'barn-door-right',hinge=chunk.group.getObjectByName(name);if(!hinge)continue;const a=side*angle;hinge.rotation.y=a;hinge.updateMatrix();const c=chunk.colliders.find(c=>c.id===name),offset=-side*B.doorWidth/4;if(c){c.angle=a;c.x=-chunk.field.barn.x+B.doorX+side*B.doorWidth/2+Math.cos(a)*offset;c.z=-chunk.field.barn.z+B.depth/2+.10-Math.sin(a)*offset;}}}
 export function makeReferenceBarn(f,level,wind){if(!f.barn)return null;const group=new T.Group(),colliders=[],b=new Batch(),r=random(f.seed^0x210cab);
