@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {createLensMicrobubbles} from './lens-microbubbles.js?v=33';
-import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=33';
+import {createLensMicrobubbles} from './lens-microbubbles.js?v=34';
+import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=34';
 export {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker};
 // V28: simulation + cached data texture only. All screen optics live in the
 // single half-resolution water-pipeline shader; no capture/blur ping-pong here.

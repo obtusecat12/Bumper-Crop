@@ -1,10 +1,10 @@
-import {landmarkTextures} from './landmark-textures.js?v=33';
-import {meadowEnvironment} from './meadow-layout.js?v=33';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=33';
-import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=33';
+import {landmarkTextures} from './landmark-textures.js?v=34';
+import {meadowEnvironment} from './meadow-layout.js?v=34';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=34';
+import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=34';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=33';
-import {surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=33';
+import {ruralTextures} from './rural-textures.js?v=34';
+import {surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=34';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -12,11 +12,7 @@ varying vec4 vMeadow;
 varying vec4 vShoreData;
 uniform float uWaterHeight;
 uniform sampler2D uPatchwork;
-uniform sampler2D uShoreRock;
-uniform sampler2D uShoreSilt;
-uniform sampler2D uRuralSoil;
-uniform sampler2D uRuralPath;
-uniform sampler2D uRuralTurf;
+uniform highp sampler2DArray uGroundAlbedo;
 uniform vec4 uLanes[4];
 uniform vec4 uDrive;
 uniform float uHasDrive;
@@ -65,12 +61,8 @@ function groundMaterial(f){
  const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1}),patch=patchworkTexture(f);m.userData.ownedParcelTexture=patch;
  m.onBeforeCompile=s=>{
   s.uniforms.uPatchwork={value:patch};
+  s.uniforms.uGroundAlbedo={value:ruralTextures.groundArray};
   s.uniforms.uWaterHeight={value:f.lakeY||0};
-  s.uniforms.uShoreRock={value:ruralTextures.shoreRock};
-  s.uniforms.uShoreSilt={value:ruralTextures.shoreSilt};
-  s.uniforms.uRuralSoil={value:ruralTextures.soil};
-  s.uniforms.uRuralPath={value:ruralTextures.path};
-  s.uniforms.uRuralTurf={value:ruralTextures.turf};
   s.uniforms.uFarm={value:new T.Vector3(f.farm?.x||0,f.farm?.z||0,f.farm?1:0)};
   s.uniforms.uFarmBuildings={value:FARM_FOOTPRINTS.map(p=>new T.Vector4(p.x,p.z,p.angle,0))};
   s.uniforms.uFarmSizes={value:FARM_FOOTPRINTS.map(p=>new T.Vector2(p.hx,p.hz))};
@@ -109,9 +101,9 @@ function groundMaterial(f){
    grass*=.92+clods*.12+grain*.14;
    // Three resident albedo samples, shared across all streamed tiles. The
    // authoritative rut mask still blends surfaces: no photographed road strips.
-   vec3 soilAlbedo=texture2D(uRuralSoil,q*.25).rgb;
-   vec3 pathAlbedo=texture2D(uRuralPath,q*.5).rgb;
-   vec3 turfAlbedo=texture2D(uRuralTurf,q*.5).rgb;
+   vec3 soilAlbedo=texture(uGroundAlbedo,vec3(q*.25,0.)).rgb;
+   vec3 pathAlbedo=texture(uGroundAlbedo,vec3(q*.5,1.)).rgb;
+   vec3 turfAlbedo=texture(uGroundAlbedo,vec3(q*.5,2.)).rgb;
    float soilDetail=dot(soilAlbedo,vec3(.2126,.7152,.0722));
    float materialDetail=.30+.70*fineFade;
    dirt=mix(dirt,mix(soilAlbedo,pathAlbedo,rut)*(.92+soilPatch*.16),.72*materialDetail);
@@ -180,15 +172,15 @@ if(uBuilding.w>.5){
     float shoreGate=1.-smoothstep(12.,25.,max(0.,vShoreData.x));
     float beach=smoothstep(-.20,.13,h)*(1.-smoothstep(.34,.63,h))*lowSlope*shoreGate;
     float wet=smoothstep(-.16,.02,h)*(1.-smoothstep(.14,.48,h))*lowSlope*shoreGate;
-    vec3 sediment=texture2D(uShoreSilt,q*.5).rgb*(.83+soilPatch*.20);
+    vec3 sediment=texture(uGroundAlbedo,vec3(q*.5,4.)).rgb*(.83+soilPatch*.20);
     float wetDark=(1.-smoothstep(-.1,.19,h))*.20;
     sediment*=1.-wetDark;
     float rockMask=clamp(vShoreData.y*.80+smoothstep(.23,.85,slope)*shoreGate,0.,1.);
     // Blended triplanar projection preserves detail without axis-switch seams.
     vec3 triWeights=pow(abs(terrainN),vec3(4.));triWeights/=max(.001,triWeights.x+triWeights.y+triWeights.z);
-    vec3 rock=(texture2D(uShoreRock,vec2(q.y,vTerrain.y)*.32).rgb*triWeights.x+
-      texture2D(uShoreRock,q*.32).rgb*triWeights.y+
-      texture2D(uShoreRock,vec2(q.x,vTerrain.y)*.32).rgb*triWeights.z)*(.82+soilPatch*.16);
+    vec3 rock=(texture(uGroundAlbedo,vec3(vec2(q.y,vTerrain.y)*.32,3.)).rgb*triWeights.x+
+      texture(uGroundAlbedo,vec3(q*.32,3.)).rgb*triWeights.y+
+      texture(uGroundAlbedo,vec3(vec2(q.x,vTerrain.y)*.32,3.)).rgb*triWeights.z)*(.82+soilPatch*.16);
     float underwater=1.-smoothstep(-.025,.025,h);
     base=mix(base,sediment,underwater);
     base=mix(base,sediment,beach*.94);
@@ -214,7 +206,7 @@ if(uBuilding.w>.5){
    normal=normalize(max(abs(soilDet),.00000001)*normal-soilGradient);
   `);
  };
- m.customProgramCacheKey=()=> 'rural-ground-v33-patchwork-'+!!f.meadow+'-'+(f.type==='pond');
+ m.customProgramCacheKey=()=> 'rural-ground-v34-layered-'+!!f.meadow+'-'+(f.type==='pond');
  return m;
 }
 function samples(step,edges){

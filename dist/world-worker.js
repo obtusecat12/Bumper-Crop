@@ -1,17 +1,17 @@
-import {copyLakeAtlas} from './lake-shape.js?v=33';
-import {initializeWeatherTextures} from './weather-textures.js?v=33';
-import {initializeLandmarkTextures} from './landmark-textures.js?v=33';
-import {buildRayGeometry} from './ray-geometry.js?v=33';
+import {copyLakeAtlas} from './lake-shape.js?v=34';
+import {initializeWeatherTextures} from './weather-textures.js?v=34';
+import {initializeLandmarkTextures} from './landmark-textures.js?v=34';
+import {buildRayGeometry} from './ray-geometry.js?v=34';
 // The render thread never constructs field geometry. Procedural templates remain
 // in this worker; unique geometry and instance arrays transfer without copies.
 import * as T from './vendor/three.module.min.js';
-import {field} from './world.js?v=33';
-import {createPacker} from './scene-packets.js?v=33';
-import {initializeRuralTextures} from './rural-textures.js?v=33';
+import {field} from './world.js?v=34';
+import {createPacker} from './scene-packets.js?v=34';
+import {initializeRuralTextures} from './rural-textures.js?v=34';
 if(typeof OffscreenCanvas==='undefined')throw Error('OffscreenCanvas is unavailable');
 globalThis.document={createElement(tag){if(tag==='canvas')return new OffscreenCanvas(1,1);throw Error('Unsupported worker element '+tag)}};
-const models=await import('./models.js?v=33');
-const wheat=await import('./dense-wheat.js?v=33');
+const models=await import('./models.js?v=34');
+const wheat=await import('./dense-wheat.js?v=34');
 await Promise.all([initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures()]);
 const packer=createPacker({T,isSharedResource:models.isSharedModelResource,wind:models.wind});
 self.onmessage=event=>{

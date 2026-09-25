@@ -12,6 +12,13 @@ export const ruralTextures=Object.fromEntries(Object.keys(RURAL_TEXTURE_FILES).m
  texture.generateMipmaps=true;texture.anisotropy=4;texture.colorSpace=T.SRGBColorSpace;texture.needsUpdate=true;
  resources.add(texture);return [key,texture];
 }));
+// One array sampler for all ground albedos. Full shoreline runtime must fit
+// WebGL2's 16 fragment texture units after GI, CSM, fog and caustics are attached.
+export const GROUND_LAYERS=['soil','path','turf','shoreRock','shoreSilt'];
+const groundArray=new T.DataArrayTexture(new Uint8Array(Array.from({length:5},()=>[128,128,128,255]).flat()),1,1,5);
+Object.assign(groundArray,{name:'Shared layered rural ground albedos',wrapS:T.MirroredRepeatWrapping,wrapT:T.MirroredRepeatWrapping,magFilter:T.LinearFilter,minFilter:T.LinearMipmapLinearFilter,generateMipmaps:true,anisotropy:4,colorSpace:T.SRGBColorSpace});
+groundArray.needsUpdate=true;ruralTextures.groundArray=groundArray;resources.add(groundArray);
+function assembleGroundLayers(){const width=512,height=512,layerBytes=width*height*4,data=new Uint8Array(layerBytes*GROUND_LAYERS.length);GROUND_LAYERS.forEach((key,i)=>data.set(ruralTextures[key].image.data,i*layerBytes));groundArray.image={data,width,height,depth:GROUND_LAYERS.length};groundArray.needsUpdate=true;}
 let loading;
 async function decode(url){
  const response=await fetch(url);if(!response.ok)throw Error('Texture load failed: '+response.status+' '+url.pathname);
@@ -26,7 +33,7 @@ export function initializeRuralTextures(decodeImage=decode){
   const pixels=await decodeImage(new URL('./textures/'+file+'.webp',import.meta.url));
   if(!pixels?.data||pixels.width!==512||pixels.height!==512)throw Error('Invalid rural texture '+key);
   ruralTextures[key].image=pixels;ruralTextures[key].needsUpdate=true;
- })).catch(error=>{loading=null;throw error});
+ })).then(assembleGroundLayers).catch(error=>{loading=null;throw error});
  return loading;
 }
 export const isSharedRuralTexture=resource=>resources.has(resource);

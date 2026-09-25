@@ -1,0 +1,21 @@
+import fs from 'node:fs';import * as T from '../../dist/vendor/three.module.min.js';
+import {field,stringSeed} from '../../dist/world.js';import {makeGround} from '../../dist/ground.js';import {waterGeometry} from '../../dist/lake.js';import {surfaceVertex,surfaceFragment} from '../../dist/water-surface.js';
+const P='/tmp/repair-v34';fs.mkdirSync(P,{recursive:true});const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),meshes=[],water=[],c=field(-2n,0n,seed,false);
+function includes(s){return s.replace(/#include <([^>]+)>/g,(_,k)=>includes(T.ShaderChunk[k]));}
+const defs='\n#define NUM_DIR_LIGHTS 1\n#define NUM_POINT_LIGHTS 0\n#define NUM_SPOT_LIGHTS 0\n#define NUM_RECT_AREA_LIGHTS 0\n#define NUM_HEMI_LIGHTS 0\n#define NUM_DIR_LIGHT_SHADOWS 0\n#define NUM_POINT_LIGHT_SHADOWS 0\n#define NUM_SPOT_LIGHT_SHADOWS 0\n#define NUM_SPOT_LIGHT_MAPS 0\n#define NUM_SPOT_LIGHT_COORDS 0\n#define NUM_SPOT_LIGHT_SHADOWS_WITH_MAPS 0\n#define NUM_CLIPPING_PLANES 0\n#define UNION_CLIPPING_PLANES 0\n';
+const vp='#version 300 es\nprecision highp float;precision highp int;\n#define attribute in\n#define varying out\nuniform mat4 modelMatrix,viewMatrix,modelViewMatrix,projectionMatrix;uniform mat3 normalMatrix;uniform vec3 cameraPosition;uniform bool isOrthographic;in vec3 position;in vec2 uv;in vec3 normal;\n'+defs;
+const fp='#version 300 es\nprecision highp float;precision highp int;\n#define varying in\n#define texture2D texture\nout vec4 pc_fragColor;\n#define gl_FragColor pc_fragColor\nuniform vec3 cameraPosition;uniform mat4 viewMatrix;uniform bool isOrthographic;\nvec4 linearToOutputTexel(vec4 c){return c;}\n'+defs;
+let shaders={};
+for(let z=-2;z<=2;z++)for(let x=-4;x<=0;x++){
+ const f=field(BigInt(x),BigInt(z),seed,false),m=makeGround(f,1),s={vertexShader:T.ShaderLib.standard.vertexShader,fragmentShader:T.ShaderLib.standard.fragmentShader,uniforms:T.UniformsUtils.clone(T.ShaderLib.standard.uniforms)};m.material.onBeforeCompile(s,{});
+ const shaderKey=(f.type==='pond'?'pond':'land')+(f.meadow?'meadow':'');shaders[shaderKey]={vertex:vp+includes(s.vertexShader),fragment:fp+includes(s.fragmentShader)};
+ const attrs={};for(const [k,a]of Object.entries(m.geometry.attributes)){const file=`mesh-${meshes.length}-${k}.bin`;fs.writeFileSync(P+'/'+file,Buffer.from(a.array.buffer));attrs[k]={file,size:a.itemSize}}
+ const index='mesh-'+meshes.length+'-index.bin';fs.writeFileSync(P+'/'+index,Buffer.from(new Uint32Array(m.geometry.index.array).buffer));
+ const uniforms={};for(const [k,u]of Object.entries(s.uniforms)){const v=u.value;if(typeof v==='number'||typeof v==='boolean')uniforms[k]=v;else if(v?.toArray)uniforms[k]=v.toArray();else if(Array.isArray(v)&&v[0]?.toArray)uniforms[k]=v.map(x=>x.toArray());}
+ const parcel='mesh-'+meshes.length+'-parcel.bin';fs.writeFileSync(P+'/'+parcel,Buffer.from(s.uniforms.uPatchwork.value.image.data));
+ meshes.push({x,z,attrs,index,parcel,count:m.geometry.index.count,shaderKey,uniforms});m.geometry.dispose();m.material.dispose();
+ if(f.type==='pond'){let g=waterGeometry(f,f.lakeY);if(g.index)g=g.toNonIndexed();const p=g.attributes.position.array,cc=g.attributes.lakeCoord.array,t=g.attributes.facetTone.array;for(let i=0;i<p.length/3;i++)water.push(p[i*3]+x*64,p[i*3+1],p[i*3+2]+z*64,cc[i*2],cc[i*2+1],t[i]);g.dispose();}
+}
+shaders.surface={vertex:'#version 300 es\n'+surfaceVertex,fragment:'#version 300 es\n'+surfaceFragment};
+const cameras=[];for(const [label,pos,look]of [['overview',[-108,104,150],[-104,0,30]],['rock-bank',[-143,2.8,6],[-112,-.4,26]],['bay',[-52,2.4,39],[-93,-.4,23]]]){const cam=new T.PerspectiveCamera(label==='overview'?62:72,4/3,.01,480);cam.position.fromArray(pos);cam.lookAt(...look);cam.updateMatrixWorld();cameras.push({label,eye:pos,projection:cam.projectionMatrix.elements,view:cam.matrixWorldInverse.elements,world:cam.matrixWorld.elements,inverseProjection:cam.projectionMatrixInverse.elements})}
+fs.writeFileSync(P+'/shaders.json',JSON.stringify(shaders));fs.writeFileSync(P+'/water.bin',Buffer.from(new Float32Array(water).buffer));fs.writeFileSync(P+'/scene.json',JSON.stringify({meshes,cameras,level:c.lakeY}));console.log({groundMeshes:meshes.length,waterTriangles:water.length/18,programs:Object.keys(shaders)});

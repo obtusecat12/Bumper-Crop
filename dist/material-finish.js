@@ -10,7 +10,7 @@ export function createMaterialFinish(){
       m.onBeforeCompile=function(shader,renderer){
         previous.call(this,shader,renderer);
         const s=shader.fragmentShader;
-        if(s.includes('uniform sampler2D uRuralSoil')){
+        if(s.includes('uniform sampler2D uRuralSoil')||s.includes('sampler2DArray uGroundAlbedo')){
           shader.fragmentShader=s.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
             float earthGrain=clamp(soilDetail*4.,0.,1.);
             float earthDry=mix(.97,.84,earthGrain)*(.98+soilPatch*.02);

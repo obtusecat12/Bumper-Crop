@@ -1,9 +1,9 @@
-import {createBarleyGeometry,createStubbleGeometry} from './crop-geometry.js?v=33';
+import {createBarleyGeometry,createStubbleGeometry} from './crop-geometry.js?v=34';
 // Golden mature wheat: varied silhouette clumps plus three bounded grain meshes.
 // Geometry/materials/textures are shared; per-chunk meshes and canopy are owned by the chunk.
 import * as T from './vendor/three.module.min.js';
-import { exactIndexGeometry } from './exact-index.js?v=33';
-import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, cropSample, random } from './world.js?v=33';
+import { exactIndexGeometry } from './exact-index.js?v=34';
+import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, cropSample, random } from './world.js?v=34';
 
 const dummy = new T.Object3D(), tint = new T.Color(), shared = new Set();
 const TAU = Math.PI * 2, DETAIL_CAPACITY = 12000, DETAIL_VARIANTS = 9;
@@ -281,27 +281,35 @@ function getResources(wind) {
 }
 
 function canopyGeometry(f) {
- const p=[],c=[],cells=42,step=64/cells,rng=random(f.seed^0xaaa818),col=new T.Color(),crop={};
- const vertex=(x,z)=>{cropSample(x,z,f,crop);const barley=crop.crop===1;
-  p.push(x,surfaceHeight(x,z,f)+(barley?.97:1.055)+Math.sin(crop.row*3.8)*.025+Math.sin(crop.along*.47)*.034,z);
-  col.setHSL(barley?.086:.119,barley?.30:.42,(barley?.29:.45)*crop.tone+(rng()-.5)*.03);c.push(col.r,col.g,col.b);};
- for(let j=0;j<cells;j++)for(let i=0;i<cells;i++){const x=i*step,z=j*step;if(cropSample(x+step*.5,z+step*.5,f,crop).crop===2)continue;
+ const p=[],c=[],step=64/42,rng=random(f.seed^0xaaa818),col=new T.Color(),crop={};
+ const vertex=(x,z,kind)=>{
+  const h=.112+rng()*.012,s=(.35+rng()*.09)*1.06,l=.40+rng()*.085;
+  p.push(x,surfaceHeight(x,z,f)+(kind===1?.99:1.055)+Math.sin(x*1.8+z)*.045+Math.sin(x*.51-z*.34)*.055,z);
+  col.setHSL(kind===1?.086:h,kind===1?.30:s,kind===1?l*.68:l);c.push(col.r,col.g,col.b);
+ };
+ for(let j=0;j<42;j++)for(let i=0;i<42;i++){const x=i*step,z=j*step;
   if(![[x,z],[x+step,z],[x,z+step],[x+step,z+step]].every(([a,b])=>wheatAllowed(a,b,f)))continue;
-  vertex(x,z);vertex(x,z+step);vertex(x+step,z+step);vertex(x,z);vertex(x+step,z+step);vertex(x+step,z);}
+  const kind=cropSample(x+step*.5,z+step*.5,f,crop).crop;
+  if(kind===2){for(let i=0;i<18;i++)rng();continue;}
+  vertex(x,z,kind);vertex(x,z+step,kind);vertex(x+step,z+step,kind);vertex(x,z,kind);vertex(x+step,z+step,kind);vertex(x+step,z,kind);
+ }
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('color',new T.Float32BufferAttribute(c,3));g.computeVertexNormals();return g;
 }
 export function buildDenseWheat(f,level,quality,wind){
- const r=getResources(wind),group=new T.Group(),roots=[[],[],[]],rng=random(f.seed^0x72ac0f),crop={};
- const spacing=quality==='low'?.98:.80,count=Math.ceil(64/spacing),step=64/count;
- for(let iz=0;iz<count;iz++)for(let ix=0;ix<count;ix++){
-  let x=(ix+.5+(rng()-.5)*.58)*step,z=(iz+.5+(rng()-.5)*.58)*step;cropSample(x,z,f,crop);
-  const delta=Math.round(crop.row/.30)*.30-crop.row;x+=Math.cos(crop.angle)*delta;z+=Math.sin(crop.angle)*delta;
-  if(!wheatAllowed(x,z,f))continue;
-  roots[crop.crop].push({x,z,a:-crop.angle+(rng()-.5)*.32,s:.84+rng()*.29,tone:.89+rng()*.11});
+ const r=getResources(wind),group=new T.Group(),roots=[[],[],[]],crop={};
+ // Preserve V32's five random draws per wheat lattice point, before any masks.
+ // Barley's independent denser stream cannot change a single wheat transform.
+ for(let pass=0;pass<2;pass++){
+  const spacing=(quality==='low'?.98:.80)*(pass===1?.80:1),rng=random(f.seed^(pass===1?0x3b42d91:0x72ac0f));
+  for(let z=.65;z<63.4;z+=spacing)for(let x=.65;x<63.4;x+=spacing){
+   const xx=x+(rng()-.5)*spacing*.58,zz=z+(rng()-.5)*spacing*.58,a=rng()*TAU,s=.84+rng()*.29,tone=.89+rng()*.11;
+   cropSample(xx,zz,f,crop);if((pass===1)!==(crop.crop===1)||!wheatAllowed(xx,zz,f))continue;
+   roots[crop.crop].push({x:xx,z:zz,a,s,tone});
+  }
  }
  for(let kind=0;kind<3;kind++){
-  if(!roots[kind].length)continue;const stubble=kind===2,mesh=new T.InstancedMesh(stubble?r.stubbleCards:r.cards,stubble?r.stubbleMaterial:kind===1?r.barleyCards:r.cardMaterial,roots[kind].length),width=quality==='low'?1.25:1.05;
-  roots[kind].forEach((root,i)=>{dummy.position.set(root.x,surfaceHeight(root.x,root.z,f)-.012,root.z);dummy.rotation.set(0,root.a,0);dummy.scale.set(stubble?1:width,stubble?1:root.s,stubble?1:width);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);tint.setRGB(root.tone,root.tone*.987,root.tone*.953);mesh.setColorAt(i,tint)});
+  if(!roots[kind].length)continue;const stubble=kind===2,mesh=new T.InstancedMesh(stubble?r.stubbleCards:r.cards,stubble?r.stubbleMaterial:kind===1?r.barleyCards:r.cardMaterial,roots[kind].length),width=(quality==='low'?1.25:1.05)*(kind===1?1.08:1);
+  roots[kind].forEach((root,i)=>{dummy.position.set(root.x,surfaceHeight(root.x,root.z,f)-(kind===0?.025:.012),root.z);dummy.rotation.set(0,root.a,0);dummy.scale.set(stubble?1:width,stubble?1:root.s,stubble?1:width);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);tint.setRGB(root.tone,root.tone*.987,root.tone*.953);mesh.setColorAt(i,tint)});
   mesh.instanceMatrix.needsUpdate=true;mesh.instanceColor.needsUpdate=true;mesh.computeBoundingSphere();if(mesh.boundingSphere)mesh.boundingSphere.radius+=1.2;mesh.receiveShadow=true;mesh.name=['dense-wheat-cards','dense-barley-cards','harvested-stubble-and-straw'][kind];group.add(mesh);
  }
  const canopy=new T.Mesh(canopyGeometry(f),r.canopyMaterial);canopy.name='distant-cereal-canopy';group.add(canopy);
@@ -320,12 +328,13 @@ const qualityDetail = quality => ({ radius: quality === 'high' ? 14 : quality ==
 export function prepareWheatDetail(f, quality = 'balanced') {
   const { keep } = qualityDetail(quality), patches = new Map(), geometries = detailGeometries();
   const temporary = new T.Object3D(), color = new T.Color(), transformedBox = new T.Box3(),crop={};
-  const last = Math.floor(CHUNK / DETAIL_SPACING);
+  for(let pass=0;pass<2;pass++){
+  const spacing=pass===1?.245:DETAIL_SPACING,last=Math.floor(CHUNK/spacing);
   for (let iz = 0; iz <= last; iz++) for (let ix = 0; ix <= last; ix++) {
     const rng = random(f.seed ^ Math.imul(ix, 734287) ^ Math.imul(iz, 912931));
-    let x = (ix + .10 + rng() * .78) * DETAIL_SPACING, z = (iz + .10 + rng() * .78) * DETAIL_SPACING;
+    const x = (ix + .10 + rng() * .78) * spacing, z = (iz + .10 + rng() * .78) * spacing;
     const selection = rng(), baseVariant = Math.floor(rng() * 3);
-    cropSample(x,z,f,crop);if(crop.crop===2&&(ix%3!==0||iz%3!==0))continue;const variant=baseVariant+crop.crop*3;const rowDelta=Math.round(crop.row/.30)*.30-crop.row;x+=Math.cos(crop.angle)*rowDelta;z+=Math.sin(crop.angle)*rowDelta;
+    cropSample(x,z,f,crop);if((pass===1)!==(crop.crop===1)||crop.crop===2&&(ix%3!==0||iz%3!==0))continue;const variant=baseVariant+crop.crop*3;
     if (selection > keep || !wheatAllowed(x, z, f)) continue;
     const key = `${Math.floor(x / DETAIL_PATCH_SIZE)},${Math.floor(z / DETAIL_PATCH_SIZE)},${variant}`;
     let patch = patches.get(key);
@@ -335,7 +344,7 @@ export function prepareWheatDetail(f, quality = 'balanced') {
       patches.set(key, patch);
     }
     temporary.position.set(x, surfaceHeight(x, z, f) - .012, z);
-    temporary.rotation.set((rng() - .5) * .18, -crop.angle+(rng()-.5)*.40, (rng() - .5) * .20);
+    temporary.rotation.set((rng() - .5) * .18, rng()*TAU, (rng() - .5) * .20);
     const breadth = .84 + rng() * .31, stature = .82 + rng() * .32;
     temporary.scale.set(breadth, stature, breadth); temporary.updateMatrix();
     patch.matrices.push(...temporary.matrix.elements); patch.roots.push(x, z);
@@ -345,6 +354,7 @@ export function prepareWheatDetail(f, quality = 'balanced') {
     transformedBox.copy(geometries[variant].boundingBox).applyMatrix4(temporary.matrix); patch.box.union(transformedBox);
     patch.rootBounds[0] = Math.min(patch.rootBounds[0], x); patch.rootBounds[1] = Math.min(patch.rootBounds[1], z);
     patch.rootBounds[2] = Math.max(patch.rootBounds[2], x); patch.rootBounds[3] = Math.max(patch.rootBounds[3], z);
+  }
   }
   let count = 0, byteLength = 0;
   const result = [...patches.values()].map(p => {
@@ -356,7 +366,7 @@ export function prepareWheatDetail(f, quality = 'balanced') {
       rootBounds: p.rootBounds, bounds: [...box.min.toArray(), ...box.max.toArray()],
       center: sphere.center.toArray(), radius: sphere.radius };
   });
-  return { version: 1, quality, spacing: DETAIL_SPACING, patchSize: DETAIL_PATCH_SIZE, count, byteLength, patches: result };
+  return { version: 1, quality, spacing: DETAIL_SPACING, barleySpacing:.245, patchSize: DETAIL_PATCH_SIZE, count, byteLength, patches: result };
 }
 
 // Patches retain their uploaded buffers for the lifetime of their chunk.

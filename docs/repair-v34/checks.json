@@ -1,0 +1,11 @@
+{
+  "pass": true,
+  "wheatDetailInstancesExact": 36553,
+  "wheatMatricesAndColors": "byte identical to V32 appearance under current clearing masks",
+  "barleyDetail": 56513,
+  "barleyRatio": 1.5460564112384756,
+  "arrivalRoadChecks": 1558,
+  "arrivalRoadReliefError": 0,
+  "buildingDescriptors": 8,
+  "seam": 3.3362201889985954e-14
+}
