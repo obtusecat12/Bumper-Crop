@@ -1,0 +1,53 @@
+{
+  "pass": true,
+  "edgeSamples": 6600,
+  "seamError": 3.3362201889985954e-14,
+  "meshEdgeError": 0,
+  "normalError": 0,
+  "lakeExcludedSamples": 8140,
+  "parcels": 64,
+  "crops": [
+    2,
+    1,
+    0
+  ],
+  "angles": [
+    1,
+    0,
+    2
+  ],
+  "roadWidth": [
+    3.503,
+    4.48
+  ],
+  "detail": [
+    {
+      "kind": 0,
+      "count": 28077,
+      "variants": [
+        2,
+        1,
+        0
+      ]
+    },
+    {
+      "kind": 1,
+      "count": 28070,
+      "variants": [
+        3,
+        5,
+        4
+      ]
+    },
+    {
+      "kind": 2,
+      "count": 3101,
+      "variants": [
+        8,
+        6,
+        7
+      ]
+    }
+  ],
+  "ownedAtlasBytes": 262144
+}

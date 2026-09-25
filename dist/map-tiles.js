@@ -1,14 +1,14 @@
-import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=32';
-import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=32';
-import {field,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=32';
-import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=32';
-import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=32';
+import {REFERENCE_BARN,barnLandscape} from './reference-barn-layout.js?v=33';
+import {meadowSample,meadowEnvironment} from './meadow-layout.js?v=33';
+import {field,cropSample,buildingSize,BUILDING_NAMES,laneOffset,pondPoint,pondBankPoint,pondDistance,roadProfile} from './world.js?v=33';
+import {FARM_FOOTPRINTS,FARM_TREES,farmRoadWeight} from './farm-layout.js?v=33';
+import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=33';
 
 // A geography-only view of the existing world. Never imports Three, terrain,
 // textures, vegetation geometry, or the streamed chunk manager.
 // X increases right, Z increases down; all absolute cell indices remain BigInt.
 const SIZE=64,TAU=Math.PI*2;
-export const MAP_COLORS={wheat:'#b8a46c',grass:'#74845a',yard:'#a28f70',rut:'#8c7658',water:'#649298',shore:'#a3a17c',tree:'#4d6849',hedge:'#61774d',building:'#a46e59'};
+export const MAP_COLORS={wheat:'#b8a46c',barley:'#998061',stubble:'#81705b',grass:'#74845a',yard:'#a28f70',rut:'#8c7658',water:'#649298',shore:'#a3a17c',tree:'#4d6849',hedge:'#61774d',building:'#a46e59'};
 const COLORS=MAP_COLORS;
 const TREE_RADII=[5.1,4.3,6.0,3.8,3.0,3.0];
 const FARM_NAMES=['红色谷仓','农舍附屋','农舍附屋','旧农舍','旧农舍','农具棚'];
@@ -53,12 +53,21 @@ function metadata(f){
  return {cx:f.x,cz:f.z,type:f.type,label:f.type==='pond'?'湖泊':f.type==='building'?BUILDING_NAMES[f.variant%8]:'麦田',vegetationMode:f.vegetationMode,footprints:mapFootprints(f),roads:f.roads,driveway:f.driveway||null,lake:f.type==='pond'?{id:f.lakeId,x:f.cx,z:f.cz,outline:pondContours(f)[0],outlines:pondContours(f)}:null,trees:f.trees.map(t=>({x:t.x,z:t.z,r:TREE_RADII[t.variant%6]*t.scale,variant:t.variant})),shrubs:f.shrubs.map(s=>({x:s.x,z:s.z,r:s.width*s.scale*.50})),farm:f.farm?{x:f.farm.x,z:f.farm.z}:null,meadow:f.meadow?{size:f.meadow.size,step:f.meadow.step,grid:f.meadow.grid}:null};
 }
 
+function drawParcels(ctx,f,n){
+ const layer=makeCanvas(n),g=layer.getContext('2d'),pixels=g.createImageData(n,n),classes=new Uint8Array(n*n),crop={},road={};
+ const colors=[[184,164,108],[149,121,84],[116,96,72]];
+ for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=(i+.5)*64/n,z=(j+.5)*64/n;cropSample(x,z,f,crop);roadProfile(x,z,f,road);
+  let color=colors[crop.crop],v=crop.tone*(1+(Math.cos(crop.row*1.57)>.55?.025:-.01)),kind=crop.crop;
+  if(road.distance<2.1){color=road.rut>.13?[132,111,79]:[107,122,74];v=1;kind=road.rut>.13?3:4;}
+  const k=j*n+i;classes[k]=kind;pixels.data[k*4]=color[0]*v;pixels.data[k*4+1]=color[1]*v;pixels.data[k*4+2]=color[2]*v;pixels.data[k*4+3]=255;
+ }g.putImageData(pixels,0,0);ctx.drawImage(layer,0,0,64,64);return{size:n,classes};
+}
 function drawMeadow(ctx,f){
  if(!f.meadow)return;
  const n=128,layer=makeCanvas(n),g=layer.getContext('2d'),pixels=g.createImageData(n,n),env={};
  for(let z=0;z<n;z++)for(let x=0;x<n;x++){
   meadowEnvironment((x+.5)*64/n,(z+.5)*64/n,f.meadow,env);
-  const c=env.cover;if(c<=.001)continue;const i=(z*n+x)*4,wet=env.moisture,d=env.patchDensity;
+  const c=env.cover*(roadProfile((x+.5)*64/n,(z+.5)*64/n,f,{}).distance<2.5?0:1);if(c<=.001)continue;const i=(z*n+x)*4,wet=env.moisture,d=env.patchDensity;
   pixels.data[i]=Math.round(122-wet*15+d*8);pixels.data[i+1]=Math.round(133+wet*7+d*7);pixels.data[i+2]=Math.round(78+wet*10+d*6);pixels.data[i+3]=Math.round(Math.min(1,c*1.25)*255);
  }
  g.putImageData(pixels,0,0);ctx.drawImage(layer,0,0,64,64);
@@ -146,15 +155,13 @@ export function createMapTiles({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   const canvas=canvasFactory(tilePixels);canvas.width=canvas.height=tilePixels;
   const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw new Error('Canvas2D is required for the map.');
   ctx.setTransform(tilePixels/64,0,0,tilePixels/64,0,0);ctx.lineJoin='round';ctx.lineCap='butt';
-  const tone=Math.round((f.tint-.5)*10);ctx.fillStyle=`rgb(${184+tone} ${164+tone} ${108+tone})`;ctx.fillRect(0,0,64,64);drawMeadow(ctx,f);yield;
-  for(const lane of f.roads){if(lane.enabled)drawLane(ctx,f,lane);yield}
-  drawDrive(ctx,f.driveway);yield;
+  const surface=drawParcels(ctx,f,tilePixels);drawMeadow(ctx,f);yield;
   if(f.type==='pond'){
    drawBank(ctx,f,1.2,COLORS.grass);yield;
    drawBank(ctx,f,.36,COLORS.shore);yield;
    drawPond(ctx,f);yield;
   }
-  const meta=metadata(f);for(const p of meta.footprints)drawYard(ctx,p);yield;
+  const meta=metadata(f);meta.surface=surface;for(const p of meta.footprints)drawYard(ctx,p);yield;
   for(const p of meta.footprints)drawBuilding(ctx,p,f.variant);yield;
   const neighbours=[];
   for(const [dx,dz]of NEIGHBOURS){neighbours.push({f:source(f.x+BigInt(dx),f.z+BigInt(dz)),dx:dx*64,dz:dz*64});yield}
@@ -212,7 +219,7 @@ export function createMapTiles({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   if(road.rut>.1)return {kind:'path',label:'田间双辙路',cx,cz,x,z};
   if(road.distance<2.05)return {kind:'grass',label:'路边草地',cx,cz,x,z};
   if(meadowSample(x,z,f.meadow)>.32)return {kind:'grass',label:'田间草地',cx,cz,x,z};
-  return {kind:'field',label:'麦田',cx,cz,x,z};
+  const crop=cropSample(x,z,f,{}).crop;return {kind:'field',label:['成熟小麦','枯褐大麦','收割麦茬'][crop],cx,cz,x,z};
  }
  function cancelPending(){pending.clear();active=null}
  function clear(){cancelPending();tiles.clear();fields.clear();revision++}

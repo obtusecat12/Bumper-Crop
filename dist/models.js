@@ -1,18 +1,18 @@
-import {makeReferenceBarn,isSharedReferenceBarnResource} from './reference-barn.js?v=32';
-import {isSharedLandmarkTexture} from './landmark-textures.js?v=32';
-import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=32';
-import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=32';
-import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=32';
+import {makeReferenceBarn,isSharedReferenceBarnResource} from './reference-barn.js?v=33';
+import {isSharedLandmarkTexture} from './landmark-textures.js?v=33';
+import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=33';
+import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=33';
+import {prepareCardDrawOrder,CARD_ORDER_KEY} from './instance-order.js?v=33';
 import * as T from './vendor/three.module.min.js';
-import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=32';
-import {makeNature,isSharedNatureResource} from './nature.js?v=32';
-import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=32';
-import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=32';
-import {isSharedRuralTexture} from './rural-textures.js?v=32';
-import {makeLake,isSharedLakeResource} from './lake.js?v=32';
-import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=32';
-import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=32';
-import {createPowerLinePlanner,POWER_POLE_HEIGHT} from './power-lines.js?v=32';
+import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=33';
+import {makeNature,isSharedNatureResource} from './nature.js?v=33';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=33';
+import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=33';
+import {isSharedRuralTexture} from './rural-textures.js?v=33';
+import {makeLake,isSharedLakeResource} from './lake.js?v=33';
+import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=33';
+import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=33';
+import {createPowerLinePlanner,POWER_POLE_HEIGHT} from './power-lines.js?v=33';
 const powerLines=createPowerLinePlanner({CHUNK,field,laneOffset,surfaceHeight,pondShoreDistance});
 const UP=new T.Vector3(0,1,0),dummy=new T.Object3D();
 const box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,7);
@@ -81,5 +81,5 @@ export const isSharedModelResource=r=>isShared(r)||[box,cylinder,glass,woodTex,b
 export function disposeChunk(chunk){if(chunk.disposePacketResources){chunk.disposePacketResources();return}const disposed=new Set();chunk.group.traverse(o=>{
  if(o.isInstancedMesh)o.dispose();
  if(o.geometry&&!disposed.has(o.geometry)&&!isShared(o.geometry)&&![box,cylinder].includes(o.geometry)){disposed.add(o.geometry);o.geometry.dispose()}
- if(o.material&&!disposed.has(o.material)&&!isShared(o.material)&&!Object.values(materials).includes(o.material)&&o.material!==glass){disposed.add(o.material);o.material.dispose()}
+ if(o.material&&!disposed.has(o.material)&&!isShared(o.material)&&!Object.values(materials).includes(o.material)&&o.material!==glass){disposed.add(o.material);o.material.userData.ownedParcelTexture?.dispose();o.material.dispose()}
 });}

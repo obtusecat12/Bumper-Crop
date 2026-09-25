@@ -18,6 +18,8 @@ createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://terminal.local');
   if(url.pathname==='/__visual-check.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await visualCheck(url));return;}
+  if(url.pathname==='/__crops-v33.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/patchwork-v33/crop-preview.html')));return;}
+  if(url.pathname==='/__patchwork-v33.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/patchwork-v33/map-preview.html')));return;}
   if(url.pathname==='/__shore-v32.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/shore-v32/map-preview.html')));return;}
   const path=resolve(root,'.'+decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname));
   if(!path.startsWith(root+sep)){res.writeHead(403);res.end();return;}

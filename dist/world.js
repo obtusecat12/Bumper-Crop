@@ -1,9 +1,10 @@
-import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=32';
-import {barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=32';
-import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=32';
-import {farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=32';
-import {createSettlementPlanner} from './rural-settlements.js?v=32';
-import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=32';
+import {patchworkContext,parcelSample} from './patchwork.js?v=33';
+import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=33';
+import {REFERENCE_BARN,barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=33';
+import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=33';
+import {FARM,farmFootprintDistance,farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=33';
+import {createSettlementPlanner} from './rural-settlements.js?v=33';
+import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=33';
 export {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance};
 // Infinite signed BigInt cells with deterministic seed-based generation.
 export const CHUNK=64;
@@ -43,50 +44,53 @@ function collectRoad(out,d,t,weight=1){
  const cover=(1-smooth(.86,1.80,d))*weight;
  if(cover>out.first){out.second=out.first;out.first=cover}else out.second=Math.max(out.second,cover);
 }
-export function roadProfile(x,z,f,out=roadState,includeDrive=true){
- out.distance=1e4;out.along=z;out.rut=0;out.cut=0;out.crown=0;out.first=0;out.second=0;
- for(const l of f?.roads||[]){
-  if(!l.enabled)continue;
-  const t=l.axis==='x'?z:x,d=Math.abs((l.axis==='x'?x:z)-l.edge-laneOffset(l,t));
-  collectRoad(out,d,t,farmRoadWeight(x,z,f));
- }
- if(includeDrive&&f?.driveway){
-  const d=f.driveway,vx=d.x2-d.x1,vz=d.z2-d.z1,len=Math.hypot(vx,vz);
-  if(len>.01){
-   const dx=x-d.x1,dz=z-d.z1,t=(dx*vx+dz*vz)/len,across=Math.abs(dx*vz-dz*vx)/len;
-   // A strip extends into the yard and fades along its length. It never uses a
-   // point-to-capped-segment radius, so the wheel paths cannot become end rings.
-   const corridor=smooth(-4.6,-2.2,t)*(1-smooth(len-.04,len+.72,t));
-   const boundary=smooth(0,.24,Math.min(x,z,64-x,64-z));
-   const clearance=across+(1-corridor)*3.8;if(clearance<out.distance){out.distance=clearance;out.along=t}
-   collectRoad(out,across,t,corridor*boundary*smooth(-1.6,3.4,t));
-  }
- }
- out.junction=out.second;
- out.relief=-out.cut-.018*out.junction+out.crown*(1-out.rut)*(1-out.junction);
+const parcelRoad={},cropScratch={};
+const landmarkCropParcels=new Map();
+function reservedCrops(seed){let ids=landmarkCropParcels.get(seed);if(ids)return ids;ids=new Set();
+ for(const landmark of [FARM,REFERENCE_BARN]){const x=BigInt(Math.floor(landmark.x/64)),z=BigInt(Math.floor(landmark.z/64));ids.add(parcelSample(landmark.x-Number(x)*64,landmark.z-Number(z)*64,{x,z,worldSeed:seed},{}).id);}
+ landmarkCropParcels.set(seed,ids);if(landmarkCropParcels.size>16)landmarkCropParcels.delete(landmarkCropParcels.keys().next().value);return ids;
+}
+export function cropSample(x,z,f,out={}){
+ parcelSample(x,z,f,out);
+ // Reserve complete parcels around authored landmarks, never a camera-shaped mask.
+ if(reservedCrops(f.worldSeed).has(out.id))out.crop=0;
  return out;
 }
-// Clearance retains the grassy median and shoulders. It deliberately does not
-// determine rut membership: wheel cuts union every path independently above.
-export function roadDistance(x,z,f){
- let distance=1e4;
- if(!f?.roads)return Math.min(x,64-x,z,64-z);
- for(const l of f.roads){if(!l.enabled)continue;const t=l.axis==='x'?z:x;distance=Math.min(distance,farmRoadWeight(x,z,f)>0?Math.abs((l.axis==='x'?x:z)-l.edge-laneOffset(l,t))+(1-farmRoadWeight(x,z,f))*2.6:1e4)}
- if(f.driveway){
-  const d=f.driveway,vx=d.x2-d.x1,vz=d.z2-d.z1,len=Math.hypot(vx,vz);
-  if(len>.01){const dx=x-d.x1,dz=z-d.z1,t=(dx*vx+dz*vz)/len,across=Math.abs(dx*vz-dz*vx)/len,corridor=smooth(-4.6,-2.2,t)*(1-smooth(len-.04,len+.72,t));distance=Math.min(distance,across+(1-corridor)*3.8)}
+export function lakeRoadClearance(x,z,f){let d=1e4;for(const lake of f.roadLakes||[])d=Math.min(d,pondShoreDistance(x,z,lake));return d;}
+export function roadProfile(x,z,f,out=roadState,includeDrive=true){
+ out.distance=1e4;out.along=z;out.rut=0;out.cut=0;out.crown=0;out.first=0;out.second=0;
+ const p=parcelSample(x,z,f,parcelRoad),lakeD=lakeRoadClearance(x,z,f);
+ let weight=smooth(3,10,farmFootprintDistance(x,z,f))*smooth(3,9,barnFootprintDistance(x,z,f));
+ if(f.type==='building'){const b=buildingLocal(x,z,f),size=buildingSize(f);weight*=smooth(1,3,Math.max(Math.abs(b.x)-size[0]/2,Math.abs(b.z)-size[1]/2));}
+ // Negative inside the road. max intersects road and the dry 30m lake buffer.
+ const signed=Math.max(p.distance-p.width*.5,30-lakeD),endWeight=smooth(30,35,lakeD);
+ const d=p.distance*4/p.width,d2=p.second*4/p.width2;
+ collectRoad(out,d,p.roadAlong,weight*endWeight);
+ collectRoad(out,d2,p.roadAlong2,weight*endWeight);
+ out.distance=Math.max(signed+2.1,p.distance*4/p.width+(1-weight)*16);
+ if(includeDrive&&f?.driveway){
+  const a=f.driveway,vx=a.x2-a.x1,vz=a.z2-a.z1,len=Math.hypot(vx,vz);
+  if(len>.01){const dx=x-a.x1,dz=z-a.z1,t=(dx*vx+dz*vz)/len,across=Math.abs(dx*vz-dz*vx)/len;
+   const boundary=smooth(0,.26,Math.min(x,z,64-x,64-z));
+   const corridor=smooth(-4.6,-2.2,t)*(1-smooth(len-.04,len+.72,t))*endWeight*boundary;
+   collectRoad(out,across,t,corridor);
+   out.distance=Math.min(out.distance,Math.max(across+(1-corridor)*16,32.1-lakeD));
+  }
  }
- return distance;
+ if(lakeD<30){out.rut=0;out.cut=0;out.crown=0;out.second=0;out.first=0;}
+ out.junction=out.second;out.relief=-out.cut-.018*out.junction+out.crown*(1-out.rut)*(1-out.junction);
+ return out;
 }
+export function roadDistance(x,z,f){return roadProfile(x,z,f,roadState).distance;}
 export function roadSample(x,z,f,includeDrive=true){
  const out=roadProfile(x,z,f,{},includeDrive);
  return {distance:out.distance,along:out.along};
 }
-export function roadRelief(x,z,f){return roadProfile(x,z,f,roadState).relief}
+export function roadRelief(x,z,f,includeDrive=true){return roadProfile(x,z,f,roadState,includeDrive).relief}
 
 const heightMetrics={};
-export function surfaceHeight(x,z,f){let y=height(x,z,f.x,f.z);if(f.type==='pond'){const m=pondMetrics(x,z,f,heightMetrics);if(m.rawMetres<28)return pondTerrainHeight(x,z,f,y)+roadRelief(x,z,f)*smooth(.75,1.05,m.bank)}
- if(f.type==='building'){const angle=f.buildingAngle||0,dx=x-f.cx,dz=z-f.cz,px=Math.cos(angle)*dx-Math.sin(angle)*dz,pz=Math.sin(angle)*dx+Math.cos(angle)*dz,size=SIZES[f.variant%8],scale=f.buildingScale||1,edge=Math.max(Math.abs(px)-size[0]*scale/2,Math.abs(pz)-size[1]*scale/2),a=smooth(.2,3.3,edge);y=(f.buildingY-.04)*(1-a)+y*a}return barnGroundHeight(x,z,f,farmGroundHeight(x,z,f,y))+roadRelief(x,z,f);}
+export function surfaceHeight(x,z,f,includeDrive=true){let y=height(x,z,f.x,f.z);if(f.type==='pond'){const m=pondMetrics(x,z,f,heightMetrics);if(m.rawMetres<28)return pondTerrainHeight(x,z,f,y)+roadRelief(x,z,f,includeDrive)*smooth(.75,1.05,m.bank)}
+ if(f.type==='building'){const angle=f.buildingAngle||0,dx=x-f.cx,dz=z-f.cz,px=Math.cos(angle)*dx-Math.sin(angle)*dz,pz=Math.sin(angle)*dx+Math.cos(angle)*dz,size=SIZES[f.variant%8],scale=f.buildingScale||1,edge=Math.max(Math.abs(px)-size[0]*scale/2,Math.abs(pz)-size[1]*scale/2),a=smooth(.2,3.3,edge);y=(f.buildingY-.04)*(1-a)+y*a}return barnGroundHeight(x,z,f,farmGroundHeight(x,z,f,y))+roadRelief(x,z,f,includeDrive);}
 export function inClearing(x,z,f){if(barnEntrance(x,z,f)||barnFootprintDistance(x,z,f)<.7)return true;if(farmClearing(x,z,f))return true;if(f.type==='pond'){const m=pondMetrics(x,z,f);return m.metres<m.width+1.5;}if(f.type==='building'){const p=buildingLocal(x,z,f),[w,d]=buildingSize(f);return Math.abs(p.x)<w/2+3.4&&Math.abs(p.z)<d/2+4.3}return false}
 function vegetationCover(f){const buckets=new Map();for(const t of [...f.trees.map(t=>({x:t.x,z:t.z,r:1.15*t.scale})),...f.shrubs.map(s=>({x:s.x,z:s.z,r:s.width*s.scale*.46}))]){for(let z=Math.floor((t.z-t.r)/4);z<=Math.floor((t.z+t.r)/4);z++)for(let x=Math.floor((t.x-t.r)/4);x<=Math.floor((t.x+t.r)/4);x++){const key=z*17+x;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(t)}}f.cover=buckets}
 function addVegetation(f,r){const valid=(x,z,margin=0)=>x>2.5&&x<61.5&&z>2.5&&z<61.5&&roadDistance(x,z,f)>2.7+margin&&!inClearing(x,z,f),addTree=(x,z,v,scale)=>{if(!valid(x,z))return;f.trees.push({x,z,variant:v,scale,rotation:r()*Math.PI*2,seed:Math.floor(r()*4294967296)})};const mode=r();f.vegetationMode=mode<.021?'windbreak':mode<.080?'grove':'scattered';
@@ -105,7 +109,7 @@ function addVegetation(f,r){const valid=(x,z,margin=0)=>x>2.5&&x<61.5&&z>2.5&&z<
    const a=q()*6.283,rad=Math.sqrt(q())*radius,u=Math.cos(a)*rad,v=Math.sin(a)*rad*stretch;
    const x=cx+Math.cos(turn)*u-Math.sin(turn)*v,z=cz+Math.sin(turn)*u+Math.cos(turn)*v;
    const width=.8+q()*1.65,scale=.58+q()*.66,rotation=q()*6.283,variant=q()<.65?dominant:Math.floor(q()*4),seed=Math.floor(q()*4294967296);
-   if(x<0||z<0||x>=64||z>=64||roadDistance(x,z,f)<2.6||inClearing(x,z,f))continue;
+   if(x<0||z<0||x>64||z>64||roadDistance(x,z,f)<2.6||inClearing(x,z,f))continue;
    if(f.shrubs.some(p=>Math.hypot(x-p.x,z-p.z)<.5+(width*scale+p.width*p.scale)*.18))continue;
    f.shrubs.push({x,z,width,scale,rotation,variant,seed,thicket:true});
   }
@@ -161,11 +165,17 @@ function lakeForTile(x,z,seed){
  }
  return null;
 }
+function nearbyRoadLakes(x,z,seed){const result=[],mx=floorBig(x,8n),mz=floorBig(z,8n);
+ for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const l=macroLake(mx+BigInt(dx),mz+BigInt(dz),seed);if(!l||farmExcludesLake(l))continue;
+ const cx=Number(l.lakeOwnerX-x)*64+l.lakeLocalX,cz=Number(l.lakeOwnerZ-z)*64+l.lakeLocalZ;
+ if(cx+l.bounds[1]+36<0||cx+l.bounds[0]-36>64||cz+l.bounds[3]+36<0||cz+l.bounds[2]-36>64)continue;result.push({...l,cx,cz,type:'pond'});}
+ return result;
+}
 export function field(x,z,seed,withVegetation=true){const cs=chunkSeed(x,z,seed),r=random(cs^0x127abab),candidate=landmark(x,z,seed);let type=candidate.type;if(type==='building'&&!hasBuilding(x,z,seed,candidate.rank))type='wheat';const settlementAddition=type==='wheat'&&settlements.additionalBuilding(x,z,seed);if(settlementAddition)type='building';const small=r()<.56,variant=small?[0,1,7][Math.floor(r()*3)]:[2,3,4,5,6][Math.floor(r()*5)],f={key:`${x},${z}`,x,z,type,variant,cx:18+r()*28,cz:18+r()*28,rx:7+r()**.65*13,rz:5+r()**.75*10,seed:cs,worldSeed:seed,tint:r(),trees:[],shrubs:[],angle:(r()-.5)*Math.PI,shorePhase:r()*6.283,shoreAmplitude:.045+r()*.065,hill:r(),depth:1+r()*1.7,buildingScale:.85+r()*.29};
  f.roads=[lane('x',x,z,seed,0),lane('x',x+1n,z,seed,64),lane('z',z,x,seed,0),lane('z',z+1n,x,seed,64)];
  const lake=lakeForTile(x,z,seed);if(lake){Object.assign(f,lake);type=f.type='pond';}else if(type==='pond'){type=f.type='wheat';}
 
- f.farm=farmContext(x,z);f.barn=barnContext(x,z);
+ f.farm=farmContext(x,z);f.barn=barnContext(x,z);f.patch=patchworkContext(x,z,seed);f.roadLakes=nearbyRoadLakes(x,z,seed);
  if(f.barn&&type==='building'&&barnFootprintDistance(f.cx,f.cz,f)<18)type=f.type='wheat';
  if(f.farm&&type==='building'&&farmMask(f.cx+f.farm.x,f.cz+f.farm.z)>.4)type=f.type='wheat';
  if(type==='building'){if(x===0n&&z===0n){f.variant=2;f.cx=32;f.cz=27;f.buildingScale=.96}const endpoints=f.roads.filter(l=>l.enabled).map(l=>l.axis==='x'?{x:clamp(l.edge+laneOffset(l,f.cz),0,64),z:f.cz}:{x:f.cx,z:clamp(l.edge+laneOffset(l,f.cx),0,64)}).sort((a,b)=>Math.hypot(a.x-f.cx,a.z-f.cz)-Math.hypot(b.x-f.cx,b.z-f.cz));
@@ -173,8 +183,8 @@ export function field(x,z,seed,withVegetation=true){const cs=chunkSeed(x,z,seed)
  f.meadow=meadowForTile(x,z,seed);
  if(withVegetation){addVegetation(f,r);if(f.farm){f.trees=f.trees.filter(t=>farmMask(t.x+f.farm.x,t.z+f.farm.z)<.25);f.shrubs=f.shrubs.filter(t=>farmMask(t.x+f.farm.x,t.z+f.farm.z)<.25);vegetationCover(f)}addMeadowShrubs(f);}return f;
 }
-export function wheatAllowed(x,z,f){if(meadowSample(x,z,f.meadow)>.32)return false;if(x<.3||z<.3||x>63.7||z>63.7||roadDistance(x,z,f)<2.05||inClearing(x,z,f))return false;for(const p of f.cover?.get(Math.floor(z/4)*17+Math.floor(x/4))||[])if(Math.hypot(x-p.x,z-p.z)<p.r)return false;return true}
-export function wheatCandidates(f,count=10800){const r=random(f.seed^0x734821),items=[];for(let i=0;i<count;i++){const x=.6+r()*62.8,z=.6+r()*62.8,s=.78+r()*.37,a=r()*6.283,t=r();if(wheatAllowed(x,z,f))items.push({x,z,s,a,t,i})}return items}
+export function wheatAllowed(x,z,f){if(meadowSample(x,z,f.meadow)>.32)return false;if(x<0||z<0||x>64||z>64||roadDistance(x,z,f)<2.05||inClearing(x,z,f))return false;for(const p of f.cover?.get(Math.floor(z/4)*17+Math.floor(x/4))||[])if(Math.hypot(x-p.x,z-p.z)<p.r)return false;return true}
+export function wheatCandidates(f,count=10800){const r=random(f.seed^0x734821),items=[];for(let i=0;i<count;i++){const x=r()*64,z=r()*64,s=.78+r()*.37,a=r()*6.283,t=r();if(wheatAllowed(x,z,f)&&cropSample(x,z,f,cropScratch).crop!==2)items.push({x,z,s,a,t,i})}return items}
 function resolveBox(position,radius,c){const nx=clamp(position.x,c.x1,c.x2),nz=clamp(position.z,c.z1,c.z2),dx=position.x-nx,dz=position.z-nz,d=Math.hypot(dx,dz);if(d>0&&d<radius){position.x=nx+dx/d*radius;position.z=nz+dz/d*radius}else if(d===0){const options=[{d:position.x-c.x1,axis:'x',v:c.x1-radius},{d:c.x2-position.x,axis:'x',v:c.x2+radius},{d:position.z-c.z1,axis:'z',v:c.z1-radius},{d:c.z2-position.z,axis:'z',v:c.z2+radius}];options.sort((a,b)=>a.d-b.d);position[options[0].axis]=options[0].v}}
 export function resolveSolid(position,radius,colliders){for(const c of colliders){if(c.kind==='circle'){let dx=position.x-c.x,dz=position.z-c.z,dist=Math.hypot(dx,dz),min=radius+c.r;if(dist<min){if(dist<.00001){dx=1;dz=0;dist=1}position.x=c.x+dx/dist*min;position.z=c.z+dz/dist*min}}
  else if(c.kind==='obb'){const co=Math.cos(c.angle),si=Math.sin(c.angle),dx=position.x-c.x,dz=position.z-c.z,p={x:co*dx-si*dz,z:si*dx+co*dz};resolveBox(p,radius,{x1:-c.hx,x2:c.hx,z1:-c.hz,z2:c.hz});position.x=c.x+co*p.x+si*p.z;position.z=c.z-si*p.x+co*p.z}else if(c.kind==='box')resolveBox(position,radius,c)}return position}

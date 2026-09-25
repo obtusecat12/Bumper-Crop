@@ -1,4 +1,4 @@
-// V32: a single world-stable implicit basin, shared by collision, map and mesh.
+// V33: a single world-stable implicit basin, shared by collision, map and mesh.
 // Coordinates stay relative to the lake owner, never to a camera or tile seed.
 const sat=x=>Math.max(0,Math.min(1,x)),mix=(a,b,t)=>a+(b-a)*t;
 const smooth=(a,b,x)=>{const t=sat((x-a)/(b-a));return t*t*(3-2*t)};
@@ -88,7 +88,7 @@ export function pondPoint(f,a,scale=1){const loop=contourAtlas(atlas(f))[0],t=((
 export function pondBankPoint(f,a,metres=0){const p=pondPoint(f,a);if(!metres)return p;const e=.5,gx=pondShoreDistance(p.x+e,p.z,f)-pondShoreDistance(p.x-e,p.z,f),gz=pondShoreDistance(p.x,p.z+e,f)-pondShoreDistance(p.x,p.z-e,f),len=Math.hypot(gx,gz)||1;return{x:p.x+gx/len*metres,z:p.z+gz/len*metres};}
 export function pondShoreWidth(f,a){const p=pondPoint(f,a);return pondMetrics(p.x,p.z,f,temp).width}
 export function pondRadius(f,a){const p=pondPoint(f,a);return Math.hypot((p.x-f.cx)/f.rx,(p.z-f.cz)/f.rz)}
-export const pondShapeGLSL=''; // V32 material consumes shared sampled attributes.
+export const pondShapeGLSL=''; // V33 material consumes shared sampled attributes.
 export function lakeCacheStats(){let bytes=0;for(const a of cache.values())bytes+=a.d.byteLength*7;return{lakes:cache.size,bytes}}
 // Stream the already-generated atlas alongside the first visible lake chunk.
 // Physics never rebuilds a newly encountered lake on the render thread.

@@ -1,6 +1,6 @@
-import {lakeAtlasKeys,acceptLakeAtlas} from './lake-shape.js?v=32';
+import {lakeAtlasKeys,acceptLakeAtlas} from './lake-shape.js?v=33';
 import * as T from './vendor/three.module.min.js';
-import {createUnpacker} from './scene-packets.js?v=32';
+import {createUnpacker} from './scene-packets.js?v=33';
 // One resident worker and one in-flight chunk keep memory bounded. Cancellation
 // is logical: stale shared registrations must still arrive in message order.
 export function createChunkStream({wind,viewUniform}){
@@ -12,13 +12,13 @@ export function createChunkStream({wind,viewUniform}){
  }
  if(typeof Worker==='undefined'||typeof OffscreenCanvas==='undefined')disabled=true;
  else try{
-  worker=new Worker(new URL('./world-worker.js?v=32',import.meta.url),{type:'module',name:'level10-world'});
+  worker=new Worker(new URL('./world-worker.js?v=33',import.meta.url),{type:'module',name:'level10-world'});
   worker.onmessage=({data})=>{
    if(data.ready){ready=true;return}
    const job=pending;pending=null;
    try{
     if(data.packet)codec.acceptShared(data.packet);
-    if(data.lakeAtlas)acceptLakeAtlas(data.lakeAtlas);
+    for(const a of data.lakeAtlases||[])acceptLakeAtlas(a);
     if(!job||job.id!==data.id)return;
     if(data.error){job.error=Error(data.error);job.done=true;fail(job.error);return}
     if(!job.cancelled){job.chunk=codec.unpackChunk(data.packet);const chunk=job.chunk;chunk.disposePacketResources=()=>codec.dispose(chunk);job.timing=data.timing}

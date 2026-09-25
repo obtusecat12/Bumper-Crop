@@ -1,4 +1,4 @@
-import {pondHabitat} from './lake-shape.js?v=32';
+import {pondHabitat} from './lake-shape.js?v=33';
 /* Low-frequency CPU counterpart of ground.js's material, for diffuse rays.
  * Use initialized texture means in linear RGB. Spatial masks, macro noise,
  * meadow mix, yards, and shore colors follow the actual visible shader.
@@ -29,21 +29,12 @@ export function linearTextureMean(texture){
 // Return fn(f, localX, localZ, outRGB?, meadowAtTriangleCenter?). The optional
 // meadow value uses {cover,moisture,patchDensity}; pass barycentric-average
 // meadowData for an exact match to the mesh's vertex interpolation when handy.
-export function createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics}){
+export function createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics,roadProfile,cropSample}){
  const soil=linearTextureMean(ruralTextures.soil),path=linearTextureMean(ruralTextures.path),turf=linearTextureMean(ruralTextures.turf);
  const shoreRock=linearTextureMean(ruralTextures.shoreRock),shoreSilt=linearTextureMean(ruralTextures.shoreSilt);
  const env={};
  function lanes(f,x,z){
-  const info=[10000,0,0,0],roadWeight=farmRoadWeight(x,z,f);
-  function add(d,t,weight){if(weight<=0)return;info[0]=Math.min(info[0],d+(1-weight)*2.6);if(d>2.65)return;
-   const phase=t*.0981747704,offset=.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11),width=.235+.022*Math.sin(phase*3)+.012*Math.sin(phase*7);
-   const wheel=(1-smooth(width*.42,width+.075,Math.abs(d-offset)))*weight;info[1]=Math.max(info[1],wheel);
-   const cover=(1-smooth(.86,1.80,d))*weight;if(cover>info[2]){info[3]=info[2];info[2]=cover}else info[3]=Math.max(info[3],cover);
-  }
-  for(let i=0;i<f.roads.length;i++){const l=f.roads[i];if(!l.enabled)continue;const t=i<2?z:x,c=l.edge+l.amplitude*Math.sin(t*.0490873852)+l.harmonic*Math.sin(t*.0981747704);add(Math.abs((i<2?x:z)-c),t,roadWeight)}
-  if(f.driveway){const d=f.driveway,ax=x-d.x1,az=z-d.z1,vx=d.x2-d.x1,vz=d.z2-d.z1,len=Math.max(Math.hypot(vx,vz),.01),t=(ax*vx+az*vz)/len,across=Math.abs(ax*vz-az*vx)/len;
-   const corridor=smooth(-4.6,-2.2,t)*(1-smooth(len-.04,len+.72,t)),boundary=smooth(0,.24,Math.min(x,z,64-x,64-z));info[0]=Math.min(info[0],across+(1-corridor)*3.8);add(across,t,corridor*boundary*smooth(-1.6,3.4,t));
-  }return [info[0],info[1],info[3]];
+  const p=roadProfile(x,z,f,{});return [p.distance,p.rut,p.junction];
  }
  function sample(f,x,z,out=new Float32Array(3),meadow=null){
   const gx=x+periodOrigin(f.x),gz=z+periodOrigin(f.z),qx=x+mod(periodOrigin(f.x),2048),qz=z+mod(periodOrigin(f.z),2048);
@@ -54,7 +45,8 @@ export function createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironm
   scale(grass,.92+clods*.12);
   blend(dirt,scale(blend(soil.slice(),path,rut),.92+soilPatch*.16),.72*materialDetail);
   scale(grass,mix(1,clamp(.60+(turf[0]*.2126+turf[1]*.7152+turf[2]*.0722)*3,.65,1.38),materialDetail));blend(grass,turf,.22*materialDetail);
-  const field=soil.map((c,i)=>c*[.86,.80,.74][i]*(.91+broad*.14+(soilPatch-.5)*.08));
+  let field=soil.map((c,i)=>c*[.86,.80,.74][i]*(.91+broad*.14+(soilPatch-.5)*.08));
+  if(cropSample(x,z,f,{}).crop===2)field=soil.map((c,i)=>c*[.84,.77,.65][i]*(.84+soilPatch*.15));
   blend(grass,field,smooth(1.42,2.32,rd+(soilPatch-.5)*.63),out);
   if(f.meadow){const m=meadow||meadowEnvironment(x,z,f.meadow,env),mg=grass.map((c,i)=>mix(c*[1.05,.96,.83][i],c*[.88,1.06,.91][i],m.moisture));scale(mg,.91+m.patchDensity*.15);
    const litter=smooth(.32,.70,1-m.patchDensity)*(.20+clods*.35);blend(mg,soil.map((c,i)=>c*[.80,.73,.57][i]),litter);blend(out,mg,smooth(.06,.76,m.cover));

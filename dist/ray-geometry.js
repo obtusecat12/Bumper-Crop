@@ -1,15 +1,15 @@
 import * as T from './vendor/three.module.min.js';
-import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=32';
-import {ruralTextures} from './rural-textures.js?v=32';
-import {periodOrigin,buildingSize,buildingLocal,pondMetrics} from './world.js?v=32';
-import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=32';
-import {meadowEnvironment} from './meadow-layout.js?v=32';
+import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=33';
+import {ruralTextures} from './rural-textures.js?v=33';
+import {periodOrigin,buildingSize,buildingLocal,pondMetrics,roadProfile,cropSample} from './world.js?v=33';
+import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=33';
+import {meadowEnvironment} from './meadow-layout.js?v=33';
 
 // Runs in the existing generation worker, before its geometry is transferred.
 // True ground/building/prop/branch/leaf triangles; no solid canopy/house proxies.
 // Fine wheat and grass do not occlude this low-frequency indirect-light cache.
 export function buildRayGeometry(root,f=null) {
-  const groundAlbedo=createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics});
+  const groundAlbedo=createGroundRayAlbedo({ruralTextures,periodOrigin,meadowEnvironment,farmRoadWeight,farmFootprintDistance,buildingSize,buildingLocal,pondMetrics,roadProfile,cropSample});
   root.updateMatrixWorld(true);
   const inverse = root.matrixWorld.clone().invert(), matrix = new T.Matrix4(), instance = new T.Matrix4();
   const draws=[], textureIds=new Map(), textures=[], averages=new WeakMap(); let total=0;

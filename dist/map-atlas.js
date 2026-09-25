@@ -1,5 +1,5 @@
-import {meadowSample} from './meadow-layout.js?v=32';
-import {FARM_TREES,farmRoadWeight} from './farm-layout.js?v=32';
+import {meadowSample} from './meadow-layout.js?v=33';
+import {FARM_TREES,farmRoadWeight} from './farm-layout.js?v=33';
 
 // The interactive map never generates procedural fields on the main thread
 // unless Canvas fallback is required. Normal requests remain worker-batched.
@@ -25,7 +25,7 @@ export function createMapAtlas({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   // Requeue only the current view. Old epochs never leak back into the map.
   for(const j of inFlight.values())if(j.epoch===epoch&&!pending.has(j.key))pending.set(j.key,j);
   inFlight.clear();releaseTiles();revision++;
-  Promise.resolve().then(()=>fallbackLoader?fallbackLoader():import('./map-tiles.js?v=32')).then(module=>{
+  Promise.resolve().then(()=>fallbackLoader?fallbackLoader():import('./map-tiles.js?v=33')).then(module=>{
    if(disposed)return;fallback=module.createMapTiles(options);mode='fallback';
    for(const j of pending.values())fallback.request(j.cx,j.cz,j.priority);pending.clear();revision++;
   }).catch(error=>{if(disposed)return;mode='failed';pending.clear();counters.failures++;workerStats.error=String(error?.message||error)});
@@ -88,11 +88,10 @@ export function createMapAtlas({seed,maxTiles=192,tilePixels=128,maxPending=maxT
   }
   for(const t of m.trees||[])if(Math.hypot(x-t.x,z-t.z)<t.r)return result('tree',m.vegetationMode==='grove'?'小树林':m.vegetationMode==='windbreak'?'防风林':'树木');
   for(const s of m.shrubs||[])if(Math.hypot(x-s.x,z-s.z)<s.r)return result('hedge','田边树篱');
-  // Use the same farm suppression as the rasterized lanes and world roads.
-  const weight=farmRoadWeight(x,z,m);
-  for(const l of m.roads||[]){if(!l.enabled||weight<=0)continue;const t=l.axis==='x'?z:x,v=l.axis==='x'?x:z,centre=l.edge+l.amplitude*Math.sin(Math.PI*t/64)+l.harmonic*Math.sin(Math.PI*t/32),distance=Math.abs(v-centre)+(1-weight)*2.6;if(distance<1.15)return result('path','田间双辙路');if(distance<2.05)return result('grass','路边草地')}
+  const surf=m.surface,k=surf?surf.classes[Math.min(surf.size-1,Math.max(0,Math.floor(z/64*surf.size)))*surf.size+Math.min(surf.size-1,Math.max(0,Math.floor(x/64*surf.size)))]:0;
+  if(k===3)return result('path','田间双辙路');if(k===4)return result('grass','路边草带');
   if(meadowSample(x,z,m.meadow)>.32)return result('grass','田间草地');
-  return result('field','麦田');
+  return result('field',['成熟小麦','枯褐大麦','收割麦茬'][k]||'麦田');
  }
  function cancelPending(){
   if(disposed)return;epoch++;pending.clear();if(fallback){fallback.cancelPending();return}
@@ -109,7 +108,7 @@ export function createMapAtlas({seed,maxTiles=192,tilePixels=128,maxPending=maxT
  }
  try{
   if(workerFactory||typeof Worker!=='undefined'&&typeof OffscreenCanvas!=='undefined'&&typeof createImageBitmap==='function'){
-   worker=workerFactory?workerFactory(new URL('./map-worker.js?v=32',import.meta.url)):new Worker(new URL('./map-worker.js?v=32',import.meta.url),{type:'module',name:'geography-map'});
+   worker=workerFactory?workerFactory(new URL('./map-worker.js?v=33',import.meta.url)):new Worker(new URL('./map-worker.js?v=33',import.meta.url),{type:'module',name:'geography-map'});
    worker.onmessage=receive;worker.onerror=event=>{event.preventDefault?.();useFallback(event.message||'Map worker failed')};worker.onmessageerror=()=>useFallback('Map worker message could not be read');
    startupTimer=setTimeout(()=>useFallback('Map worker initialization timed out'),8000);startupTimer?.unref?.();
    send({type:'init',options:{seed,maxTiles:Math.min(48,maxTiles),tilePixels,maxPending:maxInFlight}});

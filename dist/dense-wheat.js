@@ -1,15 +1,16 @@
+import {createBarleyGeometry,createStubbleGeometry} from './crop-geometry.js?v=33';
 // Golden mature wheat: varied silhouette clumps plus three bounded grain meshes.
 // Geometry/materials/textures are shared; per-chunk meshes and canopy are owned by the chunk.
 import * as T from './vendor/three.module.min.js';
-import { exactIndexGeometry } from './exact-index.js?v=32';
-import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, random } from './world.js?v=32';
+import { exactIndexGeometry } from './exact-index.js?v=33';
+import { CHUNK, surfaceHeight, wheatAllowed, wheatCandidates, cropSample, random } from './world.js?v=33';
 
 const dummy = new T.Object3D(), tint = new T.Color(), shared = new Set();
-const TAU = Math.PI * 2, DETAIL_CAPACITY = 12000, DETAIL_VARIANTS = 3;
+const TAU = Math.PI * 2, DETAIL_CAPACITY = 12000, DETAIL_VARIANTS = 9;
 let resources, detailTemplates;
 
 // No remote image dependencies. Each tile is a different, irregular stand of ripe ears.
-function wheatAtlas() {
+function wheatAtlas(barley=false) {
   const cell = 512, height = 768, count = 3;
   const canvas = document.createElement('canvas');
   canvas.width = cell * count; canvas.height = height;
@@ -23,7 +24,7 @@ function wheatAtlas() {
       const direction = rootX < 62 ? 1 : rootX > 444 ? -1 : rng() < .5 ? -1 : 1;
       const bend = direction * (12 + rng() * 47), baseX = rootX + bend;
       const baseY = 175 + rng() * 181, length = 69 + rng() * 30;
-      const nodding = (stem + variant) % 3 !== 0;
+      const nodding = barley || (stem + variant) % 3 !== 0;
       const angle = -Math.PI / 2 + direction * (nodding ? .60 + rng() * .59 : .08 + rng() * .34);
       const curve = direction * (nodding ? .50 + rng() * .66 : .13 + rng() * .31);
       const shade = Math.floor(rng() * 21), gold = `rgb(${193 + shade},${158 + shade},${91 + shade})`;
@@ -60,10 +61,10 @@ function wheatAtlas() {
         const grain = ctx.createLinearGradient(-4, 0, 4, 0);
         grain.addColorStop(0, '#a37c43'); grain.addColorStop(.42, gold);
         grain.addColorStop(.69, `rgb(${220 + shade},${189 + shade},${129 + shade})`); grain.addColorStop(1, '#b48c4b');
-        ctx.fillStyle = grain; ctx.beginPath(); ctx.ellipse(0, 0, 3.7 * taper, 6.4 * taper, 0, 0, TAU); ctx.fill();
+        ctx.fillStyle = grain; ctx.beginPath(); ctx.ellipse(0, 0, (barley?2.4:3.7) * taper, 6.4 * taper, 0, 0, TAU); ctx.fill();
         ctx.strokeStyle = 'rgba(143,103,47,.36)'; ctx.lineWidth = .5;
         ctx.beginPath(); ctx.moveTo(.8, -4.6 * taper); ctx.quadraticCurveTo(-.6, 0, .8, 5 * taper); ctx.stroke(); ctx.restore();
-        const awnLength = 22 + rng() * 21, fan = side * (.18 + rng() * .28);
+        const awnLength = (barley?47:22) + rng() * (barley?30:21), fan = side * (.18 + rng() * .28);
         const ax = Math.cos(p.a + fan), ay = Math.sin(p.a + fan);
         ctx.strokeStyle = `rgba(${221 + shade},${190 + shade},${130 + shade},${.65 + rng() * .25})`;
         ctx.lineWidth = .55 + rng() * .35;
@@ -77,21 +78,33 @@ function wheatAtlas() {
   // A restrained six-percent chroma boost, baked once into RGB only.
   const pixels=ctx.getImageData(0,0,canvas.width,canvas.height);
   for(let i=0;i<pixels.data.length;i+=4){if(!pixels.data[i+3])continue;const a=pixels.data,l=.2126*a[i]+.7152*a[i+1]+.0722*a[i+2];for(let c=0;c<3;c++)a[i+c]=Math.max(0,Math.min(255,Math.round(l+(a[i+c]-l)*1.06)));}
+  if(barley)for(let i=0;i<pixels.data.length;i+=4){pixels.data[i]*=.78;pixels.data[i+1]*=.69;pixels.data[i+2]*=.70;}
   ctx.putImageData(pixels,0,0);
   const texture = new T.CanvasTexture(canvas);
   texture.colorSpace = T.SRGBColorSpace; texture.magFilter = T.LinearFilter;
   texture.minFilter = T.LinearMipmapLinearFilter; texture.generateMipmaps = true;
-  texture.name = 'procedural-ripe-wheat-atlas'; return texture;
+  texture.name = barley?'procedural-long-awn-barley-atlas':'procedural-ripe-wheat-atlas'; return texture;
 }
 
-function cardGeometry() {
+function stubbleAtlas(){
+ const c=document.createElement('canvas');c.width=1536;c.height=384;const ctx=c.getContext('2d'),r=random(0x572bb3);
+ for(let v=0;v<3;v++){ctx.save();ctx.beginPath();ctx.rect(v*512+2,0,508,384);ctx.clip();ctx.translate(v*512,0);
+  for(let i=0;i<21;i++){const x=8+r()*496,y=360+r()*24,top=90+r()*180,lean=(r()-.5)*26;
+   ctx.strokeStyle='#6f573b';ctx.lineWidth=3+r()*2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+lean,top);ctx.stroke();
+   ctx.strokeStyle='#b29763';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(x-1,y);ctx.lineTo(x+lean-1,top+3);ctx.stroke();
+   ctx.fillStyle='#d1b878';ctx.fillRect(x+lean-2,top,4,2);
+   ctx.strokeStyle='#98815a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,364);ctx.lineTo(x+(r()-.5)*130,342+r()*35);ctx.stroke();
+  }ctx.restore();
+ }const t=new T.CanvasTexture(c);t.name='procedural cut stalks and fallen straw';t.colorSpace=T.SRGBColorSpace;t.magFilter=T.LinearFilter;t.minFilter=T.LinearMipmapLinearFilter;return t;
+}
+
+function cardGeometry(top=1.77,breadth=.48) {
   const p = [], uv = [], normals = [];
   const vertex = (x, y, z, u, v) => { p.push(x, y, z); uv.push(u, v); normals.push(0, 1, 0); };
   for (let side = 0; side < 3; side++) {
-    const a = side * Math.PI / 3, x = Math.cos(a) * .48, z = Math.sin(a) * .48;
+    const a = side * Math.PI / 3, x = Math.cos(a) * breadth, z = Math.sin(a) * breadth;
     // Inset UVs prevent one atlas tile from bleeding into the neighbouring tile.
     const u0 = (side * 512 + 2) / 1536, u1 = ((side + 1) * 512 - 2) / 1536;
-    const top = 1.77;
     vertex(-x, 0, -z, u0, 0); vertex(x, 0, z, u1, 0); vertex(x, top, z, u1, 1);
     vertex(-x, 0, -z, u0, 0); vertex(x, top, z, u1, 1); vertex(-x, top, -z, u0, 1);
   }
@@ -190,7 +203,7 @@ function detailedGeometry(variant) {
 }
 
 function detailGeometries() {
-  return detailTemplates || (detailTemplates = Array.from({ length: DETAIL_VARIANTS }, (_, i) => detailedGeometry(i)));
+  return detailTemplates || (detailTemplates = Array.from({ length: DETAIL_VARIANTS }, (_, i) => i<3?detailedGeometry(i):i<6?createBarleyGeometry(T,i-3):createStubbleGeometry(T,i-6)));
 }
 
 function animateMaterial(material, wind, { cards = false, detail = false, solidDetail = false, canopy = false, detailRadius, viewCenter } = {}) {
@@ -248,62 +261,52 @@ function animateMaterial(material, wind, { cards = false, detail = false, solidD
 
 function getResources(wind) {
   if (resources) return resources;
-  const atlas = wheatAtlas(), cards = cardGeometry(), detailed = detailGeometries();
+  const atlas = wheatAtlas(), barleyAtlas=wheatAtlas(true), cards = cardGeometry(), detailed = detailGeometries();
   const cardMaterial = new T.MeshStandardMaterial({ color: 0xffffff, map: atlas,
     side: T.DoubleSide, alphaTest: .17, roughness: 1 });
+  const barleyCards=cardMaterial.clone();barleyCards.map=barleyAtlas;barleyCards.name='mature brown barley / long awn cards';
+  const cutAtlas=stubbleAtlas(),stubbleCards=cardGeometry(.34,.46),stubbleMaterial=cardMaterial.clone();stubbleMaterial.map=cutAtlas;stubbleMaterial.name='harvested stalk silhouettes';
   const detailMaterial = new T.MeshStandardMaterial({ color: 0xffffff, side: T.DoubleSide, vertexColors: true, roughness: .92 });
   const detailCoreMaterial = new T.MeshStandardMaterial({ color: 0xffffff, side: T.DoubleSide, vertexColors: true, roughness: .92 });
   detailMaterial.name = 'Wheat detail / fading fringe'; detailCoreMaterial.name = 'Wheat detail / fully covered core';
   const canopyMaterial = new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, side: T.DoubleSide, roughness: 1 });
   const detailRadius = { value: 11 }, viewCenter = { value: new T.Vector3() };
-  animateMaterial(cardMaterial, wind, { cards: true });
+  animateMaterial(cardMaterial, wind, { cards: true });animateMaterial(barleyCards,wind,{cards:true});
   animateMaterial(detailMaterial, wind, { detail: true, detailRadius, viewCenter });
   animateMaterial(detailCoreMaterial, wind, { detail: true, solidDetail: true, detailRadius, viewCenter });
   animateMaterial(canopyMaterial, wind, { canopy: true, viewCenter });
-  for (const resource of [atlas, cards, ...detailed, cardMaterial, detailMaterial, detailCoreMaterial, canopyMaterial]) shared.add(resource);
-  resources = { atlas, cards, detailed, cardMaterial, detailMaterial, detailCoreMaterial, canopyMaterial, detailRadius, viewCenter };
+  for (const resource of [atlas,barleyAtlas,barleyCards,stubbleMaterial,cutAtlas,stubbleCards, cards, ...detailed, cardMaterial, detailMaterial, detailCoreMaterial, canopyMaterial]) shared.add(resource);
+  resources = { atlas,barleyAtlas,barleyCards,stubbleMaterial,stubbleCards, cards, detailed, cardMaterial, detailMaterial, detailCoreMaterial, canopyMaterial, detailRadius, viewCenter };
   return resources;
 }
 
 function canopyGeometry(f) {
-  const p = [], c = [], step = 1.55, rng = random(f.seed ^ 0xaaa818), col = new T.Color();
-  const vertex = (x, z) => {
-    p.push(x, surfaceHeight(x, z, f) + 1.055 + Math.sin(x * 1.8 + z) * .045 + Math.sin(x * .51 - z * .34) * .055, z);
-    col.setHSL(.112 + rng() * .012, (.35 + rng() * .09)*1.06, .40 + rng() * .085);
-    c.push(col.r, col.g, col.b);
-  };
-  for (let z = .7; z < 62; z += step) for (let x = .7; x < 62; x += step) {
-    if (![[x, z], [x + step, z], [x, z + step], [x + step, z + step]].every(([a, b]) => wheatAllowed(a, b, f))) continue;
-    vertex(x, z); vertex(x, z + step); vertex(x + step, z + step);
-    vertex(x, z); vertex(x + step, z + step); vertex(x + step, z);
-  }
-  const g = new T.BufferGeometry();
-  g.setAttribute('position', new T.Float32BufferAttribute(p, 3));
-  g.setAttribute('color', new T.Float32BufferAttribute(c, 3)); g.computeVertexNormals(); return g;
+ const p=[],c=[],cells=42,step=64/cells,rng=random(f.seed^0xaaa818),col=new T.Color(),crop={};
+ const vertex=(x,z)=>{cropSample(x,z,f,crop);const barley=crop.crop===1;
+  p.push(x,surfaceHeight(x,z,f)+(barley?.97:1.055)+Math.sin(crop.row*3.8)*.025+Math.sin(crop.along*.47)*.034,z);
+  col.setHSL(barley?.086:.119,barley?.30:.42,(barley?.29:.45)*crop.tone+(rng()-.5)*.03);c.push(col.r,col.g,col.b);};
+ for(let j=0;j<cells;j++)for(let i=0;i<cells;i++){const x=i*step,z=j*step;if(cropSample(x+step*.5,z+step*.5,f,crop).crop===2)continue;
+  if(![[x,z],[x+step,z],[x,z+step],[x+step,z+step]].every(([a,b])=>wheatAllowed(a,b,f)))continue;
+  vertex(x,z);vertex(x,z+step);vertex(x+step,z+step);vertex(x,z);vertex(x+step,z+step);vertex(x+step,z);}
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('color',new T.Float32BufferAttribute(c,3));g.computeVertexNormals();return g;
 }
-
-// Collision candidates are returned unchanged. Chunk LOD never removes the visible stand.
-export function buildDenseWheat(f, level, quality, wind) {
-  const r = getResources(wind), group = new T.Group(), roots = [], rng = random(f.seed ^ 0x72ac0f);
-  const spacing = quality === 'low' ? .98 : .80;
-  for (let z = .65; z < 63.4; z += spacing) for (let x = .65; x < 63.4; x += spacing) {
-    const xx = x + (rng() - .5) * spacing * .58, zz = z + (rng() - .5) * spacing * .58;
-    const a = rng() * TAU, s = .84 + rng() * .29, tone = .89 + rng() * .11;
-    if (wheatAllowed(xx, zz, f)) roots.push({ x: xx, z: zz, a, s, tone });
-  }
-  const mesh = new T.InstancedMesh(r.cards, r.cardMaterial, roots.length), width = quality === 'low' ? 1.25 : 1.05;
-  roots.forEach((root, i) => {
-    dummy.position.set(root.x, surfaceHeight(root.x, root.z, f) - .025, root.z);
-    dummy.rotation.set(0, root.a, 0); dummy.scale.set(width, root.s, width); dummy.updateMatrix(); mesh.setMatrixAt(i, dummy.matrix);
-    tint.setRGB(root.tone, root.tone * .987, root.tone * .953); mesh.setColorAt(i, tint);
-  });
-  mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  mesh.computeBoundingSphere(); if (mesh.boundingSphere) mesh.boundingSphere.radius += 1.2;
-  mesh.receiveShadow = true; mesh.name = 'dense-wheat-cards';
-  const canopy = new T.Mesh(canopyGeometry(f), r.canopyMaterial); canopy.name = 'distant-wheat-canopy';
-  group.add(mesh, canopy);
-  group.userData.wheat = { clumps: roots.length, silhouettesPerClump: 39, detailLevel: level, variants: 3 };
-  return { mesh: group, candidates: wheatCandidates(f) };
+export function buildDenseWheat(f,level,quality,wind){
+ const r=getResources(wind),group=new T.Group(),roots=[[],[],[]],rng=random(f.seed^0x72ac0f),crop={};
+ const spacing=quality==='low'?.98:.80,count=Math.ceil(64/spacing),step=64/count;
+ for(let iz=0;iz<count;iz++)for(let ix=0;ix<count;ix++){
+  let x=(ix+.5+(rng()-.5)*.58)*step,z=(iz+.5+(rng()-.5)*.58)*step;cropSample(x,z,f,crop);
+  const delta=Math.round(crop.row/.30)*.30-crop.row;x+=Math.cos(crop.angle)*delta;z+=Math.sin(crop.angle)*delta;
+  if(!wheatAllowed(x,z,f))continue;
+  roots[crop.crop].push({x,z,a:-crop.angle+(rng()-.5)*.32,s:.84+rng()*.29,tone:.89+rng()*.11});
+ }
+ for(let kind=0;kind<3;kind++){
+  if(!roots[kind].length)continue;const stubble=kind===2,mesh=new T.InstancedMesh(stubble?r.stubbleCards:r.cards,stubble?r.stubbleMaterial:kind===1?r.barleyCards:r.cardMaterial,roots[kind].length),width=quality==='low'?1.25:1.05;
+  roots[kind].forEach((root,i)=>{dummy.position.set(root.x,surfaceHeight(root.x,root.z,f)-.012,root.z);dummy.rotation.set(0,root.a,0);dummy.scale.set(stubble?1:width,stubble?1:root.s,stubble?1:width);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);tint.setRGB(root.tone,root.tone*.987,root.tone*.953);mesh.setColorAt(i,tint)});
+  mesh.instanceMatrix.needsUpdate=true;mesh.instanceColor.needsUpdate=true;mesh.computeBoundingSphere();if(mesh.boundingSphere)mesh.boundingSphere.radius+=1.2;mesh.receiveShadow=true;mesh.name=['dense-wheat-cards','dense-barley-cards','harvested-stubble-and-straw'][kind];group.add(mesh);
+ }
+ const canopy=new T.Mesh(canopyGeometry(f),r.canopyMaterial);canopy.name='distant-cereal-canopy';group.add(canopy);
+ group.userData.wheat={clumps:roots[0].length+roots[1].length,silhouettesPerClump:39,detailLevel:level,variants:9,crops:roots.map(a=>a.length)};
+ return{mesh:group,candidates:wheatCandidates(f)};
 }
 
 const DETAIL_PATCH_SIZE = 6, DETAIL_SPACING = .305, DETAIL_BOUND_PADDING = 1.5;
@@ -316,12 +319,13 @@ const qualityDetail = quality => ({ radius: quality === 'high' ? 14 : quality ==
 // No atlas, material, DOM, collision, camera or renderer work is needed here.
 export function prepareWheatDetail(f, quality = 'balanced') {
   const { keep } = qualityDetail(quality), patches = new Map(), geometries = detailGeometries();
-  const temporary = new T.Object3D(), color = new T.Color(), transformedBox = new T.Box3();
+  const temporary = new T.Object3D(), color = new T.Color(), transformedBox = new T.Box3(),crop={};
   const last = Math.floor(CHUNK / DETAIL_SPACING);
   for (let iz = 0; iz <= last; iz++) for (let ix = 0; ix <= last; ix++) {
     const rng = random(f.seed ^ Math.imul(ix, 734287) ^ Math.imul(iz, 912931));
-    const x = (ix + .10 + rng() * .78) * DETAIL_SPACING, z = (iz + .10 + rng() * .78) * DETAIL_SPACING;
-    const selection = rng(), variant = Math.floor(rng() * DETAIL_VARIANTS);
+    let x = (ix + .10 + rng() * .78) * DETAIL_SPACING, z = (iz + .10 + rng() * .78) * DETAIL_SPACING;
+    const selection = rng(), baseVariant = Math.floor(rng() * 3);
+    cropSample(x,z,f,crop);if(crop.crop===2&&(ix%3!==0||iz%3!==0))continue;const variant=baseVariant+crop.crop*3;const rowDelta=Math.round(crop.row/.30)*.30-crop.row;x+=Math.cos(crop.angle)*rowDelta;z+=Math.sin(crop.angle)*rowDelta;
     if (selection > keep || !wheatAllowed(x, z, f)) continue;
     const key = `${Math.floor(x / DETAIL_PATCH_SIZE)},${Math.floor(z / DETAIL_PATCH_SIZE)},${variant}`;
     let patch = patches.get(key);
@@ -331,7 +335,7 @@ export function prepareWheatDetail(f, quality = 'balanced') {
       patches.set(key, patch);
     }
     temporary.position.set(x, surfaceHeight(x, z, f) - .012, z);
-    temporary.rotation.set((rng() - .5) * .18, rng() * TAU, (rng() - .5) * .20);
+    temporary.rotation.set((rng() - .5) * .18, -crop.angle+(rng()-.5)*.40, (rng() - .5) * .20);
     const breadth = .84 + rng() * .31, stature = .82 + rng() * .32;
     temporary.scale.set(breadth, stature, breadth); temporary.updateMatrix();
     patch.matrices.push(...temporary.matrix.elements); patch.roots.push(x, z);

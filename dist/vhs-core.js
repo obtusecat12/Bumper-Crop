@@ -1,5 +1,5 @@
 import initialize, {NtscEffectBuf, NtscSettingsList} from './vendor/ntsc-rs/ntsc-rs.js';
-import {VHS_PRESET, VHS_SATURATION} from './vhs-preset.js?v=32';
+import {VHS_PRESET, VHS_SATURATION} from './vhs-preset.js?v=33';
 
 // This wraps the unmodified official WASM. The only input adjustment is the
 // requested saturation lift; no reimplementation of the analog signal chain.

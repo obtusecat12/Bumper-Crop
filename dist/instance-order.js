@@ -6,7 +6,7 @@ import * as T from './vendor/three.module.min.js';
 
 export const CARD_ORDER_KEY = 'cardDrawOrder';
 const SECTORS = 8, SECTOR_ANGLE = Math.PI / 4;
-const eligible = mesh => mesh?.isInstancedMesh && mesh.count > 0 && (mesh.name === 'dense-wheat-cards' || mesh.name.startsWith('sward-patch-')) &&
+const eligible = mesh => mesh?.isInstancedMesh && mesh.count > 0 && ((mesh.name === 'dense-wheat-cards'||mesh.name === 'dense-barley-cards'||mesh.name === 'harvested-stubble-and-straw') || mesh.name.startsWith('sward-patch-')) &&
   !Array.isArray(mesh.material) && mesh.material?.transparent !== true && !mesh.morphTexture;
 
 /** Worker-side preparation; keep this optional metadata next to the mesh.

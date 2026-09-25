@@ -1,0 +1,18 @@
+{
+  "pass": true,
+  "contourError": 3.608224830031759e-14,
+  "seamError": 3.3362201889985954e-14,
+  "waterTriangles": 15446,
+  "rockSummit": true,
+  "workerAtlasTransferBytes": 866012,
+  "cache": {
+    "lakes": 6,
+    "bytes": 5920712
+  },
+  "safeLakeLanding": {
+    "cx": "-2",
+    "cz": "0",
+    "x": 11.027560574195618,
+    "z": 1.5485096157741165
+  }
+}

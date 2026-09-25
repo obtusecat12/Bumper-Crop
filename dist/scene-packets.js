@@ -1,4 +1,4 @@
-import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=32';
+import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=33';
 // Scene packet codec for procedural Three.js chunks. No DOM or Worker globals.
 // Supply the same Three.js revision on both sides. Pack before attachFog().
 const VERSION=1;
@@ -47,7 +47,7 @@ export function createPacker({T,isSharedResource=()=>false,wind={},viewUniform}=
    if(v===null||typeof v!=='object')return v;
    // All image resources in this game's modules are fixed procedural templates.
    // Register them once, even for legacy materials outside isSharedResource().
-   if(v.isTexture)return {$type:'Texture',id:resource(v,'textures',true)};
+   if(v.isTexture)return {$type:'Texture',id:resource(v,'textures',!v.userData?.chunkOwned)};
    const record=vecRecord(v);if(record)return record;
    if(ArrayBuffer.isView(v))return {$type:'TypedArray',value:typed(v,copy)};
    if(Array.isArray(v))return v.map(x=>value(x,copy));
