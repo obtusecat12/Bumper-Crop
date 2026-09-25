@@ -1,0 +1,16 @@
+{
+  "poses": 8,
+  "maxGeometryRadius": 34.97705549352088,
+  "maxCerealTriangles": 57212,
+  "tuftFraction": 0.9501042451234022,
+  "heightP05": 1.3035391204184292,
+  "heightP95": 1.6661147302554509,
+  "maxLeanDegrees": 55.559007879968114,
+  "maxCardSpread": 1.6620006767184095,
+  "matricesUnchanged": true,
+  "coloursUnchanged": true,
+  "texturesUnchanged": true,
+  "rebasingInvariant": true,
+  "rutProfileMatched": true,
+  "alphaWeightedMips": true
+}

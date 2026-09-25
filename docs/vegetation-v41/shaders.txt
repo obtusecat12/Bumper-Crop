@@ -1,0 +1,13 @@
+OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2 llvmpipe (LLVM 20.1.2, 256 bits)
+PASS 0 sculpted-ground-and-wheel-ruts
+PASS 1 scattered-fine-rut-gravel
+PASS 2 Merged trunks, limbs and shrub stems
+PASS 3 Unified static tree and hedgerow foliage
+PASS 4 depth Unified static tree and hedgerow foliage
+PASS 5 power-lines
+PASS 6 Rural architecture / unified original surfaces
+PASS 7 pickup-bottle-opaque
+PASS 8 pickup-bottle-glass
+PASS 9 Unified photographic roadside and bank plants
+PASS 10 Frozen 40m cereal cell
+Linked 11 programs

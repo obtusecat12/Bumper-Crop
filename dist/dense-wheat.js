@@ -1,8 +1,8 @@
-import {plantTexture,plantAlpha} from './plant-texture.js?v=40';
+import {plantTexture,plantAlpha} from './plant-texture.js?v=41';
 import * as T from './vendor/three.module.min.js';
-import {wheatCandidates,random,stringSeed} from './world.js?v=40';
-import {CEREAL_RADIUS,CEREAL_LIMIT,floorDiv} from './cereal-layout.js?v=40';
-import {bindStaticSelection,selectStaticInstances} from './static-selection.js?v=40';
+import {wheatCandidates,random,stringSeed} from './world.js?v=41';
+import {CEREAL_RADIUS,CEREAL_LIMIT,CEREAL_PADDING,floorDiv} from './cereal-layout.js?v=41';
+import {bindStaticSelection,selectStaticInstances} from './static-selection.js?v=41';
 export const WHEAT_GEOMETRY_RADIUS=CEREAL_RADIUS;
 const shared=new Set();let atlas,loading,geometry;
 function stubbleImage(){
@@ -21,11 +21,15 @@ async function decode(url){
  const ctx=c.getContext('2d');ctx.drawImage(bitmap,0,0,1024,1024);bitmap.close();return new Uint8Array(ctx.getImageData(0,0,1024,1024).data);
 }
 export function initializeCerealTextures(decodeImage=decode){
- if(!loading)loading=Promise.all(['wheat','barley'].map(kind=>decodeImage(new URL(`./textures/${kind}-atlas-v40.png`,import.meta.url)))).then(images=>{
+ if(!loading)loading=Promise.all(['wheat-cutout-v39','barley-cutout-v39','wheat-atlas-v40','barley-atlas-v40'].map(name=>decodeImage(new URL(`./textures/${name}.png`,import.meta.url)))).then(images=>{
   const data=new Uint8Array(1024*3072*4),straw=stubbleImage();
-  for(let y=0;y<1024;y++)for(let k=0;k<2;k++)data.set(images[k].subarray((1023-y)*4096,(1024-y)*4096),((2-k)*1024+y)*4096);
+  for(let y=0;y<1024;y++)for(let k=0;k<2;k++){
+   const row=(1023-y)*4096,target=((2-k)*1024+y)*4096;
+   for(let x=0;x<256;x++){const from=row+x*16;data.set(images[k].subarray(from,from+4),target+x*4);}
+   for(let slot=1;slot<4;slot++){const form=[0,0,2,1][slot],from=row+form*1024;data.set(images[k+2].subarray(from,from+1024),target+slot*1024);}
+  }
   for(let y=0;y<1024;y++)for(let k=0;k<4;k++)data.set(straw.subarray((511-Math.floor(y/2))*1024,(512-Math.floor(y/2))*1024),(y*1024+k*256)*4);
-  atlas=plantTexture(data,1024,3072,{columns:4,rows:3,name:'Four wheat / four barley forms / short cut straw'});shared.add(atlas);
+  atlas=plantTexture(data,1024,3072,{columns:4,rows:3,name:'Dense V39 wheat/barley tufts with V40 ear accents / short cut straw'});shared.add(atlas);
  }).catch(e=>{loading=null;throw e;});return loading;
 }
 export function crossedCerealGeometry(){
@@ -56,7 +60,7 @@ function cerealMaterial(wind){
   s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',`float cropType=floor(vCerealKind/8.),form=mod(floor(vCerealKind/2.),4.),mirror=mod(vCerealKind,2.);
    float leafU=mix(vMapUv.x,1.-vMapUv.x,mirror);
    vec2 cerealUV=vec2((clamp(leafU,.012,.988)+form)/4.,(clamp(vMapUv.y,.002,.998)+2.-cropType)/3.);
-   diffuseColor*=texture2D(map,cerealUV);diffuseColor.a*=1.-smoothstep(26.,28.,length(vCerealWorld.xz-cameraPosition.xz));`);
+   diffuseColor*=texture2D(map,cerealUV);diffuseColor.a*=1.-smoothstep(25.,27.,length(vCerealWorld.xz-cameraPosition.xz));`);
   s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.rgb*=mix(vec3(.32,.36,.25),vec3(1.),pow(clamp(vCerealHeight,0.,1.),1.4));');
   s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_begin>','#include <normal_fragment_begin>\n#ifdef DOUBLE_SIDED\nnormal*=faceDirection;\n#endif');
   s.fragmentShader=s.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
@@ -65,13 +69,13 @@ function cerealMaterial(wind){
     float earLight=pow(clamp(vCerealHeight,0.,1.),2.)*backLight;
     totalEmissiveRadiance+=diffuseColor.rgb*vec3(1.0,.69,.27)*directionalLights[0].color*earLight*.16;
    #endif`);
- };m.customProgramCacheKey=()=> 'slender-cereal-translucency-v40';return m;
+ };m.customProgramCacheKey=()=> 'dense-varied-cereal-canopy-v41';return m;
 }
 export function createCerealMesh(cell,wind){
  const source=cerealMaterial(wind),mesh=new T.InstancedMesh(crossedCerealGeometry(),source,cell.matrices.length/16);
  mesh.instanceMatrix=new T.InstancedBufferAttribute(cell.matrices,16).setUsage(T.StaticDrawUsage);
  mesh.instanceColor=new T.InstancedBufferAttribute(cell.colors,3).setUsage(T.StaticDrawUsage);
- mesh.name='Frozen 40m cereal cell';mesh.receiveShadow=true;mesh.computeBoundingSphere();if(mesh.boundingSphere)mesh.boundingSphere.radius+=1.05;
+ mesh.name='Frozen 40m cereal cell';mesh.receiveShadow=true;mesh.computeBoundingSphere();if(mesh.boundingSphere)mesh.boundingSphere.radius+=CEREAL_PADDING;
  bindStaticSelection(mesh,cell.baked);source.dispose();return mesh;
 }
 // Gameplay collision candidates are separate from render density and geometry.
@@ -81,7 +85,7 @@ export function createWheatDetailLayer(wind,{onMesh,seed=stringSeed('CHLORINE / 
  const object=new T.Group(),cells=new Map(),pending=new Map(),wanted=new Set();object.name='Static 40m cereal chunks';
  const stats=object.userData.wheat={geometryRadius:35,activeStems:0,triangles:0,draws:0,uploadBytes:0,matrixWrites:0,selectionChanges:0,pending:0};
  let id=0,originX=0n,originZ=0n,lastOrigin='',cellX=null,cellZ=null,observerX=null,observerZ=null,dirty=true,disposed=false;
- const worker=workerFactory?workerFactory():typeof Worker!=='undefined'?new Worker(new URL('./cereal-worker.js?v=40',import.meta.url),{type:'module'}):null;
+ const worker=workerFactory?workerFactory():typeof Worker!=='undefined'?new Worker(new URL('./cereal-worker.js?v=41',import.meta.url),{type:'module'}):null;
  const discard=m=>{m.dispose();m.material.staticTextures?.forEach(t=>t.dispose());m.material.dispose();m.removeFromParent();};
  function accept(cell){if(disposed)return;const key=`${cell.cx},${cell.cz}`;pending.delete(key);
   const mesh=createCerealMesh(cell,wind);mesh.userData.cellX=cell.cx;mesh.userData.cellZ=cell.cz;mesh.matrixAutoUpdate=false;mesh.visible=false;
@@ -106,7 +110,7 @@ export function createWheatDetailLayer(wind,{onMesh,seed=stringSeed('CHLORINE / 
    m.position.set(Number(x-originX*64n),0,Number(z-originZ*64n));m.updateMatrix();
    const n=selectStaticInstances(m,Number(qx*4n-x)+2,Number(qz*4n-z)+2);count+=n;if(n)draws++;
   }
-  // The .4m stratified lattice stays below the 25k / 100k triangle ceiling.
+  // The dense tuft distribution stays below the 25k / 100k triangle ceiling.
   if(count>CEREAL_LIMIT)throw Error('Cereal geometry budget exceeded');
   // Budget/frustum checks run before Three's render traversal. Refresh only
   // on a cell selection/origin change, never rewrite an instance transform.

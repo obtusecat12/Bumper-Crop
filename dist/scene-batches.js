@@ -1,7 +1,7 @@
-import {bindLeafShadowLOD,selectLeafLOD,setLeafLOD} from './static-leaf-lod.js?v=40';
-import {bindStaticMeshLOD,selectMeshLOD} from './static-mesh-lod.js?v=40';
+import {bindLeafShadowLOD,selectLeafLOD,setLeafLOD} from './static-leaf-lod.js?v=41';
+import {bindStaticMeshLOD,selectMeshLOD} from './static-mesh-lod.js?v=41';
 import * as T from './vendor/three.module.min.js';
-import {selectStaticInstances} from './static-selection.js?v=40';
+import {selectStaticInstances} from './static-selection.js?v=41';
 // Source geometry is already merged in the worker. Retain tile bounds instead
 // of merging the entire resident world into uncullable, padded mega-meshes.
 export function createSceneBatches(){

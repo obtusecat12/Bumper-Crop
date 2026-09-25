@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {createFrameReadback} from './frame-readback.js?v=40';
+import {createFrameReadback} from './frame-readback.js?v=41';
 
 export const VHS_SIGNAL_SIZE=Object.freeze({width:960,height:720});
 export const VHS_OUTPUT_SIZE=Object.freeze({width:1440,height:1080});
@@ -73,7 +73,7 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  function fail(error){if(failed||disposed)return;failed=true;epoch++;readback.cancel();readJob=null;stopWorkers();console.error('VHS filter failed',error);onError(error);}
  function startWorkers(){if(workers.length||failed||disposed)return;
   for(let i=0;i<poolSize;i++)try{
-   const worker=new Worker(new URL('./vhs-worker.js?v=40',import.meta.url),{type:'module',name:'ntsc-rs-'+i});
+   const worker=new Worker(new URL('./vhs-worker.js?v=41',import.meta.url),{type:'module',name:'ntsc-rs-'+i});
    const slot={worker,ready:false,busy:false,timer:setTimeout(()=>fail(new Error('VHS initialization timed out')),20000)};workers.push(slot);
    worker.onerror=e=>{e.preventDefault?.();if(!workers.includes(slot))return;fail(new Error(e.message||'VHS worker failed'));};worker.onmessageerror=()=>{if(workers.includes(slot))fail(new Error('VHS transfer failed'));};
    worker.onmessage=({data})=>{
