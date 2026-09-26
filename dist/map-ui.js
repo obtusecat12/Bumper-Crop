@@ -1,6 +1,8 @@
-import {exitPoint} from './exit-route.js?v=48';
-import {paintCompass} from './retro-instruments.js?v=48';
-import {createMapAtlas} from './map-atlas.js?v=48';
+import {exitPoint} from './exit-route.js?v=49';
+import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.js?v=49';
+import {BUILDING_TYPES} from './urban-buildings.js?v=49';
+import {paintCompass} from './retro-instruments.js?v=49';
+import {createMapAtlas} from './map-atlas.js?v=49';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
 export function mapPoint(center,dx,dz){
@@ -76,12 +78,14 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   context.fillStyle='#555a57';context.fillRect(0,0,w,h);
   const ox=Number(c.cx)*64+c.x,oz=Number(c.cz)*64+c.z;
   const xy=p=>[w/2+(p.x-ox)*scale,h/2+(p.z-oz)*scale];
-  context.strokeStyle='#303735';context.lineWidth=8.2*scale;context.beginPath();
-  for(let s=-160;s<=645;s+=8){const p=xy(exitPoint(s));if(s===-160)context.moveTo(...p);else context.lineTo(...p);}context.stroke();
-  context.fillStyle='#8b8e86';for(let s=-125;s<640;s+=35)for(const side of [-1,1]){const p=exitPoint(s),pt=xy({x:p.x+side*p.nx*21,z:p.z+side*p.nz*21});context.fillRect(pt[0]-6*scale,pt[1]-13*scale,12*scale,26*scale);}
+  const center=worldToCity(ox,oz),bx=Math.floor(center.x/CITY_BLOCK),bz=Math.floor(center.z/CITY_BLOCK),r=Math.ceil(Math.max(w,h)/scale/CITY_BLOCK*.72)+1;
+  context.strokeStyle='#303735';context.lineWidth=22*scale;
+  for(let i=-r;i<=r;i++){for(const axis of[0,1]){const a=xy(cityToWorld(axis?(bx-r)*CITY_BLOCK:(bx+i)*CITY_BLOCK,axis?(bz+i)*CITY_BLOCK:(bz-r)*CITY_BLOCK)),b=xy(cityToWorld(axis?(bx+r+1)*CITY_BLOCK:(bx+i)*CITY_BLOCK,axis?(bz+i)*CITY_BLOCK:(bz+r+1)*CITY_BLOCK));context.beginPath();context.moveTo(...a);context.lineTo(...b);context.stroke();}}
+  for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++)for(const b of cityBlockPlan(ix,iz,BUILDING_TYPES).buildings){context.fillStyle=b.floors>7?'#a0a39a':'#878b80';context.beginPath();for(let k=0;k<4;k++){const u=(k===0||k===3?-1:1)*b.w/2,v=(k<2?-1:1)*b.d/2,p=xy(cityToWorld(b.x+Math.cos(b.ry)*u+Math.sin(b.ry)*v,b.z-Math.sin(b.ry)*u+Math.cos(b.ry)*v));if(k===0)context.moveTo(...p);else context.lineTo(...p);}context.closePath();context.fill();}
+  context.strokeStyle='#303735';context.lineWidth=13*scale;context.beginPath();for(let s=110;s<=430;s+=8){const p=xy(exitPoint(s));if(s===110)context.moveTo(...p);else context.lineTo(...p);}context.stroke();
   return 0;
  }
- function setLevel(value){if(level===value)return;level=value;tiles.dispose();if(level===10)tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});dirty=true;miniCenter=null;lastRevision=lastMapRevision=-1;modal.querySelector('.map-legend').hidden=level===11;setStatus(level===11?'Level 11 入口街区 · F2 返回麦田':'点击地图可传送；湖泊会落在岸边。');}
+ function setLevel(value){if(level===value)return;level=value;tiles.dispose();if(level===10)tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});dirty=true;miniCenter=null;lastRevision=lastMapRevision=-1;modal.querySelector('.map-legend').hidden=level===11;setStatus(level===11?'Level 11 · 连续城市街网 · F2 前往金融街或广场':'点击地图可传送；湖泊会落在岸边。');}
  function terrainPaint(context,c,w,h,scale){
   if(level===11)return cityPaint(context,c,w,h,scale);
   context.fillStyle=uiPalette.mapBackground;context.fillRect(0,0,w,h);context.imageSmoothingEnabled=false;const list=visibleTiles(c,w,h,scale);let missing=0;

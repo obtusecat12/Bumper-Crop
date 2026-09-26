@@ -1,7 +1,7 @@
-import {bindLeafShadowLOD,selectLeafLOD,setLeafLOD} from './static-leaf-lod.js?v=48';
-import {bindStaticMeshLOD,selectMeshLOD,STATIC_LOD_NEAR} from './static-mesh-lod.js?v=48';
+import {bindLeafShadowLOD,selectLeafLOD,setLeafLOD} from './static-leaf-lod.js?v=49';
+import {bindStaticMeshLOD,selectMeshLOD,STATIC_LOD_NEAR} from './static-mesh-lod.js?v=49';
 import * as T from './vendor/three.module.min.js';
-import {selectStaticInstances} from './static-selection.js?v=48';
+import {selectStaticInstances} from './static-selection.js?v=49';
 // Source geometry is already merged in the worker. Retain tile bounds instead
 // of merging the entire resident world into uncullable, padded mega-meshes.
 export function createSceneBatches(){
@@ -57,7 +57,7 @@ export function createSceneBatches(){
    }
   }
   for(const meshes of renderMeshes.values())for(const m of meshes)inspect(m);
-  if(extraRoot)for(const root of Array.isArray(extraRoot)?extraRoot:[extraRoot])for(const m of root.children)if(m.isMesh)inspect(m);
+  if(extraRoot)for(const root of Array.isArray(extraRoot)?extraRoot:[extraRoot])root.traverse(m=>{if(m.isMesh)inspect(m);});
   if(total>limit){
    candidates.sort((a,b)=>b.distance-a.distance);
    for(const c of candidates){if(total<=limit)break;const {m,main,shadows,unit}=c,leaf=m.userData.leafLOD,g=m.geometry;

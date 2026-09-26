@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-09-26",
+  "requestedMode": "six separate single-surface images",
+  "assets": [
+    {
+      "id": "travertine-cream",
+      "subject": "Cream/beige travertine cladding with restrained panel joints",
+      "materials": "Cream and beige travertine stone facade cladding, restrained regular panel joints, fine pores, gentle linear mineral grain and subtle small-scale tonal variation.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset type: one single-surface seamless tileable albedo texture for a Three.js city game\nsubject: Cream/beige travertine cladding with restrained panel joints\ncontext: 1970s–1990s North American/Latin American downtown and low commercial architecture, maintained but mildly weathered\nmaterials and texture: Cream and beige travertine stone facade cladding, restrained regular panel joints, fine pores, gentle linear mineral grain and subtle small-scale tonal variation.\nstyle and quality: realistic material texture with believable PS1 / early Source engine softness and detail density\ncomposition: flat orthographic surface, edge-to-edge, perfectly tileable at opposite edges horizontally and vertically; exactly one material texture image\nlighting: perfectly even diffuse light, albedo only, no directional lighting or cast shadows, no baked perspective\naspect ratio: 1:1\nAvoid: grids, contact sheets, multiple material swatches, architectural scenes, text, windows, decorative motifs, large mirrored stains, ruin, heavy grunge, excessive yellow, oversharpening, highlights and glare.",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-c7e6b8f5-dd16-42d9-b874-f96ab5f754e9.png",
+      "path": "/workspace/scratch/91e9848e2f36/assets-facades/travertine-cream.png",
+      "generator": "built-in image_gen"
+    },
+    {
+      "id": "stucco-offwhite",
+      "subject": "Matte off-white rough stucco",
+      "materials": "Matte off-white rough stucco wall surface, small natural aggregate and irregular fine plaster stipple, continuous surface without joints, subtle small-scale tonal variation.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset type: one single-surface seamless tileable albedo texture for a Three.js city game\nsubject: Matte off-white rough stucco\ncontext: 1970s–1990s North American/Latin American downtown and low commercial architecture, maintained but mildly weathered\nmaterials and texture: Matte off-white rough stucco wall surface, small natural aggregate and irregular fine plaster stipple, continuous surface without joints, subtle small-scale tonal variation.\nstyle and quality: realistic material texture with believable PS1 / early Source engine softness and detail density\ncomposition: flat orthographic surface, edge-to-edge, perfectly tileable at opposite edges horizontally and vertically; exactly one material texture image\nlighting: perfectly even diffuse light, albedo only, no directional lighting or cast shadows, no baked perspective\naspect ratio: 1:1\nAvoid: grids, contact sheets, multiple material swatches, architectural scenes, text, windows, decorative motifs, large mirrored stains, ruin, heavy grunge, excessive yellow, oversharpening, highlights and glare.",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-0e18f45c-5641-4ebe-a809-cff01175ce45.png",
+      "path": "/workspace/scratch/91e9848e2f36/assets-facades/stucco-offwhite.png",
+      "generator": "built-in image_gen"
+    },
+    {
+      "id": "precast-ribbed-gray",
+      "subject": "Pale gray ribbed bush-hammered precast concrete with vertical recessed channels",
+      "materials": "Pale gray bush-hammered precast concrete facade surface, evenly spaced vertical recessed channels, coarse but restrained pebble aggregate, subtle small-scale tonal variation.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset type: one single-surface seamless tileable albedo texture for a Three.js city game\nsubject: Pale gray ribbed bush-hammered precast concrete with vertical recessed channels\ncontext: 1970s–1990s North American/Latin American downtown and low commercial architecture, maintained but mildly weathered\nmaterials and texture: Pale gray bush-hammered precast concrete facade surface, evenly spaced vertical recessed channels, coarse but restrained pebble aggregate, subtle small-scale tonal variation.\nstyle and quality: realistic material texture with believable PS1 / early Source engine softness and detail density\ncomposition: flat orthographic surface, edge-to-edge, perfectly tileable at opposite edges horizontally and vertically; exactly one material texture image\nlighting: perfectly even diffuse light, albedo only, no directional lighting or cast shadows, no baked perspective\naspect ratio: 1:1\nAvoid: grids, contact sheets, multiple material swatches, architectural scenes, text, windows, decorative motifs, large mirrored stains, ruin, heavy grunge, excessive yellow, oversharpening, highlights and glare.",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-fe10da83-0f6c-4aeb-8b14-4350e237ed24.png",
+      "path": "/workspace/scratch/91e9848e2f36/assets-facades/precast-ribbed-gray.png",
+      "generator": "built-in image_gen"
+    },
+    {
+      "id": "brick-splitface-red",
+      "subject": "Reddish split-face masonry brick",
+      "materials": "Reddish split-face masonry brick wall, regular horizontal running bond courses, rough split faces with believable small-scale surface relief, restrained mortar joints, subtle small-scale warm red-brown variation.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset type: one single-surface seamless tileable albedo texture for a Three.js city game\nsubject: Reddish split-face masonry brick\ncontext: 1970s–1990s North American/Latin American downtown and low commercial architecture, maintained but mildly weathered\nmaterials and texture: Reddish split-face masonry brick wall, regular horizontal running bond courses, rough split faces with believable small-scale surface relief, restrained mortar joints, subtle small-scale warm red-brown variation.\nstyle and quality: realistic material texture with believable PS1 / early Source engine softness and detail density\ncomposition: flat orthographic surface, edge-to-edge, perfectly tileable at opposite edges horizontally and vertically; exactly one material texture image\nlighting: perfectly even diffuse light, albedo only, no directional lighting or cast shadows, no baked perspective\naspect ratio: 1:1\nAvoid: grids, contact sheets, multiple material swatches, architectural scenes, text, windows, decorative motifs, large mirrored stains, ruin, heavy grunge, excessive yellow, oversharpening, highlights and glare.",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-67623683-408f-49cb-9d9f-204c89048c23.png",
+      "path": "/workspace/scratch/91e9848e2f36/assets-facades/brick-splitface-red.png",
+      "generator": "built-in image_gen"
+    },
+    {
+      "id": "brick-splitface-ochre",
+      "subject": "Honey/ochre split-face masonry brick",
+      "materials": "Honey and ochre split-face masonry brick wall, regular horizontal running bond courses, rough split faces with believable small-scale surface relief, restrained mortar joints, subtle small-scale honey ochre variation.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset type: one single-surface seamless tileable albedo texture for a Three.js city game\nsubject: Honey/ochre split-face masonry brick\ncontext: 1970s–1990s North American/Latin American downtown and low commercial architecture, maintained but mildly weathered\nmaterials and texture: Honey and ochre split-face masonry brick wall, regular horizontal running bond courses, rough split faces with believable small-scale surface relief, restrained mortar joints, subtle small-scale honey ochre variation.\nstyle and quality: realistic material texture with believable PS1 / early Source engine softness and detail density\ncomposition: flat orthographic surface, edge-to-edge, perfectly tileable at opposite edges horizontally and vertically; exactly one material texture image\nlighting: perfectly even diffuse light, albedo only, no directional lighting or cast shadows, no baked perspective\naspect ratio: 1:1\nAvoid: grids, contact sheets, multiple material swatches, architectural scenes, text, windows, decorative motifs, large mirrored stains, ruin, heavy grunge, excessive yellow, oversharpening, highlights and glare.",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-4a6b97ec-ca37-4021-9ac4-d2bd90e435b0.png",
+      "path": "/workspace/scratch/91e9848e2f36/assets-facades/brick-splitface-ochre.png",
+      "generator": "built-in image_gen"
+    },
+    {
+      "id": "cinderblock-lightgray",
+      "subject": "Light gray cinder block masonry",
+      "materials": "Light gray cinder block wall, regular horizontal running bond courses of wide rectangular concrete blocks, fine porous aggregate, restrained recessed mortar joints, subtle small-scale light gray variation.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset type: one single-surface seamless tileable albedo texture for a Three.js city game\nsubject: Light gray cinder block masonry\ncontext: 1970s–1990s North American/Latin American downtown and low commercial architecture, maintained but mildly weathered\nmaterials and texture: Light gray cinder block wall, regular horizontal running bond courses of wide rectangular concrete blocks, fine porous aggregate, restrained recessed mortar joints, subtle small-scale light gray variation.\nstyle and quality: realistic material texture with believable PS1 / early Source engine softness and detail density\ncomposition: flat orthographic surface, edge-to-edge, perfectly tileable at opposite edges horizontally and vertically; exactly one material texture image\nlighting: perfectly even diffuse light, albedo only, no directional lighting or cast shadows, no baked perspective\naspect ratio: 1:1\nAvoid: grids, contact sheets, multiple material swatches, architectural scenes, text, windows, decorative motifs, large mirrored stains, ruin, heavy grunge, excessive yellow, oversharpening, highlights and glare.",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-ac127bb5-ab1f-43bd-be0e-06cb25cae952.png",
+      "path": "/workspace/scratch/91e9848e2f36/assets-facades/cinderblock-lightgray.png",
+      "generator": "built-in image_gen"
+    }
+  ]
+}

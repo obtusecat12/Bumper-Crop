@@ -1,0 +1,53 @@
+{
+  "typologies": 36,
+  "individualGeneratedTextures": 12,
+  "deterministic": true,
+  "roadSamples": 754,
+  "maxResidentBlocks": 25,
+  "streamedBlocks": 95,
+  "balancedDisposal": true,
+  "buildingStats": [
+    {
+      "type": "clinic",
+      "height": 10.55,
+      "triangles": 3148,
+      "walks": 10
+    },
+    {
+      "type": "bakery",
+      "height": 9.850000000000001,
+      "triangles": 2756,
+      "walks": 0
+    },
+    {
+      "type": "substation",
+      "height": 5.85,
+      "triangles": 2588,
+      "walks": 0
+    },
+    {
+      "type": "black_glass_setback",
+      "height": 92.00999999999999,
+      "triangles": 4144,
+      "walks": 0
+    },
+    {
+      "type": "parking_garage",
+      "height": 48.3,
+      "triangles": 3374,
+      "walks": 2
+    },
+    {
+      "type": "civic_steps",
+      "height": 51.900000000000006,
+      "triangles": 2586,
+      "walks": 12
+    },
+    {
+      "type": "residential_balconies",
+      "height": 83.2,
+      "triangles": 9292,
+      "walks": 0
+    }
+  ]
+}

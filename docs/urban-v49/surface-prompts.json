@@ -1,0 +1,92 @@
+{
+  "created": "2026-09-26",
+  "tool": "built-in image_gen.imagegen",
+  "method": "One independent generation call per material. No atlas, contact sheet, crops, or compositing. Original generated PNGs copied unmodified.",
+  "promptSkill": "/workspace/scratch/91e9848e2f36/research/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "id": "glass-blue-black",
+      "file": "glass-blue-black.png",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-a4006be1-11fa-4494-87f3-f6984273c4b0.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: dark blue-black tinted curtain-wall glass\nmaterial: a SINGLE flat pane of dark blue-black glass, very faint cloudy reflection, subtle believable muted reflection\nconstraints: no pane divisions, no frame, no city silhouette baked into the glass, no reflected buildings, no visible environment\nasset: one individual environment material texture for a 3D city game\ncomposition: flat orthographic albedo texture filling the entire image edge to edge, square 1:1, seamlessly tileable\nstyle: realistic material, PS1 or early Source game texture softness, low to medium frequency detail; not cartoon pixel art\nlighting: even diffuse neutral illumination\naspect ratio: 1:1\nAvoid: atlas, grid of different assets, contact sheet, actual building scene, perspective, frame, text, logos, objects, excessive grunge or damage, mirrored stain patterns, oversharpening, strong cast shadows, excessive glare",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "bytes": 1277206,
+      "sha256": "6e49e8aafb5ddd3db1cd654ae7477c9107c0562104009111ea791387bc0a4951",
+      "savedPath": "/workspace/scratch/91e9848e2f36/assets-urban/glass-blue-black.png"
+    },
+    {
+      "id": "steel-corrugated-gray",
+      "file": "steel-corrugated-gray.png",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-074f7de8-b9af-4742-aaf2-e7ce646681e6.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: gray galvanized corrugated steel siding\nmaterial: vertically ribbed gray galvanized steel, straight parallel vertical ribs of consistent width, quiet realistic fine galvanized metal surface\nconstraints: seamless repeat, no edge frame, no screw pattern, restrained rib shading\nasset: one individual environment material texture for a 3D city game\ncomposition: flat orthographic albedo texture filling the entire image edge to edge, square 1:1, seamlessly tileable\nstyle: realistic material, PS1 or early Source game texture softness, low to medium frequency detail; not cartoon pixel art\nlighting: even diffuse neutral illumination\naspect ratio: 1:1\nAvoid: atlas, grid of different assets, contact sheet, actual building scene, perspective, frame, text, logos, objects, excessive grunge or damage, mirrored stain patterns, oversharpening, strong cast shadows, excessive glare",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "bytes": 2307196,
+      "sha256": "7d91f1eda85e7d174aa9011e8faeb0bff20af2b598f896aa51c6f2a04914061c",
+      "savedPath": "/workspace/scratch/91e9848e2f36/assets-urban/steel-corrugated-gray.png"
+    },
+    {
+      "id": "asphalt-charcoal",
+      "file": "asphalt-charcoal.png",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-c7455d57-62e5-41f3-ac49-be2fee6e6d32.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: black charcoal asphalt\nmaterial: fine aggregate black charcoal asphalt, quiet evenly spread realistic small stones, softly resolved surface detail\nconstraints: uninterrupted seamless surface, no lines, no manholes, no objects, no potholes\nasset: one individual environment material texture for a 3D city game\ncomposition: flat orthographic albedo texture filling the entire image edge to edge, square 1:1, seamlessly tileable\nstyle: realistic material, PS1 or early Source game texture softness, low to medium frequency detail; not cartoon pixel art\nlighting: even diffuse neutral illumination\naspect ratio: 1:1\nAvoid: atlas, grid of different assets, contact sheet, actual building scene, perspective, frame, text, logos, objects, excessive grunge or damage, mirrored stain patterns, oversharpening, strong cast shadows, excessive glare",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "bytes": 3661456,
+      "sha256": "3c13f164d909cdb7c8590ccb782ad31a264704a662bcf5fbf2f5b2323914dbea",
+      "savedPath": "/workspace/scratch/91e9848e2f36/assets-urban/asphalt-charcoal.png"
+    },
+    {
+      "id": "sidewalk-concrete-gray",
+      "file": "sidewalk-concrete-gray.png",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-95b4782c-71bd-4051-a137-b2c02544791d.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: light gray sidewalk concrete\nmaterial: light gray concrete, small aggregate, subtle broad rectangular expansion joints, simple understated sidewalk slab arrangement\nconstraints: seamless material tile, straight orthographic expansion joints, no curb, no objects, no perspective, no dramatic cracks\nasset: one individual environment material texture for a 3D city game\ncomposition: flat orthographic albedo texture filling the entire image edge to edge, square 1:1, seamlessly tileable\nstyle: realistic material, PS1 or early Source game texture softness, low to medium frequency detail; not cartoon pixel art\nlighting: even diffuse neutral illumination\naspect ratio: 1:1\nAvoid: atlas, grid of different assets, contact sheet, actual building scene, perspective, frame, text, logos, objects, excessive grunge or damage, mirrored stain patterns, oversharpening, strong cast shadows, excessive glare",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "bytes": 3396322,
+      "sha256": "7fa43af1028f24551391c488c8d55fb650a130aacb1c241369fc27a108b2546b",
+      "savedPath": "/workspace/scratch/91e9848e2f36/assets-urban/sidewalk-concrete-gray.png"
+    },
+    {
+      "id": "loading-shutter-gray",
+      "file": "loading-shutter-gray.png",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-cf9a5338-a37d-4364-9257-8c525bcb7644.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: gray roll-up loading shutter\nmaterial: a full texture tile of narrow horizontal gray metal slats, straight parallel horizontal slats, subtle believable metal wear\nconstraints: straight front orthographic view, evenly lit, slats fill entire tile edge to edge, no frame, no handle, no wall, no door border\nasset: one individual environment material texture for a 3D city game\ncomposition: flat orthographic albedo texture filling the entire image edge to edge, square 1:1, seamlessly tileable\nstyle: realistic material, PS1 or early Source game texture softness, low to medium frequency detail; not cartoon pixel art\nlighting: even diffuse neutral illumination\naspect ratio: 1:1\nAvoid: atlas, grid of different assets, contact sheet, actual building scene, perspective, frame, text, logos, objects, excessive grunge or damage, mirrored stain patterns, oversharpening, strong cast shadows, excessive glare",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "bytes": 2177856,
+      "sha256": "53bd2eb3efa48db4db9d9562066f18f8e0f976cdab08e68a58b29782e2ed8ff6",
+      "savedPath": "/workspace/scratch/91e9848e2f36/assets-urban/loading-shutter-gray.png"
+    },
+    {
+      "id": "sandstone-beige-panels",
+      "file": "sandstone-beige-panels.png",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-9023c3e7-0959-4cb3-9ac8-8978a154a8dc.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: darker beige and sand sandstone cladding panels\nmaterial: darker beige/sand sandstone, fine quiet grain, large rectangular cladding panels with subtle narrow recessed panel joints\nconstraints: uninterrupted seamless facade material texture, restrained natural stone variation, no decorative stone pattern\nasset: one individual environment material texture for a 3D city game\ncomposition: flat orthographic albedo texture filling the entire image edge to edge, square 1:1, seamlessly tileable\nstyle: realistic material, PS1 or early Source game texture softness, low to medium frequency detail; not cartoon pixel art\nlighting: even diffuse neutral illumination\naspect ratio: 1:1\nAvoid: atlas, grid of different assets, contact sheet, actual building scene, perspective, frame, text, logos, objects, excessive grunge or damage, mirrored stain patterns, oversharpening, strong cast shadows, excessive glare",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "bytes": 2877458,
+      "sha256": "e54f7a83e44b6806aff51ffd9c4958289c7da7700f2924a44801528b82d9772d",
+      "savedPath": "/workspace/scratch/91e9848e2f36/assets-urban/sandstone-beige-panels.png"
+    }
+  ]
+}
