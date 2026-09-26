@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: dark green painted municipal cast iron or steel surface.
+asset type: one separate square seamless photographic diffuse texture for an urban game prop; never an atlas.
+scene: flat painted metal surface filling the entire frame, no modeled object and no background.
+materials and texture: muted dark olive green paint, fine casting pores and restrained tiny chips dispersed across an edge-free surface; enough subtle surface detail to avoid a plain colored prop.
+style and quality: authentic PS2 circa 2001–2005 game surface; soft photographic detail resembling a 256 or 512 resolution diffuse texture, low contrast albedo, no oversharpening, no modern PBR finish.
+lighting: neutral even diffuse illumination, no baked directional shadows or highlights.
+composition: flat front-facing square seamless surface, tileable in x and y, continuous surface to all four edges without seams or borders.
+aspect ratio: 1:1
+Avoid: modeled object, metal panels, seams, borders, atlas, scene, large rust patches, decorative patterns, text, logos, watermark, directional lighting, metallic glare, excessive yellow, oversharpening.

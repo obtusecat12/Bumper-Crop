@@ -1,19 +1,21 @@
-import {addDistrictMaterials,fountainClock} from './clinic-district-materials.js?v=53';
-import {createClinicDistrict} from './clinic-district.js?v=53';
-import {clipPolygon,subtractConvex,cityGroundPoint,approachRoadHalf,approachRoadTop,addApproachGroundMaterial} from './urban-ground-ownership.js?v=53';
+import {createLandmarkGround} from './landmark-ground.js?v=54';
+import {createLandmarkFabric} from './urban-landmark-fabric.js?v=54';
+import {addDistrictMaterials,fountainClock} from './clinic-district-materials.js?v=54';
+import {createClinicDistrict} from './clinic-district.js?v=54';
+import {clipPolygon,subtractConvex,cityGroundPoint,approachRoadHalf,approachRoadTop,addApproachGroundMaterial} from './urban-ground-ownership.js?v=54';
 import * as T from './vendor/three.module.min.js';
-import {exitPoint,exitSample,exitSurface,ease,EXIT_CITY_Y} from './exit-route.js?v=53';
-import {height} from './world.js?v=53';
-import {createUrbanMaterials} from './urban-materials.js?v=53';
-import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=53';
-import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=53';
-import * as P from './urban-props.js?v=53';
-import * as S from './urban-smallprops.js?v=53';
-import {addStreetwallBuilding} from './urban-streetwall.js?v=53';
-import {addBlockStreets,pavement,curb,roadHeight} from './urban-streets.js?v=53';
-import {addReferenceMaterials} from './reference-materials.js?v=53';
-import {createReferenceScenes,referenceWaypoint,clinicToWorld} from './reference-scenes.js?v=53';
-import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=53';
+import {exitPoint,exitSample,exitSurface,ease,EXIT_CITY_Y} from './exit-route.js?v=54';
+import {height} from './world.js?v=54';
+import {createUrbanMaterials} from './urban-materials.js?v=54';
+import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=54';
+import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=54';
+import * as P from './urban-props.js?v=54';
+import * as S from './urban-smallprops.js?v=54';
+import {addStreetwallBuilding} from './urban-streetwall.js?v=54';
+import {addBlockStreets,pavement,curb,roadHeight} from './urban-streets.js?v=54';
+import {addReferenceMaterials} from './reference-materials.js?v=54';
+import {createReferenceScenes,referenceWaypoint,clinicToWorld} from './reference-scenes.js?v=54';
+import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=54';
 const B=CITY_BLOCK,Y=EXIT_CITY_Y;
 const ground=(x,z)=>exitSurface(exitSample(x,z,{}),height(x,z));
 function along(s,d=0){const p=exitPoint(s);return{x:p.x+p.nx*d,z:p.z+p.nz*d,ry:Math.atan2(p.tx,p.tz)};}
@@ -93,11 +95,11 @@ function* buildBlock(mats,plan,lod){
  b.pop();return{object:b.finish('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district),colliders:b.colliders,walks:b.walks,plan,lod};
 }
 export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
- const mats=addApproachGroundMaterial(addDistrictMaterials(addReferenceMaterials(createUrbanMaterials()))),district=createClinicDistrict(mats),approach=makeApproach(mats),references=createReferenceScenes(mats),joinedGround=referenceGround(mats),root=new T.Group(),blocks=new Map();root.name='Level 10 to Level 11 / urban fabric';root.add(approach.object,approach.early,references.object,joinedGround.object,district.object);root.visible=false;
+ const mats=addApproachGroundMaterial(addDistrictMaterials(addReferenceMaterials(createUrbanMaterials()))),district=createClinicDistrict(mats),approach=makeApproach(mats),references=createReferenceScenes(mats),joinedGround=referenceGround(mats),fabric=createLandmarkFabric(mats),fabricGround=createLandmarkGround(mats),root=new T.Group(),blocks=new Map();root.name='Level 10 to Level 11 / urban fabric';root.add(approach.object,approach.early,references.object,joinedGround.object,district.object,fabric.object,fabricGround.object);root.visible=false;
  const groundGeometry=new T.PlaneGeometry(B*16,B*16);groundGeometry.rotateX(-Math.PI/2);groundGeometry.setAttribute('color',new T.Float32BufferAttribute(new Float32Array(groundGeometry.attributes.position.count*3).fill(1),3));const groundUV=groundGeometry.attributes.uv;for(let i=0;i<groundUV.count;i++)groundUV.setXY(i,groundUV.getX(i)*B*16/3.8,groundUV.getY(i)*B*16/3.8);const cityGround=new T.Mesh(groundGeometry,mats.asphalt);cityGround.name='Continuous city ground / no exposed sky beneath reserved parcels';cityGround.position.set(CITY_ORIGIN.x,Y-.065,CITY_ORIGIN.z);cityGround.receiveShadow=true;cityGround.castShadow=false;cityGround.visible=false;root.add(cityGround);
- const stats={mode:'10',blocks:0,buildings:approach.records.length+district.buildings,typologies:BUILDING_TYPES.length,triangles:0,draws:0,pending:0,district:'transition'};
+ const stats={mode:'10',blocks:0,buildings:approach.records.length+district.buildings+fabric.buildings,typologies:BUILDING_TYPES.length,triangles:0,draws:0,pending:0,district:'transition'};
  let city=false,origin='',wantedKey='',queue=[],job=null,disposed=false;
- function recount(){stats.blocks=blocks.size;stats.buildings=approach.records.length+district.buildings;stats.triangles=2;stats.draws=1;for(const g of[approach.object,approach.early,references.object,joinedGround.object,district.object,...Array.from(blocks.values(),v=>v.object)]){const q=g.userData.cityStats;stats.triangles+=q.triangles;stats.draws+=q.draws;}for(const v of blocks.values())stats.buildings+=v.plan.buildings.length;stats.pending=queue.length+Number(!!job);}
+ function recount(){stats.blocks=blocks.size;stats.buildings=approach.records.length+district.buildings+fabric.buildings;stats.triangles=2;stats.draws=1;for(const g of[approach.object,approach.early,references.object,joinedGround.object,district.object,fabric.object,fabricGround.object,...Array.from(blocks.values(),v=>v.object)]){const q=g.userData.cityStats;stats.triangles+=q.triangles;stats.draws+=q.draws;}for(const v of blocks.values())stats.buildings+=v.plan.buildings.length;stats.pending=queue.length+Number(!!job);}
  function commitBlock(v,key){blocks.set(key,v);root.add(v.object);onAdd(v.object);v.object.updateMatrix();v.object.matrixAutoUpdate=false;v.object.updateMatrixWorld(true);recount();}
  function removeBlock(key){const v=blocks.get(key);if(!v)return;onRemove(v.object);v.object.removeFromParent();v.object.traverse(m=>m.geometry?.dispose());blocks.delete(key);}
  function requestAround(wx,wz,force=false){
@@ -116,8 +118,8 @@ export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
  }
  async function prepareAt(wx,wz){requestAround(wx,wz,true);while(queue.length||job){advance();await new Promise(done=>setTimeout(done,0));}}
  function setCity(value){city=value;cityGround.visible=value;stats.mode=value?'11':'10';approach.early.visible=!value;wantedKey='';if(!value){queue=[];if(job){job.generator.return();job=null;}for(const k of blocks.keys())removeBlock(k);}recount();}
- function resolve(position,state){if(!city&&!root.visible)return position;const wx=Number(state.cx)*64,wz=Number(state.cz)*64;position.x+=wx;position.z+=wz;resolveUrban(position,approach.colliders);resolveUrban(position,references.colliders);resolveUrban(position,joinedGround.colliders);resolveUrban(position,district.colliders);const p=worldToCity(position.x,position.z),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)resolveUrban(position,v.colliders);}position.x-=wx;position.z-=wz;return position;}
- function floorAt(wx,wz){let y=urbanWalkHeight(wx,wz,joinedGround.walks,urbanWalkHeight(wx,wz,references.walks,urbanWalkHeight(wx,wz,approach.walks,Y)));y=urbanWalkHeight(wx,wz,district.walks,y);const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);if(!((ix===-1||ix===0)&&iz>=-3&&iz<4))y=Math.max(y,Y+roadHeight(p.x,p.z));for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)y=urbanWalkHeight(wx,wz,v.walks,y);}if(p.z<-32&&p.z>-205&&Math.abs(p.x)<40){const q=exitSample(wx,wz,{}),s=q.s,d=Math.abs(q.signed);if(s>=218&&d<=roadHalf(s))y=Math.max(y,Y+approachRoadTop(s));if(s>=216&&d>roadHalf(s)&&d<roadHalf(s)+4.7&&!(q.signed>0&&s>260&&s<306))y=Math.max(y,Y+.17+ease(336,350,s)*(q.signed>0?.01:-.02));}return y;}
+ function resolve(position,state){if(!city&&!root.visible)return position;const wx=Number(state.cx)*64,wz=Number(state.cz)*64;position.x+=wx;position.z+=wz;resolveUrban(position,approach.colliders);resolveUrban(position,references.colliders);resolveUrban(position,joinedGround.colliders);resolveUrban(position,district.colliders);resolveUrban(position,fabric.colliders);const p=worldToCity(position.x,position.z),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)resolveUrban(position,v.colliders);}position.x-=wx;position.z-=wz;return position;}
+ function floorAt(wx,wz){let y=urbanWalkHeight(wx,wz,joinedGround.walks,urbanWalkHeight(wx,wz,references.walks,urbanWalkHeight(wx,wz,approach.walks,Y)));y=urbanWalkHeight(wx,wz,district.walks,y);y=urbanWalkHeight(wx,wz,fabric.walks,y);const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);if(!((ix===-1||ix===0)&&iz>=-3&&iz<4))y=Math.max(y,Y+roadHeight(p.x,p.z));for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)y=urbanWalkHeight(wx,wz,v.walks,y);}if(p.z<-32&&p.z>-205&&Math.abs(p.x)<40){const q=exitSample(wx,wz,{}),s=q.s,d=Math.abs(q.signed);if(s>=218&&d<=roadHalf(s))y=Math.max(y,Y+approachRoadTop(s));if(s>=216&&d>roadHalf(s)&&d<roadHalf(s)+4.7&&!(q.signed>0&&s>260&&s<306))y=Math.max(y,Y+.17+ease(336,350,s)*(q.signed>0?.01:-.02));}return y;}
  function dispose(){disposed=true;if(job)job.generator.return();for(const key of blocks.keys())removeBlock(key);root.traverse(m=>m.geometry?.dispose());for(const[key,m]of Object.entries(mats)){if(key.startsWith('sign:')||['photoBanner','photoFamima','photoHope','photoDermica','photoFamimaRound','photoBus','photoParking','photoWalkHand'].includes(key))m.map?.dispose();m.dispose();}root.removeFromParent();}
- recount();return{object:root,update,setCity,resolve,floorAt,stats,dispose,prepareAt,waypoint:name=>name==='city-plaza'?district.waypoint:name.startsWith('photo-')?referenceWaypoint(name):cityWaypoint(name),references,joinedGround,district,colliders:[...approach.colliders,...references.colliders,...joinedGround.colliders,...district.colliders],get cityColliders(){return[...approach.colliders,...references.colliders,...joinedGround.colliders,...district.colliders,...Array.from(blocks.values()).flatMap(v=>v.colliders)];},get blocks(){return blocks;},buildingTypes:BUILDING_TYPES};
+ recount();return{object:root,update,setCity,resolve,floorAt,stats,dispose,prepareAt,waypoint:name=>name==='city-plaza'?district.waypoint:name.startsWith('photo-')?referenceWaypoint(name):cityWaypoint(name),references,joinedGround,district,fabric,fabricGround,colliders:[...approach.colliders,...references.colliders,...joinedGround.colliders,...district.colliders,...fabric.colliders],get cityColliders(){return[...approach.colliders,...references.colliders,...joinedGround.colliders,...district.colliders,...fabric.colliders,...Array.from(blocks.values()).flatMap(v=>v.colliders)];},get blocks(){return blocks;},buildingTypes:BUILDING_TYPES};
 }

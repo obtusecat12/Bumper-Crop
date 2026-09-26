@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {addUrbanAssetMaterials,installUrbanGlass} from './urban-assets.js?v=53';
-import {exitTextures} from './exit-textures.js?v=53';
-import {attachRuralDetail} from './rural-textures.js?v=53';
+import {addUrbanAssetMaterials,installUrbanGlass} from './urban-assets.js?v=54';
+import {exitTextures} from './exit-textures.js?v=54';
+import {attachRuralDetail} from './rural-textures.js?v=54';
 
 // Material sizes are metres per tile, not one stretched photo per building.
 export const URBAN_TILE_SIZE={concrete:3,stucco:3.2,travertine:3.6,sandstone:3.2,ribbed:2.4,brickRed:2.5,brickOchre:2.5,cinder:3.2,steel:2.2,shutter:2.5,asphalt:3.8,sidewalk:4.8,glass:3.2,glassLight:3.2};

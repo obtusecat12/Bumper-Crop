@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: weathered gray olive painted wood surface for park bench boards.
+asset type: one separate square seamless photographic diffuse texture for an urban game prop; never an atlas.
+scene: flat painted wood surface filling the entire frame, no bench object and no background.
+materials and texture: subtle parallel horizontal wood grain and restrained peeling gray olive paint; continuous surface with no gaps between boards; enough subtle detail to avoid a plain colored prop.
+style and quality: authentic PS2 circa 2001–2005 game surface; soft photographic detail resembling a 256 or 512 resolution diffuse texture, low contrast albedo, no oversharpening, no modern PBR finish.
+lighting: neutral even diffuse illumination, no baked directional shadows or highlights.
+composition: flat front-facing square tileable texture, continuous surface to all four edges without seams or borders.
+aspect ratio: 1:1
+Avoid: bench silhouette, 3D modeled object, scene, atlas, plank gaps, seams, borders, text, logos, watermark, directional lighting, shiny glare, excessive yellow, oversharpening.

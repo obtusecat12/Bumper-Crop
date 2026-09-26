@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {urbanRandom} from './urban-batch.js?v=53';
-import {signIndex,signAspect,storefrontSign,WINDOW_COUNT} from './urban-assets.js?v=53';
-import {addRoofEquipment,addFireEscape,addRoofLetters} from './urban-buildings.js?v=53';
+import {urbanRandom} from './urban-batch.js?v=54';
+import {signIndex,signAspect,storefrontSign,WINDOW_COUNT} from './urban-assets.js?v=54';
+import {addRoofEquipment,addFireEscape,addRoofLetters} from './urban-buildings.js?v=54';
 const PI=Math.PI;
 function sign(b,seed,kind,x,y,z,maxW,maxH,ry=0,explicit){const id=explicit??signIndex(seed,kind),aspect=signAspect(id),w=Math.min(maxW,maxH*aspect),h=w/aspect;b.box('metal',x,y,z,w+.075,h+.075,.13,ry,.83);b.panel('citySign',id,x+Math.sin(ry)*.075,y,z+Math.cos(ry)*.075,w,h,ry);return{w,h};}
 function window(b,x,y,z,w,h,material='glass',tone=1){b.box('metal',x,y,z-.028,w+.08,h+.09,.12,0,.8);b.plane(material,x,y,z+.04,w,h,0,0,tone);b.box('metal',x,y,z+.065,.042,h,.07);b.box('concrete',x,y-h/2-.045,z+.08,w+.15,.075,.16);}
@@ -34,13 +34,13 @@ export function addStreetwallBuilding(b,spec){
  }
  // Side and rear elevation windows remain behind the same lot edge.
  for(const side of[-1,1]){b.push(side*w/2,0,-.18,side*PI/2);for(let f=1;f<n;f++){const yy=ground+(f-.5)*fh;b.plane('glass',0,yy,.02,d-.9,fh*.60);for(let i=0;i<=Math.round(d/3.3);i++)b.box(wall,-d/2+i*d/Math.round(d/3.3),yy,.07,.48,fh,.22);}b.pop();}
- b.push(0,0,-d/2-.01,PI);for(let f=1;f<n;f++){const yy=ground+(f-.5)*fh;b.plane('glassLight',0,yy,0,w-.9,fh*.53);for(let i=0;i<=bays;i++)b.box(wall,-w/2+i*bay,yy,.10,.65,fh,.23);}b.box('metal',w*.25,1.37,.04,2.3,2.7,.16);b.plane('shutter',w*.25,1.37,.13,2.2,2.6);b.pop();
+ b.push(0,0,-d/2-.01,PI);for(let f=1;f<n;f++){const yy=ground+(f-.5)*fh;b.plane('glassLight',0,yy,0,w-.9,fh*.53);for(let i=0;i<=bays;i++)b.box(wall,-w/2+i*bay,yy,.10,.65,fh,.23);}if(spec.retailBack){for(let i=0;i<bays;i++)shopBay(b,-w/2+(i+.5)*bay,.04,bay-.26,seed*43+i*29,style+i+2);}else{b.box('metal',w*.25,1.37,.04,2.3,2.7,.16);b.plane('shutter',w*.25,1.37,.13,2.2,2.6);}b.pop();
  for(const side of[-1,1]){b.box(trim,0,h+.22,side*(d/2-.13),w,.44,.26);b.box(trim,side*(w/2-.13),h+.22,0,.26,.44,d);}
  b.box('asphalt',0,h+.02,0,w-.55,.06,d-.55);
  if(low&&style%3===0){b.box(wall,w*.1,h+.54,z-.14,w*.48,.62,.42);b.box(trim,w*.1,h+.88,z-.16,w*.5,.10,.47);}
  if(glassTower&&style%2===0){for(let k=0;k<3;k++){const ww=w-2.4-k*1.8,dd=d-2-k*1.6,yy=h+.6+k*1.5;b.box('glass',0,yy,0,ww,1.6,dd);b.box(trim,0,yy+.84,0,ww+.12,.14,dd+.12);}}
  if(walkup||(!low&&style%6===0))addFireEscape(b,w*.27,z+.72,Math.min(6,n),fh,lod);
- addRoofEquipment(b,w*.8,d*.8,h+.25,r,lod);if(!lod&&w>21){b.push(-w*.20,0,-d*.24);addRoofEquipment(b,w*.4,d*.35,h+.25,urbanRandom(seed+47),1,.65);b.pop();}
+ addRoofEquipment(b,w*.8,d*.8,h+.05,r,lod);if(!lod&&w>21){b.push(-w*.20,0,-d*.24);addRoofEquipment(b,w*.4,d*.35,h+.05,urbanRandom(seed+47),1,.65);b.pop();}
  if(!lod){
   // Exterior AC cases have coil louvers, wall brackets and a connected condensate line.
   if(low||walkup)for(let f=1;f<Math.min(n,5);f++)for(const sx of[-.28,.28]){const x=w*sx,y=ground+(f-.38)*fh;b.box('metal',x,y,z+.39,.85,.55,.62);for(let k=0;k<6;k++)b.box('dark',x-.32+k*.13,y,z+.712,.045,.38,.01);b.rod('white',[x+.38,y,z+.4],[x+.38,.4,z+.13],.019);for(const dx of[-.3,.3])b.rod('metal',[x+dx,y-.30,z+.01],[x+dx,y-.30,z+.69],.028);}

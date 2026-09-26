@@ -1,10 +1,10 @@
-import {architectureRayTint} from './architecture-batch.js?v=53';
+import {architectureRayTint} from './architecture-batch.js?v=54';
 import * as T from './vendor/three.module.min.js';
-import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=53';
-import {ruralTextures} from './rural-textures.js?v=53';
-import {periodOrigin,buildingSize,buildingLocal,pondMetrics,roadProfile,cropSample} from './world.js?v=53';
-import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=53';
-import {meadowEnvironment} from './meadow-layout.js?v=53';
+import {createGroundRayAlbedo} from './ground-ray-albedo.js?v=54';
+import {ruralTextures} from './rural-textures.js?v=54';
+import {periodOrigin,buildingSize,buildingLocal,pondMetrics,roadProfile,cropSample} from './world.js?v=54';
+import {farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=54';
+import {meadowEnvironment} from './meadow-layout.js?v=54';
 
 // Runs in the existing generation worker, before its geometry is transferred.
 // True ground/building/prop/branch/leaf triangles; no solid canopy/house proxies.

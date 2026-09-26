@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: one individual mature date-palm frond, dense dull olive green, long narrow lanceolate pinnate silhouette with many visibly separated narrow leaflets around one central rachis.
+asset purpose: individual transparent game foliage texture for the Level10/11 website; PS2-era circa 2001–2005 photographic texture art; medium leaf detail suitable for later downsampling to 512 × about 172 pixels.
+composition: flat top-down view of the complete frond, laid horizontally. The cut ROOT AND STEM BASE are at the far LEFT and the tapered pointed TIP is at the far RIGHT. The center rachis runs left to right. Frond shape is naturally elongated and narrow, not a fan. Keep the whole frond inside the image with a small transparent safety margin on every side and clear alpha gaps between separated leaflets.
+color and surface: dense mature dull olive green leaflets with subtle natural texture and slightly varied green values, muted early-2000s photographic game texture colors.
+image quality and vibe: PS2-era photographic foliage texture, softly resolved medium leaf detail, restrained baked diffuse tonal variation, slightly imperfect texture-photo character; no oversharpening or glossy modern PBR appearance.
+background: genuine transparent alpha background, including spaces between leaflets; no backdrop and no cast shadow.
+aspect ratio: 3:1, wide horizontal image.
+Avoid: trunk, pot, multiple leaves, atlas, sheet, collage, fan-palm silhouette, illustration, diagrams, labels, lettering, watermark, high-detail modern PBR, excessive yellow, over-sharpening, glare, specular highlights, drop shadow, any opaque background.

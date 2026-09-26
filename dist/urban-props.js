@@ -227,7 +227,7 @@ export function addTrafficSignal(b, { arm = 15, street = 'hope' } = {}) {
 
 export function addUtilityCabinet(b, { variant = 0 } = {}) {
   const green = variant % 2 === 1, w = green ? .76 : .58, h = green ? 1.32 : 1.08, d = green ? .43 : .36;
-  const key = green ? 'green' : 'stucco', tone = green ? .57 : .90;
+  const key = green ? (b.mats?.['district:paintMetal']?'district:paintMetal':'green') : 'stucco', tone = green ? .95 : .90;
   b.box('concrete', 0, .055, 0, w + .13, .11, d + .13, 0, .80);
   b.box('metal', 0, .133, 0, w - .035, .05, d - .025, 0, .69);
   b.add(roundedBoxGeometry(w, h, d, .025), key, 0, .16 + h / 2, 0, 1, 1, 1, 0, 0, 0, tone);
@@ -248,6 +248,7 @@ export function addUtilityCabinet(b, { variant = 0 } = {}) {
 }
 
 export function addTrashBin(b) {
+  const iron=b.mats?.['district:paintMetal']?'district:paintMetal':'metal';
   b.cylinder('dark', 0, .08, 0, .245, .258, .12, 12, 0, 0, .70);
   // Recessed liner and crumpled bag tops are visible through the open rim.
   b.cylinder('dark', 0, .355, 0, .232, .22, .49, 14, 0, 0, .47);
@@ -255,9 +256,9 @@ export function addTrashBin(b) {
   b.add(leafGeometry(), 'dark', .10, .585, -.07, .12, .10, .13, -.2, .15, .29, .43);
   for (let i = 0; i < 16; i++) {
     const a = i * TAU / 16;
-    b.box('metal', Math.sin(a) * .262, .45, Math.cos(a) * .262, .027, .68, .035, a, .42);
+    b.box(iron, Math.sin(a) * .262, .45, Math.cos(a) * .262, .027, .68, .035, a, .42);
   }
-  for (const y of [.135, .48, .785]) ring(b, 'metal', 0, y, 0, .265, y === .785 ? .026 : .015, .45, 16);
+  for (const y of [.135, .48, .785]) ring(b, iron, 0, y, 0, .265, y === .785 ? .026 : .015, .45, 16);
   b.circle(0, 0, .30);
 }
 
@@ -333,21 +334,22 @@ export function addStreetSign(b, { kind = 'speed' } = {}) {
 }
 
 export function addBench(b) {
+  const wood=b.mats?.['district:benchWood']?'district:benchWood':'bark',iron=b.mats?.['district:paintMetal']?'district:paintMetal':'metal';
   for (const x of [-.62, .62]) {
     for (const z of [-.19, .21]) {
-      b.box('metal', x, .019, z, .14, .038, .14, 0, .40);
+      b.box(iron, x, .019, z, .14, .038, .14, 0, .40);
       bolt(b, x + .043, .042, z, .014);
-      b.rod('metal', [x, .039, z], [x, .43, z * .78], .029);
+      b.rod(iron, [x, .039, z], [x, .43, z * .78], .029);
     }
-    b.rod('metal', [x, .421, -.22], [x, .421, .24], .028);
-    b.rod('metal', [x, .43, -.18], [x, .99, -.32], .026);
-    b.rod('metal', [x, .45, .19], [x, .69, .22], .023);
-    b.rod('metal', [x, .69, .22], [x, .69, -.245], .029);
+    b.rod(iron, [x, .421, -.22], [x, .421, .24], .028);
+    b.rod(iron, [x, .43, -.18], [x, .99, -.32], .026);
+    b.rod(iron, [x, .45, .19], [x, .69, .22], .023);
+    b.rod(iron, [x, .69, .22], [x, .69, -.245], .029);
   }
-  for (let i = 0; i < 5; i++) b.box('bark', 0, .474, -.201 + i * .096, 1.73, .053, .078, 0, .86 + (i % 3) * .05);
+  for (let i = 0; i < 5; i++) b.box(wood, 0, .474, -.201 + i * .096, 1.73, .053, .078, 0, .86 + (i % 3) * .05);
   for (let i = 0; i < 4; i++) {
     const y = .635 + i * .097, z = -.223 - (y - .60) * .25;
-    b.add(cubeGeometry(), 'bark', 0, y, z, 1.73, .080, .044, 0, -.245, 0, .84 + (i % 3) * .07);
+    b.add(cubeGeometry(), wood, 0, y, z, 1.73, .080, .044, 0, -.245, 0, .84 + (i % 3) * .07);
     for (const x of [-.62, .62]) frontBolt(b, x, y, z + .026, .009);
   }
   b.solid(0, -.04, 1.79, .64);

@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=53';
+import {ruralTextures} from './rural-textures.js?v=54';
 
 // A small prop surface: ordinary alpha blending over actual stained geometry.
 // No transmission pass, depth texture, planar reflection, or per-frame allocation.

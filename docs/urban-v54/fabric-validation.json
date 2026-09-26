@@ -1,0 +1,16 @@
+{
+  "triangles": 167212,
+  "draws": 34,
+  "parts": 13015,
+  "buildings": 44,
+  "parcels": 18,
+  "colliders": 139,
+  "walks": 387,
+  "pavingPolygons": 384,
+  "pavingArea": 14289.421999999744,
+  "positiveAreaPavingOverlaps": 0,
+  "maxOverlapArea": 0,
+  "roadPavingOverlaps": 0,
+  "buildMs": 564.804632,
+  "retailRearBuildings": 4
+}

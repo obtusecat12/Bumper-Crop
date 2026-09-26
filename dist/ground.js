@@ -1,15 +1,15 @@
-import {AUTHORED_GROUND_GLSL} from './urban-ground-ownership.js?v=53';
-import {exitForField,EXIT_GLSL,transitionProgress} from './exit-route.js?v=53';
-import {exitTextures} from './exit-textures.js?v=53';
-import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=53';
-import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=53';
-import {landmarkTextures} from './landmark-textures.js?v=53';
-import {meadowEnvironment} from './meadow-layout.js?v=53';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=53';
-import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=53';
+import {AUTHORED_GROUND_GLSL} from './urban-ground-ownership.js?v=54';
+import {exitForField,EXIT_GLSL,transitionProgress} from './exit-route.js?v=54';
+import {exitTextures} from './exit-textures.js?v=54';
+import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=54';
+import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=54';
+import {landmarkTextures} from './landmark-textures.js?v=54';
+import {meadowEnvironment} from './meadow-layout.js?v=54';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=54';
+import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=54';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=53';
-import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=53';
+import {ruralTextures} from './rural-textures.js?v=54';
+import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=54';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -244,7 +244,7 @@ if(uBuilding.w>.5){
     float yard=1.-smoothstep(.35,3.4,e+edge);
     base=mix(base,dirt*(.94+soilPatch*.08)+grain*.004,yard);
    }
-   ${f.exit?`if(authoredHopeGround(p+uExitOffset)||authoredDistrictGround(p+uExitOffset))discard;
+   ${f.exit?`if(authoredHopeGround(p+uExitOffset)||authoredDistrictGround(p+uExitOffset)||authoredFabricGround(p+uExitOffset))discard;
    vec4 exitQ=exitField(p+uExitOffset);
    float exitUrban=exitEase(.28,.72,exitQ.x),exitCrop=exitEase(.24,.76,exitQ.x)*exitQ.z;
    float exitRoad=(1.-smoothstep(exitQ.w-.25,exitQ.w+.48+(soilPatch-.5)*.5,exitQ.y))*exitQ.z;

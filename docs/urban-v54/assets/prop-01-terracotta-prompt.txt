@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: warm reddish tan terracotta flowerpot ceramic surface.
+asset type: one separate square seamless photographic diffuse texture for an urban game prop; never an atlas.
+scene: flat ceramic surface filling the entire frame with no flowerpot silhouette, no modeled object, no background.
+materials and texture: warm reddish tan terracotta with gentle vertical streaks and fine pores; enough subtle surface texture to avoid a plain colored prop.
+style and quality: authentic PS2 circa 2001–2005 game surface; soft photographic detail resembling a 256 or 512 resolution diffuse texture, low contrast albedo, no oversharpening, no modern PBR finish.
+lighting: neutral even diffuse illumination, no baked directional shadows or highlights.
+composition: flat front-facing square texture, nearly tileable seamlessly in x and y, continuous surface to all four edges without borders or seams.
+aspect ratio: 1:1
+Avoid: pot silhouette, 3D object, scene, atlas, borders, decorative pattern, text, logos, watermark, directional lighting, shiny glare, excessive yellow, oversharpening.

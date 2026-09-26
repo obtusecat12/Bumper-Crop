@@ -1,0 +1,14 @@
+{
+  "hopeGeometry": "unchanged",
+  "rampHeightSamples": 48,
+  "rampSideWinding": "outward both sides",
+  "bakerySign": "readable after handedness",
+  "clinicStats": {
+    "triangles": 18938,
+    "draws": 34,
+    "parts": 982
+  },
+  "colliders": 10,
+  "walks": 25,
+  "output": "/workspace/scratch/91e9848e2f36/v54-assets/reference-scenes-v54.js"
+}

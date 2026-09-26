@@ -1,11 +1,11 @@
-import {worldSurfaceTextures,isSharedModelResource} from './models.js?v=53';
-import {kephartSurfaceTextures} from './kephart-models.js?v=53';
-import {landmarkTextures} from './landmark-textures.js?v=53';
+import {worldSurfaceTextures,isSharedModelResource} from './models.js?v=54';
+import {kephartSurfaceTextures} from './kephart-models.js?v=54';
+import {landmarkTextures} from './landmark-textures.js?v=54';
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {buildingSurfaceTextures} from './buildings.js?v=53';
-import {yardSurfaceTextures} from './yard-assets.js?v=53';
-import {ruralTextures} from './rural-textures.js?v=53';
+import {buildingSurfaceTextures} from './buildings.js?v=54';
+import {yardSurfaceTextures} from './yard-assets.js?v=54';
+import {ruralTextures} from './rural-textures.js?v=54';
 // Two shared arrays retain every texel at its original resolution. No palette
 // flattening, texture resampling, geometry groups or per-colour draw calls.
 let small,large,medium;

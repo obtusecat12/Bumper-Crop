@@ -1,18 +1,31 @@
 import * as T from './vendor/three.module.min.js';
-import {HOPE_GROUND_RECTS} from './urban-ground-ownership.js?v=53';
-import {UrbanBatch,urbanRandom} from './urban-batch.js?v=53';
-import {exitPoint,exitSample,EXIT_CITY_Y,ease} from './exit-route.js?v=53';
-import {CITY_ORIGIN,CITY_ANGLE,cityToWorld,worldToCity} from './urban-layout.js?v=53';
-import * as P from './urban-props.js?v=53';
-import {addBuilding} from './urban-buildings.js?v=53';
+import {HOPE_GROUND_RECTS} from './urban-ground-ownership.js?v=54';
+import {UrbanBatch,urbanRandom} from './urban-batch.js?v=54';
+import {exitPoint,exitSample,EXIT_CITY_Y,ease} from './exit-route.js?v=54';
+import {CITY_ORIGIN,CITY_ANGLE,cityToWorld,worldToCity} from './urban-layout.js?v=54';
+import * as P from './urban-props.js?v=54';
+import {addBuilding} from './urban-buildings.js?v=54';
 const Y=EXIT_CITY_Y,UP=new T.Vector3(0,1,0),plane=new T.PlaneGeometry(1,1);
-const CLINIC_PATH=282,cp=exitPoint(CLINIC_PATH),CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);
+const CLINIC_PATH=282,cp=exitPoint(CLINIC_PATH);
+export const CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);
 export const CLINIC_ORIGIN={x:cp.x+cp.nx*28,z:cp.z+cp.nz*28};
 export function clinicToWorld(x,z,out={}){const c=Math.cos(CLINIC_ANGLE),s=Math.sin(CLINIC_ANGLE);out.x=CLINIC_ORIGIN.x+c*x+s*z;out.z=CLINIC_ORIGIN.z-s*x+c*z;return out;}
 function clinicLocal(wx,wz){const c=Math.cos(CLINIC_ANGLE),s=Math.sin(CLINIC_ANGLE),x=wx-CLINIC_ORIGIN.x,z=wz-CLINIC_ORIGIN.z;return{x:c*x-s*z,z:s*x+c*z};}
 const place=(b,x,y,z,ry,fn,args={})=>{b.push(x,y,z,ry);fn(b,args);b.pop();};
 function quad(b,key,points,uv=[0,0,1,0,1,1,0,1],tone=1){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(points.flat(),3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex([0,2,1,0,3,2]);g.computeVertexNormals();if(g.attributes.normal.getY(0)<-.01){g.setIndex([0,1,2,0,2,3]);g.computeVertexNormals();}b.add(g,key,0,0,0,1,1,1,0,0,0,tone);g.dispose();}
 function rail(b,a,c,height=1.04,key='photoRail'){for(const h of[height,.52])b.rod(key,[a[0],a[1]+h,a[2]],[c[0],c[1]+h,c[2]],.026);const n=Math.max(1,Math.ceil(Math.hypot(c[0]-a[0],c[2]-a[2])/1.8));for(let i=0;i<=n;i++){const t=i/n,x=a[0]+(c[0]-a[0])*t,y=a[1]+(c[1]-a[1])*t,z=a[2]+(c[2]-a[2])*t;b.rod(key,[x,y,z],[x,y+height,z],.027);}}
+// A ramp is a concrete volume, with its lower edges meeting the courtyard.
+// quad() reverses its supplied winding, so side loops below run inward first.
+function rampWedge(b,x0,x1,z0,z1,h0,h1,{bottom0=.02,bottom1=.02,key='sidewalk',walk=true}={}){
+ const w=x1-x0,d=z1-z0;
+ quad(b,key,[[x0,h0,z0],[x1,h1,z0],[x1,h1,z1],[x0,h0,z1]],[0,0,w/2,0,w/2,d/2,0,d/2]);
+ quad(b,'photoGranite',[[x0,bottom0,z0],[x1,bottom1,z0],[x1,h1,z0],[x0,h0,z0]],[0,0,w/.75,0,w/.75,h1/.75,0,h0/.75]);
+ quad(b,'photoGranite',[[x1,bottom1,z1],[x0,bottom0,z1],[x0,h0,z1],[x1,h1,z1]],[0,0,w/.75,0,w/.75,h0/.75,0,h1/.75]);
+ if(h0>bottom0+.0001)quad(b,'photoGranite',[[x0,bottom0,z1],[x0,bottom0,z0],[x0,h0,z0],[x0,h0,z1]],[0,0,d/.75,0,d/.75,h0/.75,0,h0/.75]);
+ if(h1>bottom1+.0001)quad(b,'photoGranite',[[x1,bottom1,z0],[x1,bottom1,z1],[x1,h1,z1],[x1,h1,z0]],[0,0,d/.75,0,d/.75,h1/.75,0,h1/.75]);
+ if(walk)b.walk((x0+x1)/2,(z0+z1)/2,w,d,(h0+h1)/2,(h1-h0)/w,0);
+}
+function rampKerb(b,x0,x1,z0,z1,h0,h1){rampWedge(b,x0,x1,z0,z1,h0+.095,h1+.095,{bottom0:h0,bottom1:h1,key:'photoGranite',walk:false});}
 function facade(b,{w,h,cols,rows,key='photoStone',recess=.16,sill=1.2,window=1.7,seed=1,ground=5,fin=false}){
  const r=urbanRandom(seed),bw=w/cols,fh=(h-ground)/rows;
  if(!fin)b.box(key,0,h/2,.10,w,h,.20);
@@ -135,17 +148,44 @@ function hopeStreet(mats){
  b.pop();return{object:b.finish('Hope Street / authored photographic reconstruction'),colliders:b.colliders,walks:b.walks};
 }
 function dish(b,x,y,z,r=1.4){
- const rot=new T.Euler(-.4,.2,0),point=(t,a)=>new T.Vector3(t*Math.cos(a)/.64,t*Math.sin(a),t*t/(r*2)).applyEuler(rot).add(new T.Vector3(x,y,z)).toArray();
+ const rot=new T.Euler(-.4,.2,0),center=new T.Vector3(x,y,z),frame=(u,v,w)=>new T.Vector3(u/.64,v,w).applyEuler(rot).add(center).toArray(),point=(t,a)=>frame(t*Math.cos(a),t*Math.sin(a),t*t/(r*2));
  for(let k=1;k<=6;k++){const t=r*k/6;for(let i=0;i<32;i++)b.rod('photoSteel',point(t,i*Math.PI/16),point(t,(i+1)*Math.PI/16),k===6?.018:.008);}
  for(let i=0;i<28;i++)for(let k=0;k<6;k++)b.rod('photoSteel',point(r*k/6,i*Math.PI/14),point(r*(k+1)/6,i*Math.PI/14),.011);
- b.rod('photoSteel',[x,y-r,z+.4],[x,y+r*.3,z-.8],.035);b.rod('photoSteel',[x-r*.85,y,z+.2],[x,y+r*.3,z-.8],.025);b.rod('photoSteel',[x+r*.85,y,z+.2],[x,y+r*.3,z-.8],.025);b.cylinder('photoSteel',x,y-r-1,z,.08,.1,2,8);
+ // Rim, focus and rear hub share the bowl's tilt; no disconnected feed rods.
+ const feed=frame(0,0,r*.5),hub=frame(0,0,-.18),mount=[-23,7.8,20];
+ for(const a of[Math.PI/2,Math.PI*7/6,Math.PI*11/6])b.rod('photoSteel',point(r*.94,a),feed,.025);
+ b.sphere('photoSteel',...feed,.075,.075,.075);b.rod('photoSteel',hub,[x,y,z],.09);
+ // The pedestal sits on the 4.90 m return roof; the mast and yoke are continuous.
+ b.box('photoStucco',-23,5.0,20,1.25,.20,1.05);
+ b.cylinder('photoSteel',-23,6.45,20,.085,.11,2.7,10);
+ b.rod('photoSteel',mount,hub,.065);
+ for(const u of[-.32,.32]){const axle=frame(u,0,-.18);b.rod('photoSteel',mount,axle,.043);b.rod('photoSteel',axle,hub,.035);}
+ b.rod('photoSteel',[-23,6.6,20],hub,.038);
+ for(const dx of[-.40,.40]){b.box('photoSteel',-23+dx,5.13,20,.17,.06,.25);b.rod('photoSteel',[-23+dx,5.16,20],[-23,6.24,20],.035);}
 }
 function clinicCourt(mats){
  const b=new UrbanBatch(mats);b.push(CLINIC_ORIGIN.x,Y,CLINIC_ORIGIN.z,CLINIC_ANGLE);
- b.box('photoCobble',0,-.02,17,68,.08,70);b.walk(0,17,68,70,.02);
+ b.box('photoCobble',0,-.02,10.15,68,.08,56.3);b.walk(0,10.15,68,56.3,.02);
  quad(b,'photoAsphalt',[[-34,.025,-24],[-34,.02,-18],[34,.02,-18],[34,.025,-24]],[0,0,0,1.5,11,1.5,11,0]);b.walk(0,-21,68,6,.025);
- b.box('photoGranite',0,.018,-18.03,68,.022,.16);for(const side of[-1,1]){if(side===1)b.box('photoGranite',side*34,.07,17,.20,.18,70);b.box('asphalt',side*37,-.04,22,6,.06,80);}
+ b.box('photoGranite',0,.018,-18.03,68,.022,.16);b.box('photoGranite',34,.07,10.15,.20,.18,56.3);
+ // Adjacent service asphalt and the rear street belong to the district fabric.
  b.box('photoMosaic',-21.3,4.31,5.95,18,8.62,.70);b.solid(-21.3,5.95,18,.70);b.box('photoMosaic',-30.3,4.31,14.4,.70,8.62,17.6);b.solid(-30.3,14.4,.70,17.6);b.box('photoBronze',-21.3,8.68,5.95,18.2,.12,.87);b.box('photoCream',-35,4.2,18.5,10,8.4,26);b.solid(-35,18.5,10,26);
+ // Pharmacy is a complete two-storey shell. Its lower floor steps back around
+ // the ramp approach; the 2.47 m pedestrian throat stays clear below the arcade.
+ for(const[x,w,z,d]of[[-21.615625,16.66875,7.125,2.35],[-23.25625,13.3875,10.45,4.3]]){
+  b.box('photoStucco',x,1.785,z,w,3.53,d);b.solid(x,z,w,d);
+ }
+ b.box('photoStucco',-21.615625,5.85,9.275,16.66875,4.6,6.65);
+ b.box('photoGranite',-21.615625,8.225,9.275,16.66875,.15,6.65);
+ for(const z of[8.2,12.42]){b.box('photoCream',-13.58,1.785,z,.38,3.53,.36);b.solid(-13.58,z,.38,.36);}
+ b.box('photoCream',-13.58,3.5,10.31,.45,.24,4.62);
+ for(const z of[7.45,9.7,11.55]){
+  b.box('photoShade',-13.24,5.8,z,.18,1.96,1.56);
+  b.plane('photoGlass',-13.149,5.8,z,1.43,1.82,Math.PI/2);
+  for(const dz of[-.74,0,.74])b.box('photoFrame',-13.13,5.8,z+dz,.11,1.96,.045);
+  for(const y of[4.84,6.76])b.box('photoFrame',-13.13,y,z,.11,.065,1.56);
+  b.box('photoGranite',-13.10,4.79,z,.24,.09,1.67);
+ }
  b.box('photoStucco',8.1,3.4,24.3,42.5,6.8,12.6);b.solid(8.1,24.3,42.5,12.6);
  for(const[x,w,h,z]of[[-8.9,8,2.5,22.5],[-.8,11,1.85,26],[10.5,9,.8,26],[20,16,2.1,27]]){b.box('photoStucco',x,6.8+h/2,z,w,h,8);b.box('photoBronze',x,6.83+h,z-4,w,.065,.13);}
  // Left return wing, old satellite dish, black tank and chimney.
@@ -156,7 +196,7 @@ function clinicCourt(mats){
  for(const x of[-23,-8.5])b.box('photoRail',x,1.48,14.78,.09,2.96,.10);
  b.box('brickRed',-17,6.2,21.8,.75,2.5,.8);b.box('photoBronze',-17,7.48,21.8,.92,.15,.98);dish(b,-24.4,8.73,20,1.55);
  b.cylinder('dark',-10.35,9.91,19,.56,.62,1.25,12);b.box('photoStucco',-10.35,8.84,19,2,.90,2.2);
- for(let y=7;y<26;y+=1.3){for(const x of[14.3,14.63])b.rod('photoSteel',[x,y,28.7],[x,y+1.3,28.7],.02);b.rod('photoSteel',[14.3,y,28.7],[14.63,y+1.3,28.7],.014);b.rod('photoSteel',[14.63,y,28.7],[14.3,y+1.3,28.7],.014);}for(const x of[-8,30])b.rod('photoSteel',[14.45,25.8,28.7],[x,7,33],.009);
+ for(let y=7;y<26;y+=1.3){for(const x of[14.3,14.63])b.rod('photoSteel',[x,y,28.7],[x,y+1.3,28.7],.02);b.rod('photoSteel',[14.3,y,28.7],[14.63,y+1.3,28.7],.014);b.rod('photoSteel',[14.63,y,28.7],[14.3,y+1.3,28.7],.014);}for(const[x,y,z]of[[-7.5,9.3,25],[26.5,8.9,28.9]]){b.box('photoSteel',x,y+.025,z,.34,.05,.34);b.rod('photoSteel',[14.45,25.8,28.7],[x,y+.05,z],.009);}
  // Separate physical lightboxes, matching the three reference signs.
  const signs=[[-6.0,10.1,'photoClinic'],[3.65,7.4,'photoLab'],[13.05,11,'photoMarisa']];
  for(const[x,w,key]of signs){b.box('photoFrame',x,5.58,17.83,w+.13,1.78,.29);b.plane(key,x,5.58,17.65,w,1.67,Math.PI);}
@@ -172,26 +212,50 @@ function clinicCourt(mats){
  b.push(24.1,0,17.47,0);storefront(b,10.6,{key:'photoRetail',base:.37,top:3.57,step:5.3});b.pop();
  for(const x of[-11.4,-.6,7.6,18.7,29.5])b.box('photoRail',x,1.83,17.35,.20,3.6,.18);
  b.box('photoGranite',9.2,.19,15.95,43,.38,3.2);b.walk(9.2,15.95,43,3.2,.38);
- // Switchback accessible ramp, curb edges and paired white tubular rails.
- b.box('photoGranite',-7.3,.36,15.4,10.8,.72,2.7);b.walk(-7.3,15.4,10.8,2.7,.72);
- quad(b,'sidewalk',[[-12.7,.10,9.7],[-2,.58,9.7],[-2,.58,11.4],[-12.7,.10,11.4]]);b.walk(-7.35,10.55,10.7,1.7,.34,.48/10.7,0);
- quad(b,'sidewalk',[[-12.7,.72,12],[-2,.58,12],[-2,.58,13.7],[-12.7,.72,13.7]]);b.walk(-7.35,12.85,10.7,1.7,.65,-.14/10.7,0);
- b.box('sidewalk',-1.2,.29,11.7,1.6,.58,4.0);b.walk(-1.2,11.7,1.6,4,.58);
- for(const z of[9.65,11.45])rail(b,[-12.7,.10,z],[-2,.58,z]);for(const z of[12.05,13.75])rail(b,[-12.7,.72,z],[-2,.58,z]);rail(b,[-.40,.58,9.65],[-.40,.58,13.75]);rail(b,[-12.7,.72,13.75],[-12.7,.72,16.7]);
- for(const z of[9.65,13.75])b.box('photoGranite',-7.35,.15,z,10.7,.30,.13);
+ // Solid switchback: both inclined runs, the 1.66 m turning landing and
+ // the 1.60 m upper bridge meet exactly; handrails follow the same endpoints.
+ b.box('photoGranite',-7.3,.37,15.4,10.8,.70,2.7);b.walk(-7.3,15.4,10.8,2.7,.72);
+ rampWedge(b,-12.7,-2,9.7,11.4,.02,.58);
+ rampWedge(b,-10.2,-2,12,13.7,.72,.58);
+ b.box('sidewalk',-.7,.30,11.7,2.6,.56,4.0);b.walk(-.7,11.7,2.6,4,.58);
+ b.box('sidewalk',-11.45,.37,13.025,2.5,.70,2.05);b.walk(-11.45,13.025,2.5,2.05,.72);
+ for(const z of[9.74,11.36])rail(b,[-12.7,.02,z],[-2,.58,z]);
+ for(const z of[12.04,13.66])rail(b,[-10.2,.72,z],[-2,.58,z]);
+ rail(b,[-2,.58,9.74],[.50,.58,9.74]);rail(b,[.50,.58,9.74],[.50,.58,13.66]);rail(b,[.50,.58,13.66],[-2,.58,13.66]);
+ rail(b,[-2,.58,11.36],[-2,.58,12.04]);
+ rail(b,[-10.2,.72,12.04],[-12.65,.72,12.04]);rail(b,[-12.65,.72,12.04],[-12.65,.72,16.70]);
+ for(const[z0,z1]of[[9.70,9.81],[11.29,11.40]])rampKerb(b,-12.7,-2,z0,z1,.02,.58);
+ for(const[z0,z1]of[[12,12.11],[13.59,13.70]])rampKerb(b,-10.2,-2,z0,z1,.72,.58);
+ for(const z of[9.755,13.645])b.box('photoGranite',-.7,.6275,z,2.6,.095,.11);
+ b.box('photoGranite',.545,.6275,11.7,.11,.095,4);
+ b.box('photoGranite',-11.45,.7675,12.055,2.5,.095,.11);
+ b.box('photoGranite',-12.645,.7675,14.35,.11,.095,4.7);
+ // Two grounded 170 mm risers connect the raised clinic landing to the shop walk.
+ for(const[x,w,top]of[[-1.62,.56,.55],[-1.06,.56,.38]]){b.box('photoGranite',x,(top+.02)/2,15.4,w,top-.02,2.7);b.walk(x,15.4,w,2.7,top);}
  for(let x=-17;x<30;x+=3.4){b.box('white',x,.028,6.7,.08,.009,5,0,.5);place(b,x+1.6,.05,8.8,0,P.addWheelStop);}
  // Blue awning, support struts and curb faces cast the actual courtyard shadows.
  for(let x=-11.4;x<30;x+=6.02){b.rod('photoRail',[x,3.3,17.38],[x,3.66,14.75],.022);b.rod('photoRail',[x,4.62,17.37],[x,3.66,14.75],.021);}
  for(const x of[-11.5,19.1,29.5]){b.rod('photoRail',[x,6.65,17.48],[x,.33,17.48],.042);b.rod('photoRail',[x,.33,17.48],[x,.16,17.05],.042);}
- for(const x of[-10,9,24]){b.box('metal',x,7.17,27,1.9,.7,1.35);for(let i=0;i<8;i++)b.box('photoShade',x-.77+i*.22,7.18,26.30,.05,.48,.02);}
- b.cylinder('dark',18,9.03,30,.7,.73,1.2,12);b.cylinder('photoCream',18,8.37,30,.81,.81,.12,12);
+ for(const[x,roof,z]of[[-10,6.8,27.2],[9,7.6,27],[24,8.9,27]]){for(const dx of[-.66,.66])b.box('photoSteel',x+dx,roof+.10,z,.12,.20,1.2);b.box('metal',x,roof+.55,z,1.9,.7,1.35);for(let i=0;i<8;i++)b.box('photoShade',x-.77+i*.22,roof+.56,z-.70,.05,.48,.02);}
+ b.cylinder('photoCream',18,8.96,30,.81,.81,.12,12);b.cylinder('dark',18,9.62,30,.7,.73,1.2,12);
+ // Service frontage faces the new rear lane, with glazed workrooms, a door,
+ // loading sill and drains instead of an unbroken blank billboard wall.
+ for(const x of[-7,1,9,17,24]){
+  b.box('photoFrame',x,3.3,30.67,3.05,1.8,.12);b.plane('photoGlass',x,3.3,30.743,2.88,1.62);
+  for(const dx of[-.72,0,.72])b.box('photoFrame',x+dx,3.3,30.77,.048,1.67,.045);
+  b.box('photoGranite',x,2.37,30.81,3.24,.12,.38);
+ }
+ b.box('photoFrame',-1.9,1.56,30.68,1.85,2.84,.13);b.box('photoSteel',-1.9,1.55,30.76,1.68,2.67,.075);
+ b.plane('photoGlass',-1.9,2.12,30.807,1.38,.88);b.rod('photoRail',[-1.3,1.05,30.85],[-1.3,1.51,30.85],.025);
+ b.box('photoGranite',-1.9,.09,31.15,2.4,.14,1.1);b.walk(-1.9,31.15,2.4,1.1,.16);
+ for(const x of[-12.6,28.9]){b.rod('photoBronze',[x,.15,30.83],[x,6.65,30.83],.055);b.rod('photoBronze',[x,6.65,30.83],[x,6.80,30.48],.055);b.box('photoShade',x,.04,31.0,.44,.04,.48);}
  for(const x of[-12,30]){b.box('photoGranite',x,.24,15.5,.18,.48,4.2);}
  streetTree(b,-17.4,15.3,{height:5.8,width:3.5,seed:65,small:true,shadow:true});
  b.pop();return{object:b.finish('Clinical plaza / authored photographic reconstruction'),colliders:b.colliders,walks:b.walks};
 }
 function photoHandedness(part,origin,angle,scaleX=1){
  const c=Math.cos(angle),s=Math.sin(angle),reflect=(x,z)=>{const dx=x-origin.x,dz=z-origin.z,u=c*dx-s*dz,v=s*dx+c*dz;return{x:origin.x-c*u*scaleX+s*v,z:origin.z+s*u*scaleX+c*v};};
- part.object.traverse(m=>{if(!m.isMesh)return;const g=m.geometry,p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv,isLetter=['photoClinic','photoLab','photoMarisa','photoLabWindow','photoBanner','photoFamima','photoHope','photoDermica','photoShop','photoLobby','photoRetail','photoDermicaGlass','photoBakeryInside','photoClinicInside','photoFamimaRound','photoBus','photoParking','photoWalkHand'].some(k=>m.material===part.materials?.[k]);for(let i=0;i<p.count;i++){const q=reflect(p.getX(i),p.getZ(i));p.setXYZ(i,q.x,p.getY(i),q.z);const nx=c*n.getX(i)-s*n.getZ(i),nz=s*n.getX(i)+c*n.getZ(i),v=new T.Vector3(-c*nx/scaleX+s*nz,n.getY(i),s*nx/scaleX+c*nz).normalize();n.setXYZ(i,v.x,v.y,v.z);if(u&&isLetter)u.setX(i,1-u.getX(i));}
+ part.object.traverse(m=>{if(!m.isMesh)return;const g=m.geometry,p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv,isLetter=['photoClinic','photoLab','photoMarisa','photoLabWindow','photoBanner','photoFamima','photoHope','photoDermica','photoShop','photoLobby','photoRetail','photoDermicaGlass','photoBakeryInside','photoClinicInside','photoFamimaRound','photoBus','photoParking','photoWalkHand'].some(k=>m.material===part.materials?.[k])||Object.entries(part.materials||{}).some(([k,v])=>k.startsWith('sign:')&&m.material===v);for(let i=0;i<p.count;i++){const q=reflect(p.getX(i),p.getZ(i));p.setXYZ(i,q.x,p.getY(i),q.z);const nx=c*n.getX(i)-s*n.getZ(i),nz=s*n.getX(i)+c*n.getZ(i),v=new T.Vector3(-c*nx/scaleX+s*nz,n.getY(i),s*nx/scaleX+c*nz).normalize();n.setXYZ(i,v.x,v.y,v.z);if(u&&isLetter)u.setX(i,1-u.getX(i));}
  // Restore winding after the handedness conversion; signs keep their readable UV orientation.
  for(const a of Object.values(g.attributes))for(let i=0;i<a.count;i+=3)for(let j=0;j<a.itemSize;j++){const t=a.array[(i+1)*a.itemSize+j];a.array[(i+1)*a.itemSize+j]=a.array[(i+2)*a.itemSize+j];a.array[(i+2)*a.itemSize+j]=t;}g.computeBoundingBox();g.computeBoundingSphere();});
  for(const q of part.colliders){Object.assign(q,reflect(q.x,q.z));if(q.kind==='obb'){q.ry=2*angle-q.ry;q.w*=scaleX;}else q.r*=Math.min(1,scaleX);}

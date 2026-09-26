@@ -1,9 +1,10 @@
 // A surface has one owner. Clip coverage instead of hiding coincident layers
 // with camera-dependent depth offsets.
-import {exitPoint,ease} from './exit-route.js?v=53';
+import {exitPoint,ease} from './exit-route.js?v=54';
 const origin=exitPoint(382),a=Math.atan2(origin.tx,origin.tz),ca=Math.cos(a),sa=Math.sin(a);
 export const approachRoadHalf=s=>{const r=2.05+ease(80,265,s)*2.05+ease(290,420,s)*6.9;return r+(11-r)*ease(327,350,s);};
 export const approachRoadTop=s=>.028*(1-ease(336,350,s));
+export const FABRIC_GROUND_POLYGON=[[-112,-244],[-112,-32],[112,-32],[112,-244]];
 export const APPROACH_GROUND_QUADS=[];
 for(let s=218;s<352;s+=2){const p=exitPoint(s),q=exitPoint(s+2),r=approachRoadHalf(s),t=approachRoadHalf(s+2);APPROACH_GROUND_QUADS.push([[p.x-p.nx*r,p.z-p.nz*r],[q.x-q.nx*t,q.z-q.nz*t],[q.x+q.nx*t,q.z+q.nz*t],[p.x+p.nx*r,p.z+p.nz*r]].map(([x,z])=>cityGroundPoint(x,z)));}
 const cp=exitPoint(282),clinicOrigin={x:cp.x+cp.nx*28,z:cp.z+cp.nz*28},clinicAngle=Math.atan2(cp.nx,cp.nz),cc=Math.cos(clinicAngle),cs=Math.sin(clinicAngle);
@@ -18,6 +19,7 @@ export function subtractConvex(poly,shape){let pending=poly;const out=[];const s
 export function subtractRectangles(x0,x1,z0,z1,holes){const xs=[x0,x1],zs=[z0,z1];for(const h of holes){for(const x of[h[0],h[1]])if(x>x0&&x<x1)xs.push(x);for(const z of[h[2],h[3]])if(z>z0&&z<z1)zs.push(z);}xs.sort((a,b)=>a-b);zs.sort((a,b)=>a-b);const out=[];for(let i=0;i<xs.length-1;i++)for(let j=0;j<zs.length-1;j++){const a=xs[i],c=xs[i+1],u=zs[j],v=zs[j+1];if(c-a<1e-6||v-u<1e-6)continue;if(!holes.some(h=>(a+c)/2>h[0]&&(a+c)/2<h[1]&&(u+v)/2>h[2]&&(u+v)/2<h[3]))out.push([a,c,u,v]);}return out;}
 export const AUTHORED_GROUND_GLSL=`
 vec2 authoredCity(vec2 w){vec2 p=w-vec2(${origin.x.toFixed(10)},${origin.z.toFixed(10)});return vec2(${ca.toFixed(10)}*p.x-(${sa.toFixed(10)})*p.y,${sa.toFixed(10)}*p.x+${ca.toFixed(10)}*p.y);}
+bool authoredFabricGround(vec2 w){vec2 p=authoredCity(w);return p.x>=-112.&&p.x<=112.&&p.y>=-244.&&p.y<=-32.;}
 bool authoredHopeGround(vec2 w){vec2 p=authoredCity(w);return (abs(p.x)<112.&&p.y>=-32.&&p.y<=448.)||(abs(p.x)<165.&&p.y>=-12.5&&p.y<=10.5);}
 vec2 authoredClinic(vec2 w){vec2 p=w-vec2(${clinicOrigin.x.toFixed(10)},${clinicOrigin.z.toFixed(10)});return vec2(${cc.toFixed(10)}*p.x-(${cs.toFixed(10)})*p.y,${cs.toFixed(10)}*p.x+${cc.toFixed(10)}*p.y);}
 bool authoredDistrictGround(vec2 w){vec2 p=authoredClinic(w);return ${DISTRICT_GROUND_RECTS.map(([x0,x1,z0,z1])=>`(p.x>=${x0.toFixed(4)}&&p.x<=${x1.toFixed(4)}&&p.y>=${z0.toFixed(4)}&&p.y<=${z1.toFixed(4)})`).join('||')};}
