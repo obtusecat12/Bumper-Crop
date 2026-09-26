@@ -1,0 +1,1413 @@
+{
+  "schema": "photo-scene-spec/v50",
+  "purpose": "Camera-aware inferred geometry guides for two authored 3D scenes, prioritizing the supplied photograph composition.",
+  "evidence": {
+    "reference_files": [
+      "/workspace/scratch/91e9848e2f36/upload/image(7).png",
+      "/workspace/scratch/91e9848e2f36/upload/image(8).png"
+    ],
+    "method": "Visual inspection of both full photographs and a detail crop of the clinic ramp. No surveying, lens metadata, or measured site dimensions.",
+    "skill_guidance_applied": "3dviz-pro-max main guidance: solve camera and identity-defining silhouette first, author the important geometry, tie material and lighting decisions to visible evidence.",
+    "skill_reference_limit": "Linked object-reasoning and lighting reference pages were unavailable; the main skill was read."
+  },
+  "interpretation_rules": [
+    "All metre values are inferred modeling suggestions, not measured ground truth. Expect roughly 20–35% uncertainty in absolute scale and concealed depth.",
+    "Image-space anchors and silhouette relationships take priority over metric guesses when tuning the fixed reference view.",
+    "Coordinates use X screen-right, Y up, Z into the scene. Camera ground origin is X=0,Z=0. Geometry is static.",
+    "The image-space UV origin is upper-left. Bounding boxes are [u_min,v_min,u_max,v_max].",
+    "World dimensions are not independently identifiable from one photograph; preserve ratios, overlaps, corner positions, and perspective first.",
+    "Do not claim that proposed hidden mass extents or ramp topology are exact reconstructions."
+  ],
+  "scenes": [
+    {
+      "id": "hope-street",
+      "source": "image(7).png",
+      "source_pixels": [
+        1000,
+        680
+      ],
+      "source_aspect": 1.4705882352941178,
+      "composition": {
+        "description": "A tall downtown canyon viewed from within a broad foreground intersection. The street recedes nearly centrally; major building roofs are cropped. The right beige Pegasus face is a large dominant plane, while the extreme-right glass building and dark fluted left building frame the view.",
+        "horizon_uv": [
+          0.483,
+          0.695
+        ],
+        "road_vanishing_point_uv": [
+          0.484,
+          0.69
+        ],
+        "sky_fraction_target": 0.17,
+        "foreground_intersection_vertical_fraction": 0.22,
+        "avoid": "Do not lower or shrink all buildings until their rooflines fit. The photograph deliberately crops the near building tops."
+      },
+      "camera": {
+        "position_m": [
+          0,
+          1.8,
+          0
+        ],
+        "target_m": [
+          1.9,
+          15.4,
+          90
+        ],
+        "vertical_fov_deg": 41.8,
+        "horizontal_fov_at_reference_aspect_deg": 58.62,
+        "near_m": 0.08,
+        "far_m": 600,
+        "pitch_up_deg_approx": 8.6,
+        "yaw_right_deg_approx": 1.2,
+        "strict_plus_z_alternative": "Use target X=0 and a small horizontal film/view offset to put the street vanishing point at U≈0.484. Keep camera ground origin at (0,0).",
+        "fitting_priority": [
+          "Match horizon around V=0.69.",
+          "Match near curb corners around (0.249,0.803) and (0.830,0.782).",
+          "Allow foreground building tops to exceed the upper image boundary.",
+          "Keep the distant central skyline narrow, not a broad wall."
+        ]
+      },
+      "ground": {
+        "road_axis_x_m": 1.4,
+        "road_curb_x_m": [
+          -5.6,
+          8.4
+        ],
+        "road_width_m": 14.0,
+        "road_width_plausible_range_m": [
+          12,
+          18
+        ],
+        "sidewalk_width_m": {
+          "left": 3.8,
+          "right": 4.4
+        },
+        "building_front_offsets_from_axis_m": {
+          "left": 10.8,
+          "right_foreground": 11.9,
+          "right_pegasus": 9.6
+        },
+        "street_extent_z_m": [
+          22,
+          430
+        ],
+        "cross_street_asphalt_extent_m": {
+          "x": [
+            -55,
+            55
+          ],
+          "z": [
+            -8,
+            26
+          ]
+        },
+        "visible_foreground_intersection_depth_m": 25,
+        "far_intersection_corners_m": [
+          [
+            -5.6,
+            0,
+            22
+          ],
+          [
+            8.4,
+            0,
+            27
+          ]
+        ],
+        "cross_street_note": "A slight oblique far curb is important: the right corner is a little deeper than the left, giving the far edge of the intersection an upward screen-right slope.",
+        "curb_height_m": 0.13,
+        "curb_color": "Most curb gray; short red-painted corner strips left and right.",
+        "surface": "Muted medium gray asphalt, large subtle aggregate grain. The foreground is open and visually broad. Sparse worn yellow markings, not a zebra crossing.",
+        "markings": [
+          {
+            "type": "double-yellow-center",
+            "x_m": [
+              1.29,
+              1.51
+            ],
+            "z_m": [
+              25,
+              300
+            ],
+            "width_m": 0.075,
+            "note": "Two thin yellow lines converge near the vanishing point. Start visibly at the far side of the foreground intersection."
+          },
+          {
+            "type": "cross-street-yellow",
+            "polyline_m": [
+              [
+                -45,
+                0.008,
+                6
+              ],
+              [
+                -5.6,
+                0.008,
+                22
+              ],
+              [
+                8.4,
+                0.008,
+                27
+              ],
+              [
+                50,
+                0.008,
+                42
+              ]
+            ],
+            "width_m": 0.075,
+            "note": "Use subdued, worn segments; the photo is not covered in fresh bright road markings."
+          }
+        ],
+        "optional_grade": "A very slight dip, up to 1 m over the first 140 m, may help the far road and parked-car contact points. Do not create a steep hill."
+      },
+      "building_masses": [
+        {
+          "id": "left-foreground-fluted-office",
+          "aabb_m": {
+            "x": [
+              -42,
+              -9.4
+            ],
+            "y": [
+              0,
+              34
+            ],
+            "z": [
+              18,
+              86
+            ]
+          },
+          "height_plausible_range_m": [
+            28,
+            43
+          ],
+          "main_visible_face": "Street-facing plane at X=-9.4; wrap its corner onto Z≈18.",
+          "silhouette": "Very large dark masonry mass, cropped at left and top. Repeated slender vertical concrete fins and deep dark glazing dominate. It must fill the left foreground, not read as one distant rectangular tower.",
+          "facade": {
+            "material": "Charcoal gray weathered concrete/stone, desaturated olive-black glass.",
+            "vertical_fin_spacing_m": 1.45,
+            "fin_width_m": 0.28,
+            "fin_depth_m": 0.22,
+            "floor_spacing_m": 3.3,
+            "floor_band_prominence": "Low; preserve the strong vertical emphasis."
+          },
+          "ground_floor": {
+            "height_m": 4.0,
+            "canopy_height_m": 3.7,
+            "canopy_projection_m": 1.4,
+            "canopy_fascia_height_m": 0.32,
+            "features": "Black framed storefront glass, dark cylindrical/square columns, small white lettering. Do not make the whole base opaque."
+          },
+          "image_anchor_bbox_uv": [
+            0,
+            0,
+            0.42,
+            0.8
+          ]
+        },
+        {
+          "id": "left-middle-pale-office",
+          "aabb_m": {
+            "x": [
+              -31,
+              -11.6
+            ],
+            "y": [
+              0,
+              42
+            ],
+            "z": [
+              81,
+              151
+            ]
+          },
+          "silhouette": "Pale gray/cream office behind the dark near block; a stepped flat roof and repetitive rectangular windows. A diagonal perspective band of this mass runs toward the vanishing point.",
+          "facade": {
+            "floor_spacing_m": 3.15,
+            "bay_width_m": 2.35,
+            "window_recess_m": 0.12,
+            "color": "Warm gray, slightly lighter than the near building."
+          },
+          "image_anchor_bbox_uv": [
+            0.285,
+            0.068,
+            0.438,
+            0.705
+          ]
+        },
+        {
+          "id": "left-blue-rear-slab",
+          "aabb_m": {
+            "x": [
+              -18.2,
+              -9.4
+            ],
+            "y": [
+              0,
+              52
+            ],
+            "z": [
+              110,
+              145
+            ]
+          },
+          "silhouette": "One tall blue slate glass slab, visible as a narrow blue rectangle behind the pale building.",
+          "facade": {
+            "color": "Desaturated blue-gray, subtle gridded glass, no bright cyan.",
+            "grid_spacing_m": [
+              2.3,
+              3.2
+            ]
+          },
+          "image_anchor_bbox_uv": [
+            0.334,
+            0.1,
+            0.418,
+            0.56
+          ]
+        },
+        {
+          "id": "left-far-infill",
+          "aabb_m": {
+            "x": [
+              -17,
+              -8.8
+            ],
+            "y": [
+              0,
+              25
+            ],
+            "z": [
+              150,
+              270
+            ]
+          },
+          "silhouette": "Several small differently proportioned warm gray masses; largely tree-obscured. Avoid an exact clone row."
+        },
+        {
+          "id": "right-foreground-glass-office",
+          "aabb_m": {
+            "x": [
+              13.3,
+              42
+            ],
+            "y": [
+              0,
+              51
+            ],
+            "z": [
+              15,
+              51
+            ]
+          },
+          "silhouette": "Only a cut-off strip at the extreme right is visible. Tall dark green-black glass and bright narrow mullions above a massive dull gray lower wall.",
+          "facade": {
+            "vertical_mullion_spacing_m": 1.35,
+            "horizontal_mullion_spacing_m": 3.2,
+            "mullion_width_m": 0.075,
+            "lower_solid_wall_height_m": 10.5,
+            "lower_wall_panel_size_m": [
+              2.5,
+              3.3
+            ],
+            "note": "The visible lower wall is tall and almost blank. Do not continue dense office windows down to the street."
+          },
+          "image_anchor_bbox_uv": [
+            0.891,
+            0,
+            1,
+            0.779
+          ]
+        },
+        {
+          "id": "pegasus-main-beige-tower",
+          "aabb_m": {
+            "x": [
+              11.0,
+              31.0
+            ],
+            "y": [
+              0,
+              56
+            ],
+            "z": [
+              70,
+              148
+            ]
+          },
+          "silhouette": "Large beige near face at Z=70, with a street-facing side at X=11 running into depth. Roof outside top crop. The front face is broad and regular; the side face is a narrow receding wedge.",
+          "facade": {
+            "front_normal": [
+              0,
+              0,
+              -1
+            ],
+            "front_material": "Beige sandstone/concrete panels with small gray-blue inset windows.",
+            "floor_spacing_m": 3.0,
+            "bay_width_m": 2.1,
+            "window_size_m": [
+              1.45,
+              1.7
+            ],
+            "window_recess_m": 0.14,
+            "front_bays": 9,
+            "note": "Grid is tighter than on the foreground glass building. Use subtle column and sill relief; avoid an entirely flat painted grid."
+          },
+          "image_anchor_bbox_uv": [
+            0.621,
+            0,
+            0.893,
+            0.711
+          ]
+        },
+        {
+          "id": "right-white-balcony-tower",
+          "aabb_m": {
+            "x": [
+              9.7,
+              29
+            ],
+            "y": [
+              0,
+              64
+            ],
+            "z": [
+              147,
+              190
+            ]
+          },
+          "silhouette": "Slender white/gray high-rise strip immediately behind Pegasus, with bright repeating horizontal balcony/slab edges.",
+          "image_anchor_bbox_uv": [
+            0.538,
+            0,
+            0.626,
+            0.619
+          ]
+        },
+        {
+          "id": "far-right-slim-beige-tower",
+          "aabb_m": {
+            "x": [
+              7.8,
+              16.8
+            ],
+            "y": [
+              0,
+              57
+            ],
+            "z": [
+              225,
+              245
+            ]
+          },
+          "silhouette": "Narrow distant warm gray tower to the right of the road axis; compact rectangular window grid.",
+          "image_anchor_bbox_uv": [
+            0.512,
+            0.379,
+            0.546,
+            0.65
+          ]
+        },
+        {
+          "id": "far-center-office",
+          "aabb_m": {
+            "x": [
+              -7.0,
+              8.0
+            ],
+            "y": [
+              0,
+              32
+            ],
+            "z": [
+              300,
+              322
+            ]
+          },
+          "silhouette": "Small dark gray mid-rise closing part of the very far view; fine horizontal floor stripes. It is only around 4–5% of image width.",
+          "image_anchor_bbox_uv": [
+            0.464,
+            0.553,
+            0.509,
+            0.682
+          ]
+        }
+      ],
+      "pegasus_sign": {
+        "face": "Camera-facing front plane of Pegasus, Z=69.94, normal (0,0,-1). It is beside the near-left edge of that beige front face; it is not on the X-facing receding side.",
+        "corners_m": [
+          [
+            11.8,
+            12.0,
+            69.94
+          ],
+          [
+            13.85,
+            12.0,
+            69.94
+          ],
+          [
+            13.85,
+            29.3,
+            69.94
+          ],
+          [
+            11.8,
+            29.3,
+            69.94
+          ]
+        ],
+        "width_m": 2.05,
+        "height_m": 17.3,
+        "photo_bbox_px": [
+          637,
+          122,
+          664,
+          342
+        ],
+        "photo_apparent_width_to_height": 0.12272727272727273,
+        "recommended_world_width_to_height": 0.11849710982658958,
+        "material": "Burnt orange/mustard banner or attached flat sign.",
+        "text": "Large white PEGASUS, vertically oriented along the tall panel; small vertical white contact text above.",
+        "priority": "Preserve the tall narrow orange shape and high placement even if tiny contact text is illegible. No freestanding sign, no wide landscape board, no billboard at roof height."
+      },
+      "street_details": {
+        "stairs_right": {
+          "region_m": {
+            "x": [
+              8.8,
+              17.2
+            ],
+            "z": [
+              23,
+              31
+            ]
+          },
+          "rise_m": 2.1,
+          "step_count": 10,
+          "step_rise_m": 0.21,
+          "tread_m": 0.33,
+          "rails": "Thin steel handrails and balustrades along stair edges; broad stairs climb into the extreme-right building plaza.",
+          "photo_bbox_uv": [
+            0.86,
+            0.635,
+            1,
+            0.776
+          ]
+        },
+        "trees": [
+          {
+            "id": "left-near",
+            "position_m": [
+              -7.7,
+              0,
+              31
+            ],
+            "trunk_height_m": 4.0,
+            "crown_center_height_m": 6.1,
+            "crown_radii_m": [
+              3.1,
+              2.7,
+              3.0
+            ],
+            "photo_crown_center_uv": [
+              0.257,
+              0.503
+            ]
+          },
+          {
+            "id": "left-2",
+            "position_m": [
+              -7.8,
+              0,
+              44
+            ],
+            "trunk_height_m": 3.8,
+            "crown_center_height_m": 6.0,
+            "crown_radii_m": [
+              2.7,
+              2.6,
+              2.6
+            ]
+          },
+          {
+            "id": "left-3",
+            "position_m": [
+              -7.8,
+              0,
+              61
+            ],
+            "trunk_height_m": 3.6,
+            "crown_center_height_m": 5.8,
+            "crown_radii_m": [
+              2.5,
+              2.4,
+              2.5
+            ]
+          },
+          {
+            "id": "left-4",
+            "position_m": [
+              -7.9,
+              0,
+              82
+            ],
+            "trunk_height_m": 3.7,
+            "crown_center_height_m": 5.8,
+            "crown_radii_m": [
+              2.4,
+              2.4,
+              2.3
+            ]
+          },
+          {
+            "id": "right-near",
+            "position_m": [
+              10.5,
+              0,
+              30
+            ],
+            "trunk_height_m": 3.8,
+            "crown_center_height_m": 5.3,
+            "crown_radii_m": [
+              2.8,
+              2.4,
+              2.7
+            ],
+            "photo_crown_center_uv": [
+              0.821,
+              0.56
+            ]
+          },
+          {
+            "id": "right-2",
+            "position_m": [
+              10.4,
+              0,
+              49
+            ],
+            "trunk_height_m": 3.7,
+            "crown_center_height_m": 5.9,
+            "crown_radii_m": [
+              2.9,
+              2.5,
+              2.7
+            ]
+          },
+          {
+            "id": "right-3",
+            "position_m": [
+              10.0,
+              0,
+              86
+            ],
+            "trunk_height_m": 5.1,
+            "crown_center_height_m": 9.0,
+            "crown_radii_m": [
+              4.0,
+              3.5,
+              3.4
+            ],
+            "photo_crown_center_uv": [
+              0.579,
+              0.615
+            ]
+          }
+        ],
+        "tree_form": "Pruned urban broadleaf crowns: irregular flattened/lobed masses, visible branching trunks, dark green interiors. Neither conical evergreens nor perfect spheres.",
+        "traffic_signals": [
+          {
+            "id": "left-near-red",
+            "pole_position_m": [
+              -6.8,
+              0,
+              24
+            ],
+            "signal_center_m": [
+              -6.8,
+              3.45,
+              24
+            ],
+            "housing_m": [
+              0.4,
+              1.18,
+              0.24
+            ],
+            "active": "red",
+            "photo_lamp_center_uv": [
+              0.215,
+              0.603
+            ],
+            "pedestrian_signal_center_height_m": 2.25
+          },
+          {
+            "id": "right-high-red",
+            "pole_position_m": [
+              13.6,
+              0,
+              34
+            ],
+            "arm_height_m": 7.2,
+            "arm_end_m": [
+              8.6,
+              7.2,
+              34
+            ],
+            "signal_center_m": [
+              8.6,
+              6.8,
+              34
+            ],
+            "active": "red",
+            "photo_lamp_center_uv": [
+              0.711,
+              0.487
+            ]
+          },
+          {
+            "id": "right-low-red",
+            "pole_position_m": [
+              13.6,
+              0,
+              34
+            ],
+            "signal_center_m": [
+              13.6,
+              3.8,
+              34
+            ],
+            "active": "red",
+            "photo_lamp_center_uv": [
+              0.864,
+              0.619
+            ]
+          }
+        ],
+        "hope_street_name_sign": {
+          "position_m": [
+            13.25,
+            5.3,
+            33.93
+          ],
+          "dimensions_m": [
+            1.6,
+            0.48,
+            0.05
+          ],
+          "face_normal": [
+            0,
+            0,
+            -1
+          ],
+          "text": "Hope",
+          "color": "Blue panel, white lettering",
+          "photo_bbox_uv": [
+            0.834,
+            0.535,
+            0.871,
+            0.559
+          ]
+        },
+        "street_lamps": [
+          {
+            "base_m": [
+              -7.8,
+              0,
+              32
+            ],
+            "height_m": 10.0,
+            "arm_direction": [
+              1,
+              0,
+              0
+            ],
+            "arm_length_m": 1.3
+          },
+          {
+            "base_m": [
+              13.9,
+              0,
+              35
+            ],
+            "height_m": 10.5,
+            "arm_direction": [
+              -1,
+              0,
+              0
+            ],
+            "arm_length_m": 2.0
+          }
+        ],
+        "parked_cars": {
+          "side": "left",
+          "centers_m": [
+            [
+              -4.6,
+              0.7,
+              61
+            ],
+            [
+              -4.6,
+              0.7,
+              69
+            ],
+            [
+              -4.6,
+              0.7,
+              80
+            ]
+          ],
+          "approx_dimensions_m": [
+            1.8,
+            1.4,
+            4.4
+          ],
+          "colors": [
+            "dark gray",
+            "silver",
+            "dark red"
+          ],
+          "note": "Few compact cars; they are scale cues, not hero objects."
+        },
+        "other": "One small yellow hydrant at the left corner, a few gray sidewalk utility boxes, restrained storefront details. Far traffic is very small."
+      },
+      "lighting": {
+        "evidence": "Warm slanted sunlight on pavement and tree tops, cool shaded near-left building, bright edges on right-side architecture, pale hazy sky. Long foreground shadow bands run diagonally from lower-left toward upper-right in the photograph.",
+        "suggested_direction_to_sun_world": [
+          -0.68,
+          0.38,
+          -0.63
+        ],
+        "suggested_sun_elevation_deg": 22.3,
+        "shadow_direction_on_ground": [
+          0.734,
+          0,
+          0.68
+        ],
+        "shadow_length_per_meter_height": 2.43,
+        "direction_confidence": "Medium-low: single-photo material/exposure variations do not uniquely recover solar direction. Tune to reproduce foreground diagonal shadow bands and lit tree crowns.",
+        "sun_color": "Warm neutral, about 4700–5200 K.",
+        "sky": "Pale desaturated yellow-gray/green-gray, not saturated blue. Use moderate ambient fill and atmospheric haze into distance.",
+        "shadow_style": "Long, fairly crisp architectural shadows with modestly soft foliage breakup. Do not use flat overcast illumination or noon-length shadows.",
+        "render_scale_note": "Use one consistent world scale for direct light, shadow coverage, atmosphere and material texture frequencies."
+      },
+      "big_mismatches_to_avoid": [
+        "Short standalone office blocks with fully visible roofs.",
+        "A very wide open boulevard with no close building edges.",
+        "A large horizontal Pegasus billboard or placing it on the receding side face.",
+        "A black or blue replacement for the large beige Pegasus plane.",
+        "Symmetric cloned buildings on both sides.",
+        "Centered road horizon halfway up the image.",
+        "Traffic lights and trees floating above road level.",
+        "Saturated blue sky, midday light, or no diagonal foreground shadow bands."
+      ]
+    },
+    {
+      "id": "clinic-courtyard",
+      "source": "image(8).png",
+      "source_pixels": [
+        1024,
+        683
+      ],
+      "source_aspect": 1.499267935578331,
+      "composition": {
+        "description": "A low strip of commercial/clinic units under a continuous saturated blue canopy, framed by a large cropped freestanding stone wall at left. Camera looks slightly diagonally at the strip: the right end is closer and larger. Tall open blue sky occupies the upper half; irregular cobbled courtyard fills the bottom quarter.",
+        "horizon_uv_approx": [
+          0.5,
+          0.571
+        ],
+        "main_canopy_front_edge_uv_approx": [
+          [
+            0.318,
+            0.558
+          ],
+          [
+            1.0,
+            0.573
+          ]
+        ],
+        "main_facade_base_uv_approx": [
+          [
+            0.347,
+            0.738
+          ],
+          [
+            1.0,
+            0.807
+          ]
+        ],
+        "sky_fraction_target": 0.42,
+        "avoid": "Do not replace this with a tall modern glass clinic, an isolated symmetric building, or individually detached awnings."
+      },
+      "camera": {
+        "position_m": [
+          0,
+          2.75,
+          0
+        ],
+        "target_m": [
+          0,
+          7.9,
+          85
+        ],
+        "vertical_fov_deg": 46.2,
+        "horizontal_fov_at_reference_aspect_deg": 65.0,
+        "near_m": 0.08,
+        "far_m": 180,
+        "pitch_up_deg_approx": 3.47,
+        "fitting_priority": [
+          "Put optical horizon near the blue front lip at V≈0.57. A higher effective eye (~2.7 m) is justified by this composition; do not lower the horizon to V=0.63.",
+          "Keep left stone wall about 14% of image width and nearly 60% of image height.",
+          "Make the long canopy front lip nearly horizontal in screen space around V=0.57.",
+          "Let sign top and roof lines rise toward screen-right because the right facade is closer.",
+          "Keep the rightmost adjacent shop cropped by the right edge."
+        ],
+        "calibration_note": "The canopy front lip remains almost horizontal in the photo while its roof/sign lines rise and ground line falls toward screen-right. This places the effective optical horizon close to the lip, around V=0.57. With facade distance ~18 m and the proposed 65-degree horizontal field, an effective camera height ~2.7 m fits that relationship better than a conventional 1.7 m eye. This is a compositional inference, not a measured physical camera height; terrain/level offsets and cropping may contribute."
+      },
+      "facade_coordinate_frame": {
+        "origin_m": [
+          2.0,
+          0,
+          18.0
+        ],
+        "direction_along_shops_unit": [
+          0.9063,
+          0,
+          -0.4226
+        ],
+        "front_normal_unit": [
+          -0.4226,
+          0,
+          -0.9063
+        ],
+        "yaw_deg": 25.0,
+        "formula": "For local horizontal coordinate s and depth d, point = origin + s*(0.9063,0,-0.4226) + d*(0.4226,0,0.9063). Positive d is behind the storefront. Y is height.",
+        "why": "This makes the left end farther away and the right end closer while the camera continues looking along +Z.",
+        "absolute_scale_uncertainty": "At least ±25%. Tune frame yaw 18–27 degrees and camera height before changing individual shop proportions."
+      },
+      "ground": {
+        "court_extent_m": {
+          "x": [
+            -18,
+            20
+          ],
+          "z": [
+            -4,
+            25
+          ]
+        },
+        "surface": "Uneven gray/brown small cobblestones, subtle relief; a nearer rectangular-paver apron band lies in front of the clinic ramp.",
+        "stone_size_m": [
+          0.12,
+          0.22
+        ],
+        "raised_front_walk_width_m": 0.9,
+        "raised_front_walk_height_m": 0.18,
+        "front_walk_edge": "Narrow reddish brown curb/border below shop glass.",
+        "parking_blocks": {
+          "local_s_m": [
+            -3.2,
+            -1.9
+          ],
+          "distance_in_front_of_facade_m": 3.1,
+          "dimensions_m": [
+            0.75,
+            0.15,
+            0.23
+          ],
+          "color": "Weathered pale gray concrete"
+        },
+        "no_markings": "No large fresh painted parking grid in the reference."
+      },
+      "building_masses": [
+        {
+          "id": "main-clinic-body",
+          "local_s_extent_m": [
+            -6.3,
+            1.0
+          ],
+          "depth_behind_facade_m": [
+            0,
+            6.5
+          ],
+          "height_m": 5.55,
+          "material": "White slightly weathered stucco.",
+          "parapet": "Irregular stepped flat roof. A short taller rectangular service box appears behind the left sign; no regular full upper-floor window row.",
+          "service_roof_box": {
+            "local_s_extent_m": [
+              -5.2,
+              -3.9
+            ],
+            "depth_range_m": [
+              2.0,
+              3.5
+            ],
+            "height_m": 6.15
+          }
+        },
+        {
+          "id": "marisa-and-right-body",
+          "local_s_extent_m": [
+            1.0,
+            10.5
+          ],
+          "depth_behind_facade_m": [
+            0,
+            7.0
+          ],
+          "height_m": 5.75,
+          "material": "White stucco with a very thin dark weathered roof-edge line.",
+          "parapet": "Long low white wall whose upper edge rises toward screen-right in projection."
+        },
+        {
+          "id": "left-recessed-dermi-wing",
+          "local_s_extent_m": [
+            -12.2,
+            -6.3
+          ],
+          "front_setback_d_m": 1.9,
+          "depth_m": 5.5,
+          "height_m": 3.55,
+          "material": "Warm cream/yellow stucco above yellow-brown tinted glazing.",
+          "awning": {
+            "color": "Very dark royal blue",
+            "lip_height_m": 2.65,
+            "projection_m": 0.85,
+            "fascia_height_m": 0.22
+          },
+          "photo_bbox_uv": [
+            0.132,
+            0.49,
+            0.347,
+            0.763
+          ]
+        },
+        {
+          "id": "left-freestanding-stone-wall",
+          "world_center_m": [
+            -8.45,
+            3.2,
+            14.15
+          ],
+          "world_size_m": [
+            4.0,
+            6.4,
+            0.38
+          ],
+          "yaw_deg": -12,
+          "material": "Large rectangular gray/tan stone tiles in varied checker/ashlar pattern, thin dark mortar, dark thin cap.",
+          "tile_size_m": [
+            0.52,
+            0.32
+          ],
+          "silhouette": "An unbroken tall solid wall, cropped at the extreme left. Its right edge leans only slightly through perspective. No windows or signage.",
+          "photo_bbox_uv": [
+            0.0,
+            0.228,
+            0.144,
+            0.808
+          ],
+          "tuning_note": "If projected width exceeds 15% of frame, translate farther left instead of shrinking it into a thin signpost. The left edge should remain outside the frame.",
+          "height_scale_note": "This larger wall height follows the effective raised camera calibration and is particularly uncertain in absolute metres. Keep the photo rectangle and crop as the authoritative visual target."
+        }
+      ],
+      "continuous_blue_canopy": {
+        "local_s_extent_m": [
+          -6.5,
+          10.7
+        ],
+        "back_attachment_height_m": 3.4,
+        "front_lip_height_m": 2.75,
+        "projection_m": 1.4,
+        "fascia_height_m": 0.18,
+        "material": "Saturated medium royal/azure blue metal or taut solid covering.",
+        "color_suggestion": "#0875c9 top with #0065b4 fascia; dark undersides.",
+        "geometry": "One continuous gently sloping plane with a thin straight front lip. Three subtle panel seams, not separate pyramid awnings. Leftmost canopy nose projects beyond the clinic wall.",
+        "seam_s_m": [
+          -1.45,
+          2.0,
+          6.3
+        ],
+        "photo_bbox_uv": [
+          0.316,
+          0.505,
+          1.0,
+          0.574
+        ],
+        "identity_priority": "Very high. Preserve the long saturated blue horizontal band across clinic, isiLAB and Marisa."
+      },
+      "shopfronts": [
+        {
+          "id": "dermatology-clinic",
+          "local_s_extent_m": [
+            -6.3,
+            -1.35
+          ],
+          "sign_height_range_m": [
+            3.47,
+            4.6
+          ],
+          "label": "CENTRO DERMATOLÓGICO",
+          "secondary_label": "dermi",
+          "sign_style": "White signboard, thin blue/gray frame; large narrow blue uppercase clinic name, green fine subline and a small blue/green dermi badge at right.",
+          "glass_height_range_m": [
+            0.18,
+            3.03
+          ],
+          "frame_color": "Pale aluminum/white",
+          "glass": "Upper transoms dark gray-green; lower left door glass darker, right clinic panels pale frosted aqua/gray.",
+          "mullions": {
+            "vertical_s_m": [
+              -6.25,
+              -5.2,
+              -4.15,
+              -2.7,
+              -1.4
+            ],
+            "horizontal_heights_m": [
+              1.1,
+              2.36,
+              2.95
+            ],
+            "thickness_m": 0.055
+          },
+          "entry": "One narrow hinged glazed door in left-middle bay; a small printed poster on/near its glazing. Do not replace the whole frontage with one uninterrupted transparent pane.",
+          "photo_sign_bbox_uv": [
+            0.352,
+            0.454,
+            0.542,
+            0.523
+          ]
+        },
+        {
+          "id": "isilab",
+          "local_s_extent_m": [
+            -1.35,
+            2.1
+          ],
+          "sign_height_range_m": [
+            3.48,
+            4.8
+          ],
+          "label": "isiLAB",
+          "secondary_label": "ANÁLISIS CLÍNICOS",
+          "sign_style": "White signboard; large blue/teal isiLAB wordmark and small blue secondary line.",
+          "glass_height_range_m": [
+            0.18,
+            3.03
+          ],
+          "frame_color": "Dark green/aluminum",
+          "glass": "Very dark green-tinted frontage, with strong solid turquoise/teal lower pane band from roughly 0.2 to 1.0 m.",
+          "mullions": {
+            "vertical_s_m": [
+              -1.3,
+              0.4,
+              2.05
+            ],
+            "horizontal_heights_m": [
+              1.0,
+              2.95
+            ],
+            "thickness_m": 0.045
+          },
+          "entry": "Dark central glazed double doors with narrow silver pulls; small repeated isiLAB lettering near upper glass.",
+          "photo_sign_bbox_uv": [
+            0.54,
+            0.427,
+            0.696,
+            0.514
+          ]
+        },
+        {
+          "id": "marisa",
+          "local_s_extent_m": [
+            2.1,
+            6.5
+          ],
+          "sign_height_range_m": [
+            3.45,
+            5.0
+          ],
+          "label": "Marisa",
+          "secondary_label": "Pastelería",
+          "sign_style": "Large flowing black/dark-blue script Marisa on white, green leaf accent above, small Pastelería at upper right.",
+          "glass_height_range_m": [
+            0.18,
+            3.03
+          ],
+          "frame_color": "Dark brown/green with pale facade dividers",
+          "glass": "Dark shop interior behind greenish glass; small light lettering around lower pane corners.",
+          "mullions": {
+            "vertical_s_m": [
+              2.15,
+              3.15,
+              5.7,
+              6.45
+            ],
+            "horizontal_heights_m": [
+              0.22,
+              2.99
+            ],
+            "thickness_m": 0.065
+          },
+          "entry": "Recessed dark wood/brown glazed double door, centered under brand; no bright clinic-like white doors.",
+          "photo_sign_bbox_uv": [
+            0.694,
+            0.402,
+            0.911,
+            0.518
+          ]
+        },
+        {
+          "id": "cropped-right-neighbor",
+          "local_s_extent_m": [
+            6.5,
+            10.7
+          ],
+          "sign_height_range_m": [
+            3.47,
+            4.7
+          ],
+          "label": "partially cropped neighboring shop",
+          "sign_style": "White inset sign with thin gray framing; only a fragment is visible.",
+          "glass_height_range_m": [
+            0.18,
+            3.03
+          ],
+          "frame_color": "Dark brown",
+          "note": "The frame cuts off most of this unit; do not pull it all into view."
+        }
+      ],
+      "ramp": {
+        "evidence_note": "The photograph clearly shows a long gently rising concrete approach, a left turnback/landing and overlapping white rail lines. The exact concealed path is not fully recoverable; this two-run interpretation reproduces the visible structure.",
+        "coordinate_system": "Facade-local s and d. Negative d is toward the courtyard/camera.",
+        "platform_extent": {
+          "s_m": [
+            -10.4,
+            -1.0
+          ],
+          "d_m": [
+            -3.1,
+            -0.2
+          ]
+        },
+        "deck_material": "Weathered pale concrete with dark stone/concrete exposed edge.",
+        "run_width_m": 1.15,
+        "path_nodes_s_y_d_m": [
+          [
+            -1.05,
+            0.02,
+            -3.15
+          ],
+          [
+            -8.8,
+            0.27,
+            -3.15
+          ],
+          [
+            -9.25,
+            0.3,
+            -2.55
+          ],
+          [
+            -8.8,
+            0.33,
+            -1.95
+          ],
+          [
+            -3.75,
+            0.55,
+            -1.95
+          ],
+          [
+            -3.75,
+            0.55,
+            -0.25
+          ]
+        ],
+        "turnback": "U-shaped return at left end; preserve two long mostly parallel runs and short end connection rather than a single straight stair.",
+        "handrails": {
+          "height_above_deck_m": 0.92,
+          "lower_rail_height_above_deck_m": 0.48,
+          "tube_diameter_m": 0.035,
+          "post_spacing_m": 1.3,
+          "color": "Off-white powder-coated metal",
+          "style": "Thin tubular horizontal rails with simple right-angle/rounded joins. Rails cast long thin shadows on ramp."
+        },
+        "photo_bbox_uv": [
+          0.136,
+          0.663,
+          0.552,
+          0.783
+        ],
+        "visual_note": "The foreground low rail travels left-to-right across the ramp; higher rails overlap behind it. Avoid thick barriers, opaque sidewalls or a monumental central staircase."
+      },
+      "roof_equipment": [
+        {
+          "id": "large-wire-dish-left",
+          "local_s_y_d_m": [
+            -12.3,
+            5.3,
+            2.7
+          ],
+          "diameter_m": 1.85,
+          "normal_world_approx": [
+            -0.35,
+            0.55,
+            -0.76
+          ],
+          "construction": "Thin dark-gray circular rim, radial ribs and sparse concentric wire rings; shallow concave dish, visible supporting post. Do not use an opaque white satellite disk.",
+          "photo_bbox_uv": [
+            0.23,
+            0.412,
+            0.286,
+            0.5
+          ]
+        },
+        {
+          "id": "small-dark-dish",
+          "local_s_y_d_m": [
+            -9.7,
+            4.9,
+            2.1
+          ],
+          "diameter_m": 0.65,
+          "construction": "Small shallow dark dish, partly occluded by roof."
+        },
+        {
+          "id": "brick-chimney-left",
+          "local_s_y_d_m": [
+            -14.6,
+            4.1,
+            2.1
+          ],
+          "size_m": [
+            0.42,
+            0.9,
+            0.42
+          ],
+          "construction": "Red brick shaft with small wider dark red cap.",
+          "photo_bbox_uv": [
+            0.171,
+            0.442,
+            0.201,
+            0.516
+          ]
+        },
+        {
+          "id": "black-roof-tank",
+          "local_s_y_d_m": [
+            -4.4,
+            6.45,
+            3.0
+          ],
+          "size_m": [
+            0.52,
+            0.5,
+            0.5
+          ],
+          "construction": "Small squat dark cylindrical tank above the stepped white service roof.",
+          "photo_bbox_uv": [
+            0.402,
+            0.368,
+            0.425,
+            0.399
+          ]
+        },
+        {
+          "id": "white-roof-cage",
+          "local_s_y_d_m": [
+            0.3,
+            5.65,
+            2.0
+          ],
+          "size_m": [
+            0.75,
+            0.7,
+            0.75
+          ],
+          "construction": "Light square metal cage/HVAC guard with diagonal fine bracing, not a massive cube.",
+          "photo_bbox_uv": [
+            0.629,
+            0.363,
+            0.674,
+            0.424
+          ]
+        },
+        {
+          "id": "communications-mast",
+          "local_s_y_d_m": [
+            2.0,
+            5.75,
+            3.7
+          ],
+          "height_above_roof_m": 13.5,
+          "width_m": 0.13,
+          "construction": "Very thin dark reddish lattice mast with three chords/cross bracing. Mast extends beyond the top of the photo near U=0.71. A few very faint guy wires diverge toward roof anchors.",
+          "photo_anchor_uv": [
+            0.708,
+            0.0
+          ],
+          "avoid": "No wide telecom tower, rooftop billboard frame or thick solid pole."
+        }
+      ],
+      "vegetation": {
+        "left_courtyard_tree": {
+          "world_position_m": [
+            -6.9,
+            0,
+            12.0
+          ],
+          "height_m": 3.4,
+          "trunk_radius_m": 0.06,
+          "crown_radii_m": [
+            0.7,
+            1.4,
+            0.65
+          ],
+          "style": "Small sparse drooping green tree. It sits between the stone wall and ramp, partly hiding the left glazing.",
+          "photo_bbox_uv": [
+            0.135,
+            0.52,
+            0.248,
+            0.799
+          ]
+        },
+        "foreground_right": "Only a few thin cropped yellow-green leaves can enter from the lower right; no central garden or large lawn."
+      },
+      "lighting": {
+        "evidence": "Clear saturated blue sky, bright white stucco, very dark under-canopy glass, hard courtyard shadows. Large left-wall shadow reaches diagonally into the foreground/courtyard.",
+        "suggested_direction_to_sun_world": [
+          -0.82,
+          0.56,
+          -0.12
+        ],
+        "suggested_sun_elevation_deg": 34.1,
+        "shadow_direction_on_ground": [
+          0.989,
+          0,
+          0.145
+        ],
+        "shadow_length_per_meter_height": 1.48,
+        "direction_confidence": "Medium-low; prioritize a broad dark polygon from the left wall stretching screen-right across the paving and hard canopy shade.",
+        "sun_color": "Neutral daylight, approximately 5500–6000 K.",
+        "sky": "Clean medium/deep blue, slightly lighter close to lower-left horizon.",
+        "shadow_style": "Crisp geometric shadows; black-green shaded interiors retain some detail. The left wall shadow should cover much of the lower-left apron and stop around mid-frame.",
+        "tone": "Bright but avoid pure-white clipping across all stucco. Stone tiles need visible warm/cool variation."
+      },
+      "big_mismatches_to_avoid": [
+        "Missing or undersized freestanding stone wall.",
+        "A front-on symmetrical facade with no rightward scale increase.",
+        "A tall block or regular second story above the shops.",
+        "Separate little blue awnings instead of one continuous long canopy.",
+        "Wrong shop order: clinic left, isiLAB middle, Marisa right.",
+        "All glass equally clear or all opaque; each storefront has a distinct tint and lower-panel treatment.",
+        "A single steep straight staircase replacing the shallow ramp turnbacks.",
+        "Oversized opaque roof dishes or thick antennas.",
+        "A paved parking lot with painted bays instead of broad cobbled courtyard.",
+        "Removing the large amount of sky or reducing the left-wall ground shadow."
+      ]
+    }
+  ]
+}

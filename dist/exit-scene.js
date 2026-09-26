@@ -1,11 +1,13 @@
 import * as T from './vendor/three.module.min.js';
-import {exitPoint,exitSample,exitSurface,ease,EXIT_CITY_Y} from './exit-route.js?v=49';
-import {height} from './world.js?v=49';
-import {createUrbanMaterials} from './urban-materials.js?v=49';
-import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=49';
-import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=49';
-import * as P from './urban-props.js?v=49';
-import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=49';
+import {exitPoint,exitSample,exitSurface,ease,EXIT_CITY_Y} from './exit-route.js?v=50';
+import {height} from './world.js?v=50';
+import {createUrbanMaterials} from './urban-materials.js?v=50';
+import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=50';
+import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=50';
+import * as P from './urban-props.js?v=50';
+import {addReferenceMaterials} from './reference-materials.js?v=50';
+import {createReferenceScenes,referenceWaypoint} from './reference-scenes.js?v=50';
+import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=50';
 const B=CITY_BLOCK,Y=EXIT_CITY_Y;
 const ground=(x,z)=>exitSurface(exitSample(x,z,{}),height(x,z));
 function along(s,d=0){const p=exitPoint(s);return{x:p.x+p.nx*d,z:p.z+p.nz*d,ry:Math.atan2(p.tx,p.tz)};}
@@ -30,7 +32,7 @@ function ribbon(b,key,s0,s1,offset,width,dy=0){
 function makeApproach(mats){
  const b=new UrbanBatch(mats),early=new UrbanBatch(mats),records=[];
  for(let s=105;s<220;s+=17)for(const side of[-1,1]){const p=along(s,side*(6+ease(130,210,s)*4)),y=ground(p.x,p.z);early.cylinder('concrete',p.x,y+.28,p.z,.11,.13,.55,6);if(s>135)shrub(early,p.x+side*1.8,y,p.z,.8);}
- const facilities=[[155,-1,'cinder_warehouse',22,17,1,26],[176,1,'steel_prefab',19,12,1,31],[207,-1,'auto_shop',29,18,1,25],[233,1,'substation',25,23,1,29],[252,-1,'clinic',29,20,1,23],[277,1,'bakery',27,18,1,24],[301,-1,'research_lab',29,21,2,21],[325,1,'strip_mall',34,21,1,24],[350,-1,'two_story_shops',31,23,2,23],[377,1,'bank_branch',30,21,1,24],[388,-1,'travel_agency',32,23,2,23]];
+ const facilities=[[155,-1,'cinder_warehouse',22,17,1,26],[176,1,'steel_prefab',19,12,1,31],[207,-1,'auto_shop',29,18,1,25],[233,1,'substation',25,23,1,29],[252,-1,'clinic',29,20,1,23],[301,-1,'research_lab',29,21,2,21],[350,-1,'two_story_shops',31,23,2,23]];
  for(let i=0;i<facilities.length;i++){
   const[s,side,type,w,d,floors,offset]=facilities[i],p=along(s,side*(offset+d/2)),base=s>218?Y:ground(p.x,p.z),ry=p.ry-side*Math.PI/2;
   b.push(p.x,base+.17,p.z,ry);const apron=offset-roadHalf(s)-1;b.box('asphalt',0,-.12,apron/2,w+4,.05,d+apron+4);b.box('sidewalk',0,-.055,d/2+1.3,w+1,.11,2.6);addBuilding(b,{type,w,d,floors,seed:1009+i*19,lod:0});b.pop();records.push({type,x:p.x,z:p.z,w,d,floors});
@@ -38,17 +40,18 @@ function makeApproach(mats){
   const rear=along(s,side*(offset+d+3));b.push(rear.x,base+.035,rear.z,ry);b.box('asphalt',0,0,0,w+4,.06,6);place(b,-w*.32,.06,0,0,P.addTrashBin);place(b,w*.32,.06,0,0,P.addUtilityCabinet,{variant:i%2});b.pop();
   const t=along(s-w*.42,side*(roadHalf(s)+3.7));place(b,t.x,(s>218?Y:ground(t.x,t.z))+.15,t.z,0,P.addStreetTree,{seed:i*291+17,scale:.80+(i%3)*.12});
  }
- for(let i=0;i<6;i++){const s=265+i*23,side=i%2?1:-1,p=along(s,side*(65+(i%3)*13));b.push(p.x,Y+.17,p.z,p.ry-side*Math.PI/2);addBuilding(b,{type:['cinder_warehouse','courtyard_motel','two_story_shops','precast_tower'][i%4],w:29,d:24,floors:i%4===3?8:2,seed:509+i,lod:1});b.pop();}
- ribbon(b,'asphalt',225,430,0,s=>roadHalf(s)*2,.028);
+ for(let i=0;i<4;i++){const s=265+i*23,side=i%2?1:-1,p=along(s,side*(65+(i%3)*13));b.push(p.x,Y+.17,p.z,p.ry-side*Math.PI/2);addBuilding(b,{type:['cinder_warehouse','courtyard_motel','two_story_shops','precast_tower'][i%4],w:29,d:24,floors:i%4===3?8:2,seed:509+i,lod:1});b.pop();}
+ ribbon(b,'asphalt',225,354,0,s=>roadHalf(s)*2,.028);
  for(const side of[-1,1]){
-  ribbon(b,'sidewalk',216,408,s=>side*(roadHalf(s)+2.35),4.7,.17);ribbon(b,'concrete',190,408,s=>side*(roadHalf(s)+.12),.24,.20);
-  for(let s=241;s<400;s+=30){const p=along(s,side*(roadHalf(s)+.8));place(b,p.x,Y+.17,p.z,p.ry+side*Math.PI/2,P.addStreetLight,{height:8.6,arm:2.3});if(s>280){const q=along(s+9,side*(roadHalf(s)+1));place(b,q.x,Y+.17,q.z,p.ry,P.addParkingMeter);}}
+  ribbon(b,'sidewalk',216,350,s=>side*(roadHalf(s)+2.35),4.7,.17);ribbon(b,'concrete',190,350,s=>side*(roadHalf(s)+.12),.24,.20);
+  for(let s=241;s<350;s+=30){const p=along(s,side*(roadHalf(s)+.8));place(b,p.x,Y+.17,p.z,p.ry+side*Math.PI/2,P.addStreetLight,{height:8.6,arm:2.3});if(s>280){const q=along(s+9,side*(roadHalf(s)+1));place(b,q.x,Y+.17,q.z,p.ry,P.addParkingMeter);}}
  }
- for(let s=275;s<405;s+=4){const p=along(s),len=Math.min(3.95,405-s);for(const side of[-1,1]){const q=along(s,side*.18);b.box('yellow',q.x,Y+.042,q.z,.11,.009,len,p.ry,.94);}if(s>340&&Math.floor(s/4)%2)for(const side of[-1,1]){const q=along(s,side*3.5);b.box('white',q.x,Y+.044,q.z,.11,.009,3,p.ry,.89);}}
- for(let s=300;s<429;s+=36){const q=along(s,-2.6);place(b,q.x,Y+.05,q.z,0,P.addManhole);for(const side of[-1,1]){const p=along(s+8,side*(roadHalf(s)-.35));place(b,p.x,Y+.045,p.z,p.ry,P.addStormDrain);}}
+ for(let s=275;s<350;s+=4){const p=along(s),len=Math.min(3.95,350-s);for(const side of[-1,1]){const q=along(s,side*.18);b.box('yellow',q.x,Y+.042,q.z,.11,.009,len,p.ry,.94);}if(s>340&&Math.floor(s/4)%2)for(const side of[-1,1]){const q=along(s,side*3.5);b.box('white',q.x,Y+.044,q.z,.11,.009,3,p.ry,.89);}}
+ for(let s=300;s<354;s+=36){const q=along(s,-2.6);place(b,q.x,Y+.05,q.z,0,P.addManhole);for(const side of[-1,1]){const p=along(s+8,side*(roadHalf(s)-.35));place(b,p.x,Y+.045,p.z,p.ry,P.addStormDrain);}}
  return{object:b.finish('Urban approach / occupied lots and low commerce'),early:early.finish('Urban approach / rural verge'),colliders:b.colliders,walks:b.walks,records};
 }
 function roadAndFurniture(b,plan,lod){
+ if(plan.reserved)return;
  const{x,z,ix,iz,seed}=plan;b.push(x,Y,z,0);b.box(plan.reserved?'sidewalk':'asphalt',56,-.03,56,112,.06,112);
  if(!plan.reserved){
   b.box('sidewalk',56,.075,56,90,.15,82);b.walk(56,56,90,82,.15);for(const cz of[13,99]){b.box('sidewalk',56,.075,cz,82,.15,4);b.walk(56,cz,82,4,.15);}
@@ -76,10 +79,10 @@ function* buildBlock(mats,plan,lod){
  b.pop();return{object:b.finish('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district),colliders:b.colliders,walks:b.walks,plan,lod};
 }
 export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
- const mats=createUrbanMaterials(),approach=makeApproach(mats),root=new T.Group(),blocks=new Map();root.name='Level 10 to Level 11 / urban fabric';root.add(approach.object,approach.early);root.visible=false;
+ const mats=addReferenceMaterials(createUrbanMaterials()),approach=makeApproach(mats),references=createReferenceScenes(mats),root=new T.Group(),blocks=new Map();root.name='Level 10 to Level 11 / urban fabric';root.add(approach.object,approach.early,references.object);root.visible=false;
  const stats={mode:'10',blocks:0,buildings:approach.records.length,typologies:BUILDING_TYPES.length,triangles:0,draws:0,pending:0,district:'transition'};
  let city=false,origin='',wantedKey='',queue=[],job=null,disposed=false;
- function recount(){stats.blocks=blocks.size;stats.buildings=approach.records.length;stats.triangles=0;stats.draws=0;for(const g of[approach.object,approach.early,...Array.from(blocks.values(),v=>v.object)]){const q=g.userData.cityStats;stats.triangles+=q.triangles;stats.draws+=q.draws;}for(const v of blocks.values())stats.buildings+=v.plan.buildings.length;stats.pending=queue.length+Number(!!job);}
+ function recount(){stats.blocks=blocks.size;stats.buildings=approach.records.length;stats.triangles=0;stats.draws=0;for(const g of[approach.object,approach.early,references.object,...Array.from(blocks.values(),v=>v.object)]){const q=g.userData.cityStats;stats.triangles+=q.triangles;stats.draws+=q.draws;}for(const v of blocks.values())stats.buildings+=v.plan.buildings.length;stats.pending=queue.length+Number(!!job);}
  function commitBlock(v,key){blocks.set(key,v);root.add(v.object);onAdd(v.object);v.object.updateMatrix();v.object.matrixAutoUpdate=false;v.object.updateMatrixWorld(true);recount();}
  function removeBlock(key){const v=blocks.get(key);if(!v)return;onRemove(v.object);v.object.removeFromParent();v.object.traverse(m=>m.geometry?.dispose());blocks.delete(key);}
  function requestAround(wx,wz,force=false){
@@ -97,8 +100,8 @@ export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
  }
  async function prepareAt(wx,wz){requestAround(wx,wz,true);while(queue.length||job){advance();await new Promise(done=>setTimeout(done,0));}}
  function setCity(value){city=value;stats.mode=value?'11':'10';approach.early.visible=!value;wantedKey='';if(!value){queue=[];if(job){job.generator.return();job=null;}for(const k of blocks.keys())removeBlock(k);}recount();}
- function resolve(position,state){if(!city&&!root.visible)return position;const wx=Number(state.cx)*64,wz=Number(state.cz)*64;position.x+=wx;position.z+=wz;resolveUrban(position,approach.colliders);const p=worldToCity(position.x,position.z),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)resolveUrban(position,v.colliders);}position.x-=wx;position.z-=wz;return position;}
- function floorAt(wx,wz){let y=urbanWalkHeight(wx,wz,approach.walks,Y);const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)y=urbanWalkHeight(wx,wz,v.walks,y);}if(p.z<-12&&p.z>-205&&Math.abs(p.x)<40){const s=p.z+420,d=Math.abs(p.x);if(d>roadHalf(s)&&d<roadHalf(s)+4.7)y=Math.max(y,Y+.17);}return y;}
- function dispose(){disposed=true;if(job)job.generator.return();for(const key of blocks.keys())removeBlock(key);root.traverse(m=>m.geometry?.dispose());for(const[key,m]of Object.entries(mats)){if(key.startsWith('sign:'))m.map?.dispose();m.dispose();}root.removeFromParent();}
- recount();return{object:root,update,setCity,resolve,floorAt,stats,dispose,prepareAt,waypoint:cityWaypoint,colliders:approach.colliders,get cityColliders(){return[...approach.colliders,...Array.from(blocks.values()).flatMap(v=>v.colliders)];},get blocks(){return blocks;},buildingTypes:BUILDING_TYPES};
+ function resolve(position,state){if(!city&&!root.visible)return position;const wx=Number(state.cx)*64,wz=Number(state.cz)*64;position.x+=wx;position.z+=wz;resolveUrban(position,approach.colliders);resolveUrban(position,references.colliders);const p=worldToCity(position.x,position.z),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)resolveUrban(position,v.colliders);}position.x-=wx;position.z-=wz;return position;}
+ function floorAt(wx,wz){let y=urbanWalkHeight(wx,wz,references.walks,urbanWalkHeight(wx,wz,approach.walks,Y));const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)y=urbanWalkHeight(wx,wz,v.walks,y);}if(p.z<-12&&p.z>-205&&Math.abs(p.x)<40){const s=p.z+382,d=Math.abs(p.x);if(d>roadHalf(s)&&d<roadHalf(s)+4.7)y=Math.max(y,Y+.17);}return y;}
+ function dispose(){disposed=true;if(job)job.generator.return();for(const key of blocks.keys())removeBlock(key);root.traverse(m=>m.geometry?.dispose());for(const[key,m]of Object.entries(mats)){if(key.startsWith('sign:')||['photoBanner','photoFamima','photoHope','photoDermica'].includes(key))m.map?.dispose();m.dispose();}root.removeFromParent();}
+ recount();return{object:root,update,setCity,resolve,floorAt,stats,dispose,prepareAt,waypoint:name=>name.startsWith('photo-')?referenceWaypoint(name):cityWaypoint(name),references,colliders:[...approach.colliders,...references.colliders],get cityColliders(){return[...approach.colliders,...references.colliders,...Array.from(blocks.values()).flatMap(v=>v.colliders)];},get blocks(){return blocks;},buildingTypes:BUILDING_TYPES};
 }

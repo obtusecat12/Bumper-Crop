@@ -1,8 +1,8 @@
-import {exitPoint} from './exit-route.js?v=49';
-import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.js?v=49';
-import {BUILDING_TYPES} from './urban-buildings.js?v=49';
-import {paintCompass} from './retro-instruments.js?v=49';
-import {createMapAtlas} from './map-atlas.js?v=49';
+import {exitPoint} from './exit-route.js?v=50';
+import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.js?v=50';
+import {BUILDING_TYPES} from './urban-buildings.js?v=50';
+import {paintCompass} from './retro-instruments.js?v=50';
+import {createMapAtlas} from './map-atlas.js?v=50';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
 export function mapPoint(center,dx,dz){
@@ -74,6 +74,8 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   for(let dz=minZ;dz<=maxZ;dz++)for(let dx=minX;dx<=maxX;dx++)list.push({cx:c.cx+BigInt(dx),cz:c.cz+BigInt(dz),x:w/2+(dx*64-c.x)*scale,z:h/2+(dz*64-c.z)*scale,d:(dx*64+32-c.x)**2+(dz*64+32-c.z)**2});
   return list;
  }
+ let urbanReferenceShapes=[];
+ function setUrbanReferenceShapes(shapes){urbanReferenceShapes=shapes.filter(q=>q.kind==='obb'&&q.w>4&&q.d>4);dirty=true;miniCenter=null;}
  function cityPaint(context,c,w,h,scale){
   context.fillStyle='#555a57';context.fillRect(0,0,w,h);
   const ox=Number(c.cx)*64+c.x,oz=Number(c.cz)*64+c.z;
@@ -81,6 +83,8 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   const center=worldToCity(ox,oz),bx=Math.floor(center.x/CITY_BLOCK),bz=Math.floor(center.z/CITY_BLOCK),r=Math.ceil(Math.max(w,h)/scale/CITY_BLOCK*.72)+1;
   context.strokeStyle='#303735';context.lineWidth=22*scale;
   for(let i=-r;i<=r;i++){for(const axis of[0,1]){const a=xy(cityToWorld(axis?(bx-r)*CITY_BLOCK:(bx+i)*CITY_BLOCK,axis?(bz+i)*CITY_BLOCK:(bz-r)*CITY_BLOCK)),b=xy(cityToWorld(axis?(bx+r+1)*CITY_BLOCK:(bx+i)*CITY_BLOCK,axis?(bz+i)*CITY_BLOCK:(bz+r+1)*CITY_BLOCK));context.beginPath();context.moveTo(...a);context.lineTo(...b);context.stroke();}}
+  context.fillStyle='#555a57';context.beginPath();for(const [i,p]of [[-110,-32],[110,-32],[110,448],[-110,448]].map((p,i)=>[i,xy(cityToWorld(...p))])){if(!i)context.moveTo(...p);else context.lineTo(...p);}context.closePath();context.fill();context.lineWidth=22*scale;for(const segment of[[0,-32,0,448],[-160,0,160,0]]){context.beginPath();context.moveTo(...xy(cityToWorld(segment[0],segment[1])));context.lineTo(...xy(cityToWorld(segment[2],segment[3])));context.stroke();}
+  for(const q of urbanReferenceShapes){context.fillStyle='#a0a39a';context.beginPath();for(let k=0;k<4;k++){const u=(k===0||k===3?-1:1)*q.w/2,v=(k<2?-1:1)*q.d/2,p=xy({x:q.x+Math.cos(q.ry)*u+Math.sin(q.ry)*v,z:q.z-Math.sin(q.ry)*u+Math.cos(q.ry)*v});if(!k)context.moveTo(...p);else context.lineTo(...p);}context.closePath();context.fill();}
   for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++)for(const b of cityBlockPlan(ix,iz,BUILDING_TYPES).buildings){context.fillStyle=b.floors>7?'#a0a39a':'#878b80';context.beginPath();for(let k=0;k<4;k++){const u=(k===0||k===3?-1:1)*b.w/2,v=(k<2?-1:1)*b.d/2,p=xy(cityToWorld(b.x+Math.cos(b.ry)*u+Math.sin(b.ry)*v,b.z-Math.sin(b.ry)*u+Math.cos(b.ry)*v));if(k===0)context.moveTo(...p);else context.lineTo(...p);}context.closePath();context.fill();}
   context.strokeStyle='#303735';context.lineWidth=13*scale;context.beginPath();for(let s=110;s<=430;s+=8){const p=xy(exitPoint(s));if(s===110)context.moveTo(...p);else context.lineTo(...p);}context.stroke();
   return 0;
@@ -115,5 +119,5 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
  function hide(){open=false;modal.hidden=true;pointer=null;tiles.cancelPending();miniCenter=null;}
  function setBusy(value,text){busy=value;modal.setAttribute('aria-busy',String(value));modal.querySelectorAll('button').forEach(b=>b.disabled=value);if(text)setStatus(text);dirty=true;}
  function dispose(){disposed=true;observer.disconnect();tiles.dispose();mini.remove();modal.remove();}
- return{root:mini,paint(c,r){c.save();c.translate(r.left,r.top);c.scale(r.width/256,r.height/296);paintCompass(c,parts,miniCanvas,player?.yaw||0,mini.querySelector('.map-mini-bearing').textContent,{...uiTokens,pixelMode:document.body.dataset.filter==='ps1'});c.restore();},get revision(){return counts.minimapPaints+','+counts.mapPaints+','+lastYaw;},update,show,hide,setLevel,setBusy,setStatus,setUITheme,dispose,modal,stats:()=>({...counts,...tiles.stats()}),get isOpen(){return open;}};
+ return{root:mini,paint(c,r){c.save();c.translate(r.left,r.top);c.scale(r.width/256,r.height/296);paintCompass(c,parts,miniCanvas,player?.yaw||0,mini.querySelector('.map-mini-bearing').textContent,{...uiTokens,pixelMode:document.body.dataset.filter==='ps1'});c.restore();},get revision(){return counts.minimapPaints+','+counts.mapPaints+','+lastYaw;},update,show,hide,setLevel,setUrbanReferenceShapes,setBusy,setStatus,setUITheme,dispose,modal,stats:()=>({...counts,...tiles.stats()}),get isOpen(){return open;}};
 }

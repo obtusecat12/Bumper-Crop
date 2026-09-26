@@ -1,6 +1,6 @@
-import {weatherTextures} from './weather-textures.js?v=49';
-import {fogVolumePars} from './fog-volume.js?v=49';
-import {createAdvancingFog} from './advancing-fog.js?v=49';
+import {weatherTextures} from './weather-textures.js?v=50';
+import {fogVolumePars} from './fog-volume.js?v=50';
+import {createAdvancingFog} from './advancing-fog.js?v=50';
 import * as T from './vendor/three.module.min.js';
 
 // World-ray projected cellular decks; optical column depth gives dark cores
@@ -119,6 +119,8 @@ uniform sampler2D uCloudScreen;
 uniform vec2 uCloudViewport;
 
 uniform vec3 uStageEvent;
+uniform vec4 uReferenceSky;
+uniform float uReferenceClinic;
 ${fogVolumePars}
 
 // 1,250 m cellular period, 64 periodic cells = 80 km; each world rebase
@@ -274,6 +276,8 @@ void main() {
    vec4 v=fogVolumeAt(48.);float trans=pow(v.a,3.);
    skyColor=skyColor*trans+v.rgb/max(1.-v.a,.0001)*(1.-trans);
   }
+  vec3 refSky=uReferenceSky.rgb*mix(1.12,.89,smoothstep(0.,.7,max(rd.y,0.))*uReferenceClinic);
+  skyColor=mix(skyColor,refSky,uReferenceSky.a);
   gl_FragColor = vec4(skyColor, 1.0);
   #include <colorspace_fragment>
 }`;
@@ -456,7 +460,7 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
   const fogController = installLayeredFog({scene,noiseTexture:texture,volumeUniforms});
   const uniforms = {
     ...volumeUniforms,
-    uStageEvent:{value:new T.Vector3()},
+    uStageEvent:{value:new T.Vector3()},uReferenceSky:{value:new T.Vector4()},uReferenceClinic:{value:0},
     uSkyEvent: {value:new T.Vector4()},
     uSkyWallpaper: {value:weatherTextures['cloud-wallpaper']},
     uCloudCached:{value:false},uCloudScreen:{value:null},uCloudViewport:{value:new T.Vector2(1,1)},
@@ -505,6 +509,7 @@ export function createAtmosphere({scene,renderer, fog = scene?.fog, quality = 'b
   };
   function update(options = {}) {
     const {time = 0, quality: q, camera, originX = 0, originZ = 0, mist = 0, rain = 0, event={}} = options;
+    const reference=options.reference;if(reference)uniforms.uReferenceSky.value.set(reference.sky.r,reference.sky.g,reference.sky.b,reference.amount);else uniforms.uReferenceSky.value.w=0;uniforms.uReferenceClinic.value=reference?.clinic||0;
     uniforms.uStageEvent.value.set(event.stageAge||0,event.stageReveal||0,event.stageRestore||0);
     uniforms.uSkyEvent.value.set(event.blackout||0,event.wallpaper||0,event.clear||0,event.dusk||0);
     uniforms.uCloudTime.value = Number(time) || 0;

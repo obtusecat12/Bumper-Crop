@@ -1,0 +1,68 @@
+[
+  {
+    "name": "hope-sandstone",
+    "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-3e240973-d95c-4b29-9699-3aa082019a74.png",
+    "path": "/workspace/scratch/91e9848e2f36/reference-assets/surfaces-v50/hope-sandstone.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 2884315
+  },
+  {
+    "name": "hope-dark-precast",
+    "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-a00a7b2d-01f4-423b-a874-075ec141b0e8.png",
+    "path": "/workspace/scratch/91e9848e2f36/reference-assets/surfaces-v50/hope-dark-precast.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 3676400
+  },
+  {
+    "name": "clinic-mosaic-stone",
+    "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-7b55e950-ec85-4c20-8964-800a570c799b.png",
+    "path": "/workspace/scratch/91e9848e2f36/reference-assets/surfaces-v50/clinic-mosaic-stone.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 3175068
+  },
+  {
+    "name": "clinic-cobble",
+    "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-d7df8830-fc4f-42e2-ae16-611b174656ff.png",
+    "path": "/workspace/scratch/91e9848e2f36/reference-assets/surfaces-v50/clinic-cobble.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 3716732
+  },
+  {
+    "name": "clinic-blue-canvas",
+    "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-b53f9d60-a54f-44a2-8c40-0d7760711ad6.png",
+    "path": "/workspace/scratch/91e9848e2f36/reference-assets/surfaces-v50/clinic-blue-canvas.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 3162056
+  },
+  {
+    "name": "hope-asphalt",
+    "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-71242472-0fc7-4ca2-ba86-d4107e041aba.png",
+    "path": "/workspace/scratch/91e9848e2f36/reference-assets/surfaces-v50/hope-asphalt.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 3650032
+  }
+]

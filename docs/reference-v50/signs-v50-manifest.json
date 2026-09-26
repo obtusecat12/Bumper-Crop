@@ -1,0 +1,39 @@
+{
+  "method": "built-in imagegen",
+  "reference_path": "/workspace/scratch/91e9848e2f36/upload/image(8).png",
+  "prompt_file": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/prompts.json",
+  "correction_prompt_file": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/correction-prompts.json",
+  "outputs": [
+    {
+      "name": "centro-dermatologico",
+      "filename": "clinic-sign.png",
+      "raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-35f3b8d0-dc1b-406a-b595-3a2a830f4e44.png",
+      "raw_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/clinic-sign-raw.png",
+      "final_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/clinic-sign.png",
+      "corrected_raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-60872851-9c11-4efa-9bf8-792488560b2a.png"
+    },
+    {
+      "name": "isilab-lightbox",
+      "filename": "lab-sign.png",
+      "raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-25b84a12-a1d7-481b-bfdb-4bf420204ba9.png",
+      "raw_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/lab-sign-raw.png",
+      "final_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/lab-sign.png",
+      "corrected_raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-1c3b8c74-4aaf-4df0-b10e-e1d0aae3e219.png"
+    },
+    {
+      "name": "marisa-pasteleria",
+      "filename": "marisa-sign.png",
+      "raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-a12cad3e-c8ee-4750-9805-dda1da8d1c56.png",
+      "raw_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/marisa-sign-raw.png",
+      "final_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/marisa-sign.png"
+    },
+    {
+      "name": "isilab-glass-window",
+      "filename": "lab-window.png",
+      "raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-90c239b8-5ecc-4292-9a54-76ebbd2edea8.png",
+      "raw_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/lab-window-raw.png",
+      "final_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/lab-window.png"
+    }
+  ],
+  "assessment": "Four separate front-facing single textures. Corrected clinic and lab signs fill the full frame. Main sign wording is legible. Marisa matches navy script and green flourish, but very small source subline is omitted and lettering is a reconstruction. Window keeps tint, border, decals, and faint shelves. Use opaque 3D sign materials; imagegen may retain alpha metadata."
+}

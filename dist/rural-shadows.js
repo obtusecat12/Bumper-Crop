@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {CSM} from './vendor/csm/CSM.js';
-import {SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=49';
+import {SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=50';
 
 // Contact-hardening filtering: four blocker samples and eight PCF samples.
 // Fixed spatial samples avoid adding another temporal noise reconstruction pass.
@@ -45,7 +45,7 @@ export function createRuralShadows({renderer,scene,camera,quality='balanced'}) {
   const registered=new WeakSet(),materialRoots=new WeakMap(),references=new Map(),shaderChunk=ruralShadowChunk();
   let dirty=true,lastUpdate=-Infinity,lastQuality=quality,origin='',lastPosition=new T.Vector3(Infinity,0,0),lastRotation=new T.Quaternion();
   const values={refreshes:0,casters:0,mapSize:csm.shadowMapSize};
-  const corner=new T.Vector3(),skyDirection=new T.Vector3(),warmSun=new T.Color('#ffb875'),sunColor=new T.Color();let previousDusk=0;
+  const corner=new T.Vector3(),skyDirection=new T.Vector3(),warmSun=new T.Color('#ffb875'),sunColor=new T.Color();let previousDusk=0,previousReference=false;const referenceDirection=new T.Vector3();
   function supportDepth(i,face){
     const a=i?csm.breaks[i-1]:0,b=csm.breaks[i],d=Math.min(camera.far,csm.maxFar)-camera.near;
     return face==='near'?Math.max(camera.near,(a-.125*a*a)*d):Math.min(camera.far,(b+.125*b*b)*d);
@@ -99,11 +99,12 @@ export function createRuralShadows({renderer,scene,camera,quality='balanced'}) {
     }
     dirty=true;
   }
-  function update({now,originKey='',quality=lastQuality,rain=0,clear=0,dusk=0}) {
+  function update({now,originKey='',quality=lastQuality,rain=0,clear=0,dusk=0,reference=null}) {
     if(quality!==lastQuality)resize(quality);
     sunColor.set(SUN_COLOR).lerp(warmSun,dusk);
-    const sunPower=SUN_INTENSITY*(1-rain*.28)*(1+clear*.24)*(1-dusk*.48);
+    let sunPower=SUN_INTENSITY*(1-rain*.28)*(1+clear*.24)*(1-dusk*.48);
     if((Math.abs(previousDusk-dusk)>.005&&now-lastUpdate>=100)||(dusk===0&&previousDusk!==0)){skyDirection.set(...SUN_DIRECTION).lerp(corner.set(-.86,.065,-.45),dusk).normalize().negate();csm.lightDirection.copy(skyDirection);previousDusk=dusk;dirty=true;}
+    if(reference){sunColor.lerp(reference.sunColor,reference.amount);sunPower=T.MathUtils.lerp(sunPower,reference.sunPower,reference.amount);referenceDirection.set(...SUN_DIRECTION).lerp(reference.sun,reference.amount).normalize().negate();if(referenceDirection.distanceToSquared(csm.lightDirection)>.000001){csm.lightDirection.copy(referenceDirection);dirty=true;}previousReference=true;}else if(previousReference){csm.lightDirection.set(...SUN_DIRECTION).normalize().negate();previousReference=false;dirty=true;}
     const rebased=originKey!==origin;origin=originKey;
     const distance=camera.position.distanceToSquared(lastPosition),angle=camera.quaternion.angleTo(lastRotation);
     const moved=distance>.49||angle>.025,jump=distance>256||angle>.65;

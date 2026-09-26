@@ -1,7 +1,7 @@
-import {exitPoint} from './exit-route.js?v=49';
-import {urbanHash,urbanRandom} from './urban-batch.js?v=49';
+import {exitPoint} from './exit-route.js?v=50';
+import {urbanHash,urbanRandom} from './urban-batch.js?v=50';
 export const CITY_BLOCK=112,CITY_ROAD_HALF=11,CITY_SIDEWALK=6;
-export const CITY_ORIGIN=exitPoint(420),CITY_ANGLE=Math.atan2(CITY_ORIGIN.tx,CITY_ORIGIN.tz);
+export const CITY_ORIGIN=exitPoint(382),CITY_ANGLE=Math.atan2(CITY_ORIGIN.tx,CITY_ORIGIN.tz);
 const ca=Math.cos(CITY_ANGLE),sa=Math.sin(CITY_ANGLE);
 export function cityToWorld(x,z,out={}){out.x=CITY_ORIGIN.x+ca*x+sa*z;out.z=CITY_ORIGIN.z-sa*x+ca*z;return out;}
 export function worldToCity(x,z,out={}){const dx=x-CITY_ORIGIN.x,dz=z-CITY_ORIGIN.z;out.x=ca*dx-sa*dz;out.z=sa*dx+ca*dz;return out;}
@@ -10,7 +10,7 @@ export function cityBlockPlan(ix,iz,types){
  const seed=urbanHash(ix,iz,0x114900),r=urbanRandom(seed),x=ix*CITY_BLOCK,z=iz*CITY_BLOCK,district=cityDistrict(x+56,z+56),result={ix,iz,seed,x,z,district,buildings:[],reserved:false};
  // The authored approach occupies these two parcels. It survives the threshold
  // without replacing objects in front of the player.
- if((ix===-1||ix===0)&&iz>=-3&&iz<0){result.reserved=true;return result;}
+ if((ix===-1||ix===0)&&iz>=-3&&iz<4){result.reserved=true;result.authored=iz>=0;return result;}
  const low=types.slice(0,18),high=types.slice(18),core=district==='core'||district==='civic';
  const count=core?4:district==='warehouse'?2:4;
  for(let i=0;i<count;i++){
@@ -26,4 +26,4 @@ export function cityBlockPlan(ix,iz,types){
  if(ix===1&&iz===6){result.district='civic';result.buildings[0].type='civic_steps';result.buildings[0].floors=10;result.buildings[1].type='civic_hall';}
  return result;
 }
-export function cityWaypoint(name){const p=name==='city-core'?cityToWorld(0,450):name==='city-plaza'?cityToWorld(112,706):cityToWorld(0,30);return{...p,label:name==='city-core'?'Level 11 · 金融街峡谷':name==='city-plaza'?'Level 11 · 公共广场':'Level 11 · 商业边缘区',yaw:name==='city-plaza'?CITY_ANGLE-Math.PI/2:Math.atan2(-CITY_ORIGIN.tx,-CITY_ORIGIN.tz)};}
+export function cityWaypoint(name){const edge=exitPoint(282),p=name==='city-core'?cityToWorld(0,450):name==='city-plaza'?cityToWorld(112,706):{x:edge.x+edge.nx*15,z:edge.z+edge.nz*15};return{...p,label:name==='city-core'?'Level 11 · 金融街峡谷':name==='city-plaza'?'Level 11 · 公共广场':'Level 11 · 商业边缘区',yaw:name==='city-plaza'?CITY_ANGLE-Math.PI/2:name==='city-edge'?Math.atan2(-edge.nx,-edge.nz):Math.atan2(-CITY_ORIGIN.tx,-CITY_ORIGIN.tz)};}

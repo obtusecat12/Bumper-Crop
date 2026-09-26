@@ -1,0 +1,7 @@
+OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2 llvmpipe (LLVM 20.1.2, 256 bits)
+PASS sky
+PASS coc
+PASS dilate
+PASS fused
+PASS resolve
+Linked 5 programs

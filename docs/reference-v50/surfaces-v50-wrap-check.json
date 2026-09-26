@@ -1,0 +1,44 @@
+[
+  {
+    "filename": "clinic-blue-canvas.png",
+    "wrap_difference_x": 15.55,
+    "interior_difference_x": 8.4,
+    "wrap_difference_y": 11.85,
+    "interior_difference_y": 10.37
+  },
+  {
+    "filename": "clinic-cobble.png",
+    "wrap_difference_x": 23.58,
+    "interior_difference_x": 15.46,
+    "wrap_difference_y": 24.13,
+    "interior_difference_y": 16.98
+  },
+  {
+    "filename": "clinic-mosaic-stone.png",
+    "wrap_difference_x": 20.41,
+    "interior_difference_x": 8.58,
+    "wrap_difference_y": 16.34,
+    "interior_difference_y": 9.37
+  },
+  {
+    "filename": "hope-asphalt.png",
+    "wrap_difference_x": 18.36,
+    "interior_difference_x": 13.74,
+    "wrap_difference_y": 17.19,
+    "interior_difference_y": 15.53
+  },
+  {
+    "filename": "hope-dark-precast.png",
+    "wrap_difference_x": 22.28,
+    "interior_difference_x": 15.16,
+    "wrap_difference_y": 24.0,
+    "interior_difference_y": 16.16
+  },
+  {
+    "filename": "hope-sandstone.png",
+    "wrap_difference_x": 8.59,
+    "interior_difference_x": 5.79,
+    "wrap_difference_y": 9.45,
+    "interior_difference_y": 6.64
+  }
+]

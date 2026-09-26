@@ -1,0 +1,30 @@
+[
+  {
+    "name": "centro-dermatologico",
+    "filename": "clinic-sign.png",
+    "raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-35f3b8d0-dc1b-406a-b595-3a2a830f4e44.png",
+    "raw_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/clinic-sign-raw.png",
+    "final_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/clinic-sign.png"
+  },
+  {
+    "name": "isilab-lightbox",
+    "filename": "lab-sign.png",
+    "raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-25b84a12-a1d7-481b-bfdb-4bf420204ba9.png",
+    "raw_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/lab-sign-raw.png",
+    "final_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/lab-sign.png"
+  },
+  {
+    "name": "marisa-pasteleria",
+    "filename": "marisa-sign.png",
+    "raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-a12cad3e-c8ee-4750-9805-dda1da8d1c56.png",
+    "raw_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/marisa-sign-raw.png",
+    "final_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/marisa-sign.png"
+  },
+  {
+    "name": "isilab-glass-window",
+    "filename": "lab-window.png",
+    "raw_output": "/workspace/scratch/91e9848e2f36/generated_images/exec-90c239b8-5ecc-4292-9a54-76ebbd2edea8.png",
+    "raw_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/lab-window-raw.png",
+    "final_copy": "/workspace/scratch/91e9848e2f36/reference-assets/signs-v50/lab-window.png"
+  }
+]

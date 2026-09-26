@@ -35,7 +35,7 @@ export function exitForField(x,z,f,out={}){
  if(f.x<5n||f.x>10n||f.z<2n||f.z>12n){out.active=false;out.progress=out.influence=0;out.distance=1e8;out.s=-1e8;out.signed=1e8;return out;}
  return exitSample(Number(f.x)*64+x,Number(f.z)*64+z,out);
 }
-export const EXIT_LOTS=[[155,-1,22,17,26],[176,1,19,12,31],[207,-1,29,18,25],[233,1,25,23,29],[252,-1,29,20,23],[277,1,27,18,24],[301,-1,29,21,21],[325,1,34,21,24],[350,-1,31,23,23],[377,1,30,21,24],[388,-1,32,23,23]];
+export const EXIT_LOTS=[[155,-1,22,17,26],[176,1,19,12,31],[207,-1,29,18,25],[233,1,25,23,29],[252,-1,29,20,23],[282,1,68,88,2],[301,-1,29,21,21],[350,-1,31,23,23]];
 export function exitPlotMask(q){if(!q.active)return 0;for(const[s,side,w,d,offset]of EXIT_LOTS)if(Math.abs(q.s-s)<w/2+4&&q.signed*side>q.halfWidth+1&&q.signed*side<offset+d+6)return 1;return 0;}
 export function exitCropFactor(q){if(exitPlotMask(q))return 0;return 1-ease(.24,.76,q.progress)*q.influence;}
 export function exitRoadRelief(q){const a=Math.abs(q.signed),rut=Math.exp(-Math.pow((a-.9)/.21,4)),berm=Math.exp(-Math.pow((a-1.16)/.11,2));return(-.095*rut+.035*berm)*(1-ease(.25,.63,q.progress));}
