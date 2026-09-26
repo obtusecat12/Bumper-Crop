@@ -1,0 +1,55 @@
+{
+  "worldDraws": {
+    "thermos": 1,
+    "glass": 2,
+    "ramune": 2,
+    "cola": 2,
+    "reagent": 2
+  },
+  "worldTriangles": {
+    "thermos": 2940,
+    "glass": 1652,
+    "ramune": 3520,
+    "cola": 2916,
+    "reagent": 2240
+  },
+  "maxLiquidVolumeError": 0.00017219738302946857,
+  "liquidReport": {
+    "glass": {
+      "ml": 358.15666874525266,
+      "maxError": 0.000017068229871182056
+    },
+    "ramune": {
+      "ml": 239.78866768892564,
+      "maxError": 0.00006712355155431906
+    },
+    "cola": {
+      "ml": 367.1500586367583,
+      "maxError": 0.000003704088382254645
+    },
+    "reagent": {
+      "ml": 483.18457784973856,
+      "maxError": 0.00017219738302946857
+    }
+  },
+  "liquidMl": 358.15666874525266,
+  "inspector": {
+    "activeUpdates": 107,
+    "inactiveUpdates": 0,
+    "opaqueDraws": 0,
+    "glassDraws": 0,
+    "worldGeometryReplays": 0
+  },
+  "anchorTextureTransfers": 0,
+  "checks": [
+    "all variants finite",
+    "merged static templates",
+    "worker anchor roundtrip",
+    "volume-conserving liquid",
+    "damped motion and pause",
+    "pickup flight and center hold",
+    "actual pickup/drink inventory actions",
+    "immutable world instance matrices",
+    "zero simulation while inactive"
+  ]
+}

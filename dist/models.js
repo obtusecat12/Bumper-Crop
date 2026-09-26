@@ -1,4 +1,4 @@
-import {makeAlmondAnchor,isSharedAlmondResource} from './almond-water-assets.js?v=46';
+import {makeAlmondAnchor,isSharedAlmondResource} from './almond-water-assets.js?v=47';
 import {bakeStaticLeafLOD} from './static-leaf-lod.js?v=45';
 import {bakeStaticMeshLOD} from './static-mesh-lod.js?v=45';
 import {bakeStaticSelection} from './static-selection.js?v=45';

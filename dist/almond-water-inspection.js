@@ -1,20 +1,20 @@
 import * as T from './vendor/three.module.min.js';
-import {makeAlmondBottle,releaseAlmondBottle,almondName,heroRotation,bindAlmondGlass,GLASS_LAYER} from './almond-water-assets.js?v=46';
+import {makeAlmondBottle,releaseAlmondBottle,almondName,heroRotation,bindAlmondGlass,GLASS_LAYER} from './almond-water-assets.js?v=47';
+import {almondProfile,profileRadius,liquidVolume} from './almond-water-profiles.js?v=47';
+import {almondFillTables as fillTables} from './almond-water-fill-tables.js?v=47';
+export {liquidVolume};
 const clamp=T.MathUtils.clamp;
-export function liquidRadius(y){if(y<.014)return .83*(.028+.004*clamp(y/.014,0,1));if(y<.155)return .02656;if(y<.190)return .83*(.032-(y-.155)/.035*.018);if(y<.218)return .83*(.014-(y-.190)/.028*.0035);return .008715;}
+export const liquidRadius=profileRadius;
 // The circular-segment area below y + sx*x + sz*z = h. A tiny immutable
 // one-dimensional lookup conserves volume as water moves into the shoulder.
-export function liquidVolume(h,slope=0){let v=0;const dy=.236/160;for(let i=0;i<160;i++){const y=.014+(i+.5)*dy,r=liquidRadius(y),s=slope>.00001?clamp((h-y)/(slope*r),-1,1):h>=y?1:-1;const fraction=.5+(Math.asin(s)+s*Math.sqrt(Math.max(0,1-s*s)))/Math.PI;v+=Math.PI*r*r*fraction*dy;}return v;}
-const fillTable=new Float32Array(65),volume=liquidVolume(.199);
-for(let i=0;i<fillTable.length;i++){let a=.17,b=.248;for(let j=0;j<18;j++){const h=(a+b)*.5;if(liquidVolume(h,i/64)<volume)a=h;else b=h;}fillTable[i]=(a+b)*.5;}
-fillTable[0]=.199;
-export function conservedFill(slope){const x=clamp(slope,0,1)*64,i=Math.floor(x);return T.MathUtils.lerp(fillTable[i],fillTable[Math.min(64,i+1)],x-i);}
+// Immutable build-time tables; runtime only performs one scalar lookup.
+export function conservedFill(slope,kind='glass'){const table=fillTables[kind]||fillTables.glass,x=clamp(slope,0,1)*64,i=Math.floor(x);return T.MathUtils.lerp(table[i],table[Math.min(64,i+1)],x-i);}
 export class AlmondSlosh {
- constructor(){this.x=0;this.z=0;this.vx=0;this.vz=0;this.time=0;this.motion=0;this.fill=.199;}
+ constructor(kind='glass'){this.kind=kind;this.x=0;this.z=0;this.vx=0;this.vz=0;this.time=0;this.motion=0;this.fill=almondProfile(kind).fill;}
  impulse(x,z){this.vx=clamp(this.vx+x,-4,4);this.vz=clamp(this.vz+z,-4,4);}
  update(dt,targetX,targetZ){dt=clamp(dt,0,1/15);if(!dt)return this;const steps=Math.ceil(dt/(1/120)),h=dt/steps;
   for(let i=0;i<steps;i++){this.vx+=(clamp(targetX,-.70,.70)-this.x)*90*h-this.vx*5.1*h;this.vz+=(clamp(targetZ,-.70,.70)-this.z)*90*h-this.vz*5.1*h;this.x=clamp(this.x+this.vx*h,-.70,.70);this.z=clamp(this.z+this.vz*h,-.70,.70);}
-  this.time+=dt;this.motion=clamp(Math.hypot(this.vx,this.vz)*.42,0,1);this.fill=conservedFill(Math.hypot(this.x,this.z));return this;
+  this.time+=dt;this.motion=clamp(Math.hypot(this.vx,this.vz)*.42,0,1);this.fill=conservedFill(Math.hypot(this.x,this.z),this.kind);return this;
  }
 }
 export function createAlmondInspection(){
@@ -27,7 +27,7 @@ export function createAlmondInspection(){
   destination.z=-.58;
   if(worldPosition){ndc.copy(worldPosition);ndc.y+=item.userData.almondHeight*.5;ndc.project(worldCamera);start.copy(worldPosition).applyMatrix4(worldCamera.matrixWorldInverse);start.z=clamp(start.z,-3,-.35);start.x=ndc.x*(-start.z)/camera.projectionMatrix.elements[0];start.y=ndc.y*(-start.z)/camera.projectionMatrix.elements[5];}
   else start.set(.22,-.32,-.85);
-  pose.position.copy(start);yaw=targetYaw=0;pitch=targetPitch=-.055;age=clock=0;phase='arriving';oldX=start.x;oldY=start.y;oldZ=start.z;oldVx=oldVz=0;Object.assign(slosh,{x:0,z:0,vx:.9,vz:-.5,time:0,motion:0,fill:.199});pose.rotation.set(pitch,yaw,-.035);
+  pose.position.copy(start);yaw=targetYaw=0;pitch=targetPitch=-.055;age=clock=0;phase='arriving';oldX=start.x;oldY=start.y;oldZ=start.z;oldVx=oldVz=0;Object.assign(slosh,{kind:v.kind,x:0,z:0,vx:.9,vz:-.5,time:0,motion:0,fill:almondProfile(v.kind).fill});pose.rotation.set(pitch,yaw,-.035);
  }
  function rotate(dx,dy){if(phase==='idle'||phase==='stowing')return;targetYaw+=dx*.0065;targetPitch=clamp(targetPitch+dy*.0045,-.52,.52);slosh.impulse(clamp(dx*.013,-.25,.25),clamp(dy*.012,-.25,.25));}
  function stow(){if(phase==='idle'||phase==='stowing')return;phase='stowing';age=0;start.copy(pose.position);}
@@ -41,7 +41,9 @@ export function createAlmondInspection(){
   // Acceleration and gravity are evaluated for ONE held item. Static pickups
   // never upload instance matrices, simulate liquid or allocate frame arrays.
   const vx=(pose.position.x-oldX)/dt,vz=(pose.position.z-oldZ)/dt;inverse.copy(pose.quaternion).invert();up.set(0,1,0).applyQuaternion(inverse);slosh.impulse(clamp((vx-oldVx)*-.018,-.10,.10),clamp((vz-oldVz)*-.014,-.10,.10));slosh.update(dt,up.x/Math.max(.4,up.y),up.z/Math.max(.4,up.y));oldX=pose.position.x;oldY=pose.position.y;oldZ=pose.position.z;oldVx=vx;oldVz=vz;
-  const glass=item.userData.glass;if(glass){const u=glass.material.uniforms;u.liquidTilt.value.set(slosh.x,slosh.z);u.fillHeight.value=slosh.fill;u.liquidTime.value=slosh.time;u.liquidMotion.value=slosh.motion;}
+  const glass=item.userData.glass;if(glass){const u=glass.material.uniforms;u.liquidTilt.value.set(slosh.x,slosh.z);u.fillHeight.value=slosh.fill;u.liquidTime.value=slosh.time;u.liquidMotion.value=slosh.motion;
+   if(variant.kind==='ramune'){const x=clamp(-slosh.x*.006,-.004,.004),z=clamp(-slosh.z*.006,-.004,.004);u.marbleCenter.value.set(x,.161+Math.hypot(x,z)*.35,z);}
+  }
  }
  function opaque(renderer,target){if(!item)return;camera.layers.set(0);renderer.setRenderTarget(target);renderer.clearDepth();renderer.render(scene,camera);stats.opaqueDraws++;}
  function glass(renderer,target,source,w,h){if(!item?.userData.glass)return;const u=item.userData.glass.material.uniforms;u.sceneColor.value=source;u.resolution.value.set(w,h);u.projectionScale.value.set(camera.projectionMatrix.elements[0]*.5,camera.projectionMatrix.elements[5]*.5);camera.layers.set(GLASS_LAYER);renderer.setRenderTarget(target);renderer.render(scene,camera);stats.glassDraws++;}
