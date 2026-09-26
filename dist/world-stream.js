@@ -1,10 +1,11 @@
-import {lakeAtlasKeys,acceptLakeAtlas} from './lake-shape.js?v=45';
+import {transitionProgress} from './exit-route.js?v=48';
+import {lakeAtlasKeys,acceptLakeAtlas} from './lake-shape.js?v=48';
 import * as T from './vendor/three.module.min.js';
-import {createUnpacker} from './scene-packets.js?v=45';
+import {createUnpacker} from './scene-packets.js?v=48';
 // One resident worker and one in-flight chunk keep memory bounded. Cancellation
 // is logical: stale shared registrations must still arrive in message order.
 export function createChunkStream({wind,viewUniform}){
- const codec=createUnpacker({T,wind,viewUniform});let worker=null,pending=null,serial=0,ready=false,disabled=false;
+ const codec=createUnpacker({T,wind,viewUniform,uniformBindings:{transition:transitionProgress}});let worker=null,pending=null,serial=0,ready=false,disabled=false;
  function fail(error){
   disabled=true;ready=false;worker?.terminate();worker=null;
   if(pending){pending.error=error;pending.done=true;pending=null}
@@ -12,7 +13,7 @@ export function createChunkStream({wind,viewUniform}){
  }
  if(typeof Worker==='undefined'||typeof OffscreenCanvas==='undefined')disabled=true;
  else try{
-  worker=new Worker(new URL('./world-worker.js?v=47',import.meta.url),{type:'module',name:'level10-world'});
+  worker=new Worker(new URL('./world-worker.js?v=48',import.meta.url),{type:'module',name:'level10-world'});
   worker.onmessage=({data})=>{
    if(data.ready){ready=true;return}
    const job=pending;pending=null;
@@ -31,6 +32,7 @@ export function createChunkStream({wind,viewUniform}){
   get available(){return ready&&!disabled},get starting(){return !ready&&!disabled},get busy(){return !!pending},get disabled(){return disabled},
   request(args){if(!ready||disabled||pending)return null;const job={id:++serial,done:false,cancelled:false};pending=job;worker.postMessage({id:job.id,...args,knownLakes:lakeAtlasKeys()});return job},
   cancel(job){if(!job)return;job.cancelled=true;if(job.chunk){codec.dispose(job.chunk);job.chunk=null}},
+  stop(){worker?.terminate();worker=null;disabled=true;ready=false;if(pending){pending.cancelled=true;pending=null;}},
   dispose(){worker?.terminate();if(pending)pending.cancelled=true;codec.disposeShared()}
  };
 }

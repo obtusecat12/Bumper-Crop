@@ -1,5 +1,6 @@
-import {paintCompass} from './retro-instruments.js?v=45';
-import {createMapAtlas} from './map-atlas.js?v=45';
+import {exitPoint} from './exit-route.js?v=48';
+import {paintCompass} from './retro-instruments.js?v=48';
+import {createMapAtlas} from './map-atlas.js?v=48';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
 export function mapPoint(center,dx,dz){
@@ -17,7 +18,7 @@ function pointText(p){return `X ${coordinate(p.cx,p.x)} · Z ${coordinate(p.cz,p
 // One cached geographic layer; the rotating minimap uses a CSS transform.
 // Full-map repaint is event/revision-driven. No secondary WebGL scene/camera.
 export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts}){
- const tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});
+ let level=10,tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});
  host.insertAdjacentHTML('beforeend',`<div class="map-mini" id="map-mini" data-ui-part="navigation" hidden><button class="map-mini-button" aria-label="打开地图，快捷键 F" aria-haspopup="dialog" aria-controls="world-map"><span class="map-mini-viewport"><canvas width="288" height="288" aria-hidden="true"></canvas><span class="map-mini-player" aria-hidden="true">▲</span><span class="map-mini-glass" aria-hidden="true"></span></span><canvas class="map-mini-art" width="179" height="204" aria-hidden="true"></canvas><span class="instrument-label"><span>FIELD / NAV</span><span data-ui-copy="number">010</span></span><span class="map-cardinal" data-direction="0">N</span><span class="map-cardinal" data-direction="1">E</span><span class="map-cardinal" data-direction="2">S</span><span class="map-cardinal" data-direction="3">W</span><span class="map-mini-caption"><span class="map-mini-bearing">N 000°</span><span>F 地图</span></span></button></div>
  <div class="modal map-modal" id="world-map" data-ui-part="map" role="dialog" aria-modal="true" aria-labelledby="map-title" hidden><section class="map-panel"><header class="map-header"><div><h2 id="map-title"><span data-ui-copy="code">LEVEL 10</span> / 区域地图</h2><p>拖动浏览 · 滚轮缩放 · 点击地面传送</p></div><button class="map-close" aria-label="关闭地图">F / 返回</button></header><div class="map-tools"><button data-map-action="out" aria-label="缩小地图">−</button><span class="map-zoom">100%</span><button data-map-action="in" aria-label="放大地图">＋</button><button data-map-action="center">回到当前位置</button><span class="map-north">↑ 北</span></div><div class="map-surface"><canvas class="map-canvas" tabindex="0" aria-label="世界地图，拖动或方向键浏览，点击或 Enter 传送，加减号缩放"></canvas><div class="map-scale"><i></i><span>100 m</span></div><div class="map-loading" role="status"></div></div><footer class="map-footer"><div class="map-legend"><span><i class="map-swatch wheat"></i>小麦</span><span><i class="map-swatch" style="background:#998061"></i>大麦</span><span><i class="map-swatch" style="background:#81705b"></i>麦茬</span><span><i class="map-swatch grass"></i>草地</span><span><i class="map-swatch water"></i>湖泊</span><span><i class="map-swatch trees"></i>树木 / 灌木</span><span><i class="map-swatch building"></i>建筑</span><span><i class="map-swatch road"></i>小径</span></div><div class="map-readout" aria-live="polite">点击地图可传送；湖泊会落在岸边。</div></footer></section></div>`);
  const mini=host.querySelector('#map-mini'),miniButton=mini.querySelector('button'),miniCanvas=mini.querySelector('.map-mini-viewport canvas'),miniCtx=miniCanvas.getContext('2d',{alpha:false});
@@ -44,7 +45,7 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   if(anchor){center=mapPoint(center,(anchor.x-canvas.width/2)*(1/old-1/next),(anchor.z-canvas.height/2)*(1/old-1/next));}
   zoom=next;dirty=true;modal.querySelector('.map-zoom').textContent=Math.round(zoom/1.5*100)+'%';tiles.cancelPending();
  }
- function teleport(p){if(busy)return;setStatus(`正在准备落点 · ${pointText(p)}`);onTeleport({...p,yaw:player?.yaw||0});}
+ function teleport(p){if(busy)return;if(level===11){setStatus('Level 11 入口街区 · F2 返回麦田');return;}setStatus(`正在准备落点 · ${pointText(p)}`);onTeleport({...p,yaw:player?.yaw||0});}
  miniButton.addEventListener('click',onOpen);modal.querySelector('.map-close').addEventListener('click',onClose);
  modal.querySelector('[data-map-action="out"]').onclick=()=>changeZoom(1/1.35);
  modal.querySelector('[data-map-action="in"]').onclick=()=>changeZoom(1.35);
@@ -71,7 +72,18 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   for(let dz=minZ;dz<=maxZ;dz++)for(let dx=minX;dx<=maxX;dx++)list.push({cx:c.cx+BigInt(dx),cz:c.cz+BigInt(dz),x:w/2+(dx*64-c.x)*scale,z:h/2+(dz*64-c.z)*scale,d:(dx*64+32-c.x)**2+(dz*64+32-c.z)**2});
   return list;
  }
+ function cityPaint(context,c,w,h,scale){
+  context.fillStyle='#555a57';context.fillRect(0,0,w,h);
+  const ox=Number(c.cx)*64+c.x,oz=Number(c.cz)*64+c.z;
+  const xy=p=>[w/2+(p.x-ox)*scale,h/2+(p.z-oz)*scale];
+  context.strokeStyle='#303735';context.lineWidth=8.2*scale;context.beginPath();
+  for(let s=-160;s<=645;s+=8){const p=xy(exitPoint(s));if(s===-160)context.moveTo(...p);else context.lineTo(...p);}context.stroke();
+  context.fillStyle='#8b8e86';for(let s=-125;s<640;s+=35)for(const side of [-1,1]){const p=exitPoint(s),pt=xy({x:p.x+side*p.nx*21,z:p.z+side*p.nz*21});context.fillRect(pt[0]-6*scale,pt[1]-13*scale,12*scale,26*scale);}
+  return 0;
+ }
+ function setLevel(value){if(level===value)return;level=value;tiles.dispose();if(level===10)tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});dirty=true;miniCenter=null;lastRevision=lastMapRevision=-1;modal.querySelector('.map-legend').hidden=level===11;setStatus(level===11?'Level 11 入口街区 · F2 返回麦田':'点击地图可传送；湖泊会落在岸边。');}
  function terrainPaint(context,c,w,h,scale){
+  if(level===11)return cityPaint(context,c,w,h,scale);
   context.fillStyle=uiPalette.mapBackground;context.fillRect(0,0,w,h);context.imageSmoothingEnabled=false;const list=visibleTiles(c,w,h,scale);let missing=0;
   for(const tile of list){const image=tiles.request(tile.cx,tile.cz,tile.d);if(image){context.drawImage(image,tile.x,tile.z,64*scale+.5,64*scale+.5);}else{missing++;context.strokeStyle=uiPalette.mapGrid;context.strokeRect(tile.x,tile.z,64*scale,64*scale);}}
   return missing;
@@ -93,11 +105,11 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
    const offset=miniCenter&&mapOffset(player,miniCenter),revision=tiles.stats().revision;
    if(now-lastMini>=100&&(!offset||Math.hypot(offset.x,offset.z)>.35||revision!==lastRevision)){terrainPaint(miniCtx,player,MINI,MINI,MINI_SCALE);miniCenter={...player};lastMini=now;lastRevision=revision;counts.minimapPaints++;}
   }
-  if(allowWork){const before=tiles.stats().revision;tiles.pump(open?2.5:.7,open?3:1);if(tiles.stats().revision!==before)dirty=true;}
+  if(allowWork&&level===10){const before=tiles.stats().revision;tiles.pump(open?2.5:.7,open?3:1);if(tiles.stats().revision!==before)dirty=true;}
  }
- function show(state){center={cx:state.cx,cz:state.cz,x:state.x,z:state.z};player={...center,yaw:state.yaw};open=true;modal.hidden=false;hover=null;keyboardTarget=false;dirty=true;tiles.cancelPending();resize();setStatus('点击地图可传送；湖泊会落在岸边。');}
+ function show(state){center={cx:state.cx,cz:state.cz,x:state.x,z:state.z};player={...center,yaw:state.yaw};open=true;modal.hidden=false;hover=null;keyboardTarget=false;dirty=true;tiles.cancelPending();resize();setStatus(level===11?'Level 11 入口街区 · F2 返回麦田':'点击地图可传送；湖泊会落在岸边。');}
  function hide(){open=false;modal.hidden=true;pointer=null;tiles.cancelPending();miniCenter=null;}
  function setBusy(value,text){busy=value;modal.setAttribute('aria-busy',String(value));modal.querySelectorAll('button').forEach(b=>b.disabled=value);if(text)setStatus(text);dirty=true;}
  function dispose(){disposed=true;observer.disconnect();tiles.dispose();mini.remove();modal.remove();}
- return{root:mini,paint(c,r){c.save();c.translate(r.left,r.top);c.scale(r.width/256,r.height/296);paintCompass(c,parts,miniCanvas,player?.yaw||0,mini.querySelector('.map-mini-bearing').textContent,{...uiTokens,pixelMode:document.body.dataset.filter==='ps1'});c.restore();},get revision(){return counts.minimapPaints+','+counts.mapPaints+','+lastYaw;},update,show,hide,setBusy,setStatus,setUITheme,dispose,modal,stats:()=>({...counts,...tiles.stats()}),get isOpen(){return open;}};
+ return{root:mini,paint(c,r){c.save();c.translate(r.left,r.top);c.scale(r.width/256,r.height/296);paintCompass(c,parts,miniCanvas,player?.yaw||0,mini.querySelector('.map-mini-bearing').textContent,{...uiTokens,pixelMode:document.body.dataset.filter==='ps1'});c.restore();},get revision(){return counts.minimapPaints+','+counts.mapPaints+','+lastYaw;},update,show,hide,setLevel,setBusy,setStatus,setUITheme,dispose,modal,stats:()=>({...counts,...tiles.stats()}),get isOpen(){return open;}};
 }

@@ -1,6 +1,6 @@
-import {barnFootprintDistance} from './reference-barn-layout.js?v=45';
-import {compoundAt,CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=45';
-import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=45';
+import {barnFootprintDistance} from './reference-barn-layout.js?v=48';
+import {compoundAt,CHUNK,field,buildingSize,buildingLocal,BUILDING_NAMES,pondBankPoint,pondMetrics,surfaceHeight,resolveSolid} from './world.js?v=48';
+import {FARM_PLACEMENTS,FARM_FOOTPRINTS,farmFootprintDistance} from './farm-layout.js?v=48';
 
 const titles={pond:'湖泊',building:'建筑',grove:'树林'};
 const COMPOUND_BUILDINGS=new Set(['building','barn','shed','stable','cabin','outhouse']);
@@ -189,6 +189,7 @@ export function findSafeLanding(target,colliders){
   points.push({x:target.x,z:target.z});
   if(target.mapMode==='shore'||target.mapMode==='building')points.push(...(target.mapCandidates||[]));
   points.push(...mapOffsets(target));
+ }else if(target.kind==='city-exit'){points.push({x:target.x,z:target.z});
  }else if(target.kind==='reference-barn'){points.push({x:target.x,z:target.z});
  }else if(target.kind==='photo'){points.push({x:target.x,z:target.z});
  }else if(target.kind==='start'){
@@ -220,7 +221,7 @@ export function findSafeLanding(target,colliders){
   const ground=surfaceHeight(p.x,p.z,f);
   if(f.type==='pond'&&ground<f.lakeY+.035)continue;
   if([[.4,0],[-.4,0],[0,.4],[0,-.4]].some(([dx,dz])=>Math.abs(surfaceHeight(p.x+dx,p.z+dz,f)-ground)>.32))continue;
-  return {cx:f.x,cz:f.z,x:p.x,z:p.z,y:ground+(target.eye??1.77),yaw:target.kind==='map'?target.yaw:target.kind==='start'?-.37:Math.atan2(p.x-(target.focusX??target.x),p.z-(target.focusZ??target.z)),pitch:target.kind==='photo'?Math.atan2(target.focusY+.40-ground-target.eye,Math.hypot(p.x-target.focusX,p.z-target.focusZ)):-.045};
+  return {cx:f.x,cz:f.z,x:p.x,z:p.z,y:ground+(target.eye??1.77),yaw:(target.kind==='map'||target.kind==='city-exit')?target.yaw:target.kind==='start'?-.37:Math.atan2(p.x-(target.focusX??target.x),p.z-(target.focusZ??target.z)),pitch:target.kind==='photo'?Math.atan2(target.focusY+.40-ground-target.eye,Math.hypot(p.x-target.focusX,p.z-target.focusZ)):-.045};
  }
  return null;
 }

@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=45';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,SKY_TOP,SKY_BOTTOM} from './lighting-config.js?v=48';
 
 const pars=`
 precision highp sampler3D;
@@ -105,6 +105,9 @@ vec3 ruralIrradiance(vec3 point,vec3 normal){
   return mix(sky,irradiance,smoothstep(0.,2.,edge))*uProbeWeather*uWeatherTint;
 }`;
 
+// Shared bottle/vegetation materials survive map changes. Keep one shader
+// injection per material while rebinding it to the current map's probe cache.
+const irradianceBindings=new WeakMap();
 export function createIrradianceField() {
   const count=GRID[0]*GRID[1]*GRID[2],textures=Array.from({length:7},(_,i)=>{
     const t=new T.Data3DTexture(new Uint16Array(count*4),...GRID);t.type=T.HalfFloatType;
@@ -118,7 +121,7 @@ export function createIrradianceField() {
   const values={status:'准备中',computed:0,reused:0,rays:0,ms:0,triangles:0,bytes:0};
   function fail(error){if(failed)return;failed=true;worker?.terminate();uniforms.uProbeReady.value=0;values.status='柔阴影模式';console.warn('Indirect ray cache unavailable',error)}
   try{
-    worker=new Worker(new URL('./irradiance-worker.js?v=45',import.meta.url),{type:'module',name:'rural-ray-cache'});
+    worker=new Worker(new URL('./irradiance-worker.js?v=48',import.meta.url),{type:'module',name:'rural-ray-cache'});
     worker.onerror=e=>{e.preventDefault?.();fail(new Error(e.message||'Ray worker failed'))};
     worker.onmessageerror=()=>fail(new Error('Ray cache transfer failed'));
     worker.onmessage=({data})=>{
@@ -172,9 +175,12 @@ export function createIrradianceField() {
       if(!o.isMesh)return;
       for(const m of Array.isArray(o.material)?o.material:[o.material]){
         if(!m||registered.has(m)||!(m.isMeshStandardMaterial||m.isMeshLambertMaterial||m.isMeshPhongMaterial))continue;
+        const existing=irradianceBindings.get(m);
+        if(existing){existing.uniforms=uniforms;m.needsUpdate=true;registered.add(m);continue;}
+        const binding={uniforms};irradianceBindings.set(m,binding);
         const previous=m.onBeforeCompile,key=m.customProgramCacheKey();
         m.onBeforeCompile=function(shader,r){
-          previous.call(this,shader,r);Object.assign(shader.uniforms,uniforms);
+          previous.call(this,shader,r);Object.assign(shader.uniforms,binding.uniforms);
           shader.vertexShader='varying vec3 vIrradianceWorld;\n'+shader.vertexShader;
           shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
             vec4 giPosition=vec4(transformed,1.);

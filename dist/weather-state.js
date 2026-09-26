@@ -36,7 +36,7 @@ export class WeatherDirector{
  resetClock(){this.lastTimestamp=null;this.clockActive=false;this.delta=0;}
  tick(timestamp,active=true){this.delta=active&&this.clockActive&&this.lastTimestamp!==null?Math.max(0,(timestamp-this.lastTimestamp)/1000):0;this.lastTimestamp=timestamp;this.clockActive=active;return this.update(this.delta,active);}
  update(dt,active=true){if(!active)return this.value;dt=Number.isFinite(dt)?Math.max(0,dt):0;this.elapsed+=dt;
-  if(this.kind==='normal'){this.wait-=dt;if(this.wait<=0){this.rounds++;this.start(chooseWeather(this.rng()));}}
+  if(this.kind==='normal'){if(this.automatic!==false)this.wait-=dt;if(this.automatic!==false&&this.wait<=0){this.rounds++;this.start(chooseWeather(this.rng()));}}
   else{this.age+=dt;if(this.kind==='blackout'&&!this.cutCued&&this.age>=1.5){this.cutCued=true;this.onCue('power-off');}if(this.kind==='blackout'&&!this.restoreCued&&this.age>=this.duration-1.3){this.restoreCued=true;this.onCue('power-on');}if(this.age>=this.duration)this.start('normal');}
   this.value=weatherEnvelope(this.kind,this.age,this.duration,{manual:this.manual});
   this.value.serial=this.serial||0;

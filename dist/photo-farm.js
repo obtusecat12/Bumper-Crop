@@ -1,9 +1,9 @@
 import * as T from './vendor/three.module.min.js';
-import {FARM,FARM_PLACEMENTS,FARM_TREES} from './farm-layout.js?v=45';
-import {makeKephartBuildings,isSharedKephartResource} from './kephart-models.js?v=45';
-import {makePhotoTree,isSharedPhotoTreeResource} from './photo-trees.js?v=45';
-import {clipStaticSceneToTile} from './farm-clip.js?v=45';
-import {height} from './world.js?v=45';
+import {FARM,FARM_PLACEMENTS,FARM_TREES} from './farm-layout.js?v=48';
+import {makeKephartBuildings,isSharedKephartResource} from './kephart-models.js?v=48';
+import {makePhotoTree,isSharedPhotoTreeResource} from './photo-trees.js?v=48';
+import {clipStaticSceneToTile} from './farm-clip.js?v=48';
+import {height} from './world.js?v=48';
 const cache=new WeakMap();
 function source(wind){
  if(cache.has(wind))return cache.get(wind);

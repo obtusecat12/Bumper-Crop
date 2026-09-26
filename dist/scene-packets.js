@@ -1,11 +1,11 @@
-import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=45';
+import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=48';
 // Scene packet codec for procedural Three.js chunks. No DOM or Worker globals.
 // Supply the same Three.js revision on both sides. Pack before attachFog().
 const VERSION=1;
 const materialSkip=new Set(['id','uuid','version','type','_listeners','uniforms','vertexShader','fragmentShader','onBeforeCompile','customProgramCacheKey']);
 const textureProps=['name','mapping','channel','wrapS','wrapT','wrapR','magFilter','minFilter','anisotropy','format','internalFormat','type','colorSpace','flipY','generateMipmaps','premultiplyAlpha','unpackAlignment','rotation','matrixAutoUpdate'];
 const nodeProps=['name','visible','castShadow','receiveShadow','frustumCulled','renderOrder','matrixAutoUpdate','matrixWorldAutoUpdate'];
-const uniformAliases={uPhotoTreeTime:'time',uPhotoTreeWind:'strength',uTime:'time',uNatureTime:'time',uLakeTime:'time',uWind:'strength',uNatureWind:'strength',uLakeWind:'strength',uPlayer:'player',uWheatView:'view'};
+const uniformAliases={u_transitionProgress:'transition',uPhotoTreeTime:'time',uPhotoTreeWind:'strength',uTime:'time',uNatureTime:'time',uLakeTime:'time',uWind:'strength',uNatureWind:'strength',uLakeWind:'strength',uPlayer:'player',uWheatView:'view'};
 const plain=value=>typeof structuredClone==='function'?structuredClone(value):value;
 function shaderLib(T,m){
  if(m.isShaderMaterial)return {vertexShader:m.vertexShader,fragmentShader:m.fragmentShader,uniforms:m.uniforms};

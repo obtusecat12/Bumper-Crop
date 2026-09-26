@@ -1,12 +1,14 @@
-import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=45';
-import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=45';
-import {landmarkTextures} from './landmark-textures.js?v=45';
-import {meadowEnvironment} from './meadow-layout.js?v=45';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=45';
-import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=45';
+import {exitForField,EXIT_GLSL,transitionProgress} from './exit-route.js?v=48';
+import {exitTextures} from './exit-textures.js?v=48';
+import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=48';
+import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=48';
+import {landmarkTextures} from './landmark-textures.js?v=48';
+import {meadowEnvironment} from './meadow-layout.js?v=48';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=48';
+import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=48';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=45';
-import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=45';
+import {ruralTextures} from './rural-textures.js?v=48';
+import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=48';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
@@ -72,6 +74,7 @@ export function updateCropGroundTime(time){cropTime.value=time;}
 function groundMaterial(f,level){
  const m=new T.MeshStandardMaterial({color:0xffffff,roughness:1}),patch=patchworkTexture(f,level);m.userData.ownedParcelTexture=patch;
  m.onBeforeCompile=s=>{
+  if(f.exit){s.uniforms.uExitOffset={value:new T.Vector2(Number(f.x)*64,Number(f.z)*64)};s.uniforms.uExitAsphalt={value:exitTextures['road-asphalt']};s.uniforms.u_transitionProgress=transitionProgress;}
   s.uniforms.uTime=cropTime;s.uniforms.uRoadFrame={value:roadFrameCache.get(f)};
   s.uniforms.uPatchwork={value:patch};s.uniforms.uPatchSize={value:patch.image.width};
   s.uniforms.uGroundAlbedo={value:ruralTextures.groundArray};
@@ -92,7 +95,7 @@ function groundMaterial(f,level){
   s.vertexShader='varying vec3 vCropWorld; attribute float yardData; attribute float shoreGrass; attribute float trackMud; attribute float trackRelief; varying float vShoreGrass; varying float vTrackMud; varying float vYard; varying float vTrackRelief;\nvarying vec3 vTerrain;\nvarying vec4 vMeadow;\nvarying vec4 vShoreData;\n'+(f.type==='pond'?'attribute vec4 shoreData;\n':'')+(f.meadow?'attribute vec4 meadowData;\n':'')+s.vertexShader;
   s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvCropWorld=(modelMatrix*vec4(position,1.)).xyz; vTerrain=position; vShoreGrass=shoreGrass; vTrackMud=trackMud;vTrackRelief=trackRelief; vYard=yardData; vMeadow='+(f.meadow?'meadowData':'vec4(0.)')+'; vShoreData='+(f.type==='pond'?'shoreData':'vec4(0.)')+';');
   // Keep this newline: Three's shader begins with a preprocessor directive.
-  s.fragmentShader=terrainDecl+'\n'+s.fragmentShader;
+  s.fragmentShader=(f.exit?'uniform vec2 uExitOffset;uniform sampler2D uExitAsphalt;uniform float u_transitionProgress;\n'+EXIT_GLSL:'')+terrainDecl+'\n'+s.fragmentShader;
   s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
    vec2 p=vTerrain.xz,g=p+uWorldOffset,q=p+mod(uWorldOffset,2048.);
    float broad=noise2(g*.125),soilPatch=noise2(g*.5),clods=noise2(q*5.);
@@ -240,6 +243,17 @@ if(uBuilding.w>.5){
     float yard=1.-smoothstep(.35,3.4,e+edge);
     base=mix(base,dirt*(.94+soilPatch*.08)+grain*.004,yard);
    }
+   ${f.exit?`vec4 exitQ=exitField(p+uExitOffset);
+   float exitUrban=exitEase(.28,.72,exitQ.x),exitCrop=exitEase(.24,.76,exitQ.x)*exitQ.z;
+   float exitRoad=(1.-smoothstep(exitQ.w-.25,exitQ.w+.48+(soilPatch-.5)*.5,exitQ.y))*exitQ.z;
+   float exitPatch=smoothstep(.30,.70,soilPatch*.55+broad*.45);
+   float exitWear=smoothstep(exitPatch-.28,exitPatch+.18,exitUrban)*exitEase(.22,.35,exitQ.x);
+   vec3 exitAsphalt=texture2D(uExitAsphalt,(p+uExitOffset)/3.).rgb;
+   vec3 waste=soilAlbedo*vec3(.68,.64,.57)*(1.-clods*.12);
+   base=mix(base,waste,exitCrop*(1.-exitRoad));
+   base=mix(base,base*vec3(.67,.60,.48),exitRoad*exitEase(.03,.30,exitQ.x)*brokenMask*(1.-exitUrban)*.42);
+   base=mix(base,exitAsphalt,exitRoad*exitWear);
+   base*=1.-.008*u_transitionProgress*exitQ.z;`:''}
    diffuseColor.rgb=base;
   `);
   s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
@@ -247,6 +261,7 @@ if(uBuilding.w>.5){
    // The visible wheel grooves remain the actual displaced terrain geometry.
    float cropBump=farCrop*smoothstep(2.3,3.1,rd)*(1.-meadowCover)*(1.-vShoreGrass)*(1.-vYard);
    float soilMicroHeight=(clods*.0018+grain*.0006+soilDetail*.0060)*fineFade+cropBump*wheatWave*.016 + (grooveHeight-vTrackRelief)*roadExtent-tread*.009;
+   ${f.exit?`soilMicroHeight*=1.-exitRoad*exitUrban;`:""}
    vec3 soilDx=dFdx(-vViewPosition),soilDy=dFdy(-vViewPosition);
    vec3 soilRx=cross(soilDy,normal),soilRy=cross(normal,soilDx);
    float soilDet=dot(soilDx,soilRx);
@@ -254,7 +269,7 @@ if(uBuilding.w>.5){
    normal=normalize(max(abs(soilDet),.00000001)*normal-soilGradient);
   `);
  };
- m.customProgramCacheKey=()=> 'broken-earth-ruts-v40-'+!!f.meadow+'-'+(f.type==='pond');
+ m.customProgramCacheKey=()=> 'exit-v48-'+!!f.exit+'-'+!!f.meadow+'-'+(f.type==='pond');
  return m;
 }
 function samples(step,edges){
@@ -433,6 +448,7 @@ export function makeVerge(f,level,wind){
  const size=buildingSize(f),halfW=size[0]/2,halfD=size[1]/2,co=Math.cos(f.buildingAngle||0),si=Math.sin(f.buildingAngle||0);
  group.name='dense-fine-trackside-turf';
  const blocked=(x,z)=>{
+  const e=exitForField(x,z,f,{});if(e.active&&(e.progress>.42&&e.distance<e.halfWidth+12||e.progress>.87&&e.distance<55))return true;
   if(f.compounds?.length){const a=compoundAt(x,z,f,{});if(a.footprint<.5||a.yard>.04)return true;}
   if(farmFootprintDistance(x,z,f)<.4)return true;
   if(x<.08||z<.08||x>63.92||z>63.92)return true;

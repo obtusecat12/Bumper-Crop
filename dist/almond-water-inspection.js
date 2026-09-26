@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {makeAlmondBottle,releaseAlmondBottle,almondName,heroRotation,bindAlmondGlass,GLASS_LAYER} from './almond-water-assets.js?v=47';
-import {almondProfile,profileRadius,liquidVolume} from './almond-water-profiles.js?v=47';
-import {almondFillTables as fillTables} from './almond-water-fill-tables.js?v=47';
+import {makeAlmondBottle,releaseAlmondBottle,almondName,heroRotation,bindAlmondGlass,GLASS_LAYER} from './almond-water-assets.js?v=48';
+import {almondProfile,profileRadius,liquidVolume} from './almond-water-profiles.js?v=48';
+import {almondFillTables as fillTables} from './almond-water-fill-tables.js?v=48';
 export {liquidVolume};
 const clamp=T.MathUtils.clamp;
 export const liquidRadius=profileRadius;
