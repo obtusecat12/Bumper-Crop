@@ -1,7 +1,7 @@
-import {bindLeafShadowLOD,selectLeafLOD,setLeafLOD} from './static-leaf-lod.js?v=44';
-import {bindStaticMeshLOD,selectMeshLOD,STATIC_LOD_NEAR} from './static-mesh-lod.js?v=44';
+import {bindLeafShadowLOD,selectLeafLOD,setLeafLOD} from './static-leaf-lod.js?v=45';
+import {bindStaticMeshLOD,selectMeshLOD,STATIC_LOD_NEAR} from './static-mesh-lod.js?v=45';
 import * as T from './vendor/three.module.min.js';
-import {selectStaticInstances} from './static-selection.js?v=44';
+import {selectStaticInstances} from './static-selection.js?v=45';
 // Source geometry is already merged in the worker. Retain tile bounds instead
 // of merging the entire resident world into uncullable, padded mega-meshes.
 export function createSceneBatches(){
@@ -48,7 +48,7 @@ export function createSceneBatches(){
    const main=!m.frustumCulled||frustum.intersectsSphere(sphere);let shadows=0;
    if(shadowsUpdating&&m.castShadow)for(const l of lights)if(!m.frustumCulled||l.shadow.getFrustum().intersectsSphere(sphere))shadows++;
    const unit=(g.index?.count||g.attributes.position.count)/3;
-   const mainCount=leaf?unit*m.count:Math.min(g.drawRange.count,g.index?.count||g.attributes.position.count)/3*(m.isInstancedMesh?m.count:1);
+   const mainCount=leaf?unit*m.count:Math.min(g.drawRange.count,g.index?.count||g.attributes.position.count)/3*(m.isInstancedMesh?m.count:g.isInstancedBufferGeometry?g.instanceCount:1);
    const shadowCount=leaf?unit*leaf.ranges[Math.max(1,leaf.level)].count:lod?lod.at(-1).count/3:mainCount;
    total+=(main?mainCount:0)+shadows*shadowCount;
    if((leaf||lod)&&(main||shadows)){
@@ -57,7 +57,7 @@ export function createSceneBatches(){
    }
   }
   for(const meshes of renderMeshes.values())for(const m of meshes)inspect(m);
-  if(extraRoot)for(const m of extraRoot.children)if(m.isMesh)inspect(m);
+  if(extraRoot)for(const root of Array.isArray(extraRoot)?extraRoot:[extraRoot])for(const m of root.children)if(m.isMesh)inspect(m);
   if(total>limit){
    candidates.sort((a,b)=>b.distance-a.distance);
    for(const c of candidates){if(total<=limit)break;const {m,main,shadows,unit}=c,leaf=m.userData.leafLOD,g=m.geometry;

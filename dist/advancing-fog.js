@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {FogFront,FOG_MAX_DIST} from './fog-front.js?v=44';
+import {FogFront,FOG_MAX_DIST} from './fog-front.js?v=45';
 
 export const fogVertex=`precision highp float;in vec3 position;out vec2 uv;
 void main(){uv=position.xy*.5+.5;gl_Position=vec4(position,1.);}`;
@@ -34,8 +34,9 @@ float fogFront(vec2 p){vec2 q=p+fogOffset;
  // 90 s. At 0 s its closest possible edge is still beyond the 350 m horizon.
  return dot(q,wind)+160.+macroFbm(q*.003)*120.-(1.-u_fogProgress)*maxDist;
 }
+float fogWake(){return smoothstep(.72,1.,u_fogProgress);}
 float medium(vec3 p){
- float front=fogFront(p.xz);if(front<=-18.)return 0.;
+ float wake=fogWake(),front=wake>=1.?26.:fogFront(p.xz);if(front<=-18.&&wake<=0.)return 0.;
  vec2 q=(p.xz+fogOffset)*.04+wind*fogTime*.08;
  vec3 n=noiseGradient(q*.53);q+=vec2(-n.z,n.y)*.4;
  vec2 strandUV=vec2(dot(q,wind)*.20,dot(q,vec2(-wind.y,wind.x))*1.7);
@@ -45,7 +46,7 @@ float medium(vec3 p){
  thread*=.72+.28*smoothstep(.26,.66,fibres);
  float wispy=.65+.66*thread+.12*(strand.b-.5);
  float height=exp(-.25*max(0.,p.y-groundAt(p.xz)));
- return smoothstep(-18.,26.,front)*height*wispy*fogAmount;
+ return mix(smoothstep(-18.,26.,front),1.,wake)*height*wispy*fogAmount;
 }
 float integrateFog(vec2 q,float distance){
  if(fogAmount<.0001||u_fogProgress<=0.)return 0.;
@@ -54,8 +55,10 @@ float integrateFog(vec2 q,float distance){
  // Noise is in [0,1], so no fog can exist below this conservative plane.
  float start=0.,end=distance,slope=dot(rd.xz,wind);
  float plane=dot(ro.xz+fogOffset,wind)+298.-(1.-u_fogProgress)*maxDist;
- if(abs(slope)<.00001){if(plane<0.)return 0.;}
- else if(slope>0.)start=max(0.,-plane/slope);else end=min(end,-plane/slope);
+ if(fogWake()<=0.){
+  if(abs(slope)<.00001){if(plane<0.)return 0.;}
+  else if(slope>0.)start=max(0.,-plane/slope);else end=min(end,-plane/slope);
+ }
  if(fogWaterActive>.5){
   if(ro.y<fogWaterLevel){if(rd.y<=0.)return 0.;start=max(start,(fogWaterLevel-ro.y)/rd.y);}
   else if(rd.y<0.)end=min(end,(fogWaterLevel-ro.y)/rd.y);
@@ -119,5 +122,5 @@ export function createAdvancingFog(renderer,noise){
   try{renderer.autoClear=true;quad.material=integrate;renderer.setRenderTarget(field);renderer.render(scene,camera);quad.material=composite;renderer.setRenderTarget(output);renderer.render(scene,camera);stats.passes+=2;}finally{renderer.setRenderTarget(prior);renderer.autoClear=auto;}
   return output.texture;
  }
- return {front,uniforms:u,stats,update,compose,localAmount(camera){const f=(camera.position.x+front.offsetX)*-.8+(camera.position.z+front.offsetZ)*-.6+160-(1-front.progress)*FOG_MAX_DIST;const t=T.MathUtils.clamp((f+18)/44,0,1);return front.amount*t*t*(3-2*t);},contextLost:release,dispose(){release();geometry.dispose();integrate.dispose();composite.dispose();}};
+ return {front,uniforms:u,stats,update,compose,localAmount(camera){const f=(camera.position.x+front.offsetX)*-.8+(camera.position.z+front.offsetZ)*-.6+160-(1-front.progress)*FOG_MAX_DIST;const t=T.MathUtils.clamp((f+18)/44,0,1);const w=T.MathUtils.smoothstep(front.progress,.72,1);return front.amount*(t*t*(3-2*t)*(1-w)+w);},contextLost:release,dispose(){release();geometry.dispose();integrate.dispose();composite.dispose();}};
 }

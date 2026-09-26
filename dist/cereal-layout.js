@@ -1,7 +1,7 @@
-import {roadGrassNoise} from './road-surface.js?v=44';
+import {roadGrassNoise} from './road-surface.js?v=45';
 import * as T from './vendor/three.module.min.js';
-import {field,stringSeed,random,cropSample,wheatAllowed,surfaceHeight,periodOrigin} from './world.js?v=44';
-import {prepareStaticSelection} from './static-selection.js?v=44';
+import {field,stringSeed,random,cropSample,wheatAllowed,surfaceHeight,periodOrigin} from './world.js?v=45';
+import {prepareStaticSelection} from './static-selection.js?v=45';
 export const CEREAL_CELL=40,CEREAL_RADIUS=35,CEREAL_LIMIT=25000,CEREAL_PADDING=2.2;
 export const floorDiv=(a,b)=>a/b-(a%b<0n?1n:0n);
 const fields=new Map();

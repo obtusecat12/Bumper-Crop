@@ -1,0 +1,24 @@
+import * as T from './vendor/three.module.min.js';
+export const powerAtlas=new T.DataTexture(new Uint8Array([128,128,120,255]),1,1),powerRelief=new T.DataTexture(new Uint8Array([128,128,230,255]),1,1);
+powerAtlas.colorSpace=T.SRGBColorSpace;for(const t of [powerAtlas,powerRelief]){t.generateMipmaps=true;t.minFilter=T.LinearMipmapLinearFilter;t.magFilter=T.LinearFilter;t.needsUpdate=true;}
+async function decode(url){const response=await fetch(url);if(!response.ok)throw Error('Power texture '+response.status);const image=await createImageBitmap(await response.blob()),canvas=new OffscreenCanvas(1024,1024),ctx=canvas.getContext('2d');ctx.drawImage(image,0,0,1024,1024);image.close();return{data:ctx.getImageData(0,0,1024,1024).data,width:1024,height:1024};}
+export async function initializePowerTextures(read=decode){const im=await read(new URL('./textures/rural-power-atlas-v45.webp',import.meta.url));powerAtlas.image={data:new Uint8Array(im.data),width:im.width,height:im.height};powerAtlas.needsUpdate=true;
+ const data=new Uint8Array(im.width*im.height*4),lum=(x,y)=>{const i=((y+im.height)%im.height*im.width+(x+im.width)%im.width)*4;return(im.data[i]+im.data[i+1]+im.data[i+2])/765;};
+ for(let y=0;y<im.height;y++)for(let x=0;x<im.width;x++){const i=(y*im.width+x)*4;data[i]=T.MathUtils.clamp(128+(lum(x-1,y)-lum(x+1,y))*100,0,255);data[i+1]=T.MathUtils.clamp(128+(lum(x,y-1)-lum(x,y+1))*75,0,255);data[i+2]=y<im.height/2?235:140+lum(x,y)*65;data[i+3]=255;}powerRelief.image={data,width:im.width,height:im.height};powerRelief.needsUpdate=true;
+}
+const declaration=`attribute vec4 utilityShape;attribute vec3 utilityFaceNormal;varying vec4 vUtility;varying vec2 vUtilityUV;\n`;
+const position=`vec3 transformed=vec3(position);if(utilityShape.x>.5){float d=max(abs(transformed.x),abs(transformed.z));if(d>.0001)transformed.xz*=.5/d;}transformed.xz*=mix(1.,utilityShape.y,position.y+.5);vUtility=utilityShape;vUtilityUV=uv;`;
+const fragment=`varying vec4 vUtility;varying vec2 vUtilityUV;uniform sampler2D utilityAtlas,utilityRelief;\n
+vec2 utilityUV(){float tile=max(0.,vUtility.z);return vec2(mod(tile,2.),floor(tile/2.))*.5+vec2(.006)+vUtilityUV*.488;}
+float utilityDigit(float digit,vec2 q){float bits=0.;int d=int(digit+.1);if(d==0)bits=31599.;if(d==1)bits=11415.;if(d==2)bits=29671.;if(d==3)bits=29647.;if(d==4)bits=23497.;if(d==5)bits=31183.;if(d==6)bits=31215.;if(d==7)bits=29257.;if(d==8)bits=31727.;if(d==9)bits=31695.;vec2 c=floor(q*vec2(3.,5.));if(any(lessThan(c,vec2(0.)))||any(greaterThanEqual(c,vec2(3.,5.))))return 0.;return mod(floor(bits/exp2((4.-c.y)*3.+2.-c.x)),2.);}
+`;
+export function powerMaterials(){const list=[new T.MeshStandardMaterial({roughness:.94}),new T.MeshStandardMaterial({roughness:.60,metalness:.26}),new T.MeshStandardMaterial({roughness:.22,metalness:.14,transparent:true,opacity:.76,depthWrite:true})];
+ list.forEach((m,i)=>{m.name=['Utility weathered timber','Utility steel porcelain and guards','Utility old tinted glass'][i];m.forceSinglePass=true;
+  m.onBeforeCompile=s=>{s.uniforms.utilityAtlas={value:powerAtlas};s.uniforms.utilityRelief={value:powerRelief};s.vertexShader=declaration+s.vertexShader;s.vertexShader=s.vertexShader.replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\nif(utilityShape.x>.5)objectNormal=utilityFaceNormal;').replace('#include <begin_vertex>',position);
+   s.fragmentShader=fragment+s.fragmentShader;s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>\nif(vUtility.z>=0.)diffuseColor.rgb*=texture2D(utilityAtlas,utilityUV()).rgb;\nif(vUtility.x>1.5){vec2 q=vec2((vUtilityUV.x-.08)/.84,(vUtilityUV.y-.14)/.72);float cell=floor(q.x*2.);q.x=fract(q.x*2.);float digit=cell<1.?floor(vUtility.w/10.):mod(vUtility.w,10.);float ink=utilityDigit(digit,vec2((q.x-.08)/.84,q.y));diffuseColor.rgb*=mix(1.,.14,ink);}`);
+   s.fragmentShader=s.fragmentShader.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>\nif(vUtility.z>=0.)roughnessFactor=texture2D(utilityRelief,utilityUV()).b;`);
+   s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>\nif(vUtility.z>=0.){vec2 bump=texture2D(utilityRelief,utilityUV()).rg*2.-1.;vec3 qx=dFdx(vViewPosition),qy=dFdy(vViewPosition);vec2 tx=dFdx(vUtilityUV),ty=dFdy(vUtilityUV);vec3 tangent=normalize(qx*ty.y-qy*tx.y+vec3(.00001));vec3 bitangent=normalize(-qx*ty.x+qy*tx.x+vec3(.00001));normal=normalize(normal+tangent*bump.x*.26+bitangent*bump.y*.26);}`);
+  };m.customProgramCacheKey=()=>`rural-power-v45:${i}`;
+ });return list;
+}
+export function powerDepthMaterial(){const m=new T.MeshDepthMaterial({depthPacking:T.RGBADepthPacking});m.onBeforeCompile=s=>{s.vertexShader=declaration+s.vertexShader;s.vertexShader=s.vertexShader.replace('#include <begin_vertex>',position);};m.customProgramCacheKey=()=> 'rural-power-depth-v45';return m;}

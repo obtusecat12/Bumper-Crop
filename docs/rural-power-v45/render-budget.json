@@ -1,0 +1,17 @@
+{
+  "renderer": "Native GLES 3.2 / Mesa llvmpipe",
+  "fixture": "49 resident 64m tiles, 960x720, balanced, actual scene geometry",
+  "main_pass_only": true,
+  "power": {
+    "poles": 61,
+    "cables": 466,
+    "draws": 4,
+    "triangles": 44896
+  },
+  "views": {
+    "arrival": 240611,
+    "kephart": 189385,
+    "pole_close": 241326
+  },
+  "hardware_fps_verified": false
+}

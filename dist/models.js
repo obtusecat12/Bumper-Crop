@@ -1,24 +1,24 @@
-import {bakeStaticLeafLOD} from './static-leaf-lod.js?v=44';
-import {bakeStaticMeshLOD} from './static-mesh-lod.js?v=44';
-import {bakeStaticSelection} from './static-selection.js?v=44';
-import {isSharedVergeResource,consolidatePlantCards} from './verge-cards.js?v=44';
-import {consolidateStaticArchitecture,mergeArchitectureParts} from './architecture-batch.js?v=44';
-import {makeCompoundChunk,isSharedCompoundResource} from './compound-models.js?v=44';
-import {makeReferenceBarn,isSharedReferenceBarnResource} from './reference-barn.js?v=44';
-import {isSharedLandmarkTexture} from './landmark-textures.js?v=44';
-import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=44';
-import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=44';
+import {bakeStaticLeafLOD} from './static-leaf-lod.js?v=45';
+import {bakeStaticMeshLOD} from './static-mesh-lod.js?v=45';
+import {bakeStaticSelection} from './static-selection.js?v=45';
+import {isSharedVergeResource,consolidatePlantCards} from './verge-cards.js?v=45';
+import {consolidateStaticArchitecture,mergeArchitectureParts} from './architecture-batch.js?v=45';
+import {makeCompoundChunk,isSharedCompoundResource} from './compound-models.js?v=45';
+import {makeReferenceBarn,isSharedReferenceBarnResource} from './reference-barn.js?v=45';
+import {isSharedLandmarkTexture} from './landmark-textures.js?v=45';
+import {makeMeadowVegetation,isSharedMeadowResource} from './meadow-vegetation.js?v=45';
+import {makePhotoFarmChunk,isSharedPhotoFarmResource} from './photo-farm.js?v=45';
 import * as T from './vendor/three.module.min.js';
-import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=44';
-import {makeNature,isSharedNatureResource} from './nature.js?v=44';
-import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=44';
-import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=44';
-import {isSharedRuralTexture} from './rural-textures.js?v=44';
-import {makeLake,isSharedLakeResource} from './lake.js?v=44';
-import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=44';
-import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=44';
-import {createPowerLinePlanner,POWER_POLE_HEIGHT} from './power-lines.js?v=44';
-const powerLines=createPowerLinePlanner({CHUNK,field,laneOffset,surfaceHeight,pondShoreDistance});
+import {buildDenseWheat,isSharedWheatResource} from './dense-wheat.js?v=45';
+import {makeNature,isSharedNatureResource} from './nature.js?v=45';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=45';
+import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=45';
+import {isSharedRuralTexture} from './rural-textures.js?v=45';
+import {makeLake,isSharedLakeResource} from './lake.js?v=45';
+import {makeGround,makeVerge,isSharedGroundResource} from './ground.js?v=45';
+import {CHUNK,field,random,height,surfaceHeight,laneOffset,mod,pondShoreDistance} from './world.js?v=45';
+import {planRuralPower} from './rural-power-layout.js?v=45';
+import {bakePowerPole,powerSpanCables} from './rural-power-parts.js?v=45';
 const UP=new T.Vector3(0,1,0),dummy=new T.Object3D();
 const box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,7);
 function noiseTexture(kind){const n=128,data=new Uint8Array(n*n*4),r=random(kind==='brick'?971:kind==='wood'?941:717);for(let y=0;y<n;y++)for(let x=0;x<n;x++){const i=(y*n+x)*4;let a=.72+r()*.28;if(kind==='wood')a*=.75+.25*Math.sin(x*.72+Math.sin(y*.04)*.3)**2;if(kind==='roof')a*=.75+.25*Math.sin(x*.72)**4;if(kind==='brick'){const mortar=y%16<2||(x+(Math.floor(y/16)%2)*16)%32<2;a=mortar?.58:a;}data[i]=Math.floor(255*a);data[i+1]=Math.floor(250*a);data[i+2]=Math.floor(237*a);data[i+3]=255;}const t=new T.DataTexture(data,n,n);t.wrapS=t.wrapT=T.RepeatWrapping;t.magFilter=T.LinearFilter;t.minFilter=T.LinearMipmapLinearFilter;t.generateMipmaps=true;t.colorSpace=T.SRGBColorSpace;t.needsUpdate=true;return t}
@@ -35,20 +35,6 @@ class Batch{
  box(mat,x,y,z,sx,sy,sz,rx=0,ry=0,rz=0){this.add(box,mat,x,y,z,sx,sy,sz,rx,ry,rz)}
  beam(mat,a,b,r=.07){const mid=a.clone().add(b).multiplyScalar(.5),q=new T.Quaternion().setFromUnitVectors(UP,b.clone().sub(a).normalize());dummy.position.copy(mid);dummy.quaternion.copy(q);dummy.scale.set(r,a.distanceTo(b),r);dummy.updateMatrix();const g=cylinder.toNonIndexed();g.applyMatrix4(dummy.matrix);if(!this.parts.has(mat))this.parts.set(mat,[]);this.parts.get(mat).push(g)}
  finish(group){for(const [mat,parts]of this.parts){let count=parts.reduce((n,g)=>n+g.attributes.position.count,0),p=new Float32Array(count*3),n=new Float32Array(count*3),uv=new Float32Array(count*2),at=0;for(const g of parts){p.set(g.attributes.position.array,at*3);n.set(g.attributes.normal.array,at*3);if(g.attributes.uv)uv.set(g.attributes.uv.array,at*2);at+=g.attributes.position.count;g.dispose()}const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(p,3));g.setAttribute('normal',new T.BufferAttribute(n,3));g.setAttribute('uv',new T.BufferAttribute(uv,2));g.computeBoundingSphere();const mesh=new T.Mesh(g,mat);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh)}}
-}
-function poles(f,b,colliders,group){
- const plan=powerLines.planTile(f),p=plan.pole,h=POWER_POLE_HEIGHT;
- if(p){
-  const{x,y,z}=p;
-  b.add(cylinder,materials.wood,x,y+h/2,z,.115,h,.115);
-  b.box(materials.darkwood,x,y+h-.65,z,2.9,.13,.15);
-  for(const side of[-1,0,1])b.add(cylinder,materials.trim,x+side*1.1,y+h-.41,z,.10,.26,.10);
-  colliders.push({kind:'circle',x,z,r:.18});
- }
- if(plan.positions.length){
-  const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(plan.positions,3));geo.computeBoundingSphere();
-  const wires=new T.LineSegments(geo,new T.LineBasicMaterial({color:'#333d34',fog:true}));wires.name='power-lines';group.add(wires);
- }
 }
 function unbatchedBottle(x,y,z){const g=new T.Group();const body=new T.Mesh(new T.CylinderGeometry(.095,.085,.32,8),glass);body.position.y=.19;const label=new T.Mesh(new T.CylinderGeometry(.097,.089,.15,8),materials.label);label.position.y=.19;const neck=new T.Mesh(new T.CylinderGeometry(.044,.07,.09,8),glass);neck.position.y=.40;const cap=new T.Mesh(new T.CylinderGeometry(.048,.048,.045,8),materials.cap);cap.position.y=.46;const stripe=new T.Mesh(new T.BoxGeometry(.1,.028,.01),materials.darkwood);stripe.position.set(0,.20,.095);g.add(body,label,neck,cap,stripe);g.position.set(x,y,z);g.rotation.z=.18;return g}
 const bottleResources=new Set();let bottleTemplate;
@@ -67,7 +53,7 @@ export function makeBottle(x,y,z){
 export const wind={time:{value:0},player:{value:new T.Vector3()},strength:{value:.32}};
 export const waterTime={value:0};
 export function* createChunkTask(f,level,quality,collected){
- const group=new T.Group(),b=new Batch(),colliders=[],pickups=[],wheatBuckets=new Map();let complete=false;
+ const group=new T.Group(),b=new Batch(),colliders=[],pickups=[],wheatBuckets=new Map(),powerPacket={poles:[],cables:[]};let complete=false;
  try{
   group.add(makeGround(f,level));yield 'ground';
   group.add(makeVerge(f,level,wind));yield 'verges';
@@ -75,7 +61,7 @@ export function* createChunkTask(f,level,quality,collected){
   const wheat=buildDenseWheat(f,level,quality,wind);group.add(wheat.mesh);yield 'wheat';
   // The independent 40 m cereal worker owns frozen near-field submissions.
   const nature=makeNature(f,level,wind);group.add(nature.group);colliders.push(...nature.colliders);yield 'nature';
-  poles(f,b,colliders,group);b.finish(group);yield 'poles';
+  const powerPlan=planRuralPower(f);for(const pole of powerPlan.poles){const baked=bakePowerPole(pole);powerPacket.poles.push({id:pole.id,transformer:pole.transformer,groups:baked.groups});powerPacket.cables.push(...baked.cables);if(pole.x>=0&&pole.x<64&&pole.z>=0&&pole.z<64)colliders.push({kind:'circle',x:pole.x,z:pole.z,r:.22});}for(const span of powerPlan.spans)powerPacket.cables.push(...powerSpanCables(span));yield 'power-network';
   if(f.type==='building'){
    const building=makeRuralBuilding(f,level);group.add(building.group);colliders.push(...building.colliders);pickups.push(...building.pickups);yield 'building';
    const yard=makeYardProps(f,level);group.add(yard.group);colliders.push(...yard.colliders);yield 'yard-props';
@@ -101,7 +87,7 @@ export function* createChunkTask(f,level,quality,collected){
     bakeStaticSelection(m,{radius:/daisies|gravel|pebbles/.test(m.name)?18:34,step:4,padding:1.2});
    }
   });yield 'freeze-selection';
-  complete=true;return {group,colliders,pickups,wheatBuckets,softVolumes:[...nature.softVolumes,...(barn?.softVolumes||[])],field:f,level,quality};
+  complete=true;return {group,powerPacket,colliders,pickups,wheatBuckets,softVolumes:[...nature.softVolumes,...(barn?.softVolumes||[])],field:f,level,quality};
  }finally{if(!complete)disposeChunk({group})}
 }
 // Offline validation can construct synchronously; gameplay advances one phase per frame.

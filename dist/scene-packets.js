@@ -1,4 +1,4 @@
-import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=44';
+import {packCardOrderUserData,unpackCardOrderUserData} from './instance-order.js?v=45';
 // Scene packet codec for procedural Three.js chunks. No DOM or Worker globals.
 // Supply the same Three.js revision on both sides. Pack before attachFog().
 const VERSION=1;
@@ -104,10 +104,11 @@ export function createPacker({T,isSharedResource=()=>false,wind={},viewUniform}=
    r.children=o.children.map(node);return id;
   }
   try{
-   const root=node(chunk.group),metadata={};for(const[k,v]of Object.entries(chunk))if(k!=='group'&&k!=='pickups')metadata[k]=(k==='detailPatches'||k==='rayGeometry')?v:plain(v);
+   const root=node(chunk.group),metadata={};for(const[k,v]of Object.entries(chunk))if(k!=='group'&&k!=='pickups')metadata[k]=(k==='detailPatches'||k==='rayGeometry'||k==='powerPacket')?v:plain(v);
    packet.chunk={root,...metadata,pickups:(chunk.pickups||[]).map(p=>{const q={};for(const[k,v]of Object.entries(p))if(k!=='mesh')q[k]=plain(v);q.meshNode=p.mesh?nodeIds.get(p.mesh):null;if(p.mesh&&q.meshNode===undefined)throw Error('Pickup mesh is outside chunk hierarchy');return q})};
    for(const patch of chunk.detailPatches?.patches||[])for(const v of Object.values(patch))if(ArrayBuffer.isView(v)&&!buffers.has(v.buffer)){buffers.add(v.buffer);transfer.push(v.buffer)}
    if(chunk.rayGeometry){const g=chunk.rayGeometry;for(const a of [g.positions,g.colors,g.uvs,g.textureIds,g.thin,g.ground,...g.alphaTextures.map(t=>t.data)])if(!buffers.has(a.buffer)){buffers.add(a.buffer);transfer.push(a.buffer)}}
+   for(const p of chunk.powerPacket?.poles||[])for(const a of p.groups)if(!buffers.has(a.buffer)){buffers.add(a.buffer);transfer.push(a.buffer)}
    return {packet,transfer};
   }catch(error){for(const r of newShared)sharedIds.delete(r);throw error}
  }

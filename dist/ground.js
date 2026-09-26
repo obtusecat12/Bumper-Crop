@@ -1,12 +1,12 @@
-import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=44';
-import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=44';
-import {landmarkTextures} from './landmark-textures.js?v=44';
-import {meadowEnvironment} from './meadow-layout.js?v=44';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=44';
-import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=44';
+import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=45';
+import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=45';
+import {landmarkTextures} from './landmark-textures.js?v=45';
+import {meadowEnvironment} from './meadow-layout.js?v=45';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=45';
+import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=45';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=44';
-import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=44';
+import {ruralTextures} from './rural-textures.js?v=45';
+import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=45';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;
