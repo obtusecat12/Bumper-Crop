@@ -1,10 +1,11 @@
+import {initializeAlmondTextures,hydrateAlmondPickups,releaseAlmondBottle,almondVariant} from './almond-water-assets.js?v=46';
 import {createRuralPowerNetwork} from './rural-power-render.js?v=45';
 import {initializePowerTextures} from './rural-power-materials.js?v=45';
 import {initializeVergeTextures} from './verge-cards.js?v=45';
 import {createSceneBatches} from './scene-batches.js?v=45';
 import {updateCropGroundTime} from './ground.js?v=45';
 import {bindTroughWater} from './trough-water.js?v=45';
-import {createWaterPipeline} from './water-pipeline.js?v=45';
+import {createWaterPipeline} from './water-pipeline.js?v=46';
 import {WaterState} from './water-state.js?v=45';
 import {WaterContactEffects} from './water-contact-effects.js?v=45';
 import {createWaterBubbles} from './water-bubbles.js?v=45';
@@ -31,10 +32,10 @@ import {createIrradianceField} from './irradiance-field.js?v=45';
 import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=45';
 import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=45';
 import {createPerformanceMeter} from './performance-meter.js?v=45';
-import {createChunkStream} from './world-stream.js?v=45';
+import {createChunkStream} from './world-stream.js?v=46';
 import * as T from './vendor/three.module.min.js';
 import {compoundAt,CHUNK,field,cropSample,height,surfaceHeight,buildingSize,buildingLocal,BUILDING_NAMES,pondDistance,pondShoreDistance,roadDistance,vegetationDrag,resolveSolid,rebase,stringSeed} from './world.js?v=45';
-import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=45';
+import {createChunkTask,disposeChunk,wind,waterTime} from './models.js?v=46';
 import {createWheatDetailLayer,initializeCerealTextures} from './dense-wheat.js?v=45';
 import {createAtmosphere} from './atmosphere.js?v=45';
 import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=45';
@@ -66,8 +67,8 @@ game.innerHTML=`
  <label class="setting"><span>开发者模式<small>F2 打开天气、传送与坐标</small></span><input id="devMode" type="checkbox"></label>
  <div class="panel-note">VHS 以 720 行处理并放大输出为 1080p、4:3 录像画面；PS1 为 320 行复古色阶。设置自动保存在当前浏览器。</div>
 </div></div>
-<div class="modal" id="journal" data-ui-part="journal" role="dialog" aria-modal="true" aria-labelledby="journal-title" hidden><div class="panel"><div class="panel-header"><h2 id="journal-title">层级档案 / <span data-ui-copy="number">010</span></h2><button class="close" data-close aria-label="关闭">×</button></div><div class="journal-meta">M.E.G. FIELD NOTES · <span data-ui-copy="name">丰裕</span></div><div class="journal-body"><p><strong>你正站在一片没有尽头的麦田。</strong><br>树木与高度近似的灌木将麦田分割成小块。天空始终阴沉，偶有短暂细雨与雾气，白昼从未结束。</p><p>沿着两条轮胎碾痕前行。中间的草仍在生长，但车辙里的种子永远不会发芽。这里没有被发现过的车辆。</p><p>低地的湖水清澈，带有泥土的气味。靠近湖岸时，可按 <strong>E</strong> 饮水。</p><p>谷仓、马厩和木棚大多空无一人。里面偶尔能找到木料、钉子和遗落的杏仁水。拾起杏仁水后，按 <strong>Q</strong> 饮用。</p><p>麦丛会拖慢脚步。回到小径可以更快前进。没有任务期限，沿着风走下去。</p><p>出生点东北侧有一处固定农场。按 <strong>F2</strong> 可前往两处照片机位；移动或环顾即可恢复探索镜头。</p><p class="reference-credit">农场影像参考：Edmund Garman，<a href="https://www.flickr.com/photos/3cl/3718833796" target="_blank" rel="noopener noreferrer">Kephart Farm</a> / <a href="https://www.flickr.com/photos/3cl/3719218226" target="_blank" rel="noopener noreferrer">Kephart Farm 2</a>，2009，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。场景为依据照片重新制作的三维重建。</p></div><div class="panel-note" id="expedition">尚未开始探索。</div></div></div>
-<div class="modal" id="controls" data-ui-part="controls" role="dialog" aria-modal="true" aria-labelledby="controls-title" hidden><div class="panel"><div class="panel-header"><h2 id="controls-title">操作指南</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="controls-list"><div><span class="key">W A S D</span>移动</div><div><span class="key">鼠标</span>环顾四周</div><div><span class="key">Z / 右键</span>按住拉近镜头</div><div><span class="key">滚轮</span>调节变焦倍率 · 1–4.5×</div><div><span class="key">SHIFT</span>按住奔跑</div><div><span class="key">SPACE</span>跳跃</div><div><span class="key">C</span>按住蹲下</div><div><span class="key">E</span>拾取 / 湖边饮水</div><div><span class="key">Q</span>饮用杏仁水</div><div><span class="key">J</span>层级档案</div><div><span class="key">ESC</span>暂停 / 释放鼠标</div><div><span class="key">F</span>地图 / 点击传送</div><div><span class="key">F10</span>切换全屏</div><div><span class="key">F2</span>开发者天气 / 传送</div></div><div class="panel-note">点击「进入麦田」后即可用鼠标观察。若浏览器不允许锁定鼠标，按住鼠标拖动也可以环顾。触屏设备使用左侧摇杆移动、右侧滑动观察。</div></div></div>`;
+<div class="modal" id="journal" data-ui-part="journal" role="dialog" aria-modal="true" aria-labelledby="journal-title" hidden><div class="panel"><div class="panel-header"><h2 id="journal-title">层级档案 / <span data-ui-copy="number">010</span></h2><button class="close" data-close aria-label="关闭">×</button></div><div class="journal-meta">M.E.G. FIELD NOTES · <span data-ui-copy="name">丰裕</span></div><div class="journal-body"><p><strong>你正站在一片没有尽头的麦田。</strong><br>树木与高度近似的灌木将麦田分割成小块。天空始终阴沉，偶有短暂细雨与雾气，白昼从未结束。</p><p>沿着两条轮胎碾痕前行。中间的草仍在生长，但车辙里的种子永远不会发芽。这里没有被发现过的车辆。</p><p>低地的湖水清澈，带有泥土的气味。靠近湖岸时，可按 <strong>E</strong> 饮水。</p><p>谷仓、马厩和木棚大多空无一人。里面偶尔能找到木料、钉子和遗落的杏仁水。每次拾取会把容器移到眼前检视。移动鼠标或滑动旋转，按 <strong>E</strong> 收起，按 <strong>Q</strong> 饮用，按 <strong>R</strong> 再次检视。</p><p>麦丛会拖慢脚步。回到小径可以更快前进。没有任务期限，沿着风走下去。</p><p>出生点东北侧有一处固定农场。按 <strong>F2</strong> 可前往两处照片机位；移动或环顾即可恢复探索镜头。</p><p class="reference-credit">农场影像参考：Edmund Garman，<a href="https://www.flickr.com/photos/3cl/3718833796" target="_blank" rel="noopener noreferrer">Kephart Farm</a> / <a href="https://www.flickr.com/photos/3cl/3719218226" target="_blank" rel="noopener noreferrer">Kephart Farm 2</a>，2009，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。场景为依据照片重新制作的三维重建。</p><p class="reference-credit">杏仁水设定：<a href="https://backrooms-wiki.wikidot.com/object-1" target="_blank" rel="noopener noreferrer">Object 1 — Almond Water</a>，The Backrooms Wikidot，原作 1000dumplings、修订 Natedagreat563 与 Poliacci，<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>。金属保温瓶依据文献重建；复古玻璃饮料瓶是本场景的美术变体。标签与材质为新制作。</p></div><div class="panel-note" id="expedition">尚未开始探索。</div></div></div>
+<div class="modal" id="controls" data-ui-part="controls" role="dialog" aria-modal="true" aria-labelledby="controls-title" hidden><div class="panel"><div class="panel-header"><h2 id="controls-title">操作指南</h2><button class="close" data-close aria-label="关闭">×</button></div><div class="controls-list"><div><span class="key">W A S D</span>移动</div><div><span class="key">鼠标</span>环顾四周</div><div><span class="key">Z / 右键</span>按住拉近镜头</div><div><span class="key">滚轮</span>调节变焦倍率 · 1–4.5×</div><div><span class="key">SHIFT</span>按住奔跑</div><div><span class="key">SPACE</span>跳跃</div><div><span class="key">C</span>按住蹲下</div><div><span class="key">E</span>拾取 / 收起检视 / 湖边饮水</div><div><span class="key">Q</span>饮用杏仁水</div><div><span class="key">R</span>检视背包中的杏仁水</div><div><span class="key">J</span>层级档案</div><div><span class="key">ESC</span>暂停 / 释放鼠标</div><div><span class="key">F</span>地图 / 点击传送</div><div><span class="key">F10</span>切换全屏</div><div><span class="key">F2</span>开发者天气 / 传送</div></div><div class="panel-note">点击「进入麦田」后即可用鼠标观察。若浏览器不允许锁定鼠标，按住鼠标拖动也可以环顾。触屏设备使用左侧摇杆移动、右侧滑动观察。</div></div></div>`;
 
 game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" data-ui-part="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="barn">砖砌谷仓</button><button data-teleport="barn-photo">谷仓 · 照片机位</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V43</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
 
@@ -85,7 +86,7 @@ if(!['high','balanced','low'].includes(settings.quality))settings.quality='balan
 let renderer;
 try{renderer=new T.WebGLRenderer({antialias:false,powerPreference:'high-performance',alpha:false});renderer.setPixelRatio(1);renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','Level 10 三维麦田');game.prepend(renderer.domElement)}catch(e){e.userTitle='无法启动 3D 画面';e.userMessage='当前浏览器无法创建 3D 画面。请确认已启用硬件加速，并使用支持 WebGL 2 的浏览器。';throw e}
 $('#loading').firstChild.textContent='正在载入地面与植被材质 ';
-try{await Promise.all([initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
+try{await Promise.all([initializeAlmondTextures(),initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
 $('#loading').firstChild.textContent='LOADING ';
 const performanceMeter=createPerformanceMeter(renderer);
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.23;
@@ -105,9 +106,9 @@ const naturalShadows=createRuralShadows({renderer,scene,camera,quality:settings.
 lightingReady=true;materialFinish.attach(wheatDetail.object);naturalShadows.attach(wheatDetail.object);irradiance.attach(wheatDetail.object);
 const sceneBatches=createSceneBatches({onMesh:m=>{atmosphere.attachFog(m);materialFinish.attach(m);naturalShadows.attach(m);irradiance.attach(m);},onRemove:m=>naturalShadows.detach(m)});scene.add(sceneBatches.object);
 const powerNetwork=createRuralPowerNetwork(wind,{onMesh:m=>{atmosphere.attachFog(m);materialFinish.attach(m);naturalShadows.attach(m);irradiance.attach(m);},onRemove:m=>naturalShadows.detach(m)});scene.add(powerNetwork.object);const extraBudgetRoots=[wheatDetail.object,powerNetwork.object];
-function releaseChunk(chunk){powerNetwork.remove(chunk);sceneBatches.remove(chunk);waterPipeline.detach(chunk);naturalShadows.detach(chunk.group);irradiance.remove(chunk);disposeChunk(chunk);}
+function releaseChunk(chunk){powerNetwork.remove(chunk);sceneBatches.remove(chunk);waterPipeline.detach(chunk);for(const p of chunk.pickups)releaseAlmondBottle(p.mesh);naturalShadows.detach(chunk.group);irradiance.remove(chunk);disposeChunk(chunk);}
 const state={cx:0n,cz:0n,x:.6,z:52,y:0,yaw:-.37,pitch:-.025,velocity:new T.Vector3(),jump:0,vy:0,grounded:true,stamina:100,hydration:100,health:100,sanity:100,bottles:0,distance:0,elapsed:0};
-const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),chunks=new Map(),collected=new Set();
+const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),chunks=new Map(),collected=new Set(),waterInventory=[];
 const wheatView={value:new T.Vector3()},chunkStream=createChunkStream({wind,viewUniform:wheatView});
 let queue=[],activeBuild=null,playing=false,started=false,ready=false,lastFrame=performance.now(),time=0,uiTick=0,step=0,toastTimer,activeModal=null,lastFocus=null,hadMovement=false,lastWeather='',qualityTimer=0,frameCount=0,frameTime=0,fps=60,autoScale=1,contextLost=false,streamFailed=false;
 let developerSearch=null,teleportJob=null,coverageRadius=0,referenceView=null,mapWasPlaying=false;
@@ -123,7 +124,8 @@ const rainWind=new T.Vector3(.85,0,.30),weatherLight=new T.Vector3(-.45,.84,-.30
 const weatherFlare=createWeatherFlare(renderer);
 const lensWater=createLensWater(renderer),waterState=new WaterState(),bodyWater=new WaterContactEffects(waterImpact),waterBubbles=createWaterBubbles(scene);
 const waterPipeline=createWaterPipeline(renderer,{ripples:waterRipples,lens:lensWater,waterState,flare:weatherFlare,sky:atmosphere.sky,fog:atmosphere.volume});displayFilter.setScenePipeline(waterPipeline);
-try{await waterPipeline.surface.ready;}catch(error){error.userTitle="水体材质未能加载";error.userMessage="请检查连接后重新加载。";throw error;}
+const waterInspection=waterPipeline.inspection,pickupWorldPosition=new T.Vector3();
+try{await Promise.all([waterPipeline.surface.ready,waterInspection.warmup(renderer)]);}catch(error){error.userTitle="水体材质未能加载";error.userMessage="请检查连接后重新加载。";throw error;}
 const wetInput={},rigInput={},moveNext={x:0,z:0},moveLocal={x:0,z:0},impactLighting={sunDirection:weatherLight,color:scene.fog.color,intensity:1,ambientIntensity:1},rippleInput={state,chunks,active:false,lightDirection:weatherLight};
 let barnDoorAngle=0,barnDoorGoal=0,wetLastYaw=0,wetLastVx=0,wetLastVz=0;
 const uiRaster=createUIRaster(game,{survival:survivalDisplay,navigation:navigationMap});displayFilter.setCompositor(uiRaster);
@@ -148,9 +150,10 @@ function updateQueue(){
 function finishChunk(build,c){
  if(build.cancelled){releaseChunk(c);return}
  c.group.position.set(Number(build.item.cx-state.cx)*CHUNK,0,Number(build.item.cz-state.cz)*CHUNK);
- updateBarnDoors(c,barnDoorAngle);c.group.traverse(o=>{o.updateMatrix();o.matrixAutoUpdate=false});
+ updateBarnDoors(c,barnDoorAngle);
  // An item may have been picked up while this replacement was in the worker.
  for(const p of c.pickups)if(p.mesh&&collected.has(p.id)){c.group.remove(p.mesh);p.mesh=null}
+ hydrateAlmondPickups(c);c.group.traverse(o=>{o.updateMatrix();o.matrixAutoUpdate=false});
  sceneBatches.capture(c.group);atmosphere.attachFog(c.group);materialFinish.attach(c.group);naturalShadows.attach(c.group);irradiance.attach(c.group);wetGround.attach(c.group);waterPipeline.attach(c);bindTroughWater(c.group,waterPipeline.surface,wind.time);build.chunk=c;build.compiling=true;
  // KHR_parallel_shader_compile lets the driver prepare a new material before
  // the first visible frame. The target Scene supplies identical lights/fog.
@@ -294,8 +297,8 @@ document.querySelectorAll('[data-teleport]').forEach(button=>button.addEventList
  else{developerSearch=findNearestLandmark({...state},seed,kind);$('#developer-status').textContent='正在寻找最近的地标…';}
 }));
 
-function drink(){if(state.bottles<1){toast('没有杏仁水。可以在路边或建筑内寻找。');return}state.bottles--;state.hydration=Math.min(100,state.hydration+45);state.stamina=Math.min(100,state.stamina+35);state.sanity=Math.min(100,state.sanity+20);audio.chime();toast('饮用了杏仁水。杏仁的气味让人安心。');updateHUD()}
-function use(){if(!interaction)return;if(interaction.kind==='barn-door'){const f=currentChunk()?.field;const x=state.x+(f?.barn?.x||0)-REFERENCE_BARN.doorX,z=state.z+(f?.barn?.z||0)-REFERENCE_BARN.depth/2;if(barnDoorGoal>0&&Math.abs(x)<2.4&&z>-.35&&z<2.5){toast('请先离开门扇的转动范围。');return;}barnDoorGoal=barnDoorGoal>0?0:1.47;interaction=null;return;}if(interaction.kind==='bottle'){const {p,chunk}=interaction;if(collected.has(p.id))return;collected.add(p.id);state.bottles++;chunk.group.remove(p.mesh);p.mesh.traverse(o=>{if(o.isInstancedMesh)o.dispose()});p.mesh=null;sceneBatches.refresh(chunk);audio.chime();toast('拾取了杏仁水 · 按 Q 饮用');interaction=null}else{state.hydration=100;toast('喝了一口清水。有一点泥土的味道。');audio.footstep(false,true)}updateHUD()}
+function drink(){if(state.bottles<1){toast('没有杏仁水。可以在路边或建筑内寻找。');return}waterInventory.pop();state.bottles=waterInventory.length;waterInspection.clear();state.hydration=Math.min(100,state.hydration+45);state.stamina=Math.min(100,state.stamina+35);state.sanity=Math.min(100,state.sanity+20);audio.chime();toast('饮用了杏仁水。杏仁的气味让人安心。');updateHUD()}
+function use(){if(waterInspection.active){waterInspection.stow();return;}if(!interaction)return;if(interaction.kind==='barn-door'){const f=currentChunk()?.field;const x=state.x+(f?.barn?.x||0)-REFERENCE_BARN.doorX,z=state.z+(f?.barn?.z||0)-REFERENCE_BARN.depth/2;if(barnDoorGoal>0&&Math.abs(x)<2.4&&z>-.35&&z<2.5){toast('请先离开门扇的转动范围。');return;}barnDoorGoal=barnDoorGoal>0?0:1.47;interaction=null;return;}if(interaction.kind==='bottle'){const {p,chunk}=interaction;if(collected.has(p.id))return;const variant=p.almondVariant||almondVariant(p.id);p.mesh.getWorldPosition(pickupWorldPosition);waterInspection.begin(variant,pickupWorldPosition,camera);waterInventory.push(variant);collected.add(p.id);state.bottles=waterInventory.length;waterPipeline.removeBottle(p.mesh);releaseAlmondBottle(p.mesh);p.mesh=null;sceneBatches.refresh(chunk);audio.chime();toast('已拾取杏仁水');interaction=null}else{state.hydration=100;toast('喝了一口清水。有一点泥土的味道。');audio.footstep(false,true)}updateHUD()}
 function jump(){if(state.grounded&&state.stamina>5){leaveReferenceView();state.vy=4.8;state.grounded=false;state.stamina-=4}}
 async function fullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{toast('此浏览器暂不支持全屏。')}}
 document.addEventListener('keydown',e=>{if(e.code==='KeyF'){e.preventDefault();if(!e.repeat)toggleMap();return;}if(e.code==='F2'){e.preventDefault();if(e.repeat)return;if(activeModal?.id==='developer')closeModal();else if(!teleportJob)openModal('developer');return}if(activeModal){if(e.code==='Escape'){e.preventDefault();closeModal()}if(e.code==='Tab'){const items=[...activeModal.querySelectorAll('button,input,select,[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');if(!items.length){e.preventDefault();return}if(e.shiftKey&&document.activeElement===items[0]){e.preventDefault();items.at(-1).focus()}else if(!e.shiftKey&&document.activeElement===items.at(-1)){e.preventDefault();items[0].focus()}}return}if(!playing){
@@ -311,20 +314,20 @@ document.addEventListener('keydown',e=>{if(e.code==='KeyF'){e.preventDefault();i
   if(selected&&!selected.disabled)selected.click();
  }
  return;
-} if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.repeat)return;if(e.code==='Escape')setPlay(false);if(e.code==='KeyE')use();if(e.code==='KeyQ')drink();if(e.code==='Space')jump();if(e.code==='KeyJ')openModal('journal');if(e.code==='F10'){e.preventDefault();fullscreen();}});
+} if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.repeat)return;if(e.code==='Escape')setPlay(false);if(e.code==='KeyE')use();if(e.code==='KeyQ')drink();if(e.code==='KeyR'&&waterInventory.length&&!waterInspection.active)waterInspection.begin(waterInventory.at(-1),null,camera);if(e.code==='Space')jump();if(e.code==='KeyJ')openModal('journal');if(e.code==='F10'){e.preventDefault();fullscreen();}});
 document.addEventListener('keyup',e=>keys.delete(e.code));
 addEventListener('blur',()=>{keys.clear();mouseDragging=false;if(playing)setPlay(false)});
 document.addEventListener('visibilitychange',()=>{irradiance.pause(document.hidden);weatherDirector.resetClock();if(document.hidden&&playing)setPlay(false)});
-document.addEventListener('mousemove',e=>{if(!playing||touchDevice||(!document.pointerLockElement&&!mouseDragging))return;if(e.movementX||e.movementY)leaveReferenceView();const sens=Number(settings.sensitivity)*.000025/waterPipeline.focus.result.zoom;state.yaw-=e.movementX*sens;state.pitch-=e.movementY*sens;state.pitch=T.MathUtils.clamp(state.pitch,-1.4,1.4)});
+document.addEventListener('mousemove',e=>{if(!playing||touchDevice||(!document.pointerLockElement&&!mouseDragging))return;if(waterInspection.active){waterInspection.rotate(e.movementX,e.movementY);return;}if(e.movementX||e.movementY)leaveReferenceView();const sens=Number(settings.sensitivity)*.000025/waterPipeline.focus.result.zoom;state.yaw-=e.movementX*sens;state.pitch-=e.movementY*sens;state.pitch=T.MathUtils.clamp(state.pitch,-1.4,1.4)});
 renderer.domElement.addEventListener('mousedown',e=>{if(playing){if(e.button===2){zoomHeld=true;leaveReferenceView();}mouseDragging=true;if(!document.pointerLockElement&&!touchDevice){try{renderer.domElement.requestPointerLock?.()?.catch?.(()=>{});}catch{}}}});addEventListener('mouseup',e=>{mouseDragging=false;if(e.button===2)zoomHeld=false;});renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
-renderer.domElement.addEventListener('wheel',e=>{if(!playing||activeModal)return;e.preventDefault();leaveReferenceView();zoomSetting=T.MathUtils.clamp(zoomSetting*Math.exp(-e.deltaY*.0015),1,4.5);},{passive:false});
+renderer.domElement.addEventListener('wheel',e=>{if(!playing||activeModal)return;e.preventDefault();if(waterInspection.active){waterInspection.zoom(e.deltaY);return;}leaveReferenceView();zoomSetting=T.MathUtils.clamp(zoomSetting*Math.exp(-e.deltaY*.0015),1,4.5);},{passive:false});
 $('#touch-zoom').onclick=()=>{leaveReferenceView();zoomSetting=zoomSetting<1.5?2:zoomSetting<3?4.5:1;$('#touch-zoom').textContent=zoomSetting+'×';};
 let joyPointer=null,lookPointer=null,lastTouch={x:0,y:0};
 $('#joystick').addEventListener('pointerdown',e=>{joyPointer=e.pointerId;$('#joystick').setPointerCapture(e.pointerId);moveJoy(e)});
 function moveJoy(e){if(e.pointerId!==joyPointer)return;const r=$('#joystick').getBoundingClientRect();let x=(e.clientX-r.left-r.width/2)/40,z=(e.clientY-r.top-r.height/2)/40,l=Math.hypot(x,z);if(l>1){x/=l;z/=l}joy.x=x;joy.z=z;$('#stick').style.transform=`translate(${x*33}px,${z*33}px)`}
 $('#joystick').addEventListener('pointermove',moveJoy);for(const event of['pointerup','pointercancel'])$('#joystick').addEventListener(event,()=>{joyPointer=null;joy.x=joy.z=0;$('#stick').style.transform=''})
 renderer.domElement.addEventListener('pointerdown',e=>{if(!playing||e.pointerType==='mouse')return;lookPointer=e.pointerId;lastTouch={x:e.clientX,y:e.clientY};renderer.domElement.setPointerCapture(e.pointerId)});
-renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerId!==lookPointer||!playing)return;if(e.clientX!==lastTouch.x||e.clientY!==lastTouch.y)leaveReferenceView();state.yaw-=(e.clientX-lastTouch.x)*.004/waterPipeline.focus.result.zoom;state.pitch=T.MathUtils.clamp(state.pitch-(e.clientY-lastTouch.y)*.004/waterPipeline.focus.result.zoom,-1.4,1.4);lastTouch={x:e.clientX,y:e.clientY}});
+renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerId!==lookPointer||!playing)return;if(waterInspection.active){waterInspection.rotate((e.clientX-lastTouch.x)*1.5,(e.clientY-lastTouch.y)*1.5);lastTouch.x=e.clientX;lastTouch.y=e.clientY;return;}if(e.clientX!==lastTouch.x||e.clientY!==lastTouch.y)leaveReferenceView();state.yaw-=(e.clientX-lastTouch.x)*.004/waterPipeline.focus.result.zoom;state.pitch=T.MathUtils.clamp(state.pitch-(e.clientY-lastTouch.y)*.004/waterPipeline.focus.result.zoom,-1.4,1.4);lastTouch={x:e.clientX,y:e.clientY}});
 for(const event of['pointerup','pointercancel'])renderer.domElement.addEventListener(event,()=>lookPointer=null);
 $('#touch-run').addEventListener('pointerdown',e=>{touchRun=true;e.currentTarget.setPointerCapture(e.pointerId)});for(const event of['pointerup','pointercancel'])$('#touch-run').addEventListener(event,()=>touchRun=false);$('#touch-use').onclick=use;$('#touch-drink').onclick=drink;$('#touch-jump').onclick=jump;
 
@@ -358,6 +361,9 @@ function move(dt){const c=currentChunk(),inWheat=contactWheat(c,state.x,state.z)
 }
 function scanInteraction(){
  interaction=null;
+ const inspectionPrompt=$('#interact'),crosshair=$('.crosshair');
+ if(waterInspection.active){inspectionPrompt.hidden=false;if(!inspectionPrompt.classList.contains('inspection'))inspectionPrompt.classList.add('inspection');crosshair.hidden=true;const text=waterInspection.name+'\n'+(touchDevice?'滑动旋转　E 收起　Q 饮用':'鼠标旋转 · 滚轮拉近　E 收起　Q 饮用');if(inspectionPrompt.textContent!==text)inspectionPrompt.textContent=text;return;}
+ if(inspectionPrompt.classList.contains('inspection'))inspectionPrompt.classList.remove('inspection');crosshair.hidden=false;
  let nearest=2.25;
  for(const chunk of chunks.values()){
   if(Math.abs(Number(chunk.field.x-state.cx))>1||Math.abs(Number(chunk.field.z-state.cz))>1)continue;

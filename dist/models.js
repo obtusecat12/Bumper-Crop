@@ -1,3 +1,4 @@
+import {makeAlmondAnchor,isSharedAlmondResource} from './almond-water-assets.js?v=46';
 import {bakeStaticLeafLOD} from './static-leaf-lod.js?v=45';
 import {bakeStaticMeshLOD} from './static-mesh-lod.js?v=45';
 import {bakeStaticSelection} from './static-selection.js?v=45';
@@ -36,18 +37,7 @@ class Batch{
  beam(mat,a,b,r=.07){const mid=a.clone().add(b).multiplyScalar(.5),q=new T.Quaternion().setFromUnitVectors(UP,b.clone().sub(a).normalize());dummy.position.copy(mid);dummy.quaternion.copy(q);dummy.scale.set(r,a.distanceTo(b),r);dummy.updateMatrix();const g=cylinder.toNonIndexed();g.applyMatrix4(dummy.matrix);if(!this.parts.has(mat))this.parts.set(mat,[]);this.parts.get(mat).push(g)}
  finish(group){for(const [mat,parts]of this.parts){let count=parts.reduce((n,g)=>n+g.attributes.position.count,0),p=new Float32Array(count*3),n=new Float32Array(count*3),uv=new Float32Array(count*2),at=0;for(const g of parts){p.set(g.attributes.position.array,at*3);n.set(g.attributes.normal.array,at*3);if(g.attributes.uv)uv.set(g.attributes.uv.array,at*2);at+=g.attributes.position.count;g.dispose()}const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(p,3));g.setAttribute('normal',new T.BufferAttribute(n,3));g.setAttribute('uv',new T.BufferAttribute(uv,2));g.computeBoundingSphere();const mesh=new T.Mesh(g,mat);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh)}}
 }
-function unbatchedBottle(x,y,z){const g=new T.Group();const body=new T.Mesh(new T.CylinderGeometry(.095,.085,.32,8),glass);body.position.y=.19;const label=new T.Mesh(new T.CylinderGeometry(.097,.089,.15,8),materials.label);label.position.y=.19;const neck=new T.Mesh(new T.CylinderGeometry(.044,.07,.09,8),glass);neck.position.y=.40;const cap=new T.Mesh(new T.CylinderGeometry(.048,.048,.045,8),materials.cap);cap.position.y=.46;const stripe=new T.Mesh(new T.BoxGeometry(.1,.028,.01),materials.darkwood);stripe.position.set(0,.20,.095);g.add(body,label,neck,cap,stripe);g.position.set(x,y,z);g.rotation.z=.18;return g}
-const bottleResources=new Set();let bottleTemplate;
-export function makeBottle(x,y,z){
- if(!bottleTemplate){
-  const original=unbatchedBottle(0,0,0);original.rotation.z=0;original.updateMatrixWorld(true);
-  const parts=new Map();original.traverse(o=>{if(!o.isMesh)return;const g=o.geometry.toNonIndexed();g.applyMatrix4(o.matrixWorld);const count=g.attributes.position.count;g.setAttribute('color',new T.Float32BufferAttribute(new Float32Array(count*3).fill(1),3));if(!parts.has(o.material))parts.set(o.material,[]);parts.get(o.material).push(g);o.geometry.dispose();});
-  bottleTemplate=new T.Group();mergeArchitectureParts(parts,bottleTemplate,0);for(const m of bottleTemplate.children){bottleResources.add(m.geometry);if(!m.material.transparent){const source=m.material;m.material=source.clone();m.material.onBeforeCompile=source.onBeforeCompile;m.material.customProgramCacheKey=()=>source.customProgramCacheKey()+'|bottle';bottleResources.add(m.material);}}
- }
- const group=new T.Group();group.position.set(x,y,z);group.rotation.z=.18;
- for(const source of bottleTemplate.children){const m=new T.InstancedMesh(source.geometry,source.material,1);m.setMatrixAt(0,new T.Matrix4());m.name='pickup-bottle-'+(source.material.transparent?'glass':'opaque');m.castShadow=false;m.receiveShadow=true;m.renderOrder=source.renderOrder;m.computeBoundingSphere();group.add(m);}
- return group;
-}
+export const makeBottle=makeAlmondAnchor;
 
 
 export const wind={time:{value:0},player:{value:new T.Vector3()},strength:{value:.32}};
@@ -73,7 +63,7 @@ export function* createChunkTask(f,level,quality,collected){
   const r=random(f.seed^28391);
   if(f.roads[0].enabled&&r()<.30)pickups.push({id:f.key+':road',x:1.65,z:18+r()*23,y:0});
   if(f.x===0n&&f.z===0n)pickups.push({id:'0,0:welcome',x:1.9,z:46,y:0});
-  for(const p of pickups){p.y=Math.max(p.y,surfaceHeight(p.x,p.z,f)+.025);if(!collected.has(p.id)){p.mesh=makeBottle(p.x,p.y,p.z);group.add(p.mesh)}}
+  for(const p of pickups){p.y=Math.max(p.y,surfaceHeight(p.x,p.z,f)+.004);if(!collected.has(p.id)){p.mesh=makeBottle(p.x,p.y,p.z,p.id);group.add(p.mesh)}}
   for(const w of wheat.candidates){const key=`${Math.floor(w.x/2)},${Math.floor(w.z/2)}`;if(!wheatBuckets.has(key))wheatBuckets.set(key,[]);wheatBuckets.get(key).push(w)}
   const doors=[];group.traverse(o=>{if(o.userData.dynamicDoor)doors.push(o);});
   for(const door of doors)consolidateStaticArchitecture(door,level);
@@ -92,8 +82,8 @@ export function* createChunkTask(f,level,quality,collected){
 }
 // Offline validation can construct synchronously; gameplay advances one phase per frame.
 export function makeChunk(...args){const task=createChunkTask(...args);let step;do{step=task.next()}while(!step.done);return step.value}
-const isShared=r=>isSharedVergeResource(r)||isSharedCompoundResource(r)||isSharedReferenceBarnResource(r)||isSharedLandmarkTexture(r)||isSharedMeadowResource(r)||isSharedPhotoFarmResource(r)||isSharedWheatResource(r)||isSharedNatureResource(r)||isSharedBuildingResource(r)||isSharedYardPropResource(r)||isSharedRuralTexture(r)||isSharedLakeResource(r)||isSharedGroundResource(r);
-export const isSharedModelResource=r=>bottleResources.has(r)||isShared(r)||[box,cylinder,glass,woodTex,brickTex,roofTex,...Object.values(materials)].includes(r);
+const isShared=r=>isSharedAlmondResource(r)||isSharedVergeResource(r)||isSharedCompoundResource(r)||isSharedReferenceBarnResource(r)||isSharedLandmarkTexture(r)||isSharedMeadowResource(r)||isSharedPhotoFarmResource(r)||isSharedWheatResource(r)||isSharedNatureResource(r)||isSharedBuildingResource(r)||isSharedYardPropResource(r)||isSharedRuralTexture(r)||isSharedLakeResource(r)||isSharedGroundResource(r);
+export const isSharedModelResource=r=>isSharedAlmondResource(r)||isShared(r)||[box,cylinder,glass,woodTex,brickTex,roofTex,...Object.values(materials)].includes(r);
 export function disposeChunk(chunk){if(chunk.disposePacketResources){chunk.disposePacketResources();return}const disposed=new Set();chunk.group.traverse(o=>{
  if(o.isInstancedMesh)o.dispose();
  if(o.geometry&&!disposed.has(o.geometry)&&!isShared(o.geometry)&&![box,cylinder].includes(o.geometry)){disposed.add(o.geometry);o.geometry.dispose()}

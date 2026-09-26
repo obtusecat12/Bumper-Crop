@@ -1,0 +1,20 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: A usable flat color texture atlas for vintage almond-water beverage bottle paper labels, for a high fidelity Source Engine style game.
+layout: One square image with FOUR equal horizontal strips, edge to edge. Each strip is a complete flat rectangular wraparound label, width four times its height. Clear straight divisions at exactly 25%, 50%, 75% of the image height. No photograph of a bottle, no perspective, no shadows outside the printed art.
+design: Four different authentic-looking American 1960s–1980s beverage label designs. Top strip: warm ivory paper, burgundy oval crest, engraved almonds and fine border. Second strip: cream paper, forest green ornamental lettering, almond branches. Third strip: faded blue and cream, simple 1970s farm woodcut and horizontal bands. Fourth strip: ochre paper, rust-red sunburst medallion, small vintage almond illustration.
+typography: In the middle of EACH strip the large main wording is exactly "ALMOND WATER". Smaller period-appropriate lettering reads "PURE REFRESHMENT" and "12 FL. OZ."; on the sides, small wording "RETURN FOR DEPOSIT". No modern brands or barcodes.
+material: Real aged printed paper, slight offset ink misregistration, restrained faded ink, small rubbed edges, tiny wrinkles and occasional light water stains. Keep the main lettering and illustration recognizable. Realistic scanned diffuse albedo, muted rich inks, natural paper fiber. Source Engine 2004 prop texture aesthetic, without pixel-art blocks or baked lighting.
+aspect ratio: 1:1
+Avoid: 3D bottles, mockup backgrounds, overlapping labels, white margins between the strips, illegible major wording, excessive grunge, modern graphic design, glossy highlights.
+
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+asset: A flat four-material texture atlas for a realistic old metal vacuum flask and vintage beverage-bottle closures, in a Source Engine 2004 game.
+layout: Square image split into exactly four edge-to-edge equal square quadrants, with no borders, gaps, words or objects. Each quadrant is a continuous material surface, viewed orthogonally.
+top left: Muted dark blue-grey baked enamel metal, very slight pebbled paint, sparse fine scratches exposing dull silver and a few tiny chips. Most paint remains intact.
+top right: Worn silver-grey stainless steel, subtle fine vertical brushing, tiny irregular scuffs, quiet dry matte finish. No mirror glare.
+bottom left: Aged nickel-plated metal, cool warm-grey variation, very subtle tarnish, faint polish scratches and tiny worn areas.
+bottom right: Natural tan oak cork, small compressed pores and dark fine lenticels, realistic bottle-stopper cork rather than bark.
+lighting: Uniform diffuse albedo only. No environmental reflection, cast shadows or directional highlight.
+style: Restrained real photographic material detail suitable for normal/roughness derivation and close inspection, subtle years of handling rather than severe ruin.
+aspect ratio: 1:1
+Avoid: Product silhouettes, borders, text, fake plastic sheen, bright white burns, oversized rust patches, artificial tiling grid.

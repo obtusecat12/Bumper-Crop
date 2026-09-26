@@ -12,7 +12,7 @@ export function createChunkStream({wind,viewUniform}){
  }
  if(typeof Worker==='undefined'||typeof OffscreenCanvas==='undefined')disabled=true;
  else try{
-  worker=new Worker(new URL('./world-worker.js?v=45',import.meta.url),{type:'module',name:'level10-world'});
+  worker=new Worker(new URL('./world-worker.js?v=46',import.meta.url),{type:'module',name:'level10-world'});
   worker.onmessage=({data})=>{
    if(data.ready){ready=true;return}
    const job=pending;pending=null;

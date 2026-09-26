@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
+import * as T from '../../dist/vendor/three.module.min.js';
+import * as A from '../../dist/almond-water-assets.js?v=46';
+import {AlmondSlosh,conservedFill,liquidVolume,createAlmondInspection,createAlmondWorldVisibility} from '../../dist/almond-water-inspection.js?v=46';
+import {createPacker,createUnpacker} from '../../dist/scene-packets.js?v=45';
+const counts={thermos:[],glass:[]},styles=new Set();
+for(const kind of ['thermos','glass'])for(let finish=0;finish<3;finish++)for(let label=0;label<4;label++)for(let closure=0;closure<3;closure++){
+ const v={kind,finish,label,closure,paint:finish,seed:4},object=A.makeAlmondBottle(v);let triangles=0;
+ object.traverse(m=>{if(!m.isMesh)return;for(const a of Object.values(m.geometry.attributes))assert(a.array.every(Number.isFinite));assert(m.isInstancedMesh);assert.equal(m.instanceMatrix.usage,T.StaticDrawUsage);assert(A.isSharedAlmondResource(m.geometry));triangles+=(m.geometry.index?.count||m.geometry.attributes.position.count)/3;});
+ assert.equal(object.children.length,kind==='thermos'?1:2);assert(object.userData.almondHeight<=.31);if(kind==='glass'){assert.equal(object.userData.glass.material.uniforms.roughness.value,.15);assert.equal(object.userData.glass.material.uniforms.transmission.value,.97);}counts[kind].push(triangles);A.releaseAlmondBottle(object);
+}
+for(let i=0;i<300;i++)styles.add(JSON.stringify(A.almondVariant('pickup:'+i)));assert(styles.size>250);assert.deepEqual(A.almondVariant('repeat:12'),A.almondVariant('repeat:12'));
+// Worker-transfer anchors hydrate without transferring big textures or shared
+// environment maps, and each restored pickup keeps its original identity.
+const g=new T.Group(),anchor=A.makeAlmondAnchor(1,0,2,'case:a');g.add(anchor);const packer=createPacker({T}),unpacker=createUnpacker({T}),packet=packer.packChunk({group:g,pickups:[{id:'case:a',x:1,y:0,z:2,mesh:anchor}]});
+assert.equal(packet.packet.owned.textures.length+packet.packet.shared.textures.length,0);const chunk=unpacker.unpackChunk(structuredClone(packet.packet,{transfer:packet.transfer}));A.hydrateAlmondPickups(chunk);assert.equal(chunk.pickups.length,1);assert(!chunk.pickups[0].mesh.userData.almondAnchor);assert.deepEqual(chunk.pickups[0].mesh.position.toArray(),[1,0,2]);
+// Numeric liquid check: volume stays within 0.5%; a single held item settles,
+// has bounded impulses at a long frame, and freezes while paused.
+const targetVolume=liquidVolume(.199);let maxVolumeError=0;
+for(let i=0;i<=100;i++){const slope=i/100,v=liquidVolume(conservedFill(slope),slope),error=Math.abs(v-targetVolume)/targetVolume;maxVolumeError=Math.max(maxVolumeError,error);assert(error<.005);}
+const slosh=new AlmondSlosh();slosh.impulse(2,-2);for(let i=0;i<800;i++)slosh.update(i===10?4:1/60,.23,-.3);assert(Math.abs(slosh.x-.23)<1e-6);assert(Math.abs(slosh.z+.3)<1e-6);const stopped=JSON.stringify(slosh);slosh.update(0,0,0);assert.equal(JSON.stringify(slosh),stopped);
+const camera=new T.PerspectiveCamera(72,4/3,.08,480);camera.position.set(1.6,1.75,4);camera.updateMatrixWorld();const inspection=createAlmondInspection();const inv={kind:'glass',label:1,closure:2,finish:0,paint:0,seed:5};inspection.begin(inv,new T.Vector3(1.65,0,2),camera);
+for(let i=0;i<45;i++)inspection.update(1/60,camera,true);assert.equal(inspection.phase,'holding');assert(Math.abs(inspection.pose.position.x)<.001);assert(Math.abs(inspection.pose.position.z+.58)<.001);
+inspection.rotate(65,45);for(let i=0;i<45;i++)inspection.update(1/60,camera,true);assert(inspection.slosh.motion>.001);const frozen=inspection.pose.matrixWorld.clone(),age=inspection.slosh.time;inspection.update(.5,camera,false);assert.equal(inspection.slosh.time,age);assert(inspection.pose.matrixWorld.equals(frozen));inspection.stow();for(let i=0;i<20;i++)inspection.update(1/60,camera,true);assert(!inspection.active);
+const idle=inspection.stats.activeUpdates;for(let i=0;i<1000;i++)inspection.update(1/60,camera,true);assert.equal(inspection.stats.activeUpdates,idle);
+// Execute the actual game's use/drink functions with real assets/controller.
+const source=fs.readFileSync('dist/main.js','utf8'),actions=source.slice(source.indexOf('function drink(){'),source.indexOf('function jump(){'));
+const group=new T.Group(),v=A.almondVariant('scenario:77'),bottle=A.makeAlmondBottle(v);group.add(bottle);group.updateMatrixWorld(true);const p={id:'scenario:77',mesh:bottle,almondVariant:v},collected=new Set(),inventory=[],state={bottles:0,hydration:30,stamina:20,sanity:10};
+const worldVisibility=createAlmondWorldVisibility();worldVisibility.attach({pickups:[p]});const context={T,state,waterInventory:inventory,waterInspection:inspection,pickupWorldPosition:new T.Vector3(),camera,collected,interaction:{kind:'bottle',p,chunk:{group}},almondVariant:A.almondVariant,releaseAlmondBottle:A.releaseAlmondBottle,waterPipeline:{removeBottle:worldVisibility.remove},sceneBatches:{refresh(){}},audio:{chime(){}},toast(){},updateHUD(){}};
+vm.createContext(context);vm.runInContext(actions,context);context.use();assert.equal(state.bottles,1);assert.equal(collected.size,1);assert.equal(p.mesh,null);assert.equal(inspection.variant.kind,v.kind);assert.equal(group.children.length,0);context.use();assert.equal(state.bottles,1);context.drink();assert.equal(state.bottles,0);assert.equal(state.hydration,75);assert(!inspection.active);context.drink();assert.equal(state.bottles,0);
+// Matrix versions stay frozen while the inspection animation runs elsewhere.
+const staticB=A.makeAlmondBottle(inv),versions=staticB.children.map(m=>m.instanceMatrix.version);for(let i=0;i<100;i++)inspection.update(1/60,camera,true);assert.deepEqual(staticB.children.map(m=>m.instanceMatrix.version),versions);
+const report={worldDraws:{thermos:1,glass:2},worldTriangles:{thermos:Math.max(...counts.thermos),glass:Math.max(...counts.glass)},maxLiquidVolumeError:maxVolumeError,liquidMl:targetVolume*1e6,inspector:inspection.stats,anchorTextureTransfers:0,checks:['all variants finite','merged static templates','worker anchor roundtrip','volume-conserving liquid','damped motion and pause','pickup flight and center hold','actual pickup/drink inventory actions','immutable world instance matrices','zero simulation while inactive']};
+fs.mkdirSync('docs/almond-water-v46',{recursive:true});fs.writeFileSync('docs/almond-water-v46/check.json',JSON.stringify(report,null,2));console.log(report);

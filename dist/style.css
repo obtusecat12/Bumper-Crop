@@ -69,3 +69,6 @@ body[data-filter="vhs"] .map-mini{right:calc(var(--scene-left,0px) + 24px);top:c
 .compact-picture .hud{padding:10px}.compact-picture .hud-title,.compact-picture .hud-sub{font-size:14px;line-height:18px;max-width:140px}
 .compact-picture .hud-right{margin-right:132px}.compact-picture .map-mini{transform:scale(.64);transform-origin:top right}
 .compact-picture .stats{gap:10px}.compact-picture .bar{width:48px}.compact-picture .toast{bottom:65px}
+
+/* Keep the inspection instructions above the object, clear of its label. */
+.interact.inspection{top:9%;max-width:min(90vw,640px);width:max-content;white-space:pre-line;text-align:center;line-height:1.55;}

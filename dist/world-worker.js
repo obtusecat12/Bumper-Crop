@@ -13,7 +13,7 @@ import {createPacker} from './scene-packets.js?v=45';
 import {initializeRuralTextures} from './rural-textures.js?v=45';
 if(typeof OffscreenCanvas==='undefined')throw Error('OffscreenCanvas is unavailable');
 globalThis.document={createElement(tag){if(tag==='canvas')return new OffscreenCanvas(1,1);throw Error('Unsupported worker element '+tag)}};
-const models=await import('./models.js?v=45');
+const models=await import('./models.js?v=46');
 await Promise.all([initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeVergeTextures()]);
 const packer=createPacker({T,isSharedResource:models.isSharedModelResource,wind:models.wind});
 self.onmessage=async event=>{
