@@ -1,0 +1,30 @@
+[
+  {
+    "name": "clinic-mosaic-stone",
+    "source": "art-source/reference-v51/clinic-mosaic-stone.png",
+    "runtime": "dist/textures/reference-v51/clinic-mosaic-stone.webp",
+    "prompt": "stone-prompt.txt",
+    "sha256": "f60ca62ca6effeacccb2c75ac1ff6624810df41aa44561b63524ed81e0cdc838",
+    "generatedBy": "built-in image_gen__imagegen",
+    "runtimeDimensions": [
+      1024,
+      1024
+    ],
+    "wrap": "RepeatWrapping",
+    "inspection": "accepted: neutral stone surface, no baked directional lighting; metre-scaled UV mapping"
+  },
+  {
+    "name": "hope-fine-stone",
+    "source": "art-source/reference-v51/hope-fine-stone.png",
+    "runtime": "dist/textures/reference-v51/hope-fine-stone.webp",
+    "prompt": "fine-stone-prompt.txt",
+    "sha256": "5abfa0aed7b5738b0e2e65af50a52eab8597df41495413c2fe44239ecb319deb",
+    "generatedBy": "built-in image_gen__imagegen",
+    "runtimeDimensions": [
+      1024,
+      1024
+    ],
+    "wrap": "RepeatWrapping",
+    "inspection": "accepted: neutral stone surface, no baked directional lighting; metre-scaled UV mapping"
+  }
+]

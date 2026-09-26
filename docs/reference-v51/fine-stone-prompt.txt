@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: seamless tileable fine-honed light grey granite exterior cladding surface for the corporate stairs and panel wall of the supplied photo
+reference image: material reference only for grey-green stone of the large staircase and wall on the right
+composition: square flat orthographic continuous material texture, no panel joints, seamlessly repeatable edges
+materials: very fine dense salt-and-pepper grey mineral grain, subtle small mica flecks, restrained soft variations, well-maintained 1980s corporate plaza stone; nearly neutral pale grey with a very slight green cast, no bold pattern
+lighting: evenly lit diffuse albedo, no baked directional shadows or reflections
+photo quality and vibe: photorealistic natural stone texture, quiet low contrast at a distance but detailed close up, no oversharpening, no excessive yellow
+aspect ratio: 1:1
+Avoid: strong mottling, marble veins, waves, checkerboard, blocks, tile joints, geometric pattern, text, whole building, stairs, sky, perspective, frame, watermark

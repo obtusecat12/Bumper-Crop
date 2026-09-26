@@ -1,5 +1,5 @@
-import {exitPoint} from './exit-route.js?v=50';
-import {urbanHash,urbanRandom} from './urban-batch.js?v=50';
+import {exitPoint} from './exit-route.js?v=51';
+import {urbanHash,urbanRandom} from './urban-batch.js?v=51';
 export const CITY_BLOCK=112,CITY_ROAD_HALF=11,CITY_SIDEWALK=6;
 export const CITY_ORIGIN=exitPoint(382),CITY_ANGLE=Math.atan2(CITY_ORIGIN.tx,CITY_ORIGIN.tz);
 const ca=Math.cos(CITY_ANGLE),sa=Math.sin(CITY_ANGLE);

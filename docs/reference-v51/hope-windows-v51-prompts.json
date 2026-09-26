@@ -1,0 +1,66 @@
+{
+  "version": "hope-windows-v51",
+  "created": "2026-09-26",
+  "generationMode": "built-in image_gen__imagegen; separate call for each PNG",
+  "promptSource": {
+    "url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+    "freshDownloadedCopy": "/workspace/scratch/91e9848e2f36/research/gpt_image_2_prompt_skill_v51.md",
+    "savedCopy": "/workspace/scratch/91e9848e2f36/reference-assets/hope-windows-v51/gpt_image_2_prompt_skill_v51.md",
+    "exactRequiredPrefix": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - "
+  },
+  "common": {
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "aspectRatio": "3:2",
+    "format": "PNG",
+    "mode": "RGB",
+    "opaque": true,
+    "atlas": false,
+    "frontPlane": "straight-on rectified planar UV surface",
+    "postProcessing": "none; generated PNGs copied unchanged",
+    "integrationNotes": [
+      "Use one separate texture for each matching rectangular opening; map full UV range [0,1] once with clamp-to-edge, not repeat.",
+      "Treat as opaque sRGB color textures, not transparent glass.",
+      "Interior perspective and subtle reflections are baked into the texture; avoid stacking additional strong reflections.",
+      "A restrained emissive contribution from the same texture can preserve interior readability beneath facade shadows; keep the metal frames visually dark.",
+      "Convenience texture includes narrow mullions; door texture includes edge and center bronze frames and the pulls; travel window includes thin perimeter trim."
+    ]
+  },
+  "assets": [
+    {
+      "name": "famima-window",
+      "path": "/workspace/scratch/91e9848e2f36/reference-assets/hope-windows-v51/famima-window.png",
+      "generatedSource": "/workspace/scratch/91e9848e2f36/generated_images/exec-13bf9da5-7eae-4f6a-acea-8b81fb071313.png",
+      "referenceImage": "/workspace/scratch/91e9848e2f36/upload/image(20260926-094445).png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: a single opaque rectangular window texture for an early-2000s convenience shop seen through plate glass\nscene: realistic shelves with small packaged products, a refrigerated display case, and a light grey tile floor inside a modest convenience shop; believable interior depth visible through the window\nreference image: the supplied photograph is reference for the shop's period, materials, cool urban daylight, and subdued exposure only; create the isolated window surface, not the street or building in the reference\ncomposition: 3:2 horizontal texture filling the entire image, precisely straight-on and rectified, flat front glass plane parallel to the image plane, verticals perfectly vertical; the full image is glass and visible interior with natural perspective inside, no surrounding wall; suitable to map directly onto one flat window UV surface\nlighting: subdued interior fluorescent light and soft cool daylight reflections in the plate glass; medium readable exposure that stays readable in game shadows; no pitch-black baked shadow\nphoto quality and vibe: photorealistic real-location light and materials, natural focus, raw photographic quality, restrained contrast, no oversharpening, muted realistic color, no excessive yellow\naspect ratio: 3:2\nAvoid: branding, banner, awning, outer wall, sign, sidewalk, people, whole angled building photo, perspective skew of the front plane, black featureless window, collage, grid, atlas, transparency, watermarks, strong glare",
+      "transparent_background": false,
+      "meanLuminance": 92.36,
+      "sha256": "99451654d43047155ea808b1702a14c31bf35543730f19cc2704e75d877b84b5",
+      "visualInspection": "Accepted. Rectified flat glass plane, visible shelves, refrigerated case, small products and light grey tile floor. Cool exterior building/tree reflections; no outer wall, banner or awning. Three glazing sections compose one continuous scene, not an atlas."
+    },
+    {
+      "name": "corporate-lobby-door",
+      "path": "/workspace/scratch/91e9848e2f36/reference-assets/hope-windows-v51/corporate-lobby-door.png",
+      "generatedSource": "/workspace/scratch/91e9848e2f36/generated_images/exec-583ef623-8060-4bbe-a653-858d921912f4.png",
+      "referenceImage": "/workspace/scratch/91e9848e2f36/upload/image(20260926-094056).png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: a single opaque rectangular texture of a dark bronze and aluminium framed pair of glass corporate entry doors\nscene: a raised-stone corporate building lobby viewed directly through the entry glass; subtle vestibule, visible floor, and reception depth behind the doors; two slim vertical door pulls, modest period corporate materials\nreference image: the supplied photograph is reference for the right-hand corporate building's materials and subdued cool daylight only; create the isolated entry-door surface, not the outdoor staircase, street or building\ncomposition: 3:2 horizontal texture filling the entire image, precisely straight-on and rectified, door front plane parallel to the image plane, verticals perfectly vertical, narrow dark bronze-aluminium pair-of-door frames at the image edges and center, natural depth perspective visible inside; suitable to map directly onto one flat rectangular door UV surface\nlighting: subdued reflected outdoor daylight on glass, softly visible interior vestibule and reception; medium readable exposure with dark bronze frames and readable glazing that stays visible in game shadows; no pitch-black baked shadow\nphoto quality and vibe: photorealistic real-location light and materials, natural focus, raw photographic quality, restrained contrast, no oversharpening, muted realistic color, no excessive yellow\naspect ratio: 3:2\nAvoid: people, signs, text, outer wall, sidewalk, stairs, awning, whole angled building photo, perspective skew of the front plane, black featureless glass panel, excessive glare, collage, grid, atlas, transparency, watermark",
+      "transparent_background": false,
+      "meanLuminance": 94.27,
+      "sha256": "09ecf128f6e96576b768fa2d7d56234183985ffb27c33aeae509fffb5444bdf3",
+      "visualInspection": "Accepted. Rectified paired bronze/aluminium doors with two slim vertical pulls, reflected cool daylight and readable reception, vestibule and floor depth. No person, sign, sidewalk or exterior stone wall."
+    },
+    {
+      "name": "generic-retail-window",
+      "path": "/workspace/scratch/91e9848e2f36/reference-assets/hope-windows-v51/generic-retail-window.png",
+      "generatedSource": "/workspace/scratch/91e9848e2f36/generated_images/exec-80901c30-19f5-46d6-b161-b08e46191cd4.png",
+      "referenceImage": "/workspace/scratch/91e9848e2f36/upload/image(20260926-094445).png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: a single opaque rectangular closed 1980s travel-shop window texture seen through glass\nscene: a recognizable modest period travel shop, closed for business at this moment, blinds half raised, desk, small paper travel posters, and believable rear-room depth visible through the window; worn modest commercial interior materials\nreference image: the supplied urban photograph is reference for subdued cool daylight and the period street's modest shop materials only; create the isolated window surface, not the surrounding street or building\ncomposition: 3:2 horizontal texture filling the entire image, precisely straight-on and rectified, flat front glass plane parallel to the image plane, verticals perfectly vertical; the full image is glass, half-raised blinds, and visible interior with natural perspective inside, no surrounding wall; suitable to map directly onto one flat window UV surface\nlighting: gentle cool daytime glass reflections with subdued readable interior light; medium exposure so the desk, posters and back room remain readable in game shadows; no pitch-black baked shadow\nphoto quality and vibe: photorealistic real-location light and materials, natural focus, raw photographic quality, restrained contrast, no oversharpening, muted realistic color, no excessive yellow\naspect ratio: 3:2\nAvoid: people, large exterior text or signage, branding banner, awning, outer wall, sidewalk, whole angled building photo, perspective skew of the front plane, black featureless panel, excessive glare, collage, grid, atlas, transparency, watermark",
+      "transparent_background": false,
+      "meanLuminance": 91.66,
+      "sha256": "edb327e571ac3bb002b14ee05d6fabcb5c2f11a0faf740262b018d3c9dce025d",
+      "visualInspection": "Accepted. Rectified period travel shop with raised blind edge, closed unoccupied interior, desk, paper travel posters, brochure rack, files and back-room depth. No outer wall, branding banner, awning, or sidewalk."
+    }
+  ]
+}

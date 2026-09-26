@@ -1,13 +1,13 @@
 import * as T from './vendor/three.module.min.js';
-import {exitPoint,exitSample,exitSurface,ease,EXIT_CITY_Y} from './exit-route.js?v=50';
-import {height} from './world.js?v=50';
-import {createUrbanMaterials} from './urban-materials.js?v=50';
-import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=50';
-import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=50';
-import * as P from './urban-props.js?v=50';
-import {addReferenceMaterials} from './reference-materials.js?v=50';
-import {createReferenceScenes,referenceWaypoint} from './reference-scenes.js?v=50';
-import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=50';
+import {exitPoint,exitSample,exitSurface,ease,EXIT_CITY_Y} from './exit-route.js?v=51';
+import {height} from './world.js?v=51';
+import {createUrbanMaterials} from './urban-materials.js?v=51';
+import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=51';
+import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=51';
+import * as P from './urban-props.js?v=51';
+import {addReferenceMaterials} from './reference-materials.js?v=51';
+import {createReferenceScenes,referenceWaypoint} from './reference-scenes.js?v=51';
+import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=51';
 const B=CITY_BLOCK,Y=EXIT_CITY_Y;
 const ground=(x,z)=>exitSurface(exitSample(x,z,{}),height(x,z));
 function along(s,d=0){const p=exitPoint(s);return{x:p.x+p.nx*d,z:p.z+p.nz*d,ry:Math.atan2(p.tx,p.tz)};}
@@ -43,7 +43,7 @@ function makeApproach(mats){
  for(let i=0;i<4;i++){const s=265+i*23,side=i%2?1:-1,p=along(s,side*(65+(i%3)*13));b.push(p.x,Y+.17,p.z,p.ry-side*Math.PI/2);addBuilding(b,{type:['cinder_warehouse','courtyard_motel','two_story_shops','precast_tower'][i%4],w:29,d:24,floors:i%4===3?8:2,seed:509+i,lod:1});b.pop();}
  ribbon(b,'asphalt',225,354,0,s=>roadHalf(s)*2,.028);
  for(const side of[-1,1]){
-  ribbon(b,'sidewalk',216,350,s=>side*(roadHalf(s)+2.35),4.7,.17);ribbon(b,'concrete',190,350,s=>side*(roadHalf(s)+.12),.24,.20);
+  for(const[a,c]of(side===1?[[216,260],[306,350]]:[[216,350]]))ribbon(b,'sidewalk',a,c,s=>side*(roadHalf(s)+2.35),4.7,.17);for(const[a,c]of(side===1?[[190,260],[306,350]]:[[190,350]]))ribbon(b,'concrete',a,c,s=>side*(roadHalf(s)+.12),.24,.20);
   for(let s=241;s<350;s+=30){const p=along(s,side*(roadHalf(s)+.8));place(b,p.x,Y+.17,p.z,p.ry+side*Math.PI/2,P.addStreetLight,{height:8.6,arm:2.3});if(s>280){const q=along(s+9,side*(roadHalf(s)+1));place(b,q.x,Y+.17,q.z,p.ry,P.addParkingMeter);}}
  }
  for(let s=275;s<350;s+=4){const p=along(s),len=Math.min(3.95,350-s);for(const side of[-1,1]){const q=along(s,side*.18);b.box('yellow',q.x,Y+.042,q.z,.11,.009,len,p.ry,.94);}if(s>340&&Math.floor(s/4)%2)for(const side of[-1,1]){const q=along(s,side*3.5);b.box('white',q.x,Y+.044,q.z,.11,.009,3,p.ry,.89);}}
@@ -51,7 +51,7 @@ function makeApproach(mats){
  return{object:b.finish('Urban approach / occupied lots and low commerce'),early:early.finish('Urban approach / rural verge'),colliders:b.colliders,walks:b.walks,records};
 }
 function roadAndFurniture(b,plan,lod){
- if(plan.reserved)return;
+ if(plan.reserved){b.push(plan.x,Y,plan.z,0);b.box('asphalt',56,-.043,56,112,.06,112);b.pop();return;}
  const{x,z,ix,iz,seed}=plan;b.push(x,Y,z,0);b.box(plan.reserved?'sidewalk':'asphalt',56,-.03,56,112,.06,112);
  if(!plan.reserved){
   b.box('sidewalk',56,.075,56,90,.15,82);b.walk(56,56,90,82,.15);for(const cz of[13,99]){b.box('sidewalk',56,.075,cz,82,.15,4);b.walk(56,cz,82,4,.15);}
@@ -80,13 +80,14 @@ function* buildBlock(mats,plan,lod){
 }
 export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
  const mats=addReferenceMaterials(createUrbanMaterials()),approach=makeApproach(mats),references=createReferenceScenes(mats),root=new T.Group(),blocks=new Map();root.name='Level 10 to Level 11 / urban fabric';root.add(approach.object,approach.early,references.object);root.visible=false;
+ const groundGeometry=new T.PlaneGeometry(B*16,B*16);groundGeometry.rotateX(-Math.PI/2);groundGeometry.setAttribute('color',new T.Float32BufferAttribute(new Float32Array(groundGeometry.attributes.position.count*3).fill(1),3));const groundUV=groundGeometry.attributes.uv;for(let i=0;i<groundUV.count;i++)groundUV.setXY(i,groundUV.getX(i)*B*16/3.8,groundUV.getY(i)*B*16/3.8);const cityGround=new T.Mesh(groundGeometry,mats.asphalt);cityGround.name='Continuous city ground / no exposed sky beneath reserved parcels';cityGround.position.set(CITY_ORIGIN.x,Y-.065,CITY_ORIGIN.z);cityGround.receiveShadow=true;cityGround.castShadow=false;cityGround.visible=false;root.add(cityGround);
  const stats={mode:'10',blocks:0,buildings:approach.records.length,typologies:BUILDING_TYPES.length,triangles:0,draws:0,pending:0,district:'transition'};
  let city=false,origin='',wantedKey='',queue=[],job=null,disposed=false;
- function recount(){stats.blocks=blocks.size;stats.buildings=approach.records.length;stats.triangles=0;stats.draws=0;for(const g of[approach.object,approach.early,references.object,...Array.from(blocks.values(),v=>v.object)]){const q=g.userData.cityStats;stats.triangles+=q.triangles;stats.draws+=q.draws;}for(const v of blocks.values())stats.buildings+=v.plan.buildings.length;stats.pending=queue.length+Number(!!job);}
+ function recount(){stats.blocks=blocks.size;stats.buildings=approach.records.length;stats.triangles=2;stats.draws=1;for(const g of[approach.object,approach.early,references.object,...Array.from(blocks.values(),v=>v.object)]){const q=g.userData.cityStats;stats.triangles+=q.triangles;stats.draws+=q.draws;}for(const v of blocks.values())stats.buildings+=v.plan.buildings.length;stats.pending=queue.length+Number(!!job);}
  function commitBlock(v,key){blocks.set(key,v);root.add(v.object);onAdd(v.object);v.object.updateMatrix();v.object.matrixAutoUpdate=false;v.object.updateMatrixWorld(true);recount();}
  function removeBlock(key){const v=blocks.get(key);if(!v)return;onRemove(v.object);v.object.removeFromParent();v.object.traverse(m=>m.geometry?.dispose());blocks.delete(key);}
  function requestAround(wx,wz,force=false){
-  const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B),key=ix+','+iz+','+city;if(key===wantedKey&&!force)return;wantedKey=key;
+  const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B),key=ix+','+iz+','+city;if(key===wantedKey&&!force)return;wantedKey=key;const gp=cityToWorld((ix+.5)*B,(iz+.5)*B);cityGround.position.set(gp.x,Y-.065,gp.z);cityGround.updateMatrix();
   const wanted=new Set(),next=[];
   for(let dz=-2;dz<=2;dz++)for(let dx=-2;dx<=2;dx++){const ax=ix+dx,az=iz+dz;if(!city&&az<0)continue;const k=ax+','+az;wanted.add(k);if(!blocks.has(k)&&job?.key!==k)next.push({key:k,ix:ax,iz:az,d:dx*dx+dz*dz,lod:Math.max(Math.abs(dx),Math.abs(dz))>1?1:0});}
   next.sort((a,b)=>a.d-b.d);queue=next;for(const[k,v]of blocks){if(!wanted.has(k))removeBlock(k);else if(v.lod===1&&Math.abs(v.plan.ix-ix)<=1&&Math.abs(v.plan.iz-iz)<=1&&job?.key!==k)queue.push({key:k,ix:v.plan.ix,iz:v.plan.iz,d:0,lod:0});}
@@ -99,9 +100,9 @@ export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
   const wx=Number(state.cx)*64+(state.x||0),wz=Number(state.cz)*64+(state.z||0);const cp=worldToCity(wx,wz),fx=((cp.x%B)+B)%B,fz=((cp.z%B)+B)%B;stats.coverage=2*B+Math.min(fx,fz,B-fx,B-fz)-12;if(city||exitSample(wx,wz,{}).s>190){requestAround(wx,wz);advance();}for(const v of blocks.values())v.object.visible=city||v.plan.iz>=0;
  }
  async function prepareAt(wx,wz){requestAround(wx,wz,true);while(queue.length||job){advance();await new Promise(done=>setTimeout(done,0));}}
- function setCity(value){city=value;stats.mode=value?'11':'10';approach.early.visible=!value;wantedKey='';if(!value){queue=[];if(job){job.generator.return();job=null;}for(const k of blocks.keys())removeBlock(k);}recount();}
+ function setCity(value){city=value;cityGround.visible=value;stats.mode=value?'11':'10';approach.early.visible=!value;wantedKey='';if(!value){queue=[];if(job){job.generator.return();job=null;}for(const k of blocks.keys())removeBlock(k);}recount();}
  function resolve(position,state){if(!city&&!root.visible)return position;const wx=Number(state.cx)*64,wz=Number(state.cz)*64;position.x+=wx;position.z+=wz;resolveUrban(position,approach.colliders);resolveUrban(position,references.colliders);const p=worldToCity(position.x,position.z),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)resolveUrban(position,v.colliders);}position.x-=wx;position.z-=wz;return position;}
- function floorAt(wx,wz){let y=urbanWalkHeight(wx,wz,references.walks,urbanWalkHeight(wx,wz,approach.walks,Y));const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)y=urbanWalkHeight(wx,wz,v.walks,y);}if(p.z<-12&&p.z>-205&&Math.abs(p.x)<40){const s=p.z+382,d=Math.abs(p.x);if(d>roadHalf(s)&&d<roadHalf(s)+4.7)y=Math.max(y,Y+.17);}return y;}
- function dispose(){disposed=true;if(job)job.generator.return();for(const key of blocks.keys())removeBlock(key);root.traverse(m=>m.geometry?.dispose());for(const[key,m]of Object.entries(mats)){if(key.startsWith('sign:')||['photoBanner','photoFamima','photoHope','photoDermica'].includes(key))m.map?.dispose();m.dispose();}root.removeFromParent();}
+ function floorAt(wx,wz){let y=urbanWalkHeight(wx,wz,references.walks,urbanWalkHeight(wx,wz,approach.walks,Y));const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){const v=blocks.get((ix+dx)+','+(iz+dz));if(v)y=urbanWalkHeight(wx,wz,v.walks,y);}if(p.z<-12&&p.z>-205&&Math.abs(p.x)<40){const s=p.z+382,d=Math.abs(p.x);if(d>roadHalf(s)&&d<roadHalf(s)+4.7&&!(p.x>0&&s>260&&s<306))y=Math.max(y,Y+.17);}return y;}
+ function dispose(){disposed=true;if(job)job.generator.return();for(const key of blocks.keys())removeBlock(key);root.traverse(m=>m.geometry?.dispose());for(const[key,m]of Object.entries(mats)){if(key.startsWith('sign:')||['photoBanner','photoFamima','photoHope','photoDermica','photoFamimaRound','photoBus','photoParking','photoWalkHand'].includes(key))m.map?.dispose();m.dispose();}root.removeFromParent();}
  recount();return{object:root,update,setCity,resolve,floorAt,stats,dispose,prepareAt,waypoint:name=>name.startsWith('photo-')?referenceWaypoint(name):cityWaypoint(name),references,colliders:[...approach.colliders,...references.colliders],get cityColliders(){return[...approach.colliders,...references.colliders,...Array.from(blocks.values()).flatMap(v=>v.colliders)];},get blocks(){return blocks;},buildingTypes:BUILDING_TYPES};
 }

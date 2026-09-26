@@ -1,6 +1,6 @@
-import {weatherTextures} from './weather-textures.js?v=50';
-import {fogVolumePars} from './fog-volume.js?v=50';
-import {createAdvancingFog} from './advancing-fog.js?v=50';
+import {weatherTextures} from './weather-textures.js?v=51';
+import {fogVolumePars} from './fog-volume.js?v=51';
+import {createAdvancingFog} from './advancing-fog.js?v=51';
 import * as T from './vendor/three.module.min.js';
 
 // World-ray projected cellular decks; optical column depth gives dark cores
@@ -276,7 +276,10 @@ void main() {
    vec4 v=fogVolumeAt(48.);float trans=pow(v.a,3.);
    skyColor=skyColor*trans+v.rgb/max(1.-v.a,.0001)*(1.-trans);
   }
-  vec3 refSky=uReferenceSky.rgb*mix(1.12,.89,smoothstep(0.,.7,max(rd.y,0.))*uReferenceClinic);
+  float refElevation=smoothstep(0.,.85,max(rd.y,0.));
+  vec3 refClear=mix(uReferenceSky.rgb*1.65+vec3(.035,.023,.012),uReferenceSky.rgb*.76,refElevation);
+  float refVeil=cloudNoise2(rd.xz*1.3+vec2(1.9,3.2))*.006;
+  vec3 refSky=mix(uReferenceSky.rgb*mix(1.055,.965,refElevation),refClear+refVeil,uReferenceClinic);
   skyColor=mix(skyColor,refSky,uReferenceSky.a);
   gl_FragColor = vec4(skyColor, 1.0);
   #include <colorspace_fragment>

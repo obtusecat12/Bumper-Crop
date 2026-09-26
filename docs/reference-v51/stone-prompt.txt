@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: seamless tileable stone veneer albedo texture for the broad left framing wall in the supplied clinic photograph
+reference image: supplied photo is material reference only; extract the character of its left stone wall, not the scene
+composition: square straight-on flat orthographic texture filling the entire image, seamlessly repeatable on all four edges; horizontal courses of irregular rectangular beige-grey limestone blocks with width to height ratios about 1.5 to 2.5; four courses across the texture, about seven to nine blocks per course; very thin pale low-contrast mortar joints
+materials: fine natural mottled mineral grain; subdued warm neutral grey and beige stones with small tonal differences; realistic restrained shallow surface wear
+lighting: uniform diffuse neutral albedo, no baked directional shadow or light gradient, no highlights
+photo quality and vibe: natural raw stone surface, realistic material color, no oversharpening, no excessive yellow
+aspect ratio: 1:1
+Avoid: checkerboard alternating dark and light blocks, strong stains, exaggerated contrast, arches, windows, signage, perspective, sky, floor, unrelated objects, frame, watermark

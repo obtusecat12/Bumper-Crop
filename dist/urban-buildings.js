@@ -87,7 +87,7 @@ function shops(b,w,d,h,ids,r,lod=0,opts={}) {
   b.box('concrete',0,low+.2,z-.08,w,.4,.44);
   for(let i=0;i<n;i++) {
     const x=-w/2+bay*(i+.5), ww=bay-.46;
-    b.plane(i%3?'glass':'glassLight',x,low+.4+glassH/2,z-.19,ww,glassH-.15);
+    b.plane(b.mats.photoRetail?(ids[i%ids.length]==='market'?'photoShop':ids[i%ids.length]==='bakery'?'photoBakeryInside':'photoRetail'):(i%3?'glass':'glassLight'),x,low+.4+glassH/2,z-.19,ww,glassH-.15);
     b.box(wall,x-bay/2+.16,low+glassH/2,z-.05,.32,glassH+.5,.64);
     b.box('metal',x+ww*.12,low+glassH/2+.25,z-.10,.055,glassH,.07);
     door(b,x+bay*.21,z-.09,low+.16,Math.min(1.3,bay*.28),2.4,true,lod);

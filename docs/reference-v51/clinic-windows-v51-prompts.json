@@ -1,0 +1,96 @@
+{
+  "mode": "built-in image_gen",
+  "reference": "/workspace/scratch/91e9848e2f36/upload/image(20260926-095002).png",
+  "prompt_skill_source": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "prompt_skill_download": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "name": "dermica-left-glass",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: one individual opaque photorealistic game facade texture of the left Dermica glass storefront in the reference photograph.\nreference image: Image 1 is the supplied location photograph; use the far-left lower glass storefront beneath the separate Dermica sign as the architectural material and atmosphere reference.\nscene: broad golden and grey glass sliding storefront with vertical cream curtains and amber interior reflections; a dim interior with convincing vanishing-point depth behind the glass.\ncomposition and perspective: rectified straight-on front elevation, viewed square-on to the glass plane, horizontal and vertical frame lines exactly level; full-bleed window-and-door infill only, filling the rectangular image edge to edge. The image is for a flat plane on a 3D building; the model supplies the outer architectural frame. Internal narrow sliding-glass subdivisions are allowed. One storefront texture only, not an atlas or collage.\nmaterials and colors: shaded silver-grey slim metal subdivisions, slightly muted golden glass, warm cream curtains, believable soft amber interior reflections, subtle glazing texture.\nlighting: natural shade daylight matching the supplied location, balanced exposure with visible interior details.\nphoto quality and vibe: non-studio lighting, no oversharpening, real light from the location, imperfect raw photo quality for realism, natural focus, 2k; natural lighting that matches the background.\naspect ratio: 3:2\noutput: opaque PNG texture.\nAvoid: people, outer sign, awning, surrounding walls, pavement, rails, excessive yellow, bright neon, large text, out-of-scale stickers, black empty windows, excessive glare, tilted camera, perspective skew of the outer image plane, atlas, decorative border, watermarks.",
+      "requested_aspect_ratio": "3:2",
+      "transparent_background": false,
+      "status": "complete",
+      "path": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/dermica-left-glass-opaque.png",
+      "raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-b7565709-7aa4-46e2-b293-d40ee48973c7.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "inspection": "Rectified frontage; vertical cream curtains, subdued amber reflections and interior corridor depth; no people, awning or rails. Opacity revision visually inspected; same layout with slightly brighter exposure.",
+      "revision": {
+        "asset": "dermica-left-glass",
+        "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: the supplied dermica-left-glass storefront game facade image.\nedit: produce a fully opaque RGB PNG version of this image, with no alpha transparency. Preserve the complete visible image, all window glass color, interior depth, curtains or doors, internal subdivisions, lighting, reflections and composition. The glass transparency is only an illusion painted into the RGB color image; every output pixel must be fully opaque. Keep all existing image content exactly as visible.\naspect ratio: 3:2\noutput: one fully opaque RGB PNG texture, no alpha channel, same composition.\nAvoid: changing the design, missing pixels, actual transparent glass, transparent backgrounds, people, new text, outer signs, awnings, rails, atlas, decorative borders, excessive yellow, oversharpening.",
+        "reference": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/dermica-left-glass.png",
+        "output": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/dermica-left-glass-opaque.png",
+        "raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-b7565709-7aa4-46e2-b293-d40ee48973c7.png"
+      },
+      "original_path": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/dermica-left-glass.png",
+      "original_raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-ffd22b59-37f4-4739-822d-2edd2879c071.png",
+      "opaque": true,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "name": "marisa-interior",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: one individual opaque photorealistic game facade texture of the Marisa pastry-shop glass and entrance in the reference photograph.\nreference image: Image 1 is the supplied location photograph; use the right-hand Marisa storefront beneath its sign as the architectural material and atmosphere reference.\nscene: dark reddish wood double entrance doors surrounded by green-tinted glass, with a visible warmly lit pastry counter and believable cake-shop interior depth through the glazing. Small subdued cursive writing appears low on the side glass, matching the quiet scale of the reference, with no large lettering.\ncomposition and perspective: rectified straight-on front elevation, viewed square-on to the glass plane, horizontal and vertical frame lines exactly level; full-bleed window-and-door infill only, filling the rectangular image edge to edge. The image is for a flat plane on a 3D building; the model supplies the outer architectural frame. Internal subdivisions are allowed. Interior surfaces and counters recede toward a convincing vanishing point. One storefront texture only, not an atlas or collage.\nmaterials and colors: dark red-brown wooden double doors, muted green-tinted window glass, warm pastry display counter, softly visible shelves and cakes inside; natural subdued colors, no solid-black voids.\nlighting: natural shade daylight matching the supplied location, with quiet warm interior light and visible interior details behind the reflections.\nphoto quality and vibe: non-studio lighting, no oversharpening, real light from the location, imperfect raw photo quality for realism, natural focus, 2k; natural lighting that matches the background.\naspect ratio: 3:2\noutput: opaque PNG texture.\nAvoid: people, outer sign, awning, surrounding walls, pavement, rails, excessive yellow, bright neon, giant text, out-of-scale stickers, solid-black interior, excessive glare, tilted camera, perspective skew of the outer image plane, atlas, decorative border, watermarks.",
+      "requested_aspect_ratio": "3:2",
+      "transparent_background": false,
+      "status": "complete",
+      "path": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/marisa-interior-opaque.png",
+      "raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-a9ddd63c-0198-48bc-b108-2e597aeb3e6d.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "inspection": "Rectified frontage; red-brown double doors, green-tinted side glazing, visible warm pastry counter and interior depth; small low cursive glass writing. Opacity revision visually inspected; same layout with slightly brighter exposure.",
+      "revision": {
+        "asset": "marisa-interior",
+        "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: the supplied marisa-interior storefront game facade image.\nedit: produce a fully opaque RGB PNG version of this image, with no alpha transparency. Preserve the complete visible image, all window glass color, interior depth, curtains or doors, internal subdivisions, lighting, reflections and composition. The glass transparency is only an illusion painted into the RGB color image; every output pixel must be fully opaque. Keep all existing image content exactly as visible.\naspect ratio: 3:2\noutput: one fully opaque RGB PNG texture, no alpha channel, same composition.\nAvoid: changing the design, missing pixels, actual transparent glass, transparent backgrounds, people, new text, outer signs, awnings, rails, atlas, decorative borders, excessive yellow, oversharpening.",
+        "reference": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/marisa-interior.png",
+        "output": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/marisa-interior-opaque.png",
+        "raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-a9ddd63c-0198-48bc-b108-2e597aeb3e6d.png"
+      },
+      "original_path": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/marisa-interior.png",
+      "original_raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-948c809f-bd3a-4cf8-9b90-fbb7a1fd644f.png",
+      "opaque": true,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "name": "clinic-frosted",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: one individual opaque photorealistic game facade texture of the pale aluminium clinic storefront in the reference photograph.\nreference image: Image 1 is the supplied location photograph; use the lower clinic storefront under the Centro Dermatologico sign, immediately to the left of the dark green laboratory storefront, as the architectural material and atmosphere reference.\nscene: pale aluminium clinic storefront with a grey-blue top transom, pale-green frosted lower panels, a narrow entry door and muted small clinic posters. The clearer door glazing suggests a quiet interior with convincing vanishing-point depth; frosted panels diffuse the interior softly.\ncomposition and perspective: rectified straight-on front elevation, viewed square-on to the glass plane, horizontal and vertical frame lines exactly level; full-bleed window-and-door infill only, filling the rectangular image edge to edge. The image is for a flat plane on a 3D building; the model supplies the outer architectural frame. Internal aluminium subdivisions are allowed. One storefront texture only, not an atlas or collage.\nmaterials and colors: pale aluminium narrow framing, subdued grey-blue transom glass, pale mint-green frosted lower glass panels, understated small clinical information posters at the door.\nlighting: natural shade daylight matching the supplied location, balanced exposure and subtle glazing reflections.\nphoto quality and vibe: non-studio lighting, no oversharpening, real light from the location, imperfect raw photo quality for realism, natural focus, 2k; natural lighting that matches the background.\naspect ratio: 3:2\noutput: opaque PNG texture.\nAvoid: people, outer sign, awning, surrounding walls, pavement, rails, excessive yellow, bright neon, giant text, out-of-scale posters or stickers, black empty windows, excessive glare, tilted camera, perspective skew of the outer image plane, atlas, decorative border, watermarks.",
+      "requested_aspect_ratio": "3:2",
+      "transparent_background": false,
+      "status": "complete",
+      "path": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/clinic-frosted-final.png",
+      "raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-50bd3998-2423-409a-abc4-8d9477baee3b.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "inspection": "Rectified frontage; grey-blue transom, pale-green frosted lower panels, narrow door and small notices; first version revised to reduce poster scale. Upper-door mask notice replaced with small dermatology portrait, inspected with no mask or pandemic wording.",
+      "revision": {
+        "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: targeted edit of the supplied clinic storefront texture.\nedit: replace only the two tall face-poster strips flanking the entry door with small, muted rectangular clinic notices, each around one quarter of its current poster height, centered within those same narrow panes at comfortable reading height. Fill the rest of those two narrow panes with matching pale-green frosted glass. The new small notices contain understated tiny clinical information and simple medical symbols, without faces or people.\npreserve: the exact current framing, straight-on rectified perspective, all aluminium subdivisions, narrow entry door, grey-blue upper transom, large pale-green frosted lower panels, interior depth, natural shade lighting, subdued colors and overall composition. Keep the existing small door notices in place.\naspect ratio: 3:2\noutput: one opaque PNG game storefront texture.\nAvoid: people, faces, giant posters, giant text, outer signage, awnings, pavement, rails, atlas, borders, new objects, excessive yellow, oversharpening, excessive glare.",
+        "reference": "/workspace/scratch/91e9848e2f36/generated_images/exec-9d01d2e0-915a-4255-b93b-4c37fcfa5693.png",
+        "prior_raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-9d01d2e0-915a-4255-b93b-4c37fcfa5693.png",
+        "prior_saved_path": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/clinic-frosted-v1.png"
+      },
+      "opaque": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "previous_selected_path": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/clinic-frosted.png",
+      "previous_selected_raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-c60386e0-242f-4492-af98-b5d3ab280ae5.png",
+      "period_revision": {
+        "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: a precise local edit of the supplied clinic storefront game facade texture.\nedit: change only the small upper poster on the narrow entrance door, the poster currently showing a mask with the words USO OBLIGATORIO DE CUBREBOCAS. Replace that one poster with a muted period dermatology / skin-care portrait poster featuring a small female face, as on the clinic in the original location photograph. Keep this replacement poster the same small size, position, rectangular boundary and subdued printed-paper finish. The portrait has no mask, and the poster has no pandemic wording.\npreserve: every other part of the image unchanged, including the whole frame, all glass divisions, all other posters, the door and handle, the grey-blue transom, pale-green frosted glass, interior, lighting, colors, reflections, exact straight-on composition and dimensions.\naspect ratio: 3:2\noutput: opaque RGB PNG, 1536 x 1024, identical image extent.\nAvoid: mask, pandemic wording, changed poster scale, other design changes, new objects, new signs, excessive yellow, oversharpening.",
+        "reference": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/clinic-frosted.png",
+        "path": "/workspace/scratch/91e9848e2f36/reference-assets/clinic-windows-v51/clinic-frosted-final.png",
+        "raw_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-50bd3998-2423-409a-abc4-8d9477baee3b.png",
+        "note": "Only upper-door mask notice replaced with small muted female dermatology portrait. No mask or pandemic wording visible."
+      }
+    }
+  ],
+  "integration_notes": "Use each final as its own 3:2 sRGB opaque facade plane with full UVs. Internal mullions are painted in; outer model frames can overlap the texture edge. Reflections and interior depth are baked into the image."
+}

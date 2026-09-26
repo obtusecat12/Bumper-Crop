@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {DampedSpring} from './handheld-camera.js?v=50';
-import {focalLengthForFov,hyperfocal} from './lens-optics.js?v=50';
-import {surfaceHeight,pondShoreDistance,wheatAllowed,cropSample} from './world.js?v=50';
+import {DampedSpring} from './handheld-camera.js?v=51';
+import {focalLengthForFov,hyperfocal} from './lens-optics.js?v=51';
+import {surfaceHeight,pondShoreDistance,wheatAllowed,cropSample} from './world.js?v=51';
 // Reused center ray, vectors, interval slab and critically bounded cadence.
 // Uses existing collision proxies plus authoritative terrain, not allocation-
 // heavy Mesh.raycast() intersection arrays across the entire wheat field.
