@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import crypto from 'node:crypto';import {createRequire} from 'node:module';
+const {createCanvas,loadImage}=createRequire(import.meta.url)(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/@napi-rs/canvas');
+const root=new URL('../../dist/textures/urban-v52/',import.meta.url),catalog=JSON.parse(fs.readFileSync(new URL('catalog.json',root),'utf8'));
+assert.equal(catalog.windows.length,100);assert.equal(catalog.signs.length,72);assert.equal(new Set(catalog.windows.map(a=>a.originalSha256)).size,100);assert.equal(new Set(catalog.signs.map(a=>a.style)).size,72);
+let count=0;const hashes=new Set();
+const A=await import('../../dist/urban-assets.js?v=52');
+await A.initializeUrbanAssets(async(url,w,h)=>{const bytes=fs.readFileSync(url),hash=crypto.createHash('sha256').update(bytes).digest('hex');assert(!hashes.has(hash),'duplicated packed image');hashes.add(hash);const im=await loadImage(bytes);assert(im.width>0&&im.height>0);const c=createCanvas(w,h),ctx=c.getContext('2d');ctx.drawImage(im,0,0,w,h);const a=new Uint8Array(ctx.getImageData(0,0,w,h).data);let energy=0;for(let i=0;i<a.length;i+=4){assert.equal(a[i+3],255);energy+=a[i]+a[i+1]+a[i+2];}assert(energy>a.length*9,'unreadable black image');count++;return{data:a,width:w,height:h};},async url=>JSON.parse(fs.readFileSync(url,'utf8')));
+assert.equal(count,172);assert.equal(A.windowArray.image.depth,100);assert.equal(A.signArray.image.depth,72);assert.equal(A.windowArray.image.data.length,480*320*100*4);assert.equal(A.signArray.image.data.length,512*512*72*4);
+for(let i=0;i<100;i++){const index=A.storefrontSign(i,i*7);assert(index>=0&&index<40);const available=catalog.signs.filter(s=>s.kind==='fascia'&&s.category===catalog.windows[i].business);if(available.length)assert.equal(catalog.signs[index].category,catalog.windows[i].business);}
+console.log(JSON.stringify({decoded:count,originalWindowScenes:100,uniquePackedImages:hashes.size,independentSignDesigns:72,arrayLayers:[100,72],opaque:'all',storefrontCategories:'matched'},null,2));

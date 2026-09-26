@@ -1,0 +1,18 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';import {createRequire} from 'node:module';
+const {createCanvas}=createRequire(import.meta.url)(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/@napi-rs/canvas');globalThis.document={createElement:()=>createCanvas(1,1)};
+const T=await import('../../dist/vendor/three.module.min.js'),L=await import('../../dist/urban-layout.js?v=52'),E=await import('../../dist/exit-scene.js?v=52'),R=await import('../../dist/exit-route.js?v=52');
+const before=execFileSync('git',['show','HEAD:dist/reference-scenes.js'],{encoding:'utf8'}).replaceAll('?v=51','?v=52');assert.equal(fs.readFileSync(new URL('../../dist/reference-scenes.js',import.meta.url),'utf8'),before,'fixed landmark geometry changed');
+assert.equal(L.CITY_ROAD_HALF*2,15);assert.equal(L.CITY_SIDEWALK,4.5);
+let plans=0,buildings=0;const types=new Set();
+for(let iz=0;iz<8;iz++)for(let ix=-4;ix<5;ix++){
+ const p=L.cityBlockPlan(ix,iz,[]);if(p.reserved)continue;plans++;assert.equal(p.buildings.length,ix===0&&iz===4?11:12);buildings+=p.buildings.length;
+ const boxes=p.buildings.map(s=>{types.add(s.type);assert(s.floors>=1&&s.floors<=30);const wx=Math.abs(Math.cos(s.ry))*s.w+Math.abs(Math.sin(s.ry))*s.d,dz=Math.abs(Math.sin(s.ry))*s.w+Math.abs(Math.cos(s.ry))*s.d;return {x:s.x,z:s.z,w:wx,d:dz};});
+ for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){const a=boxes[i],b=boxes[j],dx=(a.w+b.w)/2-Math.abs(a.x-b.x),dz=(a.d+b.d)/2-Math.abs(a.z-b.z);assert(dx<.001||dz<.001,`overlap ${ix},${iz} lots ${i}/${j}`);}
+ for(const pair of(ix===0&&iz===4?[[1,2],[3,4],[5,6]]:[[0,1],[2,3],[4,5],[6,7]])){const a=boxes[pair[0]],b=boxes[pair[1]],joint=Math.abs(a.x-b.x)-(a.w+b.w)/2;assert(joint>.03&&joint<.04,'party wall joint must be 35 mm');}
+}
+const scene=E.createExitScene();scene.setCity(true);const near=L.cityToWorld(112,478);await scene.prepareAt(near.x,near.z);scene.object.visible=true;scene.object.updateMatrixWorld(true);const ray=new T.Raycaster();
+function pavementAt(x,z,expected){const p=L.cityToWorld(x,z);ray.set(new T.Vector3(p.x,R.EXIT_CITY_Y+.4,p.z),new T.Vector3(0,-1,0));const hits=ray.intersectObject(scene.object).filter(h=>h.face.normal.y>.7&&h.point.y<=R.EXIT_CITY_Y+.3&&/ \/ (sidewalk|asphalt)$/.test(h.object.name));const hit=hits[0];assert(hit,`no visible surface ${x},${z}`);assert(Math.abs(hit.point.y-expected)<.015,`wrong surface ${x},${z}: ${hit.point.y}`);assert(Math.abs(scene.floorAt(p.x,p.z)-expected)<.015,`walking height ${x},${z}`);}
+for(const[x,z,h]of[[12.6,4,.18],[30,4,.18],[-13,0,.15],[-40,0,.15],[126,483,.015],[130,458,.15],[127,456,.15*(.5/4.5)],[168,458,.15*(2.5/4.5)]]){if(z>448&&x===126)continue;pavementAt(x,z,R.EXIT_CITY_Y+h);}
+let roadSamples=0;for(let z=460;z<640;z+=3){const p=L.cityToWorld(112,z),q={...p};scene.resolve(q,{cx:0n,cz:0n});assert(Math.hypot(q.x-p.x,q.z-p.z)<.001,`core driving/walking path blocked ${z}`);roadSamples++;}
+let maxLayer=-1,minLayer=999,nonfinite=0;scene.object.traverse(m=>{if(!m.isMesh)return;for(const a of Object.values(m.geometry.attributes))for(const v of a.array)if(!Number.isFinite(v))nonfinite++;const a=m.geometry.attributes.assetLayer;if(a)for(const v of a.array){maxLayer=Math.max(maxLayer,v);minLayer=Math.min(minLayer,v);assert(Number.isInteger(v)&&v>=0&&v<(m.material.name.includes('shopWindow')?100:72));}});assert.equal(nonfinite,0);
+console.log(JSON.stringify({plans,buildings,types:types.size,roadWidth:15,sidewalkWidth:4.5,roadSamples,assetLayerRange:[minLayer,maxLayer],fixedLandmarks:'unchanged',pavementReturns:'grounded',stats:scene.stats},null,2));scene.dispose();

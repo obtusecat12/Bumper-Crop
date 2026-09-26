@@ -1,6 +1,6 @@
-import {plantTexture,plantAlpha} from './plant-texture.js?v=51';
+import {plantTexture,plantAlpha} from './plant-texture.js?v=52';
 import * as T from './vendor/three.module.min.js';
-import {bakeStaticSelection} from './static-selection.js?v=51';
+import {bakeStaticSelection} from './static-selection.js?v=52';
 const shared=new Set(),geometries=new Map(),materials=new WeakMap();let loading;
 const atlas=new T.DataTexture(new Uint8Array([128,128,128,0]),1,1);atlas.name='Four Source-style roadside plants';atlas.colorSpace=T.SRGBColorSpace;atlas.magFilter=T.LinearFilter;atlas.minFilter=T.LinearMipmapLinearFilter;atlas.generateMipmaps=true;atlas.anisotropy=4;shared.add(atlas);
 async function decode(url){const r=await fetch(url);if(!r.ok)throw Error('Roadside atlas: '+r.status);const b=await createImageBitmap(await r.blob()),c=document.createElement('canvas');c.width=c.height=1024;const ctx=c.getContext('2d');ctx.drawImage(b,0,0,1024,1024);b.close();return {data:new Uint8Array(ctx.getImageData(0,0,1024,1024).data),width:1024,height:1024};}

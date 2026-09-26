@@ -97,6 +97,14 @@ export function addStreetTree(b, { seed = 1, scale = 1 } = {}) {
       limb(tip, [Math.cos(a2) * 2.10, 4.27 + rng() * .45, Math.sin(a2) * 2.05], .028, 1.03);
     }
   }
+  // Photographic cutout clusters retain individual leaf silhouettes and real
+  // alpha-tested shadows. Branches remain three-dimensional at close range.
+  if(b.mats.photoCrown){
+    for(let i=0;i<15;i++){const a=i*2.399,outer=i<9,r=outer?1.38:.55,px=Math.cos(a)*r*s,pz=Math.sin(a)*r*s,py=(outer?4.2+(i%3)*.2:5.02+(i%2)*.23)*s,w=(outer?2.50:2.58)*s;
+      for(let j=0;j<3;j++)b.plane('photoCrown',px,py,pz,w,w*.82,a+j*PI/3,(rng()-.5)*.15,.90+rng()*.13);
+    }
+    for(let i=0;i<7;i++){const a=i*2.399;b.plane('photoLeaf',Math.cos(a)*2.0*s,(4.1+Math.sin(i)*.30)*s,Math.sin(a)*2.0*s,1.65*s,1.4*s,a,0,.86);}
+  }else{
   // Thirty-six interlocking, rotated 20-triangle clusters: scalloped silhouette,
   // an irregular crown, and a visibly darker undersurface, without a blob stack.
   const crowns = [
@@ -116,6 +124,7 @@ export function addStreetTree(b, { seed = 1, scale = 1 } = {}) {
         layer.tone + (rng() - .5) * .13);
     }
   });
+  }
   b.circle(0, 0, .25 * s);
 }
 

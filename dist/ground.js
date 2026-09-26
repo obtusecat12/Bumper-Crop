@@ -1,14 +1,14 @@
-import {exitForField,EXIT_GLSL,transitionProgress} from './exit-route.js?v=51';
-import {exitTextures} from './exit-textures.js?v=51';
-import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=51';
-import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=51';
-import {landmarkTextures} from './landmark-textures.js?v=51';
-import {meadowEnvironment} from './meadow-layout.js?v=51';
-import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=51';
-import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=51';
+import {exitForField,EXIT_GLSL,transitionProgress} from './exit-route.js?v=52';
+import {exitTextures} from './exit-textures.js?v=52';
+import {roadGrassNoise,ROAD_NOISE_GLSL} from './road-surface.js?v=52';
+import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=52';
+import {landmarkTextures} from './landmark-textures.js?v=52';
+import {meadowEnvironment} from './meadow-layout.js?v=52';
+import {FARM,FARM_FOOTPRINTS,FARM_MASK_GLSL,farmRoadWeight,farmFootprintDistance} from './farm-layout.js?v=52';
+import {pondShapeGLSL,pondHabitat} from './lake-shape.js?v=52';
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=51';
-import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=51';
+import {ruralTextures} from './rural-textures.js?v=52';
+import {compoundAt,shoreGrassCover,surfaceHeight,cropSample,roadDistance,roadProfile,laneOffset,pondDistance,pondPoint,pondBankPoint,pondMetrics,buildingSize,buildingLocal,periodOrigin,random} from './world.js?v=52';
 
 const dummy=new T.Object3D(),shared=new Set(),TAU=Math.PI*2;
 const terrainDecl=`varying vec3 vTerrain;

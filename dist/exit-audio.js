@@ -1,4 +1,4 @@
-import {ease} from './exit-route.js?v=51';
+import {ease} from './exit-route.js?v=52';
 // Footstep PCM is decoded once. A step only creates one short source and gain;
 // no per-step noise buffer synthesis, convolution or CPU reverb loop.
 export class ExitAudio{

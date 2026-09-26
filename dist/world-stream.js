@@ -1,7 +1,7 @@
-import {transitionProgress} from './exit-route.js?v=51';
-import {lakeAtlasKeys,acceptLakeAtlas} from './lake-shape.js?v=51';
+import {transitionProgress} from './exit-route.js?v=52';
+import {lakeAtlasKeys,acceptLakeAtlas} from './lake-shape.js?v=52';
 import * as T from './vendor/three.module.min.js';
-import {createUnpacker} from './scene-packets.js?v=51';
+import {createUnpacker} from './scene-packets.js?v=52';
 // One resident worker and one in-flight chunk keep memory bounded. Cancellation
 // is logical: stale shared registrations must still arrive in message order.
 export function createChunkStream({wind,viewUniform}){
@@ -13,7 +13,7 @@ export function createChunkStream({wind,viewUniform}){
  }
  if(typeof Worker==='undefined'||typeof OffscreenCanvas==='undefined')disabled=true;
  else try{
-  worker=new Worker(new URL('./world-worker.js?v=51',import.meta.url),{type:'module',name:'level10-world'});
+  worker=new Worker(new URL('./world-worker.js?v=52',import.meta.url),{type:'module',name:'level10-world'});
   worker.onmessage=({data})=>{
    if(data.ready){ready=true;return}
    const job=pending;pending=null;

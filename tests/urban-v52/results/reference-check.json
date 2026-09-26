@@ -1,0 +1,9 @@
+{
+  "decodedTextures": 20,
+  "referenceVertices": 791598,
+  "hopePathSamples": 690,
+  "apronSamples": 57,
+  "photoSpawns": "clear",
+  "weatherIsolation": "passed",
+  "walkSurfaces": "finite"
+}

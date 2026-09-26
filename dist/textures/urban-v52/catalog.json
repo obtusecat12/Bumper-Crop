@@ -1,0 +1,1571 @@
+{
+  "version": 52,
+  "windows": [
+    {
+      "index": 0,
+      "file": "window-001.webp",
+      "category": "corner grocery cans/wood shelves",
+      "business": "grocery",
+      "originalSha256": "c415f7dc28e02ff4b1ddbfd836708e652fe10a5d0ba4517951c7fbc87c9c3e53"
+    },
+    {
+      "index": 1,
+      "file": "window-002.webp",
+      "category": "1980s convenience refrigerators",
+      "business": "grocery",
+      "originalSha256": "fbe99cf5d62bb86d3b3405424aff2d90d4369b96e399c5b6a9c6f272edb9d6eb"
+    },
+    {
+      "index": 2,
+      "file": "window-003.webp",
+      "category": "Latin produce market empty fruit racks",
+      "business": "produce",
+      "originalSha256": "b622e362ad2f039e85448549392159e297cef78953793241001814a623cebd3b"
+    },
+    {
+      "index": 3,
+      "file": "window-004.webp",
+      "category": "neighborhood pharmacy green white counters",
+      "business": "pharmacy",
+      "originalSha256": "fd3ec3eb5b8f50634a4af5a2d82943855302d029badcecc46106bad04762f6ba"
+    },
+    {
+      "index": 4,
+      "file": "window-005.webp",
+      "category": "butcher glass refrigerated counter",
+      "business": "butcher",
+      "originalSha256": "84538aedd9f03dcab847657c8aefd583201f45321b93351b8c14ff013b15f815"
+    },
+    {
+      "index": 5,
+      "file": "window-006.webp",
+      "category": "bakery bread shelves warm interior",
+      "business": "bakery",
+      "originalSha256": "5032abe33f6d7e6f3b67a30396e9acd5bc62d11950cfe6a843940e50263711d9"
+    },
+    {
+      "index": 6,
+      "file": "window-007.webp",
+      "category": "pastry cake display teal trim",
+      "business": "bakery",
+      "originalSha256": "d2a4b11ac1e0e113fa894a964b435483d4ffe5771580554c29d645e340b81619"
+    },
+    {
+      "index": 7,
+      "file": "window-008.webp",
+      "category": "laundromat orange washing machines",
+      "business": "laundromat",
+      "originalSha256": "d79b3a841e7581c8118244b13cc500ac262a9095527c851576a3c03019287f1d"
+    },
+    {
+      "index": 8,
+      "file": "window-009.webp",
+      "category": "dry cleaner garment conveyor",
+      "business": "dry-cleaner",
+      "originalSha256": "1ff4c02b41fc51f89c810e3a8b731edbd9c0a88f1a28b7cb97955db3825000b4"
+    },
+    {
+      "index": 9,
+      "file": "window-010.webp",
+      "category": "coin laundry blue-white",
+      "business": "laundromat",
+      "originalSha256": "264d7a1c8f0b71f646b4c20113c33a744875a56006bce6fa634a83971b114f27"
+    },
+    {
+      "index": 10,
+      "file": "window-011.webp",
+      "category": "travel agency maps/desks/blinds",
+      "business": "travel",
+      "originalSha256": "5daa2e89be1ef8e0a3b35249a91ab852954d346a10e294b9bd3f3d7e8ef84877"
+    },
+    {
+      "index": 11,
+      "file": "window-012.webp",
+      "category": "photo print shop film counter",
+      "business": "photo",
+      "originalSha256": "986c53cabcd31a369a79039e91f556e0c6814540d3e2f90b2b794be117ef15de"
+    },
+    {
+      "index": 12,
+      "file": "window-013.webp",
+      "category": "camera repair cabinets",
+      "business": "photo",
+      "originalSha256": "075d5564928c20cafa4a3a81bc5cfb1e6cc4661b251682ec27763663b903b6e2"
+    },
+    {
+      "index": 13,
+      "file": "window-014.webp",
+      "category": "hardware shop pegboard tools",
+      "business": "hardware",
+      "originalSha256": "d07a8dcf242866c6ed7f611fa929b6871e532300b960624465ff878e4e61531e"
+    },
+    {
+      "index": 14,
+      "file": "window-015.webp",
+      "category": "auto-parts counter boxed filters",
+      "business": "auto-parts",
+      "originalSha256": "d369a58c9b3d9df289b8ff16d37d90aa5245397b715136ddb8c9fbde5ba19019"
+    },
+    {
+      "index": 15,
+      "file": "window-016.webp",
+      "category": "shoe repair cobbler bench",
+      "business": "shoe-shop",
+      "originalSha256": "5f4e4cc54145490a3539ad29c586caa781fc983c15e8f45ff4d4cb91929fc0d2"
+    },
+    {
+      "index": 16,
+      "file": "window-017.webp",
+      "category": "florist empty small pots/paper wraps",
+      "business": "florist",
+      "originalSha256": "1f6c89c221076c48d545ce17e32daf9fb5f8e398457512c426786f0b2277f017"
+    },
+    {
+      "index": 17,
+      "file": "window-018.webp",
+      "category": "newsstand magazines behind glass",
+      "business": "variety",
+      "originalSha256": "2e8f6ba01603f404c12bbbd11a4bdc8ac9f5b3784f3ca9dbb80bbb67c845e511"
+    },
+    {
+      "index": 18,
+      "file": "window-019.webp",
+      "category": "record store vinyl racks",
+      "business": "record-shop",
+      "originalSha256": "ffac9b681fcd07178882de6cc1e34dbc34758ec03047a77ec777c80b3d4bf9d9"
+    },
+    {
+      "index": 19,
+      "file": "window-020.webp",
+      "category": "video rental VHS shelves",
+      "business": "record-shop",
+      "originalSha256": "18603d312110d0a0710c69c40d82fccc4d2785f40fc8d06ef0571e7a293a4c5e"
+    },
+    {
+      "index": 20,
+      "file": "window-021.webp",
+      "category": "dental reception frosted sidelight",
+      "business": "dentist",
+      "originalSha256": "e041bd2bc88a936673992fa055fd875b13665fa1e71a6783ccdac0ac95d6fa5d"
+    },
+    {
+      "index": 21,
+      "file": "window-022.webp",
+      "category": "dermatology clinic pale blinds",
+      "business": "clinic",
+      "originalSha256": "6ff9b26a126f07858dab1deaf53f349f108c8a9ace43f8c170d55462abb3e53a"
+    },
+    {
+      "index": 22,
+      "file": "window-023.webp",
+      "category": "clinical laboratory teal glass and counter",
+      "business": "laboratory",
+      "originalSha256": "2a903e0c32732eaf6c2a180c64bdbb9e876a68482bddb1f5e23a0f1408c419d2"
+    },
+    {
+      "index": 23,
+      "file": "window-024.webp",
+      "category": "optician glasses racks",
+      "business": "optician",
+      "originalSha256": "f66301c8b63386d72986ae644b04127771d831572025b2c73542354ab77bf214"
+    },
+    {
+      "index": 24,
+      "file": "window-025.webp",
+      "category": "small medical pharmacy counters",
+      "business": "pharmacy",
+      "originalSha256": "5f097499c84453a17eabe74e6b52a7f6dd6c338d331d74e62de6f7f2763b2b9b"
+    },
+    {
+      "index": 25,
+      "file": "window-026.webp",
+      "category": "family doctor waiting room brown chairs",
+      "business": "clinic",
+      "originalSha256": "1b8b8880acbfcde945f7b6e0d7b5461031856c28ff7ef20b1cd20279b637c61c"
+    },
+    {
+      "index": 26,
+      "file": "window-027.webp",
+      "category": "physiotherapy waiting reception",
+      "business": "clinic",
+      "originalSha256": "beb9bb829be9f6e74f3f2c8731b1b143030f94b98d8ceb59de70dd5eb62060d0"
+    },
+    {
+      "index": 27,
+      "file": "window-028.webp",
+      "category": "insurance broker desks vertical blinds",
+      "business": "insurance",
+      "originalSha256": "0d0b24e3c401bf07986352704747d44a81781fae172dfa0389bf4b4301db8eb8"
+    },
+    {
+      "index": 28,
+      "file": "window-029.webp",
+      "category": "tax preparation office beige computers",
+      "business": "insurance",
+      "originalSha256": "d2d18a5a77158d34fad55015e44c31e22fc152a19a30c569075a71336389d4a3"
+    },
+    {
+      "index": 29,
+      "file": "window-030.webp",
+      "category": "modest legal office oak panels",
+      "business": "insurance",
+      "originalSha256": "435acc65b8cfd8a00e075c7057f13611d9fcd17103739aef9a124ff800c69a66"
+    },
+    {
+      "index": 30,
+      "file": "window-031.webp",
+      "category": "real estate office listing cards",
+      "business": "real-estate",
+      "originalSha256": "14350d0d52d2491e3bc09399225ce736413ce69c1ddcc2f0ca16ed4d41987fbe"
+    },
+    {
+      "index": 31,
+      "file": "window-032.webp",
+      "category": "accountant gray files",
+      "business": "insurance",
+      "originalSha256": "ea1772f3f240cf1d51f72f6069fd11a4fe96f31bd6111d363293c2e5f13ab670"
+    },
+    {
+      "index": 32,
+      "file": "window-033.webp",
+      "category": "employment agency ticket window",
+      "business": "insurance",
+      "originalSha256": "4ef219b83b0630009d0e3cffc8369d7cf7e8af57d99aff2f5e256ab596960d88"
+    },
+    {
+      "index": 33,
+      "file": "window-034.webp",
+      "category": "small bank teller vestibule",
+      "business": "bank",
+      "originalSha256": "bad4b7b9bc5521a9f71549428954d144be3e85e4e87ad6d8cf7bbf8b13dd54e0"
+    },
+    {
+      "index": 34,
+      "file": "window-035.webp",
+      "category": "currency exchange grille window",
+      "business": "bank",
+      "originalSha256": "c2c0db7eb99dabc002d0a62672fdaff6f8074c282507c398ec39c92458192c04"
+    },
+    {
+      "index": 35,
+      "file": "window-036.webp",
+      "category": "travel bureau pink gray",
+      "business": "travel",
+      "originalSha256": "3776cc2170a0b37585c9387db53354b8522b9151f8498eb8d388207b6f4aaed2"
+    },
+    {
+      "index": 36,
+      "file": "window-037.webp",
+      "category": "civic records frosted door",
+      "business": "real-estate",
+      "originalSha256": "53a1cf10c72579475fda6326bdd636b92fc77570c835fd15a06a4ac620dc3ddb"
+    },
+    {
+      "index": 37,
+      "file": "window-038.webp",
+      "category": "dentist warm wood double entry",
+      "business": "dentist",
+      "originalSha256": "03aa6b926e88b163b0e30b4ac2fdb5f9b30557275fdbaa172a85bc19b235aa54"
+    },
+    {
+      "index": 38,
+      "file": "window-039.webp",
+      "category": "urban optometry mint glass",
+      "business": "optician",
+      "originalSha256": "680da6c8c1bce422db34740dfd1500e63f389f1ea4f39a43b49acb8b6495f91b"
+    },
+    {
+      "index": 39,
+      "file": "window-040.webp",
+      "category": "apartment leasing office brass frames",
+      "business": "real-estate",
+      "originalSha256": "970a3c78d94a33b5706da2e733e3040d36ad01ac06b414dd24629090fe9435aa"
+    },
+    {
+      "index": 40,
+      "file": "window-041.webp",
+      "category": "diner chrome stools",
+      "business": "restaurant",
+      "originalSha256": "3307f7bf9b7f85c1a5ddf25ca5339ca2c31406e588eed1c2c290e3b9ac269e50"
+    },
+    {
+      "index": 41,
+      "file": "window-042.webp",
+      "category": "small Mexican cafe terracotta tables",
+      "business": "cafe",
+      "originalSha256": "10391ef65341cf482f4d57de785f7fc38a58c6a0ee4fdd6f6bc2842f2dceef14"
+    },
+    {
+      "index": 42,
+      "file": "window-043.webp",
+      "category": "Chinese takeout counter 1980s",
+      "business": "restaurant",
+      "originalSha256": "3e4b75d0618d662f354d237ca2ce3f729ba1edfb75c972582725786cd0805609"
+    },
+    {
+      "index": 43,
+      "file": "window-044.webp",
+      "category": "pizza parlor vinyl booth",
+      "business": "restaurant",
+      "originalSha256": "82d04ec50c53f65a098e4a8363c6c5f4c2abf09f1896f132bae7cc50daf95591"
+    },
+    {
+      "index": 44,
+      "file": "window-045.webp",
+      "category": "donut shop empty racks pink menu",
+      "business": "bakery",
+      "originalSha256": "8e6a530a0be08bc1297ff6c684da8e83dac50a78847051aff5753b69036a0a44"
+    },
+    {
+      "index": 45,
+      "file": "window-046.webp",
+      "category": "old ice cream counter pastel",
+      "business": "cafe",
+      "originalSha256": "dbf95b030c54b27f40ba05bc3bdd4aa98c3cd1dbd2e36fbf751e623f593b9c1e"
+    },
+    {
+      "index": 46,
+      "file": "window-047.webp",
+      "category": "sandwich bar laminate counter",
+      "business": "restaurant",
+      "originalSha256": "dbdc24a6040bd72fa5498f6d82b2b6fc8f6d95f660af0eb5338b65f244537817"
+    },
+    {
+      "index": 47,
+      "file": "window-048.webp",
+      "category": "neighborhood barbershop striped chair",
+      "business": "barber",
+      "originalSha256": "b2db6ff2141f1b646c58cb0d8635ae7535d317a64e7e0a96ad3c8112a228a22f"
+    },
+    {
+      "index": 48,
+      "file": "window-049.webp",
+      "category": "hair salon mauve mirrors",
+      "business": "barber",
+      "originalSha256": "a7a4fd00cddbed5b321e1423b7cef35a4ecaa91f7489c634d5e616ed793b3786"
+    },
+    {
+      "index": 49,
+      "file": "window-050.webp",
+      "category": "tailoring dress forms fabric",
+      "business": "clothing",
+      "originalSha256": "ecfcacc8ffcdb7adbdbce2701c693b3f5c746eb63a893ae049d6e0afb6d5df4e"
+    },
+    {
+      "index": 50,
+      "file": "window-051.webp",
+      "category": "footwear shop shoebox shelves",
+      "business": "shoe-shop",
+      "originalSha256": "4c8ae63d304afa473170af11534e45bb67384d18782f8928e04a6807e7dbbe5f"
+    },
+    {
+      "index": 51,
+      "file": "window-052.webp",
+      "category": "modest menswear rail",
+      "business": "clothing",
+      "originalSha256": "36d2a56f839f1e94e8130dbd34cc6c812c8db8d97a47652f56b477fd9ef89a57"
+    },
+    {
+      "index": 52,
+      "file": "window-053.webp",
+      "category": "used bookshop dense paperbacks",
+      "business": "bookshop",
+      "originalSha256": "ee0860dc321efd2d563fb7d46dc945de4ec39109df0e82cab5ffa2c50fbf11f4"
+    },
+    {
+      "index": 53,
+      "file": "window-054.webp",
+      "category": "art supply easels",
+      "business": "bookshop",
+      "originalSha256": "f87efc64bfe3a3ce886c667ba48fe4fce9f86c286f4e32c88f943897f1efe9a4"
+    },
+    {
+      "index": 54,
+      "file": "window-055.webp",
+      "category": "music instrument store guitars",
+      "business": "record-shop",
+      "originalSha256": "ec99a2d113021c15afb32a8dba6225c95ab4624d9d35284beeaad0d908bc51b2"
+    },
+    {
+      "index": 55,
+      "file": "window-056.webp",
+      "category": "electrical repair CRT radios",
+      "business": "electronics",
+      "originalSha256": "86feb04097b5374fc18b10e3a2318298997aba3fbf0ebfc6bb2a7eeaf71d0638"
+    },
+    {
+      "index": 56,
+      "file": "window-057.webp",
+      "category": "appliance repair refrigerators",
+      "business": "electronics",
+      "originalSha256": "1004502cde9c9e7e0e8833576a2f6d230b7094596fea9d876c0617569d68a644"
+    },
+    {
+      "index": 57,
+      "file": "window-058.webp",
+      "category": "small furniture shop teak chairs",
+      "business": "furniture",
+      "originalSha256": "fd6c4bedec3618a9ac8ceab64ccd2565552e3ba03f8f7da1fcdd24fffa6a49e0"
+    },
+    {
+      "index": 58,
+      "file": "window-059.webp",
+      "category": "office supply typewriters",
+      "business": "variety",
+      "originalSha256": "9908d8287b91d93ef662a0d2cc08d83e86527a3fd7bbdf302dd8a683a8a6ff07"
+    },
+    {
+      "index": 59,
+      "file": "window-060.webp",
+      "category": "sporting goods old rackets",
+      "business": "variety",
+      "originalSha256": "3aff7edb44976fd74b6457685b785fe2344e3decf022f540f7dca877200d8b4b"
+    },
+    {
+      "index": 60,
+      "file": "window-061.webp",
+      "category": "corporate lobby",
+      "business": "bank",
+      "originalSha256": "944e66eadb4e030d53c49e52ffce86663d7a831c9eb0e8ec0bf957c1d4ac4ea9"
+    },
+    {
+      "index": 61,
+      "file": "window-062.webp",
+      "category": "office lobby with turnstiles",
+      "business": "bank",
+      "originalSha256": "dd43ded34d92dafc2c8859a5cef337bbd263903a161f87dc4ad9fd055f4aa271"
+    },
+    {
+      "index": 62,
+      "file": "window-063.webp",
+      "category": "apartment lobby with mailboxes",
+      "business": "real-estate",
+      "originalSha256": "df53398eaa567709d849da19be381bd8b90d586d9d3b90a0122314b49b3af3b9"
+    },
+    {
+      "index": 63,
+      "file": "window-064.webp",
+      "category": "modest hotel reception",
+      "business": "hotel",
+      "originalSha256": "e2963d16b6ba43c377749399bd0862f34fec488015ba5b6bae58ddf08d16d524"
+    },
+    {
+      "index": 64,
+      "file": "window-065.webp",
+      "category": "office foyer with travertine",
+      "business": "real-estate",
+      "originalSha256": "00feabe0543c4692fd24148302b1ab37aeb4ca485247e2e3bc39c3858e3deac7"
+    },
+    {
+      "index": 65,
+      "file": "window-066.webp",
+      "category": "upper office with Venetian blinds",
+      "business": "real-estate",
+      "originalSha256": "bc24a8bc38953058ab6091a127ea03e0f3b408b57cf4b439249382a6bc89adcf"
+    },
+    {
+      "index": 66,
+      "file": "window-067.webp",
+      "category": "office cubicles",
+      "business": "insurance",
+      "originalSha256": "e13f872ce2ea86c57ab6fd72281b4c9d5131ea2fc8949e8230653816506700eb"
+    },
+    {
+      "index": 67,
+      "file": "window-068.webp",
+      "category": "drafting office",
+      "business": "real-estate",
+      "originalSha256": "14546915d24b14eaaa89f29a3e2387cd778fe21f324174e42f0c7086011407b2"
+    },
+    {
+      "index": 68,
+      "file": "window-069.webp",
+      "category": "office conference room",
+      "business": "real-estate",
+      "originalSha256": "eb17453d18b906df74b87ea40ca57dbeeeadfeb92c05f2331c76e3384abc7beb"
+    },
+    {
+      "index": 69,
+      "file": "window-070.webp",
+      "category": "small office waiting room",
+      "business": "insurance",
+      "originalSha256": "994311bfbffd5fc7d7ddc9095a020e74746185aa820b48604c02854bc10951cd"
+    },
+    {
+      "index": 70,
+      "file": "window-071.webp",
+      "category": "garment wholesale",
+      "business": "clothing",
+      "originalSha256": "14da4d950bb8d1e9afe41442fcaf80b82f13d5ddc4961553ee0d3c72cbebbecb"
+    },
+    {
+      "index": 71,
+      "file": "window-072.webp",
+      "category": "electrical wholesale",
+      "business": "electrical",
+      "originalSha256": "9c825370eac2982332d695c6a0fa6026996194175d760655aef6454b1a85f321"
+    },
+    {
+      "index": 72,
+      "file": "window-073.webp",
+      "category": "parcel service",
+      "business": "variety",
+      "originalSha256": "b3cca1e1a77574d0cdd19f97298ec2c4c0372addba8040ce88f43a2b6b93952f"
+    },
+    {
+      "index": 73,
+      "file": "window-074.webp",
+      "category": "locksmith",
+      "business": "locksmith",
+      "originalSha256": "c2929e3c7ef1e5e80747d3d4b9fe514692d43de187e277d62f338643d154fced"
+    },
+    {
+      "index": 74,
+      "file": "window-075.webp",
+      "category": "industrial supply",
+      "business": "hardware",
+      "originalSha256": "437a91f4f023e5f31442dc0e8138d9ad1eca5f75a4e20e5ca736672c6bcdda44"
+    },
+    {
+      "index": 75,
+      "file": "window-076.webp",
+      "category": "artist ceramics studio",
+      "business": "variety",
+      "originalSha256": "4ca9024213a565cd6b4c1ee0501fe6b65104183d17021a8ae36481e8728dbb47"
+    },
+    {
+      "index": 76,
+      "file": "window-077.webp",
+      "category": "printing company",
+      "business": "copy-shop",
+      "originalSha256": "960dc900334ae6c20beeaf628f5f1387e80b3b33d4eefc8cc71078a43f68ec93"
+    },
+    {
+      "index": 77,
+      "file": "window-078.webp",
+      "category": "clock and watch repair",
+      "business": "jeweler",
+      "originalSha256": "9c9e50df14a1b5c1fbd35da0ea8f709574a05fbf9611348e42546ba374fe9d0b"
+    },
+    {
+      "index": 78,
+      "file": "window-079.webp",
+      "category": "television store",
+      "business": "electronics",
+      "originalSha256": "d9c3429c2e4a7838541b2a97fa27ee5297b5a59153aef4c30c19bd5d34ba718a"
+    },
+    {
+      "index": 79,
+      "file": "window-080.webp",
+      "category": "1980s computer store",
+      "business": "electronics",
+      "originalSha256": "3674ca507034eddd949b6af7acff84e522de3bad482dd94ae18f0c71a5a47b62"
+    },
+    {
+      "index": 80,
+      "file": "window-081.webp",
+      "category": "taqueria tiled counter",
+      "business": "taqueria",
+      "originalSha256": "50f063072f5bd5761af6e238e2ed0e779b6e443ffd56f5642ffc007ab5a93fcd"
+    },
+    {
+      "index": 81,
+      "file": "window-082.webp",
+      "category": "panaderia wooden racks",
+      "business": "bakery",
+      "originalSha256": "18b285ce7b624b0622ddab607cc41b80fb83c560397bbd3fe726edb32ad913fb"
+    },
+    {
+      "index": 82,
+      "file": "window-083.webp",
+      "category": "Latin travel agency wall maps",
+      "business": "travel",
+      "originalSha256": "18e3bc91321477c01c20dd83a535199e2be8f964e0a0b6ea5ca13864d65bc109"
+    },
+    {
+      "index": 83,
+      "file": "window-084.webp",
+      "category": "farmacia glass medicine cases",
+      "business": "pharmacy",
+      "originalSha256": "2d0501138fa9447ab542ba53d5fe1b3d9fc15f51300623c0d4de18ea59b19a19"
+    },
+    {
+      "index": 84,
+      "file": "window-085.webp",
+      "category": "electronics radios and cassette players",
+      "business": "electronics",
+      "originalSha256": "45743c349347f4072bcf98ff10a0333745e66f614dbad003e03ace69ce4e495e"
+    },
+    {
+      "index": 85,
+      "file": "window-086.webp",
+      "category": "fabric bolts and sewing machine",
+      "business": "clothing",
+      "originalSha256": "a13b98072c0766e474efe24b3308aac36a16a22be04a26b508bc9e0ff5bce12c"
+    },
+    {
+      "index": 86,
+      "file": "window-087.webp",
+      "category": "modest jeweler velvet cases",
+      "business": "jeweler",
+      "originalSha256": "f994caa815ed78b19f1aa59d670b69967968ab0daec9e27ed02baa118055feb2"
+    },
+    {
+      "index": 87,
+      "file": "window-088.webp",
+      "category": "gift shop ceramic shelves",
+      "business": "variety",
+      "originalSha256": "cf3d3bbb66530f1a82a6eb8e24ea7f512fbf838aa9920c954095c7bb9694ab98"
+    },
+    {
+      "index": 88,
+      "file": "window-089.webp",
+      "category": "stationery school notebooks",
+      "business": "bookshop",
+      "originalSha256": "af50a8ed6dd2e5a31c02b44dd7d89d8183e41ca974284623ac2f6a5d40fc8789"
+    },
+    {
+      "index": 89,
+      "file": "window-090.webp",
+      "category": "comic book shop racks",
+      "business": "bookshop",
+      "originalSha256": "860929644d24bf8849bd0cedf4a1e1cab2ff0be3305bc0282e9dfd08efa12b65"
+    },
+    {
+      "index": 90,
+      "file": "window-091.webp",
+      "category": "record shop listening booth",
+      "business": "record-shop",
+      "originalSha256": "125d8bbebbbd0af3b3cefa485553ba80fada62745ab23913a7cc32279ed9d837"
+    },
+    {
+      "index": 91,
+      "file": "window-092.webp",
+      "category": "old-fashioned toy shop boxed toys",
+      "business": "variety",
+      "originalSha256": "28bfd9403bcfdbb8d8d1ee16397f9ba4891d65c319c4133dfe8b2cf9d592b6a1"
+    },
+    {
+      "index": 92,
+      "file": "window-093.webp",
+      "category": "pet supply food bags no animals",
+      "business": "variety",
+      "originalSha256": "c2e550c9ab4a728a03b81913f18ad4a1c126a22b5cd1efa8efcb20cd782d8cb5"
+    },
+    {
+      "index": 93,
+      "file": "window-094.webp",
+      "category": "haircare beauty products",
+      "business": "barber",
+      "originalSha256": "0c7de167fdc8207748ccafa480851c48a93bac26f61214d6081c36d28fe568b0"
+    },
+    {
+      "index": 94,
+      "file": "window-095.webp",
+      "category": "photo studio empty chair equipment",
+      "business": "photo",
+      "originalSha256": "01abed9899957a70e088116ad0c3b65f55a5c5deb49a86c9c46200dd6f83ec34"
+    },
+    {
+      "index": 95,
+      "file": "window-096.webp",
+      "category": "shoe repair dark wood entrance",
+      "business": "shoe-shop",
+      "originalSha256": "4161c1015fc8875c1a266d92b57586da089a35fa4f1021637ed7c9430a20e5a7"
+    },
+    {
+      "index": 96,
+      "file": "window-097.webp",
+      "category": "small cafeteria stainless counter",
+      "business": "cafe",
+      "originalSha256": "d0ac30a2c9d41d5229804daaa91c1640f49d68277b6b237f80bc53705e443cc5"
+    },
+    {
+      "index": 97,
+      "file": "window-098.webp",
+      "category": "office frosted lower film upper blinds",
+      "business": "insurance",
+      "originalSha256": "4394f8a82dc111a0ad506183a38bed8177ce34e7dd53ec63dc6164d3035ca39e"
+    },
+    {
+      "index": 98,
+      "file": "window-099.webp",
+      "category": "insurance office green vertical blinds",
+      "business": "insurance",
+      "originalSha256": "455de9f8aaec91389a4ae537533ad1c01ad901cd9a0be4e20cb74b5add3fa25c"
+    },
+    {
+      "index": 99,
+      "file": "window-100.webp",
+      "category": "closed rental storefront faded film empty room",
+      "business": "real-estate",
+      "originalSha256": "b86ad364c0d982eda8e1d069e1c96f110c3cdb187ecdc303bb41b642dd22eba6"
+    }
+  ],
+  "signs": [
+    {
+      "index": 0,
+      "category": "clinic",
+      "aspect": 3,
+      "style": "medical-modern",
+      "displayName": "Clínica Santa Elena",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-000.webp"
+    },
+    {
+      "index": 1,
+      "category": "laboratory",
+      "aspect": 2.66667,
+      "style": "laboratory-grid",
+      "displayName": "Laboratorio Central",
+      "pixelWidth": 960,
+      "pixelHeight": 360,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-001.webp"
+    },
+    {
+      "index": 2,
+      "category": "bakery",
+      "aspect": 2.4,
+      "style": "bakery-script",
+      "displayName": "La Estrella Pastelería",
+      "pixelWidth": 960,
+      "pixelHeight": 400,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-002.webp"
+    },
+    {
+      "index": 3,
+      "category": "photo",
+      "aspect": 2.66667,
+      "style": "photo-spectrum",
+      "displayName": "Photo 1 Hour",
+      "pixelWidth": 1024,
+      "pixelHeight": 384,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-003.webp"
+    },
+    {
+      "index": 4,
+      "category": "laundromat",
+      "aspect": 3,
+      "style": "laundry-bubbles",
+      "displayName": "La Burbuja Laundromat",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-004.webp"
+    },
+    {
+      "index": 5,
+      "category": "grocery",
+      "aspect": 3,
+      "style": "corner-ribbon",
+      "displayName": "Corner Mart",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-005.webp"
+    },
+    {
+      "index": 6,
+      "category": "auto-parts",
+      "aspect": 3,
+      "style": "industrial-chevrons",
+      "displayName": "Ramírez Auto Parts",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-006.webp"
+    },
+    {
+      "index": 7,
+      "category": "dentist",
+      "aspect": 2.5,
+      "style": "dental-minimal",
+      "displayName": "Family Dental",
+      "pixelWidth": 960,
+      "pixelHeight": 384,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-007.webp"
+    },
+    {
+      "index": 8,
+      "category": "travel",
+      "aspect": 2.66667,
+      "style": "travel-horizon",
+      "displayName": "Viajes Horizonte",
+      "pixelWidth": 960,
+      "pixelHeight": 360,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-008.webp"
+    },
+    {
+      "index": 9,
+      "category": "hardware",
+      "aspect": 3,
+      "style": "stencil-hardware",
+      "displayName": "Hardware Supply",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-009.webp"
+    },
+    {
+      "index": 10,
+      "category": "bank",
+      "aspect": 2.66667,
+      "style": "bank-geometric",
+      "displayName": "Banco Continental",
+      "pixelWidth": 1024,
+      "pixelHeight": 384,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-010.webp"
+    },
+    {
+      "index": 11,
+      "category": "hotel",
+      "aspect": 2.4,
+      "style": "hotel-artdeco",
+      "displayName": "Hotel Imperial",
+      "pixelWidth": 960,
+      "pixelHeight": 400,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-011.webp"
+    },
+    {
+      "index": 12,
+      "category": "cafe",
+      "aspect": 2.5,
+      "style": "cafe-neon",
+      "displayName": "Café Avenida",
+      "pixelWidth": 960,
+      "pixelHeight": 384,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-012.webp"
+    },
+    {
+      "index": 13,
+      "category": "pharmacy",
+      "aspect": 3,
+      "style": "pharmacy-cross",
+      "displayName": "Farmacia del Pueblo",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-013.webp"
+    },
+    {
+      "index": 14,
+      "category": "supermarket",
+      "aspect": 2.66667,
+      "style": "sun-market",
+      "displayName": "Supermercado Sol",
+      "pixelWidth": 960,
+      "pixelHeight": 360,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-014.webp"
+    },
+    {
+      "index": 15,
+      "category": "electronics",
+      "aspect": 3,
+      "style": "electronics-signal",
+      "displayName": "Radio y Televisión Atlas",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-015.webp"
+    },
+    {
+      "index": 16,
+      "category": "furniture",
+      "aspect": 2.4,
+      "style": "furniture-seventies",
+      "displayName": "Casa Mendoza Muebles",
+      "pixelWidth": 960,
+      "pixelHeight": 400,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-016.webp"
+    },
+    {
+      "index": 17,
+      "category": "bookshop",
+      "aspect": 2.66667,
+      "style": "bookshop-classic",
+      "displayName": "Librería Universal",
+      "pixelWidth": 960,
+      "pixelHeight": 360,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-017.webp"
+    },
+    {
+      "index": 18,
+      "category": "optician",
+      "aspect": 3,
+      "style": "optical-eyes",
+      "displayName": "Óptica Moderna",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-018.webp"
+    },
+    {
+      "index": 19,
+      "category": "florist",
+      "aspect": 2.5,
+      "style": "florist-organic",
+      "displayName": "Rosas Florist",
+      "pixelWidth": 960,
+      "pixelHeight": 384,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-019.webp"
+    },
+    {
+      "index": 20,
+      "category": "restaurant",
+      "aspect": 2.66667,
+      "style": "restaurant-tile",
+      "displayName": "El Camino Restaurant",
+      "pixelWidth": 960,
+      "pixelHeight": 360,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-020.webp"
+    },
+    {
+      "index": 21,
+      "category": "barber",
+      "aspect": 3,
+      "style": "barber-poles",
+      "displayName": "Central Barber Shop",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-021.webp"
+    },
+    {
+      "index": 22,
+      "category": "jeweler",
+      "aspect": 2.5,
+      "style": "jewel-black-gold",
+      "displayName": "Joyería Diamante",
+      "pixelWidth": 960,
+      "pixelHeight": 384,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-022.webp"
+    },
+    {
+      "index": 23,
+      "category": "produce",
+      "aspect": 3,
+      "style": "produce-handpainted",
+      "displayName": "Mercado San José",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-023.webp"
+    },
+    {
+      "index": 24,
+      "category": "shoe-shop",
+      "aspect": 2.66667,
+      "style": "western-boots",
+      "displayName": "El Vaquero Boots",
+      "pixelWidth": 960,
+      "pixelHeight": 360,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-024.webp"
+    },
+    {
+      "index": 25,
+      "category": "clothing",
+      "aspect": 2.4,
+      "style": "fashion-oval",
+      "displayName": "Fashion House",
+      "pixelWidth": 960,
+      "pixelHeight": 400,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-025.webp"
+    },
+    {
+      "index": 26,
+      "category": "butcher",
+      "aspect": 3,
+      "style": "butcher-checker",
+      "displayName": "Carnicería La Favorita",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-026.webp"
+    },
+    {
+      "index": 27,
+      "category": "fishmonger",
+      "aspect": 2.5,
+      "style": "fish-waves",
+      "displayName": "Pescadería Costa Azul",
+      "pixelWidth": 960,
+      "pixelHeight": 384,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-027.webp"
+    },
+    {
+      "index": 28,
+      "category": "record-shop",
+      "aspect": 3,
+      "style": "record-pop",
+      "displayName": "Discos Mundo",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-028.webp"
+    },
+    {
+      "index": 29,
+      "category": "dry-cleaner",
+      "aspect": 2.66667,
+      "style": "cleaner-speed",
+      "displayName": "Tintorería Express",
+      "pixelWidth": 960,
+      "pixelHeight": 360,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-029.webp"
+    },
+    {
+      "index": 30,
+      "category": "bakery",
+      "aspect": 3,
+      "style": "bakery-wheat",
+      "displayName": "Panadería El Trigal",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-030.webp"
+    },
+    {
+      "index": 31,
+      "category": "tires",
+      "aspect": 2.5,
+      "style": "tire-racing",
+      "displayName": "American Tires",
+      "pixelWidth": 960,
+      "pixelHeight": 384,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-031.webp"
+    },
+    {
+      "index": 32,
+      "category": "copy-shop",
+      "aspect": 3,
+      "style": "copy-registration",
+      "displayName": "Centro de Copias",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-032.webp"
+    },
+    {
+      "index": 33,
+      "category": "electrical",
+      "aspect": 2.66667,
+      "style": "electric-lightning",
+      "displayName": "Eléctrica Norte",
+      "pixelWidth": 960,
+      "pixelHeight": 360,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-033.webp"
+    },
+    {
+      "index": 34,
+      "category": "real-estate",
+      "aspect": 3,
+      "style": "realty-roof",
+      "displayName": "Hogar Realty",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-034.webp"
+    },
+    {
+      "index": 35,
+      "category": "insurance",
+      "aspect": 2.66667,
+      "style": "insurance-shield",
+      "displayName": "Seguros La Unión",
+      "pixelWidth": 960,
+      "pixelHeight": 360,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-035.webp"
+    },
+    {
+      "index": 36,
+      "category": "taqueria",
+      "aspect": 3,
+      "style": "taqueria-scallop",
+      "displayName": "Taquería El Güero",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-036.webp"
+    },
+    {
+      "index": 37,
+      "category": "cinema",
+      "aspect": 2.4,
+      "style": "cinema-marquee",
+      "displayName": "Palacio Cinema",
+      "pixelWidth": 960,
+      "pixelHeight": 400,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-037.webp"
+    },
+    {
+      "index": 38,
+      "category": "variety",
+      "aspect": 3,
+      "style": "bazar-rainbow",
+      "displayName": "Bazar América",
+      "pixelWidth": 960,
+      "pixelHeight": 320,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-038.webp"
+    },
+    {
+      "index": 39,
+      "category": "locksmith",
+      "aspect": 2.5,
+      "style": "locksmith-keyhole",
+      "displayName": "Cerrajería City Lock",
+      "pixelWidth": 960,
+      "pixelHeight": 384,
+      "kind": "fascia",
+      "originalKind": "fascia",
+      "file": "sign-039.webp"
+    },
+    {
+      "index": 40,
+      "category": "hotel",
+      "aspect": 0.33333,
+      "style": "vertical-hotel",
+      "displayName": "Hotel Plaza Vertical",
+      "pixelWidth": 320,
+      "pixelHeight": 960,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-040.webp"
+    },
+    {
+      "index": 41,
+      "category": "pharmacy",
+      "aspect": 0.35714,
+      "style": "vertical-pharmacy",
+      "displayName": "Farmacia Vertical",
+      "pixelWidth": 320,
+      "pixelHeight": 896,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-041.webp"
+    },
+    {
+      "index": 42,
+      "category": "photo",
+      "aspect": 0.4,
+      "style": "vertical-photo",
+      "displayName": "Fotos Rápidas Vertical",
+      "pixelWidth": 320,
+      "pixelHeight": 800,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-042.webp"
+    },
+    {
+      "index": 43,
+      "category": "optician",
+      "aspect": 0.39286,
+      "style": "vertical-optic",
+      "displayName": "Óptica Vision Vertical",
+      "pixelWidth": 352,
+      "pixelHeight": 896,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-043.webp"
+    },
+    {
+      "index": 44,
+      "category": "record-shop",
+      "aspect": 0.41667,
+      "style": "vertical-records",
+      "displayName": "Discos Stereo Vertical",
+      "pixelWidth": 320,
+      "pixelHeight": 768,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-044.webp"
+    },
+    {
+      "index": 45,
+      "category": "laundromat",
+      "aspect": 0.33333,
+      "style": "vertical-laundry",
+      "displayName": "Lavandería Vertical",
+      "pixelWidth": 320,
+      "pixelHeight": 960,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-045.webp"
+    },
+    {
+      "index": 46,
+      "category": "barber",
+      "aspect": 0.35714,
+      "style": "vertical-barber",
+      "displayName": "Barbería Vertical",
+      "pixelWidth": 320,
+      "pixelHeight": 896,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-046.webp"
+    },
+    {
+      "index": 47,
+      "category": "bank",
+      "aspect": 0.36667,
+      "style": "vertical-bank",
+      "displayName": "Banco Ahorro Vertical",
+      "pixelWidth": 352,
+      "pixelHeight": 960,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-047.webp"
+    },
+    {
+      "index": 48,
+      "category": "travel",
+      "aspect": 0.39286,
+      "style": "vertical-travel",
+      "displayName": "Travel Viajes Vertical",
+      "pixelWidth": 352,
+      "pixelHeight": 896,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-048.webp"
+    },
+    {
+      "index": 49,
+      "category": "motel",
+      "aspect": 0.33333,
+      "style": "vertical-motel",
+      "displayName": "Motel Luna Vertical",
+      "pixelWidth": 320,
+      "pixelHeight": 960,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-049.webp"
+    },
+    {
+      "index": 50,
+      "category": "dentist",
+      "aspect": 0.39286,
+      "style": "vertical-dental",
+      "displayName": "Dentista Vertical",
+      "pixelWidth": 352,
+      "pixelHeight": 896,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-050.webp"
+    },
+    {
+      "index": 51,
+      "category": "parking",
+      "aspect": 0.38462,
+      "style": "vertical-parking",
+      "displayName": "Estacionamiento Vertical",
+      "pixelWidth": 320,
+      "pixelHeight": 832,
+      "kind": "banner",
+      "originalKind": "vertical",
+      "file": "sign-051.webp"
+    },
+    {
+      "index": 52,
+      "category": "clinic",
+      "aspect": 1.33333,
+      "style": "plaque-medical",
+      "displayName": "Clínica Consultation Plaque",
+      "pixelWidth": 512,
+      "pixelHeight": 384,
+      "kind": "small",
+      "originalKind": "plaque",
+      "file": "sign-052.webp"
+    },
+    {
+      "index": 53,
+      "category": "laboratory",
+      "aspect": 1,
+      "style": "plaque-lab",
+      "displayName": "Laboratory Specimen Plaque",
+      "pixelWidth": 512,
+      "pixelHeight": 512,
+      "kind": "small",
+      "originalKind": "plaque",
+      "file": "sign-053.webp"
+    },
+    {
+      "index": 54,
+      "category": "bakery",
+      "aspect": 1.66667,
+      "style": "plaque-bakery",
+      "displayName": "Pastries Hanging Oval",
+      "pixelWidth": 640,
+      "pixelHeight": 384,
+      "kind": "small",
+      "originalKind": "plaque",
+      "file": "sign-054.webp"
+    },
+    {
+      "index": 55,
+      "category": "open",
+      "aspect": 1.33333,
+      "style": "decal-open",
+      "displayName": "Open Bilingual Window",
+      "pixelWidth": 512,
+      "pixelHeight": 384,
+      "kind": "small",
+      "originalKind": "decal",
+      "file": "sign-055.webp"
+    },
+    {
+      "index": 56,
+      "category": "bank",
+      "aspect": 1,
+      "style": "decal-exchange",
+      "displayName": "Bank Exchange Window",
+      "pixelWidth": 512,
+      "pixelHeight": 512,
+      "kind": "small",
+      "originalKind": "decal",
+      "file": "sign-056.webp"
+    },
+    {
+      "index": 57,
+      "category": "travel",
+      "aspect": 1.66667,
+      "style": "plaque-travel",
+      "displayName": "Travel Agents Plaque",
+      "pixelWidth": 640,
+      "pixelHeight": 384,
+      "kind": "small",
+      "originalKind": "plaque",
+      "file": "sign-057.webp"
+    },
+    {
+      "index": 58,
+      "category": "motel",
+      "aspect": 1.6,
+      "style": "decal-vacancy",
+      "displayName": "Vacancy Motel Window",
+      "pixelWidth": 512,
+      "pixelHeight": 320,
+      "kind": "small",
+      "originalKind": "decal",
+      "file": "sign-058.webp"
+    },
+    {
+      "index": 59,
+      "category": "shoe-repair",
+      "aspect": 1,
+      "style": "plaque-cobbler",
+      "displayName": "Shoe Repair Hanging Plaque",
+      "pixelWidth": 512,
+      "pixelHeight": 512,
+      "kind": "small",
+      "originalKind": "plaque",
+      "file": "sign-059.webp"
+    },
+    {
+      "index": 60,
+      "category": "telephone",
+      "aspect": 0.75,
+      "style": "decal-phone",
+      "displayName": "Telephone Window Sign",
+      "pixelWidth": 384,
+      "pixelHeight": 512,
+      "kind": "small",
+      "originalKind": "decal",
+      "file": "sign-060.webp"
+    },
+    {
+      "index": 61,
+      "category": "dentist",
+      "aspect": 1.66667,
+      "style": "plaque-dental",
+      "displayName": "Dental Office Enamel",
+      "pixelWidth": 640,
+      "pixelHeight": 384,
+      "kind": "small",
+      "originalKind": "plaque",
+      "file": "sign-061.webp"
+    },
+    {
+      "index": 62,
+      "category": "barber",
+      "aspect": 1,
+      "style": "plaque-barber",
+      "displayName": "Barber Scissors Projector",
+      "pixelWidth": 512,
+      "pixelHeight": 512,
+      "kind": "small",
+      "originalKind": "plaque",
+      "file": "sign-062.webp"
+    },
+    {
+      "index": 63,
+      "category": "cafe",
+      "aspect": 1,
+      "style": "decal-coffee",
+      "displayName": "Fresh Coffee Window",
+      "pixelWidth": 512,
+      "pixelHeight": 512,
+      "kind": "small",
+      "originalKind": "decal",
+      "file": "sign-063.webp"
+    },
+    {
+      "index": 64,
+      "category": "beverage",
+      "aspect": 2.66667,
+      "style": "billboard-tropical",
+      "displayName": "Refrescos Tropical Billboard",
+      "pixelWidth": 1024,
+      "pixelHeight": 384,
+      "kind": "billboard",
+      "originalKind": "billboard",
+      "file": "sign-064.webp"
+    },
+    {
+      "index": 65,
+      "category": "hotel",
+      "aspect": 2.66667,
+      "style": "roof-hotel",
+      "displayName": "Hotel Continental Roof Sign",
+      "pixelWidth": 1024,
+      "pixelHeight": 384,
+      "kind": "billboard",
+      "originalKind": "roofsign",
+      "file": "sign-065.webp"
+    },
+    {
+      "index": 66,
+      "category": "leasing",
+      "aspect": 2.56,
+      "style": "billboard-leasing",
+      "displayName": "Se Renta Office Billboard",
+      "pixelWidth": 1024,
+      "pixelHeight": 400,
+      "kind": "billboard",
+      "originalKind": "billboard",
+      "file": "sign-066.webp"
+    },
+    {
+      "index": 67,
+      "category": "bank",
+      "aspect": 2.66667,
+      "style": "roof-bank",
+      "displayName": "Banco Futuro Roof Advertisement",
+      "pixelWidth": 1024,
+      "pixelHeight": 384,
+      "kind": "billboard",
+      "originalKind": "roofsign",
+      "file": "sign-067.webp"
+    },
+    {
+      "index": 68,
+      "category": "tires",
+      "aspect": 2.28571,
+      "style": "ghost-tires",
+      "displayName": "Atlas Tires Painted Wall Ad",
+      "pixelWidth": 1024,
+      "pixelHeight": 448,
+      "kind": "billboard",
+      "originalKind": "billboard",
+      "file": "sign-068.webp"
+    },
+    {
+      "index": 69,
+      "category": "bakery",
+      "aspect": 2.56,
+      "style": "ghost-bread",
+      "displayName": "Pan Sol Painted Wall Ad",
+      "pixelWidth": 1024,
+      "pixelHeight": 400,
+      "kind": "billboard",
+      "originalKind": "billboard",
+      "file": "sign-069.webp"
+    },
+    {
+      "index": 70,
+      "category": "travel",
+      "aspect": 2.66667,
+      "style": "billboard-travel",
+      "displayName": "Viajes Aeromar Billboard",
+      "pixelWidth": 1024,
+      "pixelHeight": 384,
+      "kind": "billboard",
+      "originalKind": "billboard",
+      "file": "sign-070.webp"
+    },
+    {
+      "index": 71,
+      "category": "department-store",
+      "aspect": 2.56,
+      "style": "roof-department",
+      "displayName": "La Nacional Department Store Roof",
+      "pixelWidth": 1024,
+      "pixelHeight": 400,
+      "kind": "billboard",
+      "originalKind": "roofsign",
+      "file": "sign-071.webp"
+    }
+  ]
+}

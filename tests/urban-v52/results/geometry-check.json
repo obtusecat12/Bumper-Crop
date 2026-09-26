@@ -1,0 +1,24 @@
+{
+  "plans": 64,
+  "buildings": 767,
+  "types": 24,
+  "roadWidth": 15,
+  "sidewalkWidth": 4.5,
+  "roadSamples": 60,
+  "assetLayerRange": [
+    0,
+    99
+  ],
+  "fixedLandmarks": "unchanged",
+  "pavementReturns": "grounded",
+  "stats": {
+    "mode": "11",
+    "blocks": 25,
+    "buildings": 265,
+    "typologies": 36,
+    "triangles": 3294158,
+    "draws": 764,
+    "pending": 0,
+    "district": "core"
+  }
+}

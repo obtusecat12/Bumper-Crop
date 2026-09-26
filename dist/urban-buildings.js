@@ -678,3 +678,5 @@ export function addBuilding(batch, spec = {}) {
   const height=builders[type]({b:batch,w,d,n,r,lod})+(BUILDING_TYPES.indexOf(type)<18?1:0);
   return {height,type};
 }
+
+export {equipment as addRoofEquipment,fireEscape as addFireEscape,roofLetters as addRoofLetters};

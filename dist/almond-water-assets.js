@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {almondProfile,almondProfileGLSL} from './almond-water-profiles.js?v=51';
+import {almondProfile,almondProfileGLSL} from './almond-water-profiles.js?v=52';
 
 // Object 1 containers, in metres. Templates/textures are shared; chunk workers
 // transmit only deterministic anchors. There is no per-bottle frame polling.

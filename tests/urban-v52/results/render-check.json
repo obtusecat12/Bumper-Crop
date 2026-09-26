@@ -1,0 +1,16 @@
+{
+  "renderer": "Software GLES 3.2 / llvmpipe; offscreen diagnostic, not browser",
+  "views": [
+    "ordinary-core",
+    "ordinary-shop",
+    "ordinary-alley",
+    "approach-join",
+    "hope-sidewalk",
+    "hope-steps",
+    "photo-hope"
+  ],
+  "allViewsRendered": true,
+  "glErrors": 0,
+  "composedShaderProgramsLinked": 89,
+  "browserValidation": false
+}

@@ -1,9 +1,9 @@
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch,urbanRandom} from './urban-batch.js?v=51';
-import {exitPoint,exitSample,EXIT_CITY_Y,ease} from './exit-route.js?v=51';
-import {CITY_ORIGIN,CITY_ANGLE,cityToWorld,worldToCity} from './urban-layout.js?v=51';
-import * as P from './urban-props.js?v=51';
-import {addBuilding} from './urban-buildings.js?v=51';
+import {UrbanBatch,urbanRandom} from './urban-batch.js?v=52';
+import {exitPoint,exitSample,EXIT_CITY_Y,ease} from './exit-route.js?v=52';
+import {CITY_ORIGIN,CITY_ANGLE,cityToWorld,worldToCity} from './urban-layout.js?v=52';
+import * as P from './urban-props.js?v=52';
+import {addBuilding} from './urban-buildings.js?v=52';
 const Y=EXIT_CITY_Y,UP=new T.Vector3(0,1,0),plane=new T.PlaneGeometry(1,1);
 const CLINIC_PATH=282,cp=exitPoint(CLINIC_PATH),CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);
 export const CLINIC_ORIGIN={x:cp.x+cp.nx*28,z:cp.z+cp.nz*28};
