@@ -9,3 +9,5 @@ The two authored photographic landmarks are protected by the latest user instruc
 For visual fixes, inspect real rendered output as well as code. Verify visible pavement against walking height, check asset completeness and shader compilation, and label offscreen diagnostics honestly. Never describe a software diagnostic as a browser or live-site screenshot.
 
 Large image libraries must contain independently created assets, not recolors counted as new scenes. Preserve asset provenance. Site source and publishing remain owned by the primary site agent; delegated asset work stays outside the checkout until integrated.
+
+When reviewing landmark integration, inspect the side and rear voids from the user’s problem viewpoints as well as the authored front camera. Surface ownership must be explicit at the rural/approach/reference/procedural joins; do not use tiny height offsets to hide overlapping ground. Keep the clinic courtyard → substation passage → fountain plaza pedestrian route open.

@@ -1,0 +1,76 @@
+{
+  "generated": 7,
+  "codeDesignedSigns": 7,
+  "gameFiles": [
+    {
+      "file": "fountain-tile.webp",
+      "bytes": 101622,
+      "sha256": "5ce1630dcdec40b2243f22d3e44976995b0cf6b75a5d092b891ec6b3bbc6a046"
+    },
+    {
+      "file": "plaza-pavers.webp",
+      "bytes": 97634,
+      "sha256": "1c9ca4119cf753b46361d384c542bb9c56d598518432f5edad38ffc82ceabbae"
+    },
+    {
+      "file": "pharmacy.webp",
+      "bytes": 31594,
+      "sha256": "638d93c6c27fc5bfc58739a4080f4cb67ce85b8cf576b8332152d4e2426a3422"
+    },
+    {
+      "file": "phones.webp",
+      "bytes": 30994,
+      "sha256": "1ca09b849ed6d8ed70c36643f8f7ee8ab73dc353d808e450e5c2ec79b05fad5d"
+    },
+    {
+      "file": "bookstore.webp",
+      "bytes": 30206,
+      "sha256": "80d2cf34eff7dcd9f64529a1080af8f4934212d031bcce6f649aa89c75880cb9"
+    },
+    {
+      "file": "tecnomovil.webp",
+      "bytes": 137324,
+      "sha256": "2ce51881109eeedf1452263f7bdd9db0f9444e8fc8808a2cd7672c4cc5b66c3b"
+    },
+    {
+      "file": "palm-bark.webp",
+      "bytes": 145288,
+      "sha256": "cc1c16c63a7c7c86e096e859ce0e5b3c38492f638fb8a5c70f61deade7835e81"
+    },
+    {
+      "file": "beauty.webp",
+      "bytes": 33966,
+      "sha256": "c85ebc6361790d7dc8490699b0ed64a7650d759464defae620517d12eccb8a8d"
+    },
+    {
+      "file": "laundry.webp",
+      "bytes": 29514,
+      "sha256": "23621e722d09b632f75dcefc8fa045f627145c5dbc73831ebf0e707d163ffceb"
+    },
+    {
+      "file": "palm-frond.png",
+      "bytes": 694976,
+      "sha256": "0a570dd8239be80a901e1964a8bb26402bfbb245ca5ae473028a657d7346b5cf"
+    },
+    {
+      "file": "travel.webp",
+      "bytes": 34902,
+      "sha256": "724d61165726ae1a69c19714003eefd89efe17a58d404440bf41c65e113f9034"
+    },
+    {
+      "file": "sol-y-mundo.webp",
+      "bytes": 110748,
+      "sha256": "04c03c13a1992927e53115f8411ae32023c3f73a51f462a629d95eedd28c109e"
+    },
+    {
+      "file": "optica.webp",
+      "bytes": 37832,
+      "sha256": "1a5fe672d5c37ec5f9231fb25e4062915aa759c4c6d8bcb5930379c75da660fa"
+    },
+    {
+      "file": "el-estudiante.webp",
+      "bytes": 130952,
+      "sha256": "3332cc1fda63650b597d948a7f89e4041edbd8516885a8d11d832b2ec968059b"
+    }
+  ]
+}

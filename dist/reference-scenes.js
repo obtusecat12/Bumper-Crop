@@ -1,9 +1,10 @@
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch,urbanRandom} from './urban-batch.js?v=52';
-import {exitPoint,exitSample,EXIT_CITY_Y,ease} from './exit-route.js?v=52';
-import {CITY_ORIGIN,CITY_ANGLE,cityToWorld,worldToCity} from './urban-layout.js?v=52';
-import * as P from './urban-props.js?v=52';
-import {addBuilding} from './urban-buildings.js?v=52';
+import {HOPE_GROUND_RECTS} from './urban-ground-ownership.js?v=53';
+import {UrbanBatch,urbanRandom} from './urban-batch.js?v=53';
+import {exitPoint,exitSample,EXIT_CITY_Y,ease} from './exit-route.js?v=53';
+import {CITY_ORIGIN,CITY_ANGLE,cityToWorld,worldToCity} from './urban-layout.js?v=53';
+import * as P from './urban-props.js?v=53';
+import {addBuilding} from './urban-buildings.js?v=53';
 const Y=EXIT_CITY_Y,UP=new T.Vector3(0,1,0),plane=new T.PlaneGeometry(1,1);
 const CLINIC_PATH=282,cp=exitPoint(CLINIC_PATH),CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);
 export const CLINIC_ORIGIN={x:cp.x+cp.nx*28,z:cp.z+cp.nz*28};
@@ -65,7 +66,7 @@ function signal(b,x,z,{height=6.7,arm=0,side=1,ped=false}={}){
 function streetLamp(b,x,z,side,height=10.7){b.cylinder('photoSteel',x,height/2,z,.065,.10,height,10);let a=[x,height-.8,z];for(let i=1;i<=6;i++){const t=i/6,c=[x-side*3.4*t,height-.8+Math.sin(t*Math.PI/2)*.9,z];b.rod('photoSteel',a,c,.04);a=c;}b.box('photoSteel',x-side*3.5,height+.08,z,.62,.14,.24);}
 function hopeStreet(mats){
  const b=new UrbanBatch(mats);b.push(CITY_ORIGIN.x,Y,CITY_ORIGIN.z,CITY_ANGLE);
- b.box('photoAsphalt',0,-.04,208,224,.08,480);b.box('photoAsphalt',0,-.036,-1,330,.08,23);
+ for(const[x0,x1,z0,z1]of HOPE_GROUND_RECTS)b.box('photoAsphalt',(x0+x1)/2,-.04,(z0+z1)/2,x1-x0,.08,z1-z0);
  for(const s of[-1,1]){b.box('sidewalk',s*14,.09,175,6,.18,330);b.walk(s*14,175,6,330,.18);b.box('photoGranite',s*11.05,.13,175,.19,.26,330);b.box('photoRedCurb',s*11.01,.125,39,.04,.20,67);for(let z=6;z<330;z+=3.8)b.box('photoFrame',s*14,.184,z,5.8,.005,.012);}
  // The reference intersection uses thin worn crossing/stop lines, not a zebra crossing.
  for(const z of[-4,5.3])b.box('white',0,.015,z,22,.012,.14,0,.44);
@@ -143,7 +144,7 @@ function clinicCourt(mats){
  const b=new UrbanBatch(mats);b.push(CLINIC_ORIGIN.x,Y,CLINIC_ORIGIN.z,CLINIC_ANGLE);
  b.box('photoCobble',0,-.02,17,68,.08,70);b.walk(0,17,68,70,.02);
  quad(b,'photoAsphalt',[[-34,.025,-24],[-34,.02,-18],[34,.02,-18],[34,.025,-24]],[0,0,0,1.5,11,1.5,11,0]);b.walk(0,-21,68,6,.025);
- b.box('photoGranite',0,.018,-18.03,68,.022,.16);for(const side of[-1,1]){b.box('photoGranite',side*34,.07,17,.20,.18,70);b.box('asphalt',side*37,-.04,22,6,.06,80);}
+ b.box('photoGranite',0,.018,-18.03,68,.022,.16);for(const side of[-1,1]){if(side===1)b.box('photoGranite',side*34,.07,17,.20,.18,70);b.box('asphalt',side*37,-.04,22,6,.06,80);}
  b.box('photoMosaic',-21.3,4.31,5.95,18,8.62,.70);b.solid(-21.3,5.95,18,.70);b.box('photoMosaic',-30.3,4.31,14.4,.70,8.62,17.6);b.solid(-30.3,14.4,.70,17.6);b.box('photoBronze',-21.3,8.68,5.95,18.2,.12,.87);b.box('photoCream',-35,4.2,18.5,10,8.4,26);b.solid(-35,18.5,10,26);
  b.box('photoStucco',8.1,3.4,24.3,42.5,6.8,12.6);b.solid(8.1,24.3,42.5,12.6);
  for(const[x,w,h,z]of[[-8.9,8,2.5,22.5],[-.8,11,1.85,26],[10.5,9,.8,26],[20,16,2.1,27]]){b.box('photoStucco',x,6.8+h/2,z,w,h,8);b.box('photoBronze',x,6.83+h,z-4,w,.065,.13);}
@@ -203,4 +204,4 @@ export function referenceWaypoint(name){
  const p=cityToWorld(2.8,-22);return{...p,label:'图一 · Hope St',yaw:CITY_ANGLE+Math.PI-.025,pitch:.15,eye:1.8,fov:41.8,referenceAspect:2048/1393,range:510,urbanPhoto:true};
 }
 const WORLD_HOPE_SUN=new T.Vector3(.72,1,-.62).applyAxisAngle(UP,CITY_ANGLE).normalize(),WORLD_CLINIC_SUN=new T.Vector3(.80,1,-.55).applyAxisAngle(UP,CLINIC_ANGLE).normalize();
-export function referenceEnvironment(wx,wz,level){const c=clinicLocal(wx,wz),p=worldToCity(wx,wz),clinic=(1-ease(38,76,Math.hypot(c.x-5,c.z-12)))*(1-ease(345,377,p.z+382));const route=exitSample(wx,wz,{}),urban=level===11?1:ease(220,350,route.s)*route.influence;if(urban<.001)return null;const q=Math.min(1,clinic);return{amount:urban,clinic:q,hero:(Math.abs(p.x)<62&&p.z>-50&&p.z<335)||q>.05,sky:new T.Color('#cdd7bc').lerp(new T.Color('#558ac7'),q),fog:new T.Color('#cdd7bc').lerp(new T.Color('#adbfc9'),q),sun:WORLD_HOPE_SUN.clone().lerp(WORLD_CLINIC_SUN,q).normalize(),sunColor:new T.Color('#fff2d8').lerp(new T.Color('#fff9ee'),q),sunPower:2.65+q*.4,fill:new T.Color('#d2d6d3').lerp(new T.Color('#c0cde0'),q),ground:new T.Color('#a4a297').lerp(new T.Color('#aaa69c'),q),fillPower:1.9+q*.1,exposure:1.14-q*.015,near:210,far:510};}
+export function referenceEnvironment(wx,wz,level){const c=clinicLocal(wx,wz),p=worldToCity(wx,wz),clinic=Math.max(1-ease(38,76,Math.hypot(c.x-5,c.z-12)),1-ease(0,28,Math.hypot(Math.max(25.6-c.x,0,c.x-70),Math.max(18.4-c.z,0,c.z-77))))*(1-ease(345,377,p.z+382));const route=exitSample(wx,wz,{}),urban=level===11?1:ease(220,350,route.s)*route.influence;if(urban<.001)return null;const q=Math.min(1,clinic);return{amount:urban,clinic:q,hero:(Math.abs(p.x)<62&&p.z>-50&&p.z<335)||q>.05,sky:new T.Color('#cdd7bc').lerp(new T.Color('#558ac7'),q),fog:new T.Color('#cdd7bc').lerp(new T.Color('#adbfc9'),q),sun:WORLD_HOPE_SUN.clone().lerp(WORLD_CLINIC_SUN,q).normalize(),sunColor:new T.Color('#fff2d8').lerp(new T.Color('#fff9ee'),q),sunPower:2.65+q*.4,fill:new T.Color('#d2d6d3').lerp(new T.Color('#c0cde0'),q),ground:new T.Color('#a4a297').lerp(new T.Color('#aaa69c'),q),fillPower:1.9+q*.1,exposure:1.14-q*.015,near:210,far:510};}

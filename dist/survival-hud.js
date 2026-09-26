@@ -1,5 +1,5 @@
-import {createVialMotion} from './vial-motion.js?v=52';
-import {GAUGES,gaugePath,liquidPath,paintVitals,paintVial,PART_URL} from './retro-instruments.js?v=52';
+import {createVialMotion} from './vial-motion.js?v=53';
+import {GAUGES,gaugePath,liquidPath,paintVitals,paintVial,PART_URL} from './retro-instruments.js?v=53';
 const keys=['stamina','hydration','health'],percent=v=>Math.max(0,Math.min(100,Number(v)||0));
 export function survivalMarkup(){return `<div class="stats" data-ui-part="vitals" role="group" aria-label="生命状态与补给">
  <div class="sanity-vial" id="sanity-meter" role="meter" aria-label="精神值" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><img class="tube-back" src="${PART_URL('back_glass')}" alt=""><svg viewBox="0 0 256 780" aria-hidden="true"><defs><clipPath id="liquid-clip"><path d="M67 111 L174 111 L174 648 Q174 703 121 704 Q67 703 67 648 Z"/></clipPath><linearGradient id="liquid-color"><stop stop-color="#655d3d"/><stop offset=".5" stop-color="#c3b47c"/><stop offset="1" stop-color="#655d3d"/></linearGradient></defs><path class="liquid-path" clip-path="url(#liquid-clip)" fill="url(#liquid-color)" d="${liquidPath(100)}"/></svg><img class="tube-front" src="${PART_URL('front_glass')}" alt=""><img class="tube-cork" src="${PART_URL('cork')}" alt=""></div>

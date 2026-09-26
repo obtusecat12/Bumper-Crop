@@ -1,0 +1,20 @@
+[
+  {
+    "asset": "el-estudiante",
+    "file": "/workspace/scratch/91e9848e2f36/v53-assets/shops/el-estudiante.webp",
+    "bytes": 130952,
+    "sha256": "3332cc1fda63650b597d948a7f89e4041edbd8516885a8d11d832b2ec968059b"
+  },
+  {
+    "asset": "tecnomovil",
+    "file": "/workspace/scratch/91e9848e2f36/v53-assets/shops/tecnomovil.webp",
+    "bytes": 137324,
+    "sha256": "2ce51881109eeedf1452263f7bdd9db0f9444e8fc8808a2cd7672c4cc5b66c3b"
+  },
+  {
+    "asset": "sol-y-mundo",
+    "file": "/workspace/scratch/91e9848e2f36/v53-assets/shops/sol-y-mundo.webp",
+    "bytes": 110748,
+    "sha256": "04c03c13a1992927e53115f8411ae32023c3f73a51f462a629d95eedd28c109e"
+  }
+]

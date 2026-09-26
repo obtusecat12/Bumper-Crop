@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "collection": "v53-exact-shop-fascias",
+  "createdDate": "2026-09-26",
+  "method": "Deterministic native @napi-rs/canvas text and original vector paths, optimized with sharp; no imagegen and no photographic pixels.",
+  "source": "generate-signs.mjs",
+  "provenance": "provenance.md",
+  "width": 1536,
+  "height": 384,
+  "webpQuality": 94,
+  "signs": [
+    {
+      "id": "optica-vision-total",
+      "displayName": "Óptica Visión Total",
+      "pixelWidth": 1536,
+      "pixelHeight": 384,
+      "png": "optica-vision-total.png",
+      "webp": "optica-vision-total.webp",
+      "pngPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/optica-vision-total.png",
+      "webpPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/optica-vision-total.webp",
+      "exactText": [
+        "ÓPTICA",
+        "Visión Total",
+        "EXAMEN DE LA VISTA · LENTES DE CONTACTO"
+      ],
+      "icon": "blue eye",
+      "reference": "image(20260926-115016).png",
+      "referencePosition": "upper1",
+      "sha256": {
+        "png": "b3a93503edb869f453e9671fb32f449f7d8458336a9c5850cf276e4248d6924b",
+        "webp": "1a5fe672d5c37ec5f9231fb25e4062915aa759c4c6d8bcb5930379c75da660fa"
+      },
+      "bytes": {
+        "png": 92906,
+        "webp": 37832
+      }
+    },
+    {
+      "id": "farmacia-san-jose",
+      "displayName": "Farmacia San José",
+      "pixelWidth": 1536,
+      "pixelHeight": 384,
+      "png": "farmacia-san-jose.png",
+      "webp": "farmacia-san-jose.webp",
+      "pngPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/farmacia-san-jose.png",
+      "webpPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/farmacia-san-jose.webp",
+      "exactText": [
+        "Farmacia",
+        "San José",
+        "Salud para tu familia"
+      ],
+      "icon": "blue medical cross",
+      "reference": "image(20260926-115016).png",
+      "referencePosition": "upper2",
+      "sha256": {
+        "png": "c91c959d966afb93703b9e86965b050f9b2836bfd912fa600e0cd1d34440b5c6",
+        "webp": "638d93c6c27fc5bfc58739a4080f4cb67ce85b8cf576b8332152d4e2426a3422"
+      },
+      "bytes": {
+        "png": 82171,
+        "webp": 31594
+      }
+    },
+    {
+      "id": "lavanderia",
+      "displayName": "Lavandería",
+      "pixelWidth": 1536,
+      "pixelHeight": 384,
+      "png": "lavanderia.png",
+      "webp": "lavanderia.webp",
+      "pngPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/lavanderia.png",
+      "webpPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/lavanderia.webp",
+      "exactText": [
+        "LAVANDERÍA",
+        "Lava · Seca · Dobla"
+      ],
+      "icon": "two blue droplets",
+      "reference": "image(20260926-115016).png",
+      "referencePosition": "lower1",
+      "sha256": {
+        "png": "d4928e5a8899f4b9c931d93dc3475de6d9fbd255e244aabc26abc6167471a5a3",
+        "webp": "23621e722d09b632f75dcefc8fa045f627145c5dbc73831ebf0e707d163ffceb"
+      },
+      "bytes": {
+        "png": 75730,
+        "webp": 29514
+      }
+    },
+    {
+      "id": "estetica-belleza-estilo",
+      "displayName": "Estética Belleza & Estilo",
+      "pixelWidth": 1536,
+      "pixelHeight": 384,
+      "png": "estetica-belleza-estilo.png",
+      "webp": "estetica-belleza-estilo.webp",
+      "pngPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/estetica-belleza-estilo.png",
+      "webpPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/estetica-belleza-estilo.webp",
+      "exactText": [
+        "Estética",
+        "Belleza & Estilo"
+      ],
+      "icon": "native vector feminine hair silhouette",
+      "reference": "image(20260926-115016).png",
+      "referencePosition": "lower2",
+      "sha256": {
+        "png": "f512117b11f7f6833b22cb14c5a24f441cac2df47edb2164f18a7e10c7fd834c",
+        "webp": "c85ebc6361790d7dc8490699b0ed64a7650d759464defae620517d12eccb8a8d"
+      },
+      "bytes": {
+        "png": 95217,
+        "webp": 33966
+      }
+    },
+    {
+      "id": "libreria-el-estudiante",
+      "displayName": "Librería El Estudiante",
+      "pixelWidth": 1536,
+      "pixelHeight": 384,
+      "png": "libreria-el-estudiante.png",
+      "webp": "libreria-el-estudiante.webp",
+      "pngPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/libreria-el-estudiante.png",
+      "webpPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/libreria-el-estudiante.webp",
+      "exactText": [
+        "Librería",
+        "El Estudiante",
+        "PAPELERÍA · ÚTILES · COPIAS"
+      ],
+      "icon": "open book",
+      "reference": "image(20260926-115756).png",
+      "referencePosition": "left",
+      "sha256": {
+        "png": "e930c0374b9f7c203fc76c67ba17696b0e77b4259bb613955537ac1f3cefdae4",
+        "webp": "80d2cf34eff7dcd9f64529a1080af8f4934212d031bcce6f649aa89c75880cb9"
+      },
+      "bytes": {
+        "png": 77189,
+        "webp": 30206
+      }
+    },
+    {
+      "id": "tecnomovil",
+      "displayName": "TecnoMóvil",
+      "pixelWidth": 1536,
+      "pixelHeight": 384,
+      "png": "tecnomovil.png",
+      "webp": "tecnomovil.webp",
+      "pngPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/tecnomovil.png",
+      "webpPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/tecnomovil.webp",
+      "exactText": [
+        "TecnoMóvil",
+        "VENTA · REPARACIÓN · ACCESORIOS"
+      ],
+      "icon": "blue smartphone",
+      "reference": "image(20260926-115756).png",
+      "referencePosition": "center",
+      "sha256": {
+        "png": "998b6cd15d02f4afc5513eec1799fa4b7423e45c00933a02060c5a70adf52db0",
+        "webp": "1ca09b849ed6d8ed70c36643f8f7ee8ab73dc353d808e450e5c2ec79b05fad5d"
+      },
+      "bytes": {
+        "png": 76990,
+        "webp": 30994
+      }
+    },
+    {
+      "id": "viajes-sol-y-mundo",
+      "displayName": "Viajes Sol y Mundo",
+      "pixelWidth": 1536,
+      "pixelHeight": 384,
+      "png": "viajes-sol-y-mundo.png",
+      "webp": "viajes-sol-y-mundo.webp",
+      "pngPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/viajes-sol-y-mundo.png",
+      "webpPath": "/workspace/scratch/91e9848e2f36/v53-assets/signs/viajes-sol-y-mundo.webp",
+      "exactText": [
+        "Viajes",
+        "Sol y Mundo",
+        "TUS DESTINOS MÁS CERCA"
+      ],
+      "icon": "blue palm and golden sun",
+      "reference": "image(20260926-115756).png",
+      "referencePosition": "right",
+      "sha256": {
+        "png": "d277c05509495950a5c08d9bee94bcac56b54f6eff89cdbfe06ffb8c403bc788",
+        "webp": "724d61165726ae1a69c19714003eefd89efe17a58d404440bf41c65e113f9034"
+      },
+      "bytes": {
+        "png": 89729,
+        "webp": 34902
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+
+asset type: seamless repeating game texture, palm trunk bark diffuse albedo
+object: realistic date-palm trunk bark photograph showing horizontal growth rings and the cut scars of old fronds, a roughly one-metre square patch of bark surface
+composition: square bark patch filled edge to edge, straight-on orthographic surface view; seamless across all four edges; bark horizontal ring pattern continues naturally around a cylindrical trunk when wrapped
+material: muted warm gray-brown fibrous palm bark, closely observed short dry fibers, layered ring ridges and restrained diamond-like cut frond scars, natural but cared-for city palm
+lighting: even flat diffuse illumination, no directional lighting, no cast shadows or baked specular highlights
+aspect ratio: 1:1
+Avoid: whole tree, foliage, ground, background scene, trunk silhouette or curved outer edges, perspective, dramatic dark crevices, moss, text, logos, watermarks, oversaturation, oversharpening.

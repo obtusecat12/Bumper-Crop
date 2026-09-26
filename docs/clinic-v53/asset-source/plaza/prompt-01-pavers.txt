@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+
+asset type: seamless repeating game texture, flat diffuse albedo
+object: tidy small 30 cm plaza pavers in pale warm beige and restrained reddish terracotta, suitable for a 1970s–1990s Latin American retail street plaza
+composition: square surface patch filled edge to edge with regular small paving modules and restrained narrow mortar joints; exact orthographic top-down view; seamless tiling across all four edges
+material: lightly aged but cared-for matte mineral pavers, subtle realistic stone and fired-clay grain, modest natural color variation, tidy and usable rather than ruined
+lighting: completely flat diffuse illumination; no directional lighting, no cast shadows, no highlights baked into the texture
+aspect ratio: 1:1
+Avoid: perspective, buildings, objects, plants, litter, leaves, dramatic cracks, ruin, wet patches, large stains, strong dark outlines, writing, text, logos, watermarks, excessive yellow, oversaturation, oversharpening.

@@ -1,0 +1,14 @@
+{
+  "singleOwnerRoadSamples": 313,
+  "clearPedestrianSamples": 458,
+  "finiteDistrictAttributeValues": 1847898,
+  "newTextureFiles": 14,
+  "landmarkBuildingGeometry": "unchanged",
+  "fountainCollision": "present",
+  "climate": "continuous through new plaza",
+  "district": {
+    "triangles": 55996,
+    "draws": 49,
+    "parts": 2712
+  }
+}

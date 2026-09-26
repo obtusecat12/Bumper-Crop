@@ -1,9 +1,10 @@
+import {HOPE_GROUND_RECTS,subtractRectangles,subtractConvex,APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,DISTRICT_GROUND_POLYGONS} from './urban-ground-ownership.js?v=53';
 import * as T from './vendor/three.module.min.js';
-import {urbanRandom} from './urban-batch.js?v=52';
-import * as P from './urban-props.js?v=52';
-import * as S from './urban-smallprops.js?v=52';
-import {CITY_BLOCK as B,CITY_ROAD_HALF as R,CITY_SIDEWALK as W,worldToCity} from './urban-layout.js?v=52';
-import {EXIT_CITY_Y as Y} from './exit-route.js?v=52';
+import {urbanRandom} from './urban-batch.js?v=53';
+import * as P from './urban-props.js?v=53';
+import * as S from './urban-smallprops.js?v=53';
+import {CITY_BLOCK as B,CITY_ROAD_HALF as R,CITY_SIDEWALK as W,worldToCity} from './urban-layout.js?v=53';
+import {EXIT_CITY_Y as Y} from './exit-route.js?v=53';
 const PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args)=>{const w=b.point(x,y,z),p=worldToCity(w.x,w.z);if(p.x>4.5&&p.x<33.5&&p.z>443&&p.z<471)return;b.push(x,y,z,ry);fn(b,args||{});b.pop();};
 function face(b,key,points){const g=new T.BufferGeometry(),p=[];for(const i of[0,1,2,0,2,3])p.push(...points[i]);g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.computeVertexNormals();if(g.attributes.normal.getY(0)<-.001){const a=g.attributes.position;for(let j=0;j<a.count;j+=3){const v=[a.getX(j+1),a.getY(j+1),a.getZ(j+1)];a.setXYZ(j+1,a.getX(j+2),a.getY(j+2),a.getZ(j+2));a.setXYZ(j+2,...v);}g.computeVertexNormals();}b.add(g,key,0,0,0);g.dispose();}
@@ -12,7 +13,7 @@ export function pavement(b,x,z,w,d,top=.15){b.box('sidewalk',x,top/2,z,w,top,d);
 export function curb(b,x,z,length,ry=0,height=.15){b.push(x,0,z,ry);const a=-length/2,c=length/2,q=[[0,0],[0,height-.04],[.04,height],[.24,height],[.24,0]];for(let i=0;i<4;i++)face(b,'concrete',[[a,q[i][1],q[i][0]],[a,q[i+1][1],q[i+1][0]],[c,q[i+1][1],q[i+1][0]],[c,q[i][1],q[i][0]]]);b.pop();}
 function ramp(b,x,z,w,d,ry){b.push(x,0,z,ry);face(b,'sidewalk',[[-w/2,0,-d/2],[-w/2,.15,d/2],[w/2,.15,d/2],[w/2,0,-d/2]]);b.walk(0,0,w,d,.075,0,.15/d);for(let j=0;j<4;j++)for(let i=0;i<8;i++)b.cylinder('yellow',-w*.40+i*w*.114,.034+j*.014,-d*.34+j*.4,.025,.025,.009,6);b.pop();}
 export function roadHeight(x,z){const near=v=>Math.min(((v%B)+B)%B,B-((v%B)+B)%B),d=Math.min(near(x),near(z));return d<=R?.045*(1-d/R):0;}
-function roadHalf(b,ry){b.push(0,0,0,ry);face(b,'asphalt',[[0,.045,0],[0,.045,B],[R,0,B],[R,0,0]]);b.pop();}
+function roadHalf(b,ry){b.push(0,0,0,ry);face(b,'asphalt',[[0,.045,R],[0,.045,B-R],[R,0,B-R],[R,0,R]]);b.pop();}
 function roads(b){
  // Each block owns four half-roads; adjoining halves share the crown exactly.
  roadHalf(b,0);b.push(B,0,B,PI);roadHalf(b,0);b.pop();
@@ -48,8 +49,9 @@ function frontage(b,seed,lod,ry,portal,exclude){
  b.pop();b.pop();
 }
 export function addBlockStreets(b,plan,lod){
- b.push(plan.x,Y,plan.z);b.box('asphalt',56,-.035,56,B,.07,B);
- if(plan.reserved){b.pop();return;}
+ b.push(plan.x,Y,plan.z);
+ if(plan.reserved){for(const[a,c,u,v]of subtractRectangles(plan.x,plan.x+B,plan.z,plan.z+B,HOPE_GROUND_RECTS)){let pieces=[[[a,0,u],[a,0,v],[c,0,v],[c,0,u]]];if(plan.z<0)for(const shape of[...APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,...DISTRICT_GROUND_POLYGONS]){const xs=shape.map(p=>p[0]),zs=shape.map(p=>p[1]);if(Math.max(...xs)<a||Math.min(...xs)>c||Math.max(...zs)<u||Math.min(...zs)>v)continue;pieces=pieces.flatMap(p=>subtractConvex(p,shape));}for(const poly of pieces){const g=new T.BufferGeometry(),pos=[];for(let k=1;k<poly.length-1;k++)for(const p of[poly[0],poly[k],poly[k+1]])pos.push(p[0]-plan.x,p[1],p[2]-plan.z);g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.computeVertexNormals();b.add(g,'asphalt',0,0,0);g.dispose();}}b.pop();return;}
+ b.box('asphalt',56,-.035,56,B,.07,B);
  roads(b);
  // Sidewalk ring surrounds occupied lots, with six-metre rear-access portals.
  const joinsLandmark=plan.ix===0&&plan.iz===4;for(let side=0;side<4;side++)frontage(b,plan.seed+side*29,lod,side*PI/2,side%2===0,joinsLandmark?(side===0?[0,33]:side===1?[76,112]:null):null);
@@ -63,7 +65,7 @@ export function addBlockStreets(b,plan,lod){
  place(b,9.2,.15,16,PI,P.addTrafficSignal,{arm:10.8,street:plan.iz%3?'olive':'hope'});place(b,102.8,.15,96,0,P.addTrafficSignal,{arm:10.8,street:plan.ix%2?'grand':'hope'});
  for(const[x,z]of[[3.6,42],[78,108.6]])place(b,x,roadHeight(x,z)+.008,z,0,P.addManhole);
  // Real inner service court, bounded by the backs of continuous perimeter buildings.
- b.box('asphalt',56,.008,56,44,.016,40);b.box('asphalt',56,.008,56,6,.016,88);b.walk(56,56,6,88,.016);for(const front of[true,false]){b.push(56,0,front?13:99,front?0:PI);face(b,'sidewalk',[[-3,.15,-1],[-3,.016,1],[3,.016,1],[3,.15,-1]]);b.walk(0,0,6,2,.083,0,-.067);b.pop();}
+ b.box('asphalt',56,.008,56,44,.016,40);for(const z of[24,88])b.box('asphalt',56,.008,z,6,.016,24);b.walk(56,56,6,88,.016);for(const front of[true,false]){b.push(56,0,front?13:99,front?0:PI);face(b,'sidewalk',[[-3,.15,-1],[-3,.016,1],[3,.016,1],[3,.15,-1]]);b.walk(0,0,6,2,.083,0,-.067);b.pop();}
  for(const z of[38.0,74.0]){place(b,44,.025,z,0,S.addDumpster);place(b,64,.025,z,0,P.addUtilityCabinet,{variant:1});}
  if(!lod){for(const x of[39,43,47,65,69,73]){b.box('white',x,.028,56,.08,.009,5.0,0,.57);place(b,x+1.6,.02,58,0,P.addWheelStop);}if(plan.seed%2===0)place(b,70,.026,54,0,S.addParkedSedan,{seed:plan.seed+377});}
  b.pop();

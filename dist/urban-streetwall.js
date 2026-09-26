@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {urbanRandom} from './urban-batch.js?v=52';
-import {signIndex,signAspect,storefrontSign,WINDOW_COUNT} from './urban-assets.js?v=52';
-import {addRoofEquipment,addFireEscape,addRoofLetters} from './urban-buildings.js?v=52';
+import {urbanRandom} from './urban-batch.js?v=53';
+import {signIndex,signAspect,storefrontSign,WINDOW_COUNT} from './urban-assets.js?v=53';
+import {addRoofEquipment,addFireEscape,addRoofLetters} from './urban-buildings.js?v=53';
 const PI=Math.PI;
 function sign(b,seed,kind,x,y,z,maxW,maxH,ry=0,explicit){const id=explicit??signIndex(seed,kind),aspect=signAspect(id),w=Math.min(maxW,maxH*aspect),h=w/aspect;b.box('metal',x,y,z,w+.075,h+.075,.13,ry,.83);b.panel('citySign',id,x+Math.sin(ry)*.075,y,z+Math.cos(ry)*.075,w,h,ry);return{w,h};}
 function window(b,x,y,z,w,h,material='glass',tone=1){b.box('metal',x,y,z-.028,w+.08,h+.09,.12,0,.8);b.plane(material,x,y,z+.04,w,h,0,0,tone);b.box('metal',x,y,z+.065,.042,h,.07);b.box('concrete',x,y-h/2-.045,z+.08,w+.15,.075,.16);}

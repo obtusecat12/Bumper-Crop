@@ -1,0 +1,109 @@
+OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2 llvmpipe (LLVM 20.1.2, 256 bits)
+PASS 0 sculpted-ground-and-wheel-ruts
+PASS 1 sward-patch-6
+PASS 2 meadow-shortgrass-1
+PASS 3 Unified photographic roadside and bank plants
+PASS 4 Almond water / merged body label closure
+PASS 5 Almond water / refracting glass and moving liquid
+PASS 6 Frozen 40m cereal cell
+PASS 7 Utility weathered timber
+PASS 8 depth Utility weathered timber
+PASS 9 Utility steel porcelain and guards
+PASS 10 All utility cables · one GPU batch
+PASS 11 Urban approach / continuous commercial streetwall / asphalt
+PASS 12 Urban approach / continuous commercial streetwall / sidewalk
+PASS 13 Urban approach / continuous commercial streetwall / cinder
+PASS 14 Urban approach / continuous commercial streetwall / dark
+PASS 15 Urban approach / continuous commercial streetwall / concrete
+PASS 16 Urban approach / continuous commercial streetwall / sign:ghost
+PASS 17 Urban approach / continuous commercial streetwall / shutter
+PASS 18 Urban approach / continuous commercial streetwall / steel
+PASS 19 Urban approach / continuous commercial streetwall / yellow
+PASS 20 Urban approach / continuous commercial streetwall / metal
+PASS 21 Urban approach / continuous commercial streetwall / glass
+PASS 22 Urban approach / continuous commercial streetwall / green
+PASS 23 Urban approach / continuous commercial streetwall / rubber
+PASS 24 Urban approach / continuous commercial streetwall / stucco
+PASS 25 Urban approach / continuous commercial streetwall / brickOchre
+PASS 26 Urban approach / continuous commercial streetwall / white
+PASS 27 Urban approach / continuous commercial streetwall / red
+PASS 28 Urban approach / continuous commercial streetwall / sign:auto
+PASS 29 Urban approach / continuous commercial streetwall / travertine
+PASS 30 Urban approach / continuous commercial streetwall / shopWindow
+PASS 31 Urban approach / continuous commercial streetwall / citySign
+PASS 32 Urban approach / continuous commercial streetwall / blue
+PASS 33 Urban approach / continuous commercial streetwall / glassLight
+PASS 34 Urban approach / continuous commercial streetwall / dishMesh
+PASS 35 Urban approach / continuous commercial streetwall / brickRed
+PASS 36 Urban approach / continuous commercial streetwall / approachAsphalt
+PASS 37 Urban approach / continuous commercial streetwall / bark
+PASS 38 Urban approach / continuous commercial streetwall / photoCrown
+PASS 39 Urban approach / continuous commercial streetwall / photoLeaf
+PASS 40 Urban approach / continuous commercial streetwall / lamp
+PASS 41 Urban approach / continuous commercial streetwall / rust
+PASS 42 Hope Street / authored photographic reconstruction / photoAsphalt
+PASS 43 Hope Street / authored photographic reconstruction / photoGranite
+PASS 44 Hope Street / authored photographic reconstruction / photoRedCurb
+PASS 45 Hope Street / authored photographic reconstruction / photoFrame
+PASS 46 Hope Street / authored photographic reconstruction / photoPrecast
+PASS 47 Hope Street / authored photographic reconstruction / photoShade
+PASS 48 Hope Street / authored photographic reconstruction / photoGlass
+PASS 49 Hope Street / authored photographic reconstruction / photoShop
+PASS 50 Hope Street / authored photographic reconstruction / photoSteel
+PASS 51 Hope Street / authored photographic reconstruction / photoFamima
+PASS 52 Hope Street / authored photographic reconstruction / photoRail
+PASS 53 Hope Street / authored photographic reconstruction / photoFamimaRound
+PASS 54 Hope Street / authored photographic reconstruction / photoCream
+PASS 55 Hope Street / authored photographic reconstruction / photoCurtain
+PASS 56 Hope Street / authored photographic reconstruction / photoGlassBlue
+PASS 57 Hope Street / authored photographic reconstruction / photoPodium
+PASS 58 Hope Street / authored photographic reconstruction / photoLobby
+PASS 59 Hope Street / authored photographic reconstruction / photoBronze
+PASS 60 Hope Street / authored photographic reconstruction / photoStone
+PASS 61 Hope Street / authored photographic reconstruction / photoBanner
+PASS 62 Hope Street / authored photographic reconstruction / photoRetail
+PASS 63 Hope Street / authored photographic reconstruction / photoTrunk
+PASS 64 Hope Street / authored photographic reconstruction / photoTree
+PASS 65 Hope Street / authored photographic reconstruction / photoPole
+PASS 66 Hope Street / authored photographic reconstruction / signalRed
+PASS 67 Hope Street / authored photographic reconstruction / photoWalkHand
+PASS 68 Hope Street / authored photographic reconstruction / photoSignalHot
+PASS 69 Hope Street / authored photographic reconstruction / photoHope
+PASS 70 Hope Street / authored photographic reconstruction / ribbed
+PASS 71 Hope Street / authored photographic reconstruction / sign:pegasus
+PASS 72 Hope Street / authored photographic reconstruction / photoBus
+PASS 73 Hope Street / authored photographic reconstruction / photoParking
+PASS 74 Clinical plaza / authored photographic reconstruction / photoCobble
+PASS 75 Clinical plaza / authored photographic reconstruction / photoMosaic
+PASS 76 Clinical plaza / authored photographic reconstruction / photoStucco
+PASS 77 Clinical plaza / authored photographic reconstruction / photoBlue
+PASS 78 Clinical plaza / authored photographic reconstruction / photoDermica
+PASS 79 Clinical plaza / authored photographic reconstruction / photoDermicaGlass
+PASS 80 Clinical plaza / authored photographic reconstruction / photoCanvas
+PASS 81 Clinical plaza / authored photographic reconstruction / photoClinic
+PASS 82 Clinical plaza / authored photographic reconstruction / photoLab
+PASS 83 Clinical plaza / authored photographic reconstruction / photoMarisa
+PASS 84 Clinical plaza / authored photographic reconstruction / sign:bakery
+PASS 85 Clinical plaza / authored photographic reconstruction / photoClinicInside
+PASS 86 Clinical plaza / authored photographic reconstruction / photoLabWindow
+PASS 87 Clinical plaza / authored photographic reconstruction / photoBakeryInside
+PASS 88 Clinic infill / connected shops and palm fountain square / district:beauty
+PASS 89 Clinic infill / connected shops and palm fountain square / district:pharmacy
+PASS 90 Clinic infill / connected shops and palm fountain square / district:laundry
+PASS 91 Clinic infill / connected shops and palm fountain square / district:optica
+PASS 92 Clinic infill / connected shops and palm fountain square / district:books
+PASS 93 Clinic infill / connected shops and palm fountain square / district:bookSign
+PASS 94 Clinic infill / connected shops and palm fountain square / district:palmBark
+PASS 95 Clinic infill / connected shops and palm fountain square / district:palmFrond
+PASS 96 Clinic infill / connected shops and palm fountain square / district:phones
+PASS 97 Clinic infill / connected shops and palm fountain square / district:phoneSign
+PASS 98 Clinic infill / connected shops and palm fountain square / district:travel
+PASS 99 Clinic infill / connected shops and palm fountain square / district:travelSign
+PASS 100 Clinic infill / connected shops and palm fountain square / sign:photo
+PASS 101 Clinic infill / connected shops and palm fountain square / district:pavers
+PASS 102 Clinic infill / connected shops and palm fountain square / district:poolTile
+PASS 103 Clinic infill / connected shops and palm fountain square / fountainWater
+PASS 104 Clinic infill / connected shops and palm fountain square / fountainJet
+PASS 105 Clinic infill / connected shops and palm fountain square / foliage
+PASS 106 three-layer-dynamic-overcast
+Linked 107 programs

@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+
+asset type: single photorealistic botanical cutout for a generic geometry alpha-card palm frond in a 3D game
+object: one complete green date-palm feather frond, from the cut base of its slender petiole through the long central rachis to the pointed tip; many finely separated long narrow leaflets on both sides
+composition: the entire single frond fits fully inside a landscape frame with a small clear margin; longest axis horizontal, base at left and tapered tip at right; long central rachis gently curving; leaflets naturally fan out above and below the rachis with transparent gaps clearly visible
+background: genuinely transparent background with true alpha channel, including all spaces between leaflets
+style: realistic detailed botanical photograph with natural green color, fine leaf veins and gently varied greens, readable silhouette suitable for an alpha-card texture
+lighting: soft even diffuse light, no directional cast shadow
+aspect ratio: 2:1 landscape
+Avoid: trunk, other leaves, second frond, entire palm tree, ground, backdrop, shadow, cropped leaf tips, cropped petiole base, checkerboard painted into image, opaque white background, text, labels, logos, watermarks, excessive yellow, oversaturation, oversharpening.

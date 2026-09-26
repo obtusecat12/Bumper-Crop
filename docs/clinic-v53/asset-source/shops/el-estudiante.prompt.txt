@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: a genuinely detailed photographic rectified shop-window interior texture for the modest Mexican neighborhood bookstore and stationery shop El Estudiante.
+scene: a fullbleed view through clear storefront glass into a compact real bookstore. Tall, densely stocked shelves hold hundreds of distinct narrow book spines, spiral notebooks, paper folders, school supplies and stationery packets. A small copy counter has a recognizable office photocopier, neat paper stacks and pens; low display racks contain colorful book and notebook covers. Warm-white ceiling spotlights and a tiled floor extend into the shop, creating visible interior depth.
+framing: landscape 3:2 image. Camera level and directly perpendicular to the window plane; vertical shelving remains vertical, front display edges remain horizontal. Crop exactly to the glass opening; the whole image is usable as an interior glass material in a 3D shop window. Merchandise and shelves fill the width and height, with a narrow glimpse of ceiling and floor. No surrounding exterior facade, fascia, signage board, awning, pavement or street.
+glass: subtle, low-opacity daylight sky reflection across upper glass only; interior detail stays clearly visible. Slight natural glass smudges, subdued cool daylight from a blue awning outside, warm neutral interior lamps.
+photo quality and vibe: highly detailed natural-location photograph, raw realistic materials, fine individual merchandise details, convincing human-scale interior depth, no oversharpening, no oversaturation, 2k. Match the realistic sunny Latin American street-store character of a small bookstore.
+text: only tiny plausible book-cover and packaging print; no large typography is needed.
+aspect ratio: 3:2.
+Avoid: people, portraits, HUD, compass, collage, multiple panels, a complete building, outer masonry, large store-name fascia, excessive yellow tint, opaque mirror glass, strong glare, illustration, cartoon, simplistic blocks, CGI render appearance.

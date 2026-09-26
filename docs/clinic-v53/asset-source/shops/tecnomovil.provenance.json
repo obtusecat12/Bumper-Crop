@@ -1,0 +1,21 @@
+{
+  "asset": "tecnomovil",
+  "mode": "built-in image_gen",
+  "source_reference": "/workspace/scratch/91e9848e2f36/upload/image(20260926-115756).png",
+  "reference_role": "observed visual reference for photographic street-shop character",
+  "generated_source": "/workspace/scratch/91e9848e2f36/generated_images/exec-89df9f13-5830-4d92-be4c-84a2c314bf99.png",
+  "original": "/workspace/scratch/91e9848e2f36/v53-assets/shops/tecnomovil.original.png",
+  "original_dimensions": [
+    1536,
+    1024
+  ],
+  "game_texture": "/workspace/scratch/91e9848e2f36/v53-assets/shops/tecnomovil.webp",
+  "game_dimensions": [
+    768,
+    512
+  ],
+  "postprocessing": "resize only, Lanczos, WebP quality 90",
+  "prompt_file": "tecnomovil.prompt.txt",
+  "guidance_url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "guidance_freshly_read_before_generation": true
+}

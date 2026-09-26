@@ -1,10 +1,10 @@
 // Deterministic road stationing. All topology and attachment work is worker-only.
-import {macroPlan,parcelHash} from './patchwork.js?v=52';
-import {height,random,stringSeed,pondShoreDistance,compoundPlanner} from './world.js?v=52';
-import {farmMask,FARM} from './farm-layout.js?v=52';
-import {KEPHART_ACCESS_SEGMENTS} from './farm-access.js?v=52';
-import {REFERENCE_BARN} from './reference-barn-layout.js?v=52';
-import {ARRIVAL_COMPONENTS} from './arrival-compound.js?v=52';
+import {macroPlan,parcelHash} from './patchwork.js?v=53';
+import {height,random,stringSeed,pondShoreDistance,compoundPlanner} from './world.js?v=53';
+import {farmMask,FARM} from './farm-layout.js?v=53';
+import {KEPHART_ACCESS_SEGMENTS} from './farm-access.js?v=53';
+import {REFERENCE_BARN} from './reference-barn-layout.js?v=53';
+import {ARRIVAL_COMPONENTS} from './arrival-compound.js?v=53';
 const cache=new Map(),TAU=Math.PI*2;
 const floor=(x,n)=>x>=0n?x/n:(x-n+1n)/n,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const unit=id=>parcelHash(id)/4294967296;

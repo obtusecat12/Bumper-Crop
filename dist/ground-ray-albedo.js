@@ -1,5 +1,5 @@
-import {shoreGrassCover} from './world.js?v=52';
-import {pondHabitat} from './lake-shape.js?v=52';
+import {shoreGrassCover} from './world.js?v=53';
+import {pondHabitat} from './lake-shape.js?v=53';
 /* Low-frequency CPU counterpart of ground.js's material, for diffuse rays.
  * Use initialized texture means in linear RGB. Spatial masks, macro noise,
  * meadow mix, yards, and shore colors follow the actual visible shader.

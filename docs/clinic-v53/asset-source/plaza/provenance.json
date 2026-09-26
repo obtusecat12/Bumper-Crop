@@ -1,0 +1,93 @@
+{
+  "created_utc": "2026-09-26T12:09:08.096452+00:00",
+  "external_prompt_guidance": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "external_prompt_guidance_freshly_fetched_before_every_generation": true,
+  "guidance_snapshots": [
+    "prompt-skill-01.md",
+    "prompt-skill-02.md",
+    "prompt-skill-03.md",
+    "prompt-skill-04.md"
+  ],
+  "assets": [
+    {
+      "asset": "plaza-pavers",
+      "generator": "built-in image_gen.imagegen",
+      "transparent_background": false,
+      "original_path": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/plaza-pavers-original.png",
+      "original_source_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-0809169a-857b-4ec5-b405-307b49edfac1.png",
+      "game_path": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/plaza-pavers-512.png",
+      "prompt_file": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/prompt-01-pavers.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nasset type: seamless repeating game texture, flat diffuse albedo\nobject: tidy small 30 cm plaza pavers in pale warm beige and restrained reddish terracotta, suitable for a 1970s\u20131990s Latin American retail street plaza\ncomposition: square surface patch filled edge to edge with regular small paving modules and restrained narrow mortar joints; exact orthographic top-down view; seamless tiling across all four edges\nmaterial: lightly aged but cared-for matte mineral pavers, subtle realistic stone and fired-clay grain, modest natural color variation, tidy and usable rather than ruined\nlighting: completely flat diffuse illumination; no directional lighting, no cast shadows, no highlights baked into the texture\naspect ratio: 1:1\nAvoid: perspective, buildings, objects, plants, litter, leaves, dramatic cracks, ruin, wet patches, large stains, strong dark outlines, writing, text, logos, watermarks, excessive yellow, oversaturation, oversharpening.",
+      "postprocessing": "Pillow LANCZOS resize only; no creative edits",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "sha256": "38f4f596fea08b53aea02d4cfcabf701fefa6ccf5ccbd83ccedba31a89b1a396"
+    },
+    {
+      "asset": "fountain-tiles",
+      "generator": "built-in image_gen.imagegen",
+      "transparent_background": false,
+      "original_path": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/fountain-tiles-original.png",
+      "original_source_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-8c0d3902-e87f-45b7-abdf-058960109fae.png",
+      "game_path": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/fountain-tiles-512.png",
+      "prompt_file": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/prompt-02-fountain-tiles.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nasset type: seamless repeating game texture, dry diffuse albedo for fountain pool interior\nobject: small muted turquoise and teal square ceramic fountain tiles with gently worn grout, suitable for a 1970s\u20131990s Latin American retail street plaza\ncomposition: square patch entirely covered with an even grid of small ceramic tile modules, regular narrow grout joints; exact orthographic top-down view, no perspective; seamless repeat across all four edges\nmaterial: realistic slightly aged ceramic tiles, restrained subtle teal and turquoise variation, worn pale mineral grout; dry surface because animated shader water will be applied later\nlighting: completely flat diffuse illumination with no directional light or cast shadows\naspect ratio: 1:1\nAvoid: water, waves, ripples, caustics, specular glints, perspective, objects, leaves, debris, heavy damage, excessive stains, text, logos, watermarks, oversaturation, oversharpening.",
+      "postprocessing": "Pillow LANCZOS resize only; no creative edits",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "sha256": "82c8a08f391c3a250a4c69763d3cbdd844d4f73a28c2e4880cb05c4362f0c9dc"
+    },
+    {
+      "asset": "palm-bark",
+      "generator": "built-in image_gen.imagegen",
+      "transparent_background": false,
+      "original_path": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/palm-bark-original.png",
+      "original_source_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-253a45a6-345d-4a66-9461-1fb0f3bd9dc0.png",
+      "game_path": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/palm-bark-512.png",
+      "prompt_file": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/prompt-03-palm-bark.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nasset type: seamless repeating game texture, palm trunk bark diffuse albedo\nobject: realistic date-palm trunk bark photograph showing horizontal growth rings and the cut scars of old fronds, a roughly one-metre square patch of bark surface\ncomposition: square bark patch filled edge to edge, straight-on orthographic surface view; seamless across all four edges; bark horizontal ring pattern continues naturally around a cylindrical trunk when wrapped\nmaterial: muted warm gray-brown fibrous palm bark, closely observed short dry fibers, layered ring ridges and restrained diamond-like cut frond scars, natural but cared-for city palm\nlighting: even flat diffuse illumination, no directional lighting, no cast shadows or baked specular highlights\naspect ratio: 1:1\nAvoid: whole tree, foliage, ground, background scene, trunk silhouette or curved outer edges, perspective, dramatic dark crevices, moss, text, logos, watermarks, oversaturation, oversharpening.",
+      "postprocessing": "Pillow LANCZOS resize only; no creative edits",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "sha256": "80ea787f4a523e5586e0ff34b8abc34e8beaa3a771add61163c1acd5cea297a5"
+    },
+    {
+      "asset": "palm-frond",
+      "generator": "built-in image_gen.imagegen",
+      "transparent_background": true,
+      "original_path": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/palm-frond-original.png",
+      "original_source_path": "/workspace/scratch/91e9848e2f36/generated_images/exec-2141fe4e-838e-4ba3-8932-fa95fbf8bbc6.png",
+      "game_path": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/palm-frond-1024x512.png",
+      "prompt_file": "/workspace/scratch/91e9848e2f36/v53-assets/plaza/prompt-04-palm-frond.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nasset type: single photorealistic botanical cutout for a generic geometry alpha-card palm frond in a 3D game\nobject: one complete green date-palm feather frond, from the cut base of its slender petiole through the long central rachis to the pointed tip; many finely separated long narrow leaflets on both sides\ncomposition: the entire single frond fits fully inside a landscape frame with a small clear margin; longest axis horizontal, base at left and tapered tip at right; long central rachis gently curving; leaflets naturally fan out above and below the rachis with transparent gaps clearly visible\nbackground: genuinely transparent background with true alpha channel, including all spaces between leaflets\nstyle: realistic detailed botanical photograph with natural green color, fine leaf veins and gently varied greens, readable silhouette suitable for an alpha-card texture\nlighting: soft even diffuse light, no directional cast shadow\naspect ratio: 2:1 landscape\nAvoid: trunk, other leaves, second frond, entire palm tree, ground, backdrop, shadow, cropped leaf tips, cropped petiole base, checkerboard painted into image, opaque white background, text, labels, logos, watermarks, excessive yellow, oversaturation, oversharpening.",
+      "postprocessing": "Pillow LANCZOS resize only; no creative edits",
+      "size": [
+        1024,
+        512
+      ],
+      "mode": "RGBA",
+      "sha256": "0a570dd8239be80a901e1964a8bb26402bfbb245ca5ae473028a657d7346b5cf",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        20,
+        1024,
+        512
+      ],
+      "transparent_pixel_fraction": 0.5399532318115234,
+      "opaque_pixel_fraction": 0.0056705474853515625
+    }
+  ]
+}

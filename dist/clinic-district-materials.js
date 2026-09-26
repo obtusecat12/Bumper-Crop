@@ -1,0 +1,23 @@
+import * as T from './vendor/three.module.min.js';
+import {URBAN_TILE_SIZE} from './urban-materials.js?v=53';
+export const DISTRICT_TEXTURES={
+ pavers:[512,512,true,'plaza-pavers.webp'],poolTile:[512,512,true,'fountain-tile.webp'],palmBark:[512,512,true,'palm-bark.webp'],palmFrond:[1024,512,false,'palm-frond.png'],
+ books:[768,512,false,'el-estudiante.webp'],phones:[768,512,false,'tecnomovil.webp'],travel:[768,512,false,'sol-y-mundo.webp'],
+ optica:[1536,384,false,'optica.webp'],pharmacy:[1536,384,false,'pharmacy.webp'],laundry:[1536,384,false,'laundry.webp'],beauty:[1536,384,false,'beauty.webp'],bookSign:[1536,384,false,'bookstore.webp'],phoneSign:[1536,384,false,'phones.webp'],travelSign:[1536,384,false,'travel.webp']
+};
+export const districtTextures={};
+for(const[key,[w,h,repeat]]of Object.entries(DISTRICT_TEXTURES)){const t=new T.DataTexture(new Uint8Array([188,185,170,255]),1,1);t.name='Clinic district / '+key;t.colorSpace=T.SRGBColorSpace;t.flipY=true;t.generateMipmaps=true;t.minFilter=T.LinearMipmapLinearFilter;t.magFilter=T.LinearFilter;t.anisotropy=8;t.wrapS=t.wrapT=repeat?T.RepeatWrapping:T.ClampToEdgeWrapping;t.needsUpdate=true;districtTextures[key]=t;}
+let pending;
+async function decode(url,w,h){const r=await fetch(url);if(!r.ok)throw Error('District texture '+url.pathname+': '+r.status);const im=await createImageBitmap(await r.blob()),c=new OffscreenCanvas(w,h),ctx=c.getContext('2d');ctx.drawImage(im,0,0,w,h);im.close();return{data:new Uint8Array(ctx.getImageData(0,0,w,h).data),width:w,height:h};}
+export function initializeDistrictTextures(load=decode){return pending||(pending=Promise.all(Object.entries(DISTRICT_TEXTURES).map(async([key,[w,h,,file]])=>{districtTextures[key].image=await load(new URL('./textures/clinic-v53/'+file,import.meta.url),w,h);districtTextures[key].needsUpdate=true;})).catch(e=>{pending=null;throw e;}));}
+export const fountainClock={value:0},fountainCenter={value:new T.Vector2()};
+export function addDistrictMaterials(m){
+ for(const[key,t]of Object.entries(districtTextures)){const leaf=key==='palmFrond',shop=['books','phones','travel'].includes(key),sign=['optica','pharmacy','laundry','beauty','bookSign','phoneSign','travelSign'].includes(key);m['district:'+key]=new T.MeshStandardMaterial({map:t,color:0xffffff,roughness:shop?.29:leaf?.87:sign?.67:.86,metalness:shop?.12:0,vertexColors:true,side:leaf||shop||sign?T.DoubleSide:T.FrontSide,alphaTest:leaf?.34:0,...(shop?{emissiveMap:t,emissive:0xffffff,emissiveIntensity:.16}:{})});m['district:'+key].name='Clinic district / '+key;m['district:'+key].userData.urbanShared=true;}
+ Object.assign(URBAN_TILE_SIZE,{'district:pavers':3,'district:poolTile':1.28,'district:palmBark':1.5});
+ const water=m.fountainWater=new T.MeshStandardMaterial({color:0x469d9b,roughness:.16,metalness:.35,vertexColors:true});water.name='Fountain / rippling water';water.userData.urbanShared=true;
+ water.onBeforeCompile=s=>{s.uniforms.uFountainTime=fountainClock;s.uniforms.uFountainCenter=fountainCenter;s.vertexShader='varying vec3 vPoolLocal;\n'+s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvPoolLocal=position;');s.fragmentShader='uniform float uFountainTime;uniform vec2 uFountainCenter; varying vec3 vPoolLocal;\n'+s.fragmentShader;s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
+ vec2 p=vPoolLocal.xz-uFountainCenter;float t=uFountainTime;vec2 wave=vec2(sin(p.x*3.8+p.y*2.2-t*1.5),cos(p.y*4.3-p.x*1.8+t*1.25))*.10;normal=normalize(normal+(viewMatrix*vec4(wave.x,0.,wave.y,0.)).xyz);`);s.fragmentShader=s.fragmentShader.replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+ float ripple=.5+.5*sin(length(vPoolLocal.xz-uFountainCenter)*16.-uFountainTime*2.2);float glint=pow(ripple,18.);reflectedLight.indirectSpecular+=vec3(.30,.44,.46)*(.12+glint*.16);`);};water.customProgramCacheKey=()=> 'clinic-pool-ripples-v53';
+ m.fountainJet=new T.MeshStandardMaterial({color:0xb9e8dc,roughness:.18,metalness:.25,vertexColors:true,transparent:true,opacity:.74,depthWrite:false});m.fountainJet.name='Fountain / thin falling streams';m.fountainJet.userData.urbanShared=true;m.fountainJet.onBeforeCompile=s=>{s.uniforms.uFountainTime=fountainClock;s.vertexShader='varying float vJetHeight;\n'+s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvJetHeight=position.y;');s.fragmentShader='uniform float uFountainTime;varying float vJetHeight;\n'+s.fragmentShader;s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\ndiffuseColor.a*=.80+.20*sin(vJetHeight*29.+uFountainTime*7.);');};m.fountainJet.customProgramCacheKey=()=> 'fountain-flow-v53';
+ return m;
+}

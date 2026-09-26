@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+
+asset type: seamless repeating game texture, dry diffuse albedo for fountain pool interior
+object: small muted turquoise and teal square ceramic fountain tiles with gently worn grout, suitable for a 1970s–1990s Latin American retail street plaza
+composition: square patch entirely covered with an even grid of small ceramic tile modules, regular narrow grout joints; exact orthographic top-down view, no perspective; seamless repeat across all four edges
+material: realistic slightly aged ceramic tiles, restrained subtle teal and turquoise variation, worn pale mineral grout; dry surface because animated shader water will be applied later
+lighting: completely flat diffuse illumination with no directional light or cast shadows
+aspect ratio: 1:1
+Avoid: water, waves, ripples, caustics, specular glints, perspective, objects, leaves, debris, heavy damage, excessive stains, text, logos, watermarks, oversaturation, oversharpening.
