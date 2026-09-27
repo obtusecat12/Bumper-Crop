@@ -1,0 +1,202 @@
+[
+  {
+    "id": "ad-021",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-021.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American ghost sign, square 1:1.\nPrimary request: Fictional \"Coastal Coffee\" wall advertisement with exact copy \"FRESH EVERY MORNING\".\nScene/backdrop: full-bleed faded brick and hand-painted sign substrate, seam-free rectangular face.\nSubject: hand-painted coffee cup, large period lettering, an authentic worn burgundy, oatmeal, and brown composition.\nStyle/medium: believable 1970s American outdoor ad design; realistic early-2000s PS2 photographic diffuse game texture, mildly soft source imagery; tasteful faded paint and material wear, no excessive damage.\nComposition/framing: orthographic head-on, canvas filled edge to edge, graphic and lettering balanced across the square.\nColor palette: worn burgundy, oatmeal, brown.\nText (verbatim): \"Coastal Coffee\" and \"FRESH EVERY MORNING\" only; spell accurately and legibly.\nConstraints: original fictional brand/layout; flat print face only; no surrounding buildings, poles, installed billboard photo, perspective, external frame, drop shadow, UI, watermark, unrelated logos or extra text; no people; no anatomical anomaly.\nAvoid: overly sharp digital vector finish, novelty pixel art, excessive distress, clutter, glare.",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-022",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-022.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American poster ad, wide 2:1.\nPrimary request: Fictional \"Pioneer Stereo\" advertisement with exact copy \"FEEL EVERY NOTE\".\nScene/backdrop: full-bleed warm chocolate, orange, and cream printed poster.\nSubject: beautiful period product photograph of a 1970 receiver and turntable, analog knobs and platter, with expressive period typography.\nStyle/medium: believable 1970s American outdoor ad design; realistic early-2000s PS2 photographic diffuse game texture, mildly soft source imagery; tasteful faded print and material wear.\nComposition/framing: orthographic head-on, canvas filled edge to edge; product imagery balanced with large readable copy.\nColor palette: chocolate, orange, cream.\nText (verbatim): \"Pioneer Stereo\" and \"FEEL EVERY NOTE\" only; spell accurately and legibly.\nConstraints: original fictional brand/layout; flat print face only; no surrounding buildings, poles, installed billboard photo, perspective, external frame, drop shadow, UI, watermark, unrelated logos or extra text; no people.\nAvoid: overly sharp digital vector finish, novelty pixel art, excessive distress, clutter, glare.",
+    "dimensions": [
+      1774,
+      887
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-023",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-023.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American fascia advertisement; very wide aspect ratio 3:1.\nPrimary request: Original fictional \"Palm Springs Cleaners\" ad with exact copy \"ONE HOUR SERVICE\".\nScene/backdrop: full-bleed slightly aged painted or vinyl storefront sign face, no exterior environment beyond the graphic substrate.\nSubject: heavy rounded serif emblem; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. Keep all main text and imagery within the central 50% of canvas height for horizontal fascia cropping.\nColor palette: brown cream burnt orange.\nText (verbatim): \"Palm Springs Cleaners\" and \"ONE HOUR SERVICE\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      2172,
+      724
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-024",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-024.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American blade advertisement; tall aspect ratio 1:3.\nPrimary request: Original fictional \"Velvet Lounge\" ad with exact copy \"LIVE MUSIC\".\nScene/backdrop: full-bleed painted enamel or translucent acrylic face with contained irregular neon-inspired motifs, no exterior environment beyond the graphic substrate.\nSubject: script neon and stylized piano key; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: wine amber black.\nText (verbatim): \"Velvet Lounge\" and \"LIVE MUSIC\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      724,
+      2172
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-025",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-025.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American bulletin advertisement; very wide aspect ratio 3:1.\nPrimary request: Original fictional \"Country Cluck\" ad with exact copy \"BRING HOME A BUCKET\".\nScene/backdrop: full-bleed faded period printed ad surface, no exterior environment beyond the graphic substrate.\nSubject: illustrated chef chicken bucket family feast; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period product photography or painted illustration as appropriate to subject.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. Keep all text within central 80% of height for billboard framing.\nColor palette: red ochre cream.\nText (verbatim): \"Country Cluck\" and \"BRING HOME A BUCKET\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      2172,
+      724
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-026",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-026.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American poster advertisement; wide aspect ratio 2:1.\nPrimary request: Original fictional \"Suncraft Color Film\" ad with exact copy \"KEEP THIS SUMMER\".\nScene/backdrop: full-bleed faded period printed ad surface, no exterior environment beyond the graphic substrate.\nSubject: 35mm film box and slightly faded beach snapshot; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period product photography or painted illustration as appropriate to subject.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: gold red black.\nText (verbatim): \"Suncraft Color Film\" and \"KEEP THIS SUMMER\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      1774,
+      887
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-027",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-027.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American ghost advertisement; square aspect ratio 1:1.\nPrimary request: Original fictional \"Mercury Hardware\" ad with exact copy \"TOOLS FOR EVERY JOB\".\nScene/backdrop: full-bleed seam-free faded brick and painted letters, no exterior environment beyond the graphic substrate.\nSubject: painted wrench and stacked slab serif letters; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: dull blue cream rust.\nText (verbatim): \"Mercury Hardware\" and \"TOOLS FOR EVERY JOB\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-028",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-028.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American pylon advertisement; portrait aspect ratio 2:3.\nPrimary request: Original fictional \"Desert Star Center\" ad with exact copy \"PHARMACY \u00b7 LIQUOR \u00b7 DINER\".\nScene/backdrop: full-bleed weathered acrylic sign face and integral tenant board zones, no exterior environment beyond the graphic substrate.\nSubject: three tenant boards and replaceable reader letters; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: orange brown ivory.\nText (verbatim): \"Desert Star Center\" and \"PHARMACY \u00b7 LIQUOR \u00b7 DINER\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-029",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-029.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American fascia advertisement; very wide aspect ratio 3:1.\nPrimary request: Original fictional \"Acorn Family Restaurant\" ad with exact copy \"GOOD FOOD GOOD COMPANY\".\nScene/backdrop: full-bleed slightly aged painted or vinyl storefront sign face, no exterior environment beyond the graphic substrate.\nSubject: rounded Cooper-like large letters; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. Keep all main text and imagery within the central 50% of canvas height for horizontal fascia cropping.\nColor palette: ochre forest green cream.\nText (verbatim): \"Acorn Family Restaurant\" and \"GOOD FOOD GOOD COMPANY\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      2172,
+      724
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-030",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-030.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American googie advertisement; square aspect ratio 1:1.\nPrimary request: Original fictional \"Canyon Bowl\" ad with exact copy \"24 LANES\".\nScene/backdrop: full-bleed flat painted enamel surface with irregular boomerang/starburst graphic shapes, no exterior environment beyond the graphic substrate.\nSubject: boomerang bowling lane starburst enamel sign; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: orange teal cream.\nText (verbatim): \"Canyon Bowl\" and \"24 LANES\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-031",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-031.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American poster advertisement; wide aspect ratio 2:1.\nPrimary request: Original fictional \"Union Dial\" ad with exact copy \"CALL HOME TONIGHT\".\nScene/backdrop: full-bleed faded period printed ad surface, no exterior environment beyond the graphic substrate.\nSubject: rotary desk telephone telephone cord; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period product photography or painted illustration as appropriate to subject.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: blue gray white.\nText (verbatim): \"Union Dial\" and \"CALL HOME TONIGHT\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      1774,
+      887
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-032",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-032.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American bulletin advertisement; very wide aspect ratio 3:1.\nPrimary request: Original fictional \"Royal Wagon\" ad with exact copy \"ROOM FOR EVERYTHING\".\nScene/backdrop: full-bleed faded period printed ad surface, no exterior environment beyond the graphic substrate.\nSubject: 1975 wood-paneled station wagon mountains painting; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period product photography or painted illustration as appropriate to subject.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. Keep all text within central 80% of height for billboard framing.\nColor palette: brown ochre pale sky.\nText (verbatim): \"Royal Wagon\" and \"ROOM FOR EVERYTHING\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      2172,
+      724
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-033",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-033.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American fascia advertisement; very wide aspect ratio 3:1.\nPrimary request: Original fictional \"Village Video Sound\" ad with exact copy \"TAPES & RECORDS\".\nScene/backdrop: full-bleed slightly aged painted or vinyl storefront sign face, no exterior environment beyond the graphic substrate.\nSubject: cassette vinyl illustration broad horizontal bands; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. Keep all main text and imagery within the central 50% of canvas height for horizontal fascia cropping.\nColor palette: brown rust cream.\nText (verbatim): \"Village Video Sound\" and \"TAPES & RECORDS\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      2172,
+      724
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-034",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-034.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American monument advertisement; very wide aspect ratio 3:1.\nPrimary request: Original fictional \"Westhaven Savings\" ad with exact copy \"A PLACE TO GROW\".\nScene/backdrop: full-bleed stone-look sign surface, no exterior environment beyond the graphic substrate.\nSubject: stone look restrained corporate geometric tree; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: olive charcoal ivory.\nText (verbatim): \"Westhaven Savings\" and \"A PLACE TO GROW\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      2172,
+      724
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-035",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-035.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American ghost advertisement; square aspect ratio 1:1.\nPrimary request: Original fictional \"Blue Ribbon Soap\" ad with exact copy \"A CLEANER TOMORROW\".\nScene/backdrop: full-bleed seam-free faded brick and painted letters, no exterior environment beyond the graphic substrate.\nSubject: large soap bar overlapping older painted lettering; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: faded teal cream red.\nText (verbatim): \"Blue Ribbon Soap\" and \"A CLEANER TOMORROW\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-036",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-036.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American blade advertisement; tall aspect ratio 1:3.\nPrimary request: Original fictional \"The Brass Key\" ad with exact copy \"ROOMS\".\nScene/backdrop: full-bleed painted enamel or translucent acrylic face with contained irregular neon-inspired motifs, no exterior environment beyond the graphic substrate.\nSubject: antique key and retro condensed letters; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: orange brown cream.\nText (verbatim): \"The Brass Key\" and \"ROOMS\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      724,
+      2172
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-037",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-037.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American poster advertisement; wide aspect ratio 2:1.\nPrimary request: Original fictional \"Campcrest\" ad with exact copy \"TAKE THE LONG WEEKEND\".\nScene/backdrop: full-bleed faded period printed ad surface, no exterior environment beyond the graphic substrate.\nSubject: canvas tent and roadside campground print ad; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period product photography or painted illustration as appropriate to subject.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: orange olive tan.\nText (verbatim): \"Campcrest\" and \"TAKE THE LONG WEEKEND\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      1774,
+      887
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-038",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-038.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American bulletin advertisement; very wide aspect ratio 3:1.\nPrimary request: Original fictional \"Vista Cruises\" ad with exact copy \"THE HORIZON IS YOURS\".\nScene/backdrop: full-bleed faded period printed ad surface, no exterior environment beyond the graphic substrate.\nSubject: 1970 cruise ship sea travel illustration; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period product photography or painted illustration as appropriate to subject.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. Keep all text within central 80% of height for billboard framing.\nColor palette: navy turquoise cream.\nText (verbatim): \"Vista Cruises\" and \"THE HORIZON IS YOURS\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      2172,
+      724
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-039",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-039.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American fascia advertisement; very wide aspect ratio 3:1.\nPrimary request: Original fictional \"Seventy Seven Records\" ad with exact copy \"BUY SELL TRADE\".\nScene/backdrop: full-bleed slightly aged painted or vinyl storefront sign face, no exterior environment beyond the graphic substrate.\nSubject: groovy bold letterforms vinyl disk; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. Keep all main text and imagery within the central 50% of canvas height for horizontal fascia cropping.\nColor palette: purple orange black.\nText (verbatim): \"Seventy Seven Records\" and \"BUY SELL TRADE\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      2172,
+      724
+    ],
+    "status": "success"
+  },
+  {
+    "id": "ad-040",
+    "path": "/workspace/scratch/91e9848e2f36/v55-assets/group-2/ad-040.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed face for a 1970s American pylon advertisement; portrait aspect ratio 2:3.\nPrimary request: Original fictional \"Valley Mart\" ad with exact copy \"OPEN 7 DAYS\".\nScene/backdrop: full-bleed weathered acrylic sign face and integral tenant board zones, no exterior environment beyond the graphic substrate.\nSubject: rounded rectangular plastic main panel tenant inserts; authentic period lettering and a distinctive original layout.\nStyle/medium: believable 1970s American outdoor advertising design, realistic early-2000s PS2 photographic diffuse game texture with mildly soft source imagery, tasteful faded print/material wear, no excessive damage; period painted and sign-making craft.\nComposition/framing: orthographic head-on, face fills canvas edge-to-edge. \nColor palette: red chocolate cream.\nText (verbatim): \"Valley Mart\" and \"OPEN 7 DAYS\" only, spelled accurately and fully legible.\nConstraints: clean composition, strong color direction, flat graphic face for 3D mapping, fictional/parody brand, original layout; no installed sign photograph, pole, buildings, camera angle, surrounding frame, external drop shadow, UI, watermark, unrelated logos or extra text. No anatomical anomalies.\nAvoid: novelty pixel art, sharp modern digital vectors, excessive damage, clutter and glare.",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "status": "success"
+  }
+]

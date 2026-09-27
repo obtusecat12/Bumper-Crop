@@ -1,0 +1,14 @@
+{
+  "singleOwnerRoadSamples": 125,
+  "visibleWalkSurfaceSamples": 8,
+  "clearPedestrianSamples": 981,
+  "occupiedParcels": 18,
+  "newBuildings": 44,
+  "oldMassIntersection": "none",
+  "districtTextureFiles": 22,
+  "fabric": {
+    "triangles": 170468,
+    "draws": 36,
+    "parts": 13050
+  }
+}

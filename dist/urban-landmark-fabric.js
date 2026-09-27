@@ -1,13 +1,13 @@
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch} from './urban-batch.js?v=54';
-import {URBAN_TILE_SIZE} from './urban-materials.js?v=54';
-import {addStreetwallBuilding} from './urban-streetwall.js?v=54';
-import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=54';
-import {CITY_ORIGIN,CITY_ANGLE,cityToWorld} from './urban-layout.js?v=54';
-import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=54';
-import {subtractConvex} from './urban-ground-ownership.js?v=54';
-import * as P from './urban-props.js?v=54';
-import * as S from './urban-smallprops.js?v=54';
+import {UrbanBatch} from './urban-batch.js?v=55';
+import {URBAN_TILE_SIZE} from './urban-materials.js?v=55';
+import {addStreetwallBuilding} from './urban-streetwall.js?v=55';
+import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=55';
+import {CITY_ORIGIN,CITY_ANGLE,cityToWorld} from './urban-layout.js?v=55';
+import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=55';
+import {subtractConvex,TRANSITION_TERRAIN_QUADS,APPROACH_GROUND_QUADS} from './urban-ground-ownership.js?v=55';
+import * as P from './urban-props.js?v=55';
+import * as S from './urban-smallprops.js?v=55';
 const PI=Math.PI,Y=EXIT_CITY_Y,cp=exitPoint(282),CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);
 const frames={city:{...CITY_ORIGIN,ry:CITY_ANGLE,toWorld:cityToWorld},clinic:{...CLINIC_ORIGIN,ry:CLINIC_ANGLE,toWorld:clinicToWorld}};
 export const LANDMARK_FABRIC_PARCELS=[
@@ -52,7 +52,7 @@ export function createLandmarkFabric(mats){
   const ext={x0,x1,z0,z1};if(front==='north'){ext.z0-=back;ext.z1+=3.5;}if(front==='south'){ext.z0-=3.5;ext.z1+=back;}if(front==='east'){ext.x0-=back;ext.x1+=3.5;}if(front==='west'){ext.x0-=3.5;ext.x1+=back;}
   slab(frame,key,ext.x0,ext.x1,ext.z0,ext.z1);const footprint=worldPolygon(frame,x0,x1,z0,z1).map(p=>[p[0],p[2]]);parcels.push({...parcel,footprint,buildings:n});
   withFrame(frame,()=>{b.push((x0+x1)/2,.15,(z0+z1)/2,ry);
-   for(let i=0;i<n;i++){const u=-w/2+(i+.5)*step,type=['two_story_shops','corner_market','photo_studio','bank_branch','brick_walkup','laundromat'][(seed+i)%6],storeys=floors+Number(i%3===1);b.push(u,0,0);addStreetwallBuilding(b,{type,w:step-.018,d,floors:storeys,seed:seed+137*i,lod:1,retailBack});const p=b.point(0,0,0);records.push({type,x:p.x,z:p.z,w:step-.018,d,ry:b.frame.ry,floors:storeys,frame,parcel:parcels.length-1,retailBack});b.pop();}
+   for(let i=0;i<n;i++){const u=-w/2+(i+.5)*step,type=['two_story_shops','corner_market','photo_studio','bank_branch','brick_walkup','laundromat'][(seed+i)%6],heroWall=frame==='clinic'&&seed===54421&&i===1,storeys=heroWall?14:floors+Number(i%3===1);b.push(u,0,0);addStreetwallBuilding(b,{type:heroWall?'brutalist_slab':type,w:step-.018,d,floors:storeys,seed:seed+137*i,lod:1,retailBack,heroWall});const p=b.point(0,0,0);records.push({type,x:p.x,z:p.z,w:step-.018,d,ry:b.frame.ry,floors:storeys,frame,parcel:parcels.length-1,retailBack});b.pop();}
    // Two-storey frontage can still have generous footways: trunks and poles use the curb strip.
    for(let u=-w/2+6.5;u<w/2-3;u+=13)place(b,u,0,d/2+2.65,0,P.addStreetTree,{seed:seed+Math.round(u*3),scale:.62});
    place(b,-w/2+2.2,0,d/2+2.7,0,P.addHydrant);place(b,w/2-2.0,0,d/2+2.6,PI/2,P.addStreetLight,{height:7.6,arm:1.8});if(seed%3===0)place(b,w/2-4.1,0,d/2+2.5,0,P.addTrashBin);
@@ -69,7 +69,8 @@ export function createLandmarkFabric(mats){
  slab('clinic','photoGranite',71.5,76,-29,98);slab('clinic','photoGranite',84,88,9,75.5);slab('clinic','district:pavers',70,71.5,18.4,77,.12);
  // All flat pieces are unioned geometrically, including differently oriented parcel boundaries.
  // Claim road footprints and curb ramps first, then subtract every earlier pavement owner.
- const holes=LANDMARK_ROAD_POLYGONS.map(q=>q.polygon),rampHoles=ramps.map(q=>q.poly.map(p=>[p[0],p[2]]));
+ const corridorHoles=[...TRANSITION_TERRAIN_QUADS,...APPROACH_GROUND_QUADS].map(poly=>poly.map(([x,z])=>{const p=cityToWorld(x,z);return[p.x,p.z];}));
+ const holes=[...LANDMARK_ROAD_POLYGONS.map(q=>q.polygon),...corridorHoles],rampHoles=ramps.map(q=>q.poly.map(p=>[p[0],p[2]]));
  for(const q of ramps){emitSlab(b,q.key,q.poly);accepted.push(q.poly.map(p=>[p[0],p[2]]));}
  for(const q of pavings){let pieces=[q.poly];for(const h of [...holes,...rampHoles,...accepted])pieces=pieces.flatMap(p=>subtractConvex(p,h)).filter(p=>area(p)>1e-7);for(const p of pieces){emitSlab(b,q.key,p);const polygon=p.map(v=>[v[0],v[2]]);accepted.push(polygon);b.walks.push({polygon,y:q.top});}}
  // The replaced part of the old cobble court has exactly one asphalt owner.

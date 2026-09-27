@@ -1,10 +1,12 @@
-import {FABRIC_GROUND_POLYGON,HOPE_GROUND_RECTS,subtractRectangles,subtractConvex,APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,DISTRICT_GROUND_POLYGONS} from './urban-ground-ownership.js?v=54';
+import {adFor} from './advertising-assets.js?v=55';
+import {poleSign,monumentSign,posterStand,googieSign} from './advertising-structures.js?v=55';
+import {TRANSITION_TERRAIN_QUADS,FABRIC_GROUND_POLYGON,HOPE_GROUND_RECTS,subtractRectangles,subtractConvex,APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,DISTRICT_GROUND_POLYGONS} from './urban-ground-ownership.js?v=55';
 import * as T from './vendor/three.module.min.js';
-import {urbanRandom} from './urban-batch.js?v=54';
-import * as P from './urban-props.js?v=54';
-import * as S from './urban-smallprops.js?v=54';
-import {CITY_BLOCK as B,CITY_ROAD_HALF as R,CITY_SIDEWALK as W,worldToCity} from './urban-layout.js?v=54';
-import {EXIT_CITY_Y as Y} from './exit-route.js?v=54';
+import {urbanRandom} from './urban-batch.js?v=55';
+import * as P from './urban-props.js?v=55';
+import * as S from './urban-smallprops.js?v=55';
+import {CITY_BLOCK as B,CITY_ROAD_HALF as R,CITY_SIDEWALK as W,worldToCity} from './urban-layout.js?v=55';
+import {EXIT_CITY_Y as Y} from './exit-route.js?v=55';
 const PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args)=>{const w=b.point(x,y,z),p=worldToCity(w.x,w.z);if(p.x>4.5&&p.x<33.5&&p.z>443&&p.z<471)return;b.push(x,y,z,ry);fn(b,args||{});b.pop();};
 function face(b,key,points){const g=new T.BufferGeometry(),p=[];for(const i of[0,1,2,0,2,3])p.push(...points[i]);g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.computeVertexNormals();if(g.attributes.normal.getY(0)<-.001){const a=g.attributes.position;for(let j=0;j<a.count;j+=3){const v=[a.getX(j+1),a.getY(j+1),a.getZ(j+1)];a.setXYZ(j+1,a.getX(j+2),a.getY(j+2),a.getZ(j+2));a.setXYZ(j+2,...v);}g.computeVertexNormals();}b.add(g,key,0,0,0);g.dispose();}
@@ -32,14 +34,15 @@ function frontage(b,seed,lod,ry,portal,exclude){
  const r=urbanRandom(seed),stations=[];for(let x=17;x<98;x+=9)stations.push(x);
  for(let i=0;i<stations.length;i++){
   const x=stations[i];if(portal&&x>51&&x<61)continue;const z=R+1.05;
-  if(i%2===0){place(b,x,.15,z,0,P.addStreetTree,{seed:seed+i*771,scale:.88+(i%3)*.055});}
+  if(i===3&&!lod&&seed%3===0){const kind=['pylon','monument','poster','googie'][(seed>>>3)%4],fn={pylon:poleSign,monument:monumentSign,poster:posterStand,googie:googieSign}[kind];place(b,x,.15,z,PI,bb=>fn(bb,adFor(seed*13,kind),0,0,kind==='poster'?6.9:3.2));}
+  else if(i%2===0){place(b,x,.15,z,0,P.addStreetTree,{seed:seed+i*771,scale:.88+(i%3)*.055});}
   else if(!lod){const k=(seed+i)%5;place(b,x,.15,z,PI,k===0?P.addHydrant:k===1?P.addParkingMeter:k===2?P.addTrashBin:k===3?S.addNewspaperBox:S.addBikeRack,{seed:seed+i,color:['blue','yellow','red'][i%3]});}
  }
  place(b,30,.15,R+.65,PI/2,P.addStreetLight,{height:8.5,arm:2.4});place(b,83,.15,R+.65,PI/2,P.addStreetLight,{height:8.5,arm:2.4});
  if(!lod){
   place(b,13.2,.15,10.5,PI,S.addNewspaperBox,{seed,color:'yellow'});place(b,14.0,.15,10.5,PI,S.addNewspaperBox,{seed:seed+1,color:'blue'});
   place(b,96.5,.15,10,PI,P.addUtilityCabinet,{variant:seed%2});place(b,96.5,.15,10,PI,S.addUtilityDetails,{seed,...(seed%2?{width:.76,height:1.32,depth:.43}:{})});
-  place(b,44,.15,R+1.0,PI,P.addParkingMeter);place(b,72,.15,R+1.0,PI,P.addParkingMeter);
+  if(seed%3!==0)place(b,44,.15,R+1.0,PI,P.addParkingMeter);place(b,72,.15,R+1.0,PI,P.addParkingMeter);
   place(b,23,.15,R+.58,PI,P.addStreetSign,{kind:seed%3?'restrict':'speed'});
   if(portal)for(const x of[52.5,59.5])place(b,x,.15,10.7,0,P.addBollard);
   if(seed%3===0)place(b,70,.05,5.85,PI/2,S.addParkedSedan,{seed});
@@ -50,7 +53,7 @@ function frontage(b,seed,lod,ry,portal,exclude){
 }
 export function addBlockStreets(b,plan,lod){
  b.push(plan.x,Y,plan.z);
- if(plan.reserved){for(const[a,c,u,v]of subtractRectangles(plan.x,plan.x+B,plan.z,plan.z+B,HOPE_GROUND_RECTS)){let pieces=[[[a,0,u],[a,0,v],[c,0,v],[c,0,u]]];if(plan.z<0)for(const shape of[FABRIC_GROUND_POLYGON,...APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,...DISTRICT_GROUND_POLYGONS]){const xs=shape.map(p=>p[0]),zs=shape.map(p=>p[1]);if(Math.max(...xs)<a||Math.min(...xs)>c||Math.max(...zs)<u||Math.min(...zs)>v)continue;pieces=pieces.flatMap(p=>subtractConvex(p,shape));}for(const poly of pieces){const g=new T.BufferGeometry(),pos=[];for(let k=1;k<poly.length-1;k++)for(const p of[poly[0],poly[k],poly[k+1]])pos.push(p[0]-plan.x,p[1],p[2]-plan.z);g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.computeVertexNormals();b.add(g,'asphalt',0,0,0);g.dispose();}}b.pop();return;}
+ if(plan.reserved){for(const[a,c,u,v]of subtractRectangles(plan.x,plan.x+B,plan.z,plan.z+B,HOPE_GROUND_RECTS)){let pieces=[[[a,0,u],[a,0,v],[c,0,v],[c,0,u]]];if(plan.z<0)for(const shape of[FABRIC_GROUND_POLYGON,...TRANSITION_TERRAIN_QUADS,...APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,...DISTRICT_GROUND_POLYGONS]){const xs=shape.map(p=>p[0]),zs=shape.map(p=>p[1]);if(Math.max(...xs)<a||Math.min(...xs)>c||Math.max(...zs)<u||Math.min(...zs)>v)continue;pieces=pieces.flatMap(p=>subtractConvex(p,shape));}for(const poly of pieces){const g=new T.BufferGeometry(),pos=[];for(let k=1;k<poly.length-1;k++)for(const p of[poly[0],poly[k],poly[k+1]])pos.push(p[0]-plan.x,p[1],p[2]-plan.z);g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.computeVertexNormals();b.add(g,'asphalt',0,0,0);g.dispose();}}b.pop();return;}
  b.box('asphalt',56,-.035,56,B,.07,B);
  roads(b);
  // Sidewalk ring surrounds occupied lots, with six-metre rear-access portals.

@@ -1,14 +1,15 @@
-import {addFountainLiquid,finishFountainLiquid} from './fountain-water-v54.js?v=54';
-import {fountainCenter} from './clinic-district-materials.js?v=54';
+import {addClinicStreetlife,PATIO_RECT} from './clinic-streetlife.js?v=55';
+import {addFountainLiquid,finishFountainLiquid} from './fountain-water-v54.js?v=55';
+import {fountainCenter} from './clinic-district-materials.js?v=55';
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch,urbanRandom} from './urban-batch.js?v=54';
-import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=54';
-import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=54';
-import {subtractRectangles} from './urban-ground-ownership.js?v=54';
-import {addRoofEquipment} from './urban-buildings.js?v=54';
-import {windowCatalog} from './urban-assets.js?v=54';
-import * as P from './urban-props.js?v=54';
-import * as S from './urban-smallprops.js?v=54';
+import {UrbanBatch,urbanRandom} from './urban-batch.js?v=55';
+import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=55';
+import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=55';
+import {subtractRectangles} from './urban-ground-ownership.js?v=55';
+import {addRoofEquipment} from './urban-buildings.js?v=55';
+import {windowCatalog} from './urban-assets.js?v=55';
+import * as P from './urban-props.js?v=55';
+import * as S from './urban-smallprops.js?v=55';
 const cp=exitPoint(282),A=Math.atan2(cp.nx,cp.nz),Y=EXIT_CITY_Y,PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args={})=>{b.push(x,y,z,ry);fn(b,args);b.pop();};
 function surface(b,key,x0,x1,z0,z1,y,holes=[]){for(const[a,c,u,v]of subtractRectangles(x0,x1,z0,z1,holes)){b.box(key,(a+c)/2,y-.06,(u+v)/2,c-a,.12,v-u);b.walk((a+c)/2,(u+v)/2,c-a,v-u,y);}}
@@ -49,15 +50,15 @@ export function createClinicDistrict(mats){const center=clinicToWorld(49,46);fou
  for(let x=11;x<40;x+=3.3)place(b,x,.025,3.1,0,P.addWheelStop);for(const x of[32,43,54,60])place(b,x,.025,61.5,0,P.addWheelStop);
  // A 41 × 33 m pedestrian square: fountain, shaded perimeter, two generous axial paths.
  const treePositions=[[31.5,34],[31.5,46],[31.5,58],[65.5,34],[65.5,46],[65.5,58],[40,58],[56,58]];
- const holes=[[43.78,54.22,40.78,51.22],...treePositions.map(([x,z])=>[x-.78,x+.78,z-.78,z+.78])];
- surface(b,'district:pavers',29,70,29,62.1,.12,holes);surface(b,'photoCobble',25.6,29,29,62.1,.02);
+ const holes=[PATIO_RECT,[43.78,54.22,40.78,51.22],...treePositions.map(([x,z])=>[x-.78,x+.78,z-.78,z+.78])];
+ surface(b,'district:pavers',29,70,29,62.1,.12,holes);surface(b,'district:terraceTile',...PATIO_RECT,.12,treePositions.map(([x,z])=>[x-.78,x+.78,z-.78,z+.78]));surface(b,'photoCobble',25.6,29,29,62.1,.02);
  // Trim follows the real outer perimeter, with 2.8 m ramp openings aligned to paths.
  for(const [a,c]of[[29,46.6],[49.4,70]]){b.box('photoGranite',(a+c)/2,.13,29,c-a,.10,.22);b.box('photoGranite',(a+c)/2,.13,62.1,c-a,.10,.22);}
  for(const z of[29,62.1]){const sign=z===29?1:-1;quad(b,'photoGranite',[[46.6,.02,z-sign*1.5],[49.4,.02,z-sign*1.5],[49.4,.12,z],[46.6,.12,z]]);b.walk(48,z-sign*.75,2.8,1.5,.07,0,sign*.10/1.5);}
  for(const x of[29,70])b.box('photoGranite',x,.10,45.55,.18,.16,33.1);
  for(let k=0;k<64;k++){const a=k*PI/32,c=(k+1)*PI/32,point=(t,r)=>[49+Math.cos(t)*r,.12,46+Math.sin(t)*r],edge=t=>5.22/Math.max(Math.abs(Math.cos(t)),Math.abs(Math.sin(t)));quad(b,'district:pavers',[point(a,5.22),point(c,5.22),point(c,edge(c)),point(a,edge(a))]);}fountain(b,49,46);
  for(let i=0;i<treePositions.length;i++){const[x,z]=treePositions[i];palm(b,x,z,.12,8.1+(i%3)*.75,901+i,1.2,true);}
- for(const[x,z,ry]of[[36,37,PI/2],[36,49,PI/2],[60.7,37,-PI/2],[60.7,49,-PI/2],[41,55,PI],[56,55,PI],[41,33,0],[56,33,0]])place(b,x,.12,z,ry,P.addBench);
+ for(const[x,z,ry]of[[60.7,37,-PI/2],[60.7,49,-PI/2],[56,55,PI],[56,33,0]])place(b,x,.12,z,ry,P.addBench);
  for(const x of[28.4,70.6])for(const z of[34,56.5]){b.box('photoGranite',x,.32,z,1.35,.60,7.6);b.box('bark',x,.627,z,1.12,.04,7.32);b.solid(x,z,1.35,7.6);for(let k=0;k<9;k++){const q=z-3.2+k*.8;b.sphere('foliage',x,.96,q,.55,.48,.61,.82+(k%3)*.05);for(let j=0;j<2;j++)b.plane('photoLeaf',x,1.05,q,1.1,.80,j*PI/2,0,.92);}}
  for(const[x,z]of[[36,31.8],[62,55.8],[28,60]])place(b,x,x<29?.02:.12,z,0,P.addTrashBin);
  for(const[x,z]of[[29,25],[68,25],[68,61]])place(b,x,.02,z,PI,P.addStreetLight,{height:7.8,arm:1.6});
@@ -68,5 +69,6 @@ export function createClinicDistrict(mats){const center=clinicToWorld(49,46);fou
  place(b,62.8,.02,74.5,PI/2,S.addDumpster);place(b,39.8,.16,4.4,0,P.addHydrant);potted(b,29.2,4.1,1.7);potted(b,10.1,4.3,1.35);
  // Back service walk meets the neighboring generated block at city X≈112.
  surface(b,'asphalt',27.6,70,76.3,82.3,.005);surface(b,'photoGranite',27.6,62.4,76.3,77.7,.15);
+ addClinicStreetlife(b,{potted});
  b.pop();const object=b.finish('Clinic infill / connected shops and palm fountain square');finishFountainLiquid(object);return{object,walks:b.walks,colliders:b.colliders,buildings:3,shops:8,waypoint:{...clinicToWorld(48,28),label:'Level 11 · 棕榈喷泉广场',yaw:A+PI,pitch:.03}};
 }

@@ -1,20 +1,20 @@
-import {initializeExitTextures} from './exit-textures.js?v=54';
-import {initializeVergeTextures} from './verge-cards.js?v=54';
-import {readChunkCache,writeChunkCache} from './chunk-cache.js?v=54';
-import {snapshotGround,restoreGround} from './ground.js?v=54';
-import {copyLakeAtlas} from './lake-shape.js?v=54';
-import {initializeWeatherTextures} from './weather-textures.js?v=54';
-import {initializeLandmarkTextures} from './landmark-textures.js?v=54';
-import {buildRayGeometry} from './ray-geometry.js?v=54';
+import {initializeExitTextures} from './exit-textures.js?v=55';
+import {initializeVergeTextures} from './verge-cards.js?v=55';
+import {readChunkCache,writeChunkCache} from './chunk-cache.js?v=55';
+import {snapshotGround,restoreGround} from './ground.js?v=55';
+import {copyLakeAtlas} from './lake-shape.js?v=55';
+import {initializeWeatherTextures} from './weather-textures.js?v=55';
+import {initializeLandmarkTextures} from './landmark-textures.js?v=55';
+import {buildRayGeometry} from './ray-geometry.js?v=55';
 // The render thread never constructs field geometry. Procedural templates remain
 // in this worker; unique geometry and instance arrays transfer without copies.
 import * as T from './vendor/three.module.min.js';
-import {field} from './world.js?v=54';
-import {createPacker} from './scene-packets.js?v=54';
-import {initializeRuralTextures} from './rural-textures.js?v=54';
+import {field} from './world.js?v=55';
+import {createPacker} from './scene-packets.js?v=55';
+import {initializeRuralTextures} from './rural-textures.js?v=55';
 if(typeof OffscreenCanvas==='undefined')throw Error('OffscreenCanvas is unavailable');
 globalThis.document={createElement(tag){if(tag==='canvas')return new OffscreenCanvas(1,1);throw Error('Unsupported worker element '+tag)}};
-const models=await import('./models.js?v=54');
+const models=await import('./models.js?v=55');
 await Promise.all([initializeRuralTextures(),initializeExitTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeVergeTextures()]);
 const packer=createPacker({T,isSharedResource:models.isSharedModelResource,wind:models.wind});
 self.onmessage=async event=>{

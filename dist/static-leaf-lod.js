@@ -1,4 +1,4 @@
-import {bindStaticSelection} from './static-selection.js?v=54';
+import {bindStaticSelection} from './static-selection.js?v=55';
 // Group tiny distant sprays in 3D cells. All three representations are baked
 // once; branch locations, species and colours are retained. Near sprays are exact.
 export function bakeStaticLeafLOD(mesh){

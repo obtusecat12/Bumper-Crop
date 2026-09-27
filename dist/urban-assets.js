@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 
-export const WINDOW_COUNT=100,SIGN_COUNT=72,WINDOW_W=480,WINDOW_H=320,SIGN_W=512,SIGN_H=512;
+export const WINDOW_COUNT=100,SIGN_COUNT=72,WINDOW_W=480,WINDOW_H=320,SIGN_W=128,SIGN_H=128;
 function arrayTexture(name,count){const data=new Uint8Array(count*4);for(let i=0;i<count;i++)data.set([155,161,158,255],i*4);const t=new T.DataArrayTexture(data,1,1,count);t.name=name;t.colorSpace=T.SRGBColorSpace;t.magFilter=T.LinearFilter;t.minFilter=T.LinearMipmapLinearFilter;t.generateMipmaps=true;t.anisotropy=4;t.needsUpdate=true;return t;}
 export const windowArray=arrayTexture('100 independently generated shop interiors',WINDOW_COUNT),signArray=arrayTexture('72 independently designed commercial signs',SIGN_COUNT);
 export let signCatalog=[],windowCatalog=[];

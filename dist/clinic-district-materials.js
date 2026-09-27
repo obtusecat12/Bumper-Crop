@@ -1,7 +1,8 @@
-import {addFountainWaterMaterials} from './fountain-water-v54.js?v=54';
+import {addFountainWaterMaterials} from './fountain-water-v54.js?v=55';
 import * as T from './vendor/three.module.min.js';
-import {URBAN_TILE_SIZE} from './urban-materials.js?v=54';
+import {URBAN_TILE_SIZE} from './urban-materials.js?v=55';
 export const DISTRICT_TEXTURES={
+ burgundyCanvas:[512,512,true,'../urban-v55/patio-burgundy-canvas.webp'],yellowLinen:[512,512,true,'../urban-v55/patio-yellow-linen.webp'],wicker:[512,512,true,'../urban-v55/patio-wicker.webp'],terraceTile:[512,512,true,'../urban-v55/patio-terracotta.webp'],
  pavers:[512,512,true,'plaza-pavers.webp'],poolTile:[512,512,true,'fountain-tile.webp'],palmBark:[512,512,true,'palm-bark.webp'],palmFrond:[512,256,false,'../urban-v54/palm-a.webp'],palmFrondB:[512,256,false,'../urban-v54/palm-b.webp'],
  terracotta:[256,256,true,'../urban-v54/prop-terracotta-diffuse.webp'],benchWood:[256,256,true,'../urban-v54/prop-benchwood-diffuse.webp'],paintMetal:[256,256,true,'../urban-v54/prop-municipalmetal-diffuse.webp'],
  books:[768,512,false,'el-estudiante.webp'],phones:[768,512,false,'tecnomovil.webp'],travel:[768,512,false,'sol-y-mundo.webp'],
@@ -14,8 +15,8 @@ async function decode(url,w,h){const r=await fetch(url);if(!r.ok)throw Error('Di
 export function initializeDistrictTextures(load=decode){return pending||(pending=Promise.all(Object.entries(DISTRICT_TEXTURES).map(async([key,[w,h,,file]])=>{districtTextures[key].image=await load(new URL('./textures/clinic-v53/'+file,import.meta.url),w,h);districtTextures[key].needsUpdate=true;})).catch(e=>{pending=null;throw e;}));}
 export const fountainClock={value:0},fountainCenter={value:new T.Vector2()};
 export function addDistrictMaterials(m){
- for(const[key,t]of Object.entries(districtTextures)){const leaf=key.startsWith('palmFrond'),shop=['books','phones','travel'].includes(key),sign=['optica','pharmacy','laundry','beauty','bookSign','phoneSign','travelSign'].includes(key);m['district:'+key]=new T.MeshStandardMaterial({map:t,color:0xffffff,roughness:shop?.29:leaf?.87:sign?.67:.86,metalness:shop?.12:0,vertexColors:true,side:leaf||shop||sign?T.DoubleSide:T.FrontSide,alphaTest:leaf?.42:0,alphaToCoverage:leaf,...(shop?{emissiveMap:t,emissive:0xffffff,emissiveIntensity:.16}:{})});m['district:'+key].name='Clinic district / '+key;m['district:'+key].userData.urbanShared=true;}
- Object.assign(URBAN_TILE_SIZE,{'district:pavers':3,'district:poolTile':1.28,'district:palmBark':1.5,'district:terracotta':.55,'district:benchWood':1.75,'district:paintMetal':.8});
+ for(const[key,t]of Object.entries(districtTextures)){const leaf=key.startsWith('palmFrond'),shop=['books','phones','travel'].includes(key),sign=['optica','pharmacy','laundry','beauty','bookSign','phoneSign','travelSign'].includes(key);m['district:'+key]=new T.MeshStandardMaterial({map:t,color:0xffffff,roughness:shop?.29:leaf?.87:sign?.67:.86,metalness:shop?.12:0,vertexColors:true,side:leaf||shop||sign||['burgundyCanvas','yellowLinen'].includes(key)?T.DoubleSide:T.FrontSide,alphaTest:leaf?.42:0,alphaToCoverage:leaf,...(shop?{emissiveMap:t,emissive:0xffffff,emissiveIntensity:.16}:{})});m['district:'+key].name='Clinic district / '+key;m['district:'+key].userData.urbanShared=true;}
+ Object.assign(URBAN_TILE_SIZE,{'district:burgundyCanvas':1,'district:yellowLinen':1.4,'district:wicker':.36,'district:terraceTile':2.0,'district:pavers':3,'district:poolTile':1.28,'district:palmBark':1.5,'district:terracotta':.55,'district:benchWood':1.75,'district:paintMetal':.8});
  addFountainWaterMaterials(m,{clock:fountainClock,center:fountainCenter});
  return m;
 }

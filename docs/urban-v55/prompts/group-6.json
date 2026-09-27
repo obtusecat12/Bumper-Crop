@@ -1,0 +1,170 @@
+[
+  {
+    "id": "ad-120",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-120.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified printed wallscape face for a giant 9 × 27 meter building wall, 2001 luxury clothing campaign\nScene and subject: one adult in a charcoal tailored coat; realistic analog fashion photography, calm frontal monochrome face gigantic in the upper half, coat and full body lower half. On the SAME FACE the exact same natural photographic pair of eyes is obviously mechanically copied into FOUR distinct, aligned horizontal rows, eight eyes total, each row sharing the very same eye strip. The uncanny effect is editorial graphic repetition in a believable fashion ad, with undamaged natural skin.\nComposition: tall portrait 1:3, clean legible silhouette from a distance, head and repeated eyes prominent; typography very small at bottom, ample photographic image.\nStyle and material: early-2000s American luxury clothing print campaign, mildly soft real photo, cool gray black white, tasteful aged vinyl print grain, subtle fade, highly realistic diffuse game texture.\nText verbatim: \"ECHO\" and immediately beneath \"WEAR EVERY VERSION.\"\nConstraints: strict flat edge-to-edge rectangular print face, orthographic head-on, no surrounding building, frame, pole, support, mockup, 3D perspective, UI, watermark or extra words. Eight eyes exactly, four horizontal identical pairs. No blood, gore, wounds, monster traits, extra face, other human.\nAspect ratio: 1:3\nAvoid: over-sharp digital gloss, dramatic glare, excessive damage, novelty pixel art.",
+    "dimensions": "724x2172",
+    "status": "success"
+  },
+  {
+    "id": "ad-101",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-101.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified wallscape printed face, early-2000s American outdoor advertising for a PS2-era scene\nPrimary request: 2001 adult tailored clothing fashion portrait clean campaign; distinct original period campaign for fictional brand Caldwell & Finch.\nScene and subject: 2001 adult tailored clothing fashion portrait clean campaign. Real adult subjects only when called for; believable product photography or original painted ad design as suits the brief.\nStyle and medium: realistic early-2000s analog commercial print, mildly soft photographic diffuse imagery, readable period typography, tasteful light fading and material wear; no novelty pixel art.\nComposition: 1:3 aspect ratio, orthographic head-on rectangle edge-to-edge. Readable campaign hierarchy and balanced period layout.\nColor palette: gray burgundy white.\nText verbatim: \"Caldwell & Finch\" and \"MADE FOR THE EVERYDAY\". No other words.\nConstraints: image is solely the flat sign face for texture mapping; no surrounding buildings, pole, supports, oblique angle, installed sign mockup, surrounding frame, UI, watermark or unrelated logo. No anatomically anomalous eyes or faces. Clean composition and strong color direction.\nAspect ratio: 1:3\nAvoid: excessive damage, oversharpening, digital gloss, glare, oversaturation.",
+    "dimensions": "736x2135",
+    "status": "success"
+  },
+  {
+    "id": "ad-102",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-102.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified bulletin printed face, early-2000s American outdoor advertising for a PS2-era scene\nPrimary request: 2002 denim jacket adult model monochrome photo; distinct original period campaign for fictional brand Urban Thread.\nScene and subject: 2002 denim jacket adult model monochrome photo. Real adult subjects only when called for; believable product photography or original painted ad design as suits the brief.\nStyle and medium: realistic early-2000s analog commercial print, mildly soft photographic diffuse imagery, readable period typography, tasteful light fading and material wear; no novelty pixel art.\nComposition: 3:1 aspect ratio, orthographic head-on rectangle edge-to-edge. All critical text within central 80% of height for 3.43:1 framing.\nColor palette: black cream red.\nText verbatim: \"Urban Thread\" and \"FIND YOUR OWN FIT\". No other words.\nConstraints: image is solely the flat sign face for texture mapping; no surrounding buildings, pole, supports, oblique angle, installed sign mockup, surrounding frame, UI, watermark or unrelated logo. No anatomically anomalous eyes or faces. Clean composition and strong color direction.\nAspect ratio: 3:1\nAvoid: excessive damage, oversharpening, digital gloss, glare, oversaturation.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "ad-103",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-103.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified poster printed face, early-2000s American outdoor advertising for a PS2-era scene\nPrimary request: 2000 translucent blue pager PDA commercial image; distinct original period campaign for fictional brand Palm Digital.\nScene and subject: 2000 translucent blue pager PDA commercial image. Real adult subjects only when called for; believable product photography or original painted ad design as suits the brief.\nStyle and medium: realistic early-2000s analog commercial print, mildly soft photographic diffuse imagery, readable period typography, tasteful light fading and material wear; no novelty pixel art.\nComposition: 2:1 aspect ratio, orthographic head-on rectangle edge-to-edge. Readable campaign hierarchy and balanced period layout.\nColor palette: navy silver cyan.\nText verbatim: \"Palm Digital\" and \"STAY IN TOUCH\". No other words.\nConstraints: image is solely the flat sign face for texture mapping; no surrounding buildings, pole, supports, oblique angle, installed sign mockup, surrounding frame, UI, watermark or unrelated logo. No anatomically anomalous eyes or faces. Clean composition and strong color direction.\nAspect ratio: 2:1\nAvoid: excessive damage, oversharpening, digital gloss, glare, oversaturation.",
+    "dimensions": "1774x887",
+    "status": "success"
+  },
+  {
+    "id": "ad-104",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-104.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified fascia printed face, early-2000s American outdoor advertising for a PS2-era scene\nPrimary request: early 2000 telecom ACP wordmark; distinct original period campaign for fictional brand Blue Harbor Wireless.\nScene and subject: early 2000 telecom ACP wordmark. Real adult subjects only when called for; believable product photography or original painted ad design as suits the brief.\nStyle and medium: realistic early-2000s analog commercial print, mildly soft photographic diffuse imagery, readable period typography, tasteful light fading and material wear; no novelty pixel art.\nComposition: 3:1 aspect ratio, orthographic head-on rectangle edge-to-edge. All critical copy within central 50% of height for storefront cropping.\nColor palette: navy orange silver.\nText verbatim: \"Blue Harbor Wireless\" and \"TALK A LITTLE LONGER\". No other words.\nConstraints: image is solely the flat sign face for texture mapping; no surrounding buildings, pole, supports, oblique angle, installed sign mockup, surrounding frame, UI, watermark or unrelated logo. No anatomically anomalous eyes or faces. Clean composition and strong color direction.\nAspect ratio: 3:1\nAvoid: excessive damage, oversharpening, digital gloss, glare, oversaturation.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "ad-105",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-105.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified wallscape printed face, early-2000s American outdoor advertising for a PS2-era scene\nPrimary request: apartment portrait banner big phone 888-555-0162; distinct original period campaign for fictional brand Meridian Lofts.\nScene and subject: apartment portrait banner big phone 888-555-0162. Real adult subjects only when called for; believable product photography or original painted ad design as suits the brief.\nStyle and medium: realistic early-2000s analog commercial print, mildly soft photographic diffuse imagery, readable period typography, tasteful light fading and material wear; no novelty pixel art.\nComposition: 1:3 aspect ratio, orthographic head-on rectangle edge-to-edge. Readable campaign hierarchy and balanced period layout.\nColor palette: orange charcoal white.\nText verbatim: \"Meridian Lofts\" and \"SPACE TO CALL YOUR OWN\". Also exact phone \"888-555-0162\".\nConstraints: image is solely the flat sign face for texture mapping; no surrounding buildings, pole, supports, oblique angle, installed sign mockup, surrounding frame, UI, watermark or unrelated logo. No anatomically anomalous eyes or faces. Clean composition and strong color direction.\nAspect ratio: 1:3\nAvoid: excessive damage, oversharpening, digital gloss, glare, oversaturation.",
+    "dimensions": "724x2171",
+    "status": "success"
+  },
+  {
+    "id": "ad-106",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-106.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified bulletin printed face, early-2000s American outdoor advertising for a PS2-era scene\nPrimary request: 1999 friendly family banking campaign two adults; distinct original period campaign for fictional brand Pacific Mutual.\nScene and subject: 1999 friendly family banking campaign two adults. Real adult subjects only when called for; believable product photography or original painted ad design as suits the brief.\nStyle and medium: realistic early-2000s analog commercial print, mildly soft photographic diffuse imagery, readable period typography, tasteful light fading and material wear; no novelty pixel art.\nComposition: 3:1 aspect ratio, orthographic head-on rectangle edge-to-edge. All critical text within central 80% of height for 3.43:1 framing.\nColor palette: forest green gray white.\nText verbatim: \"Pacific Mutual\" and \"YOUR NEXT CHAPTER\". No other words.\nConstraints: image is solely the flat sign face for texture mapping; no surrounding buildings, pole, supports, oblique angle, installed sign mockup, surrounding frame, UI, watermark or unrelated logo. No anatomically anomalous eyes or faces. Clean composition and strong color direction.\nAspect ratio: 3:1\nAvoid: excessive damage, oversharpening, digital gloss, glare, oversaturation.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "ad-107",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-107.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified poster print face for 2000–2003 American outdoor advertisement, PS2-era diffuse game texture\nSubject and scene: 2003 analog metal watch close product photography; fictional brand Tempo Timepieces; original campaign composition with visual specificity of its product or service.\nStyle and material: real early-2000s commercial photography or period sign design, mildly soft analog imagery, believable legible typography, restrained faded printed surface. Color palette: black steel blue.\nComposition: 2:1, edge-to-edge rectangular orthographic face. Readable balanced original ad layout.\nText verbatim: \"Tempo Timepieces\" and \"EVERY SECOND YOURS\". No other words.\nConstraints: solely flat printed texture, no building, frame, installed mockup, pole, supports, oblique perspective, UI, watermark, extraneous logos. Adults only if relevant. Anatomically normal faces.\nAspect ratio: 2:1\nAvoid: excessive damage, novelty pixel art, modern digital gloss, oversharpening, excessive glare.",
+    "dimensions": "1774x887",
+    "status": "success"
+  },
+  {
+    "id": "ad-108",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-108.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified monument print face for 2000–2003 American outdoor advertisement, PS2-era diffuse game texture\nSubject and scene: clean business park identity dark metal raised letters; fictional brand Northgate Offices; original campaign composition with visual specificity of its product or service.\nStyle and material: real early-2000s commercial photography or period sign design, mildly soft analog imagery, believable legible typography, restrained faded printed surface. Color palette: charcoal gray white.\nComposition: 3:1, edge-to-edge rectangular orthographic face. Readable balanced original ad layout.\nText verbatim: \"Northgate Offices\" and \"VISITOR ENTRANCE\". No other words.\nConstraints: solely flat printed texture, no building, frame, installed mockup, pole, supports, oblique perspective, UI, watermark, extraneous logos. Adults only if relevant. Anatomically normal faces.\nAspect ratio: 3:1\nAvoid: excessive damage, novelty pixel art, modern digital gloss, oversharpening, excessive glare.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "ad-109",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-109.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified fascia print face for 2000–2003 American outdoor advertisement, PS2-era diffuse game texture\nSubject and scene: restrained bookshop serif corporate fascia; fictional brand Fieldstone Books; original campaign composition with visual specificity of its product or service.\nStyle and material: real early-2000s commercial photography or period sign design, mildly soft analog imagery, believable legible typography, restrained faded printed surface. Color palette: forest ivory burgundy.\nComposition: 3:1, edge-to-edge rectangular orthographic face. Keep main graphics and text within central 50% of height for narrow fascia crop.\nText verbatim: \"Fieldstone Books\" and \"READ SOMETHING NEW\". No other words.\nConstraints: solely flat printed texture, no building, frame, installed mockup, pole, supports, oblique perspective, UI, watermark, extraneous logos. Adults only if relevant. Anatomically normal faces.\nAspect ratio: 3:1\nAvoid: excessive damage, novelty pixel art, modern digital gloss, oversharpening, excessive glare.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "ad-110",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-110.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat rectified bulletin print face for 2000–2003 American outdoor advertisement, PS2-era diffuse game texture\nSubject and scene: empty resort pool palm photo 2001 advertising; fictional brand Sunline Travel; original campaign composition with visual specificity of its product or service.\nStyle and material: real early-2000s commercial photography or period sign design, mildly soft analog imagery, believable legible typography, restrained faded printed surface. Color palette: navy orange pale aqua.\nComposition: 3:1, edge-to-edge rectangular orthographic face. Keep text within central 80% of height for 3.43:1 sign frame.\nText verbatim: \"Sunline Travel\" and \"A DIFFERENT KIND OF DAY\". No other words.\nConstraints: solely flat printed texture, no building, frame, installed mockup, pole, supports, oblique perspective, UI, watermark, extraneous logos. Adults only if relevant. Anatomically normal faces.\nAspect ratio: 3:1\nAvoid: excessive damage, novelty pixel art, modern digital gloss, oversharpening, excessive glare.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "ad-111",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-111.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: flat full-bleed 1:3 portrait wallscape face, 2000 fragrance advertising\nSubject: a fully clothed adult model in an elegant gray-violet tailored jacket with high neckline, alongside a large simple violet glass perfume bottle. Fashion portrait with head, jacket and bottle visible. Quiet aspirational campaign for fictional Vela Fragrance.\nStyle: tasteful 2000 department store perfume print advertisement, mild soft analog photography, gray violet silver palette, subtle aged vinyl grain.\nComposition: tall 1:3 orthographic rectangular graphic filling every edge, clear print hierarchy and reserved copy near bottom.\nText verbatim: \"Vela Fragrance\" and \"STAY WITH YOU\". No other words.\nConstraints: fully clothed adult, no suggestive pose, no nudity; flat rectified image face only, no photo border, frame, installed sign, building, pole, supports, perspective mockup, UI, watermark or extra logos.\nAspect ratio: 1:3",
+    "dimensions": "724x2172",
+    "status": "success"
+  },
+  {
+    "id": "ad-112",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-112.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: full-bleed flat rectified poster graphic face for early-2000s American outdoor ad, realistic PS2 diffuse texture\nSubject: 2000 reclining chair home furnishing campaign. Original fictional Softwave campaign, its primary visual precisely reflects this subject.\nVisual language: believable 2000–2003 analog commercial photography or restrained period storefront design as appropriate, mildly soft imagery, tasteful subtle faded print and material grain.\nColor palette: beige forest gray.\nComposition: 2:1 aspect ratio, orthographic head-on full-bleed RECTANGLE, image fills every edge and corner, no margin. Clear period campaign hierarchy.\nText verbatim only: \"Softwave\" and \"MAKE YOURSELF AT HOME\".\nConstraints: no building, sign hardware, frame, installed mockup, photo border, pole, perspective angle, UI, watermark, extra words or unrelated logos. Normal human anatomy.\nAspect ratio: 2:1\nAvoid: excessive damage, novelty pixel art, hyperclean digital gloss, oversharpening, glare.",
+    "dimensions": "1774x887",
+    "status": "success"
+  },
+  {
+    "id": "ad-113",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-113.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: full-bleed flat rectified fascia graphic face for early-2000s American outdoor ad, realistic PS2 diffuse texture\nSubject: restrained condensed sans sporty identity. Original fictional Cobalt Fitness campaign, its primary visual precisely reflects this subject.\nVisual language: believable 2000–2003 analog commercial photography or restrained period storefront design as appropriate, mildly soft imagery, tasteful subtle faded print and material grain.\nColor palette: cobalt cool gray orange.\nComposition: 3:1 aspect ratio, orthographic head-on full-bleed RECTANGLE, image fills every edge and corner, no margin. Keep wordmark/text in central 50% of height for narrow storefront crop.\nText verbatim only: \"Cobalt Fitness\" and \"START WHERE YOU ARE\".\nConstraints: no building, sign hardware, frame, installed mockup, photo border, pole, perspective angle, UI, watermark, extra words or unrelated logos. Normal human anatomy.\nAspect ratio: 3:1\nAvoid: excessive damage, novelty pixel art, hyperclean digital gloss, oversharpening, glare.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "ad-114",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-114.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: full-bleed flat rectified pylon graphic face for early-2000s American outdoor ad, realistic PS2 diffuse texture\nSubject: 2002 tidy stacked business directory. Original fictional Midtown Commons campaign, its primary visual precisely reflects this subject.\nVisual language: believable 2000–2003 analog commercial photography or restrained period storefront design as appropriate, mildly soft imagery, tasteful subtle faded print and material grain.\nColor palette: forest navy gray.\nComposition: 2:3 aspect ratio, orthographic head-on full-bleed RECTANGLE, image fills every edge and corner, no margin. Clear period campaign hierarchy.\nText verbatim only: \"Midtown Commons\" and \"COFFEE · BOOKS · WIRELESS\".\nConstraints: no building, sign hardware, frame, installed mockup, photo border, pole, perspective angle, UI, watermark, extra words or unrelated logos. Normal human anatomy.\nAspect ratio: 2:3\nAvoid: excessive damage, novelty pixel art, hyperclean digital gloss, oversharpening, glare.",
+    "dimensions": "1024x1536",
+    "status": "success"
+  },
+  {
+    "id": "ad-115",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-115.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: full-bleed flat rectified bulletin graphic face for early-2000s American outdoor ad, realistic PS2 diffuse texture\nSubject: 2003 understated luxury sedan advertisement. Original fictional Aurelia Motors campaign, its primary visual precisely reflects this subject.\nVisual language: believable 2000–2003 analog commercial photography or restrained period storefront design as appropriate, mildly soft imagery, tasteful subtle faded print and material grain.\nColor palette: silver charcoal blue.\nComposition: 3:1 aspect ratio, orthographic head-on full-bleed RECTANGLE, image fills every edge and corner, no margin. Keep words in central 80% height for billboard crop.\nText verbatim only: \"Aurelia Motors\" and \"QUIET CONFIDENCE\".\nConstraints: no building, sign hardware, frame, installed mockup, photo border, pole, perspective angle, UI, watermark, extra words or unrelated logos. Normal human anatomy.\nAspect ratio: 3:1\nAvoid: excessive damage, novelty pixel art, hyperclean digital gloss, oversharpening, glare.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "ad-116",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-116.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: full-bleed flat rectified poster print face for realistic PS2-era street scene\nSubject and scene: CRT banking website illustration within period ad photo. Original campaign for fictional Brightbank Online. \nStyle: believable 2000–2003 American commercial photograph or period corporate sign design as fits subject, mildly soft analog source image, subtly faded printed surface and tasteful material wear.\nPalette: blue white green.\nComposition: orthographic front, exact 2:1 aspect, image fills the rectangle to all edges without border. Distinct campaign hierarchy.\nText verbatim: \"Brightbank Online\" and \"BANK ON YOUR TIME\". No extra text.\nConstraints: flat printed texture only, no surrounding building or installed sign mockup, support, frame, pole, camera perspective, UI, watermark, unrelated logos. Adults fully clothed with normal anatomy.\nAspect ratio: 2:1\nAvoid: excessive damage, pixel art, oversharpening and artificial gloss.",
+    "dimensions": "1774x887",
+    "status": "success"
+  },
+  {
+    "id": "ad-117",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-117.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: full-bleed flat rectified wallscape print face for realistic PS2-era street scene\nSubject and scene: 2000 elegant adult coat model tall retail campaign. Original campaign for fictional Oriel Department Store. Adult fully clothed in elegant burgundy coat, fashion retail portrait.\nStyle: believable 2000–2003 American commercial photograph or period corporate sign design as fits subject, mildly soft analog source image, subtly faded printed surface and tasteful material wear.\nPalette: burgundy cool cream black.\nComposition: orthographic front, exact 1:3 aspect, image fills the rectangle to all edges without border. Distinct campaign hierarchy.\nText verbatim: \"Oriel Department Store\" and \"THE SEASON IS YOURS\". No extra text.\nConstraints: flat printed texture only, no surrounding building or installed sign mockup, support, frame, pole, camera perspective, UI, watermark, unrelated logos. Adults fully clothed with normal anatomy.\nAspect ratio: 1:3\nAvoid: excessive damage, pixel art, oversharpening and artificial gloss.",
+    "dimensions": "724x2172",
+    "status": "success"
+  },
+  {
+    "id": "ad-118",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-118.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: full-bleed flat rectified fascia print face for realistic PS2-era street scene\nSubject and scene: flat clean parcel delivery shop ACP face. Original campaign for fictional ParcelPoint. \nStyle: believable 2000–2003 American commercial photograph or period corporate sign design as fits subject, mildly soft analog source image, subtly faded printed surface and tasteful material wear.\nPalette: navy red white.\nComposition: orthographic front, exact 3:1 aspect, image fills the rectangle to all edges without border. Graphics within central 50% height for cropping.\nText verbatim: \"ParcelPoint\" and \"SEND IT SIMPLY\". No extra text.\nConstraints: flat printed texture only, no surrounding building or installed sign mockup, support, frame, pole, camera perspective, UI, watermark, unrelated logos. Adults fully clothed with normal anatomy.\nAspect ratio: 3:1\nAvoid: excessive damage, pixel art, oversharpening and artificial gloss.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "ad-119",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/ad-119.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: ads-marketing\nAsset type: full-bleed flat rectified bulletin print face for realistic PS2-era street scene\nSubject and scene: 2002 widescreen CRT set showing empty living room. Original campaign for fictional ClearSky Television. \nStyle: believable 2000–2003 American commercial photograph or period corporate sign design as fits subject, mildly soft analog source image, subtly faded printed surface and tasteful material wear.\nPalette: blue black silver.\nComposition: orthographic front, exact 3:1 aspect, image fills the rectangle to all edges without border. Text within central 80% height.\nText verbatim: \"ClearSky Television\" and \"STAY A LITTLE LONGER\". No extra text.\nConstraints: flat printed texture only, no surrounding building or installed sign mockup, support, frame, pole, camera perspective, UI, watermark, unrelated logos. Adults fully clothed with normal anatomy.\nAspect ratio: 3:1\nAvoid: excessive damage, pixel art, oversharpening and artificial gloss.",
+    "dimensions": "2172x724",
+    "status": "success"
+  },
+  {
+    "id": "patio-burgundy-canvas",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/patio-burgundy-canvas.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: photorealistic-natural\nAsset type: square seamless tileable diffuse material texture for an early-2000s PS2-style outdoor patio umbrella\nSubject: faded muted burgundy red canvas fabric, small visible woven fibers, slight sun age and modest mottled pigment, natural dry cloth surface. Inspired by the burgundy red patio umbrellas in the supplied rainy poolside reference, but only the material itself.\nComposition: straight overhead front-on orthographic macro surface, uniform scale edge-to-edge, 1:1 square. Pattern and tones repeat plausibly across every edge.\nLighting: neutral flat diffuse daylight, no directional shadow.\nConstraints: material swatch only, no umbrella shape, ribs, folds, seams, hems, objects, perspective, text, borders, vignette, glossy highlights.\nAspect ratio: 1:1",
+    "dimensions": "1254x1254",
+    "status": "success"
+  },
+  {
+    "id": "patio-yellow-linen",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/patio-yellow-linen.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: photorealistic-natural\nAsset type: square seamless tileable diffuse texture for early-2000s PS2-style outdoor patio tablecloth\nSubject: soft buttery pale yellow linen cloth weave, subtle aged variation and woven fibers, like pale yellow tablecloths in supplied rainy poolside reference. Flat fabric material only.\nComposition: straight overhead front-on orthographic macro surface, uniform scale edge-to-edge, 1:1 square. Soft variation repeats naturally at all edges.\nLighting: neutral diffuse, no hard directional shadows.\nConstraints: no table geometry, folds, creases, draped edge, seam, embroidered motif, objects, text, border, vignette or perspective.\nAspect ratio: 1:1",
+    "dimensions": "1254x1254",
+    "status": "success"
+  },
+  {
+    "id": "patio-wicker",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/patio-wicker.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: photorealistic-natural\nAsset type: seamless 1:1 square diffuse game material for a weathered outdoor woven rattan chair\nSubject: tightly packed weathered medium-brown cane strips crossing in an unmistakable DIAGONAL herringbone weave. Every strip runs at approximately +45° or -45° from horizontal; no horizontal or vertical strips. Authentic slightly faded natural rattan fibers.\nComposition: macro orthographic flat texture, entire square covered with same-scale 45-degree diagonal interlace, repeating continuously at all four borders; edge-to-edge pattern with no object silhouette.\nLighting: neutral diffuse overcast daylight, only subtle local fiber shading.\nConstraints: no horizontal/vertical basket grid, no chair silhouette, edge rim, cushion, folds, table, people, text, border, perspective, vignette or gloss.\nAspect ratio: 1:1",
+    "dimensions": "1254x1254",
+    "status": "success"
+  },
+  {
+    "id": "patio-terracotta",
+    "output": "/workspace/scratch/91e9848e2f36/v55-assets/group-6/patio-terracotta.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: photorealistic-natural\nAsset type: seamless square tileable diffuse material texture for PS2-style outdoor poolside patio floor\nSubject: warm reddish terracotta square paving slabs with medium darkened mortar joints in a regular grid, lightly irregular natural surface, slight age and a few subdued damp patches inspired by the supplied rainy poolside reference.\nComposition: true top-down orthographic plane without perspective, uniform tile scale and straight consistent grout lines, 1:1 square. Make pattern repeat continuously at left/right and top/bottom edges.\nLighting: overcast neutral diffuse, soft damp value variation but no sharp reflection, shadow or glare.\nConstraints: only paving material, no pool, furniture, leaves, objects, people, text, borders or camera perspective.\nAspect ratio: 1:1",
+    "dimensions": "1254x1254",
+    "status": "success"
+  }
+]

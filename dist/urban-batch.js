@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {URBAN_TILE_SIZE} from './urban-materials.js?v=54';
+import {URBAN_TILE_SIZE} from './urban-materials.js?v=55';
 const up=new T.Vector3(0,1,0),pose=new T.Object3D(),unitBox=new T.BoxGeometry(1,1,1),unitPlane=new T.PlaneGeometry(1,1),unitSphere=new T.IcosahedronGeometry(1,1);
 export const urbanRandom=seed=>{let a=seed>>>0;return()=>{a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};};
 export const urbanHash=(x,z,salt=0)=>{let h=Math.imul(x|0,73856093)^Math.imul(z|0,19349663)^salt;h=Math.imul(h^h>>>13,1274126177);return(h^h>>>16)>>>0;};
@@ -34,7 +34,7 @@ export class UrbanBatch{
  solid(x,z,w,d,ry=0){const p=this.point(x,0,z);this.colliders.push({kind:'obb',x:p.x,z:p.z,w,d,ry:ry+this.frame.ry});}
  circle(x,z,r){const p=this.point(x,0,z);this.colliders.push({kind:'circle',x:p.x,z:p.z,r});}
  walk(x,z,w,d,topY,slopeX=0,slopeZ=0,skewX=0){const p=this.point(x,topY,z);this.walks.push({...p,w,d,ry:this.frame.ry,slopeX,slopeZ,skewX});}
- finish(name){const root=new T.Group();root.name=name;for(const[key,parts]of this.parts){const g=mergeGeometries(parts,false);parts.forEach(p=>p.dispose());g.computeBoundingSphere();g.computeBoundingBox();const m=new T.Mesh(g,this.mats[key]);m.name=name+' / '+key;m.receiveShadow=true;m.castShadow=!['asphalt','approachAsphalt','sidewalk','glass','glassLight','shopWindow','photoAsphalt','photoCobble','photoGlass','photoGlassBlue'].includes(key)&&!key.startsWith('sign:');m.userData.exitStatic=true;m.matrixAutoUpdate=false;m.updateMatrix();root.add(m);}this.parts.clear();root.userData.cityStats={triangles:this.triangles,draws:root.children.length,parts:this.instances};return root;}
+ finish(name){const root=new T.Group();root.name=name;for(const[key,parts]of this.parts){const g=mergeGeometries(parts,false);parts.forEach(p=>p.dispose());g.computeBoundingSphere();g.computeBoundingBox();const m=new T.Mesh(g,this.mats[key]);m.name=name+' / '+key;m.receiveShadow=true;m.castShadow=!['asphalt','approachAsphalt','sidewalk','glass','glassLight','shopWindow','photoAsphalt','photoCobble','photoGlass','photoGlassBlue'].includes(key)&&!key.startsWith('sign:');m.userData.exitStatic=true;m.matrixAutoUpdate=false;m.updateMatrix();root.add(m);}this.parts.clear();root.userData.adPlacements=this.ads||[];root.userData.facades=this.facades||[];root.userData.cityStats={triangles:this.triangles,draws:root.children.length,parts:this.instances};return root;}
 }
 export function resolveUrban(position,solids,radius=.27){
  for(const q of solids){if(q.kind==='circle'){let dx=position.x-q.x,dz=position.z-q.z,d=Math.hypot(dx,dz),min=q.r+radius;if(d<min){if(d<1e-8){dx=1;dz=0;d=1;}position.x=q.x+dx/d*min;position.z=q.z+dz/d*min;}continue;}
