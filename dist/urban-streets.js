@@ -1,12 +1,12 @@
-import {adFor} from './advertising-assets.js?v=55';
-import {poleSign,monumentSign,posterStand,googieSign} from './advertising-structures.js?v=55';
-import {TRANSITION_TERRAIN_QUADS,FABRIC_GROUND_POLYGON,HOPE_GROUND_RECTS,subtractRectangles,subtractConvex,APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,DISTRICT_GROUND_POLYGONS} from './urban-ground-ownership.js?v=55';
+import {adFor} from './advertising-assets.js?v=56';
+import {poleSign,monumentSign,posterStand,googieSign} from './advertising-structures.js?v=56';
+import {TRANSITION_TERRAIN_QUADS,FABRIC_GROUND_POLYGON,HOPE_GROUND_RECTS,subtractRectangles,subtractConvex,APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,DISTRICT_GROUND_POLYGONS} from './urban-ground-ownership.js?v=56';
 import * as T from './vendor/three.module.min.js';
-import {urbanRandom} from './urban-batch.js?v=55';
-import * as P from './urban-props.js?v=55';
-import * as S from './urban-smallprops.js?v=55';
-import {CITY_BLOCK as B,CITY_ROAD_HALF as R,CITY_SIDEWALK as W,worldToCity} from './urban-layout.js?v=55';
-import {EXIT_CITY_Y as Y} from './exit-route.js?v=55';
+import {urbanRandom} from './urban-batch.js?v=56';
+import * as P from './urban-props.js?v=56';
+import * as S from './urban-smallprops.js?v=56';
+import {CITY_BLOCK as B,CITY_ROAD_HALF as R,CITY_SIDEWALK as W,worldToCity} from './urban-layout.js?v=56';
+import {EXIT_CITY_Y as Y} from './exit-route.js?v=56';
 const PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args)=>{const w=b.point(x,y,z),p=worldToCity(w.x,w.z);if(p.x>4.5&&p.x<33.5&&p.z>443&&p.z<471)return;b.push(x,y,z,ry);fn(b,args||{});b.pop();};
 function face(b,key,points){const g=new T.BufferGeometry(),p=[];for(const i of[0,1,2,0,2,3])p.push(...points[i]);g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.computeVertexNormals();if(g.attributes.normal.getY(0)<-.001){const a=g.attributes.position;for(let j=0;j<a.count;j+=3){const v=[a.getX(j+1),a.getY(j+1),a.getZ(j+1)];a.setXYZ(j+1,a.getX(j+2),a.getY(j+2),a.getZ(j+2));a.setXYZ(j+2,...v);}g.computeVertexNormals();}b.add(g,key,0,0,0);g.dispose();}

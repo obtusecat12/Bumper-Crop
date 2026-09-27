@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {AD_CATALOG} from './ad-catalog-v55.js?v=55';
+import {AD_CATALOG} from './ad-catalog-v55.js?v=56';
 export {AD_CATALOG};
 export const AD_SIZES={wide:[640,256],tall:[256,768],square:[512,512]};
 export const adArrays={};

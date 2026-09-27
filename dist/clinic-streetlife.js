@@ -1,8 +1,8 @@
 import * as T from './vendor/three.module.min.js';
-import * as P from './urban-props.js?v=55';
-import * as S from './urban-smallprops.js?v=55';
-import {adFor,adFace} from './advertising-assets.js?v=55';
-import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=55';
+import * as P from './urban-props.js?v=56';
+import * as S from './urban-smallprops.js?v=56';
+import {adFor,adFace} from './advertising-assets.js?v=56';
+import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=56';
 const PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args={})=>{b.push(x,y,z,ry);fn(b,args);b.pop();};
 function mesh(b,key,p,uv,ix){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p.flat(),3));g.setAttribute('uv',new T.Float32BufferAttribute(uv.flat(),2));g.setIndex(ix);g.computeVertexNormals();b.add(g,key,0,0,0);g.dispose();}

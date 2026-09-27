@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {surfaceHeight,buildingSize,roadDistance,wheatAllowed,cropSample} from './world.js?v=55';
-import {getYardAsset,isSharedYardAssetResource} from './yard-assets.js?v=55';
+import {surfaceHeight,buildingSize,roadDistance,wheatAllowed,cropSample} from './world.js?v=56';
+import {getYardAsset,isSharedYardAssetResource} from './yard-assets.js?v=56';
 
 // Each independently seeded slot selects ONE cached object. Clusters describe
 // places, never fixed inventories: changing a rejection cannot change a later

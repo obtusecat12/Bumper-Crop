@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=55';
-import {ruralTextures} from './rural-textures.js?v=55';
+import {height,random} from './world.js?v=56';
+import {ruralTextures} from './rural-textures.js?v=56';
 
 // Main-wall dimensions; roof overhangs/optional porch are described by footprint.
 export const RURAL_BUILDING_SIZES = Object.freeze([[7,9,3],[2.8,3.2,2.7],[12,17,4.9],[13,19,5.1],[11,15,4.3],[13,9,3.7],[13,18,3.8],[8,11,3.2]].map(Object.freeze));

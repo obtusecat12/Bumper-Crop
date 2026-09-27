@@ -1,0 +1,17 @@
+{
+  "runtime_version": 56,
+  "new_textures": 4,
+  "cave_mesh_draws": 14,
+  "cave_triangles": 71680,
+  "shader_programs_linked": 11,
+  "native_gl_errors": 0,
+  "views": [
+    "spring-reference",
+    "spring-stairs",
+    "spring-arrival",
+    "spring-soak",
+    "bath-context"
+  ],
+  "level10_11_regressions": "passed",
+  "browser_test": "Unavailable: static project / required browser control skill absent; captures are software GLES diagnostics."
+}

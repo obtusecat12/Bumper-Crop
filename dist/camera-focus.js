@@ -1,17 +1,17 @@
 import * as T from './vendor/three.module.min.js';
-import {DampedSpring} from './handheld-camera.js?v=55';
-import {focalLengthForFov,hyperfocal} from './lens-optics.js?v=55';
-import {surfaceHeight,pondShoreDistance,wheatAllowed,cropSample} from './world.js?v=55';
+import {DampedSpring} from './handheld-camera.js?v=56';
+import {focalLengthForFov,hyperfocal} from './lens-optics.js?v=56';
+import {surfaceHeight,pondShoreDistance,wheatAllowed,cropSample} from './world.js?v=56';
 // Reused center ray, vectors, interval slab and critically bounded cadence.
 // Uses existing collision proxies plus authoritative terrain, not allocation-
 // heavy Mesh.raycast() intersection arrays across the entire wheat field.
 export function createCameraFocus(){
  const groundCache=new WeakMap();const spring=new DampedSpring(2.58),ray=new T.Ray(),point=new T.Vector3(),local=new T.Ray(),box=new T.Box3(),chunks=[];
- let delay=0,target=2.58,baseFov=72,zoomGoal=1,zoom=1,closeAge=0,mist=0;const crop={};
+ let delay=0,target=2.58,baseFov=72,zoomGoal=1,zoom=1,closeAge=0,mist=0,sceneQuery=null;const crop={};
  const result={distance:2.58,target:2.58,breathing:0,zoom:1,focalLength:focalLengthForFov(72),mode:'wide',traces:0};
  function attach(c){if(!chunks.includes(c)){chunks.push(c);groundCache.set(c,(c.colliders||[]).map(b=>surfaceHeight(b.x||0,b.z||0,c.field)));}}
  function detach(c){const i=chunks.indexOf(c);if(i>=0){for(let j=i;j<chunks.length-1;j++)chunks[j]=chunks[j+1];chunks.pop();}}
- function trace(camera,maxDistance=120){result.traces++;ray.origin.copy(camera.position);camera.getWorldDirection(ray.direction);let best=maxDistance;
+ function trace(camera,maxDistance=120){result.traces++;if(sceneQuery)return Math.max(.25,sceneQuery(camera,maxDistance));ray.origin.copy(camera.position);camera.getWorldDirection(ray.direction);let best=maxDistance;
   for(let j=0;j<chunks.length;j++){const c=chunks[j],ox=c.group.position.x,oz=c.group.position.z,f=c.field;
    if(Math.hypot(ox+32-camera.position.x,oz+32-camera.position.z)>maxDistance+46)continue;
    const colliders=c.colliders||[];
@@ -49,5 +49,5 @@ export function createCameraFocus(){
   result.breathing=wide?0:T.MathUtils.clamp((target-d)*.0015,-.045,.045);
   const fov=zoomFov+result.breathing;if(Math.abs(camera.fov-fov)>.0001){camera.fov=fov;camera.updateProjectionMatrix();}return result;
  }
- return {attach,detach,update,trace,result,spring,setMist(v){mist=T.MathUtils.clamp(v,0,1);},setZoom(v){zoomGoal=T.MathUtils.clamp(v,1,4.5);},setBaseFov(v){baseFov=v;},reset(camera){target=2.58;spring.reset(target);zoom=zoomGoal=1;closeAge=0;delay=0;Object.assign(result,{distance:target,target,zoom:1,mode:'wide',focalLength:focalLengthForFov(baseFov),breathing:0});if(camera){camera.fov=baseFov;camera.updateProjectionMatrix();}}};
+ return {attach,detach,update,trace,result,spring,setSceneQuery(query){sceneQuery=query;delay=0;},setMist(v){mist=T.MathUtils.clamp(v,0,1);},setZoom(v){zoomGoal=T.MathUtils.clamp(v,1,4.5);},setBaseFov(v){baseFov=v;},reset(camera){target=2.58;spring.reset(target);zoom=zoomGoal=1;closeAge=0;delay=0;Object.assign(result,{distance:target,target,zoom:1,mode:'wide',focalLength:focalLengthForFov(baseFov),breathing:0});if(camera){camera.fov=baseFov;camera.updateProjectionMatrix();}}};
 }

@@ -1,11 +1,11 @@
-import {wheelProfile} from './road-surface.js?v=55';
-import {patchworkContext,parcelSample} from './patchwork-legacy.js?v=55';
-import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=55';
-import {REFERENCE_BARN,barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=55';
-import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=55';
-import {FARM,farmFootprintDistance,farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=55';
-import {createSettlementPlanner} from './rural-settlements.js?v=55';
-import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=55';
+import {wheelProfile} from './road-surface.js?v=56';
+import {patchworkContext,parcelSample} from './patchwork-legacy.js?v=56';
+import {pondTerrainHeight,pondBounds} from './lake-shape.js?v=56';
+import {REFERENCE_BARN,barnContext,barnEntrance,barnFootprintDistance,barnGroundHeight} from './reference-barn-layout.js?v=56';
+import {meadowForTile,meadowSample,meadowEnvironment,meadowFloorDiv} from './meadow-layout.js?v=56';
+import {FARM,farmFootprintDistance,farmContext,farmMask,farmRoadWeight,farmGroundHeight,farmClearing,farmExcludesLake} from './farm-layout.js?v=56';
+import {createSettlementPlanner} from './rural-settlements.js?v=56';
+import {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance} from './lake-shape.js?v=56';
 export {pondRadius,pondPoint,pondDistance,pondMetrics,pondBankPoint,pondShoreDistance};
 // Infinite signed BigInt cells with deterministic seed-based generation.
 export const CHUNK=64;

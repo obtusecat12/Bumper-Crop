@@ -1,0 +1,49 @@
+{
+  "generator": "built-in image_gen",
+  "sourceDimensions": {
+    "width": 1254,
+    "height": 1254
+  },
+  "intendedRuntimeSize": {
+    "width": 512,
+    "height": 512
+  },
+  "textures": [
+    {
+      "name": "limestone-strata",
+      "path": "/workspace/scratch/91e9848e2f36/level27-assets/limestone-strata.png",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: photorealistic-natural\nAsset type: seamless square diffuse albedo game texture for a Backrooms Level 27 limestone hot spring cave; downsampled to 512 px for a photographic PS2-era look\nSubject: gray, taupe and dark brown fractured limestone, thin irregular approximately horizontal sediment layers, weather-rounded ledges and porous rock\nStyle/medium: believable photographed natural stone material, moderate softness and fine diffuse grain\nComposition/framing: orthographic straight-on flat material swatch filling the entire square; irregular strata continue seamlessly across opposite edges, edge-to-edge repeat without a visible seam; no scene perspective\nLighting/mood: neutral, even diffuse illumination, restrained contrast, no directional lamp shadows\nColor palette: gray, taupe, dark brown\nMaterials/textures: thin broken sediment bands, gently eroded steps and small porous pits\nAspect ratio: 1:1\nConstraints: brand-new independent material map, plausible surface scale when repeated in a game environment; absolutely no plants, moss, algae, animals, people, written text or borders\nAvoid: room or cave scene composition, horizon, camera perspective, visible lighting gradients, painted shadows, polished stylization, pixel art, oversharpening, high contrast, glare, watermarks."
+    },
+    {
+      "name": "limestone-flowstone",
+      "path": "/workspace/scratch/91e9848e2f36/level27-assets/limestone-flowstone.png",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: photorealistic-natural\nAsset type: seamless square diffuse albedo game texture for a Backrooms Level 27 limestone hot spring cave; downsampled to 512 px for a photographic PS2-era look\nSubject: pale ivory and cool gray calcite flowstone mineral coating over limestone\nStyle/medium: believable photographed natural mineral material, moderate softness and fine diffuse grain\nComposition/framing: orthographic straight-on flat material swatch filling the entire square; rounded wax-like vertical lobes and fine mineral grooves, continuous across opposite edges for seamless edge-to-edge repeating; no scene perspective\nLighting/mood: neutral even diffuse illumination, restrained contrast; wet-looking mineral substance expressed by smooth coloration and form but no glossy light spots\nColor palette: pale ivory, warm off-white, cool gray\nMaterials/textures: rounded soft calcite drapery lobes, slender vertical accretion grooves, small weathered unevenness\nAspect ratio: 1:1\nConstraints: brand-new independent material map, plausible surface scale when repeated in a game environment; absolutely no plants, moss, algae, animals, people, written text or borders\nAvoid: cave scene composition, stalactite silhouette, horizon, camera perspective, water shading, glaring highlights, baked lamp shadows, visible lighting gradients, plastic, pixel art, oversharpening, watermark."
+    },
+    {
+      "name": "mineral-poolbed",
+      "path": "/workspace/scratch/91e9848e2f36/level27-assets/mineral-poolbed.png",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: photorealistic-natural\nAsset type: seamless square diffuse albedo game texture for a Backrooms Level 27 limestone hot spring pool bed; downsampled to 512 px for a photographic PS2-era look\nSubject: submerged bed of smooth gray-beige limestone, small rounded rock fragments and dissolved pale mineral deposits\nStyle/medium: believable photographed natural stone material, moderate softness and fine diffuse grain\nComposition/framing: orthographic directly overhead flat material swatch filling the square, fragments irregularly dispersed and modest in size; continuous seamless edge-to-edge pattern across opposite edges; no perspective\nLighting/mood: neutral even diffuse illumination with restrained contrast\nColor palette: gray-beige limestone with subtle pale ivory mineral deposition\nMaterials/textures: smooth worn limestone substrate, embedded rounded chips, cloudy pale calcite deposits, gently porous surface\nAspect ratio: 1:1\nConstraints: brand-new independent material map for a bed under water, but depict only the underlying dry diffuse rock colors; absolutely no plants, moss, algae, animals, people, written text or borders\nAvoid: actual water shading, ripples, caustic highlights, bubbles, blue tint, underwater scene perspective, horizon, baked shadows, glaring light, visible lighting gradient, pixel art, oversharpening, watermark."
+    },
+    {
+      "name": "spring-ripples",
+      "path": "/workspace/scratch/91e9848e2f36/level27-assets/spring-ripples.png",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nUse case: photorealistic-natural\nAsset type: seamless square grayscale height-detail texture for animated micro-normal spring-water shader in a Backrooms Level 27 hot spring; downsampled to 512 px for a photographic PS2-era look\nSubject: softly intersecting short water surface ripples, small wavy interference lines\nStyle/medium: restrained photographic grayscale surface detail, moderate softness, smooth gradations\nComposition/framing: directly overhead orthographic flat texture covering the entire square, evenly distributed fine overlapping ripples, repeatable edge-to-edge seamlessly in both axes; no single central splash or composition focus\nLighting/mood: uniform neutral depiction of ripple elevation rather than illuminated water, low contrast\nColor palette: midgray range only, subtle lighter crests and darker troughs\nMaterials/textures: soft short irregular wavy ripple bands and interference, suitable to sample as a height map for micro-normal displacement\nAspect ratio: 1:1\nConstraints: independent monochrome texture, no objects, no written text, no borders; absolutely no plants, moss, algae, animals or people\nAvoid: blue tint, actual color water, sky or cave reflections, caustics, specular glints, foam, droplets, large concentric rings, directional lighting gradient, high contrast, pixel art, oversharpening, watermark."
+    }
+  ]
+}

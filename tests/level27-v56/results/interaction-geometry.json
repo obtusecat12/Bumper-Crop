@@ -1,0 +1,11 @@
+{
+  "area": 18.58,
+  "waterfalls": 2,
+  "walkingRouteSamples": 1625,
+  "physicalTreadSamples": 13,
+  "streetDoorToShowerSamples": 106,
+  "entry": "highest heat AND standing under shower AND 2.15s eyes closed",
+  "return": "production controller preserves exact world position and look; inventory retained",
+  "indoorAtmosphere": "isolated from urban sky/fog",
+  "runtimeTextureCount": 4
+}

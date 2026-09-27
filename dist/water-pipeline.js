@@ -1,11 +1,11 @@
 import * as T from './vendor/three.module.min.js';
-import {createWaterSurface} from './water-surface.js?v=55';
-import {createWaterEnvironment} from './water-environment.js?v=55';
-import {createWaterVisibility} from './water-visibility.js?v=55';
-import {createCameraFocus} from './camera-focus.js?v=55';
-import {cocFragment,dilateFragment,lensGLSL,discGLSL} from './dof-shaders.js?v=55';
-import {createAlmondInspection,createAlmondWorldVisibility} from './almond-water-inspection.js?v=55';
-import {almondEnvironment,GLASS_LAYER} from './almond-water-assets.js?v=55';
+import {createWaterSurface} from './water-surface.js?v=56';
+import {createWaterEnvironment} from './water-environment.js?v=56';
+import {createWaterVisibility} from './water-visibility.js?v=56';
+import {createCameraFocus} from './camera-focus.js?v=56';
+import {cocFragment,dilateFragment,lensGLSL,discGLSL} from './dof-shaders.js?v=56';
+import {createAlmondInspection,createAlmondWorldVisibility} from './almond-water-inspection.js?v=56';
+import {almondEnvironment,GLASS_LAYER} from './almond-water-assets.js?v=56';
 export const INTERNAL_HEIGHT=720,DOF_SCALE=.5,DOF_TAPS=16;
 export const passVertex=`precision highp float;precision highp sampler2D;in vec3 position;out vec2 uv;void main(){uv=position.xy*.5+.5;gl_Position=vec4(position,1.);}`;
 export const copyDepthFragment=`precision highp float;precision highp sampler2D;uniform sampler2D picture,depth;in vec2 uv;out vec4 outColor;void main(){outColor=texture(picture,uv);gl_FragDepth=texture(depth,uv).r;}`;
@@ -219,13 +219,13 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky,
  }
  function draw(m,target){quad.material=m;renderer.setRenderTarget(target);renderer.render(scene,screenCamera);}
  function render(world,camera,beforeScene,w,h,output,uiTexture=null,mode=0){allocate(w,h);const saved=renderer.getRenderTarget(),auto=renderer.autoClear,mask=camera.layers.mask,bg=world.background;
-  try{resolve.uniforms.uiOnly.value=false;resolve.uniforms.uiPicture.value=uiTexture;resolve.uniforms.hasUI.value=!!uiTexture;resolve.uniforms.displayMode.value=mode;beforeScene?.();sky?.userData.renderClouds?.(camera,w,h);const visibleWater=visibility.any(waterMeshes,camera),visibleBottles=bottleVisibility.any(camera);stats.waterVisible=visibleWater;stats.bottleGlassVisible=visibleBottles;if(!visibleWater)stats.waterSkips++;if(environment&&(waterMeshes.size||visibleBottles||inspection.active)){environment.update(clock,camera);surface.uniforms.environmentReady.value=environment.ready?1:0;if(environment.ready)almondEnvironment.value=environment.texture;}renderer.autoClear=true;camera.layers.set(0);renderer.setRenderTarget(opaque);renderer.render(world,camera);let source=opaque;
+  try{resolve.uniforms.uiOnly.value=false;resolve.uniforms.uiPicture.value=uiTexture;resolve.uniforms.hasUI.value=!!uiTexture;resolve.uniforms.displayMode.value=mode;beforeScene?.();if(!world.userData.noAtmosphere)sky?.userData.renderClouds?.(camera,w,h);const visibleWater=visibility.any(waterMeshes,camera),visibleBottles=bottleVisibility.any(camera);stats.waterVisible=visibleWater;stats.bottleGlassVisible=visibleBottles;if(!visibleWater)stats.waterSkips++;if(environment&&(waterMeshes.size||visibleBottles||inspection.active)){environment.update(clock,camera);surface.uniforms.environmentReady.value=environment.ready?1:0;if(environment.ready)almondEnvironment.value=environment.texture;}renderer.autoClear=true;camera.layers.set(0);renderer.setRenderTarget(opaque);renderer.render(world,camera);let source=opaque;
    if(visibleWater){copy.uniforms.picture.value=opaque.texture;copy.uniforms.depth.value=opaque.depthTexture;draw(copy,water);stats.depthCopies++;
     surface.uniforms.sceneColor.value=opaque.texture;surface.uniforms.sceneDepth.value=opaque.depthTexture;
     renderer.autoClear=false;world.background=null;camera.layers.set(2);renderer.setRenderTarget(water);renderer.render(world,camera);source=water;}
    if(visibleBottles){if(!bottleTarget)bottleTarget=target(w,h,true);renderer.autoClear=true;copy.uniforms.picture.value=source.texture;copy.uniforms.depth.value=source.depthTexture;draw(copy,bottleTarget);bottleVisibility.bind(source.texture,w,h,camera);renderer.autoClear=false;world.background=null;camera.layers.set(GLASS_LAYER);renderer.setRenderTarget(bottleTarget);renderer.render(world,camera);source=bottleTarget;}
    world.background=bg;camera.layers.mask=mask;renderer.autoClear=true;
-   let picture=fog?.compose(source,camera,{waterActive:waterState.hasWater,level:u.level.value})||source.texture;
+   let picture=world.userData.noAtmosphere?source.texture:(fog?.compose(source,camera,{waterActive:waterState.hasWater,level:u.level.value})||source.texture);
    if(inspection.active){
     // Ping-pong the three existing world targets. Preserve source.depthTexture
     // for the lens and never allocate a pair of fullscreen inspection buffers.

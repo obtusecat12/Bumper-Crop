@@ -1,10 +1,10 @@
 import * as T from './vendor/three.module.min.js';
-import {urbanRandom} from './urban-batch.js?v=55';
-import {WINDOW_COUNT} from './urban-assets.js?v=55';
-import {addRoofEquipment,addFireEscape,addRoofLetters} from './urban-buildings.js?v=55';
-import {FacadeLayout} from './facade-layout.js?v=55';
-import {adFor,adFace,AD_CATALOG} from './advertising-assets.js?v=55';
-import {lightbox,bladeSign,buildingRoofAd,wallBanner} from './advertising-structures.js?v=55';
+import {urbanRandom} from './urban-batch.js?v=56';
+import {WINDOW_COUNT} from './urban-assets.js?v=56';
+import {addRoofEquipment,addFireEscape,addRoofLetters} from './urban-buildings.js?v=56';
+import {FacadeLayout} from './facade-layout.js?v=56';
+import {adFor,adFace,AD_CATALOG} from './advertising-assets.js?v=56';
+import {lightbox,bladeSign,buildingRoofAd,wallBanner} from './advertising-structures.js?v=56';
 const PI=Math.PI;
 function window(b,x,y,z,w,h,material='glass',tone=1){b.box('metal',x,y,z-.028,w+.08,h+.09,.12,0,.8);b.plane(material,x,y,z+.04,w,h,0,0,tone);b.box('metal',x,y,z+.065,.042,h,.07);b.box('concrete',x,y-h/2-.045,z+.08,w+.15,.075,.16);}
 function canopy(b,x,y,z,w,style){const fabric=style%3===0?'blue':style%3===1?'green':'yellow';if(style%4===0){b.box('metal',x,y,z+.60,w,.07,1.2);b.plane('glassLight',x,y+.039,z+.60,w-.1,1.1,0,-PI/2);}else{const g=new T.PlaneGeometry(w,1.32),p=g.attributes.position;for(let i=0;i<p.count;i++){const t=(p.getY(i)+.66)/1.32;p.setXYZ(i,p.getX(i),-.31*t,t*1.32);}const ix=g.index;for(let i=0;i<ix.count;i+=3){const a=ix.getX(i+1);ix.setX(i+1,ix.getX(i+2));ix.setX(i+2,a);}g.computeVertexNormals();b.add(g,fabric,x,y,z);g.dispose();b.box(fabric,x,y-.395,z+1.32,w,.17,.035);for(const side of[-1,1])b.rod('metal',[x+side*w*.46,y-.64,z],[x+side*w*.46,y-.32,z+1.29],.026);}}

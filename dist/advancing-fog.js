@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {FogFront,FOG_MAX_DIST} from './fog-front.js?v=55';
+import {FogFront,FOG_MAX_DIST} from './fog-front.js?v=56';
 
 export const fogVertex=`precision highp float;in vec3 position;out vec2 uv;
 void main(){uv=position.xy*.5+.5;gl_Position=vec4(position,1.);}`;
