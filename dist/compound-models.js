@@ -1,10 +1,10 @@
-import {mergeArchitectureParts,isSharedArchitectureResource} from './architecture-batch.js?v=56';
-import {makeTroughWater,isSharedTroughWaterResource} from './trough-water.js?v=56';
+import {mergeArchitectureParts,isSharedArchitectureResource} from './architecture-batch.js?v=57';
+import {makeTroughWater,isSharedTroughWaterResource} from './trough-water.js?v=57';
 import * as T from './vendor/three.module.min.js';
-import {height,random,roadDistance} from './world.js?v=56';
-import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=56';
-import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=56';
-import {ruralTextures} from './rural-textures.js?v=56';
+import {height,random,roadDistance} from './world.js?v=57';
+import {makeRuralBuilding,isSharedBuildingResource} from './buildings.js?v=57';
+import {makeYardProps,isSharedYardPropResource} from './yard-props.js?v=57';
+import {ruralTextures} from './rural-textures.js?v=57';
 
 // Plans use tile-local component centres. The owner tile renders a component;
 // every intersecting tile retains its complete collision and rain metadata.

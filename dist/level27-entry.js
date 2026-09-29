@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch} from './urban-batch.js?v=56';
-import {clinicToWorld,CLINIC_ANGLE} from './reference-scenes.js?v=56';
-import {EXIT_CITY_Y} from './exit-route.js?v=56';
+import {UrbanBatch} from './urban-batch.js?v=57';
+import {clinicToWorld,CLINIC_ANGLE} from './reference-scenes.js?v=57';
+import {EXIT_CITY_Y} from './exit-route.js?v=57';
 const center=clinicToWorld(91.4,40),angle=CLINIC_ANGLE-Math.PI/2,Y=EXIT_CITY_Y+.15;
 export const BATH_ADDRESS={x:center.x,z:center.z,angle};
 export function bathLocal(wx,wz){const c=Math.cos(angle),s=Math.sin(angle),x=wx-center.x,z=wz-center.z;return{x:c*x-s*z,z:s*x+c*z};}

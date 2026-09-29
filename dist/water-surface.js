@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {ruralTextures} from './rural-textures.js?v=56';
+import {ruralTextures} from './rural-textures.js?v=57';
 export const surfaceVertex=`precision highp float;precision highp sampler2D;
 in vec3 position;in vec2 lakeCoord;in float facetTone;
 uniform mat4 modelMatrix,viewMatrix,projectionMatrix;

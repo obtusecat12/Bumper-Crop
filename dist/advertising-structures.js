@@ -1,4 +1,4 @@
-import {adFor,adFace} from './advertising-assets.js?v=56';
+import {adFor,adFace} from './advertising-assets.js?v=57';
 const PI=Math.PI;
 export function lightbox(b,ad,x,y,z,w,h,ry=0){b.push(x,y,z,ry);b.box('metal',0,0,0,w+.10,h+.10,.19);b.box('white',0,0,.10,w+.025,h+.025,.035);adFace(b,ad,0,0,.123,w,h);b.pop();}
 export function floodlights(b,w,y,z,count=3){for(let i=0;i<count;i++){const x=(i-(count-1)/2)*w/(count+.4);b.rod('metal',[x,y,z],[x,y+.10,z+.8],.025);b.box('dark',x,y+.12,z+.85,.38,.15,.23);b.plane('lamp',x,y+.145,z+.979,.29,.085);}}

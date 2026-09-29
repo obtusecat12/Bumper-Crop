@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {AD_CATALOG} from './ad-catalog-v55.js?v=56';
+import {AD_CATALOG} from './ad-catalog-v55.js?v=57';
 export {AD_CATALOG};
 export const AD_SIZES={wide:[640,256],tall:[256,768],square:[512,512]};
 export const adArrays={};
@@ -9,7 +9,7 @@ let pending;
 async function decode(url,w,h){const r=await fetch(url);if(!r.ok)throw Error('Advertisement '+url.pathname+': '+r.status);const im=await createImageBitmap(await r.blob()),c=new OffscreenCanvas(w,h),ctx=c.getContext('2d');ctx.drawImage(im,0,0,w,h);im.close();return{data:new Uint8Array(ctx.getImageData(0,0,w,h).data),width:w,height:h};}
 export function initializeAdvertising(load=decode){return pending||(pending=(async()=>{
  for(const[group,[w,h]]of Object.entries(AD_SIZES)){const items=AD_CATALOG.filter(a=>a.textureGroup===group),data=new Uint8Array(w*h*4*items.length);let cursor=0;await Promise.all(Array.from({length:6},async()=>{for(;;){const i=cursor++;if(i>=items.length)return;const p=await load(new URL('./textures/advertising-v55/'+items[i].file,import.meta.url),w,h);data.set(p.data||p,i*w*h*4);}}));adArrays[group].image={data,width:w,height:h,depth:items.length};adArrays[group].needsUpdate=true;}
- heroTexture.image=await load(new URL('./textures/advertising-v55/ad-120-hero.webp',import.meta.url),768,2304);heroTexture.needsUpdate=true;
+ heroTexture.image=await load(new URL('./textures/advertising-v57/echo-clothing-1994.webp',import.meta.url),768,2304);heroTexture.needsUpdate=true;
 })().catch(e=>{pending=null;throw e;}));}
 export function adFor(seed,kind,era){let a=AD_CATALOG.filter(a=>a.id!=='ad-120'&&(!kind||a.kind===kind)&&(!era||a.era===era));if(!a.length)a=AD_CATALOG.filter(a=>a.kind===kind&&a.id!=='ad-120');let h=seed>>>0;h=Math.imul(h^(h>>>16),0x7feb352d);h=Math.imul(h^(h>>>15),0x846ca68b);h=(h^(h>>>16))>>>0;return a[h%a.length]||AD_CATALOG[0];}
 export function addAdvertisingMaterials(m){

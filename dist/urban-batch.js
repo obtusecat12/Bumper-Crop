@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {URBAN_TILE_SIZE} from './urban-materials.js?v=56';
+import {URBAN_TILE_SIZE} from './urban-materials.js?v=57';
 const up=new T.Vector3(0,1,0),pose=new T.Object3D(),unitBox=new T.BoxGeometry(1,1,1),unitPlane=new T.PlaneGeometry(1,1),unitSphere=new T.IcosahedronGeometry(1,1);
 export const urbanRandom=seed=>{let a=seed>>>0;return()=>{a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};};
 export const urbanHash=(x,z,salt=0)=>{let h=Math.imul(x|0,73856093)^Math.imul(z|0,19349663)^salt;h=Math.imul(h^h>>>13,1274126177);return(h^h>>>16)>>>0;};

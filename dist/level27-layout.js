@@ -7,7 +7,7 @@ export function polygonArea(p){return Math.abs(p.reduce((s,a,i)=>{const b=p[(i+1
 const scale=Math.sqrt(CAVE_AREA/polygonArea(raw));
 export const CAVE_PLAN=raw.map(([x,z])=>[x*scale,z*scale]);
 export const ARRIVAL={x:1.23,z:-5.2,yaw:Math.PI,pitch:-.13};
-export const CALCITE_OUTCROPS=[[-1.16,-1.86,-.52,1.68,.36],[-.75,-2.08,-.48,2.53,.38],[-.30,-2.04,-.55,1.67,.39],[.06,-2.05,-.39,1.92,.30]];
+export const CALCITE_OUTCROPS=[]; // V57 deposits are continuous with the shell, never intersecting lathe objects.
 export function radialLimit(x,z){const a=(Math.atan2(z,x)+Math.PI*2)%(Math.PI*2),i=a/(Math.PI*2)*CAVE_PLAN.length,k=Math.floor(i),t=i-k,p=CAVE_PLAN[k],q=CAVE_PLAN[(k+1)%CAVE_PLAN.length];return Math.hypot(p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t);}
 export function inTunnel(x,z,margin=0){return x>.43+margin&&x<2.02-margin&&z>=-8.6+margin&&z<-1.60;}
 export function stairHeight(z){const step=Math.max(0,Math.min(STAIRS.count-1,Math.floor((z-STAIRS.start)/STAIRS.tread)));return STAIRS.base+(STAIRS.count-step)*STAIRS.rise;}
@@ -33,17 +33,30 @@ export class SpringSession{
  leave(){const p=this.origin;this.origin=null;this.sitting=false;return p;}
 }
 
-export function wallPoint(angle,y){const N=CAVE_PLAN.length,k=((angle/(Math.PI*2)*N)%N+N)%N,i=Math.floor(k),u=k-i,p=CAVE_PLAN[i],q=CAVE_PLAN[(i+1)%N];let x=p[0]+(q[0]-p[0])*u,z=p[1]+(q[1]-p[1])*u;
-  const pale=angle>4.10&&angle<5.23;
-  const shelf=.105*Math.pow(.5+.5*Math.sin(y*8.2+angle*.8+.35*Math.sin(angle*7)),4)+.025*Math.sin(y*26+angle*1.2);
-  const fold=.025*Math.cos(angle*36+.4*Math.sin(y*2.3))+.018*Math.sin(y*7+angle*7);
-  const mass=.095*Math.sin(y*1.9+angle*4.3)+.07*Math.sin(y*4.1-angle*3);
-  // Deposits grow from the wall as broad overlapping calcite lobes. Each lobe
-  // has its own height, breadth and trailing apron; none is a free-standing tube.
-  let deposit=0;
-  for(const [a,h,w,t,r] of [[4.16,.20,.19,.58,.34],[4.30,1.34,.14,.59,.45],[4.47,.91,.17,.50,.38],[4.58,1.92,.12,.59,.44],[4.76,1.51,.16,.45,.34],[4.96,.63,.20,.53,.28],[4.88,2.52,.16,.44,.23]]){
-   const ga=Math.exp(-Math.pow((angle-a)/w,2));deposit+=ga*r*(Math.exp(-Math.pow((y-h)/t,2))+.20*Math.exp(-Math.pow((y-h+.65)/1.05,2)));
-  }
-  const ledge=.33*Math.exp(-Math.pow((angle-3.01)/.46,2))*Math.exp(-Math.pow((y-.34)/.74,2));
-  const inset=.13+mass+(pale?fold:shelf)+deposit+ledge+Math.max(0,y-2.4)*.10,rad=Math.hypot(x,z);x*=1-inset/rad;z*=1-inset/rad;return[x,y,z];
- }
+// Different scales of bedding, solution pockets and broad calcite aprons.
+// The waterline is the survey polygon itself: its area is genuinely 18.58 m².
+const gaussian=(v,c,w)=>Math.exp(-Math.pow((v-c)/w,2));
+export function roofHeight(a){return 2.98+.19*Math.sin(a*3+.7)+.15*Math.cos(a*5-.4);}
+export function wallPoint(angle,y){
+ const a=(angle%(Math.PI*2)+Math.PI*2)%(Math.PI*2),N=CAVE_PLAN.length,k=a/(Math.PI*2)*N,i=Math.floor(k),u=k-i,p=CAVE_PLAN[i],q=CAVE_PLAN[(i+1)%N];let x=p[0]+(q[0]-p[0])*u,z=p[1]+(q[1]-p[1])*u;
+ const pale=gaussian(a,4.39,.56),depth=1-Math.exp(-y*y/ .045);
+ // Irregular ledges have tilted sedimentary bedding rather than ring-like ribs.
+ const strataPhase=y*16.5+.82*Math.sin(a*3.7)+.35*Math.sin(a*9.1);
+ const strata=.050*Math.tanh(3*Math.sin(strataPhase))+.023*Math.sin(y*39+a*6.2);
+ const crags=.065*Math.sin(a*8+y*3.7)*Math.cos(a*13-y*6.2)+.018*Math.sin(a*63+y*27);
+ let deposit=0;
+ for(const [aa,yy,aw,yw,r]of [[4.08,.65,.21,.60,.38],[4.21,1.02,.22,.59,.62],[4.39,1.62,.27,.49,.53],[4.61,1.01,.23,.48,.49],[4.78,.57,.22,.40,.40],[4.31,2.15,.23,.44,.30]])deposit+=r*gaussian(a,aa,aw)*gaussian(y,yy,yw);
+ // Rounded, scalloped shoulders fuse to the rear wall; no pointed tube tops.
+ const scallops=pale*(.055*Math.sin(a*37+Math.sin(y*4.2))*Math.sin(y*9.5+a*3)+.025*Math.sin(a*77-y*17));
+ const left=gaussian(a,2.93,.53)*(.40*gaussian(y,.44,.21)+.55*gaussian(y,1.45,.30)+.29*gaussian(y,2.42,.28));
+ const foreground=gaussian(a,3.03,.27)*(.83*gaussian(y,.35,.30)+.25*gaussian(y,1.5,.38));
+ const spillLip=.17*gaussian(a,3.87,.12)*gaussian(y,1.07,.14);
+ const upper=.28*gaussian(y,2.69,.39)*(1+.3*Math.sin(a*6));
+ const inset=depth*(.04+strata*(1-pale*.72)+crags*(1-pale*.45)+deposit+scallops+left+foreground+spillLip+upper);
+ const rad=Math.hypot(x,z);return[x*(1-inset/rad),y,z*(1-inset/rad)];
+}
+export function roofPoint(a,r){const edge=wallPoint(a,roofHeight(a)),x=edge[0]*r,z=edge[2]*r;
+ // A shallow asymmetric broken ceiling, with a low rock eyebrow over the pool.
+ const y=roofHeight(a)*r+3.16*(1-r)+Math.sin(Math.PI*r)*(.13*Math.sin(x*2.6-z*1.8)-.22*gaussian(z,-.72,.46))+.025*Math.sin(x*17+z*11)*Math.sin(Math.PI*r);
+ return[x,y,z];
+}

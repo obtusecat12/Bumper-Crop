@@ -1,8 +1,8 @@
-import {exitPoint} from './exit-route.js?v=56';
-import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.js?v=56';
-import {BUILDING_TYPES} from './urban-buildings.js?v=56';
-import {paintCompass} from './retro-instruments.js?v=56';
-import {createMapAtlas} from './map-atlas.js?v=56';
+import {exitPoint} from './exit-route.js?v=57';
+import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.js?v=57';
+import {BUILDING_TYPES} from './urban-buildings.js?v=57';
+import {paintCompass} from './retro-instruments.js?v=57';
+import {createMapAtlas} from './map-atlas.js?v=57';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
 export function mapPoint(center,dx,dz){

@@ -1,0 +1,47 @@
+{
+  "generation": "built-in image_gen, seven independent calls",
+  "files": [
+    {
+      "file": "municipal-green-painted-steel.png",
+      "width": 1254,
+      "height": 1254,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nUse case: photorealistic-natural\nasset type: seamless game environment material texture, diffuse/albedo map\nsubject: faded dark municipal green painted steel surface, mild scuffs, salt abrasion and subtle uneven repainting, maintained but weathered\nstyle and material: grounded Source-engine / PS2-era photographic texture, realistic grain and soft imperfect detail\ncomposition: flat front-facing surface filling entire image, seamless tileable edges, aspect ratio 1:1\nlighting: neutral diffuse, even across image, no baked directional shadows\nAvoid: object edges, panels, rivets, rust apocalypse, perspective, specular glare, graffiti, words, pixel art, clean vector look."
+    },
+    {
+      "file": "pale-terrazzo-cement.png",
+      "width": 1254,
+      "height": 1254,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nUse case: photorealistic-natural\nasset type: seamless game environment material texture, diffuse/albedo map\nsubject: pale terrazzo cement with sparse small embedded aggregate flecks, tactile slightly worn public-plaza paving\nstyle and material: grounded Source-engine / PS2-era photographic texture, natural grain and soft detail\ncomposition: flat top-down surface filling entire image, seamless tileable edges, aspect ratio 1:1\nlighting: neutral diffuse, even across image, no baked directional shadows\nAvoid: slab seams, objects, large stones, perspective, strong highlights, words, pixel art, overly sharp procedural pattern."
+    },
+    {
+      "file": "warm-bench-hardwood-planks.png",
+      "width": 1254,
+      "height": 1254,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nUse case: photorealistic-natural\nasset type: seamless game environment material texture, diffuse/albedo map\nsubject: vertically running warm hardwood bench planks, real varnish and subtle grain, gently weathered by plaza use\nstyle and material: grounded Source-engine / PS2-era photographic texture, natural grain, tactile and soft detail\ncomposition: straight-on flat wood surface filling entire image, narrow parallel planks running top-to-bottom with subtle gaps, seamless tileable edges, aspect ratio 1:1\nlighting: neutral diffuse, even across image, no baked directional shadows\nAvoid: furniture in perspective, nails, graffiti, strong glare, words, pixel art, exaggerated wood knots."
+    },
+    {
+      "file": "corn-sun-front.png",
+      "width": 1024,
+      "height": 1536,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nUse case: product-mockup\nasset type: front-face texture artwork for a fictional 1990s cereal carton in a PS2-era corner store\nsubject: CORN SUN toasted corn cereal front panel, red and cream print palette, appetizing photographic cereal bowl with toasted corn flakes in milk, slightly faded factory ink and subtle print wear\ncomposition: FLAT 2:3 rectangular graphic artwork, orthographic front view, cropped precisely edge-to-edge at all four artwork edges; full image is the printed box face\ntext (verbatim): \"CORN SUN\" prominent masthead; \"TOASTED CORN\" smaller subtitle\naspect ratio: 2:3\nAvoid: 3D product mockup, box side, perspective, background, shelf, scenery, whitespace outside the artwork, random brands, watermark, modern glossy design."
+    },
+    {
+      "file": "saltine-house-front.png",
+      "width": 1024,
+      "height": 1536,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nUse case: product-mockup\nasset type: front-face texture artwork for fictional 1980s corner-store cracker carton\nsubject: SALTINE HOUSE cracker front panel, blue and ivory print, inviting photographic stack of lightly salted square crackers, aged but maintained factory-printed retail packaging\ncomposition: FLAT 2:3 rectangular graphic artwork, orthographic front view, cropped precisely edge-to-edge at all four artwork edges; full image is the printed carton face\ntext (verbatim): \"SALTINE HOUSE\" prominent masthead; \"SALTINE CRACKERS\" small subtitle\naspect ratio: 2:3\nAvoid: 3D product mockup, box side, perspective, background, shelf, scenery, whitespace outside artwork, random brands, watermark, modern glossy design."
+    },
+    {
+      "file": "golden-valley-chip-front.png",
+      "width": 1254,
+      "height": 1254,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nUse case: product-mockup\nasset type: flat front-face texture for a fictional potato chip packet in a PS2-era corner store\nsubject: GOLDEN VALLEY potato chips packet artwork, warm yellow and red factory print, believable photographic potato chips, gentle physical crinkle and a few metallic foil highlights, period-appropriate faded retail graphics\ncomposition: FLAT square packet face, orthographic straight-on view, edge-to-edge image filled entirely by printed packet surface\ntext (verbatim): \"GOLDEN VALLEY\" large and legible; \"POTATO CHIPS\" smaller\naspect ratio: 1:1\nAvoid: 3D bag mockup, perspective, background, shelf, scenery, whitespace outside packet, unrelated brands, watermark, overly shiny foil."
+    },
+    {
+      "file": "orchard-orange-front.png",
+      "width": 887,
+      "height": 1774,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nUse case: product-mockup\nasset type: flat front-face texture artwork for fictional 1990s fruit juice carton\nsubject: ORCHARD ORANGE juice front panel, faded green and orange-cream factory-printed colors, photographic cut orange fruit with leaves, modest aged corner-store packaging\ncomposition: FLAT tall 1:2 rectangular graphic artwork, orthographic front view, cropped precisely edge-to-edge at all four artwork edges; full image is the printed carton face\ntext (verbatim): \"ORCHARD\" large brand name; \"ORANGE\" clear product name\naspect ratio: 1:2\nAvoid: 3D product mockup, carton top, side, perspective, background, shelf, scenery, whitespace outside artwork, unrelated brands, watermark, modern glossy design."
+    }
+  ]
+}

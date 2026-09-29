@@ -1,8 +1,9 @@
 import * as T from './vendor/three.module.min.js';
-import * as P from './urban-props.js?v=56';
-import * as S from './urban-smallprops.js?v=56';
-import {adFor,adFace} from './advertising-assets.js?v=56';
-import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=56';
+import {UrbanBatch} from './urban-batch.js?v=57';
+import * as P from './urban-props.js?v=57';
+import * as S from './urban-smallprops.js?v=57';
+import {adFor,adFace} from './advertising-assets.js?v=57';
+import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=57';
 const PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args={})=>{b.push(x,y,z,ry);fn(b,args);b.pop();};
 function mesh(b,key,p,uv,ix){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p.flat(),3));g.setAttribute('uv',new T.Float32BufferAttribute(uv.flat(),2));g.setIndex(ix);g.computeVertexNormals();b.add(g,key,0,0,0);g.dispose();}
@@ -38,12 +39,67 @@ function patioTable(b,shade){
 }
 function terraceLamp(b){b.box('district:paintMetal',0,.72,0,.07,1.44,.07);b.box('photoBronze',0,1.48,0,.34,.08,.34);b.sphere('lamp',0,1.67,0,.14,.19,.14);for(const x of[-.13,.13])for(const z of[-.13,.13])b.rod('photoBronze',[x,1.49,z],[x,1.85,z],.011);b.cylinder('photoBronze',0,1.9,0,0,.26,.12,8);b.circle(0,0,.16);}
 function bicycle(b){const rims=[];for(const z of[-.57,.57]){const g=new T.TorusGeometry(.32,.024,5,20);g.rotateY(PI/2);b.add(g,'rubber',0,.34,z);g.dispose();for(let k=0;k<12;k++){const a=k*PI/6;b.rod('photoSteel',[0,.34,z],[0,.34+Math.sin(a)*.29,z+Math.cos(a)*.29],.004);}rims.push([0,.34,z]);}const pedal=[0,.34,-.06],seat=[0,.84,-.23],head=[0,.86,.34];for(const[a,c]of[[rims[0],pedal],[rims[0],seat],[seat,pedal],[pedal,head],[seat,head],[head,rims[1]]])b.rod('green',a,c,.019);b.box('rubber',0,.88,-.26,.16,.045,.27);b.rod('metal',head,[0,1.02,.35],.016);b.rod('metal',[-.28,1.02,.35],[.28,1.02,.35],.016);b.solid(0,0,.56,1.8);}
-export function sunkenCart(b,x,z,y=.12){b.push(x,y-.53,z,.29);
+// Assemble then rotate the entire object about its centre of mass. All rods,
+// labels and wheels share the same pose; the paving itself occludes buried parts.
+export const CART_POSE={x:45.6,y:-.27,z:55,rx:.61,ry:.55,rz:-.27};
+export const EMBEDDED_PACKAGES=[
+ {key:'cereal',x:45.10,y:.13,z:54.03,w:.23,h:.35,d:.075,rx:.58,ry:.44,rz:-.51},
+ {key:'crackers',x:46.34,y:.16,z:54.61,w:.16,h:.27,d:.07,rx:-.43,ry:-.52,rz:.72},
+ {key:'juice',x:45.04,y:.13,z:55.91,w:.11,h:.24,d:.105,rx:.39,ry:1.14,rz:-.27},
+ {key:'chips',x:46.33,y:.09,z:55.44,w:.19,h:.25,d:.06,rx:1.02,ry:-.20,rz:.43},
+ {key:'crackers',x:44.75,y:.095,z:54.62,w:.16,h:.27,d:.07,rx:-.73,ry:1.65,rz:-.82}
+];
+function assembled(b,fn,p){const local=new UrbanBatch(b.mats);fn(local);for(const[key,parts]of local.parts)for(const g of parts){b.add(g,key,p.x,p.y,p.z,1,1,1,p.ry||0,p.rx||0,p.rz||0);g.dispose();}}
+function cartMesh(b){
  const ring=height=>{const t=(height-.46)/.54,w=.46+.19*t,d=.61+.28*t;return[[-w/2,height,-d/2],[w/2,height,-d/2],[w/2,height,d/2],[-w/2,height,d/2]];};
  for(let k=0;k<=6;k++){const p=ring(.46+k*.09);for(let i=0;i<4;i++)b.rod('photoSteel',p[i],p[(i+1)%4],k===6?.014:.0065);}
  const a=ring(.46),c=ring(1);for(let edge=0;edge<4;edge++)for(let i=0;i<9;i++){const t=i/8,p=a[edge].map((v,j)=>v+(a[(edge+1)%4][j]-v)*t),q=c[edge].map((v,j)=>v+(c[(edge+1)%4][j]-v)*t);b.rod('photoSteel',p,q,.0065);}
  for(const x of[-.28,.28]){b.rod('photoSteel',[x,.12,-.57],[x,.92,-.50],.02);b.rod('photoSteel',[x,.12,-.57],[x,.12,.43],.02);b.rod('photoSteel',[x,.92,-.50],[x,1.08,-.57],.02);for(const z of[-.50,.39])b.cylinder('rubber',x,.09,z,.078,.078,.05,10,0,PI/2);}
- b.rod('blue',[-.29,1.08,-.57],[.29,1.08,-.57],.029);b.box('red',0,.81,-.445,.38,.12,.018);b.solid(0,0,.78,1.23);b.pop();
+ b.rod('blue',[-.29,1.08,-.57],[.29,1.08,-.57],.029);b.box('red',0,.81,-.445,.38,.12,.018); 
+}
+
+function carton(b,q){
+ b.box(q.key==='juice'?'green':'photoCream',0,0,0,q.w,q.h,q.d);
+ // The image belongs to the outer face; never intersects the supporting carton.
+ b.plane('district:'+q.key,0,0,q.d/2+.0012,q.w*.98,q.h*.98);
+ b.plane('district:'+q.key,0,0,-q.d/2-.0012,q.w*.98,q.h*.98,PI);
+ if(q.key==='juice'){b.box('white',0,q.h/2+.008,0,q.w,.016,q.d);b.box('white',0,q.h/2+.024,0,.01,.022,q.d*.75);}
+}
+export function sunkenCart(b){assembled(b,cartMesh,CART_POSE);b.solid(CART_POSE.x,CART_POSE.z,1.13,1.46,CART_POSE.ry);
+ for(const p of EMBEDDED_PACKAGES)assembled(b,bb=>carton(bb,p),p);
+}
+function drinkingFountain(b){
+ b.box('district:terrazzo',0,.40,0,.42,.80,.44);b.box('district:paintMetal',0,.85,0,.58,.10,.58);
+ b.cylinder('photoSteel',0,.911,0,.22,.20,.026,20);b.cylinder('dark',0,.927,.10,.038,.038,.009,12);
+ b.rod('photoSteel',[-.17,.914,-.15],[-.17,1.01,-.15],.025);b.rod('photoSteel',[-.17,1.01,-.15],[-.11,1.01,-.15],.025);
+ b.cylinder('photoSteel',.213,.71,.08,.033,.033,.025,12,0,PI/2);b.solid(0,0,.62,.62);
+}
+function plazaTable(b){
+ b.cylinder('district:terrazzo',0,.42,0,.25,.39,.84,16);b.cylinder('district:terrazzo',0,.87,0,.86,.84,.09,32);
+ // Stationary chessboard inset into a real slab, with no duplicate table surface.
+ const g=new T.PlaneGeometry(.49,.49);g.rotateX(-PI/2);b.add(g,'photoCream',0,.920,0);g.dispose();
+ for(let z=0;z<8;z++)for(let x=0;x<8;x++)if((x+z)%2===0)b.box('dark',(x-3.5)*.060,.922,(z-3.5)*.060,.060,.004,.060);
+ for(const x of[-1.13,1.13]){b.cylinder('district:terrazzo',x,.24,0,.23,.28,.48,16);b.cylinder('district:benchWood',x,.52,0,.35,.34,.075,24);b.circle(x,0,.40);}
+ b.circle(0,0,.87);
+}
+function lowPlanter(b){b.box('district:terrazzo',0,.30,0,1.14,.60,1.14);b.box('bark',0,.61,0,.95,.025,.95);b.solid(0,0,1.15,1.15);for(const[x,z]of[[-.2,-.2],[.2,.2],[0,-.12]])b.sphere('foliage',x,.83,z,.33,.30,.33);}
+function serviceTrolley(b){
+ for(const x of[-.32,.32])for(const z of[-.43,.43]){b.cylinder('rubber',x,.09,z,.085,.085,.045,10,0,PI/2);b.rod('district:paintMetal',[x,.09,z],[x,.78,z],.027);}
+ for(const y of[.24,.77]){b.box('district:paintMetal',0,y,0,.70,.04,.95);for(const x of[-.34,.34])b.box('district:paintMetal',x,y+.06,0,.028,.12,.95);}
+ for(const x of[-.32,.32])b.rod('district:paintMetal',[x,.78,-.43],[x,1.02,-.43],.027);b.rod('district:paintMetal',[-.32,1.02,-.43],[.32,1.02,-.43],.028);
+ b.cylinder('blue',0,.45,.08,.15,.12,.35,14);b.rod('district:benchWood',[.20,.25,.20],[.25,1.40,.16],.019);b.solid(0,0,.85,1.06);
+}
+function plazaDetails(b){
+ // Furniture forms occupied edges, leaving fountain access and the axis open.
+ for(const[x,z,ry]of[[63.0,42,0],[62.2,58.9,.18],[33.1,53.5,PI/2]])place(b,x,.12,z,ry,plazaTable);
+ for(const[x,z,ry]of[[63.3,39.7,-PI/2],[61.8,60,-PI/2]])place(b,x,.12,z,ry,drinkingFountain);
+ for(const[x,z]of[[58.8,30.9],[63.0,53.4],[33.0,38.9]])place(b,x,.12,z,0,lowPlanter);
+ place(b,66.8,.12,54.2,-.09,serviceTrolley);
+ place(b,67.4,.12,37.4,PI/2,S.addBikeRack);
+ place(b,61.7,.12,31.9,PI,S.addNewspaperBox,{color:'district:paintMetal',seed:571});
+ // A forgotten takeaway cup on a bench, and folded stock on the service trolley.
+ b.cylinder('white',56.4,.68,55,.043,.034,.11,12);b.cylinder('white',56.4,.741,55,.048,.048,.014,12);
+ assembled(b,bb=>carton(bb,{key:'cereal',w:.23,h:.35,d:.075}),{x:66.67,y:1.075,z:54.39,ry:.14,rx:0,rz:0});
 }
 export function addClinicStreetlife(b,{potted}){
  // Occupied café terrace stays west of the fountain and the clear axial path.
@@ -52,7 +108,7 @@ export function addClinicStreetlife(b,{potted}){
  for(const[x,z]of[[34.4,39.1],[43.2,58.8]])place(b,x,.12,z,0,terraceLamp);
  b.box('district:benchWood',35.6,.68,60.4,2.25,1.1,.84);b.box('photoGranite',35.6,1.26,60.4,2.35,.09,.95);b.solid(35.6,60.4,2.35,.95);adFace(b,adFor(8,'poster'),35.6,.75,59.972,1.80,.75,PI);
  place(b,43.9,.12,33.8,-PI/2,bb=>posterStand(bb,adFor(0,'poster'),0,0,1.2));
- sunkenCart(b,45.6,55.0);
+ sunkenCart(b);plazaDetails(b);
  // Rear service strip: everything fits between the real wall and public footway.
  place(b,-13.7,.02,32.0,PI,S.addDumpster);place(b,-11.4,.02,32.0,PI,S.addDumpster);
  place(b,7.0,.02,32.0,PI,P.addBench);place(b,-7.9,.02,32.1,PI/2,bicycle);

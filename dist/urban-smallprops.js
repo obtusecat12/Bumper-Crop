@@ -108,7 +108,7 @@ function stencil(b, label, x, y, z, width, height, key = 'dark', tone = .8) {
 
 /** Footprint .56 × .48 m; height 1.24 m. Red, blue or yellow enamel. */
 export function addNewspaperBox(b, { color = 'blue', seed = 1 } = {}) {
-  const key = ['red', 'blue', 'yellow'].includes(color) ? color : 'blue';
+  const key = b.mats?.[color] ? color : 'blue';
   const rng = random(seed), tone = .76 + rng() * .15;
   // Raised plinth and four separated feet keep the cabinet off wet pavement.
   for (const x of [-.205, .205]) for (const z of [-.145, .145]) {
