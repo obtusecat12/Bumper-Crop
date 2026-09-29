@@ -1,6 +1,6 @@
 // A surface has one owner. Clip coverage instead of hiding coincident layers
 // with camera-dependent depth offsets.
-import {exitPoint,ease} from './exit-route.js?v=57';
+import {exitPoint,ease} from './exit-route.js?v=58';
 const origin=exitPoint(382),a=Math.atan2(origin.tx,origin.tz),ca=Math.cos(a),sa=Math.sin(a);
 export const approachRoadHalf=s=>{const r=2.05+ease(80,265,s)*2.05+ease(290,420,s)*6.9;return r+(11-r)*ease(327,350,s);};
 export const approachRoadTop=s=>.028*(1-ease(336,350,s));

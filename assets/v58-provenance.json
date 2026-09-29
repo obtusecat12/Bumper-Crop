@@ -1,0 +1,69 @@
+{
+  "release": "V58",
+  "generatedAssets": [
+    {
+      "original": "assets/pantry-v58/harvest-tin-peas.png",
+      "sha256": "8bd56d49ae265baf64ef744113efeaf330db47b1a3a25542f32117bf03077f79"
+    },
+    {
+      "original": "assets/pantry-v58/northfield-tomato-soup.png",
+      "sha256": "f4ae3080c292fe5d40415b712ff67a8486c954d8566aceae091b85023eb3a016"
+    },
+    {
+      "original": "assets/pantry-v58/stillwater-tuna.png",
+      "sha256": "b45e17fa2394023dabdcf4c09afb041636f840e3a0ac832bdfb92ed66659ad31"
+    },
+    {
+      "original": "assets/pantry-v58/sunvale-peaches.png",
+      "sha256": "a3e99ea165e2377fb8d135666b909f106ffae39123c0fb4a9eb81e616b89d63d"
+    },
+    {
+      "original": "assets/pantry-v58/tin-lid.png",
+      "sha256": "6d6e1e9813a887a4121bd9e1819d92fef5c4befe356942a5189af0813ecb2567"
+    },
+    {
+      "original": "assets/plaza-v58/ceramic-mosaic.png",
+      "sha256": "6e589c07a67306bb47011a599f78a84382442c953f5bdc92b1f54b06522ad5e8"
+    },
+    {
+      "original": "assets/plaza-v58/palm-court-directory.png",
+      "sha256": "a317c21dfe5c91004770b20e9b631e040788472b901676c846972b65e219b8b7"
+    },
+    {
+      "original": "assets/plaza-v58/payphone-face.png",
+      "sha256": "cd30dc506d5b328878757e78752cce0c56f28d3a3aa8fba120cbefbcd179d1ab"
+    },
+    {
+      "original": "assets/plaza-v58/sunset-cola-vending.png",
+      "sha256": "df993ceffa79b13687a754b4d109affdf12406c5399776d4afd3206a110f175e"
+    }
+  ],
+  "referencePhotos": [
+    {
+      "source": "https://concierges.exblog.jp/11625278/",
+      "observed": "Circular/arched shopping-court shelter, geometric structure, quiet open-air circulation",
+      "adaptation": "Compact east arcade with vaulted canopy, tiled columns and rain gutters"
+    },
+    {
+      "source": "https://abandonedonline.net/location/cedar-knoll-galleria/",
+      "observed": "Tiled fountain edge, still-working vending machines and directory within empty concourse",
+      "adaptation": "Cola machine, permanent mall directory and public amenities at plaza perimeter"
+    },
+    {
+      "source": "https://99wfmk.com/jackson-michigans-westwood-mall/",
+      "observed": "Angular star planters combined with seating around a water feature",
+      "adaptation": "Eight-point mosaic planting court and timber ribbon seats"
+    },
+    {
+      "source": "https://www.audacy.com/wben/news/local/boulevard-mall-closes-nearly-all-indoor-shops-concourse-by-end-of-april",
+      "observed": "Repetitive neutral structural bays, occupied furniture edges around an empty walkway",
+      "adaptation": "Clear walking corridor with repeated shelter bays and edge seating"
+    },
+    {
+      "source": "https://victoriancollections.net.au/items/674adc198f48af8ae7211c5b",
+      "status": "Image search metadata only; direct download blocked",
+      "adaptation": "Period acoustic public-phone typology; no photo texture copied"
+    }
+  ],
+  "notes": "Web photographs were used as references only and are not embedded as game textures. Original landmark geometry and weather retained. Cans are scenery, not an added inventory item."
+}

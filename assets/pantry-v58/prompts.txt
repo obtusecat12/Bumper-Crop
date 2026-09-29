@@ -1,0 +1,58 @@
+## northfield-tomato-soup
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+use case: product-mockup
+asset type: flat UV texture artwork for a cylindrical canned-food prop in a PS1/PS2-style Three.js game
+object: fictional NORTHFIELD tomato soup paper can label, 1980s/1990s North-American supermarket packaging
+scene: the entire frame is the unfolded rectangular full-wrap printed label, lying completely flat, orthographic, edge-to-edge artwork
+layout: center front-facing brand and product panel with large readable text "NORTHFIELD" and "TOMATO SOUP"; a modest appetizing illustration of a bowl of red tomato soup and tomatoes integrated in the front panel; smaller ingredients, nutrition and barcode-like back-panel details toward the side edges, so the left and right edges could meet around the can
+style: authentic modest period grocery print design with coarse low-resolution PS1 source-texture detail, subtle registration softness and mild paper wear, not intentional pixel art
+palette: cream and muted tomato red, restrained black details
+aspect ratio: 3:1
+Avoid: can or cylinder depiction, mockup, perspective, table, scenery, thick outer border, modern minimalist branding, heavy grunge, watermark, unrelated logos
+
+## harvest-tin-peas
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+use case: product-mockup
+asset type: flat UV texture artwork for a cylindrical canned-food prop in a PS1/PS2-style Three.js game
+object: fictional HARVEST tin peas paper can label, 1980s/1990s North-American supermarket packaging
+scene: the entire frame is the unfolded rectangular full-wrap printed label, completely flat, orthographic, edge-to-edge artwork
+layout: center front-facing brand and product panel with large readable text "HARVEST" and "TIN PEAS"; modest period illustration or printed food photograph of green peas in a small serving bowl integrated in the front; ingredients, nutrition and barcode-like back-panel details toward side edges, so left and right edges can meet around can
+style: authentic modest period grocery print design with coarse low-resolution PS1 source-texture detail, subtle registration softness and mild paper wear, not intentional pixel art
+palette: olive green and warm gold with muted cream details
+aspect ratio: 3:1
+Avoid: can or cylinder depiction, mockup, perspective, table, scenery, thick outer border, modern minimalist branding, heavy grunge, watermark, unrelated logos
+
+## stillwater-tuna
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+use case: product-mockup
+asset type: flat UV texture artwork for a cylindrical canned-food prop in a PS1/PS2-style Three.js game
+object: fictional STILLWATER tuna paper can label, 1980s/1990s North-American supermarket packaging
+scene: the entire frame is the unfolded rectangular full-wrap printed label, completely flat, orthographic, edge-to-edge artwork
+layout: center front-facing brand and product panel with large readable text "STILLWATER" and "TUNA"; modest period illustration of a tuna fish and a prepared tuna serving integrated in the front; ingredients, nutrition and barcode-like back-panel details toward side edges, so left and right edges can meet around can
+style: authentic modest period grocery print design with coarse low-resolution PS1 source-texture detail, subtle registration softness and mild paper wear, not intentional pixel art
+palette: navy blue and subdued silver-gray, off-white details
+aspect ratio: 3:1
+Avoid: can or cylinder depiction, mockup, perspective, table, scenery, thick outer border, modern minimalist branding, heavy grunge, watermark, unrelated logos
+
+## sunvale-peaches
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+use case: product-mockup
+asset type: flat UV texture artwork for a cylindrical canned-food prop in a PS1/PS2-style Three.js game
+object: fictional SUNVALE peaches paper can label, 1980s/1990s North-American supermarket packaging
+scene: the entire frame is the unfolded rectangular full-wrap printed label, completely flat, orthographic, edge-to-edge artwork
+layout: center front-facing brand and product panel with large readable text "SUNVALE" and "PEACHES"; modest period illustration or printed food photograph of peach halves and leaves integrated in the front; ingredients, nutrition and barcode-like back-panel details toward side edges, so left and right edges can meet around can
+style: authentic modest period grocery print design with coarse low-resolution PS1 source-texture detail, subtle registration softness and mild paper wear, not intentional pixel art
+palette: dusty orange and cream with subdued brown details
+aspect ratio: 3:1
+Avoid: can or cylinder depiction, mockup, perspective, table, scenery, thick outer border, modern minimalist branding, heavy grunge, watermark, unrelated logos
+
+## tin-lid
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+use case: product-mockup
+asset type: top-facing circular metal can lid texture for a canned-food prop in a PS1/PS2-style Three.js game
+object: stamped unpainted tin can lid, single centered round disc with concentric shallow grooves and subtle stamped rim
+scene: square image completely filled with neutral tin metal background; exact orthographic top-down surface texture, flat ambient illumination
+style: authentic mildly worn low-resolution PS1 source-texture detail, subdued brushed tin with a few restrained scratches and no dramatic reflections
+composition: circular lid concentric grooves centered symmetrically and comfortably within the square
+aspect ratio: 1:1
+Avoid: angled can, cylindrical side, table, scenery, lettering, pull tab, strong shadows, harsh highlights, heavy rust, border, watermark

@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: Seamless square ceramic mall floor mosaic diffuse texture for an empty late-1970s to 1990s North American shopping plaza scene.
+subject: Small square ceramic tiles, mostly off-white cream, with roughly 20% muted pool-turquoise accent tiles distributed naturally, soft grey grout, slight mild water aging.
+style and medium: Period-authentic photographic diffuse material, soft detail and restrained grain suited to a low-resolution PS2/Source-engine environment texture.
+composition: Orthographic flat tile pattern filling the entire frame edge to edge, naturally seamless in both axes. Real-world repeat around 0.7 meter.
+lighting: Even flat diffuse color, no baked shadows or directional highlights.
+aspect ratio: 1:1.
+Avoid: Perspective, scene context, borders, dramatic grime or ruin, modern sharp 4K promo feel, oversharpening.

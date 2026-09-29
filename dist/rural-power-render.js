@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {powerMaterials,powerDepthMaterial} from './rural-power-materials.js?v=57';
+import {powerMaterials,powerDepthMaterial} from './rural-power-materials.js?v=58';
 const STRIDE=23;
 function primitive(){const p=[],n=[],uv=[],face=[],idx=[];
  const v=(x,y,z,nx,ny,nz,u,w,fx=nx,fy=ny,fz=nz)=>{p.push(x,y,z);n.push(nx,ny,nz);uv.push(u,w);face.push(fx,fy,fz);};

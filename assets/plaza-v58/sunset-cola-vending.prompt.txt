@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: Late-1980s beverage vending machine front face UV diffuse image for an empty North American shopping plaza scene.
+subject: Fictional SUNSET COLA branding with a cold soda glass photograph, retro coral-red, cream and chestnut palette. Selection buttons form a vertical strip on the far right, with payment hardware in the upper-right area. Shallow printed wear.
+style and medium: Period-authentic photographic printed machine front, softened detail and restrained grain, suited to a low-resolution PS2/Source-engine environment texture.
+composition: Flat front elevation, front face edge-to-edge, full panel isolated as a texture, no perspective or surrounding machine render.
+lighting: Even diffuse, avoid baked directional lighting and glossy glare.
+text (verbatim): SUNSET COLA.
+aspect ratio: 1:2.
+Avoid: External background, side panels, angled product render, modern sharp 4K promo feel, oversharpening, heavy ruin, unrelated logos or text.

@@ -1,0 +1,19 @@
+{
+  "buildings": 32,
+  "cans": 70,
+  "sideways": 42,
+  "kinds": [
+    "peaches",
+    "tuna",
+    "soup",
+    "peas"
+  ],
+  "floorError": 0.00032555763795971866,
+  "packetLabels": 3,
+  "wheat": {
+    "binding": "live shared player + trail",
+    "rebase": "64m and huge BigInt verified",
+    "immutableMatrices": true,
+    "wakeSamples": 12
+  }
+}

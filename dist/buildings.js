@@ -1,6 +1,7 @@
+import {planFloorCans,makeFloorCans,isSharedCanResource} from './canned-food.js?v=58';
 import * as T from './vendor/three.module.min.js';
-import {height,random} from './world.js?v=57';
-import {ruralTextures} from './rural-textures.js?v=57';
+import {height,random} from './world.js?v=58';
+import {ruralTextures} from './rural-textures.js?v=58';
 
 // Main-wall dimensions; roof overhangs/optional porch are described by footprint.
 export const RURAL_BUILDING_SIZES = Object.freeze([[7,9,3],[2.8,3.2,2.7],[12,17,4.9],[13,19,5.1],[11,15,4.3],[13,9,3.7],[13,18,3.8],[8,11,3.2]].map(Object.freeze));
@@ -69,7 +70,7 @@ export const buildingSurfaceTextures=[woodTex,roofTex,brickTex,floorTex,stoneTex
 const shared=new Set([unitBox,floorSlabGeo,barrelGeo,hoopGeo,stoneGeo,cylinder,woodTex,roofTex,brickTex,floorTex,stoneTex]);
 function material(color,map=null){let m=new T.MeshStandardMaterial({color,map,vertexColors:true,roughness:1,side:T.DoubleSide});shared.add(m);return m;}
 const M={wood:material('#938b7c',woodTex),red:material('#914e40',woodTex),darkRed:material('#72483d',woodTex),dark:material('#514b40',woodTex),trim:material('#bfbaa5',woodTex),brick:material('#956950',brickTex),brickDark:material('#71584b',brickTex),stone:material('#817b6c',stoneTex),roof:material('#4c5350',roofTex),tin:material('#7b827a',roofTex),rust:material('#795b45',roofTex),black:material('#202e2a'),metal:material('#515950'),floor:material('#867b61',floorTex),hay:material('#92815a')};
-export function isSharedBuildingResource(resource){return shared.has(resource);}
+export function isSharedBuildingResource(resource){return shared.has(resource)||isSharedCanResource(resource);}
 M.farmRed=material('#c4bbb1',ruralTextures.barnRed);
 // Finishes share finite material/texture pools. Masonry keeps its brick map
 // and jamb construction when painted, rather than turning into timber boards.
@@ -367,6 +368,9 @@ export function makeRuralBuilding(f,level=0){
  }
  b.finish(group);group.position.set(f.cx,y+.035,f.cz);group.rotation.y=angle;group.scale.setScalar(s);group.name=`rural-${v}`;group.userData.ruralVariant=v;group.userData.rainRoofs=rainRoofs;
  const bounds=new T.Box3();for(const mesh of group.children)bounds.union(mesh.geometry.boundingBox);
+ // Test candidate tins against the same furniture/wall OBBs used by walking.
+ const cans=planFloorCans(f,w,d,(x,z,radius)=>{const p=world(x,z);return colliders.some(q=>{const cc=Math.cos(q.angle),ss=Math.sin(q.angle),dx=p.x-q.x,dz=p.z-q.z;return Math.abs(cc*dx-ss*dz)<q.hx+radius*s&&Math.abs(ss*dx+cc*dz)<q.hz+radius*s;});});
+ group.add(makeFloorCans(cans,level));group.userData.floorCans=cans;
  const nearZ=v===1?.05:Math.min(1.5,d*.15),nearX=v===0?-1.15:0,p=world(nearX,nearZ);
  pickups.push({id:f.key+':barn',x:p.x,z:p.z,y:y+.07});
  const footprint={x:f.cx,z:f.cz,angle,w:(bounds.max.x-bounds.min.x)*s,d:(bounds.max.z-bounds.min.z)*s,h:bounds.max.y*s,hx:Math.max(Math.abs(bounds.min.x),Math.abs(bounds.max.x))*s,hz:Math.max(Math.abs(bounds.min.z),Math.abs(bounds.max.z))*s,minX:bounds.min.x*s,maxX:bounds.max.x*s,minZ:bounds.min.z*s,maxZ:bounds.max.z*s};

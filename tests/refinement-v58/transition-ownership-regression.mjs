@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import {createRequire} from 'node:module';
+const {createCanvas}=createRequire(import.meta.url)(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/@napi-rs/canvas');globalThis.document={createElement:()=>createCanvas(1,1)};
+const T=await import('../../dist/vendor/three.module.min.js');const {createExitScene}=await import('../../dist/exit-scene.js?v=58'),R=await import('../../dist/exit-route.js?v=58'),G=await import('../../dist/urban-ground-ownership.js?v=58');
+const ex=createExitScene(),ray=new T.Raycaster();ex.object.updateMatrixWorld(true);let center=0,shoulders=0,paving=0;
+function owners(s,d){const p=R.exitPoint(s),x=p.x+p.nx*d,z=p.z+p.nz*d;ray.set(new T.Vector3(x,10,z),new T.Vector3(0,-1,0));return{p:{x,z},hits:ray.intersectObject(ex.fabricGround.object).filter(h=>h.face.normal.y>.5)};}
+for(let s=100.37;s<217.5;s+=1.731){for(const d of[-1.6,0,1.6]){const q=owners(s,d);assert.equal(q.hits.length,0,`urban asphalt covers rural road at ${s}, ${d}`);if(s>141)assert(G.transitionTerrainOwns(q.p.x,q.p.z),'same geometric hole must preserve rural shader pixels');center++;}if(s>180)for(const d of[-6,6]){assert.equal(owners(s,d).hits.length,0,'soil shoulder must be preserved');shoulders++;}}
+// The first authored road begins at the SAME boundary, with no arbitrary height patch.
+for(let s=218.2;s<350;s+=2.72){const q=owners(s,0);assert.equal(q.hits.length,0,'landmark ground must not overlap actual road ribbon');}
+// The fabric's raised crosslink sidewalks must also yield to rural shoulders.
+for(let s=142.3;s<217.9;s+=1.17)for(const d of[-6,-3,0,3,6]){const p=R.exitPoint(s);ray.set(new T.Vector3(p.x+p.nx*d,2,p.z+p.nz*d),new T.Vector3(0,-1,0));const hits=ray.intersectObject(ex.fabric.object).filter(h=>h.face.normal.y>.7&&/ \/ (sidewalk|photoGranite)$/.test(h.object.name));assert.equal(hits.length,0,`raised urban pavement covers transition at ${s}, ${d}`);paving++;}
+assert(!G.AUTHORED_GROUND_GLSL.includes('p.y--'),'valid signed GLSL coordinates');
+const report={ruralRoadSamples:center,soilShoulderSamples:shoulders,pavementExclusionSamples:paving,ownership:'one polygon set drives rural preservation and asphalt clipping',start:'original gradual terrain remains visible through s=218'};fs.mkdirSync(new URL('./results/',import.meta.url),{recursive:true});fs.writeFileSync(new URL('./results/transition.json',import.meta.url),JSON.stringify(report,null,2));console.log(report);ex.dispose();

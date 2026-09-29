@@ -1,15 +1,15 @@
-import {addClinicStreetlife,PATIO_RECT} from './clinic-streetlife.js?v=57';
-import {addFountainLiquid,finishFountainLiquid} from './fountain-water-v54.js?v=57';
-import {fountainCenter} from './clinic-district-materials.js?v=57';
+import {addClinicStreetlife,PATIO_RECT} from './clinic-streetlife.js?v=58';
+import {addFountainLiquid,finishFountainLiquid} from './fountain-water-v54.js?v=58';
+import {fountainCenter} from './clinic-district-materials.js?v=58';
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch,urbanRandom} from './urban-batch.js?v=57';
-import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=57';
-import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=57';
-import {subtractRectangles} from './urban-ground-ownership.js?v=57';
-import {addRoofEquipment} from './urban-buildings.js?v=57';
-import {windowCatalog} from './urban-assets.js?v=57';
-import * as P from './urban-props.js?v=57';
-import * as S from './urban-smallprops.js?v=57';
+import {UrbanBatch,urbanRandom} from './urban-batch.js?v=58';
+import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=58';
+import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=58';
+import {subtractRectangles} from './urban-ground-ownership.js?v=58';
+import {addRoofEquipment} from './urban-buildings.js?v=58';
+import {windowCatalog} from './urban-assets.js?v=58';
+import * as P from './urban-props.js?v=58';
+import * as S from './urban-smallprops.js?v=58';
 const cp=exitPoint(282),A=Math.atan2(cp.nx,cp.nz),Y=EXIT_CITY_Y,PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args={})=>{b.push(x,y,z,ry);fn(b,args);b.pop();};
 function surface(b,key,x0,x1,z0,z1,y,holes=[]){for(const[a,c,u,v]of subtractRectangles(x0,x1,z0,z1,holes)){b.box(key,(a+c)/2,y-.06,(u+v)/2,c-a,.12,v-u);b.walk((a+c)/2,(u+v)/2,c-a,v-u,y);}}
@@ -58,7 +58,7 @@ export function createClinicDistrict(mats){const center=clinicToWorld(49,46);fou
  for(const x of[29,70])b.box('photoGranite',x,.10,45.55,.18,.16,33.1);
  for(let k=0;k<64;k++){const a=k*PI/32,c=(k+1)*PI/32,point=(t,r)=>[49+Math.cos(t)*r,.12,46+Math.sin(t)*r],edge=t=>5.22/Math.max(Math.abs(Math.cos(t)),Math.abs(Math.sin(t)));quad(b,'district:pavers',[point(a,5.22),point(c,5.22),point(c,edge(c)),point(a,edge(a))]);}fountain(b,49,46);
  for(let i=0;i<treePositions.length;i++){const[x,z]=treePositions[i];palm(b,x,z,.12,8.1+(i%3)*.75,901+i,1.2,true);}
- for(const[x,z,ry]of[[60.7,37,-PI/2],[60.7,49,-PI/2],[56,55,PI],[56,33,0]])place(b,x,.12,z,ry,P.addBench);
+ for(const[x,z,ry]of[[60.7,37,-PI/2],[60.7,49,-PI/2],[56,55,PI],[58,33,0]])place(b,x,.12,z,ry,P.addBench);
  for(const x of[28.4,70.6])for(const z of[34,56.5]){b.box('photoGranite',x,.32,z,1.35,.60,7.6);b.box('bark',x,.627,z,1.12,.04,7.32);b.solid(x,z,1.35,7.6);for(let k=0;k<9;k++){const q=z-3.2+k*.8;b.sphere('foliage',x,.96,q,.55,.48,.61,.82+(k%3)*.05);for(let j=0;j<2;j++)b.plane('photoLeaf',x,1.05,q,1.1,.80,j*PI/2,0,.92);}}
  for(const[x,z]of[[36,31.8],[62,55.8],[28,60]])place(b,x,x<29?.02:.12,z,0,P.addTrashBin);
  for(const[x,z]of[[29,25],[68,25],[68,61]])place(b,x,.02,z,PI,P.addStreetLight,{height:7.8,arm:1.6});

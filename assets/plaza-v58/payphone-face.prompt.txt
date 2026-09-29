@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: Public payphone metal front UV diffuse texture for an empty late-1970s to 1990s North American shopping plaza scene.
+subject: Period-1980s brushed stainless coin-operated faceplate with keypad, coin slot, coin return, tiny printed instructions and a muted blue TELEPHONE header. Exclude the handset because it is modeled separately.
+style and medium: Period-authentic photographic diffuse material, soft detail and restrained grain suited to a low-resolution PS2/Source-engine environment texture.
+composition: Single faceplate front view, flat and edge-to-edge, with no external background or perspective. Functional elements arranged believably on one vertical rectangular panel.
+lighting: Even diffuse, minimal reflected lighting baked into metal.
+text (verbatim): TELEPHONE on muted blue header.
+aspect ratio: 2:3.
+Avoid: Handset, surrounding wall or cabinet, angled product render, deep shadows, modern sharp 4K promo feel, oversharpening, heavy ruin.

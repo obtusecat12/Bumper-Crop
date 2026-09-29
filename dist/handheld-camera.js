@@ -89,9 +89,9 @@ export class HandheldCameraRig {
  strike(side,strength){
   // Instant velocity changes are the time integral of a brief acceleration
   // spike. Do NOT multiply by frame dt: that would weaken it at high FPS.
-  this.heelY.velocity-=.15*strength;
-  this.heelPitch.velocity+=.033*strength;
-  this.heelRoll.velocity+=side*.115*strength;
+  this.heelY.velocity-=.24*strength;
+  this.heelPitch.velocity+=.048*strength;
+  this.heelRoll.velocity+=side*.16*strength;
  }
  update(dt,input){
   const {x,z,yaw,pitch,eyeY,jump=0,moved=0,dx=0,dz=0,grounded=true,running=false,crouch=false,stamina=100,landingSpeed=0,enabled=true,locked=false}=input;
@@ -143,13 +143,15 @@ export class HandheldCameraRig {
   const yawNoise=enabled?drift*.72*this.noise.fbm(this.clock,.16,1,3)+wrist*.13*this.noise.fbm(this.clock,1.35,4,2):0;
   const pitchNoise=enabled?drift*.58*this.noise.fbm(this.clock,.21,2,3)+wrist*.15*this.noise.fbm(this.clock,1.63,5,2):0;
   const rollNoise=enabled?drift*.46*this.noise.fbm(this.clock,.13,3,3)+wrist*.10*this.noise.fbm(this.clock,1.17,6,2):0;
-  const lateral=enabled?this.path[0]*.018*gain:0;
-  const vertical=enabled?this.path[1]*.026*gain+this.heelY.position:0;
-  const forward=enabled?this.path[1]*.006*gain:0;
+  // V58: visible shoulder transfer and heel compression, driven by resolved
+  // distance; look controls, photo locks and reduced-motion opt-out stay exact.
+  const lateral=enabled?this.path[0]*.037*gain:0;
+  const vertical=enabled?this.path[1]*.048*gain+this.heelY.position:0;
+  const forward=enabled?this.path[1]*.013*gain:0;
   const viewYaw=this.yaw.position+yawNoise,c=Math.cos(viewYaw),s=Math.sin(viewYaw);
   const ox=c*lateral+s*forward,oz=-s*lateral+c*forward;
   this.camera.position.set(x+ox,eye+jump+vertical,z+oz);
-  this.camera.rotation.set(clamp(this.pitch.position+pitchNoise+(enabled?this.heelPitch.position:0),-1.415,1.415),viewYaw,rollNoise+(enabled?this.path[0]*.0045*gain+this.heelRoll.position+bank:0),'YXZ');
+  this.camera.rotation.set(clamp(this.pitch.position+pitchNoise+(enabled?this.heelPitch.position-this.path[1]*.0055*gain:0),-1.415,1.415),viewYaw,rollNoise+(enabled?this.path[0]*.009*gain+this.heelRoll.position+bank:0),'YXZ');
   this.camera.updateMatrixWorld();
   // dx/dz are the resolved movement BEFORE 64 m chunk rebasing. Derivatives
   // remain physical even at huge BigInt world coordinates or a chunk border.

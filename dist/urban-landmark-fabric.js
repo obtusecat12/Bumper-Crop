@@ -1,13 +1,13 @@
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch} from './urban-batch.js?v=57';
-import {URBAN_TILE_SIZE} from './urban-materials.js?v=57';
-import {addStreetwallBuilding} from './urban-streetwall.js?v=57';
-import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=57';
-import {CITY_ORIGIN,CITY_ANGLE,cityToWorld} from './urban-layout.js?v=57';
-import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=57';
-import {subtractConvex,TRANSITION_TERRAIN_QUADS,APPROACH_GROUND_QUADS} from './urban-ground-ownership.js?v=57';
-import * as P from './urban-props.js?v=57';
-import * as S from './urban-smallprops.js?v=57';
+import {UrbanBatch} from './urban-batch.js?v=58';
+import {URBAN_TILE_SIZE} from './urban-materials.js?v=58';
+import {addStreetwallBuilding} from './urban-streetwall.js?v=58';
+import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=58';
+import {CITY_ORIGIN,CITY_ANGLE,cityToWorld} from './urban-layout.js?v=58';
+import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=58';
+import {subtractConvex,TRANSITION_TERRAIN_QUADS,APPROACH_GROUND_QUADS} from './urban-ground-ownership.js?v=58';
+import * as P from './urban-props.js?v=58';
+import * as S from './urban-smallprops.js?v=58';
 const PI=Math.PI,Y=EXIT_CITY_Y,cp=exitPoint(282),CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);
 const frames={city:{...CITY_ORIGIN,ry:CITY_ANGLE,toWorld:cityToWorld},clinic:{...CLINIC_ORIGIN,ry:CLINIC_ANGLE,toWorld:clinicToWorld}};
 export const LANDMARK_FABRIC_PARCELS=[

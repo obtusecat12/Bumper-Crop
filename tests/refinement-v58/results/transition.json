@@ -1,0 +1,7 @@
+{
+  "ruralRoadSamples": 204,
+  "soilShoulderSamples": 42,
+  "pavementExclusionSamples": 325,
+  "ownership": "one polygon set drives rural preservation and asphalt clipping",
+  "start": "original gradual terrain remains visible through s=218"
+}

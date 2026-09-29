@@ -1,9 +1,9 @@
-import {exitForField,exitCropFactor,ease} from './exit-route.js?v=57';
-import {roadGrassNoise} from './road-surface.js?v=57';
+import {exitForField,exitCropFactor,ease} from './exit-route.js?v=58';
+import {roadGrassNoise} from './road-surface.js?v=58';
 import * as T from './vendor/three.module.min.js';
-import {field,stringSeed,random,cropSample,wheatAllowed,surfaceHeight,periodOrigin} from './world.js?v=57';
-import {prepareStaticSelection} from './static-selection.js?v=57';
-export const CEREAL_CELL=40,CEREAL_RADIUS=35,CEREAL_LIMIT=25000,CEREAL_PADDING=2.2;
+import {field,stringSeed,random,cropSample,wheatAllowed,surfaceHeight,periodOrigin} from './world.js?v=58';
+import {prepareStaticSelection} from './static-selection.js?v=58';
+export const CEREAL_CELL=40,CEREAL_RADIUS=35,CEREAL_LIMIT=25000,CEREAL_PADDING=2.95;
 export const floorDiv=(a,b)=>a/b-(a%b<0n?1n:0n);
 const fields=new Map();
 function cachedField(x,z,seed){const key=`${seed}:${x},${z}`;let f=fields.get(key);if(!f){f=field(x,z,seed);fields.set(key,f);if(fields.size>36)fields.delete(fields.keys().next().value);}return f;}

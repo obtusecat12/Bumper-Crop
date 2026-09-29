@@ -1,7 +1,7 @@
-import {compoundRainRoof} from './compound-models.js?v=57';
-import {surfaceHeight,buildingLocal,pondShoreDistance} from './world.js?v=57';
-import {REFERENCE_BARN as B} from './reference-barn-layout.js?v=57';
-import {farmRainRoof} from './weather-farm-roofs.js?v=57';
+import {compoundRainRoof} from './compound-models.js?v=58';
+import {surfaceHeight,buildingLocal,pondShoreDistance} from './world.js?v=58';
+import {REFERENCE_BARN as B} from './reference-barn-layout.js?v=58';
+import {farmRainRoof} from './weather-farm-roofs.js?v=58';
 const roofRecords=new WeakMap(),compoundRoofRecords=new WeakMap();
 function compoundRoofs(chunk){if(compoundRoofRecords.has(chunk))return compoundRoofRecords.get(chunk);const found=[];chunk.group?.traverse(o=>{if(o.userData?.compoundRainRoofs)found.push(...o.userData.compoundRainRoofs)});compoundRoofRecords.set(chunk,found);return found;}
 function roofs(chunk){if(roofRecords.has(chunk))return roofRecords.get(chunk);let found=[];chunk.group?.traverse(o=>{if(o.userData?.rainRoofs)found=o.userData.rainRoofs;});roofRecords.set(chunk,found);return found;}

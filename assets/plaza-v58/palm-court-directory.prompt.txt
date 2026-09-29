@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: Fictional PALM COURT shopping mall directory printed panel UV texture for an empty late-1970s to 1990s North American plaza scene.
+subject: Flat period-1988 directory graphic, dark muted teal header, warm cream field with a geometric floorplan and colored retail units. Faded retail listing reads LAUNDRY / TRAVEL / PHOTO / BOOKS / FOUNTAIN COURT. A clearly visible small red YOU ARE HERE dot.
+style and medium: Printed period mall wayfinding graphic, tidy and maintained yet subtly sun-faded, soft low-resolution photographic diffuse texture and restrained grain for a PS2/Source-engine environment.
+composition: Flat front view, single rectangular panel fills the frame edge to edge, with clear header, map, legend and listings. The same corridor branches repeat subtly within the map, creating a quiet uncanny impression without explicit horror.
+text (verbatim): PALM COURT; LAUNDRY; TRAVEL; PHOTO; BOOKS; FOUNTAIN COURT; YOU ARE HERE.
+aspect ratio: 2:3.
+Avoid: Perspective, frame or wall, overt horror, excessive distress, modern vector crispness, sharp 4K promotional finish, oversharpening.

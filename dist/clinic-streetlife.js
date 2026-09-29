@@ -1,9 +1,10 @@
+import {addPlazaMemory} from './plaza-memory.js?v=58';
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch} from './urban-batch.js?v=57';
-import * as P from './urban-props.js?v=57';
-import * as S from './urban-smallprops.js?v=57';
-import {adFor,adFace} from './advertising-assets.js?v=57';
-import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=57';
+import {UrbanBatch} from './urban-batch.js?v=58';
+import * as P from './urban-props.js?v=58';
+import * as S from './urban-smallprops.js?v=58';
+import {adFor,adFace} from './advertising-assets.js?v=58';
+import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=58';
 const PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args={})=>{b.push(x,y,z,ry);fn(b,args);b.pop();};
 function mesh(b,key,p,uv,ix){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p.flat(),3));g.setAttribute('uv',new T.Float32BufferAttribute(uv.flat(),2));g.setIndex(ix);g.computeVertexNormals();b.add(g,key,0,0,0);g.dispose();}
@@ -94,12 +95,12 @@ function plazaDetails(b){
  for(const[x,z,ry]of[[63.0,42,0],[62.2,58.9,.18],[33.1,53.5,PI/2]])place(b,x,.12,z,ry,plazaTable);
  for(const[x,z,ry]of[[63.3,39.7,-PI/2],[61.8,60,-PI/2]])place(b,x,.12,z,ry,drinkingFountain);
  for(const[x,z]of[[58.8,30.9],[63.0,53.4],[33.0,38.9]])place(b,x,.12,z,0,lowPlanter);
- place(b,66.8,.12,54.2,-.09,serviceTrolley);
- place(b,67.4,.12,37.4,PI/2,S.addBikeRack);
+ place(b,68.75,.12,54.9,-.09,serviceTrolley);
+ place(b,67.4,.12,30.9,PI/2,S.addBikeRack);
  place(b,61.7,.12,31.9,PI,S.addNewspaperBox,{color:'district:paintMetal',seed:571});
  // A forgotten takeaway cup on a bench, and folded stock on the service trolley.
  b.cylinder('white',56.4,.68,55,.043,.034,.11,12);b.cylinder('white',56.4,.741,55,.048,.048,.014,12);
- assembled(b,bb=>carton(bb,{key:'cereal',w:.23,h:.35,d:.075}),{x:66.67,y:1.075,z:54.39,ry:.14,rx:0,rz:0});
+ assembled(b,bb=>carton(bb,{key:'cereal',w:.23,h:.35,d:.075}),{x:68.62,y:1.075,z:55.09,ry:.14,rx:0,rz:0});
 }
 export function addClinicStreetlife(b,{potted}){
  // Occupied café terrace stays west of the fountain and the clear axial path.
@@ -108,7 +109,7 @@ export function addClinicStreetlife(b,{potted}){
  for(const[x,z]of[[34.4,39.1],[43.2,58.8]])place(b,x,.12,z,0,terraceLamp);
  b.box('district:benchWood',35.6,.68,60.4,2.25,1.1,.84);b.box('photoGranite',35.6,1.26,60.4,2.35,.09,.95);b.solid(35.6,60.4,2.35,.95);adFace(b,adFor(8,'poster'),35.6,.75,59.972,1.80,.75,PI);
  place(b,43.9,.12,33.8,-PI/2,bb=>posterStand(bb,adFor(0,'poster'),0,0,1.2));
- sunkenCart(b);plazaDetails(b);
+ sunkenCart(b);plazaDetails(b);addPlazaMemory(b);
  // Rear service strip: everything fits between the real wall and public footway.
  place(b,-13.7,.02,32.0,PI,S.addDumpster);place(b,-11.4,.02,32.0,PI,S.addDumpster);
  place(b,7.0,.02,32.0,PI,P.addBench);place(b,-7.9,.02,32.1,PI/2,bicycle);

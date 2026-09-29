@@ -1,0 +1,189 @@
+{
+  "summary": {
+    "passed": 18,
+    "failed": 0
+  },
+  "failed": [],
+  "measurements": {
+    "gaitAcrossFps": [
+      {
+        "mode": "walk",
+        "fps": 30,
+        "contacts": 44,
+        "expected": 44,
+        "nearDuplicates": 0,
+        "phase": 2.438251014726477,
+        "heelY": -0.000022827563334517157,
+        "heelYVelocity": 0.000025448822130935925
+      },
+      {
+        "mode": "walk",
+        "fps": 60,
+        "contacts": 44,
+        "expected": 44,
+        "nearDuplicates": 0,
+        "phase": 2.4382510147264975,
+        "heelY": -0.00002282756333451707,
+        "heelYVelocity": 0.00002544882213098003
+      },
+      {
+        "mode": "walk",
+        "fps": 120,
+        "contacts": 44,
+        "expected": 44,
+        "nearDuplicates": 0,
+        "phase": 2.438251014726382,
+        "heelY": -0.00002282756333451752,
+        "heelYVelocity": 0.000025448822130722493
+      },
+      {
+        "mode": "walk",
+        "fps": 144,
+        "contacts": 44,
+        "expected": 44,
+        "nearDuplicates": 0,
+        "phase": 2.438251014726781,
+        "heelY": -0.00002282756333451601,
+        "heelYVelocity": 0.000025448822131617556
+      },
+      {
+        "mode": "aligned-walk",
+        "fps": 30,
+        "contacts": 40,
+        "expected": 40,
+        "nearDuplicates": 0,
+        "phase": 1.9539925233402755e-14,
+        "heelY": 0.0000016621059919039031,
+        "heelYVelocity": -0.2400039654365551
+      },
+      {
+        "mode": "aligned-walk",
+        "fps": 60,
+        "contacts": 40,
+        "expected": 40,
+        "nearDuplicates": 0,
+        "phase": 0,
+        "heelY": 0.0000016621059926383239,
+        "heelYVelocity": -0.24000396543658048
+      },
+      {
+        "mode": "aligned-walk",
+        "fps": 120,
+        "contacts": 40,
+        "expected": 40,
+        "nearDuplicates": 0,
+        "phase": 1.6253665080512292e-13,
+        "heelY": 0.0000016621059864415234,
+        "heelYVelocity": -0.24000396543636635
+      },
+      {
+        "mode": "aligned-walk",
+        "fps": 144,
+        "contacts": 40,
+        "expected": 40,
+        "nearDuplicates": 0,
+        "phase": 0,
+        "heelY": 0.0000016621059926383207,
+        "heelYVelocity": -0.24000396543658048
+      },
+      {
+        "mode": "run",
+        "fps": 30,
+        "contacts": 62,
+        "expected": 62,
+        "nearDuplicates": 0,
+        "phase": 2.4840500051641143,
+        "heelY": 0.00017195741490600507,
+        "heelYVelocity": -0.004985047569196977
+      },
+      {
+        "mode": "run",
+        "fps": 60,
+        "contacts": 62,
+        "expected": 62,
+        "nearDuplicates": 0,
+        "phase": 2.4840500051641428,
+        "heelY": 0.0001719574149059912,
+        "heelYVelocity": -0.004985047569196844
+      },
+      {
+        "mode": "run",
+        "fps": 120,
+        "contacts": 62,
+        "expected": 62,
+        "nearDuplicates": 0,
+        "phase": 2.4840500051639913,
+        "heelY": 0.00017195741490606738,
+        "heelYVelocity": -0.004985047569197565
+      },
+      {
+        "mode": "run",
+        "fps": 144,
+        "contacts": 62,
+        "expected": 62,
+        "nearDuplicates": 0,
+        "phase": 2.4840500051640126,
+        "heelY": 0.00017195741490605622,
+        "heelYVelocity": -0.0049850475691974525
+      },
+      {
+        "mode": "crouch",
+        "fps": 30,
+        "contacts": 35,
+        "expected": 35,
+        "nearDuplicates": 0,
+        "phase": 4.795062471268677,
+        "heelY": 0.000004647761131059567,
+        "heelYVelocity": -0.0007837134182517672
+      },
+      {
+        "mode": "crouch",
+        "fps": 60,
+        "contacts": 35,
+        "expected": 35,
+        "nearDuplicates": 0,
+        "phase": 4.795062471268741,
+        "heelY": 0.000004647761131050842,
+        "heelYVelocity": -0.0007837134182515032
+      },
+      {
+        "mode": "crouch",
+        "fps": 120,
+        "contacts": 35,
+        "expected": 35,
+        "nearDuplicates": 0,
+        "phase": 4.795062471268773,
+        "heelY": 0.000004647761131046231,
+        "heelYVelocity": -0.0007837134182513642
+      },
+      {
+        "mode": "crouch",
+        "fps": 144,
+        "contacts": 35,
+        "expected": 35,
+        "nearDuplicates": 0,
+        "phase": 4.795062471268602,
+        "heelY": 0.0000046477611310695765,
+        "heelYVelocity": -0.000783713418252069
+      }
+    ],
+    "tenMinuteBounds": {
+      "maxTranslationMetres": 0.06589103592360997,
+      "maxRotationDegrees": 1.005496262114747,
+      "maxVelocityMetresPerSecond": 5.999140560630966,
+      "maxHeelMetres": 0.005683073240318013
+    },
+    "cpuMillisecondsPerUpdate": {
+      "median": 0.0011246457333333334,
+      "batches": [
+        0.0011157416666666678,
+        0.0011172903333333333,
+        0.0011246457333333334,
+        0.0011767139333333338,
+        0.0011914057333333328
+      ],
+      "node": "v24.19.0",
+      "includes": "Rig math and real Three camera updateMatrixWorld; excludes renderer, UI, GPU, and game simulation"
+    }
+  }
+}
