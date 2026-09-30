@@ -1,0 +1,14 @@
+[
+  {
+    "name": "limestone",
+    "prompt": "Use case: stylized-concept. Asset type: square seamless repeating game diffuse texture. Primary request: Seamless damp pale grey-beige limestone/travertine cave surface with broad natural mineral strata and subtle dark moisture areas. No plants or leaves, no objects. Style: restrained 2000-era PS2 / early Source-engine photographic diffuse texture, subdued low-frequency detail and contrast, designed to remain readable downsampled to 256–512 px. Composition: surface fills entire square edge-to-edge, orthographic front view; edges match for seamless tiling horizontally and vertically. Lighting: perfectly flat diffuse ambient, no directional light, no cast shadow, no specular highlights. Avoid modern shiny PBR, oversharpening, faux chunky pixel art, text, border, collage, atlas, objects, scenery. Generate exactly one image."
+  },
+  {
+    "name": "bathhouse-tiles",
+    "prompt": "Use case: stylized-concept. Asset type: square seamless repeating game diffuse texture. Primary request: Seamless aged off-white small square ceramic bathhouse tiles in a regular grid, dull desaturated cyan-grey grout, subtle water marks. Restrained aging. Tiles viewed straight-on flat with no perspective. Style: restrained 2000-era PS2 / early Source-engine photographic diffuse texture, subdued low-frequency detail and contrast, designed to remain readable downsampled to 256–512 px. Composition: surface fills entire square edge-to-edge, orthographic front view; edges match for seamless tiling horizontally and vertically. Lighting: perfectly flat diffuse ambient, no directional light, no cast shadow, no specular highlights. Avoid modern shiny PBR, oversharpening, faux chunky pixel art, text, border, collage, atlas, objects, scenery. Generate exactly one image."
+  },
+  {
+    "name": "barrel-staves",
+    "prompt": "Use case: stylized-concept. Asset type: square seamless repeating game diffuse texture. Primary request: Seamless weathered dark honey-brown wood vertical barrel staves. Straight parallel vertical narrow boards with fine worn grain and narrow joints. No metal hoops or hardware, no curved barrel silhouette or perspective. Style: restrained 2000-era PS2 / early Source-engine photographic diffuse texture, subdued low-frequency detail and contrast, designed to remain readable downsampled to 256–512 px. Composition: surface fills entire square edge-to-edge, orthographic front view; edges match for seamless tiling horizontally and vertically. Lighting: perfectly flat diffuse ambient, no directional light, no cast shadow, no specular highlights. Avoid modern shiny PBR, oversharpening, faux chunky pixel art, text, border, collage, atlas, objects, scenery. Generate exactly one image."
+  }
+]

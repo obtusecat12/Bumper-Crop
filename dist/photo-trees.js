@@ -1,7 +1,7 @@
-import {plantTexture} from './plant-texture.js?v=59';
+import {plantTexture} from './plant-texture.js?v=60';
 import * as T from './vendor/three.module.min.js';
-import {JoinedWood} from './joined-wood.js?v=59';
-import {attachRuralDetail} from './rural-textures.js?v=59';
+import {JoinedWood} from './joined-wood.js?v=60';
+import {attachRuralDetail} from './rural-textures.js?v=60';
 
 // Photo-specific Kephart Farm trees. Trunks and branch scaffolds are merged;
 // foliage is individual small leaves drawn into shared alpha-cut twig cards.

@@ -11,16 +11,24 @@ export function woodenBucket(root,tex,metal,x,y,z,scale=1){const g=new T.Group()
  for(let i=0;i<16;i++){const a=i/16*Math.PI*2;propRod(g,metal,[Math.cos(a)*.174,.027,Math.sin(a)*.174],[Math.cos(a)*.212,.305,Math.sin(a)*.212],.0019);}
  const handle=propMesh(g,new T.TorusGeometry(.212,.009,5,24,Math.PI),metal,0,.285,0);handle.rotation.z=0;return g;}
 export function addWashStation(root,mats,tex,{x,y,z}){
- const marble=new T.MeshStandardMaterial({name:'Carved pale mineral stone wash basin',map:tex['granite-basin'],bumpMap:tex['granite-basin'],bumpScale:.002,color:0xe2e4de,roughness:.43});
- const base=propMesh(root,new T.LatheGeometry([[0,0],[.34,0],[.36,.06],[.30,.12],[.16,.17],[.14,.60],[.23,.67],[.46,.72],[.61,.87],[.62,.96],[.58,.99],[.54,.91],[.40,.80],[.20,.75],[0,.75]].map(p=>new T.Vector2(...p)),48),marble,x,y,z,'Waist-high carved stone bowl on pedestal');
- // A shallow, bounded water surface stays below the carved inner lip.
- const water=new T.MeshStandardMaterial({name:'Rinse water in bowl',color:0x5d857c,roughness:.14,metalness:.25,transparent:true,opacity:.66});const surface=propMesh(root,new T.CircleGeometry(.465,48),water,x,y+.856,z);surface.rotation.x=-Math.PI/2;
- const wood=new T.MeshStandardMaterial({map:tex.wood,color:0xc7ab7c,roughness:.77});
- const spoon=propMesh(root,new T.LatheGeometry([[0,0],[.078,.017],[.085,.07],[.073,.07],[.065,.024],[0,.015]].map(p=>new T.Vector2(...p)),24),wood,x-.19,y+.945,z+.08,'Rinsing ladle cup');
- propRod(root,wood,[x-.17,y+.97,z+.10],[x+.48,y+1.0,z+.26],.017);
- woodenBucket(root,tex.wood,mats.metal,x+.27,y,z-.98,.86);
- const stool=propMesh(root,new T.BoxGeometry(.56,.065,.40),wood,x+.13,y+.36,z-.59,'Small towel stool');
- for(const dx of[-.21,.21])for(const dz of[-.145,.145])propRod(root,wood,[x+.13+dx,y,z-.59+dz],[x+.13+dx*.88,y+.35,z-.59+dz*.85],.025);
- foldedTowel(root,tex['towel-ivory'],x+.14,y+.40,z-.60,.42,.31,-.07);foldedTowel(root,tex['towel-turquoise'],x+.13,y+.447,z-.57,.39,.28,.03);
+ const marble=new T.MeshStandardMaterial({name:'PS2 carved marble / pale veins',map:tex['granite-basin'],bumpMap:tex['granite-basin'],bumpScale:.0018,color:0xd4d2c8,roughness:.76});
+ // Reference 5: 1.38m wide, 1.02m tall, open shallow bowl, fluted foot, square plinth.
+ propMesh(root,new T.BoxGeometry(.65,.12,.65),marble,x,y+.06,z,'Square marble plinth, grounded on dry rock');
+ const profile=[[0,.12],[.30,.12],[.31,.17],[.265,.21],[.23,.25],[.17,.34],[.155,.45],[.19,.51],[.26,.55],[.27,.58],[.24,.61],[.34,.63],[.48,.68],[.61,.77],[.675,.86],[.69,.94],[.684,.98],[.65,1.01],[.62,.975],[.62,.925],[.56,.83],[.42,.75],[.24,.705],[0,.705]].map(p=>new T.Vector2(...p));
+ const geo=new T.LatheGeometry(profile,96),pos=geo.attributes.position;
+ for(let i=0;i<pos.count;i++){const yy=pos.getY(i),a=Math.atan2(pos.getZ(i),pos.getX(i)),r=Math.hypot(pos.getX(i),pos.getZ(i));let flute=0;if(yy>.25&&yy<.50)flute=.012*(.5+.5*Math.cos(a*24));if(yy>.64&&yy<.87)flute=.014*(.5+.5*Math.cos(a*32))*Math.sin((yy-.64)/.23*Math.PI);pos.setX(i,Math.cos(a)*(r-flute));pos.setZ(i,Math.sin(a)*(r-flute));}geo.computeVertexNormals();
+ const base=propMesh(root,geo,marble,x,y,z,'Broad shallow gadrooned basin / fluted pedestal');
+ for(const [r,yy]of[[.685,.947],[.256,.582]])for(let i=0;i<(r>.5?48:24);i++){const a=i/(r>.5?48:24)*Math.PI*2;const bead=propMesh(root,new T.SphereGeometry(r>.5?.025:.019,6,5),marble,x+Math.cos(a)*r,y+yy,z+Math.sin(a)*r);bead.scale.y=1.12;}
+ const water=new T.MeshStandardMaterial({name:'Thin rinse water below carved interior rim',color:0x738982,roughness:.22,metalness:.1,transparent:true,opacity:.35});const surface=propMesh(root,new T.CircleGeometry(.44,48),water,x,y+.773,z);surface.rotation.x=-Math.PI/2;
+ const wood=new T.MeshStandardMaterial({name:'Used wooden ladle and towel stool',map:tex.wood,color:0xa99981,roughness:.92});
+ const cup=propMesh(root,new T.LatheGeometry([[0,0],[.071,.015],[.079,.058],[.068,.068],[.061,.022],[0,.015]].map(p=>new T.Vector2(...p)),20),wood,x-.18,y+.94,z+.1,'Wooden washing ladle');
+ propRod(root,wood,[x-.16,y+.983,z+.1],[x+.40,y+1.01,z+.20],.014);
+ woodenBucket(root,tex.wood,mats.metal,4.75,y,-1.05,1.06);
+ const sx=3.45,sz=1.95;propMesh(root,new T.BoxGeometry(.65,.07,.43),wood,sx,y+.43,sz,'Worn stool on dry floor');
+ for(const dx of[-.24,.24])for(const dz of[-.15,.15])propRod(root,wood,[sx+dx,y,sz+dz],[sx+dx*.92,y+.40,sz+dz*.9],.032);
+ foldedTowel(root,tex['towel-ivory'],sx-.04,y+.47,sz,.48,.35,-.07);foldedTowel(root,tex['towel-turquoise'],sx+.02,y+.518,sz+.01,.43,.30,.04);
+ // One casually draped towel hangs over a grounded stool edge.
+ const cloth=new T.MeshStandardMaterial({map:tex['towel-ivory'],color:0xd1c7b3,roughness:1,side:T.DoubleSide}),g=new T.PlaneGeometry(.26,.42,12,18),pp=g.attributes.position;
+ for(let i=0;i<pp.count;i++){const xx=pp.getX(i),v=(pp.getY(i)+.21)/.42;pp.setXYZ(i,xx,y+.46-v*.35,sz+.21+.015*Math.sin(v*12+xx*30));}g.computeVertexNormals();propMesh(root,g,cloth,sx-.14,0,0,'Soft towel over stool edge');
  return base;
 }

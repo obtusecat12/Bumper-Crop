@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {random} from './world.js?v=59';
+import {random} from './world.js?v=60';
 
 export const CAN_TEXTURES={soup:[384,128],peas:[384,128],tuna:[384,128],peaches:[384,128],lid:[128,128]};
 const shared=new Set();

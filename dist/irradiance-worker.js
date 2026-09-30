@@ -1,7 +1,7 @@
-import {RayFrameBudget,probeRayUpperBound,RAY_FRAME_BUDGET,RAY_SLICE_MS} from './ray-budget.js?v=59';
-import {REFERENCE_BARN as B,BARN_ROOFLIGHTS} from './reference-barn-layout.js?v=59';
-import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=59';
-import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=59';
+import {RayFrameBudget,probeRayUpperBound,RAY_FRAME_BUDGET,RAY_SLICE_MS} from './ray-budget.js?v=60';
+import {REFERENCE_BARN as B,BARN_ROOFLIGHTS} from './reference-barn-layout.js?v=60';
+import {TriangleBVH,ChunkBVHScene,traceRelocatedProbe} from './probe-bvh.js?v=60';
+import {PROBE_GRID as GRID,PROBE_STEP as STEP,PROBE_RAYS,PROBE_FAR,SKY_TOP,SKY_BOTTOM,SUN_DIRECTION,SUN_COLOR,SUN_INTENSITY} from './lighting-config.js?v=60';
 
 const budget=new RayFrameBudget();
 const chunks=new Map(),cache=new Map(),scene=new ChunkBVHScene();

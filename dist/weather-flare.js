@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {weatherSurface} from './weather-surfaces.js?v=59';
+import {weatherSurface} from './weather-surfaces.js?v=60';
 export function createWeatherFlare(renderer){
  const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));
  const uniforms={uSun:{value:new T.Vector2()},uStrength:{value:0},uAspect:{value:4/3}};

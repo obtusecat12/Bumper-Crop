@@ -1,10 +1,10 @@
-import {addPlazaMemory} from './plaza-memory.js?v=59';
+import {addPlazaMemory} from './plaza-memory.js?v=60';
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch} from './urban-batch.js?v=59';
-import * as P from './urban-props.js?v=59';
-import * as S from './urban-smallprops.js?v=59';
-import {adFor,adFace} from './advertising-assets.js?v=59';
-import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=59';
+import {UrbanBatch} from './urban-batch.js?v=60';
+import * as P from './urban-props.js?v=60';
+import * as S from './urban-smallprops.js?v=60';
+import {adFor,adFace} from './advertising-assets.js?v=60';
+import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=60';
 const PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args={})=>{b.push(x,y,z,ry);fn(b,args);b.pop();};
 function mesh(b,key,p,uv,ix){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p.flat(),3));g.setAttribute('uv',new T.Float32BufferAttribute(uv.flat(),2));g.setIndex(ix);g.computeVertexNormals();b.add(g,key,0,0,0);g.dispose();}

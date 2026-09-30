@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {URBAN_TILE_SIZE} from './urban-materials.js?v=59';
+import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 
 export const REFERENCE_TEXTURES={
  'hope-fine-stone':[1024,1024,true], 'hope-sandstone':[1024,1024,true], 'hope-dark-precast':[1024,1024,true],

@@ -1,8 +1,8 @@
-import {exitForField,exitCropFactor,ease} from './exit-route.js?v=59';
-import {roadGrassNoise} from './road-surface.js?v=59';
+import {exitForField,exitCropFactor,ease} from './exit-route.js?v=60';
+import {roadGrassNoise} from './road-surface.js?v=60';
 import * as T from './vendor/three.module.min.js';
-import {field,stringSeed,random,cropSample,wheatAllowed,surfaceHeight,periodOrigin} from './world.js?v=59';
-import {prepareStaticSelection} from './static-selection.js?v=59';
+import {field,stringSeed,random,cropSample,wheatAllowed,surfaceHeight,periodOrigin} from './world.js?v=60';
+import {prepareStaticSelection} from './static-selection.js?v=60';
 export const CEREAL_CELL=40,CEREAL_RADIUS=35,CEREAL_LIMIT=25000,CEREAL_PADDING=2.95;
 export const floorDiv=(a,b)=>a/b-(a%b<0n?1n:0n);
 const fields=new Map();

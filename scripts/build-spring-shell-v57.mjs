@@ -4,20 +4,21 @@ import fs from 'node:fs';
 import * as T from '../dist/vendor/three.module.min.js';
 import {mergeVertices} from '../dist/vendor/BufferGeometryUtils.js';
 import {wallPoint,roofPoint,roofHeight} from '../dist/level27-layout.js?v=59';
-const lo=[-2.8,-1.12,-8.82],hi=[2.8,3.9,2.8],h=.08;
+const lo=[-2.9,-1.12,-10.65],hi=[5.8,4.9,3.0],h=.12;
 const nx=Math.ceil((hi[0]-lo[0])/h)+1,ny=Math.ceil((hi[1]-lo[1])/h)+1,nz=Math.ceil((hi[2]-lo[2])/h)+1;
 const values=new Float32Array(nx*ny*nz),at=(i,j,k)=>(k*ny+j)*nx+i;
 const smax=(a,b,k)=>{const t=Math.max(0,Math.min(1,.5+.5*(a-b)/k));return b*(1-t)+a*t+k*t*(1-t);};
-const port=wallPoint(3.57,1.59),length=Math.hypot(port[0],port[2]),out=[port[0]/length,port[2]/length];
+const port=wallPoint(3.57,2.10),length=Math.hypot(port[0],port[2]),out=[port[0]/length,port[2]/length];
 // Cache geology evaluations by x/z/y slices, then contour the air/stone interface.
 for(let k=0;k<nz;k++)for(let i=0;i<nx;i++){
  const x=lo[0]+i*h,z=lo[2]+k*h,r=Math.hypot(x,z),a=(Math.atan2(z,x)+Math.PI*2)%(Math.PI*2),edge=wallPoint(a,roofHeight(a)),ro=roofPoint(a,Math.min(1,r/Math.hypot(edge[0],edge[2])))[1];
- const tunnelCenter=1.22+.055*Math.sin(z*1.3),half=.87+.035*Math.sin(z*2.8),tx=(x-tunnelCenter)/half,arch=2.44+1.10*Math.sqrt(Math.max(0,1-tx*tx))+.055*Math.sin(z*2.2)+.02*Math.sin(z*13),ax=(x-port[0])*out[0]+(z-port[2])*out[1],tangent=(x-port[0])*out[1]-(z-port[2])*out[0];
+ const tunnelCenter=2.98+.06*Math.sin(z*1.3),half=1.93+.07*Math.sin(z*2.8),tx=(x-tunnelCenter)/half,arch=3.12+1.22*Math.sqrt(Math.max(0,1-tx*tx))+.055*Math.sin(z*2.2)+.02*Math.sin(z*13),ax=(x-port[0])*out[0]+(z-port[2])*out[1],tangent=(x-port[0])*out[1]-(z-port[2])*out[0];
  for(let j=0;j<ny;j++){
   const y=lo[1]+j*h,p=wallPoint(a,y),room=Math.min(Math.hypot(p[0],p[2])-r,ro-y,y+1.045);
-  const tunnel=Math.min(half-Math.abs(x-tunnelCenter)+.023*Math.sin(y*17+z*3),arch-y,y-1.26,-.40-z,z+8.73);
-  let d=smax(room,tunnel,.10);
-  const bore=Math.min(.165-Math.hypot(tangent*.71,(y-1.61)*1.3),ax+.22,.39-ax);
+  const tunnel=Math.min(half-Math.abs(x-tunnelCenter)+.023*Math.sin(y*17+z*3),arch-y,y-1.58,-1.00-z,z+10.52);
+  const ar=Math.hypot((x-3.12)/2.38,(z-.10)/2.64),annex=Math.min((1-ar)*2.25+(y>.5?.025*Math.sin(y*14+z*3):0),4.14+.22*Math.sin(x*1.1+z*.7)-y,y+.12);
+  let d=smax(smax(room,annex,.30),tunnel,.20);
+  const bore=Math.min(.165-Math.hypot(tangent*.71,(y-2.12)*1.3),ax+.22,.39-ax);
   const drainCenter=-.85-.48*Math.max(0,Math.min(1,(z-1.45)/1.1));
   const drain=Math.min(.135-Math.abs(x-drainCenter),.075-y,y+.20,z-1.52,2.68-z);
   d=smax(smax(d,bore,.022),drain,.022);values[at(i,j,k)]=d;

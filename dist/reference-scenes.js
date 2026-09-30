@@ -1,10 +1,10 @@
 import * as T from './vendor/three.module.min.js';
-import {HOPE_GROUND_RECTS} from './urban-ground-ownership.js?v=59';
-import {UrbanBatch,urbanRandom} from './urban-batch.js?v=59';
-import {exitPoint,exitSample,EXIT_CITY_Y,ease} from './exit-route.js?v=59';
-import {CITY_ORIGIN,CITY_ANGLE,cityToWorld,worldToCity} from './urban-layout.js?v=59';
-import * as P from './urban-props.js?v=59';
-import {addBuilding} from './urban-buildings.js?v=59';
+import {HOPE_GROUND_RECTS} from './urban-ground-ownership.js?v=60';
+import {UrbanBatch,urbanRandom} from './urban-batch.js?v=60';
+import {exitPoint,exitSample,EXIT_CITY_Y,ease} from './exit-route.js?v=60';
+import {CITY_ORIGIN,CITY_ANGLE,cityToWorld,worldToCity} from './urban-layout.js?v=60';
+import * as P from './urban-props.js?v=60';
+import {addBuilding} from './urban-buildings.js?v=60';
 const Y=EXIT_CITY_Y,UP=new T.Vector3(0,1,0),plane=new T.PlaneGeometry(1,1);
 const CLINIC_PATH=282,cp=exitPoint(CLINIC_PATH);
 export const CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);

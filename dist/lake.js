@@ -1,8 +1,8 @@
-import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=59';
+import {plantCardGeometry,plantCardMaterial} from './verge-cards.js?v=60';
 import * as T from './vendor/three.module.min.js';
-import {terrainGeometry} from './ground.js?v=59';
-import { random, height, surfaceHeight, roadDistance } from './world.js?v=59';
-import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth, pondHabitat, pondShoreDistance, pondContours } from './lake-shape.js?v=59';
+import {terrainGeometry} from './ground.js?v=60';
+import { random, height, surfaceHeight, roadDistance } from './world.js?v=60';
+import { pondPoint, pondDistance, pondBankPoint, pondMetrics, pondShoreWidth, pondHabitat, pondShoreDistance, pondContours } from './lake-shape.js?v=60';
 
 // Reference-led irregular rural lake: shared shapes, cross-tile water, and dense
 // broken banks. The original layered wind-ripple / sky-reflection water is retained.

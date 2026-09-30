@@ -1,0 +1,9 @@
+{
+  "routeSamples": 5026,
+  "minimumHeadroom": 2.3038319981551165,
+  "triangles": 226682,
+  "focusMedianMs": 0.004386000000067725,
+  "focusP95Ms": 0.008713000000170723,
+  "twoWaterfalls": true,
+  "independentDryAnnex": true
+}

@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';const{createCanvas,loadImage}=createRequire(import.meta.url)(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/@napi-rs/canvas');globalThis.document={createElement:()=>createCanvas(1,1)};
+const T=await import('../../dist/vendor/three.module.min.js'),L=await import('../../dist/level27-layout.js?v=60'),B=await import('../../dist/bathhouse-layout.js?v=60');
+async function decode(url,w,h){const im=await loadImage(url.pathname),c=createCanvas(w,h);c.getContext('2d').drawImage(im,0,0,w,h);return{data:new Uint8Array(c.getContext('2d').getImageData(0,0,w,h).data),width:w,height:h};}
+await(await import('../../dist/level27-materials.js?v=60')).initializeSpringTextures(decode);await(await import('../../dist/bath-textures.js?v=60')).initializeBathTextures(decode);
+const spring=(await import('../../dist/level27-scene.js?v=60')).createLevel27(),bath=(await import('../../dist/bathhouse-scene.js?v=60')).createBathhouse();spring.scene.updateMatrixWorld(true);bath.scene.updateMatrixWorld(true);
+let samples=0;function route(start,targets,resolve,floor){let p={...start};for(const target of targets){for(let n=0;n<5000;n++){let dx=target.x-p.x,dz=target.z-p.z,d=Math.hypot(dx,dz);if(d<.016)break;const q=resolve(p,{x:p.x+dx/d*.014,z:p.z+dz/d*.014});assert(Math.hypot(q.x-p.x,q.z-p.z)>.003,`blocked ${JSON.stringify(p)} -> ${JSON.stringify(target)} floor ${floor(p.x,p.z)}`);p=q;samples++;if(n===4999)throw Error('route limit');}}return p;}
+route(L.ARRIVAL,[{x:3.65,z:.18},{x:3.0,z:.55},{x:2.0,z:.55},{x:.3,z:.55},{x:2.0,z:.55},{x:3,z:.55},{x:3.65,z:.18},{x:3.65,z:-9.8}],L.resolveSpring,L.springFloor);
+route(B.BATH_ARRIVAL,[{x:0,z:-.70},{x:-3.1,z:-.70},{x:-3.65,z:-1.35},{x:-5.9,z:-1.35},{x:-7.25,z:-1.65},{x:-5.9,z:-1.35},{x:-5.9,z:-6},{x:-7.25,z:-6},{x:-5.9,z:-6},{x:-5.9,z:-1.35},{x:-3.65,z:-1.35},{x:-3.1,z:-.70},{x:0,z:-.70},{x:0,z:3.85}],B.resolveBath,B.bathFloor);
+route({x:-2,z:-.90},[{x:-2,z:-3.05},{x:.8,z:-4.5},{x:-2,z:-3.05},{x:-2,z:-.90}],B.resolveBath,B.bathFloor);
+const ray=new T.Raycaster(),rocks=spring.scene.children[0].children.filter(o=>o.material===spring.materials.rock);let minHeadroom=100;
+for(let z=-9.8;z<.01;z+=.05){const floor=L.springFloor(L.STAIRS.x,z);ray.set(new T.Vector3(L.STAIRS.x,floor+.04,z),new T.Vector3(0,1,0));const hit=ray.intersectObjects(rocks)[0];minHeadroom=Math.min(minHeadroom,hit?.distance+.04||100);assert(!hit||hit.distance+.04>1.86,'headroom '+z+' '+hit?.distance);}
+assert.equal(spring.falls.children.length,2);assert.equal(L.springFloor(4.2,1.1),.28);assert(!L.inPool(4.2,1.1));assert(L.inPool(0,0));
+let times=[];const cam=new T.PerspectiveCamera();cam.position.set(.1,1,1.2);cam.lookAt(0,1,-1.5);cam.updateMatrixWorld();for(let i=0;i<1000;i++){const t=performance.now();spring.focusDistance(cam,14);times.push(performance.now()-t);}times.sort((a,b)=>a-b);
+let tris=0;spring.scene.traverse(o=>{if(o.isMesh)tris+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;});
+console.log(JSON.stringify({routeSamples:samples,minimumHeadroom:minHeadroom,triangles:tris,focusMedianMs:times[500],focusP95Ms:times[950],twoWaterfalls:true,independentDryAnnex:true},null,2));

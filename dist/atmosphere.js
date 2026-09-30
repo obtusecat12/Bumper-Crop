@@ -1,6 +1,6 @@
-import {weatherTextures} from './weather-textures.js?v=59';
-import {fogVolumePars} from './fog-volume.js?v=59';
-import {createAdvancingFog} from './advancing-fog.js?v=59';
+import {weatherTextures} from './weather-textures.js?v=60';
+import {fogVolumePars} from './fog-volume.js?v=60';
+import {createAdvancingFog} from './advancing-fog.js?v=60';
 import * as T from './vendor/three.module.min.js';
 
 // World-ray projected cellular decks; optical column depth gives dark cores

@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {polePoint,phasePoint,secondaryPoint,telcoPoint,makeCable} from './rural-power-layout.js?v=59';
+import {polePoint,phasePoint,secondaryPoint,telcoPoint,makeCable} from './rural-power-layout.js?v=60';
 const up=new T.Vector3(0,1,0),dummy=new T.Object3D(),color=new T.Color();
 // Matrix + shape/taper/atlas/year + linear RGB. Authored once inside world worker.
 export const POWER_STRIDE=23;
