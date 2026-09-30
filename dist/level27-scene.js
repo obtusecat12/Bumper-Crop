@@ -1,14 +1,17 @@
 import * as T from './vendor/three.module.min.js';
-import {SPRING_SHELL} from './level27-shell-data.js?v=58';
+import {SPRING_SHELL} from './level27-shell-data.js?v=59';
 import {mergeGeometries,mergeVertices} from './vendor/BufferGeometryUtils.js';
-import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint} from './level27-layout.js?v=58';
-import {springMaterials,springTextures} from './level27-materials.js?v=58';
+import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit} from './level27-layout.js?v=59';
+import {springMaterials,springTextures} from './level27-materials.js?v=59';
 
+import {createSpringDynamics} from './spring-dynamics.js?v=59';
+import {bathTextures} from './bath-textures.js?v=59';
+import {addWashStation} from './bathing-props.js?v=59';
 const UP=new T.Vector3(0,1,0);
 export const SPRING_LIGHTS=[
- {p:[-1.47,.50,-.85],color:0xffdea1,power:.75,range:6},
- {p:[-.46,1.57,-1.06],color:0xffeac3,power:2.0,range:6},
- {p:[-.48,2.48,-1.33],color:0x7494c2,power:3.1,range:6},
+ {p:[-1.30,.85,.28],color:0xffdeb6,power:1.65,range:6},
+ {p:[1.16,2.30,.65],color:0xffe6bf,power:2.7,range:6},
+ {p:[-.48,2.48,-1.33],color:0x8199ad,power:2.1,range:6},
  {p:[1.88,2.72,-3.9],color:0xffdfad,power:4.2,range:7}
 ];
 function geoGrid(cols,rows,point,skip=()=>false){const p=[],uv=[],idx=[];for(let j=0;j<=rows;j++)for(let i=0;i<=cols;i++){const q=point(i/cols,j/rows);p.push(...q.slice(0,3));uv.push(...q.slice(3,5));}for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){if(skip((i+.5)/cols,(j+.5)/rows))continue;const a=j*(cols+1)+i,b=a+cols+1;idx.push(a,b,a+1,a+1,b,b+1);}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return g;}
@@ -47,36 +50,41 @@ export function createLevel27(){
  for(let i=0;i<q.length;i++){p[i]=q[i]/SPRING_SHELL.scale;if(i%3===0){uv[i/3*2]=p[i]*.67;uv[i/3*2+1]=q[i+1]/SPRING_SHELL.scale*.67;}}
  const shell=new T.BufferGeometry();shell.setAttribute('position',new T.BufferAttribute(p,3));shell.setAttribute('uv',new T.BufferAttribute(uv,2));shell.setIndex(new T.BufferAttribute(unpack(SPRING_SHELL.indices,Uint32Array),1));const qn=unpack(SPRING_SHELL.normals,Int16Array);shell.setAttribute('normal',new T.Float32BufferAttribute(Array.from(qn,v=>v/16000),3));
  mesh(shell,mats.rock,'Unified limestone air boundary / cave and stream passage');
- mesh(geoGrid(96,24,(u,v)=>{const k=Math.min(95,Math.floor(u*96)),f=u*96-k,p=CAVE_PLAN[k],q=CAVE_PLAN[(k+1)%96],x=(p[0]+(q[0]-p[0])*f)*v,z=(p[1]+(q[1]-p[1])*f)*v;return[x,poolFloor(x||.0001,z||.0001),z,x*.67,z*.67];}),mats.bed,'Mineral basin / shared walking bed');
- box(rockRoot,mats.concrete,1.41,1.40,-5.16,1.18,.12,7.06,'M.E.G. dry tunnel bank');
- box(rockRoot,mats.bed,.60,1.31,-5.16,.42,.10,7.06,'Inflow stream bed');
+ mesh(geoGrid(160,160,(u,v)=>{const x=(u-.5)*5.4,z=(v-.5)*5.4;return[x,poolFloor(x||.0001,z||.0001),z,x*.67,z*.67];},(u,v)=>{const x=(u-.5)*5.4,z=(v-.5)*5.4;return Math.hypot(x,z)>radialLimit(x,z)+.025;}),mats.bed,'Mineral basin / shared walking bed');
+
+ // The bank is lightly dressed natural limestone: irregular edges, a narrow
+ // low stream bed and dry, full-height walking clearance along its right side.
+ mesh(geoGrid(12,112,(u,v)=>{const z=-8.62+v*6.47,left=.82+.025*Math.sin(z*3.7),x=left+u*(1.96-left);return[x,1.46+.009*Math.sin(x*17+z*5)*Math.sin(u*Math.PI),z,x,z];}),mats.concrete,'Dressed natural limestone tunnel bank');
+ mesh(geoGrid(10,112,(u,v)=>{const z=-8.62+v*6.55,x=.31+u*.44;return[x,1.34+.08*Math.pow(Math.abs(u-.5)*2,3),z,x,z];}),mats.bed,'Eroded stream gutter');
  box(rockRoot,mats.black,1.225,2.5,-8.72,1.75,2.5,.14,'Return threshold / dark continuation');
- // Thirteen anchored treads continue below the waterline. The bottom tread
- // meets the natural basin slope, so the return route never needs a jump.
- for(let i=0;i<STAIRS.count;i++){const z=STAIRS.start+(i+.5)*STAIRS.tread,top=STAIRS.base+(STAIRS.count-i)*STAIRS.rise;box(rockRoot,mats.concrete,STAIRS.x,(top-.94)/2,z,STAIRS.width,top+.94,STAIRS.tread,'M.E.G. stair tread '+(i+1));box(rockRoot,mats.metal,STAIRS.x,top+.003,z+.10,STAIRS.width-.06,.007,.032,'Non-slip tread nosing');}
- for(const x of[.74,1.72]){rod(rockRoot,mats.metal,[x,2.45,-1.92],[x,.66,1.27],.027);rod(rockRoot,mats.metal,[x,1.98,-1.92],[x,.19,1.27],.023);for(let i=0;i<5;i++){const z=-1.78+i*.73,y=1.46-i*.45;rod(rockRoot,mats.metal,[x,y-.07,z],[x,y+1.0,z],.028);box(rockRoot,mats.metal,x,y-.04,z,.12,.022,.15);}}
+ for(let i=0;i<STAIRS.count;i++){const z=STAIRS.start+(i+.5)*STAIRS.tread,top=STAIRS.base+(STAIRS.count-i)*STAIRS.rise;box(rockRoot,mats.concrete,STAIRS.x,(top-.92)/2,z,STAIRS.width,top+.92,STAIRS.tread,'Stone tread '+(i+1));}
+ for(const x of[STAIRS.x-.47,STAIRS.x+.47]){rod(rockRoot,mats.metal,[x,2.43,-2.2],[x,1.18,-.10],.024);for(let i=0;i<4;i++){const z=-2.10+i*.65,y=1.46-i*.42;rod(rockRoot,mats.metal,[x,y-.04,z],[x,y+.96,z],.021);box(rockRoot,mats.metal,x,y-.035,z,.11,.018,.11);}}
  const plate=box(rockRoot,plaque('M.E.G. / 27','RETURN  ←  ALONG THE STREAM'),1.975,2.34,-3.9,.02,.34,.9,'Fixed tunnel return marker');
  plate.material.side=T.DoubleSide;
- // The drainage opening is deliberately narrower than a human body.
- box(rockRoot,mats.black,-1.73,-.035,1.46,.22,.14,.42,'Tiny impassable drainage channel');
- for(const z of[1.27,1.35,1.43,1.51,1.59])rod(rockRoot,mats.metal,[-1.85,.04,z],[-1.61,.04,z],.009);
- for(const l of SPRING_LIGHTS){const light=new T.PointLight(l.color,l.power,l.range,2);light.position.fromArray(l.p);light.castShadow=true;light.shadow.mapSize.set(512,512);light.shadow.bias=-.001;light.shadow.normalBias=.025;light.shadow.camera.near=.05;light.shadow.camera.far=l.range;scene.add(light);if(l===SPRING_LIGHTS[3]){box(rockRoot,mats.black,l.p[0]+.09,l.p[1],l.p[2],.12,.22,.15,'Recessed lamp housing');const o=new T.Mesh(new T.SphereGeometry(.035,8,6),mats.lamp);o.position.fromArray(l.p);scene.add(o);}}
+ addWashStation(rockRoot,mats,bathTextures(),{x:WASH_BASIN.x,y:.18,z:WASH_BASIN.z});
+ // A stone-cut natural slit, not a grate or an opaque black patch. Its
+ // geological opening is subtracted in the shell; a shallow flowing floor
+ // leads from the pool to the too-small mouth in the southern corner.
+
+ const practicals=[];
+ for(let i=0;i<SPRING_LIGHTS.length;i++){const l=SPRING_LIGHTS[i],light=new T.PointLight(l.color,l.power,l.range,2);light.position.fromArray(l.p);light.castShadow=true;light.shadow.mapSize.set(512,512);light.shadow.bias=-.001;light.shadow.normalBias=.022;light.shadow.camera.near=.05;light.shadow.camera.far=l.range;scene.add(light);if(i===1||i===3){box(rockRoot,mats.black,l.p[0]+.09,l.p[1],l.p[2],.12,.22,.15,'Small shielded practical');const bulb=new T.Mesh(new T.SphereGeometry(.035,10,8),mats.lamp);bulb.position.fromArray(l.p);scene.add(bulb);practicals.push({light,power:l.power,bulb,phase:i*1.7});}}
  scene.add(new T.AmbientLight(0xadb4bb,.24));
- const tex=springTextures(),footRings=Array.from({length:4},()=>new T.Vector4(0,0,-100,0)),uniforms={clock,footRings:{value:footRings},ripple:{value:tex['spring-ripples']},caustics:{value:tex['water-caustics']},reflection:{value:null},refraction:{value:null},sceneDepth:{value:null},eye:{value:new T.Vector3()},reflectMatrix:{value:new T.Matrix4()},nearFar:{value:new T.Vector2(.06,40)},ready:{value:0}};
+ const dynamics=createSpringDynamics(),tex=springTextures(),footRings=Array.from({length:4},()=>new T.Vector4(0,0,-100,0)),uniforms={clock,dynamicSlope:{value:dynamics.texture},footRings:{value:footRings},ripple:{value:tex['spring-ripples']},caustics:{value:tex['water-caustics']},reflection:{value:null},refraction:{value:null},sceneDepth:{value:null},eye:{value:new T.Vector3()},reflectMatrix:{value:new T.Matrix4()},nearFar:{value:new T.Vector2(.06,40)},ready:{value:0}};
  const waterMat=new T.ShaderMaterial({name:'Mineral spring / planar reflection and depth refraction',uniforms,side:T.DoubleSide,
   vertexShader:`varying vec3 wp;varying vec4 screenP,mirrorP;uniform mat4 reflectMatrix;void main(){vec4 p=modelMatrix*vec4(position,1.);wp=p.xyz;screenP=projectionMatrix*viewMatrix*p;mirrorP=reflectMatrix*p;gl_Position=screenP;}`,
-  fragmentShader:`precision highp float;uniform float clock,ready;uniform sampler2D ripple,caustics,reflection,refraction,sceneDepth;uniform vec3 eye;uniform vec2 nearFar;uniform vec4 footRings[4];varying vec3 wp;varying vec4 screenP,mirrorP;
+  fragmentShader:`precision highp float;uniform float clock,ready;uniform sampler2D ripple,caustics,reflection,refraction,sceneDepth,dynamicSlope;uniform vec3 eye;uniform vec2 nearFar;uniform vec4 footRings[4];varying vec3 wp;varying vec4 screenP,mirrorP;
   float linearZ(float d){return nearFar.x*nearFar.y/(nearFar.y-d*(nearFar.y-nearFar.x));}
   float h(vec2 p){return texture2D(ripple,p*.56+vec2(clock*.012,-clock*.019)).r*.58+texture2D(ripple,p*.94+vec2(-clock*.016,clock*.006)).r*.42;}
+  // Exact dielectric Fresnel from Clearwater / Lumaris (MIT).
+  float waterFresnel(float ci){ci=clamp(ci,0.,1.);float ct=sqrt(1.-(1.-ci*ci)/(1.3335*1.3335));float rs=(ci-1.3335*ct)/(ci+1.3335*ct),rp=(1.3335*ci-ct)/(1.3335*ci+ct);return .5*(rs*rs+rp*rp);}
   void main(){vec2 p=wp.xz;float e=.015;vec2 n=vec2(h(p+vec2(e,0.))-h(p-vec2(e,0.)),h(p+vec2(0.,e))-h(p-vec2(0.,e)))*1.65;
-   for(int i=0;i<2;i++){vec2 s=i==0?vec2(.52,-1.70):vec2(-1.60,-.97);vec2 v=p-s;float d=length(v);n+=normalize(v+vec2(.001))*cos(d*29.-clock*6.)*.021*exp(-d*1.7);}
-   for(int i=0;i<4;i++){vec2 v=p-footRings[i].xy;float d=length(v),age=clock-footRings[i].z;float band=d-age*.42;n+=normalize(v+vec2(.001))*sin(band*32.)*.018*exp(-band*band*20.)*exp(-age*1.35)*footRings[i].w;}
-   vec3 N=normalize(vec3(-n.x,1.,-n.y)),V=normalize(eye-wp);float fresnel=.035+.965*pow(1.-max(dot(N,V),0.),5.);vec2 uv=screenP.xy/screenP.w*.5+.5;
+   vec4 dyn=texture2D(dynamicSlope,p/5.6+.5);n+=(dyn.rg-.5)*.5;
+   vec3 N=normalize(vec3(-n.x,1.,-n.y)),V=normalize(eye-wp);float fresnel=waterFresnel(max(dot(N,V),0.));vec2 uv=screenP.xy/screenP.w*.5+.5;
    vec2 refrUV=clamp(uv+n*.019,.003,.997);float depth=clamp(linearZ(texture2D(sceneDepth,refrUV).r)-linearZ(gl_FragCoord.z),0.,3.);
    vec3 trans=texture2D(refraction,refrUV).rgb*exp(-vec3(.53,.22,.24)*depth)+vec3(.027,.082,.067)*(1.-exp(-depth));
    vec2 ru=clamp(mirrorP.xy/mirrorP.w+n*.028,.003,.997);vec3 reflected=texture2D(reflection,ru).rgb;
    float cells=texture2D(caustics,p*.86+vec2(clock*.011,-clock*.009)+n*.065).r;float shimmer=texture2D(caustics,p*.91+vec2(-clock*.015,clock*.013)).r;
-   trans+=vec3(.065,.14,.12)*pow(min(cells,shimmer)*1.28,1.5)*exp(-depth*.5);
+   trans+=vec3(.047,.094,.080)*pow(min(cells,shimmer)*1.28,1.5)*exp(-depth*.5)*clamp(1./(1.+(dyn.a-.5)*4.),.65,1.8);
    vec3 c=mix(trans,reflected,min(.84,fresnel));c=mix(vec3(.016,.033,.028),c,ready);
    vec3 L=normalize(vec3(-1.56,.4,-.96)-wp);float glint=pow(max(dot(reflect(-L,N),V),0.),160.);c+=vec3(.42,.26,.09)*glint;
    gl_FragColor=vec4(c,1.);
@@ -87,27 +95,37 @@ export function createLevel27(){
  // Each of the two sources includes its continuous sheet and grounded impact foam.
  const fallMaterial=new T.ShaderMaterial({name:'PS2 photographic waterfall / longitudinal mineral-water streaks',uniforms:{clock,flow:{value:tex['waterfall-flow']}},transparent:true,depthWrite:false,side:T.DoubleSide,
  vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
- fragmentShader:`precision highp float;uniform float clock;uniform sampler2D flow;varying vec2 vUv;void main(){vec2 uv=vec2(vUv.x,vUv.y*1.25-clock*.52);vec3 sampleA=texture2D(flow,uv).rgb;float streak=dot(sampleA,vec3(.25,.50,.25));float second=texture2D(flow,vec2(vUv.x*1.53+.17,vUv.y*1.69-clock*.68)).g;float edge=smoothstep(0.,.09,vUv.x)*smoothstep(0.,.09,1.-vUv.x);float foam=smoothstep(.76,1.,vUv.y);float alpha=edge*(.23+streak*.61+second*.13+foam*.12);gl_FragColor=vec4(mix(vec3(.10,.26,.25),vec3(.60,.81,.74),clamp(streak*.92+second*.20+foam*.12,0.,1.)),alpha);}`});
- const impactMaterial=new T.ShaderMaterial({name:'Spring cascade impact foam / surface contact',uniforms:{clock,foam:{value:tex['water-caustics']}},transparent:true,depthWrite:false,side:T.DoubleSide,
+ fragmentShader:`precision highp float;uniform float clock;uniform sampler2D flow;varying vec2 vUv;void main(){vec2 uv=vec2(vUv.x,vUv.y*1.25-clock*.52);vec3 sampleA=texture2D(flow,uv).rgb;float streak=dot(sampleA,vec3(.25,.50,.25));float second=texture2D(flow,vec2(vUv.x*1.53+.17,vUv.y*1.69-clock*.68)).g;float edge=smoothstep(0.,.09,vUv.x)*smoothstep(0.,.09,1.-vUv.x);float foam=smoothstep(.76,1.,vUv.y);float strand=smoothstep(.17,.63,streak);float alpha=edge*(.065+strand*.40+second*.09+foam*.09);gl_FragColor=vec4(mix(vec3(.10,.26,.25),vec3(.39,.61,.55),clamp(streak*.92+second*.20+foam*.12,0.,1.)),alpha);}`});
+ const impactMaterial=new T.ShaderMaterial({name:'Spring cascade impact foam / surface contact',uniforms:{clock,foam:{value:bathTextures()['foam-ripple']}},transparent:true,depthWrite:false,side:T.DoubleSide,
  vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
- fragmentShader:`precision highp float;uniform float clock;uniform sampler2D foam;varying vec2 vUv;void main(){vec2 p=vUv*2.-1.;float d=length(p);float q=texture2D(foam,vUv*1.4+vec2(clock*.035,-clock*.026)).r;float ring=pow(.5+.5*cos(d*29.-clock*4.6),5.)*.15;float a=(1.-smoothstep(.08,1.,d))*(.18+q*.48+ring);gl_FragColor=vec4(.63,.82,.74,a);}`});
+ fragmentShader:`precision highp float;uniform float clock;uniform sampler2D foam;varying vec2 vUv;void main(){vec2 p=(vUv-.5)*(1.+.025*sin(clock*3.));vec4 q=texture2D(foam,p+.5);float a=q.a*.36*(1.-smoothstep(.3,.7,length(p)));gl_FragColor=vec4(q.rgb*vec3(.70,.82,.77),a);}`});
  const falls=new T.Group();falls.name='Exactly two wall-fed waterfalls';scene.add(falls);
- const port=wallPoint(3.87,1.10),outward=new T.Vector3(port[0],0,port[2]).normalize();
- // The secondary source's recess is part of the same implicit mesh.
- const clearRad=Math.min(...Array.from({length:30},(_,i)=>{const p=wallPoint(3.87,1.1*i/29);return Math.hypot(p[0],p[2]);}))-.04;const sourceInset=Math.max(0,Math.hypot(port[0],port[2])-clearRad);
- const sources=[[.60,-1.61,1.405,.29,0,1],[port[0]-outward.x*sourceInset,port[2]-outward.z*sourceInset,1.10,.25,-outward.x,-outward.z]];
- for(const [x,z,top,w,nx,nz]of sources){const group=new T.Group();group.name='Wall opening / falling mineral water';
-  const g=geoGrid(20,40,(u,v)=>{const d=.024+v*v*(nx===0?.16:.26),curve=Math.sin(u*Math.PI)*.025;return[x+(u-.5)*w*(1.+v*.22)*nz+nx*(d+curve),top*(1-v)+.007,z-(u-.5)*w*(1.+v*.22)*nx+nz*(d+curve),u,v];});group.add(new T.Mesh(g,fallMaterial));
-  const impact=new T.Mesh(new T.PlaneGeometry(w*2.7,.70),impactMaterial);impact.rotation.x=-Math.PI/2;impact.position.set(x+nx*(nx===0?.16:.26),.009,z+nz*(nx===0?.16:.26));impact.renderOrder=4;group.add(impact);falls.add(group);
+ const folded=cascadePath(),freefall=[[STREAM_X,1.405,-2.07],[STREAM_X,1.405,-1.98],[STREAM_X,1.30,-1.90],[STREAM_X,.98,-1.83],[STREAM_X,.54,-1.75],[STREAM_X,.012,-1.69]];
+ const routes=[freefall,folded],impacts=routes.map(p=>p.at(-1).slice());const cr=Math.min(...Array.from({length:89},(_,i)=>{const p=wallPoint(3.57,1.59*(1-i/88)+.012);return Math.hypot(p[0],p[2])-.10;}));impacts[1]=[Math.cos(3.57)*cr,.012,Math.sin(3.57)*cr];
+ const sprays=[];
+ const sprayMaterial=new T.MeshBasicMaterial({name:'Photographic fine impact spray',map:bathTextures()['impact-spray'],transparent:true,opacity:.46,depthWrite:false,side:T.DoubleSide});
+ for(let k=0;k<routes.length;k++){const path=routes[k],curve=new T.CatmullRomCurve3(path.map(p=>new T.Vector3(...p)),false,'centripetal'),group=new T.Group();group.name=k?'West wall / three limestone cascade folds':'North stream / independent waterfall beside stairs';
+  const width=k?.43:.40;
+  const cascadeRadii=Array.from({length:25},()=>Infinity);
+  const g=geoGrid(24,88,(u,v)=>{if(k){const y=1.59*(1-v)+.012,a=3.57+(u-.5)*width/2.1,p=wallPoint(a,y),i=Math.round(u*24),r=Math.min(cascadeRadii[i],Math.hypot(p[0],p[2])-.10);cascadeRadii[i]=r;return[Math.cos(a)*r,y,Math.sin(a)*r,u,v*1.35];}const center=curve.getPoint(v),tangent=curve.getTangent(v),side=new T.Vector3(1,0,0),bulge=Math.sin(u*Math.PI)*.024,normal=new T.Vector3().crossVectors(side,tangent).normalize();center.addScaledVector(side,(u-.5)*width*(1+.18*v)).addScaledVector(normal,bulge);return[...center.toArray(),u,v*curve.getLength()/1.4];});
+  const flow=new T.Mesh(g,fallMaterial);flow.name='Continuous curved moving water sheet';flow.renderOrder=3;group.add(flow);
+  if(k){const gp=g.attributes.position;for(const col of[3,12,21]){const pts=[];for(let row=0;row<=88;row++){const idx=row*25+col;pts.push(new T.Vector3(gp.getX(idx),gp.getY(idx),gp.getZ(idx)));}const rivulet=new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts),88,.009,5,false),fallMaterial);rivulet.renderOrder=3;group.add(rivulet);}}
+  // Side rivulets give the sheet thickness when walked around.
+  for(const sign of(k?[]:[-1,1])){const rivuletPath=path.map((p,i)=>new T.Vector3(p[0]+(k?-.415:1)*sign*width*.43,p[1],p[2]+(k?.91:0)*sign*width*.43));const tube=new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(rivuletPath),42,.009,5,false),fallMaterial);tube.renderOrder=3;group.add(tube);}
+  const end=impacts[k],impact=new T.Mesh(new T.PlaneGeometry(.85,.77),impactMaterial);impact.rotation.x=-Math.PI/2;impact.position.set(end[0],.012,end[2]);impact.renderOrder=4;group.add(impact);
+  const spray=new T.Mesh(new T.PlaneGeometry(.76,.42),sprayMaterial);spray.position.set(end[0],.20,end[2]);spray.renderOrder=5;group.add(spray);sprays.push(spray);falls.add(group);
  }
- const streamNormal=tex['spring-ripples'].clone();streamNormal.repeat.set(.35,4.8);streamNormal.needsUpdate=true;const streamMaterial=new T.MeshStandardMaterial({name:'Shallow inflow stream / rippled clear water',color:0x46594b,roughness:.19,metalness:.15,bumpMap:streamNormal,bumpScale:.018,transparent:true,opacity:.42,depthWrite:false,side:T.DoubleSide});
- const stream=new T.Mesh(new T.PlaneGeometry(.31,7.20),streamMaterial);stream.rotation.x=-Math.PI/2;stream.position.set(.60,1.405,-5.2);stream.name='Inflow stream beside return bank';stream.receiveShadow=true;scene.add(stream);
+ const streamNormal=tex['spring-ripples'].clone();streamNormal.repeat.set(.35,4.8);streamNormal.needsUpdate=true;const streamMaterial=new T.MeshStandardMaterial({name:'Shallow inflow stream / rippled clear water',color:0x709991,emissive:0x263e37,emissiveIntensity:.19,roughness:.19,metalness:.15,bumpMap:streamNormal,bumpScale:.018,transparent:true,opacity:.42,depthWrite:false,side:T.DoubleSide});
+ const stream=new T.Mesh(geoGrid(8,96,(u,v)=>{const z=-8.62+v*6.55;return[STREAM_X+(u-.5)*(.32+.025*Math.sin(z*4)),1.405,z,u,v*4];}),streamMaterial);stream.name='Inflow stream beside return bank';stream.receiveShadow=true;scene.add(stream);const drainWater=new T.Mesh(geoGrid(6,40,(u,v)=>{const z=1.48+v*1.16;return[-.85-.48*v+(u-.5)*.195,-.004-v*.012,z,u,v*3];},(u,v)=>{const z=1.48+v*1.16,x=-.85-.48*v;return Math.hypot(x,z)<radialLimit(x,z);}),streamMaterial);drainWater.name='Visible natural outflow / too narrow to enter';drainWater.renderOrder=3;scene.add(drainWater);
  const splashGeo=new T.BufferGeometry(),splash=new Float32Array(160*3);splashGeo.setAttribute('position',new T.BufferAttribute(splash,3));const sprayMat=new T.PointsMaterial({color:0xb5d5c9,size:.019,transparent:true,opacity:.30,depthWrite:false});const droplets=new T.Points(splashGeo,sprayMat);droplets.name='Waterfall contact droplets';scene.add(droplets);
  const reflection=new T.WebGLRenderTarget(512,512,{type:T.HalfFloatType,depthBuffer:true}),refraction=new T.WebGLRenderTarget(640,480,{type:T.HalfFloatType,depthBuffer:true});refraction.depthTexture=new T.DepthTexture(640,480,T.UnsignedIntType);const mirrorCamera=new T.PerspectiveCamera(),target=new T.Vector3(),direction=new T.Vector3(),bias=new T.Matrix4().set(.5,0,0,.5,0,.5,0,.5,0,0,.5,.5,0,0,0,1);let frames=0;
  uniforms.reflection.value=reflection.texture;uniforms.refraction.value=refraction.texture;uniforms.sceneDepth.value=refraction.depthTexture;
- let stepTravel=0,stepIndex=0;
- function update(t,player){clock.value=t;streamNormal.offset.y=-t*.09;streamNormal.updateMatrix();if(player?.wet){stepTravel+=player.moved;if(stepTravel>.22){stepTravel=0;footRings[stepIndex++%4].set(player.x,player.z,t,1);}}for(let i=0;i<160;i++){const n=i%2,life=(t*.62+i*.618)%1,a=i*2.399,x=n?port[0]-outward.x*.2:.52,z=n?port[2]-outward.z*.2:-1.55,r=.09+life*.19;splash[i*3]=x+Math.cos(a)*r*life;splash[i*3+1]=.008+Math.sin(life*Math.PI)*(.09+(i%7)*.01);splash[i*3+2]=z+Math.sin(a)*r*life;}splashGeo.attributes.position.needsUpdate=true;}
+ let stepTravel=0,stepIndex=0,lastTime=0;
+ function update(t,player){const dt=Math.max(0,Math.min(.06,t-lastTime));lastTime=t;clock.value=t;streamNormal.offset.y=-t*.09;streamNormal.updateMatrix();if(player?.wet){stepTravel+=player.moved;if(stepTravel>.20){stepTravel=0;footRings[stepIndex++%4].set(player.x,player.z,t,1);dynamics.drop(player.x,player.z,.16,.012);}}dynamics.update(dt,impacts.map(p=>[p[0],p[2]]));
+  for(const p of practicals){const dip=Math.pow(Math.max(0,Math.sin(t*1.13+p.phase)*Math.sin(t*3.73+.6)),16);p.light.intensity=p.power*(.98+.012*Math.sin(t*37+p.phase)-.17*dip);}
+  for(let i=0;i<160;i++){const origin=impacts[i%2],life=(t*.96+i*.618)%1,a=i*2.399,r=.07+life*.27;splash[i*3]=origin[0]+Math.cos(a)*r*life;splash[i*3+1]=.011+Math.sin(life*Math.PI)*(.11+(i%7)*.025);splash[i*3+2]=origin[2]+Math.sin(a)*r*life;}splashGeo.attributes.position.needsUpdate=true;}
  function capture(renderer,camera){
+  for(const s of sprays)s.rotation.y=Math.atan2(camera.position.x-s.position.x,camera.position.z-s.position.z);
   uniforms.eye.value.copy(camera.position);uniforms.nearFar.value.set(camera.near,camera.far);frames++;
   const saved=renderer.getRenderTarget(),planes=renderer.clippingPlanes,auto=renderer.autoClear,shadowAuto=renderer.shadowMap.autoUpdate;
   const w=Math.min(720,Math.max(384,Math.round(512*camera.aspect))),h=512;if(refraction.width!==w||refraction.height!==h)refraction.setSize(w,h);
@@ -117,12 +135,12 @@ export function createLevel27(){
  }
  let sound=null;
  function audio(ctx,master,active,position,yaw){if(!ctx)return;if(!sound){const out=ctx.createGain();out.gain.value=0;out.connect(master);const count=ctx.sampleRate*4,buffer=ctx.createBuffer(1,count,ctx.sampleRate),d=buffer.getChannelData(0);let low=0;for(let i=0;i<count;i++){low=(low+(Math.random()*2-1)*.03)/1.04;d[i]=low*2+(Math.random()*2-1)*.07;}const src=ctx.createBufferSource(),filter=ctx.createBiquadFilter();src.buffer=buffer;src.loop=true;filter.type='lowpass';filter.frequency.value=1650;src.connect(filter);filter.connect(out);const delay=ctx.createDelay(.5),feedback=ctx.createGain();delay.delayTime.value=.145;feedback.gain.value=.29;filter.connect(delay);delay.connect(feedback);feedback.connect(delay);feedback.connect(out);src.start();sound={out,src,filter,delay,feedback};}sound.out.gain.setTargetAtTime(active?.72:0,ctx.currentTime,.35);}
- function dispose(){scene.traverse(o=>{o.geometry?.dispose();});for(const m of new Set([...Object.values(mats),fallMaterial,impactMaterial,waterMat,sprayMat,streamMaterial,plate.material]))m.dispose();reflection.dispose();refraction.dispose();streamNormal.dispose();sound?.src.stop();Object.values(sound||{}).forEach(n=>n.disconnect?.());}
+ function dispose(){scene.traverse(o=>{o.geometry?.dispose();});for(const m of new Set([...Object.values(mats),fallMaterial,impactMaterial,waterMat,sprayMat,streamMaterial,plate.material]))m.dispose();reflection.dispose();refraction.dispose();streamNormal.dispose();dynamics.dispose();sprayMaterial.dispose();sound?.src.stop();Object.values(sound||{}).forEach(n=>n.disconnect?.());}
  // Static stone and hardware share material batches. Point-light shadow maps
  // are rebuilt on entry, then reused for the two water capture views.
  rockRoot.updateMatrixWorld(true);const groups=new Map();
  for(const o of [...rockRoot.children]){if(!o.isMesh)continue;const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();g.applyMatrix4(o.matrix);if(!groups.has(o.material))groups.set(o.material,[]);groups.get(o.material).push(g);o.geometry.dispose();rockRoot.remove(o);}
  for(const [material,parts]of groups){let g=mergeGeometries(parts);parts.forEach(p=>p.dispose());mesh(g,material,'Batched limestone, dry bank and M.E.G. fittings / '+material.name);}
  const focusRay=new T.Raycaster();function focusDistance(camera,max){focusRay.ray.origin.copy(camera.position);camera.getWorldDirection(focusRay.ray.direction);focusRay.far=max;return focusRay.intersectObjects(rockRoot.children,false)[0]?.distance??max;}
- scene.updateMatrixWorld(true);return{scene,water,falls,materials:mats,uniforms,update,capture,audio,dispose,focusDistance};
+ scene.updateMatrixWorld(true);return{scene,water,falls,materials:mats,uniforms,dynamics,update,capture,audio,dispose,focusDistance};
 }

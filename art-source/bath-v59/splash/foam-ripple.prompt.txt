@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Use case: stylized-concept
+Asset type: original transparent game VFX cutout for a tiny 0.6–1 m cave waterfall foot
+Aspect ratio: 1:1 square
+Input image: reference only for restrained wet sparkle and fine water texture near the bottom of the thin falls; do not reproduce any scene elements.
+Subject: isolated scattered foam and bubble ripple patch viewed straight down. Subtle, scattered small pale bubbles, tiny disconnected flecks of foam, and broken delicate wavelets, uneven organic circular-ish footprint with clear transparent gaps.
+Style/medium: PS2/Source-era photographic water sprite detail, understated translucent white-silver highlights, soft optical edges, realistic small-scale water interaction.
+Composition: a sparse patch centered with natural asymmetry and transparent negative space around it.
+Scene/backdrop: true transparent alpha, no background.
+Constraints: no solid white ring, no blue backdrop, no explosive splash, no cartoon foam, no vegetation, no rocks, no typography, no colored background, no border.

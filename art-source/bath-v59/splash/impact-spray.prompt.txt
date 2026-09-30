@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Use case: stylized-concept
+Asset type: original transparent game VFX cutout for a tiny 0.6–1 m cave waterfall foot
+Aspect ratio: 3:2 landscape
+Input image: reference only for the thin sparkling falling water and restrained wet impact at the bottom; do not reproduce its rocks, foliage, or text.
+Subject: isolated miniature waterfall impact spray at eye level, a wide, low crown of fine bright droplets, thin translucent white-silver arcs, clear open gaps between the strands, very small wet splashes close to the water surface.
+Style/medium: PS2/Source-era photographic water sprite detail with natural specular glints and soft optical edges, delicate scale, subtle translucency.
+Composition: centered low horizontal cluster filling a modest area with generous transparent space above and around it.
+Scene/backdrop: true transparent alpha, no background.
+Constraints: no explosive splash, no cartoon foam, no vegetation, no rocks, no typography, no colored backdrop, no border, no solid ground plane.

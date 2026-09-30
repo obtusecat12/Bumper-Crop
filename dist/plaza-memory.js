@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {adFor,adFace} from './advertising-assets.js?v=58';
+import {adFor,adFace} from './advertising-assets.js?v=59';
 const PI=Math.PI;
 const place=(b,x,y,z,ry,fn)=>{b.push(x,y,z,ry);fn(b);b.pop();};
 function geometry(b,key,p,uv,ix){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(ix);g.computeVertexNormals();b.add(g,key,0,0,0);g.dispose();}

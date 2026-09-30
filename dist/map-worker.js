@@ -1,4 +1,4 @@
-import{createMapTiles}from'./map-tiles.js?v=58';
+import{createMapTiles}from'./map-tiles.js?v=59';
 
 // Runs exclusively in a dedicated module worker. No Three, textures, streamed
 // chunks, or DOM are initialized here. Cached canvases survive bitmap exports.

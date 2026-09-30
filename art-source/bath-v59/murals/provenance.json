@@ -1,0 +1,27 @@
+{
+  "generator": "image_gen.imagegen",
+  "reference_images": [
+    "/workspace/scratch/91e9848e2f36/upload/image(3).png",
+    "/workspace/scratch/91e9848e2f36/upload/image(4).png"
+  ],
+  "assets": [
+    {
+      "file": "ocean-wall.png",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-0b3f5fc9-6bde-40f6-950a-62d9f5d6b092.png",
+      "dimensions": [2172, 724],
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nAsset: flat diffuse texture for a 3D game wall plane; panoramic 3:1 aspect ratio.\nComposition: continuous ocean horizon across the lower third, calm slightly gray turquoise blue sea; softly airbrushed pale blue sky with white clouds filling upper two thirds; distant low tropical shore and small palm silhouettes only at far left and right edges.\nStyle: faithful to attached empty indoor pool reference's lightly faded 1990s leisure-center hand-painted trompe-l'oeil wall scenery, modest photographic PS2/Source-era texture fidelity, subtle paint softness and mild age, even indoor diffuse lighting.\nOutput: straight-on orthographic mural artwork filling canvas edge to edge, no perspective, no room architecture, columns, balustrade, pool, tile, frames, people, text, lamp, heavy cracks or ruin."
+    },
+    {
+      "file": "palm-wall.png",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-35b2e010-2816-446b-ac80-e787199883d2.png",
+      "dimensions": [2172, 724],
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nAsset: flat diffuse texture for a 3D game left-wall plane; panoramic 3:1 aspect ratio.\nComposition: dense overlapping tropical palms and muted green foliage clustered across the left third, with a low sandy shore narrowing into the distance; calm slightly gray turquoise ocean opening across the right two thirds; straight blue horizon at about the lower third and pale blue clouded sky above, aligned with a neighboring open ocean mural.\nStyle: attached empty indoor pool reference's lightly faded 1990s leisure-center airbrush trompe-l'oeil mural, restrained photographic PS2/Source-era game texture fidelity, subtle hand-painted softness, even diffuse lighting, slightly gray turquoise blue and old painted aesthetic.\nOutput: straight-on orthographic mural painting filling canvas edge to edge, no perspective, no architecture, columns, balustrade, pool, tiles, frames, people, text, lamp, heavy cracks or ruin."
+    },
+    {
+      "file": "cloud-ceiling.png",
+      "source": "/workspace/scratch/91e9848e2f36/generated_images/exec-40bbf3bc-8180-430b-8e3d-49475f44cedf.png",
+      "dimensions": [1254, 1254],
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\nAsset: square 1:1 flat diffuse texture for a 3D ceiling plane.\nComposition: upward-facing hand-painted pale gray-blue sky with loose wispy white and soft gray cloud banks distributed organically across the entire square; cloud forms gently taper toward all edges so repeated tiles meet unobtrusively, broadly uniform diffuse light.\nStyle: attached indoor pool reference's slightly faded 1990s leisure-center airbrushed cloudy ceiling mural, restrained photographic PS2/Source-era game texture fidelity, painterly softness and muted blue-turquoise, modest age without damage.\nOutput: straight-on planar ceiling painting, edge-to-edge artwork; no horizon, sea, sun disc, lamp, skylight, fixture, architecture, trim, columns, people, text, cracks or ruin."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+const {createCanvas,loadImage}=createRequire(import.meta.url)(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/@napi-rs/canvas');globalThis.document={createElement:()=>createCanvas(1,1)};
+const T=await import('../../dist/vendor/three.module.min.js'),L=await import('../../dist/level27-layout.js?v=59'),B=await import('../../dist/bathhouse-layout.js?v=59');
+async function decode(url,w,h){const im=await loadImage(url.pathname),c=createCanvas(w,h);c.getContext('2d').drawImage(im,0,0,w,h);return{data:new Uint8Array(c.getContext('2d').getImageData(0,0,w,h).data),width:w,height:h};}
+await (await import('../../dist/level27-materials.js?v=59')).initializeSpringTextures(decode);await (await import('../../dist/bath-textures.js?v=59')).initializeBathTextures(decode);
+const spring=(await import('../../dist/level27-scene.js?v=59')).createLevel27(),bath=(await import('../../dist/bathhouse-scene.js?v=59')).createBathhouse();spring.scene.updateMatrixWorld(true);bath.scene.updateMatrixWorld(true);
+assert(Math.abs(L.polygonArea(L.CAVE_PLAN)-18.58)<1e-8);assert.equal(spring.falls.children.length,2);
+let samples=0;function route(start,targets,resolve,floor){let p={...start};for(const target of targets){for(let n=0;n<3000;n++){let dx=target.x-p.x,dz=target.z-p.z,d=Math.hypot(dx,dz);if(d<.016)break;const q=resolve(p,{x:p.x+dx/d*.014,z:p.z+dz/d*.014});assert(Math.hypot(q.x-p.x,q.z-p.z)>.003,`blocked at ${JSON.stringify(p)} to ${JSON.stringify(target)} floor ${floor(p.x,p.z)}`);assert(Math.abs(floor(q.x,q.z)-floor(p.x,p.z))<.245);p=q;samples++;if(n===2999)throw Error('route limit');}}return p;}
+route(L.ARRIVAL,[{x:1.38,z:-.03},{x:.45,z:-.03},{x:0,z:.6},{x:.45,z:-.03},{x:1.38,z:-.03},{x:1.38,z:-7.7}],L.resolveSpring,L.springFloor);
+const springSamples=samples;
+route(B.BATH_ARRIVAL,[{x:0,z:-.70},{x:-3.1,z:-.70},{x:-3.65,z:-1.35},{x:-5.9,z:-1.35},{x:-7.33,z:-1.65},{x:-5.9,z:-1.35},{x:-5.9,z:-6},{x:-7.33,z:-6},{x:-5.9,z:-6},{x:-5.9,z:-1.35},{x:-3.65,z:-1.35},{x:-3.1,z:-.70},{x:0,z:-.70},{x:0,z:3.85}],B.resolveBath,B.bathFloor);
+route({x:-2,z:-.90},[{x:-2,z:-3.05},{x:.8,z:-4.5},{x:-2,z:-3.05},{x:-2,z:-.90}],B.resolveBath,B.bathFloor);
+const ray=new T.Raycaster(),rocks=spring.scene.children[0].children.filter(o=>o.material===spring.materials.rock);let headroom=100,treads=0;
+for(let z=-7.6;z<-.20;z+=.05){const floor=L.springFloor(L.STAIRS.x,z);ray.set(new T.Vector3(L.STAIRS.x,floor+.04,z),new T.Vector3(0,1,0));const hit=ray.intersectObjects(rocks)[0];headroom=Math.min(headroom,hit?.distance+.04||100);assert(!hit||hit.distance+.04>1.86,'headroom '+z+' '+hit?.distance);}
+const stairMesh=spring.scene.children[0].children.filter(o=>o.material===spring.materials.concrete);for(let i=0;i<L.STAIRS.count;i++){const z=L.STAIRS.start+(i+.5)*L.STAIRS.tread;ray.set(new T.Vector3(L.STAIRS.x,3.8,z),new T.Vector3(0,-1,0));const hit=ray.intersectObjects(stairMesh)[0];assert(hit&&Math.abs(hit.point.y-L.springFloor(L.STAIRS.x,z))<.002);treads++;}
+assert.equal(L.springFloor(1.38,-.03),.17999999999999994);
+for(const p of B.SHOWER_HEADS)assert(B.bathUnderShower(p.x,p.z));assert(!B.bathUnderShower(0,1));
+const session=new L.SpringSession();assert(!session.beginClose(true));session.heat();assert(!session.beginClose(true));session.heat();assert(!session.beginClose(false));assert(session.beginClose(true));assert(!session.tickClose(.5,false));assert(session.beginClose(true));assert(session.tickClose(2.2,true));const origin={level:11,cx:1234567890123n,cz:-778899223344n,x:4.2,z:3,yaw:1,pitch:.2};session.enter(origin);assert.deepEqual(session.leave(),origin);
+spring.dynamics.drop(0,0);const initial=spring.dynamics.energy;for(let i=0;i<60;i++)spring.dynamics.update(1/60);assert(spring.dynamics.version>60);assert(spring.dynamics.energy>0);assert(Number.isFinite(spring.dynamics.energy));bath.presets[1]=2;bath.update(2);assert(bath.streams[1].visible);assert(!bath.streams[0].visible);
+console.log({area:L.CAVE_AREA,springRouteSamples:springSamples,bathRouteSamples:samples-springSamples,minimumHeadroom:headroom,stairs:treads,waterfalls:spring.falls.children.length,showerHeads:4,waterDynamicsEnergy:spring.dynamics.energy,returnPose:'BigInt exact',emptyPoolFloor:-.99});

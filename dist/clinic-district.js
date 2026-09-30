@@ -1,15 +1,15 @@
-import {addClinicStreetlife,PATIO_RECT} from './clinic-streetlife.js?v=58';
-import {addFountainLiquid,finishFountainLiquid} from './fountain-water-v54.js?v=58';
-import {fountainCenter} from './clinic-district-materials.js?v=58';
+import {addClinicStreetlife,PATIO_RECT} from './clinic-streetlife.js?v=59';
+import {addFountainLiquid,finishFountainLiquid} from './fountain-water-v54.js?v=59';
+import {fountainCenter} from './clinic-district-materials.js?v=59';
 import * as T from './vendor/three.module.min.js';
-import {UrbanBatch,urbanRandom} from './urban-batch.js?v=58';
-import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=58';
-import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=58';
-import {subtractRectangles} from './urban-ground-ownership.js?v=58';
-import {addRoofEquipment} from './urban-buildings.js?v=58';
-import {windowCatalog} from './urban-assets.js?v=58';
-import * as P from './urban-props.js?v=58';
-import * as S from './urban-smallprops.js?v=58';
+import {UrbanBatch,urbanRandom} from './urban-batch.js?v=59';
+import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=59';
+import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=59';
+import {subtractRectangles} from './urban-ground-ownership.js?v=59';
+import {addRoofEquipment} from './urban-buildings.js?v=59';
+import {windowCatalog} from './urban-assets.js?v=59';
+import * as P from './urban-props.js?v=59';
+import * as S from './urban-smallprops.js?v=59';
 const cp=exitPoint(282),A=Math.atan2(cp.nx,cp.nz),Y=EXIT_CITY_Y,PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args={})=>{b.push(x,y,z,ry);fn(b,args);b.pop();};
 function surface(b,key,x0,x1,z0,z1,y,holes=[]){for(const[a,c,u,v]of subtractRectangles(x0,x1,z0,z1,holes)){b.box(key,(a+c)/2,y-.06,(u+v)/2,c-a,.12,v-u);b.walk((a+c)/2,(u+v)/2,c-a,v-u,y);}}

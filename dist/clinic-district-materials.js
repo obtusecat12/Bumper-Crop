@@ -1,6 +1,6 @@
-import {addFountainWaterMaterials} from './fountain-water-v54.js?v=58';
+import {addFountainWaterMaterials} from './fountain-water-v54.js?v=59';
 import * as T from './vendor/three.module.min.js';
-import {URBAN_TILE_SIZE} from './urban-materials.js?v=58';
+import {URBAN_TILE_SIZE} from './urban-materials.js?v=59';
 export const DISTRICT_TEXTURES={
  mallMosaic:[512,512,true,'../urban-v58/ceramic-mosaic.webp'],payphoneFace:[256,384,false,'../urban-v58/payphone-face.webp'],mallDirectory:[512,768,false,'../urban-v58/palm-court-directory.webp'],colaMachine:[256,512,false,'../urban-v58/sunset-cola-vending.webp'],
  terrazzo:[512,512,true,'../urban-v57/pale-terrazzo-cement.webp'],

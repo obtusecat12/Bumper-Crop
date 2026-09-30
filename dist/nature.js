@@ -1,8 +1,8 @@
-import {twigTexture} from './photo-trees.js?v=58';
+import {twigTexture} from './photo-trees.js?v=59';
 import * as T from './vendor/three.module.min.js';
-import {attachRuralDetail} from './rural-textures.js?v=58';
-import {JoinedWood} from './joined-wood.js?v=58';
-import {height} from './world.js?v=58';
+import {attachRuralDetail} from './rural-textures.js?v=59';
+import {JoinedWood} from './joined-wood.js?v=59';
+import {height} from './world.js?v=59';
 
 // Open-grown eastern/central US farm trees. The crown follows the woody branch
 // hierarchy; every foliage instance is a little open spray of individual leaves.

@@ -1,9 +1,9 @@
-import {createCerealInteraction,cerealInteractionDeclarations,cerealInteractionVertex} from './cereal-interaction.js?v=58';
-import {plantTexture,plantAlpha} from './plant-texture.js?v=58';
+import {createCerealInteraction,cerealInteractionDeclarations,cerealInteractionVertex} from './cereal-interaction.js?v=59';
+import {plantTexture,plantAlpha} from './plant-texture.js?v=59';
 import * as T from './vendor/three.module.min.js';
-import {wheatCandidates,random,stringSeed} from './world.js?v=58';
-import {CEREAL_RADIUS,CEREAL_LIMIT,CEREAL_PADDING,floorDiv} from './cereal-layout.js?v=58';
-import {bindStaticSelection,selectStaticInstances} from './static-selection.js?v=58';
+import {wheatCandidates,random,stringSeed} from './world.js?v=59';
+import {CEREAL_RADIUS,CEREAL_LIMIT,CEREAL_PADDING,floorDiv} from './cereal-layout.js?v=59';
+import {bindStaticSelection,selectStaticInstances} from './static-selection.js?v=59';
 export const WHEAT_GEOMETRY_RADIUS=CEREAL_RADIUS;
 const shared=new Set();let atlas,loading,geometry;
 function stubbleImage(){
@@ -90,7 +90,7 @@ export function createWheatDetailLayer(wind,{onMesh,seed=stringSeed('CHLORINE / 
  const object=new T.Group(),cells=new Map(),pending=new Map(),wanted=new Set();object.name='Static 40m cereal chunks';
  const stats=object.userData.wheat={geometryRadius:35,activeStems:0,triangles:0,draws:0,uploadBytes:0,matrixWrites:0,selectionChanges:0,pending:0};
  let id=0,originX=0n,originZ=0n,lastOrigin='',cellX=null,cellZ=null,observerX=null,observerZ=null,dirty=true,disposed=false;
- const worker=workerFactory?workerFactory():typeof Worker!=='undefined'?new Worker(new URL('./cereal-worker.js?v=58',import.meta.url),{type:'module'}):null;
+ const worker=workerFactory?workerFactory():typeof Worker!=='undefined'?new Worker(new URL('./cereal-worker.js?v=59',import.meta.url),{type:'module'}):null;
  const discard=m=>{m.dispose();m.material.staticTextures?.forEach(t=>t.dispose());m.material.dispose();m.removeFromParent();};
  function accept(cell){if(disposed)return;const key=`${cell.cx},${cell.cz}`;pending.delete(key);
   const mesh=createCerealMesh(cell,wind,interaction);mesh.userData.cellX=cell.cx;mesh.userData.cellZ=cell.cz;mesh.matrixAutoUpdate=false;mesh.visible=false;
