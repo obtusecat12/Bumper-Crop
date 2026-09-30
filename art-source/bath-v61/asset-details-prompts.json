@@ -1,0 +1,84 @@
+{
+  "mode": "built-in imagegen",
+  "sourceSkill": "https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "key": "banos_showers_sign",
+      "transparent_background": false,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: aged cream acrylic backlit sign face.\ntext: exact large dark teal text \"BAÑOS - SHOWERS\", with exact smaller text \"AGUA CALIENTE · 24 HORAS\" below.\ntypography: 1980s sans serif lettering, well spaced and legible.\ncomposition: horizontal flat front orthographic full crop sign face only, completely fills image; no housing, no perspective.\nmaterials: softly glowing cream acrylic with subtle patina.\nphoto quality and vibe: photographic material texture for a realistic low-fidelity PlayStation 2 game circa 2001–2005; 1980s American/Latin American poolcore bathhouse; slightly soft imperfect photographic detail, subtle patina, no oversharpening.\naspect ratio: 3:1.\nAvoid: cartoon, pixel art, illustration, oversharpening, excessive yellow, extra words, watermarks, border housing.",
+      "path": "/workspace/scratch/85111d38430a/asset-details/banos_showers_sign.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGB"
+    },
+    {
+      "key": "jade_decorative_border",
+      "transparent_background": false,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: decorative 1980s ceramic tile border, jade and cream ceramic with a terracotta geometric fan/palm motif.\ncomposition: horizontal strip texture, flat straight-on orthographic view, full crop, continuous repeating pattern tileable seamlessly at left and right edges.\nmaterials: glazed ceramic, subtle aged patina and grout.\nphoto quality and vibe: photographic material texture for a realistic low-fidelity PlayStation 2 game circa 2001–2005; 1980s American/Latin American poolcore bathhouse; slightly soft imperfect photographic detail, subtle patina, no oversharpening.\naspect ratio: 3:1.\nAvoid: words, lettering, cartoon, pixel art, perspective, oversharpening, excessive yellow, background scene, watermark.",
+      "path": "/workspace/scratch/85111d38430a/asset-details/jade_decorative_border.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGB"
+    },
+    {
+      "key": "frosted_geometric_glass",
+      "transparent_background": false,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: embossed frosted glass texture with a vintage geometric diamond and ribbed pattern.\ncomposition: square seamless tileable material swatch, flat orthographic full crop, no frame.\nmaterials: translucent frosted glass, embossed geometric diamonds and narrow ribs, softly diffuse neutral light.\nphoto quality and vibe: photographic material texture for a realistic low-fidelity PlayStation 2 game circa 2001–2005; 1980s American/Latin American poolcore bathhouse; slightly soft imperfect photographic detail, subtle patina, no oversharpening.\naspect ratio: 1:1.\nAvoid: frame, window housing, text, cartoon, pixel art, perspective, oversharpening, excessive yellow, harsh glare, background objects.",
+      "path": "/workspace/scratch/85111d38430a/asset-details/frosted_geometric_glass.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB"
+    },
+    {
+      "key": "beige_pebbled_abs",
+      "transparent_background": false,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: aged warm beige pebbled ABS plastic surface from a water dispenser housing.\ncomposition: square seamless tileable material swatch, flat orthographic full crop.\nmaterials: fine irregular molded pebbled plastic grain, warm beige, subtle wear and natural age, diffuse flat lighting.\nphoto quality and vibe: photographic material texture for a realistic low-fidelity PlayStation 2 game circa 2001–2005; 1980s American/Latin American poolcore bathhouse; slightly soft imperfect photographic detail, subtle patina, no oversharpening.\naspect ratio: 1:1.\nAvoid: whole dispenser, seams, edges, labels, lettering, cartoon, pixel art, perspective, oversharpening, excessive yellow, hard shadows.",
+      "path": "/workspace/scratch/85111d38430a/asset-details/beige_pebbled_abs.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB"
+    },
+    {
+      "key": "teal_terry_towel",
+      "transparent_background": false,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: faded teal cotton terry towel fabric.\ncomposition: square seamless tileable fabric material swatch, flat orthographic full crop.\nmaterials: soft worn cotton terry loops, faded teal, subtle natural fabric variation and no folds, diffuse flat lighting.\nphoto quality and vibe: photographic material texture for a realistic low-fidelity PlayStation 2 game circa 2001–2005; 1980s American/Latin American poolcore bathhouse; slightly soft imperfect photographic detail, subtle patina, no oversharpening.\naspect ratio: 1:1.\nAvoid: towel edges, whole towel, border, seams, text, folds, cartoon, pixel art, perspective, oversharpening, excessive yellow, hard shadows.",
+      "path": "/workspace/scratch/85111d38430a/asset-details/teal_terry_towel.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB"
+    },
+    {
+      "key": "ivy_vine_alpha",
+      "transparent_background": true,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: climbing ivy vine cluster as a single flat texture-card asset, sparse irregular branches and leaves.\ncomposition: front view isolated climbing ivy cluster, all foliage inside the frame, branching asymmetrically upward with plenty of open gaps between vines.\nbackground: genuinely transparent background with actual alpha, no background whatsoever and no ground shadow.\nmaterials: photographed green ivy leaves and thin woody vines.\nphoto quality and vibe: photographic material texture for a realistic low-fidelity PlayStation 2 game circa 2001–2005; 1980s American/Latin American poolcore bathhouse; slightly soft imperfect photographic detail, subtle patina, no oversharpening. Soft PS2 foliage texture quality.\naspect ratio: 1:1.\nAvoid: background color, checkerboard pattern, wall, pot, planter, scenery, frame, cartoon, pixel art, oversharpening, excessive yellow, text, watermark.",
+      "path": "/workspace/scratch/85111d38430a/asset-details/ivy_vine_alpha.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "key": "agua_sierra_label",
+      "transparent_background": false,
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: weathered 1980s cream and teal vintage water jug sticker label.\ntext: exact large text \"AGUA SIERRA\" with exact smaller text \"PURIFIED WATER · 5 GAL\" below.\ndesign: simple wave stripes, vintage 1980s lettering, worn cream background and dark teal print.\ncomposition: horizontal front-flat orthographic label texture, fills the entire crop, no perspective or surrounding jug.\nphoto quality and vibe: realistic photographic low-fidelity PS2 circa 2001–2005 game texture for a 1980s American/Latin American bathhouse, subtle wear and aging, soft natural detail, no oversharpening.\naspect ratio: 3:1.\nAvoid: unrelated text, watermarks, whole jug, perspective, cartoon, pixel art, oversharpening, excessive yellow.",
+      "path": "/workspace/scratch/85111d38430a/asset-details/agua_sierra_label.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGB"
+    }
+  ],
+  "validation": "Visually inspected all seven generated outputs. Both text assets are accurate; every opaque material is a full crop surface texture. Ivy has actual RGBA alpha with open gaps. No resizing or procedural modification performed."
+}

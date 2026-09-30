@@ -12,6 +12,7 @@ export const copyDepthFragment=`precision highp float;precision highp sampler2D;
 export const fusedFragment=`precision highp float;precision highp sampler2D;
  uniform sampler2D picture,depth,cocField,wetHeight,bubbleField,washNoise,bottomSoil;
  uniform vec2 fieldSize;uniform mat4 inverseProjection,cameraWorld;
+ uniform float bathSteam;
  uniform float wet,bubbleWeight,waterActive,washWeight,washAge,exiting,time,level,exitFlash;
  uniform vec2 flareSun;uniform float flareStrength,flareAspect;uniform vec3 eye,screenLight;in vec2 uv;out vec4 outColor;
  ${lensGLSL}
@@ -107,6 +108,16 @@ export const fusedFragment=`precision highp float;precision highp sampler2D;
  c+=vec3(.30,.20,.10)*exp(-abs(v.y)*80.)*exp(-abs(v.x)*2.3)*.11;
  return c*flareStrength;
  }
+ float bathNoise(vec3 p){return .5+.5*sin(p.x*2.7+sin(p.z*3.1+time*.23))*sin(p.y*3.7+sin(p.x*2.1-time*.18));}
+ vec4 bathSteamAt(vec2 q){
+  if(bathSteam<.001)return vec4(0.);
+  float d=texture(depth,q).r;vec4 v=inverseProjection*vec4(q*2.-1.,d*2.-1.,1.);vec3 end=(cameraWorld*vec4(v.xyz/v.w,1.)).xyz;vec3 delta=end-eye;
+  float total=min(length(delta),18.);vec3 dir=normalize(delta);float sum=0.;
+  for(int i=0;i<12;i++){float t=(float(i)+.5)/12.*total;vec3 p=eye+dir*t;
+   float inside=step(-8.28,p.x)*step(p.x,-4.31)*step(-6.79,p.z)*step(p.z,-.68)*smoothstep(.3,1.1,p.y)*(1.-smoothstep(2.7,2.93,p.y));
+   float clouds=mix(bathNoise(p*.8),bathNoise(p*1.91),.28);sum+=inside*(.45+.55*clouds)*total/12.;
+  }float a=1.-exp(-sum*(.035+.027*bathSteam));return vec4(.66,.72,.67,a);
+ }
  void main(){
   vec4 central=fieldAt(uv),meniscus=meniscusAt(uv);
   vec2 warped=safe(warp(uv,central,1.)+meniscus.xy*meniscus.z);
@@ -168,6 +179,7 @@ export const fusedFragment=`precision highp float;precision highp sampler2D;
   color=color*(1.+exitFlash*.72)+bloom*.10*exitFlash*.62;
   float coverage=max(max(max(farBlend,nearCoverage),central.z),max(max(smoothstep(.0002,.005,waterPath(uv)),meniscus.z),exitFlash));
   coverage=max(coverage,clamp(flareStrength,0.,1.));
+  vec4 steam=bathSteamAt(uv);color=mix(color,steam.rgb,steam.a);coverage=max(coverage,steam.a);
   vec3 sharpBase=texture(picture,uv).rgb;
   // Resolve applies coverage exactly once; packing an already mixed colour
   // would square foreground alpha and turn soft discs into faint sharp ghosts.
@@ -197,7 +209,7 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky,
  const geometry=new T.BufferGeometry().setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3)),scene=new T.Scene(),screenCamera=new T.Camera();
  const mat=(f,u,depth=false)=>new T.RawShaderMaterial({glslVersion:T.GLSL3,vertexShader:passVertex,fragmentShader:f,uniforms:u,depthTest:depth,depthFunc:T.AlwaysDepth,depthWrite:depth,blending:T.NoBlending,toneMapped:false});
  const copy=mat(copyDepthFragment,{picture:{value:null},depth:{value:null}},true);
- const u={picture:{value:null},depth:{value:null},wetHeight:{value:null},bubbleField:{value:null},bubbleWeight:{value:0},washNoise:{value:surface.normalA},bottomSoil:{value:surface.bottomSoil},resolution:{value:new T.Vector2()},fieldSize:{value:new T.Vector2()},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},nearPlane:{value:.1},farPlane:{value:480},focusDist:{value:2.58},focalMM:{value:2.478},fNumber:{value:2.8},sensorHeight:{value:3.6},dofEnabled:{value:1},cocField:{value:null},wet:{value:0},waterActive:{value:0},washWeight:{value:0},washAge:{value:0},exiting:{value:0},time:{value:0},level:{value:0},exitFlash:{value:0},eye:{value:new T.Vector3()},screenLight:{value:new T.Vector3(-.42,.67,.83)},flareSun:flare?.uniforms.uSun||{value:new T.Vector2()},flareStrength:flare?.uniforms.uStrength||{value:0},flareAspect:flare?.uniforms.uAspect||{value:4/3}};
+ const u={bathSteam:{value:0},picture:{value:null},depth:{value:null},wetHeight:{value:null},bubbleField:{value:null},bubbleWeight:{value:0},washNoise:{value:surface.normalA},bottomSoil:{value:surface.bottomSoil},resolution:{value:new T.Vector2()},fieldSize:{value:new T.Vector2()},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},nearPlane:{value:.1},farPlane:{value:480},focusDist:{value:2.58},focalMM:{value:2.478},fNumber:{value:2.8},sensorHeight:{value:3.6},dofEnabled:{value:1},cocField:{value:null},wet:{value:0},waterActive:{value:0},washWeight:{value:0},washAge:{value:0},exiting:{value:0},time:{value:0},level:{value:0},exitFlash:{value:0},eye:{value:new T.Vector3()},screenLight:{value:new T.Vector3(-.42,.67,.83)},flareSun:flare?.uniforms.uSun||{value:new T.Vector2()},flareStrength:flare?.uniforms.uStrength||{value:0},flareAspect:flare?.uniforms.uAspect||{value:4/3}};
  const cocPass=mat(cocFragment,Object.fromEntries(['depth','focalMM','fNumber','sensorHeight','focusDist','nearPlane','farPlane','dofEnabled','resolution'].map(k=>[k,u[k]]))),dilateU={coc:{value:null},direction:{value:new T.Vector2()},resolution:u.resolution},dilatePass=mat(dilateFragment,dilateU);
  const fused=mat(fusedFragment,u),resolve=mat(resolveFragment,{...u,fused:{value:null},sharp:{value:null},exposure:{value:1.23},uiPicture:{value:null},hasUI:{value:false},uiOnly:{value:false},displayMode:{value:0}}),quad=new T.Mesh(geometry,copy);quad.frustumCulled=false;scene.add(quad);
  let opaque=null,water=null,half=null,cocA=null,cocB=null,bottleTarget=null,width=0,height=0,clock=0;const waterMeshes=new Set(),visibility=createWaterVisibility();
@@ -246,5 +258,5 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky,
   }finally{world.background=bg;camera.layers.mask=mask;renderer.autoClear=auto;renderer.setRenderTarget(saved);}
  }
  function renderUI(w,h,output,texture,mode){allocate(w,h);resolve.uniforms.uiOnly.value=true;resolve.uniforms.hasUI.value=!!texture;resolve.uniforms.uiPicture.value=texture;resolve.uniforms.displayMode.value=mode;draw(resolve,output);}
- return {render,renderUI,attach,detach,update,focus,surface,environment,stats,inspection,removeBottle:group=>bottleVisibility.remove(group),reset(camera){inspection.clear();focus.reset(camera);environment?.reset();},contextLost(){disposeTargets();fog?.contextLost();environment?.reset();lens.contextLost();u.wetHeight.value=null;},dispose(){inspection.dispose();bottleVisibility.clear();disposeTargets();environment?.dispose();surface.dispose();geometry.dispose();copy.dispose();cocPass.dispose();dilatePass.dispose();fused.dispose();resolve.dispose();waterMeshes.clear();}};
+ return {render,renderUI,attach,detach,update,setBathSteam(value){u.bathSteam.value=Math.max(0,value);},focus,surface,environment,stats,inspection,removeBottle:group=>bottleVisibility.remove(group),reset(camera){inspection.clear();focus.reset(camera);environment?.reset();},contextLost(){disposeTargets();fog?.contextLost();environment?.reset();lens.contextLost();u.wetHeight.value=null;},dispose(){inspection.dispose();bottleVisibility.clear();disposeTargets();environment?.dispose();surface.dispose();geometry.dispose();copy.dispose();cocPass.dispose();dilatePass.dispose();fused.dispose();resolve.dispose();waterMeshes.clear();}};
 }

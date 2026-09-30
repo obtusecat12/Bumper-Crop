@@ -2,10 +2,10 @@ import {initializeCanTextures} from './canned-food.js?v=60';
 import {initializeSpringTextures} from './level27-materials.js?v=60';
 import {createLevel27} from './level27-scene.js?v=60';
 import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=60';
-import {nearBathEntrance} from './level27-entry.js?v=60';
-import {initializeBathTextures} from './bath-textures.js?v=60';
-import {createBathhouse} from './bathhouse-scene.js?v=60';
-import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=60';
+import {nearBathEntrance} from './level27-entry.js?v=61';
+import {initializeBathTextures} from './bath-textures.js?v=61';
+import {createBathhouse} from './bathhouse-scene.js?v=61';
+import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=61';
 import {initializeAdvertising} from './advertising-assets.js?v=60';
 import {initializeDistrictTextures} from './clinic-district-materials.js?v=60';
 import {exitForField,exitTeleport,exitPoint,transitionProgress,ease} from './exit-route.js?v=60';
@@ -22,7 +22,7 @@ import {initializeVergeTextures} from './verge-cards.js?v=60';
 import {createSceneBatches} from './scene-batches.js?v=60';
 import {updateCropGroundTime} from './ground.js?v=60';
 import {bindTroughWater} from './trough-water.js?v=60';
-import {createWaterPipeline} from './water-pipeline.js?v=60';
+import {createWaterPipeline} from './water-pipeline.js?v=61';
 import {WaterState} from './water-state.js?v=60';
 import {WaterContactEffects} from './water-contact-effects.js?v=60';
 import {createWaterBubbles} from './water-bubbles.js?v=60';
@@ -35,7 +35,7 @@ import {createWeatherFlare} from './weather-flare.js?v=60';
 import {initializeWeatherTextures} from './weather-textures.js?v=60';
 import {createWaterImpact} from './water-impact.js?v=60';
 import {createWaterRipples} from './water-ripples.js?v=60';
-import {createLensWater} from './lens-water.js?v=60';
+import {createLensWater} from './lens-water.js?v=61';
 import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=60';
 import {updateBarnDoors} from './reference-barn.js?v=60';
 import {initializeLandmarkTextures} from './landmark-textures.js?v=60';
@@ -195,6 +195,7 @@ function updateSpringEntry(dt){
  if(done)enterSpring();
 }
 function enterSpring(){
+ waterPipeline.setBathSteam(0);
  const pose=springSession.enter(state);state.level=27;state.cx=state.cz=0n;Object.assign(state,pose);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=1;keys.clear();joy.x=joy.z=0;
  waterInspection.clear();lensWater.reset();waterState.reset();bodyWater.reset();waterBubbles.clear();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);
  waterPipeline.focus.setSceneQuery(spring.focusDistance);uiThemes.applyLevel('27');$('#journal .journal-body').innerHTML=springJournal;$('#interact').hidden=true;renderer.domElement.setAttribute('aria-label','Level 27 岩体泉 · 洞穴温泉');renderer.shadowMap.needsUpdate=true;camera.far=40;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);resize();toast('Level 27 · 岩体泉。沿溪流向前，楼梯通往温泉。');
@@ -229,7 +230,7 @@ function enterBath(){
  lensWater.reset();waterState.reset();bodyWater.reset();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);waterPipeline.focus.setSceneQuery(bathhouse.focusDistance);camera.far=24;camera.updateProjectionMatrix();renderer.shadowMap.needsUpdate=true;resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Baños 浴室 · 前厅、假风景空池、淋浴间');toast('前厅通往空池。左侧通道是淋浴间。');
 }
 function leaveBath(announce=true){
- if(!bathhouse.active||!bathOrigin)return;Object.assign(state,bathOrigin);bathOrigin=null;bathhouse.active=false;state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;keys.clear();joy.x=joy.z=0;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);lensWater.reset();waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('玻璃门在你身后合上。');
+ if(!bathhouse.active||!bathOrigin)return;Object.assign(state,bathOrigin);bathOrigin=null;bathhouse.active=false;waterPipeline.setBathSteam(0);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;keys.clear();joy.x=joy.z=0;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);lensWater.reset();waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('玻璃门在你身后合上。');
 }
 function animateBath(now,dt,rawDt){
  if(springOpen>0&&!springSession.closing){springOpen=Math.max(0,springOpen-dt*.9);eyelids.style.opacity=String(springOpen);}
@@ -241,10 +242,10 @@ function animateBath(now,dt,rawDt){
  if(springSession.closing&&playing){const done=springSession.tickClose(dt,wet&&springSession.preset===2);eyelids.style.opacity=String(Math.min(1,springSession.closing/1.45));if(done){enterSpring();animateSpring(now,dt,rawDt);return;}}
  const crouch=keys.has('KeyC'),rig=cameraRig.update(dt,{x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,eyeY:bathFloor(state.x,state.z)+(crouch?1.06:1.77),jump:0,moved,dx,dz,grounded:true,running:false,crouch,stamina:state.stamina,landingSpeed:0,enabled:settings.bob&&!reduceCameraMotion.matches,locked:false});state.y=rig.eyeHeight;step=rig.phase;
  if(playing){bathStepTravel+=moved;if(bathStepTravel>.62){bathStepTravel=0;audio.footstep(false,wet);}survivalDisplay.animate(dt,state,step);}
- if(wet&&playing){bathWetAge+=dt;if(bathWetAge>.38){lensWater.impact(.65);bathWetAge=0;}}else bathWetAge=.39;
+ if(wet&&playing){bathWetAge+=dt;if(bathWetAge>.18){lensWater.spray(.9);bathWetAge=0;}}else bathWetAge=.39;
  lensWater.update(playing?dt:0,{enabled:playing,rain:0,humidity:wet?.92:.58,sheltered:true,hasWater:false,cameraHeight:camera.position.y,level:-10,aspect:camera.aspect,pitch:camera.rotation.x,roll:camera.rotation.z,accelX:0,cameraVelocity:cameraRig.velocity,waterCrossing:{submerged:false,crossing:0}});
- bathhouse.update(bathTime);if(audio.ctx){audio.motion.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);audio.rain.gain.setTargetAtTime(wet?.14:0,audio.ctx.currentTime,.2);}exitAudio.update(0,false,time);
- waterPipeline.focus.setZoom(playing&&(keys.has('KeyZ')||zoomHeld)?Math.max(3,zoomSetting):zoomSetting);waterPipeline.focus.setMist(0);waterPipeline.update(playing?dt:0,camera,state,playing,false,bathhouse.scene.background,new T.Vector3(0,1,0),0,-10);renderer.toneMappingExposure=T.MathUtils.lerp(renderer.toneMappingExposure,1.0,1-Math.exp(-dt*2));
+ bathhouse.update(bathTime);bathhouse.beforeRender(renderer,camera);if(audio.ctx){audio.motion.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);audio.rain.gain.setTargetAtTime(wet?.14:0,audio.ctx.currentTime,.2);}exitAudio.update(0,false,time);
+ waterPipeline.focus.setZoom(playing&&(keys.has('KeyZ')||zoomHeld)?Math.max(3,zoomSetting):zoomSetting);waterPipeline.setBathSteam(bathhouse.presets.reduce((a,b)=>a+(b===2?1:b===1?.4:0),0));waterPipeline.focus.setMist(0);waterPipeline.update(playing?dt:0,camera,state,playing,false,bathhouse.scene.background,new T.Vector3(0,1,0),0,-10);renderer.toneMappingExposure=T.MathUtils.lerp(renderer.toneMappingExposure,1.0,1-Math.exp(-dt*2));
  uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent='BAÑOS · 热水浴室';const p=$('#interact');p.classList.remove('inspection');$('.crosshair').hidden=false;p.hidden=!playing;p.textContent=springSession.closing?'闭眼中…':near>=0?(springSession.preset===0?'E 打开这只花洒':springSession.preset===1?'E 调到最热预设':wet?'E 闭上眼睛':'E 关闭花洒 · 站到水下可闭眼'):state.z>2.7?'E 推门返回街道':state.x< -4?'各花洒可独立开关 · 最热预设 + 闭眼':'空池左侧 → 淋浴间';}
  performanceMeter.markSimulation();displayFilter.render(bathhouse.scene,camera,now,()=>performanceMeter.beforeRender());performanceMeter.end();document.documentElement.dataset.bootState='ready';frameCount++;frameTime+=rawDt;if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;}
 }

@@ -1,0 +1,106 @@
+{
+  "jade": {
+    "source": "jade-ceramic-wall.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "ivory": {
+    "source": "ivory-blue-shower.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "floor": {
+    "source": "ochre-bath-floor.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "paving": {
+    "source": "alley-concrete.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "plaster": {
+    "source": "cream-stucco.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "stone": {
+    "source": "pale-travertine.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "sign": {
+    "source": "banos_showers_sign.png",
+    "dimensions": [
+      768,
+      256
+    ],
+    "generated": true
+  },
+  "border": {
+    "source": "jade_decorative_border.png",
+    "dimensions": [
+      768,
+      256
+    ],
+    "generated": true
+  },
+  "glass": {
+    "source": "frosted_geometric_glass.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "plastic": {
+    "source": "beige_pebbled_abs.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "towel": {
+    "source": "teal_terry_towel.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "ivy": {
+    "source": "ivy_vine_alpha.png",
+    "dimensions": [
+      512,
+      512
+    ],
+    "generated": true
+  },
+  "label": {
+    "source": "agua_sierra_label.png",
+    "dimensions": [
+      768,
+      256
+    ],
+    "generated": true
+  }
+}

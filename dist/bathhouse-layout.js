@@ -19,9 +19,11 @@ export function bathAllowed(x,z){
  if(!(lobby||poolroom||showers||link))return false;
  if(Math.abs(z)<.22&&Math.abs(x)>.82)return false;
  if(lobby&&x>.17&&x<2.34&&z>.57&&z<1.85)return false;
- if(lobby&&x<-1.5&&z>1.8&&z<3.4)return false;
+ if(lobby&&Math.hypot(x+2,z-2.85)<.48)return false;
  for(const h of SHOWER_HEADS.slice(0,3))if(x<-6.6&&Math.abs(z-(h.z-.725))<.27)return false;
- if(lobby&&Math.abs(x+2.08)<.51&&[.55,1.30].some(v=>Math.abs(z-v)<.48))return false;
+ if(lobby&&Math.abs(x+2.02)<.44&&Math.abs(z-.86)<.44)return false;
+ if(showers&&Math.abs(x+5.38)<.58&&z> -5.54&&z< -3.10)return false;
+ if(showers&&Math.hypot(x+4.79,z+.98)<.35)return false;
  if(poolroom&&(x>3.40||z< -6.43||(x< -3.45&&z< -2.55)))return false;
  for(const p of [[-3.62,-2.30],[-3.62,-.48],[-3.64,-4.4],[-3.55,-6.65],[0,-6.74],[3.55,-6.65],[3.65,-3.30],[3.63,-.48]])if(Math.hypot(x-p[0],z-p[1])<.37)return false;
  return true;

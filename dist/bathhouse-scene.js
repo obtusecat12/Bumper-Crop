@@ -1,7 +1,8 @@
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {bathTextures} from './bath-textures.js?v=60';
-import {BATH_POOL,SHOWER_HEADS} from './bathhouse-layout.js?v=60';
+import {bathTextures} from './bath-textures.js?v=61';
+import {BATH_POOL,SHOWER_HEADS} from './bathhouse-layout.js?v=61';
+import {buildBathRefit} from './bath-v61-interior.js?v=61';
 import {foldedTowel,propMesh,propRod} from './bathing-props.js?v=60';
 export const BATH_LIGHTS=[{p:[0,2.50,-3.90],color:0xf1f3ec,power:19,range:10},{p:[0,2.65,2],color:0xffedce,power:8,range:6},{p:[-6.4,2.67,-3.6],color:0xe3efe9,power:11,range:8},{p:[-3.0,2.55,-1.2],color:0xe8e6dc,power:3.5,range:5}];
 export function bathLabel(text,sub=''){const c=document.createElement('canvas');c.width=768;c.height=256;const g=c.getContext('2d');g.fillStyle='#d9dbcd';g.fillRect(0,0,c.width,c.height);g.fillStyle='#294a47';g.textAlign='center';g.font='bold 62px sans-serif';g.fillText(text,384,108,728);g.font='25px sans-serif';g.fillText(sub,384,178,710);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return new T.MeshStandardMaterial({name:text,map:t,roughness:.8});}
@@ -47,54 +48,13 @@ export function createBathhouse(){
  const ceilingLamp=mesh(new T.CircleGeometry(.98,64),lamp,0,3.052,-3.9,'Large oval diffused ceiling light');ceilingLamp.rotation.x=Math.PI/2;// Circular diffuser foreshortens naturally from the camera.
  // Low ceiling and squat classical proportions from the two source views.
  for(const o of root.children){if(!o.isMesh)continue;o.updateMatrix();o.geometry.applyMatrix4(o.matrix);const pp=o.geometry.attributes.position;for(let i=0;i<pp.count;i++)if(pp.getY(i)>0)pp.setY(i,pp.getY(i)*.88);o.geometry.computeVertexNormals();o.position.set(0,0,0);o.rotation.set(0,0,0);o.scale.set(1,1,1);}
- // Small reception lobby with an open central passage to the empty pool.
- box(floor,0,-.09,2.1,5.2,.18,4.2);for(const x of[-2.6,2.6])box(white,x,1.48,2.1,.16,2.96,4.2);box(white,0,2.97,2.1,5.35,.14,4.4);
- for(const x of[-1.7,1.7])box(white,x,1.48,4.23,1.72,2.96,.16);box(white,0,2.66,4.23,1.68,.60,.16);
- for(const x of[-.81,.81])box(metal,x,1.2,4.15,.048,2.40,.065);box(metal,0,2.41,4.15,1.66,.06,.07);plane(glass,0,1.22,4.15,1.57,2.36,Math.PI);propRod(root,metal,[.57,.92,4.09],[.57,1.40,4.09],.015);
- box(wood,1.22,.48,1.20,1.95,.96,.69,'Reception counter');box(white,1.22,1.0,1.20,2.04,.065,.79);box(dark,1.5,1.07,1.18,.27,.08,.21,'Desk telephone');propRod(root,dark,[1.39,1.13,1.18],[1.64,1.13,1.18],.034);
- plane(bathLabel('BAÑOS','RECEPCIÓN  /  24 HORAS'),2.502,1.95,1.2,1.5,.50,-Math.PI/2);
- for(let i=0;i<12;i++){box(wood,2.48,1.27+(i%3)*.22,.14+Math.floor(i/3)*.21,.04,.16,.17,'Key cabinet');}
- box(white,-1.94,.51,2.72,.53,1.02,.49,'Water dispenser');box(dark,-1.94,.77,2.458,.32,.27,.025);for(const x of[-2.04,-1.85])mesh(new T.CylinderGeometry(.022,.022,.10,12),metal,x,.78,2.41);const jugmat=new T.MeshStandardMaterial({color:0x83bac9,roughness:.22,transparent:true,opacity:.55,metalness:.1});mesh(new T.LatheGeometry([[.08,0],[.09,.1],[.22,.18],[.23,.44],[.18,.55],[0,.57]].map(p=>new T.Vector2(...p)),32),jugmat,-1.94,1.02,2.72,'Translucent water jug');
- for(const z of[.55,1.30]){box(wood,-2.08,.47,z,.61,.075,.56);box(wood,-2.35,.82,z,.065,.66,.56);for(const xx of[-2.30,-1.86])for(const zz of[z-.22,z+.22])propRod(root,metal,[xx,0,zz],[xx,.44,zz],.023);}
- foldedTowel(root,tex['towel-ivory'],.63,1.04,1.18,.45,.32);plane(bathLabel('DUCHAS','←  SHOWERS'),-1.74,1.67,-.012,1.15,.38);
- box(lamp,0,2.88,2.0,1.25,.045,.24);
- // Left passage and a real four-stall shower room. All wet equipment is
- // anchored to walls / floor; the aisle stays over 1.2m wide.
- box(floor,-6.24,-.09,-3.74,4.28,.18,6.30);box(tile,-8.38,1.48,-3.74,.16,2.96,6.30);box(tile,-6.24,1.48,-6.89,4.3,2.96,.16);box(tile,-6.24,1.48,-.59,4.3,2.96,.16);box(white,-6.24,2.98,-3.74,4.4,.16,6.5);box(floor,-4.10,-.09,-1.38,.40,.18,1.58);
- plane(bathLabel('AGUA CALIENTE','I  WARM   /   II  MAX HOT'),-4.277,1.83,-3.38,1.43,.50,-Math.PI/2);
- const streams=[];const clock={value:0};const waterMat=new T.ShaderMaterial({name:'Individual refractive shower strands',transparent:true,depthWrite:false,side:T.DoubleSide,uniforms:{clock,flow:{value:tex['impact-spray']}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'precision highp float;varying vec2 vUv;uniform float clock;uniform sampler2D flow;void main(){float wave=.5+.5*sin(vUv.y*110.-clock*29.+vUv.x*9.);float glint=pow(wave,12.);float line=.26+.46*glint;gl_FragColor=vec4(mix(vec3(.39,.59,.61),vec3(.92,.98,.96),glint),line);}' });
- const splashMat=new T.MeshBasicMaterial({map:tex['foam-ripple'],transparent:true,opacity:.24,depthWrite:false});
- const porcelain=new T.MeshStandardMaterial({name:'Ivory perforated shower face',map:tex['ceramic-tile'],color:0xdddcd0,roughness:.55});
- const puddleMat=new T.ShaderMaterial({name:'Thin spreading shower puddles / ripples and ceiling highlights',transparent:true,depthWrite:false,uniforms:{clock,ripple:{value:tex['foam-ripple']}},vertexShader:'varying vec2 vUv;varying vec3 wp;void main(){vUv=uv;wp=(modelMatrix*vec4(position,1.)).xyz;gl_Position=projectionMatrix*viewMatrix*vec4(wp,1.);}',fragmentShader:`precision highp float;varying vec2 vUv;varying vec3 wp;uniform float clock;void main(){vec2 p=vUv-.5;float r=length(p*vec2(1.,1.16));float edge=1.-smoothstep(.34+.025*sin(atan(p.y,p.x)*7.),.49,r);float rings=pow(.5+.5*sin(r*100.-clock*10.),12.)*exp(-r*5.);float reflection=pow(max(0.,1.-abs(p.x*2.+.10*sin(p.y*40.-clock*3.))),14.);gl_FragColor=vec4(vec3(.29,.36,.36)+rings*.30+reflection*.20,edge*(.13+reflection*.27+rings*.10));}`});
- SHOWER_HEADS.forEach((p,i)=>{
-  // Handheld bell-shaped chrome head held in a wall bracket, angled down into the stall.
-  const head=new T.Group();head.position.set(-8.03,2.16,p.z);const axis=new T.Vector3(.57,-.82,0);head.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),axis);root.add(head);
-  propMesh(head,new T.LatheGeometry([[.031,-.19],[.040,-.12],[.066,-.04],[.107,.025],[.112,.058],[.103,.071]].map(q=>new T.Vector2(...q)),32),metal,0,0,0,'Chrome bell showerhead');
-  const face=propMesh(head,new T.CircleGeometry(.097,32),porcelain,0,.073,0,'White perforated shower disc');face.rotation.x=-Math.PI/2;
-  for(let k=0;k<61;k++){const a=k*2.399,r=.088*Math.sqrt(k/61);const hole=propMesh(head,new T.CircleGeometry(.0031,5),dark,Math.cos(a)*r,.074,Math.sin(a)*r);hole.rotation.x=-Math.PI/2;}
-  propRod(root,metal,[-8.27,2.20,p.z],[-8.11,2.20,p.z],.036);box(metal,-8.27,2.20,p.z,.05,.14,.13,'Wall bracket backplate');
-  const hoseCurve=new T.CatmullRomCurve3([new T.Vector3(-8.16,2.29,p.z),new T.Vector3(-8.05,1.93,p.z+.17),new T.Vector3(-8.00,.71,p.z+.27),new T.Vector3(-8.23,.61,p.z+.18),new T.Vector3(-8.25,1.02,p.z)]);
-  const hg=new T.TubeGeometry(hoseCurve,100,.018,7,false),hp=hg.attributes.position;for(let j=0;j<=100;j++){const center=hoseCurve.getPointAt(j/100),r=(j%2?1:.82);for(let k=0;k<=7;k++){const n=j*8+k;hp.setXYZ(n,center.x+(hp.getX(n)-center.x)*r,center.y+(hp.getY(n)-center.y)*r,center.z+(hp.getZ(n)-center.z)*r);}}hg.computeVertexNormals();mesh(hg,metal,0,0,0,'Flexible corrugated metal hose');
-  mesh(new T.CylinderGeometry(.063,.063,.07,16),metal,-8.20,1.05,p.z).rotation.z=Math.PI/2;propRod(root,metal,[-8.14,1.05,p.z-.09],[-8.14,1.05,p.z+.09],.014);
-  box(dark,p.x,.009,p.z,.20,.016,.20,'Shower floor drain');for(let k=0;k<6;k++)box(metal,p.x-.087+k*.035,.020,p.z,.012,.008,.195);
-  box(floor,-8.10,1.18,p.z+.43,.42,.07,.39,'Wall-supported corner soap shelf');
-  for(const [dz,color,height]of[[.34,0x305b59,.20],[.49,0x789dad,.25]]){const bottleMat=new T.MeshStandardMaterial({map:tex['towel-ivory'],color,roughness:.64});mesh(new T.CylinderGeometry(.039,.044,height,10),bottleMat,-8.03,1.215+height/2,p.z+dz);box(dark,-8.03,1.22+height,p.z+dz,.045,.035,.045);}
-  if(i<3)box(tile,-7.47,.84,p.z-.725,1.66,1.68,.08,'Wall-attached shower stall divider');
-  const jets=new T.Group();jets.name='Angled flowing shower '+(i+1);scene.add(jets);const pieces=[];
-  for(let k=0;k<61;k++){const a=k*2.399,r=.091*Math.sqrt(k/61),start=new T.Vector3(-7.988+Math.cos(a)*r*.82,2.098+Math.cos(a)*r*.57,p.z+Math.sin(a)*r),end=new T.Vector3(p.x+Math.cos(a)*r*3.0,.028,p.z+Math.sin(a)*r*3.0);const mid=start.clone().lerp(end,.5);mid.y+=.20;const path=new T.QuadraticBezierCurve3(start,mid,end);pieces.push(new T.TubeGeometry(path,16,.0020+(k%4)*.00042,3,false));}
-  const j=new T.Mesh(mergeGeometries(pieces),waterMat);pieces.forEach(p=>p.dispose());jets.add(j);
-  const spl=new T.Mesh(new T.PlaneGeometry(.69,.65),splashMat);spl.rotation.x=-Math.PI/2;spl.position.set(p.x,.025,p.z);jets.add(spl);
-  const puddle=new T.Mesh(new T.PlaneGeometry(1.38,1.23,1,1),puddleMat);puddle.rotation.x=-Math.PI/2;puddle.position.set(p.x+.12,.013,p.z);jets.add(puddle);
-  jets.visible=false;streams.push(jets);
- });
- for(const z of[-2.0,-5.2]){box(lamp,-6.25,2.85,z,1.2,.05,.18);propRod(root,metal,[-4.40,1.7,z],[-4.60,1.7,z],.014);}
- foldedTowel(root,tex['towel-turquoise'],-4.69,.07,-6.44,.53,.37,.12);
+ const refit=buildBathRefit(scene,root,wood);const {clock,presets,streams}=refit;
  const lights=[];for(const l of BATH_LIGHTS){const o=new T.PointLight(l.color,l.power,l.range,2);o.position.fromArray(l.p);o.castShadow=true;o.shadow.mapSize.set(512,512);o.shadow.bias=-.0007;o.shadow.normalBias=.022;o.shadow.camera.near=.08;o.shadow.camera.far=l.range;scene.add(o);lights.push(o);}scene.add(new T.AmbientLight(0xc1ced0,.84));
  // Static material batching keeps the column flutes and balusters affordable.
- root.updateMatrixWorld(true);const groups=new Map();root.traverse(o=>{if(!o.isMesh)return;const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();g.applyMatrix4(o.matrixWorld);if(!groups.has(o.material))groups.set(o.material,[]);groups.get(o.material).push(g);o.geometry.dispose();});root.clear();for(const [m,parts]of groups){mesh(mergeGeometries(parts),m,0,0,0,m.name);parts.forEach(g=>g.dispose());}
- const ray=new T.Raycaster();const presets=[0,0,0,0];let active=false;
- function update(t){clock.value=t;streams.forEach((s,i)=>s.visible=presets[i]>0);lights[2].intensity=BATH_LIGHTS[2].power;}
+ root.updateMatrixWorld(true);const groups=new Map();root.traverse(o=>{if(!o.isMesh)return;if(!groups.has(o.material))groups.set(o.material,[]);const count=o.isInstancedMesh?o.count:1;for(let i=0;i<count;i++){const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone(),matrix=o.matrixWorld.clone();if(o.isInstancedMesh){const instance=new T.Matrix4();o.getMatrixAt(i,instance);matrix.multiply(instance);}g.applyMatrix4(matrix);groups.get(o.material).push(g);}o.geometry.dispose();});root.clear();for(const [m,parts]of groups){mesh(mergeGeometries(parts),m,0,0,0,m.name);parts.forEach(g=>g.dispose());}
+ let active=false;
+ function update(t){refit.update(t);lights[2].intensity=BATH_LIGHTS[2].power;}
  function focusDistance(camera,max){const d=new T.Vector3();camera.getWorldDirection(d);for(let t=.25;t<max;t+=.18){const x=camera.position.x+d.x*t,y=camera.position.y+d.y*t,z=camera.position.z+d.z*t;if(y<-.99||y>2.85||z< -7||x>4.1||x< -8.35||z>4.23)return t;}return max;}
- function dispose(){const materials=new Set();scene.traverse(o=>{o.geometry?.dispose();if(o.material)materials.add(o.material);});materials.forEach(m=>m.dispose());}
- return{scene,presets,streams,update,focusDistance,dispose,get active(){return active;},set active(v){active=v;}};
+ function dispose(){refit.dispose();const materials=new Set();scene.traverse(o=>{o.geometry?.dispose();if(o.material)materials.add(o.material);});materials.forEach(m=>m.dispose());}
+ return{scene,presets,streams,update,beforeRender:refit.beforeRender,focusDistance,dispose,get active(){return active;},set active(v){active=v;}};
 }
