@@ -5,7 +5,7 @@ import {SHOWER_HEADS} from '../../dist/bathhouse-layout.js?v=61';
 let seed=1922;const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 const lens=createLensWater(null,{rng});lens.showerContact();assert.equal(lens.washWeight,1);assert.equal(lens.physics.drops.length,12);assert.equal(lens.physics.sheet.submerged,false);assert.equal(lens.physics.sheet.volume,24);
 const state={enabled:true,rain:0,humidity:.7,sheltered:true,aspect:1.5,pitch:0,roll:0,waterCrossing:{submerged:false,crossing:0}};
-for(let i=0;i<72;i++)lens.update(1/30,state);assert(lens.washWeight<.001);assert(lens.physics.wet);assert(lens.physics.pinches>=0);lens.prepareField();assert(lens.physics.pixels.some(v=>v>0));
+for(let i=0;i<72;i++)lens.update(1/30,state);assert(lens.washWeight<.001);assert(lens.physics.wet);assert(lens.physics.pinches>=0);const optical=lens.prepareField();assert.equal(optical.image.width,1024);assert(optical.image.data.some((v,i)=>i%4===3&&v>0));
 const before=lens.physics.time;lens.update(.1,{...state,enabled:false});assert.equal(lens.physics.time,before);
 for(let i=0;i<165;i++)lens.update(1/30,state);assert.equal(lens.wetWeight,0);assert.equal(lens.physics.wet,false);lens.dispose();
 const buffers=[],gains=[],pans=[],sources=[];const parameter=()=>({value:0,setTargetAtTime(v){this.value=v;}});

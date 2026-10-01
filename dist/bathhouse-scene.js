@@ -1,9 +1,10 @@
 import * as T from './vendor/three.module.min.js';
-import {createSpa,SPA_LIGHTS} from './spa-scene-v65.js';
+import {SPA} from './spa-layout-v66.js';
+import {createSpa,SPA_LIGHTS} from './spa-scene-v66.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {bathTextures} from './bath-textures.js?v=62';
-import {BATH_POOL,SHOWER_HEADS} from './bathhouse-layout.js?v=65';
-import {buildBathRefit} from './bath-v61-interior.js?v=65';
+import {BATH_POOL,SHOWER_HEADS} from './bathhouse-layout.js?v=66';
+import {buildBathRefit} from './bath-v61-interior.js?v=66';
 import {showerMaterials} from './bath-v62-materials.js?v=62';
 import {bathRefitMaterials} from './bath-v61-materials.js?v=61';
 import {foldedTowel,propMesh,propRod} from './bathing-props.js?v=60';
@@ -52,16 +53,16 @@ export function createBathhouse(){
  // Low ceiling and squat classical proportions from the two source views.
  for(const o of root.children){if(!o.isMesh)continue;o.updateMatrix();o.geometry.applyMatrix4(o.matrix);const pp=o.geometry.attributes.position;for(let i=0;i<pp.count;i++)if(pp.getY(i)>0)pp.setY(i,pp.getY(i)*.88);o.geometry.computeVertexNormals();o.position.set(0,0,0);o.rotation.set(0,0,0);o.scale.set(1,1,1);}
  const refit=buildBathRefit(scene,root,wood);const {clock,presets,streams}=refit;
- const lights=[];for(const l of BATH_LIGHTS){const o=new T.PointLight(l.color,l.power,l.range,2);o.position.fromArray(l.p);o.castShadow=true;o.shadow.mapSize.set(512,512);o.shadow.bias=-.0007;o.shadow.normalBias=.022;o.shadow.camera.near=.08;o.shadow.camera.far=l.range;scene.add(o);lights.push(o);}scene.add(new T.AmbientLight(0xc1ced0,.84));
+ const lights=[];for(const l of BATH_LIGHTS){const o=new T.PointLight(l.color,l.power,l.range,2);o.position.fromArray(l.p);o.castShadow=true;o.shadow.mapSize.set(512,512);o.shadow.bias=-.0007;o.shadow.normalBias=.022;o.shadow.camera.near=.08;o.shadow.camera.far=l.range;scene.add(o);lights.push(o);}scene.add(new T.AmbientLight(0xc1ced0,.28));
  // Static material batching keeps the column flutes and balusters affordable.
  root.updateMatrixWorld(true);const groups=new Map();root.traverse(o=>{if(!o.isMesh)return;if(!groups.has(o.material))groups.set(o.material,[]);const count=o.isInstancedMesh?o.count:1;for(let i=0;i<count;i++){const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone(),matrix=o.matrixWorld.clone();if(o.isInstancedMesh){const instance=new T.Matrix4();o.getMatrixAt(i,instance);matrix.multiply(instance);}g.applyMatrix4(matrix);groups.get(o.material).push(g);}o.geometry.dispose();});root.clear();for(const [m,parts]of groups){mesh(mergeGeometries(parts),m,0,0,0,m.name);parts.forEach(g=>g.dispose());}
  const spa=createSpa(scene),showers=scene.userData.showerWater;
  scene.userData.showerWater={get active(){return showers.active||spa.stats.visible;},prepare(renderer){showers.prepare(renderer);},bind(color,depth,w,h,camera){showers.bind(color,depth,w,h,camera);if(spa.stats.visible)spa.water.bind(color,depth,w,h,camera);}};
  scene.userData.springVolume={compose:spa.compose};
  let active=false;
- function update(t){refit.update(t);spa.update(t);lights[2].intensity=BATH_LIGHTS[2].power;}
+ function update(t,player){refit.update(t);spa.update(t,player);lights[2].intensity=BATH_LIGHTS[2].power;}
  function beforeRender(renderer,camera){spa.prepare(renderer,camera);refit.beforeRender(renderer,camera);}
- function focusDistance(camera,max){const d=new T.Vector3();camera.getWorldDirection(d);for(let t=.25;t<max;t+=.18){const x=camera.position.x+d.x*t,y=camera.position.y+d.y*t,z=camera.position.z+d.z*t;if(y<-.99||y>(x>4.1?3.2:2.85)||z< (x>4.1?-7.9:-7)||x>12.25||x< -8.35||z>4.23)return t;}return max;}
+ function focusDistance(camera,max){const d=new T.Vector3();camera.getWorldDirection(d);for(let t=.25;t<max;t+=.18){const x=camera.position.x+d.x*t,y=camera.position.y+d.y*t,z=camera.position.z+d.z*t;if(y<-.99||y>(x>4.1?3.2:2.85)||z<(x>4.1?SPA.z0:-7)||x>SPA.x1||x< -8.35||z>(x>4.1?SPA.z1:4.23))return t;}return max;}
  function dispose(){spa.dispose();refit.dispose();const materials=new Set();scene.traverse(o=>{o.geometry?.dispose();if(o.material)materials.add(o.material);});materials.forEach(m=>m.dispose());}
  return{scene,presets,streams,spa,update,beforeRender,focusDistance,dispose,get active(){return active;},set active(v){active=v;}};
 }

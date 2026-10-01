@@ -1,0 +1,8 @@
+{
+  "samples": 4342,
+  "maxStep": 0.16500000000000004,
+  "emptyBasinVertices": 63,
+  "route": "Reception → original empty deck → east portal → spa deck → six shared steps → water → loungers → glass screen → changing room → exact return",
+  "floorAtArrival": 0,
+  "waterBottom": -0.99
+}

@@ -1,0 +1,24 @@
+{
+  "camera": "spa-lounge",
+  "simulationFrames": 84,
+  "densityGain": 0.55,
+  "extinction": 1.65,
+  "volumeViews": [
+    {
+      "view": "main",
+      "minTransmission": 0.87841796875,
+      "meanTransmission": 0.9994103908538818,
+      "coveredFraction": 0.01390625
+    }
+  ],
+  "SSR": {
+    "hitPixelFraction": 0.07438151041666667,
+    "peakBlend": 0.046905517578125
+  },
+  "glErrors": 0,
+  "renderSize": [
+    960,
+    640
+  ],
+  "limitations": "Native software GLES diagnostic, standard PBR approximation omits runtime cubemap clearcoat/transmission. No browser, display/lens or measured gameplay FPS."
+}

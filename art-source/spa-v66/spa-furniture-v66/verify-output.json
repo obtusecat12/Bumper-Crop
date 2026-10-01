@@ -1,0 +1,329 @@
+{
+  "triangleCount": 33482,
+  "meshCount": 220,
+  "nonFiniteComponents": 0,
+  "contacts": [
+    {
+      "name": "strap-chaise-west-left-front-foot",
+      "kind": "floor",
+      "point": [
+        6.95,
+        0,
+        1.374
+      ],
+      "radius": 0.026
+    },
+    {
+      "name": "strap-chaise-west-left-rear-foot",
+      "kind": "floor",
+      "point": [
+        6.95,
+        0,
+        2.726
+      ],
+      "radius": 0.026
+    },
+    {
+      "name": "strap-chaise-west-right-front-foot",
+      "kind": "floor",
+      "point": [
+        7.55,
+        0,
+        1.374
+      ],
+      "radius": 0.026
+    },
+    {
+      "name": "strap-chaise-west-right-rear-foot",
+      "kind": "floor",
+      "point": [
+        7.55,
+        0,
+        2.726
+      ],
+      "radius": 0.026
+    },
+    {
+      "name": "strap-chaise-east-left-front-foot",
+      "kind": "floor",
+      "point": [
+        8.719999999999999,
+        0,
+        1.374
+      ],
+      "radius": 0.026
+    },
+    {
+      "name": "strap-chaise-east-left-rear-foot",
+      "kind": "floor",
+      "point": [
+        8.719999999999999,
+        0,
+        2.726
+      ],
+      "radius": 0.026
+    },
+    {
+      "name": "strap-chaise-east-right-front-foot",
+      "kind": "floor",
+      "point": [
+        9.32,
+        0,
+        1.374
+      ],
+      "radius": 0.026
+    },
+    {
+      "name": "strap-chaise-east-right-rear-foot",
+      "kind": "floor",
+      "point": [
+        9.32,
+        0,
+        2.726
+      ],
+      "radius": 0.026
+    },
+    {
+      "name": "monstera-east-ceramic-foot",
+      "kind": "floor",
+      "point": [
+        11.62,
+        0,
+        0.95
+      ],
+      "radius": 0.247
+    },
+    {
+      "name": "monstera-northwest-ceramic-foot",
+      "kind": "floor",
+      "point": [
+        6.75,
+        0,
+        3.72
+      ],
+      "radius": 0.232030303030303
+    },
+    {
+      "name": "wet-rubber-route-mat",
+      "kind": "floor-area",
+      "point": [
+        10.6,
+        0,
+        1.2
+      ],
+      "width": 0.72,
+      "length": 1.36
+    },
+    {
+      "name": "Spa towel 1 | wall hook and hanging cloth",
+      "centerZ": -2.77,
+      "wallAnchor": [
+        12.29,
+        1.65,
+        -2.77
+      ],
+      "hookTip": [
+        12.134,
+        1.6905,
+        -2.77
+      ],
+      "clothContact": [
+        12.134,
+        1.7,
+        -2.77
+      ],
+      "clothTop": [
+        12.134,
+        1.7,
+        -2.77
+      ],
+      "clothMinY": 0.79,
+      "face": "-X",
+      "triangles": 1996
+    },
+    {
+      "name": "Spa towel 2 | wall hook and hanging cloth",
+      "centerZ": -0.2,
+      "wallAnchor": [
+        12.29,
+        1.65,
+        -0.2
+      ],
+      "hookTip": [
+        12.134,
+        1.6905,
+        -0.2
+      ],
+      "clothContact": [
+        12.134,
+        1.7,
+        -0.2
+      ],
+      "clothTop": [
+        12.134,
+        1.7,
+        -0.2
+      ],
+      "clothMinY": 0.79,
+      "face": "-X",
+      "triangles": 1996
+    },
+    {
+      "name": "Spa towel 3 | wall hook and hanging cloth",
+      "centerZ": 2.34,
+      "wallAnchor": [
+        12.29,
+        1.65,
+        2.34
+      ],
+      "hookTip": [
+        12.134,
+        1.6905,
+        2.34
+      ],
+      "clothContact": [
+        12.134,
+        1.7,
+        2.34
+      ],
+      "clothTop": [
+        12.134,
+        1.7,
+        2.34
+      ],
+      "clothMinY": 0.79,
+      "face": "-X",
+      "triangles": 1996
+    }
+  ],
+  "children": [
+    {
+      "name": "strap-chaise-west",
+      "bounds": [
+        [
+          6.923000000059605,
+          -2.9504300391725025e-10,
+          1.0804493188858033
+        ],
+        [
+          7.576999999940395,
+          0.8999870419502258,
+          3.13955078125
+        ]
+      ],
+      "triangles": 7368
+    },
+    {
+      "name": "strap-chaise-east",
+      "bounds": [
+        [
+          8.693000000059603,
+          -2.9504300391725025e-10,
+          1.0804493188858033
+        ],
+        [
+          9.346999999940396,
+          0.9154999852180481,
+          3.13955078125
+        ]
+      ],
+      "triangles": 5720
+    },
+    {
+      "name": "monstera-east",
+      "bounds": [
+        [
+          11.289999986886977,
+          3.3527612630646075e-10,
+          0.2577182465791702
+        ],
+        [
+          12.144048037528991,
+          1.666782259941101,
+          1.6396655252575874
+        ]
+      ],
+      "triangles": 6696
+    },
+    {
+      "name": "monstera-northwest",
+      "bounds": [
+        [
+          6.085302954912185,
+          3.3527612630646075e-10,
+          3.1331577345728876
+        ],
+        [
+          7.441664918661117,
+          1.666782259941101,
+          4.343910683989525
+        ]
+      ],
+      "triangles": 6266
+    },
+    {
+      "name": "wet-rubber-route-mat",
+      "bounds": [
+        [
+          10.239999985694885,
+          -2.1606683109354208e-10,
+          0.5199999928474426
+        ],
+        [
+          10.960000014305114,
+          0.026799999177455902,
+          1.8800000071525573
+        ]
+      ],
+      "triangles": 1444
+    },
+    {
+      "name": "Spa towel 1 | wall hook and hanging cloth",
+      "bounds": [
+        [
+          12.091643333435059,
+          0.7900065183639526,
+          -3.038525342941284
+        ],
+        [
+          12.29000000018999,
+          1.7000000476837158,
+          -2.5014731884002686
+        ]
+      ],
+      "triangles": 1996
+    },
+    {
+      "name": "Spa towel 2 | wall hook and hanging cloth",
+      "bounds": [
+        [
+          12.09355354309082,
+          0.7900062203407288,
+          -0.46852555871009827
+        ],
+        [
+          12.29000000018999,
+          1.7000000476837158,
+          0.06852647662162781
+        ]
+      ],
+      "triangles": 1996
+    },
+    {
+      "name": "Spa towel 3 | wall hook and hanging cloth",
+      "bounds": [
+        [
+          12.091385841369629,
+          0.7900061011314392,
+          2.0714738368988037
+        ],
+        [
+          12.29000000018999,
+          1.7000000476837158,
+          2.6085262298583984
+        ]
+      ],
+      "triangles": 1996
+    }
+  ]
+}

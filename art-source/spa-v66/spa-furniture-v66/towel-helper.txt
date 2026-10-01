@@ -1,0 +1,189 @@
+function addHangingTowels(T, parent, materials) {
+  // Metres. A thin closed textile shell, a rounded top fold, and rolled hems.
+  // All textile UVs are measured in metres / 0.20, including the hem tubes.
+  const contacts = [];
+  const centers = [-2.77, -0.20, 2.34];
+  const NU = 14, NV = 20;
+  const clothMaterial = materials.towel.clone();
+  clothMaterial.name = 'Towel | white woven terry cloth';
+  clothMaterial.side = T.DoubleSide;
+  const V = (x, y, z) => new T.Vector3(x, y, z);
+
+  function mesh(group, name, geometry, material) {
+    const result = new T.Mesh(geometry, material);
+    result.name = name;
+    result.castShadow = true;
+    result.receiveShadow = true;
+    group.add(result);
+    return result;
+  }
+
+  function textileGeometry(points, uvs, faces) {
+    const geo = new T.BufferGeometry();
+    geo.setAttribute('position', new T.Float32BufferAttribute(points, 3));
+    geo.setAttribute('uv', new T.Float32BufferAttribute(uvs, 2));
+    geo.setIndex(faces);
+    geo.computeVertexNormals();
+    geo.computeBoundingBox();
+    geo.computeBoundingSphere();
+    return geo;
+  }
+
+  centers.forEach((zc, towelIndex) => {
+    const group = new T.Group();
+    group.name = `Spa towel ${towelIndex + 1} | wall hook and hanging cloth`;
+    parent.add(group);
+    const phase = towelIndex * 0.47;
+    const points = [], uvs = [], faces = [];
+
+    // Cloth gathers at the hook and opens under its own weight. Long pleats,
+    // oblique cross-folds, and smaller puckers are geometry, not a normal map.
+    function sample(u, t, side) {
+      const halfWidth = 0.033 + 0.233 * (1 - Math.exp(-6.2 * t));
+      const drape = Math.pow(t, 0.55);
+      const primaryPleats = 0.018 * Math.sin(2.8 * Math.PI * u + 1.1 * t + phase);
+      const finePleats = 0.006 * Math.sin(6 * Math.PI * u - 2.1 * t + phase);
+      const crossFold = 0.007 * Math.sin(25 * t + 5.4 * u + phase)
+        * Math.exp(-Math.pow((t - 0.39) / 0.27, 2));
+      const lowFold = 0.0045 * Math.sin(36 * t - 7 * u)
+        * Math.exp(-Math.pow((t - 0.78) / 0.15, 2));
+      const xMid = 12.121 + 0.013 * Math.exp(-8 * t)
+        + drape * (primaryPleats + finePleats + crossFold + lowFold);
+      // At the crown the shell folds around the brass tip; below it the two
+      // cloth faces settle to a tangible six-millimetre terry thickness.
+      const halfThickness = 0.003 + 0.010 * Math.exp(-16 * t);
+      const y = 1.690 - 0.897 * t
+        - 0.022 * (1 - t) * Math.pow(Math.abs(u), 1.65)
+        + 0.012 * Math.pow(t, 9) * (1 - u * u)
+        + 0.004 * Math.sin(11 * Math.PI * t + 5 * u + phase)
+          * Math.sin(Math.PI * t) * (1 - 0.45 * Math.abs(u));
+      const z = zc + halfWidth * u
+        + 0.005 * Math.sin(8 * t + phase) * Math.sin(Math.PI * t) * (1 - u * u);
+      return V(xMid + side * halfThickness, y, z);
+    }
+
+    const front = [], back = [];
+    [-1, 1].forEach((side, sheet) => {
+      const start = points.length / 3;
+      const rows = sheet === 0 ? front : back;
+      for (let j = 0; j <= NV; j++) {
+        const row = [];
+        for (let i = 0; i <= NU; i++) {
+          const p = sample(2 * i / NU - 1, j / NV, side);
+          points.push(p.x, p.y, p.z);
+          uvs.push((p.z - zc) / 0.20, (1.700 - p.y) / 0.20);
+          row.push(p);
+        }
+        rows.push(row);
+      }
+      for (let j = 0; j < NV; j++) {
+        for (let i = 0; i < NU; i++) {
+          const a = start + j * (NU + 1) + i;
+          const b = a + 1, c = a + NU + 1, d = c + 1;
+          if (side < 0) faces.push(a, c, b, b, c, d);
+          else faces.push(a, b, c, b, d, c);
+        }
+      }
+    });
+
+    // Close both selvages and the lower fabric edge: the towel has volume
+    // even when seen obliquely from the glass corridor.
+    function closeEdge(frontPath, backPath) {
+      const start = points.length / 3;
+      for (let k = 0; k < frontPath.length; k++) {
+        for (const p of [frontPath[k], backPath[k]]) {
+          points.push(p.x, p.y, p.z);
+          uvs.push((p.z - zc) / 0.20, (1.700 - p.y) / 0.20);
+        }
+      }
+      for (let k = 0; k < frontPath.length - 1; k++) {
+        const a = start + 2 * k;
+        faces.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
+      }
+    }
+    closeEdge(front.map(r => r[0]), back.map(r => r[0]));
+    closeEdge(front.map(r => r[NU]), back.map(r => r[NU]));
+    closeEdge(front[NV], back[NV]);
+
+    // Four panels across the rounded fold; its exact crown is y = 1.700.
+    const crownStart = points.length / 3;
+    const crownSteps = 4;
+    for (let k = 0; k <= crownSteps; k++) {
+      const theta = Math.PI * k / crownSteps;
+      for (let i = 0; i <= NU; i++) {
+        const a = front[0][i], b = back[0][i];
+        const x = (a.x + b.x) / 2 - (b.x - a.x) / 2 * Math.cos(theta);
+        const y = a.y + 0.010 * Math.sin(theta);
+        points.push(x, y, a.z);
+        uvs.push((a.z - zc) / 0.20, -0.013 * theta / 0.20);
+      }
+    }
+    for (let k = 0; k < crownSteps; k++) {
+      for (let i = 0; i < NU; i++) {
+        const a = crownStart + k * (NU + 1) + i;
+        const b = a + 1, c = a + NU + 1, d = c + 1;
+        faces.push(a, b, c, b, d, c);
+      }
+    }
+    mesh(group, `Towel ${towelIndex + 1} | gathered terry shell and top fold`,
+      textileGeometry(points, uvs, faces), clothMaterial);
+
+    // Low-profile physical rolled hems follow every wrinkle in the boundary.
+    function hem(name, path) {
+      const curve = new T.CatmullRomCurve3(path.map(p => p.clone()), false, 'centripetal');
+      const radius = 0.003;
+      const geo = new T.TubeGeometry(curve, path.length - 1, radius, 4, false);
+      const uv = geo.attributes.uv;
+      const length = curve.getLength();
+      for (let n = 0; n < uv.count; n++) {
+        uv.setXY(n, uv.getX(n) * length / 0.20,
+          uv.getY(n) * (Math.PI * 2 * radius) / 0.20);
+      }
+      mesh(group, `Towel ${towelIndex + 1} | ${name} rolled hem`, geo, clothMaterial);
+    }
+    hem('left', front.map(r => r[0]));
+    hem('right', front.map(r => r[NU]));
+    hem('bottom', front[NV]);
+
+    const plate = mesh(group, `Towel hook ${towelIndex + 1} | round brass wall plate`,
+      new T.CylinderGeometry(0.028, 0.028, 0.008, 12), materials.brass);
+    plate.rotation.z = Math.PI / 2;
+    plate.position.set(12.286, 1.650, zc);
+
+    // The J grows out from the -X face of the plate, curves down, then rises
+    // inside the gathered cloth crown; no floating hook or wall intersection.
+    const hookCurve = new T.CatmullRomCurve3([
+      V(12.282, 1.650, zc), V(12.235, 1.650, zc),
+      V(12.188, 1.622, zc), V(12.153, 1.628, zc),
+      V(12.133, 1.658, zc), V(12.134, 1.6905, zc)
+    ], false, 'centripetal');
+    mesh(group, `Towel hook ${towelIndex + 1} | curved brass J`,
+      new T.TubeGeometry(hookCurve, 8, 0.009, 8, false), materials.brass);
+    const tip = mesh(group, `Towel hook ${towelIndex + 1} | rounded brass tip`,
+      new T.SphereGeometry(0.0095, 8, 4), materials.brass);
+    tip.position.set(12.134, 1.6905, zc);
+
+    let triangles = 0;
+    group.traverse(o => {
+      if (o.isMesh) triangles += o.geometry.index
+        ? o.geometry.index.count / 3 : o.geometry.attributes.position.count / 3;
+    });
+    group.userData = {
+      type: 'hanging-towel', wallFace: '-X', uvRepeatMetres: 0.20,
+      clothThicknessMetres: 0.006, triangleCount: triangles,
+      hookSegments: 8, hookTubeRadius: 0.009
+    };
+    contacts.push({
+      name: group.name,
+      centerZ: zc,
+      wallAnchor: [12.290, 1.650, zc],
+      hookTip: [12.134, 1.6905, zc],
+      clothContact: [12.134, 1.700, zc],
+      clothTop: [12.134, 1.700, zc],
+      clothMinY: 0.790,
+      face: '-X',
+      triangles
+    });
+  });
+  return contacts;
+}

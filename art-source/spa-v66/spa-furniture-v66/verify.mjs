@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+const T=await import('/workspace/scratch/85111d38430a/level10/dist/vendor/three.module.min.js');
+const {createSpaFurniture}=await import('./spa-furniture.mjs');
+const materials=Object.fromEntries(['vinyl','chrome','towel','leaf','ceramic','soil','rubber','brass'].map(k=>[k,new T.MeshStandardMaterial({name:k})]));
+const group=createSpaFurniture(T,materials);
+group.updateMatrixWorld(true);
+let invalid=0;const names=new Set(),duplicates=[];
+group.traverse(o=>{if(names.has(o.name))duplicates.push(o.name);names.add(o.name);if(o.isMesh){for(const a of Object.values(o.geometry.attributes)){for(const v of a.array) if(!Number.isFinite(v))invalid++;}}});
+const children=group.children.map(o=>{const b=new T.Box3().setFromObject(o);let triangles=0;o.traverse(m=>{if(m.isMesh)triangles+=(m.geometry.index?.count||m.geometry.attributes.position.count)/3;});return {name:o.name,bounds:[b.min.toArray(),b.max.toArray()],triangles};});
+const result={triangleCount:group.userData.triangleCount,meshCount:group.userData.meshCount,nonFiniteComponents:invalid,contacts:group.userData.contacts,children};
+fs.writeFileSync('/workspace/scratch/85111d38430a/spa-furniture-v66/verification.json',JSON.stringify(result,null,2));
+console.log(JSON.stringify(result,null,2));
+if(invalid || group.userData.triangleCount>35000)process.exitCode=1;

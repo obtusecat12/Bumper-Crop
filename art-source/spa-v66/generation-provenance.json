@@ -1,0 +1,60 @@
+{
+  "version": "spa-v66",
+  "generation_mode": "built-in image_gen",
+  "generated_at": "2026-10-01",
+  "reference": {
+    "path": "/workspace/scratch/85111d38430a/upload/image(20261001-144738).png",
+    "role": "inspected material palette reference; not edited or passed as image-generation input"
+  },
+  "prompt_instructions": "/workspace/scratch/85111d38430a/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "key": "ivory-square-tiles",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-8c8a51a1-c3fe-4b97-b322-23cd7326efdb.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset type: seamless photographic albedo texture for an existing 1980s/1990s indoor spa in a Three.js PS2-style scene.\nsubject: ivory/cream glazed ceramic square tiles, each tile 10 cm square, exact 10 by 10 square grid filling the whole image, slightly grey grout and subtle ceramic mottling and water mineral stains.\ncomposition: perfectly face-on orthographic flat texture, every tile equally sized, continuous square grid with edges matching seamlessly left/right and top/bottom.\nlighting: even diffuse illumination, uniform exposure, surface-color source without directional lighting.\nmaterial and palette: aged warm cream glazed ceramic, gently grey grout, restrained authentic photographic material detail suitable for later downsampling.\naspect ratio: 1:1.\nAvoid: skinny vertical brick tiles, rectangular tiles, perspective, rendered full scenes, baked spot lights, vignettes, text, lettering, logos, sharp reflected highlights.",
+      "transparent_background": false
+    },
+    {
+      "key": "limestone",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-5625e5bd-4ff6-4f91-bf73-e95ab747a92d.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset type: seamless photographic albedo texture for coarse rock in an existing 1980s/1990s indoor spa in a Three.js PS2-style scene.\nsubject: coarse stratified grey-brown limestone fractured ledge rock, natural erosion pores and mineral green-grey damp areas.\ncomposition: close-up face-on surface fills the entire square, irregular ledges and cracks with naturally continuous surfaces at all four edges for seamless repetition.\nlighting: even diffuse illumination and uniform exposure, material color only, subdued small crevice detail.\nmaterial and palette: physically real grey-brown layered limestone with eroded pores, coarse broken grain and green-grey mineral staining, photographic source suited for later downsampling.\naspect ratio: 1:1.\nAvoid: smooth clay, cartoon rock, synthetic blobs, clean geometric stone blocks, perspective, rendered full scenes, baked spot lights, vignettes, text, lettering, logos.",
+      "transparent_background": false
+    },
+    {
+      "key": "golden-sun-art",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-7051c159-9c7f-45d7-979f-29522720240e.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset type: photographic decorative square art texture for an existing 1980s/1990s indoor spa in a Three.js PS2-style scene.\nsubject: one antique golden sun-face relief in terracotta/bronze, decorative square art inset with a dark navy square border.\ncomposition: single full square artifact perfectly centered and face-on, artifact fills the complete square image, sun face centered within its navy border, no perspective, no external background.\nlighting: even diffuse illumination without directional shadows or a spotlight.\nmaterial and palette: antique golden terracotta and bronze relief, slightly worn aged patina, dark navy frame, realistic photographic material texture suitable for later downsampling.\naspect ratio: 1:1.\nAvoid: text, lettering, logos, other objects, rendered full scenes, baked spot lights, vignettes, perspective, cropped frame.",
+      "transparent_background": false
+    },
+    {
+      "key": "white-terrycloth",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-9a0da0c1-f216-4cf2-8320-aadfa44a8022.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset type: seamless photographic albedo texture for spa towels in an existing 1980s/1990s indoor spa in a Three.js PS2-style scene.\nsubject: creamy-white heavy terrycloth loops, subtly worn cotton.\ncomposition: face-on macro close-up of flat fabric, entire image filled with authentic dense cotton terry loops, seamless left/right and top/bottom repetition.\nlighting: even diffuse illumination, uniform exposure, diffuse material color.\nmaterial and palette: creamy white thick looped cotton with slight natural wear and tactile photographic detail suitable for later downsampling.\naspect ratio: 1:1.\nAvoid: folded towel, cloth silhouette, hems, background, perspective, rendered full scenes, baked spot lights, vignettes, text, lettering, logos.",
+      "transparent_background": false
+    },
+    {
+      "key": "ivory-lounger-vinyl",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-a54c91e7-978d-4100-842a-d91b1493f851.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset type: seamless photographic albedo texture for 1980s white strap lounge chairs in an existing indoor spa in a Three.js PS2-style scene.\nsubject: warm ivory vinyl/plastic microtexture with small scuffs and faint ridges.\ncomposition: face-on flat material swatch fills the entire image, microscopic fine grain and faint parallel ridges with seamless repetition on both axes.\nlighting: even diffuse illumination with uniform diffuse albedo, no directional lighting.\nmaterial and palette: old warm ivory white vinyl/plastic, restrained small scuffs and fine ridges, photographic source suitable for later downsampling.\naspect ratio: 1:1.\nAvoid: entire chair or chair strap, large scratches, perspective, rendered full scenes, baked spot lights, vignettes, text, lettering, logos, glare, shadows.",
+      "transparent_background": false
+    },
+    {
+      "key": "rubber-mat",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-670844cc-f4c7-45d7-8d87-548a5e601edf.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset type: seamless photographic albedo texture for poolside rubber mat in an existing 1980s/1990s indoor spa in a Three.js PS2-style scene.\nsubject: dark seafoam teal rubber anti-slip mat close-up, fine circular perforations and raised ribs, physically plausible used pool mat.\ncomposition: perfectly face-on orthographic texture of continuous mat surface filling the whole square, small regular circular holes and raised rubber ribs in a physically plausible repeating grid, seamless edges on both axes.\nlighting: even diffuse light and uniform exposure for albedo use.\nmaterial and palette: dark muted seafoam teal rubber, slight realistic wear, subtle dirty recesses, photographic detail suitable for later downsampling.\naspect ratio: 1:1.\nAvoid: rolled-up mat, mat outer border, perspective, rendered full scenes, baked spot lights, vignettes, text, lettering, logos, strong shadows, glare.",
+      "transparent_background": false
+    },
+    {
+      "key": "monstera-leaf",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-9994ac08-63f5-43f1-973e-8e9ef5016ace.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset type: single photographic plant leaf cutout with actual transparent background for an existing 1980s/1990s indoor spa in a Three.js PS2-style scene.\nsubject: one dark lush green monstera leaf with its stem viewed face-on, authentic split edges and fenestrated leaf holes, highly detailed veins yet softly photographed.\ncomposition: entire single leaf and attached slender stem fully visible, centered face-on, no perspective; actual alpha transparency behind the leaf and through every natural split and fenestrated hole.\nlighting: soft even diffuse illumination without directional spotlight.\nmaterial and palette: lush dark green leaf with natural soft vein detail, realistic photographic source, gentle softness compatible with PS2 photographic texturing and later downsampling.\naspect ratio: 1:1.\nAvoid: multiple leaves, plant pot, branch cluster, rendered full scenes, baked spot lights, vignettes, text, lettering, logos, white or checkerboard background, opaque fill inside fenestrations.",
+      "transparent_background": true
+    },
+    {
+      "key": "glass-block",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-d9429a57-687c-40bc-9822-3711d34e9cd2.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset type: photographic albedo texture of one square 1980s pressed-glass block for repeating 0.19 m glass blocks in an existing indoor spa in a Three.js PS2-style scene.\nsubject: one face-on square pressed wavy translucent glass-block surface with broad perimeter bevels, grey-green clear glass.\ncomposition: full single square block surface fills the entire square image exactly, centered perfectly face-on orthographic view, broad beveled edges on all four sides, subtle pressed wavy glass distortions within the face.\nlighting: even diffuse illumination, neutral luminous backing with no room reflected, uniform exposure.\nmaterial and palette: clear subtly grey-green thick pressed glass, waviness and broad bevels remain visible, realistic photographic source suitable for later downsampling.\naspect ratio: 1:1.\nAvoid: perspective, visible side depth, mortar wall grid, multiple blocks, objects or room reflections, lettering, text, logos, rendered full scenes, baked spot lights, vignettes, harsh specular glare.",
+      "transparent_background": false
+    }
+  ]
+}

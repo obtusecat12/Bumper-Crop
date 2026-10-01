@@ -1,15 +1,15 @@
-import {SHOWER_HEADS} from './bathhouse-layout.js?v=65';
-import {initializeSpaTextures} from './spa-materials-v65.js';
-import {inSpaWater} from './spa-layout-v65.js';
+import {SHOWER_HEADS} from './bathhouse-layout.js?v=66';
+import {initializeSpaTextures} from './spa-materials-v66.js';
+import {inSpaWater} from './spa-layout-v66.js';
 import {createShowerAudio} from './bath-v62-audio.js?v=62';
 import {initializeCanTextures} from './canned-food.js?v=60';
 import {initializeSpringTextures} from './level27-materials.js?v=63';
-import {createLevel27} from './level27-scene.js?v=65';
+import {createLevel27} from './level27-scene.js?v=66';
 import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=64';
 import {nearBathEntrance} from './level27-entry.js?v=61';
 import {initializeBathTextures} from './bath-textures.js?v=62';
-import {createBathhouse} from './bathhouse-scene.js?v=65';
-import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=65';
+import {createBathhouse} from './bathhouse-scene.js?v=66';
+import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=66';
 import {initializeAdvertising} from './advertising-assets.js?v=60';
 import {initializeDistrictTextures} from './clinic-district-materials.js?v=60';
 import {exitForField,exitTeleport,exitPoint,transitionProgress,ease} from './exit-route.js?v=60';
@@ -26,7 +26,7 @@ import {initializeVergeTextures} from './verge-cards.js?v=60';
 import {createSceneBatches} from './scene-batches.js?v=60';
 import {updateCropGroundTime} from './ground.js?v=60';
 import {bindTroughWater} from './trough-water.js?v=60';
-import {createWaterPipeline} from './water-pipeline.js?v=65';
+import {createWaterPipeline} from './water-pipeline.js?v=66';
 import {WaterState} from './water-state.js?v=60';
 import {WaterContactEffects} from './water-contact-effects.js?v=60';
 import {createWaterBubbles} from './water-bubbles.js?v=60';
@@ -61,7 +61,7 @@ import {createWheatDetailLayer,initializeCerealTextures,releaseCerealGPU,resumeC
 import {createAtmosphere} from './atmosphere.js?v=60';
 import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=60';
 import {initializeRuralTextures} from './rural-textures.js?v=60';
-import {createNavigationMap} from './map-ui.js?v=65';
+import {createNavigationMap} from './map-ui.js?v=66';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -202,7 +202,7 @@ function enterSpring(){
  waterPipeline.setBathSteam(0);
  const pose=springSession.enter(state);state.level=27;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.type=T.PCFSoftShadowMap;navigationMap.setLevel(27);state.cx=state.cz=0n;Object.assign(state,pose);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=1;keys.clear();joy.x=joy.z=0;
  waterInspection.clear();lensWater.reset();waterState.reset();bodyWater.reset();waterBubbles.clear();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);
- showerAudio.mute();waterPipeline.focus.setSceneQuery(spring.focusDistance);uiThemes.applyLevel('27');$('#journal .journal-body').innerHTML=springJournal;$('#interact').hidden=true;renderer.domElement.setAttribute('aria-label','Level 27 岩体泉 · 洞穴温泉');renderer.shadowMap.needsUpdate=true;camera.far=40;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);resize();toast('Level 27 · 岩体泉。沿溪流向前，楼梯通往温泉。');
+ showerAudio.mute();bathhouse.spa?.muteAudio();waterPipeline.focus.setSceneQuery(spring.focusDistance);uiThemes.applyLevel('27');$('#journal .journal-body').innerHTML=springJournal;$('#interact').hidden=true;renderer.domElement.setAttribute('aria-label','Level 27 岩体泉 · 洞穴温泉');renderer.shadowMap.needsUpdate=true;camera.far=40;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);resize();toast('Level 27 · 岩体泉。沿溪流向前，楼梯通往温泉。');
 }
 function leaveSpring(announce=true){
  const origin=springSession.leave();if(!origin)return;Object.assign(state,origin);renderer.shadowMap.autoUpdate=!bathhouse.active;renderer.shadowMap.type=T.PCFShadowMap;navigationMap.setLevel(state.level);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);spring.audio(audio.ctx,audio.master,false);keys.clear();joy.x=joy.z=0;
@@ -235,7 +235,7 @@ function enterBath(){
  lensWater.reset();waterState.reset();bodyWater.reset();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);waterPipeline.focus.setSceneQuery(bathhouse.focusDistance);camera.far=24;camera.updateProjectionMatrix();renderer.shadowMap.needsUpdate=true;resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Baños 浴室 · 前厅、假风景空池、淋浴间');toast('空池左侧通往淋浴间，右侧新通道通往水疗圆池。');
 }
 function leaveBath(announce=true){
- if(!bathhouse.active||!bathOrigin)return;showerAudio.mute();Object.assign(state,bathOrigin);bathOrigin=null;bathhouse.active=false;renderer.shadowMap.autoUpdate=true;renderer.shadowMap.needsUpdate=true;waterPipeline.setBathSteam(0);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;keys.clear();joy.x=joy.z=0;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);lensWater.reset();waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('玻璃门在你身后合上。');
+ if(!bathhouse.active||!bathOrigin)return;showerAudio.mute();bathhouse.spa?.muteAudio();Object.assign(state,bathOrigin);bathOrigin=null;bathhouse.active=false;renderer.shadowMap.autoUpdate=true;renderer.shadowMap.needsUpdate=true;waterPipeline.setBathSteam(0);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;keys.clear();joy.x=joy.z=0;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);lensWater.reset();waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('玻璃门在你身后合上。');
 }
 function animateBath(now,dt,rawDt){
  if(springOpen>0&&!springSession.closing){springOpen=Math.max(0,springOpen-dt*.9);eyelids.style.opacity=String(springOpen);}
@@ -249,9 +249,9 @@ function animateBath(now,dt,rawDt){
  if(playing){bathStepTravel+=moved;if(bathStepTravel>.62){bathStepTravel=0;audio.footstep(false,wet||inSpaWater(state.x,state.z));}survivalDisplay.animate(dt,state,step);}
  if(wet&&playing){bathWetAge+=dt;if(bathWetAge>2.7){lensWater.showerContact();bathWetAge=0;}}else bathWetAge=3.0;
  lensWater.update(playing?dt:0,{enabled:playing,rain:0,humidity:wet?.92:.58,sheltered:true,hasWater:false,cameraHeight:camera.position.y,level:-10,aspect:camera.aspect,pitch:camera.rotation.x,roll:camera.rotation.z,accelX:0,cameraVelocity:cameraRig.velocity,waterCrossing:{submerged:false,crossing:0}});
- bathhouse.update(bathTime);bathhouse.beforeRender(renderer,camera);if(audio.ctx){audio.motion.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);audio.rain.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);showerAudio.update(bathhouse.presets,state,state.yaw,playing);}exitAudio.update(0,false,time);
+ bathhouse.update(bathTime,state);bathhouse.beforeRender(renderer,camera);if(audio.ctx){audio.motion.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);audio.rain.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);showerAudio.update(bathhouse.presets,state,state.yaw,playing);bathhouse.spa.audio(audio.ctx,audio.master,state,playing);}exitAudio.update(0,false,time);
  waterPipeline.focus.setZoom(playing&&(keys.has('KeyZ')||zoomHeld)?Math.max(3,zoomSetting):zoomSetting);waterPipeline.setBathSteam(bathhouse.presets.reduce((a,b)=>a+(b===2?1:b===1?.4:0),0));waterPipeline.focus.setMist(0);waterPipeline.update(playing?dt:0,camera,state,playing,false,bathhouse.scene.background,new T.Vector3(0,1,0),0,-10);renderer.toneMappingExposure=T.MathUtils.lerp(renderer.toneMappingExposure,1.0,1-Math.exp(-dt*2));
- uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent='BAÑOS · 热水浴室';const p=$('#interact');p.classList.remove('inspection');$('.crosshair').hidden=false;p.hidden=!playing;p.textContent=springSession.closing?'闭眼中…':near>=0?(springSession.preset===0?'E 打开这只花洒':springSession.preset===1?'E 调到最热预设':wet?'E 闭上眼睛':'E 关闭花洒 · 站到水下可闭眼'):state.z>2.7?'E 推门返回街道':state.x< -4?'各花洒可独立开关 · 最热预设 + 闭眼':state.x>4.2?'水疗圆池 · 沿镀铬扶手下池': '空池左侧 → 淋浴间 · 右侧 → 水疗圆池';}
+ uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent='BAÑOS · 热水浴室';const p=$('#interact');p.classList.remove('inspection');$('.crosshair').hidden=false;p.hidden=!playing;p.textContent=springSession.closing?'闭眼中…':near>=0?(springSession.preset===0?'E 打开这只花洒':springSession.preset===1?'E 调到最热预设':wet?'E 闭上眼睛':'E 关闭花洒 · 站到水下可闭眼'):state.z>2.7&&Math.abs(state.x)<1?'E 推门返回街道':state.x< -4?'各花洒可独立开关 · 最热预设 + 闭眼':state.x>4.2?'水疗圆池 · 沿镀铬扶手下池': '空池左侧 → 淋浴间 · 右侧 → 水疗圆池';}
  performanceMeter.markSimulation();displayFilter.render(bathhouse.scene,camera,now,()=>performanceMeter.beforeRender());performanceMeter.end();document.documentElement.dataset.bootState='ready';frameCount++;frameTime+=rawDt;if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;}
 }
 
@@ -539,7 +539,7 @@ function scanInteraction(){
  prompt.hidden=!interaction;
  if(interaction)prompt.innerHTML=interaction.kind==='barn-door'?`<kbd>E</kbd> ${barnDoorGoal>0?'关闭':'打开'}谷仓双门`:interaction.kind==='bottle'?'<kbd>E</kbd> 拾取杏仁水':'<kbd>E</kbd> 饮用湖水';
 }
-function updateHUD(){if(activeModal?.id==='developer')updateDeveloperCoordinates();const degrees=((Math.round(-camera.rotation.y*180/Math.PI)%360)+360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(degrees/45)%8];$('#bearing').textContent=`${dir}  ${String(degrees).padStart(3,'0')}°`;survivalDisplay.update(state.stamina,state.hydration,state.bottles,state.health,state.sanity);const c=currentChunk();let location=c&&roadDistance(state.x,state.z,c.field)>2.2?'田间草地':'泥土小径';if(c){const f=c.field;if(f.type==='pond'&&pondShoreDistance(state.x,state.z,f)<7)location='湖泊 · 未开垦的低地';else if(f.type==='building'){const[w,d]=buildingSize(f);const bp=buildingLocal(state.x,state.z,f);if(Math.abs(bp.x)<w/2&&Math.abs(bp.z)<d/2)location=BUILDING_NAMES[f.variant];else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}if(c&&roadDistance(state.x,state.z,c.field)>2.5&&location.includes('麦田'))location=['麦田 · 成熟小麦','麦田 · 枯褐大麦','收割后的麦茬地'][cropSample(state.x,state.z,c.field,{}).crop];if(c&&location==='田间草地'&&cropSample(state.x,state.z,c.field,{}).crop===2)location='收割后的麦茬地';if(c&&barnFootprintDistance(state.x,state.z,c.field)<0)location='砖砌谷仓 · 临时栖身处';if(c){const a=compoundAt(state.x,state.z,c.field,{});if(a.footprint<0)location=a.component?.variant!==undefined?BUILDING_NAMES[a.component.variant%8]:a.component?.kind==='silo'?'筒仓':'田间旧建筑';else if(a.yard>.35)location=a.plan?.kind==='hamlet'?'农庄聚落 · 前院':a.plan?.kind==='farm'||a.plan?.kind==='extension'?'农庄 · 作业地':'建筑旁的踩踏地';}if(state.level===27)location='岩体泉 · 32.2°C · 泡浴 '+Math.floor(springSession.bathSeconds/60)+' 分钟';if(state.level===11)location='Level 11 · '+({commercial:'商业边缘区',mixed:'都会过渡区',core:'金融街峡谷',civic:'公共广场区',warehouse:'仓储街区'}[exitScene.stats.district]||'无垠城市');if(bathhouse.active&&state.level!==27)location='BAÑOS · '+(state.x< -4?'淋浴间':state.z>0?'前厅':'假风景空池');$('#location').textContent=`${location}  /  ${Math.round(state.distance)} m`;$('#fps').textContent=`${Math.round(fps)} FPS${settings.filter==='vhs'?' · VHS '+Math.round(displayFilter.values.fps):''} · ${chunks.size} 区块${settings.devMode?'\n'+performanceText():''}`;}
+function updateHUD(){if(activeModal?.id==='developer')updateDeveloperCoordinates();const degrees=((Math.round(-camera.rotation.y*180/Math.PI)%360)+360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(degrees/45)%8];$('#bearing').textContent=`${dir}  ${String(degrees).padStart(3,'0')}°`;survivalDisplay.update(state.stamina,state.hydration,state.bottles,state.health,state.sanity);const c=currentChunk();let location=c&&roadDistance(state.x,state.z,c.field)>2.2?'田间草地':'泥土小径';if(c){const f=c.field;if(f.type==='pond'&&pondShoreDistance(state.x,state.z,f)<7)location='湖泊 · 未开垦的低地';else if(f.type==='building'){const[w,d]=buildingSize(f);const bp=buildingLocal(state.x,state.z,f);if(Math.abs(bp.x)<w/2&&Math.abs(bp.z)<d/2)location=BUILDING_NAMES[f.variant];else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}else if(contactWheat(c,state.x,state.z)>.1)location='麦田 · 作物齐腰'}if(c&&roadDistance(state.x,state.z,c.field)>2.5&&location.includes('麦田'))location=['麦田 · 成熟小麦','麦田 · 枯褐大麦','收割后的麦茬地'][cropSample(state.x,state.z,c.field,{}).crop];if(c&&location==='田间草地'&&cropSample(state.x,state.z,c.field,{}).crop===2)location='收割后的麦茬地';if(c&&barnFootprintDistance(state.x,state.z,c.field)<0)location='砖砌谷仓 · 临时栖身处';if(c){const a=compoundAt(state.x,state.z,c.field,{});if(a.footprint<0)location=a.component?.variant!==undefined?BUILDING_NAMES[a.component.variant%8]:a.component?.kind==='silo'?'筒仓':'田间旧建筑';else if(a.yard>.35)location=a.plan?.kind==='hamlet'?'农庄聚落 · 前院':a.plan?.kind==='farm'||a.plan?.kind==='extension'?'农庄 · 作业地':'建筑旁的踩踏地';}if(state.level===27)location='岩体泉 · 32.2°C · 泡浴 '+Math.floor(springSession.bathSeconds/60)+' 分钟';if(state.level===11)location='Level 11 · '+({commercial:'商业边缘区',mixed:'都会过渡区',core:'金融街峡谷',civic:'公共广场区',warehouse:'仓储街区'}[exitScene.stats.district]||'无垠城市');if(bathhouse.active&&state.level!==27)location='BAÑOS · '+(state.x>4.15?'水疗壁龛':state.x< -4?'淋浴间':state.z>0?'前厅':'假风景空池');$('#location').textContent=`${location}  /  ${Math.round(state.distance)} m`;$('#fps').textContent=`${Math.round(fps)} FPS${settings.filter==='vhs'?' · VHS '+Math.round(displayFilter.values.fps):''} · ${chunks.size} 区块${settings.devMode?'\n'+performanceText():''}`;}
 
 const normalFog=new T.Color('#acb6b1'),clearFog=new T.Color('#b4cbd2'),duskFog=new T.Color('#b9a4a0'),duskFill=new T.Color('#8998b2'),normalFill=new T.Color('#c9d2d4');
 let activeReferenceEnvironment=null;

@@ -1,4 +1,4 @@
-import {spaFloor,spaAllowed,inSpa,inSpaPortal} from './spa-layout-v65.js';
+import {spaFloor,spaAllowed,inSpa,inSpaPortal} from './spa-layout-v66.js';
 // One metre-scale authority for the empty pool, its deck and all indoor routes.
 // Rounded inset basin: the left column island is a genuine convex tiled lobe.
 const pool=[[-2.58,-1.58],[2.45,-1.58]];

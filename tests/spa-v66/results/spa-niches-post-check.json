@@ -1,0 +1,24 @@
+{
+  "camera": "spa-niches",
+  "simulationFrames": 84,
+  "densityGain": 0.55,
+  "extinction": 1.65,
+  "volumeViews": [
+    {
+      "view": "main",
+      "minTransmission": 0.43994140625,
+      "meanTransmission": 0.9685287475585938,
+      "coveredFraction": 0.18513020833333332
+    }
+  ],
+  "SSR": {
+    "hitPixelFraction": 0.06281901041666667,
+    "peakBlend": 0.08062744140625
+  },
+  "glErrors": 0,
+  "renderSize": [
+    960,
+    640
+  ],
+  "limitations": "Native software GLES diagnostic, standard PBR approximation omits runtime cubemap clearcoat/transmission. No browser, display/lens or measured gameplay FPS."
+}

@@ -1,0 +1,290 @@
+[
+  {
+    "file": "glass-block-ao.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 34396
+  },
+  {
+    "file": "glass-block-normal.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 143212
+  },
+  {
+    "file": "glass-block-roughness.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 60250
+  },
+  {
+    "file": "glass-block.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 38098
+  },
+  {
+    "file": "golden-sun-art-ao.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 126598
+  },
+  {
+    "file": "golden-sun-art-normal.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 470452
+  },
+  {
+    "file": "golden-sun-art-roughness.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 135286
+  },
+  {
+    "file": "golden-sun-art.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 116810
+  },
+  {
+    "file": "ivory-lounger-vinyl-ao.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 85490
+  },
+  {
+    "file": "ivory-lounger-vinyl-normal.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 359450
+  },
+  {
+    "file": "ivory-lounger-vinyl-roughness.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 145532
+  },
+  {
+    "file": "ivory-lounger-vinyl.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 63662
+  },
+  {
+    "file": "ivory-square-tiles-ao.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 24984
+  },
+  {
+    "file": "ivory-square-tiles-normal.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 136560
+  },
+  {
+    "file": "ivory-square-tiles-roughness.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 70806
+  },
+  {
+    "file": "ivory-square-tiles.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 29566
+  },
+  {
+    "file": "limestone-ao.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "mode": "RGB",
+    "bytes": 545690
+  },
+  {
+    "file": "limestone-normal.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "mode": "RGB",
+    "bytes": 2352498
+  },
+  {
+    "file": "limestone-roughness.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "mode": "RGB",
+    "bytes": 603674
+  },
+  {
+    "file": "limestone.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "mode": "RGB",
+    "bytes": 497258
+  },
+  {
+    "file": "monstera-leaf-ao.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 31318
+  },
+  {
+    "file": "monstera-leaf-normal.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 90004
+  },
+  {
+    "file": "monstera-leaf-roughness.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 47052
+  },
+  {
+    "file": "monstera-leaf.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "bytes": 199824
+  },
+  {
+    "file": "rubber-mat-ao.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 102512
+  },
+  {
+    "file": "rubber-mat-normal.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 469610
+  },
+  {
+    "file": "rubber-mat-roughness.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 123908
+  },
+  {
+    "file": "rubber-mat.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 79782
+  },
+  {
+    "file": "white-terrycloth-ao.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 109184
+  },
+  {
+    "file": "white-terrycloth-normal.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 489484
+  },
+  {
+    "file": "white-terrycloth-roughness.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 118920
+  },
+  {
+    "file": "white-terrycloth.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "bytes": 91542
+  }
+]

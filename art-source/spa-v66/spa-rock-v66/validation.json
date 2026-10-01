@@ -1,0 +1,491 @@
+{
+  "name": "spa-rock-v66",
+  "units": "metres",
+  "seed": 660731,
+  "vertices": 24489,
+  "triangles": 48974,
+  "beforeDecimationTriangles": 129928,
+  "components": 1,
+  "watertight": true,
+  "boundaryEdges": 0,
+  "nonmanifoldEdges": 0,
+  "bounds": {
+    "min": [
+      4.159998893737793,
+      -0.2800000011920929,
+      -5.719998359680176
+    ],
+    "max": [
+      8.24197006225586,
+      3.184999704360962,
+      -3.118197441101074
+    ]
+  },
+  "statueContacts": [
+    {
+      "name": "seated",
+      "origin": [
+        6.88,
+        1.18,
+        -4.73
+      ],
+      "centerHits": [
+        -0.28,
+        1.18
+      ],
+      "samples": [
+        {
+          "offset": [
+            -0.35,
+            -0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.35,
+            -0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.35,
+            0
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.35,
+            0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.35,
+            0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            -0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            -0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            0
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            -0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            -0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            -0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            -0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            0
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.35,
+            -0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.35,
+            -0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.35,
+            0
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.35,
+            0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.35,
+            0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        }
+      ],
+      "onPlane": 25,
+      "count": 25
+    },
+    {
+      "name": "kneeling",
+      "origin": [
+        7.88,
+        1.18,
+        -5.18
+      ],
+      "centerHits": [
+        -0.28,
+        1.18
+      ],
+      "samples": [
+        {
+          "offset": [
+            -0.35,
+            -0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.35,
+            -0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.35,
+            0
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.35,
+            0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.35,
+            0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            -0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            -0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            0
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            -0.25,
+            0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            -0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            -0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0,
+            0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            -0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            -0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            0
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            0.25
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.25,
+            0.35
+          ],
+          "top": 1.18,
+          "onPlane": true
+        },
+        {
+          "offset": [
+            0.35,
+            -0.35
+          ],
+          "top": 1.160541,
+          "onPlane": false
+        },
+        {
+          "offset": [
+            0.35,
+            -0.25
+          ],
+          "top": 1.160541,
+          "onPlane": false
+        },
+        {
+          "offset": [
+            0.35,
+            0
+          ],
+          "top": 1.160541,
+          "onPlane": false
+        },
+        {
+          "offset": [
+            0.35,
+            0.25
+          ],
+          "top": 1.160541,
+          "onPlane": false
+        },
+        {
+          "offset": [
+            0.35,
+            0.35
+          ],
+          "top": 1.160541,
+          "onPlane": false
+        }
+      ],
+      "onPlane": 20,
+      "count": 25
+    }
+  ],
+  "poolClearance": {
+    "requiredRadiusBelowY082": 2.43,
+    "minVertexRadius": 2.4519658041602,
+    "minSampledTriangleRadius": 2.4468480391513565,
+    "pass": true
+  },
+  "fallLine": {
+    "x": 7.57,
+    "z": -4.21,
+    "verticalTriangleHits": [],
+    "pass": true
+  },
+  "spillwaySupport": {
+    "x": 7.57,
+    "z": -4.46,
+    "verticalTriangleHits": [
+      0.99197,
+      1.02
+    ],
+    "topTarget": 1.02
+  },
+  "normalsFinite": true,
+  "minNormalLength": 0.9999999999999998,
+  "notes": [
+    "A single closed mass embedded behind wall planes x=4.24, z=-5.60.",
+    "Top support plane y=1.18; first pad complete at \u00b10.35m, second front/east corner can be beveled/clipped.",
+    "Low rock is clipped to r=2.452m for interpolation safety; allowance tapers only above y=.82.",
+    "No rock intersects the waterfall line x=7.57,z=-4.21.",
+    "World x,z UV fallback; owner should use triplanar material."
+  ],
+  "minimumTriangleArea": 1.5023999822005862e-09,
+  "degenerateFaces": 0,
+  "threeFactoryImport": "passed with existing vendor Three module"
+}

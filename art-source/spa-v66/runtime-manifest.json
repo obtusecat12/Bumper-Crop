@@ -1,0 +1,221 @@
+{
+  "source": "Eight built-in image_gen calls; prompts and source paths in generation-provenance.json",
+  "processing": "Albedo originals only resized and encoded. PBR scalar fields inferred numerically from original luminance; these are approximate material cues, not measured scans. Normal, roughness and AO WebP encoded losslessly.",
+  "asset_count": 8,
+  "runtime_file_count": 32,
+  "assets": [
+    {
+      "name": "ivory-square-tiles",
+      "original": "/workspace/scratch/85111d38430a/spa-assets-v66/ivory-square-tiles.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        512,
+        512
+      ],
+      "albedo": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/ivory-square-tiles.webp",
+      "normal": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/ivory-square-tiles-normal.webp",
+      "roughness": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/ivory-square-tiles-roughness.webp",
+      "ao": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/ivory-square-tiles-ao.webp",
+      "normal_convention": "OpenGL tangent space",
+      "albedo_color_space": "sRGB",
+      "data_map_color_space": "linear / NoColorSpace",
+      "normal_xy_p95": 0.4327,
+      "roughness_range": [
+        0.25,
+        0.835
+      ],
+      "source_sha256": "8a384ed363b10878b91a2195be81de124513f8e026da3df800776374b08fbbc8",
+      "albedo_encoding": "RGB WebP quality 90"
+    },
+    {
+      "name": "limestone",
+      "original": "/workspace/scratch/85111d38430a/spa-assets-v66/limestone.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "albedo": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/limestone.webp",
+      "normal": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/limestone-normal.webp",
+      "roughness": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/limestone-roughness.webp",
+      "ao": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/limestone-ao.webp",
+      "normal_convention": "OpenGL tangent space",
+      "albedo_color_space": "sRGB",
+      "data_map_color_space": "linear / NoColorSpace",
+      "normal_xy_p95": 0.7241,
+      "roughness_range": [
+        0.76,
+        0.96
+      ],
+      "source_sha256": "1a1f13311ba178f623dcaf0ee49850fd85a584c527ac455f8d3730224d69b00f",
+      "albedo_encoding": "RGB WebP quality 90"
+    },
+    {
+      "name": "golden-sun-art",
+      "original": "/workspace/scratch/85111d38430a/spa-assets-v66/golden-sun-art.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        512,
+        512
+      ],
+      "albedo": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/golden-sun-art.webp",
+      "normal": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/golden-sun-art-normal.webp",
+      "roughness": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/golden-sun-art-roughness.webp",
+      "ao": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/golden-sun-art-ao.webp",
+      "normal_convention": "OpenGL tangent space",
+      "albedo_color_space": "sRGB",
+      "data_map_color_space": "linear / NoColorSpace",
+      "normal_xy_p95": 0.615,
+      "roughness_range": [
+        0.44,
+        0.69
+      ],
+      "source_sha256": "7cc42e87af5f0099d3465737f831b69655a78690d0dcc0dc21c4f641b2bae837",
+      "albedo_encoding": "RGB WebP quality 90"
+    },
+    {
+      "name": "white-terrycloth",
+      "original": "/workspace/scratch/85111d38430a/spa-assets-v66/white-terrycloth.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        512,
+        512
+      ],
+      "albedo": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/white-terrycloth.webp",
+      "normal": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/white-terrycloth-normal.webp",
+      "roughness": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/white-terrycloth-roughness.webp",
+      "ao": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/white-terrycloth-ao.webp",
+      "normal_convention": "OpenGL tangent space",
+      "albedo_color_space": "sRGB",
+      "data_map_color_space": "linear / NoColorSpace",
+      "normal_xy_p95": 0.395,
+      "roughness_range": [
+        0.91,
+        0.99
+      ],
+      "source_sha256": "6c57252744f8edc4e44ec6c110e770717b20472edca10d2611ce5cfa614b889c",
+      "albedo_encoding": "RGB WebP quality 90"
+    },
+    {
+      "name": "ivory-lounger-vinyl",
+      "original": "/workspace/scratch/85111d38430a/spa-assets-v66/ivory-lounger-vinyl.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        512,
+        512
+      ],
+      "albedo": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/ivory-lounger-vinyl.webp",
+      "normal": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/ivory-lounger-vinyl-normal.webp",
+      "roughness": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/ivory-lounger-vinyl-roughness.webp",
+      "ao": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/ivory-lounger-vinyl-ao.webp",
+      "normal_convention": "OpenGL tangent space",
+      "albedo_color_space": "sRGB",
+      "data_map_color_space": "linear / NoColorSpace",
+      "normal_xy_p95": 0.1676,
+      "roughness_range": [
+        0.5,
+        0.62
+      ],
+      "source_sha256": "eb614d7f50481b98e493bdd8b70ed94a61c00087e7877893b63a989b8fd6c91b",
+      "albedo_encoding": "RGB WebP quality 90"
+    },
+    {
+      "name": "rubber-mat",
+      "original": "/workspace/scratch/85111d38430a/spa-assets-v66/rubber-mat.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        512,
+        512
+      ],
+      "albedo": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/rubber-mat.webp",
+      "normal": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/rubber-mat-normal.webp",
+      "roughness": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/rubber-mat-roughness.webp",
+      "ao": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/rubber-mat-ao.webp",
+      "normal_convention": "OpenGL tangent space",
+      "albedo_color_space": "sRGB",
+      "data_map_color_space": "linear / NoColorSpace",
+      "normal_xy_p95": 0.5843,
+      "roughness_range": [
+        0.77,
+        0.94
+      ],
+      "source_sha256": "ca9799d9975c97e5e69f4487354f77bdc11083f865b21f7b79152b9d14e31869",
+      "albedo_encoding": "RGB WebP quality 90"
+    },
+    {
+      "name": "monstera-leaf",
+      "original": "/workspace/scratch/85111d38430a/spa-assets-v66/monstera-leaf.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        512,
+        512
+      ],
+      "albedo": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/monstera-leaf.webp",
+      "normal": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/monstera-leaf-normal.webp",
+      "roughness": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/monstera-leaf-roughness.webp",
+      "ao": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/monstera-leaf-ao.webp",
+      "normal_convention": "OpenGL tangent space",
+      "albedo_color_space": "sRGB",
+      "data_map_color_space": "linear / NoColorSpace",
+      "normal_xy_p95": 0.1483,
+      "roughness_range": [
+        0.38,
+        1.0
+      ],
+      "source_sha256": "b11f342fecd4bb10e8da527e938346f0059264ea5d6f469ec3e9612d09e6eb99",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "transparent_pixel_fraction": 0.5348,
+      "albedo_encoding": "lossless RGBA WebP"
+    },
+    {
+      "name": "glass-block",
+      "original": "/workspace/scratch/85111d38430a/spa-assets-v66/glass-block.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        512,
+        512
+      ],
+      "albedo": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/glass-block.webp",
+      "normal": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/glass-block-normal.webp",
+      "roughness": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/glass-block-roughness.webp",
+      "ao": "/workspace/scratch/85111d38430a/spa-assets-v66/runtime/glass-block-ao.webp",
+      "normal_convention": "OpenGL tangent space",
+      "albedo_color_space": "sRGB",
+      "data_map_color_space": "linear / NoColorSpace",
+      "normal_xy_p95": 0.4327,
+      "roughness_range": [
+        0.13,
+        0.24
+      ],
+      "source_sha256": "8aabbcc75a86902f87c62cde7f7669d6662d90144db9132af1feaae74cb4e132",
+      "albedo_encoding": "RGB WebP quality 90"
+    }
+  ]
+}

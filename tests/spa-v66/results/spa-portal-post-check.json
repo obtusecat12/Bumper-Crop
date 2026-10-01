@@ -1,0 +1,24 @@
+{
+  "camera": "spa-portal",
+  "simulationFrames": 84,
+  "densityGain": 0.55,
+  "extinction": 1.65,
+  "volumeViews": [
+    {
+      "view": "main",
+      "minTransmission": 0.1915283203125,
+      "meanTransmission": 0.978492021560669,
+      "coveredFraction": 0.06942708333333333
+    }
+  ],
+  "SSR": {
+    "hitPixelFraction": 0.0259765625,
+    "peakBlend": 0.2113037109375
+  },
+  "glErrors": 0,
+  "renderSize": [
+    960,
+    640
+  ],
+  "limitations": "Native software GLES diagnostic, standard PBR approximation omits runtime cubemap clearcoat/transmission. No browser, display/lens or measured gameplay FPS."
+}

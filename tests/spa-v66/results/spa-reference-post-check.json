@@ -1,0 +1,24 @@
+{
+  "camera": "spa-reference",
+  "simulationFrames": 84,
+  "densityGain": 0.55,
+  "extinction": 1.65,
+  "volumeViews": [
+    {
+      "view": "main",
+      "minTransmission": 0.2298583984375,
+      "meanTransmission": 0.8526997566223145,
+      "coveredFraction": 0.5037863756613756
+    }
+  ],
+  "SSR": {
+    "hitPixelFraction": 0.009729125248508946,
+    "peakBlend": 0.09002685546875
+  },
+  "glErrors": 0,
+  "renderSize": [
+    960,
+    1006
+  ],
+  "limitations": "Native software GLES diagnostic, standard PBR approximation omits runtime cubemap clearcoat/transmission. No browser, display/lens or measured gameplay FPS."
+}
