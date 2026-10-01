@@ -1,4 +1,4 @@
-/* Spring V63 — three independent water scales, in metres.
+/* Spring V64 falling-film refinement — local ledge churn and accelerating clear spans.
  * All meshes remain on layer 0. Hide group during the opaque capture, then
  * bind(capture.texture,capture.depthTexture,width,height,camera) before render.
  * prepare(renderer) executes at most four 1/60s MRT steps per update and is
@@ -17,14 +17,20 @@ float waterFresnel(float c){c=clamp(c,0.,1.);float n=1.3335,ct=sqrt(1.-(1.-c*c)/
 float linearDepth(float z,vec2 nf){return nf.x*nf.y/(nf.y-z*(nf.y-nf.x));}
 `;
 export const cascadeSheetVertex=`precision highp float;
-in vec3 position,normal;in vec2 uv;
+in vec3 position,normal,flowState;in vec2 uv;
 uniform mat4 modelMatrix,viewMatrix,projectionMatrix;
-uniform float time,kind;
-out vec2 vUv;out vec3 worldPosition,worldNormal,viewPosition;
-void main(){vUv=uv;vec3 p=position;
- float amplitude=kind>1.5?.0022:.0038;
- float travel=uv.y*29.-time*(kind>1.5?2.4:15.);
- p+=normal*amplitude*(sin(travel+uv.x*24.)+.40*sin(travel*1.73-uv.x*38.));
+uniform float time,kind,seed;
+out vec2 vUv;out vec3 worldPosition,worldNormal,viewPosition;out vec3 vFlow;
+${NOISE_GLSL}
+void main(){vUv=uv;vFlow=flowState;vec3 p=position;
+ if(kind>1.5){
+  float travel=uv.y*29.-time*2.4;
+  p+=normal*.0022*(sin(travel+uv.x*24.)+.40*sin(travel*1.73-uv.x*38.));
+ }else{
+  // Sub-millimetre advected surface grain; no whole-curtain sinusoidal folds.
+  float grain=noise(vec2(uv.x*29.+seed,flowState.x*17.-time*17.));
+  p+=normal*.00045*(grain-.5);
+ }
  vec4 world=modelMatrix*vec4(p,1.);worldPosition=world.xyz;
  worldNormal=normalize(mat3(modelMatrix)*normal);vec4 view=viewMatrix*world;viewPosition=view.xyz;
  gl_Position=projectionMatrix*view;
@@ -32,13 +38,16 @@ void main(){vUv=uv;vec3 p=position;
 export const cascadeSheetFragment=`precision highp float;precision highp sampler2D;
 uniform sampler2D sceneColor,sceneDepth,ripple,caustics,flowMap;
 uniform vec2 resolution,nearFar;uniform vec3 eye;
+uniform mat4 viewMatrix,projectionMatrix;
 uniform float time,kind,ready,pathLength,seed;
 uniform vec4 pebbles[12];
-in vec2 vUv;in vec3 worldPosition,worldNormal,viewPosition;out vec4 fragColor;
+in vec2 vUv;in vec3 worldPosition,worldNormal,viewPosition;in vec3 vFlow;out vec4 fragColor;
 ${NOISE_GLSL}
 void main(){
  bool creek=kind>1.5;bool rivulet=kind>.5&&kind<1.5;
- vec2 q=vec2(vUv.x*6.7+seed,vUv.y*pathLength*2.5-time*1.5);
+ // flowState.x is integrated time-of-flight. Features accelerate through
+ // each drop and slow only where the supplied rock path turns across a ledge.
+ vec2 q=vec2(vUv.x*18.+seed,vFlow.x*13.-time*13.);
  vec2 flow=texture(flowMap,clamp(vUv,0.,1.)).rg*2.-1.;
  if(creek)q=worldPosition.xz*2.7-flow*time*.25;
  float n=fnoise(q),fine=fnoise(q*vec2(4.3,1.6)+vec2(7.,-time*.9));
@@ -47,35 +56,67 @@ void main(){
  float edge=smoothstep(0.,.075+noise(vec2(vUv.y*31.,seed+2.))*.045,vUv.x)*smoothstep(0.,.065+noise(vec2(vUv.y*27.,seed+13.))*.065,1.-vUv.x);
  // Eroding holes and irregular boundaries belong to the moving film itself.
  float erosion=smoothstep(.19,.43,n+.12*sin(vUv.x*31.+n*4.));
- float coverage=mix(.025,.94,erosion)*edge;
- if(rivulet){edge=1.;coverage=.77;}
+ float coverage=mix(.02,.96,erosion)*edge*(1.-smoothstep(.970,1.,vUv.y));
+ if(rivulet){
+  // Narrow streams belong within the film. Advected constrictions interrupt
+  // their silhouette; they are not permanent full-height cylindrical rods.
+  float neck=fnoise(vec2(seed+vUv.x*.35,vFlow.x*19.-time*19.));
+  float breakup=smoothstep(.30,.61,neck);
+  edge=smoothstep(0.,.12,vUv.x)*smoothstep(0.,.12,1.-vUv.x);
+  coverage=(.12+.44*breakup)*edge*(1.-smoothstep(.96,1.,vUv.y));
+ }
  if(creek)coverage=edge*.93;
  if(coverage<.012)discard;
  vec3 N=normalize(worldNormal);if(!gl_FrontFacing)N=-N;
+ if(!creek){
+  // Vertex motion must also affect optical normals, especially over lips.
+  vec3 geometricNormal=normalize(cross(dFdx(worldPosition),dFdy(worldPosition)));
+  if(dot(geometricNormal,N)<0.)geometricNormal=-geometricNormal;
+  N=normalize(mix(N,geometricNormal,.42));
+ }
  vec3 crossSlope=normalize(cross(abs(N.y)<.9?vec3(0.,1.,0.):vec3(0.,0.,1.),N));
  vec3 downSlope=normalize(cross(N,crossSlope));
- float dx=(fnoise(q+vec2(.045,0.))-fnoise(q-vec2(.045,0.)))*1.7;
- float dy=(fnoise(q+vec2(0.,.045))-fnoise(q-vec2(0.,.045)))*1.3;
- N=normalize(N+crossSlope*(dx+(rippleA-.5)*.14)+downSlope*(dy+(rippleB-.5)*.10));
+ float dx=(fnoise(q+vec2(.045,0.))-fnoise(q-vec2(.045,0.)))*(creek?1.7:.65);
+ float dy=(fnoise(q+vec2(0.,.045))-fnoise(q-vec2(0.,.045)))*(creek?1.3:.24);
+ N=normalize(N+crossSlope*(dx+(rippleA-.5)*(creek?.14:.040))+downSlope*(dy+(rippleB-.5)*(creek?.10:.015)));
  vec3 V=normalize(eye-worldPosition);float fresnel=waterFresnel(abs(dot(N,V)));
  vec2 screenUV=gl_FragCoord.xy/resolution;
  float waterDepth=-viewPosition.z;
  float behind=linearDepth(texture(sceneDepth,screenUV).r,nearFar)-waterDepth;
  if(ready>.5&&behind<-.014)discard;
- vec2 distortion=vec2(dx,dy+(rippleA-.5)*.10)*(creek?.009:.014);
+ vec2 distortion=vec2(dx,dy+(rippleA-.5)*.10)*.009;
+ if(!creek){
+  // Snell refraction through a millimetre-scale film, projected into this
+  // camera. UV noise is not a valid screen-space direction on a bent wall.
+  vec3 incident=normalize(viewPosition),viewNormal=normalize(mat3(viewMatrix)*N);
+  if(dot(viewNormal,incident)>0.)viewNormal=-viewNormal;
+  vec3 ray=refract(incident,viewNormal,1./1.3335);
+  float thickness=rivulet?.0035:mix(.0025,.009,n);
+  vec2 bend=ray.xy/max(.18,-ray.z)-incident.xy/max(.18,-incident.z);
+  distortion=bend*vec2(projectionMatrix[0][0],projectionMatrix[1][1])*.5*thickness/max(.25,waterDepth);
+  distortion=clamp(distortion,vec2(-.007),vec2(.007));
+ }
  vec2 refrUV=clamp(screenUV+distortion,.001,.999);
  if(linearDepth(texture(sceneDepth,refrUV).r,nearFar)<waterDepth-.015)refrUV=screenUV;
  float depth=clamp(behind,0.,creek?.38:.075);
  vec3 transmitted=texture(sceneColor,refrUV).rgb*exp(-vec3(.55,.20,.16)*depth);
- vec3 reflected=vec3(.075,.105,.100)+vec3(.13,.15,.14)*pow(max(N.y,0.),2.);
- vec3 water=mix(transmitted,reflected,clamp(fresnel,.02,.58));
+ // Without an environment map, estimate low-energy ambient from captured
+ // cave illumination. A constant grey would emit white bands over dark rock.
+ vec3 reflected=creek?vec3(.075,.105,.100)+vec3(.13,.15,.14)*pow(max(N.y,0.),2.):transmitted*.32+vec3(.004,.006,.005);
+ vec3 water=mix(transmitted,reflected,creek?clamp(fresnel,.02,.58):fresnel);
  water=mix(vec3(.075,.115,.107),water,ready);
  vec3 H=normalize(normalize(vec3(-.4,.9,.5))+V);
- float glint=pow(max(dot(N,H),0.),creek?92.:128.);
- water+=vec3(.75,.84,.81)*glint*.42;
- float foam=pow(smoothstep(.56,.9,fine),2.)*.20;
- foam+=smoothstep(.74,1.,vUv.y)*smoothstep(.49,.83,n)*.29;
- if(rivulet)foam*=.58;
+ float glint=pow(max(dot(N,H),0.),creek?92.:48.);
+ float specularWeight=creek?.42:waterFresnel(abs(dot(V,H)))*(rivulet?1.4:2.4);
+ water+=vec3(.75,.84,.81)*glint*specularWeight;
+ // Entrained microbubbles make fast free-falling water readable without
+ // whitening the entire sheet or inventing a luminous reflection surface.
+ if(!creek){float airNoise=fnoise(vec2(vUv.x*36.+seed,vFlow.x*21.-time*21.));float entrained=smoothstep(.34,.76,airNoise)*clamp((vFlow.z-.5)*.065,0.,.19)*(1.-clamp(vFlow.y,0.,1.)*.55);if(rivulet)entrained*=.38;water=mix(water,vec3(.65,.76,.72),entrained);}
+
+ // White water belongs at rock contact, not along every downstream pixel.
+ // The existing impact system owns the pool landing; there is no bottom ramp.
+ float foam=clamp(vFlow.y,0.,1.)*smoothstep(.51,.82,fine)*.16;
+ if(rivulet)foam*=.28;
  if(creek){
   foam=0.;
   for(int i=0;i<12;i++){
@@ -90,7 +131,9 @@ void main(){
  }
  foam=clamp(foam,0.,.66);
  water=mix(water,vec3(.78,.87,.82),foam);
- float alpha=coverage*clamp(.36+fresnel*.54+foam*.67+glint*.22,.12,.88);
+ // RGB already contains transmitted background plus reflection. Applying
+ // a second low optical opacity would undo refraction and erase the sheet.
+ float alpha=coverage*.94;
  if(creek)alpha=coverage*clamp(.50+fresnel*.35+foam*.4,.42,.93);
  fragColor=vec4(water,alpha);
 }`;
@@ -204,36 +247,53 @@ function makePath(T,input){
  const side=new T.Vector3(-planar.z,0,planar.x);
  function point(v){const d=Math.max(0,Math.min(1,v))*total;let j=1;while(j<lengths.length-1&&lengths[j]<d)j++;return points[j-1].clone().lerp(points[j],(d-lengths[j-1])/Math.max(.00001,lengths[j]-lengths[j-1]));}
  function tangent(v){return point(Math.min(1,v+.003)).sub(point(Math.max(0,v-.003))).normalize();}
- return{points,length:total,point,tangent,side};
+ // Three components: accumulated flight time, local ledge contact, speed.
+ // Kinetic head resets at rock contacts; vertical spans obey v²=v0²+2gΔh.
+ const samples=256,profile=[];let elapsed=0,head=0,previous=point(0),lastSpeed=.5;
+ for(let i=0;i<=samples;i++){
+  const v=i/samples,p=point(v),down=Math.max(0,-tangent(v).y);
+  const contact=Math.max(0,Math.min(1,(.90-down)/.34));
+  const drop=Math.max(0,previous.y-p.y);head=contact>.10?0:head+drop;
+  const speed=contact>.10?.38+.18*(1-contact):Math.sqrt(.5*.5+2*GRAVITY*head);
+  if(i)elapsed+=p.distanceTo(previous)/Math.max(.32,(lastSpeed+speed)*.5);
+  profile.push(new T.Vector3(elapsed,contact,speed));previous=p;lastSpeed=speed;
+ }
+ function flowAt(v){const q=Math.max(0,Math.min(1,v))*samples,i=Math.min(samples-1,Math.floor(q));return profile[i].clone().lerp(profile[i+1],q-i);}
+ return{points,length:total,point,tangent,side,flowAt};
 }
+function irregular(x){const i=Math.floor(x),f=x-i,t=f*f*(3-2*f),h=n=>{const q=Math.sin(n*127.1+311.7)*43758.5453;return q-Math.floor(q);};return h(i)*(1-t)+h(i+1)*t;}
 function ribbon(T,path,width,rows=180,cols=28,creek=false){
- const positions=[],uv=[],indices=[];
+ const positions=[],uv=[],indices=[],flow=[];
  for(let j=0;j<=rows;j++){const v=j/rows,c=path.point(v),t=path.tangent(v);let side=path.side;
   if(creek){side=new T.Vector3(-t.z,0,t.x);if(side.lengthSq()<.0001)side=path.side;else side.normalize();}
   const normal=creek?new T.Vector3(0,1,0):new T.Vector3().crossVectors(side,t).normalize();
   // The supplied polyline is the surveyed wet rock face. Crosswise geometry
   // creates folded ribbons; no smoothing spline cuts through a ledge.
   for(let i=0;i<=cols;i++){const u=i/cols,across=u-.5;
-   const edge=.87+.075*Math.sin(v*36.+u*7.)+.055*Math.sin(v*73.-u*11.);
-   const meander=creek?.012*Math.sin(v*24.):.014*Math.sin(v*21.);
-   const fold=creek?.004*Math.sin(u*17.+v*35.):.0065*Math.sin(u*39.+v*26.)+.0035*Math.cos(u*65.-v*51.);
+   const state=path.flowAt(v);
+   const edge=creek?.87+.075*Math.sin(v*36.+u*7.)+.055*Math.sin(v*73.-u*11.):.94+.035*(irregular(v*9.)-.5);
+   const meander=creek?.012*Math.sin(v*24.):0;
+   const fold=creek?.004*Math.sin(u*17.+v*35.):.00035*(irregular(u*19.+v*.3)-.5);
    const p=c.clone().addScaledVector(side,across*width*edge+meander).addScaledVector(normal,fold+.010);
-   positions.push(p.x,p.y,p.z);uv.push(u,v);
+   positions.push(p.x,p.y,p.z);uv.push(u,v);flow.push(state.x,state.y,state.z);
   }
  }
  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const a=j*(cols+1)+i,b=a+cols+1;indices.push(a,b,a+1,a+1,b,b+1);}
- const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();return g;
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setAttribute('flowState',new T.Float32BufferAttribute(flow,3));g.setIndex(indices);g.computeVertexNormals();return g;
 }
 function rivuletGeometry(T,path,offset,index){
- const p=[],uv=[],indices=[],rows=140,segments=5;
+ const p=[],uv=[],indices=[],flow=[],rows=140,segments=5;
  for(let j=0;j<=rows;j++){
   const v=j/rows,t=path.tangent(v),normal=new T.Vector3().crossVectors(path.side,t).normalize();
-  const center=path.point(v).addScaledVector(path.side,offset+.009*Math.sin(v*29.+index*4.)).addScaledVector(normal,.016);
-  const radius=(.007+(index%4)*.0025)*(.72+.28*Math.sin(v*31.+index));
-  for(let n=0;n<=segments;n++){const a=n/segments*Math.PI*2,q=center.clone().addScaledVector(path.side,Math.cos(a)*radius).addScaledVector(normal,Math.sin(a)*radius);p.push(q.x,q.y,q.z);uv.push(n/segments,v);}
+  const state=path.flowAt(v);
+  const center=path.point(v).addScaledVector(path.side,offset).addScaledVector(normal,.014);
+  const radius=(.0030+(index%4)*.0008)*(.86+.18*(irregular(v*13.+index*7.)-.5));
+  // Shallow wet-rock stream cross-section, 6–11mm wide. An open convex cap
+  // removes the continuous cylindrical Fresnel rims that read as wire.
+  for(let n=0;n<=segments;n++){const across=n/segments*2.-1.,q=center.clone().addScaledVector(path.side,across*radius).addScaledVector(normal,Math.sqrt(Math.max(0,1.-across*across))*radius*.20);p.push(q.x,q.y,q.z);uv.push(n/segments,v);flow.push(state.x,state.y,state.z);}
  }
  for(let j=0;j<rows;j++)for(let n=0;n<segments;n++){const a=j*(segments+1)+n,b=a+segments+1;indices.push(a,b,a+1,a+1,b,b+1);}
- const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();return g;
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setAttribute('flowState',new T.Float32BufferAttribute(flow,3));g.setIndex(indices);g.computeVertexNormals();return g;
 }
 function makeParticleGeometry(T){
  const g=new T.InstancedBufferGeometry();g.setIndex([0,1,2,0,2,3]);g.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,1,-1,0,1,1,0,-1,1,0],3));
@@ -253,7 +313,8 @@ export function createSpringCascades(T,{paths,textures={},waterY=0,widths=[.75,.
   const u={...shared,seed:{value:k*7.17+1.},pathLength:{value:path.length},kind:{value:0}};
   const sheet=new T.Mesh(ribbon(T,path,widths[k]),makeMat('Refractive irregular water film',u,cascadeSheetVertex,cascadeSheetFragment));sheet.renderOrder=3;sheet.name='Eroded broad water sheet';source.add(sheet);geometries.push(sheet.geometry);
   const ru={...u,kind:{value:1}},rivuletMat=makeMat('Clear narrow gravity rivulets',ru,cascadeSheetVertex,cascadeSheetFragment);
-  for(let n=0;n<11;n++){const g=rivuletGeometry(T,path,(n-5)*widths[k]*.076,n+k*11),m=new T.Mesh(g,rivuletMat);m.name='Separate refractive rivulet '+(n+1);m.renderOrder=4;source.add(m);geometries.push(g);}
+  const strandOffsets=[-.41,-.285,-.105,.025,.185,.315,.425];
+  for(let n=0;n<strandOffsets.length;n++){const g=rivuletGeometry(T,path,strandOffsets[n]*widths[k],n+k*7),m=new T.Mesh(g,rivuletMat);m.name='Shallow intermittent refractive rivulet '+(n+1);m.renderOrder=4;source.add(m);geometries.push(g);}
   const foamU={...shared,seed:{value:k*7.17+.7}},foamG=new T.PlaneGeometry(widths[k]*1.75,.94,1,1);foamG.rotateX(-Math.PI/2);
   const foam=new T.Mesh(foamG,makeMat('Local impact foam and concentric waves',foamU,cascadeImpactVertex,cascadeImpactFragment));foam.position.copy(impacts[k]);foam.renderOrder=6;foam.name='Impact foam / four expanding concentric ripples';source.add(foam);geometries.push(foamG);
  });

@@ -1,15 +1,15 @@
 import * as T from './vendor/three.module.min.js';
 import {SPRING_SHELL} from './level27-shell-data.js?v=63';
 import {mergeGeometries,mergeVertices} from './vendor/BufferGeometryUtils.js';
-import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit,inAnnex,ANNEX,streamPath,stairCenter} from './level27-layout.js?v=63';
+import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit,inAnnex,ANNEX,streamPath,stairCenter} from './level27-layout.js?v=64';
 import {springMaterials,springTextures} from './level27-materials.js?v=63';
 
 import {createSpringDynamics} from './spring-dynamics.js?v=63';
 import {bathTextures} from './bath-textures.js?v=62';
 import {createMineLamp,createPrimitiveWashStation} from './spring-props-v63.js';
-import {paintGeology,configureGeology,naturalTreads,organicStone} from './spring-geology-v63.js';
+import {paintGeology,configureGeology,naturalTreads,organicStone} from './spring-geology-v63.js?v=64';
 import {createSpringVolume} from './spring-volume-v63.js';
-import {createSpringCascades,createFlowStream} from './spring-cascades-v63.js';
+import {createSpringCascades,createFlowStream} from './spring-cascades-v63.js?v=64';
 const UP=new T.Vector3(0,1,0);
 export const SPRING_LIGHTS=[
  {p:[-1.72,2.00,1.16],color:0xffc58f,power:5.8,range:7},
@@ -73,7 +73,7 @@ export function createLevel27(){
  const wp=[0,0,0],wu=[.5,.5],wi=[];for(const [x,z] of CAVE_PLAN){wp.push(x,0,z);wu.push(x/5.2+.5,z/5.2+.5);}for(let i=0;i<CAVE_PLAN.length;i++)wi.push(0,(i+1)%CAVE_PLAN.length+1,i+1);const wg=new T.BufferGeometry();wg.setAttribute('position',new T.Float32BufferAttribute(wp,3));wg.setAttribute('uv',new T.Float32BufferAttribute(wu,2));wg.setIndex(wi);wg.computeVertexNormals();
  const water=new T.Mesh(wg,waterMat);water.name='Clear warm spring water / bounded to basin';water.renderOrder=2;scene.add(water);
  const freefall=wholeStream.slice(8).map(p=>new T.Vector3(...p)),west=[];let minRadius=100;
- for(let i=0;i<=48;i++){const y=2.10*(1-i/48)+.014,a=3.57+.012*Math.sin(i*.8),p=wallPoint(a,y),r=Math.min(minRadius,Math.hypot(p[0],p[2])-.035);minRadius=r;west.push(new T.Vector3(Math.cos(a)*r,y,Math.sin(a)*r));}
+ for(let i=0;i<=48;i++){const y=2.10*(1-i/48)+.014,a=3.57,p=wallPoint(a,y),r=Math.min(minRadius,Math.hypot(p[0],p[2])-.035);minRadius=r;west.push(new T.Vector3(Math.cos(a)*r,y,Math.sin(a)*r));}
  const cascade=createSpringCascades(T,{paths:[freefall,west],textures:tex,waterY:0});const falls=cascade.group;scene.add(falls);const impacts=cascade.impacts;
  const creek=createFlowStream(T,{points:wholeStream.slice(0,9).map(p=>new T.Vector3(...p)),width:1.02,textures:tex});scene.add(creek.group);
  const volume=createSpringVolume(T,{waterY:0,density:.85,lights:SPRING_LIGHTS,poolPlan:{points:CAVE_PLAN}});scene.userData.springVolume={compose:(renderer,color,depth,camera,w,h)=>volume.compose(renderer,color,depth,camera,w,h,clock.value)};

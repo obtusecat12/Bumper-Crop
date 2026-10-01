@@ -2,8 +2,8 @@ import {SHOWER_HEADS} from './bathhouse-layout.js?v=61';
 import {createShowerAudio} from './bath-v62-audio.js?v=62';
 import {initializeCanTextures} from './canned-food.js?v=60';
 import {initializeSpringTextures} from './level27-materials.js?v=63';
-import {createLevel27} from './level27-scene.js?v=63';
-import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=63';
+import {createLevel27} from './level27-scene.js?v=64';
+import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=64';
 import {nearBathEntrance} from './level27-entry.js?v=61';
 import {initializeBathTextures} from './bath-textures.js?v=62';
 import {createBathhouse} from './bathhouse-scene.js?v=62';
@@ -59,7 +59,7 @@ import {createWheatDetailLayer,initializeCerealTextures,releaseCerealGPU,resumeC
 import {createAtmosphere} from './atmosphere.js?v=60';
 import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=60';
 import {initializeRuralTextures} from './rural-textures.js?v=60';
-import {createNavigationMap} from './map-ui.js?v=63';
+import {createNavigationMap} from './map-ui.js?v=64';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
