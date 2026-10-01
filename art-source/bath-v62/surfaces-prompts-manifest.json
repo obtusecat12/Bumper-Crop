@@ -1,0 +1,29 @@
+{
+  "mode": "built-in image_gen",
+  "images": [
+    {
+      "key": "pool-floor-ceramic",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: seamless square ceramic pool-floor albedo texture.\nSubject: light ivory-grey ceramic 10 cm tiles with muted blue-grey thin grout.\nMaterials and details: slight rounded ceramic lips; subtle mineral deposit and wear; colors compatible with a beige 1980s pool room.\nComposition: flat overhead view, seamless repeating surface filling the square.\nLighting: neutral albedo, no directional baked lighting.\nStyle: realistic PS2 material style, softly detailed, not cartoon or pixel blocks.\nAspect ratio: 1:1.",
+      "filename": "pool-floor-ceramic.png",
+      "nativePath": null
+    },
+    {
+      "key": "shelf-white-marble",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: seamless square white marble albedo texture for corner shelves.\nSubject: polished white marble with sparse thin warm-grey veins.\nMaterials and details: small pinprick mineral pits; no tile pattern.\nComposition: flat overhead view, seamless repeating surface filling the square.\nLighting: neutral albedo, no directional baked lighting.\nStyle: realistic PS2 material style, softly detailed, not cartoon or pixel blocks.\nAspect ratio: 1:1.",
+      "filename": "shelf-white-marble.png",
+      "nativePath": "/workspace/scratch/85111d38430a/generated_images/exec-ce41c9a3-6d1f-44cc-86a5-d18c4f67a403.png"
+    },
+    {
+      "key": "chrome-flex-hose-braid",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: seamless square chrome flex-hose braid albedo texture.\nSubject: tightly woven chrome flex-hose braid.\nMaterials and details: horizontal and vertical interwoven diagonal thin steel wires.\nComposition: flat close-up view, seamless repeating surface filling the square.\nLighting and color: neutral grey albedo, no dramatic shine or directional baked lighting.\nStyle: realistic PS2 material style, softly detailed, not cartoon or pixel blocks.\nAspect ratio: 1:1.",
+      "filename": "chrome-flex-hose-braid.png",
+      "nativePath": "/workspace/scratch/85111d38430a/generated_images/exec-239f5c00-c045-47af-b26e-ec293081a06d.png"
+    },
+    {
+      "key": "cotton-cord-braid",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: seamless square cotton cord braid albedo texture.\nSubject: off-white cotton cord braid textile close-up.\nMaterials and details: fine diagonal strand weave.\nComposition: flat close-up view, seamless repeating surface filling the square.\nLighting and color: neutral off-white albedo, no directional baked lighting.\nStyle: realistic PS2 material style, softly detailed, not cartoon or pixel blocks.\nAspect ratio: 1:1.",
+      "filename": "cotton-cord-braid.png",
+      "nativePath": "/workspace/scratch/85111d38430a/generated_images/exec-db6a5f92-25b4-4130-804a-64c1d53e8213.png"
+    }
+  ]
+}

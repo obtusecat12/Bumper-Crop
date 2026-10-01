@@ -1,11 +1,13 @@
 import * as T from './vendor/three.module.min.js';
-import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
+import {createStallKit} from './bath-v62-stall-kit.js?v=62';
+import {showerMaterials} from './bath-v62-materials.js?v=62';
+import {createHybridShower} from './bath-v62-water.js?v=62';
 import {bathRefitMaterials,bathRefitTextures,addBox,addPlane,addTube,rock,worldUV} from './bath-v61-materials.js?v=61';
 import {makeDispenser,makeTelephone,makePlasticChair,makeTowel,makeRockPlanter} from './bath-v61-props.js?v=61';
 import {wetFloorMaterial,createBathReflection} from './bath-v61-wet.js?v=61';
 import {SHOWER_HEADS} from './bathhouse-layout.js?v=61';
 export function buildBathRefit(scene,root,oldWood){
- const m=bathRefitMaterials(),tex=bathRefitTextures(),clock={value:0},presets=[0,0,0,0],streams=[];
+ const m=bathRefitMaterials(),tex=bathRefitTextures(),clock={value:0},presets=[0,0,0,0],streams=[],nozzles=[];
  oldWood=m.wood;
  const box=(mat,x,y,z,w,h,d,n='',r=.018)=>addBox(root,mat,x,y,z,w,h,d,n,r),plane=(mat,x,y,z,w,h,ry=0,rx=0,n='')=>addPlane(root,mat,x,y,z,w,h,ry,rx,n);
  const pipe=(pts,r=.022,mat=m.metal,n='Attached plumbing')=>addTube(root,mat,pts,r,n);
@@ -13,10 +15,10 @@ export function buildBathRefit(scene,root,oldWood){
  const lobbyFloor=wetFloorMaterial(m.floor,{baseWet:.18}),showerFloor=wetFloorMaterial(m.floor,{heads:SHOWER_HEADS,baseWet:.48});
  box(lobbyFloor,0,-.095,2.1,5.2,.18,4.2,'Reception terrazzo tile floor');
  for(const x of[-2.60,2.60]){
-  box(m.plaster,x,1.48,2.1,.18,2.96,4.2,'Mineral-stained lobby plaster',.02);
-  box(m.jade,x-Math.sign(x)*.11,.56,2.1,.036,1.12,4.14,'Glazed green dado',.004);
-  const p=plane(m.border,x-Math.sign(x)*.132,1.17,2.1,4.14,.18,x<0?Math.PI/2:-Math.PI/2);p.geometry.attributes.uv.array.forEach((v,i,a)=>{if(i%2===0)a[i]*=3.1;});
-  box(m.stone,x-Math.sign(x)*.12,.055,2.1,.07,.11,4.15,'Coved stone skirting');
+  box(m.plaster,x,1.48,2.185,.18,2.96,4.03,'Mineral-stained lobby plaster',.02);
+  box(m.jade,x-Math.sign(x)*.11,.56,2.185,.036,1.12,3.97,'Glazed green dado',.004);
+  const p=plane(m.border,x-Math.sign(x)*.132,1.17,2.185,3.97,.18,x<0?Math.PI/2:-Math.PI/2);p.geometry.attributes.uv.array.forEach((v,i,a)=>{if(i%2===0)a[i]*=3.1;});
+  box(m.stone,x-Math.sign(x)*.12,.055,2.175,.07,.11,4.00,'Coved stone skirting');
  }
  box(m.plaster,0,2.97,2.1,5.35,.14,4.4,'Closed reception ceiling');
  for(const x of[-1.70,1.70])box(m.plaster,x,1.48,4.23,1.72,2.96,.18,'Entrance return wall');box(m.plaster,0,2.66,4.23,1.68,.60,.18);
@@ -55,8 +57,12 @@ export function buildBathRefit(scene,root,oldWood){
  box(m.ivory,-8.38,1.48,-3.74,.18,2.96,6.30,'Wet ceramic west wall');
  for(const z of[-6.89,-.59])box(m.ivory,-6.24,1.48,z,4.3,2.96,.18,'Wet ceramic end wall');
  box(m.ivory,-4.29,1.48,-4.66,.12,2.96,4.40,'Shower east tile backing');
- box(m.plaster,-6.24,2.98,-3.74,4.42,.17,6.50,'Steam-stained shower ceiling');box(m.floor,-4.10,-.085,-1.38,.40,.16,1.58,'Flush linking threshold');
- for(const x of[-8.26,-4.37])box(m.jade,x,.084,-3.78,.052,.17,5.96,'Coved wet room skirting');
+ box(m.plaster,-6.24,2.98,-3.74,4.42,.17,6.50,'Steam-stained shower ceiling');box(m.floor,-4.395,-.045,-1.47,.58,.08,1.15,'Flush stone-to-pool linking threshold');
+ box(m.jade,-8.26,.084,-3.78,.052,.17,5.96,'Coved wet room skirting');
+ box(m.jade,-4.37,.084,-4.655,.052,.17,4.21,'Skirting ending at stone arch pier');
+ // The old pool wall and the wet-room backing share one solid reveal. No exposed inset seam.
+ box(m.plaster,-4.255,1.145,-2.30,.17,2.29,.23,'Joined pool-to-shower jamb return',.016);
+ box(m.plaster,-4.255,1.145,-.665,.17,2.29,.12,'Joined upper doorway jamb return',.016);
  const border=plane(m.border,-8.276,2.39,-3.72,6.1,.19,Math.PI/2,0,'Green geometric shower border');for(let i=0;i<border.geometry.attributes.uv.count;i++)border.geometry.attributes.uv.setX(i,border.geometry.attributes.uv.getX(i)*4.5);
  for(const z of[-6.79,-.687]){const p=plane(m.border,-6.27,2.39,z,4.04,.19,z< -3?0:Math.PI);for(let i=0;i<p.geometry.attributes.uv.count;i++)p.geometry.attributes.uv.setX(i,p.geometry.attributes.uv.getX(i)*3);}
  // Heavy rough stone bench, two broad supports contact the floor.
@@ -66,26 +72,25 @@ export function buildBathRefit(scene,root,oldWood){
   put(makeTowel(T,m),-4.35-.113*s,.90,z,-Math.PI/2,s);
  }
  put(makeRockPlanter(T,m),-4.79,0,-.98,0,.57);
- const waterMat=new T.ShaderMaterial({name:'Fine flowing shower jets',uniforms:{clock},transparent:true,depthWrite:false,side:T.DoubleSide,vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'precision highp float;varying vec2 vUv;uniform float clock;void main(){float f=pow(.5+.5*sin(vUv.y*133.-clock*30.+vUv.x*3.),7.);gl_FragColor=vec4(mix(vec3(.36,.52,.53),vec3(.83,.92,.88),f),.14+f*.30);}'});
+ const kitMaterials=showerMaterials(m);
  SHOWER_HEADS.forEach((p,i)=>{
-  const head=new T.Group();head.position.set(-8.03,2.18,p.z);head.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(.57,-.82,0));root.add(head);
-  const g=new T.LatheGeometry([[.03,-.18],[.047,-.10],[.065,-.035],[.115,.05],[.112,.071]].map(a=>new T.Vector2(...a)),20);const shell=new T.Mesh(g,m.metal);head.add(shell);
-  const disc=new T.Mesh(new T.CylinderGeometry(.104,.104,.011,24),m.plastic);disc.position.y=.071;head.add(disc);
-  const holes=new T.InstancedMesh(new T.CylinderGeometry(.0032,.0032,.012,5),m.dark,37),pose=new T.Object3D();for(let k=0;k<37;k++){const a=k*2.399,r=.091*Math.sqrt(k/37);pose.position.set(Math.cos(a)*r,.078,Math.sin(a)*r);pose.updateMatrix();holes.setMatrixAt(k,pose.matrix);}head.add(holes);
-  pipe([[-8.28,2.21,p.z],[-8.09,2.21,p.z]],.034,m.metal,'Bolted shower head bracket');box(m.metal,-8.26,2.21,p.z,.043,.15,.13,'Bracket plate');
-  pipe([[-8.10,2.23,p.z],[-8.01,1.53,p.z+.17],[-8.07,.72,p.z+.25],[-8.24,.68,p.z+.11],[-8.24,1.08,p.z]],.022,m.metal,'Curving chrome shower hose');
-  const esc=new T.Mesh(new T.CylinderGeometry(.072,.072,.038,20),m.metal);esc.rotation.z=Math.PI/2;esc.position.set(-8.23,1.06,p.z);root.add(esc);pipe([[-8.18,1.06,p.z-.1],[-8.18,1.06,p.z+.1]],.015);
-  const drain=box(m.dark,p.x,.004,p.z,.22,.012,.22,'Inset drain');for(let k=0;k<6;k++)box(m.metal,p.x-.094+k*.037,.011,p.z,.011,.007,.208,'Drain grate',.002);
-  box(m.stone,-8.08,1.17,p.z+.42,.40,.074,.37,'Mineral-encrusted soap shelf');
-  for(const [dz,col,h]of[[.33,0x648780,.20],[.48,0xa39c71,.24]]){const bm=m.plastic.clone();bm.color.set(col);const bottle=new T.Mesh(new T.CylinderGeometry(.035,.045,h,12),bm);bottle.position.set(-8.03,1.207+h/2,p.z+dz);root.add(bottle);box(m.dark,-8.03,1.215+h,p.z+dz,.043,.027,.043,'Bottle cap',.003);plane(m.label,-7.985,1.26+h/3,p.z+dz,.075,.063,Math.PI/2);}
+  const kit=createStallKit(T,kitMaterials,i);kit.group.position.set(-8.275,0,p.z);kit.group.rotation.y=Math.PI/2;root.add(kit.group);kit.group.updateMatrixWorld(true);
+  for(const n of kit.nozzles){const pos=new T.Vector3(...n.position).applyMatrix4(kit.group.matrixWorld),dir=new T.Vector3(...n.direction).transformDirection(kit.group.matrixWorld);nozzles.push({position:pos.toArray(),direction:dir.toArray()});}
+  box(m.dark,p.x,.004,p.z,.22,.012,.22,'Inset drain');for(let k=0;k<6;k++)box(m.metal,p.x-.094+k*.037,.011,p.z,.011,.007,.208,'Drain grate',.002);
   if(i<3){box(m.ivory,-7.46,.85,p.z-.725,1.66,1.7,.115,'Beveled tile cubicle divider',.025);box(m.jade,-7.46,1.716,p.z-.725,1.70,.04,.15,'Rounded divider cap',.013);box(m.jade,-6.62,.86,p.z-.725,.045,1.70,.145,'Capped outer divider edge');}
-  const jets=new T.Group();jets.name='Controllable shower '+(i+1);const pieces=[];
-  for(let k=0;k<41;k++){const a=k*2.399,r=.087*Math.sqrt(k/41),start=new T.Vector3(-7.983+Math.cos(a)*r*.82,2.10+Math.cos(a)*r*.57,p.z+Math.sin(a)*r),end=new T.Vector3(p.x+Math.cos(a)*r*2.8,.028,p.z+Math.sin(a)*r*2.8),mid=start.clone().lerp(end,.5);mid.y+=.12;pieces.push(new T.TubeGeometry(new T.QuadraticBezierCurve3(start,mid,end),12,.0015+(k%3)*.0003,3,false));}
-  const jet=new T.Mesh(mergeGeometries(pieces),waterMat);pieces.forEach(g=>g.dispose());jets.add(jet);jets.visible=false;scene.add(jets);streams.push(jets);
  });
+ const showerWater=createHybridShower(scene,presets,nozzles);
  // Spare bottles beside the bench sit on their sides on the tile.
  for(let i=0;i<2;i++){const bottle=new T.Mesh(new T.CylinderGeometry(.035,.039,.17,10),m.plastic);bottle.rotation.z=Math.PI/2; bottle.rotation.y=.5+i; bottle.position.set(-5.95+i*.22,.042,-5.98);root.add(bottle);}
  for(const z of[-2.08,-5.25]){box(m.plastic,-6.30,2.85,z,1.28,.12,.30,'Fluorescent sealed casing');box(m.lamp,-6.30,2.774,z,1.12,.033,.20,'Soft diffuser');}
  const reflector=createBathReflection(scene,[showerFloor]);
- return {clock,presets,streams,materials:m,wetMaterials:[lobbyFloor,showerFloor],beforeRender:reflector.render,update(t){clock.value=t;streams.forEach((s,i)=>s.visible=presets[i]>0);for(const mat of[lobbyFloor,showerFloor]){mat.userData.wetUniforms.bTime.value=t;mat.userData.wetUniforms.bFlow.value.fromArray(presets.map(v=>v>0?1:0));}},dispose(){reflector.dispose();}};
+ let environment=null,environmentReady=false;
+ function beforeRender(renderer,camera){
+  if(!environmentReady){environmentReady=true;environment=new T.WebGLCubeRenderTarget(128,{type:renderer.extensions.has('EXT_color_buffer_float')?T.HalfFloatType:T.UnsignedByteType,generateMipmaps:true,minFilter:T.LinearMipmapLinearFilter});
+   const cube=new T.CubeCamera(.08,15,environment);cube.position.set(-7.0,1.73,-3.0);const old=renderer.shadowMap.autoUpdate,needs=renderer.shadowMap.needsUpdate;
+   try{renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=false;cube.update(renderer,scene);const metals=new Set();scene.traverse(o=>{if(o.material?.metalness>=.9)metals.add(o.material);});for(const material of metals){material.envMap=environment.texture;material.envMapIntensity=.8;material.needsUpdate=true;}}
+   finally{renderer.shadowMap.autoUpdate=old;renderer.shadowMap.needsUpdate=needs;}}
+  reflector.render(renderer,camera);
+ }
+ return {clock,presets,streams,materials:m,wetMaterials:[lobbyFloor,showerFloor],beforeRender,update(t){clock.value=t;showerWater.update(t);for(const mat of[lobbyFloor,showerFloor]){mat.userData.wetUniforms.bTime.value=t;mat.userData.wetUniforms.bFlow.value.fromArray(presets.map(v=>v>0?1:0));}},dispose(){reflector.dispose();showerWater.dispose();environment?.dispose();}};
 }

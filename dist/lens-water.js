@@ -21,6 +21,10 @@ export function createLensWater(renderer,{limit=64,rng=Math.random}={}){
  }
  function impact(power=1){if(disposed||submerged)return;runoff(power);drainAge=0;washAge=0;}
  function spray(power=1){if(disposed||submerged)return;for(let i=0;i<4;i++){const x=.08+physics.rng()*.84,y=.05+physics.rng()*.80;const d=physics.add(x,y,1.5+physics.rng()*2.8*power,(physics.rng()-.5)*.05,.05+physics.rng()*.15);if(d){d.tailX=x;d.tailY=y-.02;}}drainAge=0;}
+ function exitFilm(){runoff();drainAge=washAge=0;}
+ // Reuse the lake crossing sheet, rupture, retained heads and conserved trails.
+ // A spray contact wets the lens, then drains; it does not immerse the body.
+ function showerContact(){if(disposed||submerged)return;physics.setCameraWet(true,1);physics.setCameraWet(false,-1);exitFilm();}
  function update(dt,state){if(disposed)return 0;enabled=state.enabled!==false;if(!enabled){physics.accumulator=physics.rainBudget=0;return 0;}
   const step=Math.max(0,Math.min(dt,.1));drainAge+=step;washAge+=step;
   physics.setAspect(state.aspect||physics.aspect);const crossed=state.waterCrossing||cameraEntry.update(state);cameraEntry.wet=crossed.submerged;submerged=crossed.submerged;
@@ -29,7 +33,7 @@ export function createLensWater(renderer,{limit=64,rng=Math.random}={}){
   // or ongoing exposed rain can activate optical droplets.
   raining=state.rain>.005&&!state.sheltered&&!submerged;
   if(crossed.crossing===1){washAge=0;microbubbles.emit(state.aspect||4/3);}
-  if(crossed.crossing===-1){runoff();drainAge=washAge=0;}
+  if(crossed.crossing===-1){exitFilm();}
   microbubbles.update(step,submerged,state.aspect||4/3);
   if(raining)drainAge=0;
   physics.step(dt,state);
@@ -50,5 +54,5 @@ export function createLensWater(renderer,{limit=64,rng=Math.random}={}){
   }return texture;
  }
  function contextLost(){texture?.dispose();texture=null;width=height=0;uploaded=-1;reset();}
- return {microbubbles,physics,entry,cameraEntry,diagnostics,update,impact,spray,prepareField,reset,contextLost,get washAge(){return washAge;},get washWeight(){return submerged?Math.max(0,1-washAge/.38):Math.max(0,1-washAge/2.4);},get submerged(){return submerged;},get wetWeight(){return physics.wet&&!submerged?fade():0;},dispose(){if(disposed)return;disposed=true;texture?.dispose();microbubbles.dispose();physics.clear();}};
+ return {microbubbles,physics,entry,cameraEntry,diagnostics,update,impact,spray,showerContact,prepareField,reset,contextLost,get washAge(){return washAge;},get washWeight(){return submerged?Math.max(0,1-washAge/.38):Math.max(0,1-washAge/2.4);},get submerged(){return submerged;},get wetWeight(){return physics.wet&&!submerged?fade():0;},dispose(){if(disposed)return;disposed=true;texture?.dispose();microbubbles.dispose();physics.clear();}};
 }

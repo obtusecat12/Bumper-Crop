@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {createLensWater} from '../../dist/lens-water.js?v=62';
+import {createShowerAudio} from '../../dist/bath-v62-audio.js?v=62';
+import {SHOWER_HEADS} from '../../dist/bathhouse-layout.js?v=61';
+let seed=1922;const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+const lens=createLensWater(null,{rng});lens.showerContact();assert.equal(lens.washWeight,1);assert.equal(lens.physics.drops.length,12);assert.equal(lens.physics.sheet.submerged,false);assert.equal(lens.physics.sheet.volume,24);
+const state={enabled:true,rain:0,humidity:.7,sheltered:true,aspect:1.5,pitch:0,roll:0,waterCrossing:{submerged:false,crossing:0}};
+for(let i=0;i<72;i++)lens.update(1/30,state);assert(lens.washWeight<.001);assert(lens.physics.wet);assert(lens.physics.pinches>=0);lens.prepareField();assert(lens.physics.pixels.some(v=>v>0));
+const before=lens.physics.time;lens.update(.1,{...state,enabled:false});assert.equal(lens.physics.time,before);
+for(let i=0;i<165;i++)lens.update(1/30,state);assert.equal(lens.wetWeight,0);assert.equal(lens.physics.wet,false);lens.dispose();
+const buffers=[],gains=[],pans=[],sources=[];const parameter=()=>({value:0,setTargetAtTime(v){this.value=v;}});
+const node=()=>({connect(){},disconnect(){}});
+const ctx={sampleRate:12000,currentTime:1,createBuffer(ch,n,sr){const a=Array.from({length:ch},()=>new Float32Array(n));const b={getChannelData:c=>a[c],length:n,sampleRate:sr};buffers.push(b);return b;},createGain(){const n={...node(),gain:parameter()};gains.push(n);return n;},createStereoPanner(){const n={...node(),pan:parameter()};pans.push(n);return n;},createBiquadFilter(){return{...node(),frequency:parameter()};},createBufferSource(){const n={...node(),playbackRate:parameter(),start(){this.started=true;},stop(){this.stopped=true;}};sources.push(n);return n;},createConvolver(){return node();}};
+const audio=createShowerAudio(SHOWER_HEADS);audio.attach(ctx,node());assert.equal(sources.length,4);assert(sources.every(s=>s.started));const pcm=buffers[0].getChannelData(0);assert(pcm.every(Number.isFinite));const rms=Math.sqrt(pcm.reduce((s,v)=>s+v*v,0)/pcm.length);assert(rms>.03&&rms<.3);assert(Math.max(...pcm)<.5);
+audio.update([1,0,2,0],SHOWER_HEADS[0],0,true);assert(gains[1].gain.value>gains[3].gain.value);assert.equal(gains[2].gain.value,0);assert.equal(gains[4].gain.value,0);
+audio.update([1,1,1,1],SHOWER_HEADS[0],0,false);assert(gains.slice(1).every(g=>g.gain.value===0));audio.dispose();assert(sources.every(s=>s.stopped));
+console.log('Original lens film → rupture → retained trails → fade, pause, per-valve audio, distance attenuation, finite PCM and teardown passed.',{rms});

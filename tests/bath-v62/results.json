@@ -1,0 +1,70 @@
+{
+  "passed": true,
+  "source_sha256": "03ce5c5918e4d33616f295fabf22f19fdc2ac68b9414911674e47ac23faa39e1",
+  "gles": "OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "actual_shader_pairs_linked": [
+    "compute",
+    "particles",
+    "jets"
+  ],
+  "sampler_bindings": {
+    "particles": {
+      "positions": 0,
+      "velocities": 1,
+      "emitters": 2,
+      "sceneColor": 3,
+      "sceneDepth": 4
+    },
+    "jets": {
+      "emitters": 2,
+      "sceneColor": 3,
+      "sceneDepth": 4
+    }
+  },
+  "nozzles": 220,
+  "simulation": {
+    "state_size": [
+      128,
+      128
+    ],
+    "particle_count": 16384,
+    "format": "RGBA32F",
+    "attachments_per_target": 2,
+    "ping_pong_targets": 2,
+    "integration_frames": 30,
+    "delta": 0.016666666666666666,
+    "total_compute_draws": 33,
+    "finite_all_frames": true,
+    "initial_age_range": [
+      0.0,
+      0.5694433450698853
+    ],
+    "young_particles_surviving_30_steps": 844,
+    "survivor_y_displacement_range": [
+      -1.8390294313430786,
+      -1.5635812282562256
+    ],
+    "max_float32_velocity_step_error": 2.628016886774276e-06,
+    "max_float32_position_step_error": 4.241523892112298e-06,
+    "respawn_events": 13929,
+    "stall_2_off_exact_4096_particles": true,
+    "stall_2_reenabled": true,
+    "final_position_xyz_min": [
+      -8.003531455993652,
+      -0.08630537986755371,
+      -6.108901023864746
+    ],
+    "final_position_xyz_max": [
+      -7.04609489440918,
+      2.115872383117676,
+      -1.5371304750442505
+    ]
+  },
+  "validation_wall_seconds": 0.0728494850000061,
+  "limitations": [
+    "Mesa software GLES, not hardware/device FPS",
+    "Actual shaders compile/link and compute runs; full Three.js frame and browser integration are not rendered by this harness",
+    "No screenshot or full scene visual correctness claim"
+  ]
+}

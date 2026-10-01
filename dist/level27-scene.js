@@ -5,7 +5,7 @@ import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeigh
 import {springMaterials,springTextures} from './level27-materials.js?v=60';
 
 import {createSpringDynamics} from './spring-dynamics.js?v=60';
-import {bathTextures} from './bath-textures.js?v=61';
+import {bathTextures} from './bath-textures.js?v=62';
 import {addWashStation} from './bathing-props.js?v=60';
 const UP=new T.Vector3(0,1,0);
 export const SPRING_LIGHTS=[

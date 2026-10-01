@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "source_sha256": "03ce5c5918e4d33616f295fabf22f19fdc2ac68b9414911674e47ac23faa39e1",
+  "camera": {
+    "aspect": 1.3,
+    "label": "bath-shelf",
+    "inverseViewProjection": [
+      0.30742026813368617,
+      0,
+      -0.6847087790250289,
+      0,
+      -0.048818682398891415,
+      0.5748648927379671,
+      -0.02191859209746144,
+      0,
+      44.598125,
+      -10.7285,
+      6.299875,
+      -6.2375,
+      -45.685217397256075,
+      10.67881200027999,
+      -6.732952198768034,
+      6.262499999999999
+    ],
+    "eye": [
+      -7.15,
+      1.72,
+      -1.01
+    ],
+    "projection": [
+      1.3323467750529827,
+      0,
+      0,
+      0,
+      0,
+      1.7320508075688774,
+      0,
+      0,
+      0,
+      0,
+      -1.0040080160320641,
+      -1,
+      0,
+      0,
+      -0.16032064128256512,
+      0
+    ],
+    "view": [
+      0.40959040283383985,
+      -0.08455643827344843,
+      0.9083423972560793,
+      0,
+      -1.3877787807814454e-17,
+      0.9956952017097922,
+      0.09268799972000794,
+      0,
+      -0.9122695335844624,
+      -0.03796411514318089,
+      0.4078271987680352,
+      0,
+      2.0071791513416475,
+      -2.3555180368906115,
+      6.747130251618269,
+      1
+    ]
+  },
+  "valves": [
+    1,
+    0,
+    0,
+    0
+  ],
+  "counts": {
+    "particles": {
+      "triangles_per_instance": 2,
+      "instances": 16384
+    },
+    "jets": {
+      "triangles_per_instance": 15840,
+      "instances": 1
+    }
+  },
+  "source_destination_distinct": true,
+  "source_capture": "actual HDR opaque scene and depth fixture, with point-light shadows",
+  "particle_state": "actual 30-frame native RGBA32F MRT readback",
+  "gl_errors": 0,
+  "limitations": [
+    "Native Mesa GLES diagnostic, not browser screenshot or hardware performance proof"
+  ]
+}

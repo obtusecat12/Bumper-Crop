@@ -1,0 +1,38 @@
+[
+  {
+    "name": "nocturne",
+    "ratio": "1:2",
+    "spec": "subject: black label for a black asymmetrically tapered flattened shampoo bottle.\ntext verbatim: \"NOCTURNE\" and \"SHAMPOO\".\ndesign: silver narrow type and one small pale blue botanical mark on black; 1980s shampoo label.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: black label for a black asymmetrically tapered flattened shampoo bottle.\ntext verbatim: \"NOCTURNE\" and \"SHAMPOO\".\ndesign: silver narrow type and one small pale blue botanical mark on black; 1980s shampoo label.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2"
+  },
+  {
+    "name": "azure",
+    "ratio": "1:2",
+    "spec": "subject: blue shampoo label.\ntext verbatim: \"AZURE\" and \"VOLUMIZING SHAMPOO\".\ndesign: white and blue 1980s period blockstyle packaging typography on blue.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: blue shampoo label.\ntext verbatim: \"AZURE\" and \"VOLUMIZING SHAMPOO\".\ndesign: white and blue 1980s period blockstyle packaging typography on blue.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2"
+  },
+  {
+    "name": "pure-line",
+    "ratio": "1:2",
+    "spec": "subject: white conditioner label for a slender bottle.\ntext verbatim: \"PURE LINE\" and \"CONDITIONER\".\ndesign: white label, navy typography and navy wave accent, clean 1980s conditioner packaging.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: white conditioner label for a slender bottle.\ntext verbatim: \"PURE LINE\" and \"CONDITIONER\".\ndesign: white label, navy typography and navy wave accent, clean 1980s conditioner packaging.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2"
+  },
+  {
+    "name": "sundrop",
+    "ratio": "1:2",
+    "spec": "subject: amber herbal rinse label.\ntext verbatim: \"SUNDROP\" and \"HERBAL RINSE\".\ndesign: amber label with cream and brown serif typography, 1980s herbal rinse packaging.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: amber herbal rinse label.\ntext verbatim: \"SUNDROP\" and \"HERBAL RINSE\".\ndesign: amber label with cream and brown serif typography, 1980s herbal rinse packaging.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2"
+  },
+  {
+    "name": "palm-springs",
+    "ratio": "1:2",
+    "spec": "subject: mint body wash label.\ntext verbatim: \"PALM SPRINGS\" and \"BODY WASH\".\ndesign: mint and cream 1980s packaging typography with a palm graphic.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: mint body wash label.\ntext verbatim: \"PALM SPRINGS\" and \"BODY WASH\".\ndesign: mint and cream 1980s packaging typography with a palm graphic.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2"
+  },
+  {
+    "name": "velvet",
+    "ratio": "1:1",
+    "spec": "subject: burgundy square bar-soap wrapper front label.\ntext verbatim: \"VELVET\" and \"BATH SOAP\".\ndesign: burgundy wrapper art, cream and gold 1980s retro typography.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: burgundy square bar-soap wrapper front label.\ntext verbatim: \"VELVET\" and \"BATH SOAP\".\ndesign: burgundy wrapper art, cream and gold 1980s retro typography.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:1"
+  }
+]

@@ -1,10 +1,12 @@
+import {SHOWER_HEADS} from './bathhouse-layout.js?v=61';
+import {createShowerAudio} from './bath-v62-audio.js?v=62';
 import {initializeCanTextures} from './canned-food.js?v=60';
 import {initializeSpringTextures} from './level27-materials.js?v=60';
 import {createLevel27} from './level27-scene.js?v=60';
 import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=60';
 import {nearBathEntrance} from './level27-entry.js?v=61';
-import {initializeBathTextures} from './bath-textures.js?v=61';
-import {createBathhouse} from './bathhouse-scene.js?v=61';
+import {initializeBathTextures} from './bath-textures.js?v=62';
+import {createBathhouse} from './bathhouse-scene.js?v=62';
 import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=61';
 import {initializeAdvertising} from './advertising-assets.js?v=60';
 import {initializeDistrictTextures} from './clinic-district-materials.js?v=60';
@@ -22,7 +24,7 @@ import {initializeVergeTextures} from './verge-cards.js?v=60';
 import {createSceneBatches} from './scene-batches.js?v=60';
 import {updateCropGroundTime} from './ground.js?v=60';
 import {bindTroughWater} from './trough-water.js?v=60';
-import {createWaterPipeline} from './water-pipeline.js?v=61';
+import {createWaterPipeline} from './water-pipeline.js?v=62';
 import {WaterState} from './water-state.js?v=60';
 import {WaterContactEffects} from './water-contact-effects.js?v=60';
 import {createWaterBubbles} from './water-bubbles.js?v=60';
@@ -35,7 +37,7 @@ import {createWeatherFlare} from './weather-flare.js?v=60';
 import {initializeWeatherTextures} from './weather-textures.js?v=60';
 import {createWaterImpact} from './water-impact.js?v=60';
 import {createWaterRipples} from './water-ripples.js?v=60';
-import {createLensWater} from './lens-water.js?v=61';
+import {createLensWater} from './lens-water.js?v=62';
 import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=60';
 import {updateBarnDoors} from './reference-barn.js?v=60';
 import {initializeLandmarkTextures} from './landmark-textures.js?v=60';
@@ -198,7 +200,7 @@ function enterSpring(){
  waterPipeline.setBathSteam(0);
  const pose=springSession.enter(state);state.level=27;state.cx=state.cz=0n;Object.assign(state,pose);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=1;keys.clear();joy.x=joy.z=0;
  waterInspection.clear();lensWater.reset();waterState.reset();bodyWater.reset();waterBubbles.clear();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);
- waterPipeline.focus.setSceneQuery(spring.focusDistance);uiThemes.applyLevel('27');$('#journal .journal-body').innerHTML=springJournal;$('#interact').hidden=true;renderer.domElement.setAttribute('aria-label','Level 27 岩体泉 · 洞穴温泉');renderer.shadowMap.needsUpdate=true;camera.far=40;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);resize();toast('Level 27 · 岩体泉。沿溪流向前，楼梯通往温泉。');
+ showerAudio.mute();waterPipeline.focus.setSceneQuery(spring.focusDistance);uiThemes.applyLevel('27');$('#journal .journal-body').innerHTML=springJournal;$('#interact').hidden=true;renderer.domElement.setAttribute('aria-label','Level 27 岩体泉 · 洞穴温泉');renderer.shadowMap.needsUpdate=true;camera.far=40;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);resize();toast('Level 27 · 岩体泉。沿溪流向前，楼梯通往温泉。');
 }
 function leaveSpring(announce=true){
  const origin=springSession.leave();if(!origin)return;Object.assign(state,origin);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);spring.audio(audio.ctx,audio.master,false);keys.clear();joy.x=joy.z=0;
@@ -230,7 +232,7 @@ function enterBath(){
  lensWater.reset();waterState.reset();bodyWater.reset();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);waterPipeline.focus.setSceneQuery(bathhouse.focusDistance);camera.far=24;camera.updateProjectionMatrix();renderer.shadowMap.needsUpdate=true;resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Baños 浴室 · 前厅、假风景空池、淋浴间');toast('前厅通往空池。左侧通道是淋浴间。');
 }
 function leaveBath(announce=true){
- if(!bathhouse.active||!bathOrigin)return;Object.assign(state,bathOrigin);bathOrigin=null;bathhouse.active=false;waterPipeline.setBathSteam(0);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;keys.clear();joy.x=joy.z=0;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);lensWater.reset();waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('玻璃门在你身后合上。');
+ if(!bathhouse.active||!bathOrigin)return;showerAudio.mute();Object.assign(state,bathOrigin);bathOrigin=null;bathhouse.active=false;waterPipeline.setBathSteam(0);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;keys.clear();joy.x=joy.z=0;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);lensWater.reset();waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('玻璃门在你身后合上。');
 }
 function animateBath(now,dt,rawDt){
  if(springOpen>0&&!springSession.closing){springOpen=Math.max(0,springOpen-dt*.9);eyelids.style.opacity=String(springOpen);}
@@ -242,9 +244,9 @@ function animateBath(now,dt,rawDt){
  if(springSession.closing&&playing){const done=springSession.tickClose(dt,wet&&springSession.preset===2);eyelids.style.opacity=String(Math.min(1,springSession.closing/1.45));if(done){enterSpring();animateSpring(now,dt,rawDt);return;}}
  const crouch=keys.has('KeyC'),rig=cameraRig.update(dt,{x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,eyeY:bathFloor(state.x,state.z)+(crouch?1.06:1.77),jump:0,moved,dx,dz,grounded:true,running:false,crouch,stamina:state.stamina,landingSpeed:0,enabled:settings.bob&&!reduceCameraMotion.matches,locked:false});state.y=rig.eyeHeight;step=rig.phase;
  if(playing){bathStepTravel+=moved;if(bathStepTravel>.62){bathStepTravel=0;audio.footstep(false,wet);}survivalDisplay.animate(dt,state,step);}
- if(wet&&playing){bathWetAge+=dt;if(bathWetAge>.18){lensWater.spray(.9);bathWetAge=0;}}else bathWetAge=.39;
+ if(wet&&playing){bathWetAge+=dt;if(bathWetAge>2.7){lensWater.showerContact();bathWetAge=0;}}else bathWetAge=3.0;
  lensWater.update(playing?dt:0,{enabled:playing,rain:0,humidity:wet?.92:.58,sheltered:true,hasWater:false,cameraHeight:camera.position.y,level:-10,aspect:camera.aspect,pitch:camera.rotation.x,roll:camera.rotation.z,accelX:0,cameraVelocity:cameraRig.velocity,waterCrossing:{submerged:false,crossing:0}});
- bathhouse.update(bathTime);bathhouse.beforeRender(renderer,camera);if(audio.ctx){audio.motion.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);audio.rain.gain.setTargetAtTime(wet?.14:0,audio.ctx.currentTime,.2);}exitAudio.update(0,false,time);
+ bathhouse.update(bathTime);bathhouse.beforeRender(renderer,camera);if(audio.ctx){audio.motion.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);audio.rain.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);showerAudio.update(bathhouse.presets,state,state.yaw,playing);}exitAudio.update(0,false,time);
  waterPipeline.focus.setZoom(playing&&(keys.has('KeyZ')||zoomHeld)?Math.max(3,zoomSetting):zoomSetting);waterPipeline.setBathSteam(bathhouse.presets.reduce((a,b)=>a+(b===2?1:b===1?.4:0),0));waterPipeline.focus.setMist(0);waterPipeline.update(playing?dt:0,camera,state,playing,false,bathhouse.scene.background,new T.Vector3(0,1,0),0,-10);renderer.toneMappingExposure=T.MathUtils.lerp(renderer.toneMappingExposure,1.0,1-Math.exp(-dt*2));
  uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent='BAÑOS · 热水浴室';const p=$('#interact');p.classList.remove('inspection');$('.crosshair').hidden=false;p.hidden=!playing;p.textContent=springSession.closing?'闭眼中…':near>=0?(springSession.preset===0?'E 打开这只花洒':springSession.preset===1?'E 调到最热预设':wet?'E 闭上眼睛':'E 关闭花洒 · 站到水下可闭眼'):state.z>2.7?'E 推门返回街道':state.x< -4?'各花洒可独立开关 · 最热预设 + 闭眼':'空池左侧 → 淋浴间';}
  performanceMeter.markSimulation();displayFilter.render(bathhouse.scene,camera,now,()=>performanceMeter.beforeRender());performanceMeter.end();document.documentElement.dataset.bootState='ready';frameCount++;frameTime+=rawDt;if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;}
@@ -336,7 +338,7 @@ addEventListener('resize',resize);resize();updateQueue();
 
 class Ambience{
  constructor(){this.ctx=null;this.master=null;this.motion=null;this.rain=null;this.last=0}
- start(){try{if(!this.ctx){const A=window.AudioContext||window.webkitAudioContext;this.ctx=new A();this.master=this.ctx.createGain();this.master.connect(this.ctx.destination);const count=this.ctx.sampleRate*4,buffer=this.ctx.createBuffer(1,count,this.ctx.sampleRate),d=buffer.getChannelData(0);let brown=0;for(let i=0;i<count;i++){brown=(brown+(Math.random()*2-1)*.035)/1.015;d[i]=brown*3}const source=this.ctx.createBufferSource();source.buffer=buffer;source.loop=true;const filter=this.ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=900;this.motion=this.ctx.createGain();this.motion.gain.value=.19;source.connect(filter);filter.connect(this.motion);this.motion.connect(this.master);source.start();const hiss=this.ctx.createBuffer(1,count,this.ctx.sampleRate),hd=hiss.getChannelData(0);for(let i=0;i<count;i++)hd[i]=(Math.random()*2-1)*.12;const rainSource=this.ctx.createBufferSource();rainSource.buffer=hiss;rainSource.loop=true;const hp=this.ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=1800;this.rain=this.ctx.createGain();this.rain.gain.value=0;rainSource.connect(hp);hp.connect(this.rain);this.rain.connect(this.master);rainSource.start()}exitAudio.attach(this.ctx,this.master);this.ctx.resume().catch(()=>{});this.setVolume()}catch{}}
+ start(){try{if(!this.ctx){const A=window.AudioContext||window.webkitAudioContext;this.ctx=new A();this.master=this.ctx.createGain();this.master.connect(this.ctx.destination);const count=this.ctx.sampleRate*4,buffer=this.ctx.createBuffer(1,count,this.ctx.sampleRate),d=buffer.getChannelData(0);let brown=0;for(let i=0;i<count;i++){brown=(brown+(Math.random()*2-1)*.035)/1.015;d[i]=brown*3}const source=this.ctx.createBufferSource();source.buffer=buffer;source.loop=true;const filter=this.ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=900;this.motion=this.ctx.createGain();this.motion.gain.value=.19;source.connect(filter);filter.connect(this.motion);this.motion.connect(this.master);source.start();const hiss=this.ctx.createBuffer(1,count,this.ctx.sampleRate),hd=hiss.getChannelData(0);for(let i=0;i<count;i++)hd[i]=(Math.random()*2-1)*.12;const rainSource=this.ctx.createBufferSource();rainSource.buffer=hiss;rainSource.loop=true;const hp=this.ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=1800;this.rain=this.ctx.createGain();this.rain.gain.value=0;rainSource.connect(hp);hp.connect(this.rain);this.rain.connect(this.master);rainSource.start()}exitAudio.attach(this.ctx,this.master);showerAudio.attach(this.ctx,this.master);this.ctx.resume().catch(()=>{});this.setVolume()}catch{}}
  setVolume(){if(this.master)this.master.gain.setTargetAtTime((Number(settings.volume)/100)*.6,this.ctx.currentTime,.1)}
  update(moving,wheat,rain){if(!this.ctx)return;this.motion.gain.setTargetAtTime((.15+.035*Math.sin(time*.23)+(moving&&wheat?.15:0))*(1-ease(.57,.96,transitionProgress.value)*.82),this.ctx.currentTime,.2);this.rain.gain.setTargetAtTime(rain*.6,this.ctx.currentTime,.3)}
  footstep(wheat,wet){if(!this.ctx||Number(settings.volume)===0)return;if(!wet&&transitionProgress.value>.015&&exitAudio.step())return;const len=.12,buffer=this.ctx.createBuffer(1,this.ctx.sampleRate*len,this.ctx.sampleRate),d=buffer.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/d.length*5);const src=this.ctx.createBufferSource();src.buffer=buffer;const filter=this.ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=wet?400:wheat?2100:700;const gain=this.ctx.createGain();gain.gain.value=wet?.13:wheat?.09:.15;src.connect(filter);filter.connect(gain);gain.connect(this.master);src.start();src.onended=()=>{src.disconnect();filter.disconnect();gain.disconnect()}}
@@ -344,6 +346,7 @@ class Ambience{
  chime(){if(!this.ctx)return;const osc=this.ctx.createOscillator(),g=this.ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(690,this.ctx.currentTime);osc.frequency.exponentialRampToValueAtTime(980,this.ctx.currentTime+.08);g.gain.setValueAtTime(.07,this.ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,this.ctx.currentTime+.2);osc.connect(g);g.connect(this.master);osc.start();osc.stop(this.ctx.currentTime+.22);osc.onended=()=>{osc.disconnect();g.disconnect()}}
 }
 const audio=new Ambience();
+const showerAudio=createShowerAudio(SHOWER_HEADS);
 const weatherDirector=new WeatherDirector({onCue:kind=>audio.powerCue(kind)});let weatherState=weatherDirector.value,rainAmount=0,pointerLockHeld=false;
 for(const button of document.querySelectorAll('[data-weather]'))button.onclick=()=>{if(!ready||teleportJob)return;if(state.level===27||bathhouse.active){$('#weather-status').textContent='洞穴与室外天气隔离。返回街道后可更改天气。';return;}audio.start();const kind=button.dataset.weather;weatherDirector.start(kind,{manual:true});if(kind==='normal'){weatherDirector.wetness=0;rainEffects.clear();lensWater.reset();waterRipples.reset();waterImpact.clear();weatherFlare.reset();}weatherState=weatherDirector.update(0);closeModal(false);start();toast(kind==='sunbreak'?'晴空已触发 · 4 秒后开始转入黄昏':WEATHER_LABELS[kind]+' · 已触发');};
 

@@ -1,0 +1,75 @@
+[
+  {
+    "name": "nocturne",
+    "ratio": "1:2",
+    "spec": "subject: black label for a black asymmetrically tapered flattened shampoo bottle.\ntext verbatim: \"NOCTURNE\" and \"SHAMPOO\".\ndesign: silver narrow type and one small pale blue botanical mark on black; 1980s shampoo label.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: black label for a black asymmetrically tapered flattened shampoo bottle.\ntext verbatim: \"NOCTURNE\" and \"SHAMPOO\".\ndesign: silver narrow type and one small pale blue botanical mark on black; 1980s shampoo label.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2",
+    "path": "/workspace/scratch/85111d38430a/assets-v62/labels/nocturne.png",
+    "nativePath": "/workspace/scratch/85111d38430a/generated_images/exec-fc1118e0-1738-411a-9257-94c1f926804b.png",
+    "size": [
+      887,
+      1774
+    ]
+  },
+  {
+    "name": "azure",
+    "ratio": "1:2",
+    "spec": "subject: blue shampoo label.\ntext verbatim: \"AZURE\" and \"VOLUMIZING SHAMPOO\".\ndesign: white and blue 1980s period blockstyle packaging typography on blue.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: blue shampoo label.\ntext verbatim: \"AZURE\" and \"VOLUMIZING SHAMPOO\".\ndesign: white and blue 1980s period blockstyle packaging typography on blue.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2",
+    "path": "/workspace/scratch/85111d38430a/assets-v62/labels/azure.png",
+    "nativePath": "/workspace/scratch/85111d38430a/generated_images/exec-17325799-de22-4c45-b1e5-66c1f09470d7.png",
+    "size": [
+      887,
+      1774
+    ]
+  },
+  {
+    "name": "pure-line",
+    "ratio": "1:2",
+    "spec": "subject: white conditioner label for a slender bottle.\ntext verbatim: \"PURE LINE\" and \"CONDITIONER\".\ndesign: white label, navy typography and navy wave accent, clean 1980s conditioner packaging.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: white conditioner label for a slender bottle.\ntext verbatim: \"PURE LINE\" and \"CONDITIONER\".\ndesign: white label, navy typography and navy wave accent, clean 1980s conditioner packaging.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2",
+    "path": "/workspace/scratch/85111d38430a/assets-v62/labels/pure-line.png",
+    "nativePath": null,
+    "note": "Built-in returned data URL without saved-path metadata; exact PNG decoded from returned image into project asset path.",
+    "size": [
+      887,
+      1774
+    ]
+  },
+  {
+    "name": "sundrop",
+    "ratio": "1:2",
+    "spec": "subject: amber herbal rinse label.\ntext verbatim: \"SUNDROP\" and \"HERBAL RINSE\".\ndesign: amber label with cream and brown serif typography, 1980s herbal rinse packaging.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: amber herbal rinse label.\ntext verbatim: \"SUNDROP\" and \"HERBAL RINSE\".\ndesign: amber label with cream and brown serif typography, 1980s herbal rinse packaging.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2",
+    "path": "/workspace/scratch/85111d38430a/assets-v62/labels/sundrop.png",
+    "nativePath": "/workspace/scratch/85111d38430a/generated_images/exec-6a5ee32b-ad24-4423-9da4-722b65f935d8.png",
+    "size": [
+      887,
+      1774
+    ]
+  },
+  {
+    "name": "palm-springs",
+    "ratio": "1:2",
+    "spec": "subject: mint body wash label.\ntext verbatim: \"PALM SPRINGS\" and \"BODY WASH\".\ndesign: mint and cream 1980s packaging typography with a palm graphic.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: mint body wash label.\ntext verbatim: \"PALM SPRINGS\" and \"BODY WASH\".\ndesign: mint and cream 1980s packaging typography with a palm graphic.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:2",
+    "path": "/workspace/scratch/85111d38430a/assets-v62/labels/palm-springs.png",
+    "nativePath": "/workspace/scratch/85111d38430a/generated_images/exec-3c06e9fc-e69a-4353-b0e5-a5cd1b1610cc.png",
+    "size": [
+      887,
+      1774
+    ]
+  },
+  {
+    "name": "velvet",
+    "ratio": "1:1",
+    "spec": "subject: burgundy square bar-soap wrapper front label.\ntext verbatim: \"VELVET\" and \"BATH SOAP\".\ndesign: burgundy wrapper art, cream and gold 1980s retro typography.",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nsubject: burgundy square bar-soap wrapper front label.\ntext verbatim: \"VELVET\" and \"BATH SOAP\".\ndesign: burgundy wrapper art, cream and gold 1980s retro typography.\nasset: one separate flat face-on rectangular product-label bitmap texture for a PS2-era poolcore bath game.\nstyle: fictional 1980s packaging, clean readable printed typography, subtly aged real label material, detailed enough to inspect close-up yet softly sampled, no oversharpening.\ncomposition: full-bleed label art fills the entire rectangular image edge to edge; straight-on flat print texture.\nAvoid: bottle, container, object mockup, photograph, 3D scene, perspective, scene lighting, cast shadows, background margins, atlas, collage, multiple labels, watermark, extra text.\naspect ratio: 1:1",
+    "path": "/workspace/scratch/85111d38430a/assets-v62/labels/velvet.png",
+    "nativePath": "/workspace/scratch/85111d38430a/generated_images/exec-d175ff69-e5b3-4943-885a-533e14114d8c.png",
+    "size": [
+      1254,
+      1254
+    ]
+  }
+]
