@@ -1,0 +1,174 @@
+{
+  "generatedDate": "2026-10-01",
+  "generationMode": "six independent built-in imagegen calls; no atlas",
+  "assets": [
+    {
+      "key": "mosaic_cyan",
+      "name": "spa-mosaic",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: one independent seamless photographic material albedo texture of tiny alternating light and dark cyan-blue ceramic square mosaic tiles used on the pool interior in the supplied reference.\nreference: the supplied room photograph is a color and ceramic material reference only; produce only the tile surface.\ncomposition: perfectly front-on flat orthographic texture, uniform 28 by 28 aligned small square tiles with narrow pale sandy grout. Entire image is the material, no scene, no perspective, no border.\nmaterial: real glazed ceramic microtexture, subtle wet wear, occasional softly faded cyan and azure tile hues, tiny natural surface imperfections, slightly recessed sand colored grout. Balanced authentic photographic detail suitable for a PS2 spa environment.\nlighting: even diffuse cross-polarized light, no cast shadows, no specular reflections or directional baked lighting.\naspect ratio: 1:1\nresolution: 1024 by 1024\nconstraints: edges match seamlessly horizontally and vertically. One single material only, never an atlas. No pool water, no objects, no text, no grids beyond real grout.",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-d237b1b5-4d20-4dd6-bfd8-ea59c29d4f69.png",
+      "tool": "image_gen.imagegen",
+      "inputReference": "/workspace/scratch/85111d38430a/upload/image(20261001-072728).png",
+      "deliverables": {
+        "albedo": "spa-mosaic.jpg",
+        "normal": "spa-mosaic-normal.png",
+        "roughness": "spa-mosaic-roughness.png",
+        "ao": "spa-mosaic-ao.png",
+        "original": "originals/spa-mosaic.png"
+      },
+      "albedoSize": [
+        1024,
+        1024
+      ],
+      "derivedMapSize": [
+        512,
+        512
+      ],
+      "normalConvention": "OpenGL tangent-space; normalize RGB decode",
+      "normalScaleRecommendation": 0.35,
+      "repeatPerMetreRecommendation": 3.2,
+      "albedoProcessing": "Lanczos downsample and JPEG encode only. No painted, procedural or atlas-derived albedo.",
+      "derivedMapMethod": "Conservative normal/roughness/AO inferred from the independent photographic albedo. Mural uses flat normal/AO so depicted facade and canal remain a printed wall image."
+    },
+    {
+      "key": "ivory_wall_tiles",
+      "name": "spa-ivory-tile",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: one independent seamless photographic material albedo texture of pale ivory skinny vertical ceramic wall tiles matching the plain tiled right-hand wall of the supplied reference.\nreference: use the narrow vertical cream tiles at right as material reference, exclude mirror and framed picture completely.\ncomposition: perfectly front-on flat orthographic texture, uniform aligned tile grid; each individual tile approximately 1 unit wide and 4 units tall, with fine small recessed grey-beige grout. Tile grid continues through all image edges.\nmaterial: pale ivory ceramic glaze with subtle real surface variation and mild age, clean understated warm off-white appearance. Authentic photographed ceramic surface for a PS2 indoor spa environment.\nlighting: fully even diffuse light, no directional baked shading, no reflections.\naspect ratio: 1:1\nresolution: 1024 by 1024\nconstraints: horizontally and vertically seamless repeat. Entire image one single material, never an atlas. No mirror, frame, dark decorative borders, room, objects, text, highlights, perspective.",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-61b5c021-96ad-4281-814d-b98426b468cf.png",
+      "tool": "image_gen.imagegen",
+      "inputReference": "/workspace/scratch/85111d38430a/upload/image(20261001-072728).png",
+      "deliverables": {
+        "albedo": "spa-ivory-tile.jpg",
+        "normal": "spa-ivory-tile-normal.png",
+        "roughness": "spa-ivory-tile-roughness.png",
+        "ao": "spa-ivory-tile-ao.png",
+        "original": "originals/spa-ivory-tile.png"
+      },
+      "albedoSize": [
+        512,
+        512
+      ],
+      "derivedMapSize": [
+        512,
+        512
+      ],
+      "normalConvention": "OpenGL tangent-space; normalize RGB decode",
+      "normalScaleRecommendation": 0.35,
+      "repeatPerMetreRecommendation": 1,
+      "albedoProcessing": "Lanczos downsample and JPEG encode only. No painted, procedural or atlas-derived albedo.",
+      "derivedMapMethod": "Conservative normal/roughness/AO inferred from the independent photographic albedo. Mural uses flat normal/AO so depicted facade and canal remain a printed wall image."
+    },
+    {
+      "key": "brown_stone_veneer",
+      "name": "spa-stone-wall",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: one independent seamless photographic material albedo of warm brown irregular small stone veneer, precisely inspired by the small rounded polygonal stones and pale seams on the surrounding wall above and beside the Roman arch in the supplied spa reference.\ncomposition: front-on flat orthographic texture completely filled by irregular small brown stones separated by narrow pale beige mortar seams. About 14 to 20 stones across image width, natural varied sizes, no regular brick pattern.\nmaterial: dark caramel, umber, warm chestnut and subdued ochre stones; authentic photographic rough surface, mild age and pores, soft organic rock shapes, cream sand mortar joints. Real photographic textures suitable for PS2 spa wall.\nlighting: uniform diffuse cross-polarized light without scene shadows or directional shading.\naspect ratio: 1:1\nresolution: 1024 by 1024\nconstraints: seamless repeat all edges, one material only, never an atlas. No arch, room, objects, text or perspective.",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-c4f2c605-70f6-4198-8d05-44fc98e4c6eb.png",
+      "tool": "image_gen.imagegen",
+      "inputReference": "/workspace/scratch/85111d38430a/upload/image(20261001-072728).png",
+      "deliverables": {
+        "albedo": "spa-stone-wall.jpg",
+        "normal": "spa-stone-wall-normal.png",
+        "roughness": "spa-stone-wall-roughness.png",
+        "ao": "spa-stone-wall-ao.png",
+        "original": "originals/spa-stone-wall.png"
+      },
+      "albedoSize": [
+        512,
+        512
+      ],
+      "derivedMapSize": [
+        512,
+        512
+      ],
+      "normalConvention": "OpenGL tangent-space; normalize RGB decode",
+      "normalScaleRecommendation": 0.22,
+      "repeatPerMetreRecommendation": 1,
+      "albedoProcessing": "Lanczos downsample and JPEG encode only. No painted, procedural or atlas-derived albedo.",
+      "derivedMapMethod": "Conservative normal/roughness/AO inferred from the independent photographic albedo. Mural uses flat normal/AO so depicted facade and canal remain a printed wall image."
+    },
+    {
+      "key": "roman_sandstone",
+      "name": "spa-sandstone",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: one independent seamless photographic material albedo of cream ochre Roman sandstone for carved arch blocks, column shafts, capitals and plinths in an old indoor spa.\ncomposition: perfectly front-on flat orthographic close-up of homogeneous continuous sandstone surface with no cut-block joints or structure.\nmaterial: warm pale buff and subdued ochre mineral grains, softly mottled natural porous sandstone, light old staining, subtly weathered and worn. Real scanned photographic stone detail, neutral contrast and restrained color, suitable for PS2 Roman spa architectural elements.\nlighting: even diffuse cross-polarized illumination, no cast shadows, highlights or directional baked lighting.\naspect ratio: 1:1\nresolution: 1024 by 1024\nconstraints: seamless repeat all edges. One independent material, never an atlas. No columns, arch, sculptures, objects, lettering, deep cracks, tiles, bricks or composition.",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-0c720c2d-c06e-4f96-985c-3104f779697a.png",
+      "tool": "image_gen.imagegen",
+      "inputReference": null,
+      "deliverables": {
+        "albedo": "spa-sandstone.jpg",
+        "normal": "spa-sandstone-normal.png",
+        "roughness": "spa-sandstone-roughness.png",
+        "ao": "spa-sandstone-ao.png",
+        "original": "originals/spa-sandstone.png"
+      },
+      "albedoSize": [
+        512,
+        512
+      ],
+      "derivedMapSize": [
+        512,
+        512
+      ],
+      "normalConvention": "OpenGL tangent-space; normalize RGB decode",
+      "normalScaleRecommendation": 0.22,
+      "repeatPerMetreRecommendation": 1,
+      "albedoProcessing": "Lanczos downsample and JPEG encode only. No painted, procedural or atlas-derived albedo.",
+      "derivedMapMethod": "Conservative normal/roughness/AO inferred from the independent photographic albedo. Mural uses flat normal/AO so depicted facade and canal remain a printed wall image."
+    },
+    {
+      "key": "statuary_marble",
+      "name": "spa-marble",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: one independent seamless photographic material albedo of softly cloudy warm white statuary marble and plaster, for classical seated Roman statues in an indoor spa.\ncomposition: front-on flat orthographic close-up filled by a homogeneous continuous fine-grained material surface.\nmaterial: ivory-white with very subtle clouding, barely visible grey mineral grain and delicate old plaster-like patina, smooth soft marble. Authentic high quality photographic surface detail suited to PS2 Roman spa statues. Uniform low contrast, no dramatic streaks.\nlighting: even diffuse cross-polarized lighting, no cast shadows or glossy highlights, no directional baked shading.\naspect ratio: 1:1\nresolution: 1024 by 1024\nconstraints: seamlessly repeating all edges, one single material only, never an atlas. No sculpture shapes, body parts, room, objects, lines, text or perspective.",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-b93a901a-0376-4e68-8ed3-30519542f510.png",
+      "tool": "image_gen.imagegen",
+      "inputReference": null,
+      "deliverables": {
+        "albedo": "spa-marble.jpg",
+        "normal": "spa-marble-normal.png",
+        "roughness": "spa-marble-roughness.png",
+        "ao": "spa-marble-ao.png",
+        "original": "originals/spa-marble.png"
+      },
+      "albedoSize": [
+        512,
+        512
+      ],
+      "derivedMapSize": [
+        512,
+        512
+      ],
+      "normalConvention": "OpenGL tangent-space; normalize RGB decode",
+      "normalScaleRecommendation": 0.22,
+      "repeatPerMetreRecommendation": 1,
+      "albedoProcessing": "Lanczos downsample and JPEG encode only. No painted, procedural or atlas-derived albedo.",
+      "derivedMapMethod": "Conservative normal/roughness/AO inferred from the independent photographic albedo. Mural uses flat normal/AO so depicted facade and canal remain a printed wall image."
+    },
+    {
+      "key": "venice_mural",
+      "name": "spa-venice-mural",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: flat Venice trompe-l'oeil wall mural extracted and reconstructed from the Venetian mural visible inside the central Roman arch of the supplied spa room photograph.\nreference image role: exact visual content and period reference for the blue canal and ochre-yellow Venetian facades visible through the central arch. Reconstruct a clean frontal rectangular mural image from that region using image generation.\nscene: bright turquoise-blue canal in the lower quarter, clear faded blue sky, ochre yellow and pale golden Venetian palace facades lining the water with thin white trim and tall arched windows, a perspective pale stone pedestrian bridge receding across a side canal, quiet early 1980s spa mural atmosphere.\nstyle: realistic hand-painted trompe-l'oeil then printed as a slightly faded retro 1980s photographic wall mural, faithful restrained detail and blue/ochre palette of the supplied reference, softly textured matte print surface.\ncomposition: frontal rectangular wall mural image, only Venice scenery fully filling the frame, no arch or frame baked into the image. Main ochre palace slightly to the right, open blue canal in foreground.\naspect ratio: 1:1\nresolution: 1024 by 1024\nconstraints: one independent mural image, never an atlas; no foreground spa structures, no statues, no waterfall, no pool, no mirrors, no actual Roman arch, no borders, no lettering, no UI.",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-c8ad5a90-72a8-486e-a23d-f13422479b1d.png",
+      "tool": "image_gen.imagegen",
+      "inputReference": "/workspace/scratch/85111d38430a/upload/image(20261001-072728).png",
+      "deliverables": {
+        "albedo": "spa-venice-mural.jpg",
+        "normal": "spa-venice-mural-normal.png",
+        "roughness": "spa-venice-mural-roughness.png",
+        "ao": "spa-venice-mural-ao.png",
+        "original": "originals/spa-venice-mural.png"
+      },
+      "albedoSize": [
+        1024,
+        1024
+      ],
+      "derivedMapSize": [
+        512,
+        512
+      ],
+      "normalConvention": "OpenGL tangent-space; normalize RGB decode",
+      "normalScaleRecommendation": 0.22,
+      "repeatPerMetreRecommendation": null,
+      "albedoProcessing": "Lanczos downsample and JPEG encode only. No painted, procedural or atlas-derived albedo.",
+      "derivedMapMethod": "Conservative normal/roughness/AO inferred from the independent photographic albedo. Mural uses flat normal/AO so depicted facade and canal remain a printed wall image."
+    }
+  ]
+}

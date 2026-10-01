@@ -1,3 +1,4 @@
+import {spaFloor,spaAllowed,inSpa,inSpaPortal} from './spa-layout-v65.js';
 // One metre-scale authority for the empty pool, its deck and all indoor routes.
 // Rounded inset basin: the left column island is a genuine convex tiled lobe.
 const pool=[[-2.58,-1.58],[2.45,-1.58]];
@@ -8,10 +9,12 @@ export const POOL_STAIR={x:-2,width:.95,start:-1.58,tread:.22,count:6,rise:.165}
 export const BATH_ARRIVAL={x:0,z:3.05,yaw:0,pitch:-.035};
 export const SHOWER_HEADS=[-1.65,-3.10,-4.55,-6.0].map(z=>({x:-7.25,z}));
 export function insidePolygon(x,z,p){let inside=false;for(let i=0,j=p.length-1;i<p.length;j=i++){const a=p[i],b=p[j];if((a[1]>z)!==(b[1]>z)&&x<(b[0]-a[0])*(z-a[1])/(b[1]-a[1])+a[0])inside=!inside;}return inside;}
-export function bathFloor(x,z){if(x>-2.48&&x<-1.53&&z<-1.58&&z>-2.92)return-Math.min(6,Math.ceil((-z-1.58)/.22))*.165;return insidePolygon(x,z,BATH_POOL)?-.99:0;}
+export function bathFloor(x,z){if(inSpa(x,z))return spaFloor(x,z);if(x>-2.48&&x<-1.53&&z<-1.58&&z>-2.92)return-Math.min(6,Math.ceil((-z-1.58)/.22))*.165;return insidePolygon(x,z,BATH_POOL)?-.99:0;}
 export function bathShowerAt(x,z,r=.66){return SHOWER_HEADS.findIndex(p=>Math.hypot(p.x-x,p.z-z)<r);}
 export function bathUnderShower(x,z){return bathShowerAt(x,z,.34)>=0;}
 export function bathAllowed(x,z){
+ if(inSpaPortal(x,z))return true;
+ if(inSpa(x,z))return spaAllowed(x,z);
  const lobby=x>-2.32&&x<2.32&&z>-.16&&z<4.03;
  const poolroom=x>-3.83&&x<3.83&&z> -6.78&&z<.12;
  const showers=x>-8.02&&x< -4.25&&z> -6.63&&z<-.84;

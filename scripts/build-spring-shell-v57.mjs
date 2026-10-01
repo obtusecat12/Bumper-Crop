@@ -3,8 +3,11 @@
 import fs from 'node:fs';
 import * as T from '../dist/vendor/three.module.min.js';
 import {mergeVertices} from '../dist/vendor/BufferGeometryUtils.js';
-import {wallPoint,roofPoint,roofHeight,ANNEX,streamPath} from '../dist/level27-layout.js?v=63';
-const lo=[-2.9,-1.12,-10.65],hi=[6.65,4.9,3.1],h=.085;
+import * as L from '../dist/level27-layout.js?v=64';
+import {wallPoint,roofPoint,roofHeight,ANNEX} from '../dist/level27-layout.js?v=64';
+import {createCreekAuthority} from '../dist/level27-creek.js?v=65';
+const creek=createCreekAuthority(T,L);
+const lo=[-2.9,-1.12,-10.65],hi=[6.65,4.9,3.1],h=.115;
 const nx=Math.ceil((hi[0]-lo[0])/h)+1,ny=Math.ceil((hi[1]-lo[1])/h)+1,nz=Math.ceil((hi[2]-lo[2])/h)+1;
 const values=new Float32Array(nx*ny*nz),at=(i,j,k)=>(k*ny+j)*nx+i;
 const smax=(a,b,k)=>{const t=Math.max(0,Math.min(1,.5+.5*(a-b)/k));return b*(1-t)+a*t+k*t*(1-t);};
@@ -12,17 +15,19 @@ const port=wallPoint(3.57,2.10),length=Math.hypot(port[0],port[2]),out=[port[0]/
 // Cache geology evaluations by x/z/y slices, then contour the air/stone interface.
 for(let k=0;k<nz;k++)for(let i=0;i<nx;i++){
  const x=lo[0]+i*h,z=lo[2]+k*h,r=Math.hypot(x,z),a=(Math.atan2(z,x)+Math.PI*2)%(Math.PI*2),edge=wallPoint(a,roofHeight(a)),ro=roofPoint(a,Math.min(1,r/Math.hypot(edge[0],edge[2])))[1];
+ const cs=creek.section(x,z);
  const tunnelCenter=2.98+.06*Math.sin(z*1.3),half=1.93+.07*Math.sin(z*2.8),tx=(x-tunnelCenter)/half,arch=3.12+1.22*Math.sqrt(Math.max(0,1-tx*tx))+.055*Math.sin(z*2.2)+.02*Math.sin(z*13),ax=(x-port[0])*out[0]+(z-port[2])*out[1],tangent=(x-port[0])*out[1]-(z-port[2])*out[0];
  for(let j=0;j<ny;j++){
   const y=lo[1]+j*h,p=wallPoint(a,y),room=Math.min(Math.hypot(p[0],p[2])-r,ro-y,y+1.045);
-  const tunnel=Math.min(half-Math.abs(x-tunnelCenter)+.023*Math.sin(y*17+z*3),arch-y,y-1.58,-1.00-z,z+10.52);
+  const tunnel=Math.min(half-Math.abs(x-tunnelCenter)+.023*Math.sin(y*17+z*3),arch-y,y-(creek.tunnelFloor(x,z,cs)??1.88),-1.00-z,z+10.52);
   const ar=Math.hypot((x-ANNEX.x)/ANNEX.rx,(z-ANNEX.z)/ANNEX.rz),annex=Math.min((1-ar)*2.25+(y>.5?.045*Math.sin(y*9+z*3)*Math.sin(x*5-y):0),3.62+.30*Math.sin(x*1.1+z*.7)-y,y-.15);
   let d=smax(smax(room,annex,.24),tunnel,.20);
   // Carve the landing/stair descent and creek bend into the same rock boundary.
   const access=Math.min(.91-Math.abs(x-(3.4+.17*Math.sin(z))),3.96-y,y+.12,-.03-z,z+3.6);
   const bankDoor=Math.min(.86-Math.abs(z),3.15-y,y+1.02,x-1.62,3.35-x);
   d=smax(smax(d,access,.22),bankDoor,.18);
-  const creek=streamPath();for(let n=5;n<9;n++){const p=creek[n];const c=Math.min(.66-Math.hypot(x-p[0],z-p[2]),3.45-y,y-p[1]+.19);d=smax(d,c,.18);}
+  d=smax(d,creek.air(cs,y),.055);
+  d=Math.min(d,creek.support(cs,x,y,z));
   const bore=Math.min(.165-Math.hypot(tangent*.71,(y-2.12)*1.3),ax+.22,.39-ax);
   const drainCenter=-.85-.48*Math.max(0,Math.min(1,(z-1.45)/1.1));
   const drain=Math.min(.135-Math.abs(x-drainCenter),.075-y,y+.20,z-1.52,2.68-z);

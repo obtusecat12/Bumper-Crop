@@ -107,6 +107,7 @@ def drawscene(cam,fbo,water=False,reflect=False):
  BindFBO(0x8D40,fbo);Viewport(0,0,W,H);ClearColor(*fixture['lighting']['sky'],1);Clear(0x4100);Enable(0x0B71);DepthMask(1);DepthFunc(0x0203);Disable(0x0B44)
  view=np.array(cam['view'],np.float32).reshape(4,4).T
  for f,ab,ib in meshes:
+  if not water and 'sceneColor' in data[f['shaderKey']]['textures']:continue
   if not water and ('Clear warm spring' in f['name'] or f['material'] in ['Refractive irregular water film','Clear narrow gravity rivulets','Local impact foam and concentric waves','4096 refractive impact beads','Clear flowing creek / tangent flowmap and pebble foam']):continue
   if reflect and 'Integrated wet ground' in f['material']:continue
   pr=programs[f['shaderKey']];sh=data[f['shaderKey']];Use(pr);model=np.array(f['model'],np.float32).reshape(4,4).T;mv=view@model;normal=np.ascontiguousarray(np.linalg.inv(mv[:3,:3]).T.T.flatten(),np.float32)

@@ -262,7 +262,7 @@ function makePath(T,input){
  return{points,length:total,point,tangent,side,flowAt};
 }
 function irregular(x){const i=Math.floor(x),f=x-i,t=f*f*(3-2*f),h=n=>{const q=Math.sin(n*127.1+311.7)*43758.5453;return q-Math.floor(q);};return h(i)*(1-t)+h(i+1)*t;}
-function ribbon(T,path,width,rows=180,cols=28,creek=false){
+function ribbon(T,path,width,rows=180,cols=28,creek=false,widthAt=null){
  const positions=[],uv=[],indices=[],flow=[];
  for(let j=0;j<=rows;j++){const v=j/rows,c=path.point(v),t=path.tangent(v);let side=path.side;
   if(creek){side=new T.Vector3(-t.z,0,t.x);if(side.lengthSq()<.0001)side=path.side;else side.normalize();}
@@ -274,7 +274,7 @@ function ribbon(T,path,width,rows=180,cols=28,creek=false){
    const edge=creek?.87+.075*Math.sin(v*36.+u*7.)+.055*Math.sin(v*73.-u*11.):.94+.035*(irregular(v*9.)-.5);
    const meander=creek?.012*Math.sin(v*24.):0;
    const fold=creek?.004*Math.sin(u*17.+v*35.):.00035*(irregular(u*19.+v*.3)-.5);
-   const p=c.clone().addScaledVector(side,across*width*edge+meander).addScaledVector(normal,fold+.010);
+   const p=c.clone().addScaledVector(side,across*(widthAt?widthAt(v,c):width)*edge+meander).addScaledVector(normal,fold+.010);
    positions.push(p.x,p.y,p.z);uv.push(u,v);flow.push(state.x,state.y,state.z);
   }
  }
@@ -355,7 +355,7 @@ export function createSpringCascades(T,{paths,textures={},waterY=0,widths=[.75,.
  };
 }
 
-export function createFlowStream(T,{points,width=1.02,textures={},pebbleCount=12}={}){
+export function createFlowStream(T,{points,width=1.02,widthAt=null,bedAt=null,textures={},pebbleCount=12}={}){
  const path=makePath(T,points),group=new T.Group();group.name='Meandering shallow creek / directional flow and pebble wakes';
  const {uniforms,fallback}=baseUniforms(T,textures);uniforms.kind.value=2;uniforms.pathLength.value=path.length;
  // RG records world-XZ tangent, BA carries speed and curl. The texture follows
@@ -365,14 +365,14 @@ export function createFlowStream(T,{points,width=1.02,textures={},pebbleCount=12
   data[idx]=Math.round((t.x*.92+bend)*127.5+127.5);data[idx+1]=Math.round((t.z*.92-bend)*127.5+127.5);data[idx+2]=Math.round((.48+Math.sin(u*Math.PI)*.45)*255);data[idx+3]=255;
  }}
  const flowMap=new T.DataTexture(data,cols,rows,T.RGBAFormat);flowMap.minFilter=flowMap.magFilter=T.LinearFilter;flowMap.wrapS=flowMap.wrapT=T.ClampToEdgeWrapping;flowMap.generateMipmaps=false;flowMap.needsUpdate=true;uniforms.flowMap.value=flowMap;
- const geometry=ribbon(T,path,width,220,22,true),material=rawMaterial(T,'Clear flowing creek / tangent flowmap and pebble foam',uniforms,cascadeSheetVertex,cascadeSheetFragment);
+ const geometry=ribbon(T,path,width,160,16,true,widthAt),material=rawMaterial(T,'Clear flowing creek / tangent flowmap and pebble foam',uniforms,cascadeSheetVertex,cascadeSheetFragment);
  const water=new T.Mesh(geometry,material);water.name='Undulating clear creek surface';water.renderOrder=3;group.add(water);
  const stoneGeometry=new T.IcosahedronGeometry(1,1),stoneMaterial=new T.MeshStandardMaterial({name:'Wet embedded creek pebbles',color:0x655f4e,roughness:.48,metalness:.02,map:textures['riverbed-pebbles']||textures['limestone-strata']||null,normalMap:textures['riverbed-pebbles-normal']||null,normalScale:new T.Vector2(.6,.6),roughnessMap:textures['riverbed-pebbles-roughness']||null});
  const n=Math.min(12,Math.max(0,pebbleCount));
  for(let i=0;i<n;i++){const u=.18+((i*.61803398875)%1)*.64,v=.08+((i*.38196601125)%1)*.86,r=.031+(i%4)*.008;
-  const p=path.point(v),t=path.tangent(v),side=new T.Vector3(-t.z,0,t.x).normalize();p.addScaledVector(side,(u-.5)*width);p.y-=.022;
+  const p=path.point(v),t=path.tangent(v),side=new T.Vector3(-t.z,0,t.x).normalize();const localWidth=widthAt?widthAt(v,p):width;p.addScaledVector(side,(u-.5)*localWidth);p.y=bedAt?bedAt(p.x,p.z)+r*.36:p.y-.17+r*.36;
   const mesh=new T.Mesh(stoneGeometry,stoneMaterial);mesh.position.copy(p);mesh.scale.set(r*1.20,r*.62,r*.85);mesh.rotation.set(i*.31,i*1.71,i*.13);mesh.name='Embedded rounded stream pebble '+(i+1);mesh.receiveShadow=true;group.add(mesh);
-  uniforms.pebbles.value[i].set(u,v,r/width,r);
+  uniforms.pebbles.value[i].set(u,v,r/localWidth,r);
  }
  let disposed=false;
  return{group,water,material,flowMap,shaderSources,

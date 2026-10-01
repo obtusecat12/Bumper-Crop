@@ -1,0 +1,122 @@
+{
+  "createdAt": "2026-10-01T08:03:54.066Z",
+  "failures": [],
+  "warnings": [],
+  "area": {
+    "survey": 18.58,
+    "error": 0,
+    "renderedFloat32": 18.579999973546236
+  },
+  "route": {
+    "samples": 2389,
+    "maxStep": 0.17791994151785273,
+    "stalls": [],
+    "finalPose": {
+      "x": 3.65,
+      "z": -7.395991667463674
+    },
+    "roundTripComplete": true,
+    "waypoints": 589,
+    "poolCenterAllowed": true,
+    "poolCenterIsPool": true
+  },
+  "floor": {
+    "authority": {
+      "samples": 144720,
+      "min": -0.9049982578001291,
+      "max": -0.020149832316570082,
+      "maxAt": [
+        0.5027328298713828,
+        -2.3651720084362156
+      ],
+      "nonSubmerged": 0
+    },
+    "renderedGrid": {
+      "samples": 6480,
+      "columns": 160,
+      "rows": 128,
+      "cullMargin": 0.065,
+      "missing": 0,
+      "aboveWater": 0,
+      "max": -0.022255871349707662,
+      "maxAt": [
+        2.5313923935990985,
+        0.08839817027003766,
+        1
+      ],
+      "examples": []
+    }
+  },
+  "treads": {
+    "samples": 270,
+    "maxMismatch": 0.0004665472039939722,
+    "maxMismatchAt": {
+      "step": 3,
+      "x": 3.280943899475802,
+      "z": -2.17,
+      "expected": 1.3816246776648209,
+      "visible": 1.381158130460827
+    },
+    "steps": [
+      {
+        "step": 1,
+        "maximumDifference": 0.00028119283911776094,
+        "missing": 0
+      },
+      {
+        "step": 2,
+        "maximumDifference": 0.0004484515464096006,
+        "missing": 0
+      },
+      {
+        "step": 3,
+        "maximumDifference": 0.0002805597783408498,
+        "missing": 0
+      },
+      {
+        "step": 4,
+        "maximumDifference": 0.0004665472039939722,
+        "missing": 0
+      },
+      {
+        "step": 5,
+        "maximumDifference": 0.00040821252098099947,
+        "missing": 0
+      },
+      {
+        "step": 6,
+        "maximumDifference": 0.00031407526859106305,
+        "missing": 0
+      },
+      {
+        "step": 7,
+        "maximumDifference": 0.00040219403411478893,
+        "missing": 0
+      },
+      {
+        "step": 8,
+        "maximumDifference": 0.00040542175814461956,
+        "missing": 0
+      },
+      {
+        "step": 9,
+        "maximumDifference": 0.0003068084255658521,
+        "missing": 0
+      },
+      {
+        "step": 10,
+        "maximumDifference": 0.0002897748906933173,
+        "missing": 0
+      }
+    ]
+  },
+  "shell": {
+    "vertices": 98027,
+    "triangles": 195944,
+    "pathSamples": 299,
+    "minCeilingClearance": 2.3031314357845662,
+    "minHorizontalClearance": ">=0.21",
+    "obstructions": [],
+    "floorPiercings": []
+  }
+}

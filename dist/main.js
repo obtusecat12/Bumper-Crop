@@ -1,13 +1,15 @@
-import {SHOWER_HEADS} from './bathhouse-layout.js?v=61';
+import {SHOWER_HEADS} from './bathhouse-layout.js?v=65';
+import {initializeSpaTextures} from './spa-materials-v65.js';
+import {inSpaWater} from './spa-layout-v65.js';
 import {createShowerAudio} from './bath-v62-audio.js?v=62';
 import {initializeCanTextures} from './canned-food.js?v=60';
 import {initializeSpringTextures} from './level27-materials.js?v=63';
-import {createLevel27} from './level27-scene.js?v=64';
+import {createLevel27} from './level27-scene.js?v=65';
 import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=64';
 import {nearBathEntrance} from './level27-entry.js?v=61';
 import {initializeBathTextures} from './bath-textures.js?v=62';
-import {createBathhouse} from './bathhouse-scene.js?v=62';
-import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=61';
+import {createBathhouse} from './bathhouse-scene.js?v=65';
+import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=65';
 import {initializeAdvertising} from './advertising-assets.js?v=60';
 import {initializeDistrictTextures} from './clinic-district-materials.js?v=60';
 import {exitForField,exitTeleport,exitPoint,transitionProgress,ease} from './exit-route.js?v=60';
@@ -24,7 +26,7 @@ import {initializeVergeTextures} from './verge-cards.js?v=60';
 import {createSceneBatches} from './scene-batches.js?v=60';
 import {updateCropGroundTime} from './ground.js?v=60';
 import {bindTroughWater} from './trough-water.js?v=60';
-import {createWaterPipeline} from './water-pipeline.js?v=63';
+import {createWaterPipeline} from './water-pipeline.js?v=65';
 import {WaterState} from './water-state.js?v=60';
 import {WaterContactEffects} from './water-contact-effects.js?v=60';
 import {createWaterBubbles} from './water-bubbles.js?v=60';
@@ -59,7 +61,7 @@ import {createWheatDetailLayer,initializeCerealTextures,releaseCerealGPU,resumeC
 import {createAtmosphere} from './atmosphere.js?v=60';
 import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=60';
 import {initializeRuralTextures} from './rural-textures.js?v=60';
-import {createNavigationMap} from './map-ui.js?v=64';
+import {createNavigationMap} from './map-ui.js?v=65';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -105,7 +107,7 @@ if(!['high','balanced','low'].includes(settings.quality))settings.quality='balan
 let renderer;
 try{renderer=new T.WebGLRenderer({antialias:false,powerPreference:'high-performance',alpha:false});renderer.setPixelRatio(1);renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','Level 10 三维麦田');game.prepend(renderer.domElement)}catch(e){e.userTitle='无法启动 3D 画面';e.userMessage='当前浏览器无法创建 3D 画面。请确认已启用硬件加速，并使用支持 WebGL 2 的浏览器。';throw e}
 $('#loading').firstChild.textContent='正在载入地面与植被材质 ';
-try{await Promise.all([initializeCanTextures(),initializeSpringTextures(),initializeBathTextures(),initializeAlmondTextures(),initializeExitTextures(),initializeReferenceTextures(),initializeDistrictTextures(),initializeUrbanAssets(),initializeAdvertising(),initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
+try{await Promise.all([initializeCanTextures(),initializeSpringTextures(),initializeBathTextures(),initializeSpaTextures(),initializeAlmondTextures(),initializeExitTextures(),initializeReferenceTextures(),initializeDistrictTextures(),initializeUrbanAssets(),initializeAdvertising(),initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
 $('#loading').firstChild.textContent='LOADING ';
 const performanceMeter=createPerformanceMeter(renderer);
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.23;
@@ -198,12 +200,12 @@ function updateSpringEntry(dt){
 }
 function enterSpring(){
  waterPipeline.setBathSteam(0);
- const pose=springSession.enter(state);state.level=27;renderer.shadowMap.type=T.PCFSoftShadowMap;navigationMap.setLevel(27);state.cx=state.cz=0n;Object.assign(state,pose);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=1;keys.clear();joy.x=joy.z=0;
+ const pose=springSession.enter(state);state.level=27;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.type=T.PCFSoftShadowMap;navigationMap.setLevel(27);state.cx=state.cz=0n;Object.assign(state,pose);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=1;keys.clear();joy.x=joy.z=0;
  waterInspection.clear();lensWater.reset();waterState.reset();bodyWater.reset();waterBubbles.clear();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);
  showerAudio.mute();waterPipeline.focus.setSceneQuery(spring.focusDistance);uiThemes.applyLevel('27');$('#journal .journal-body').innerHTML=springJournal;$('#interact').hidden=true;renderer.domElement.setAttribute('aria-label','Level 27 岩体泉 · 洞穴温泉');renderer.shadowMap.needsUpdate=true;camera.far=40;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);resize();toast('Level 27 · 岩体泉。沿溪流向前，楼梯通往温泉。');
 }
 function leaveSpring(announce=true){
- const origin=springSession.leave();if(!origin)return;Object.assign(state,origin);renderer.shadowMap.type=T.PCFShadowMap;navigationMap.setLevel(state.level);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);spring.audio(audio.ctx,audio.master,false);keys.clear();joy.x=joy.z=0;
+ const origin=springSession.leave();if(!origin)return;Object.assign(state,origin);renderer.shadowMap.autoUpdate=!bathhouse.active;renderer.shadowMap.type=T.PCFShadowMap;navigationMap.setLevel(state.level);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);spring.audio(audio.ctx,audio.master,false);keys.clear();joy.x=joy.z=0;
  waterPipeline.focus.setSceneQuery(bathhouse.active?bathhouse.focusDistance:null);uiThemes.applyLevel(String(state.level));$('#journal .journal-body').innerHTML=state.level===11?cityJournal:fieldJournal;renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');renderer.shadowMap.needsUpdate=true;camera.far=bathhouse.active?24:480;camera.updateProjectionMatrix();if(!bathhouse.active)exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);resize();if(announce)toast('你回到了进入时的热水淋浴间。');
 }
 function animateSpring(now,dt,rawDt){
@@ -229,11 +231,11 @@ function animateSpring(now,dt,rawDt){
 }
 
 function enterBath(){
- bathOrigin={level:state.level,cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch};bathhouse.active=true;state.cx=state.cz=0n;Object.assign(state,BATH_ARRIVAL);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;keys.clear();joy.x=joy.z=0;springOpen=1;eyelids.style.opacity='1';
- lensWater.reset();waterState.reset();bodyWater.reset();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);waterPipeline.focus.setSceneQuery(bathhouse.focusDistance);camera.far=24;camera.updateProjectionMatrix();renderer.shadowMap.needsUpdate=true;resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Baños 浴室 · 前厅、假风景空池、淋浴间');toast('前厅通往空池。左侧通道是淋浴间。');
+ bathOrigin={level:state.level,cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch};bathhouse.active=true;renderer.shadowMap.autoUpdate=false;state.cx=state.cz=0n;Object.assign(state,BATH_ARRIVAL);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;keys.clear();joy.x=joy.z=0;springOpen=1;eyelids.style.opacity='1';
+ lensWater.reset();waterState.reset();bodyWater.reset();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);waterPipeline.focus.setSceneQuery(bathhouse.focusDistance);camera.far=24;camera.updateProjectionMatrix();renderer.shadowMap.needsUpdate=true;resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Baños 浴室 · 前厅、假风景空池、淋浴间');toast('空池左侧通往淋浴间，右侧新通道通往水疗圆池。');
 }
 function leaveBath(announce=true){
- if(!bathhouse.active||!bathOrigin)return;showerAudio.mute();Object.assign(state,bathOrigin);bathOrigin=null;bathhouse.active=false;waterPipeline.setBathSteam(0);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;keys.clear();joy.x=joy.z=0;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);lensWater.reset();waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('玻璃门在你身后合上。');
+ if(!bathhouse.active||!bathOrigin)return;showerAudio.mute();Object.assign(state,bathOrigin);bathOrigin=null;bathhouse.active=false;renderer.shadowMap.autoUpdate=true;renderer.shadowMap.needsUpdate=true;waterPipeline.setBathSteam(0);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;keys.clear();joy.x=joy.z=0;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);lensWater.reset();waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('玻璃门在你身后合上。');
 }
 function animateBath(now,dt,rawDt){
  if(springOpen>0&&!springSession.closing){springOpen=Math.max(0,springOpen-dt*.9);eyelids.style.opacity=String(springOpen);}
@@ -244,12 +246,12 @@ function animateBath(now,dt,rawDt){
  const under=bathShowerAt(state.x,state.z,.34),near=bathShowerAt(state.x,state.z,.91),wet=under>=0&&bathhouse.presets[under]>0;springSession.preset=under>=0?bathhouse.presets[under]:near>=0?bathhouse.presets[near]:0;
  if(springSession.closing&&playing){const done=springSession.tickClose(dt,wet&&springSession.preset===2);eyelids.style.opacity=String(Math.min(1,springSession.closing/1.45));if(done){enterSpring();animateSpring(now,dt,rawDt);return;}}
  const crouch=keys.has('KeyC'),rig=cameraRig.update(dt,{x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,eyeY:bathFloor(state.x,state.z)+(crouch?1.06:1.77),jump:0,moved,dx,dz,grounded:true,running:false,crouch,stamina:state.stamina,landingSpeed:0,enabled:settings.bob&&!reduceCameraMotion.matches,locked:false});state.y=rig.eyeHeight;step=rig.phase;
- if(playing){bathStepTravel+=moved;if(bathStepTravel>.62){bathStepTravel=0;audio.footstep(false,wet);}survivalDisplay.animate(dt,state,step);}
+ if(playing){bathStepTravel+=moved;if(bathStepTravel>.62){bathStepTravel=0;audio.footstep(false,wet||inSpaWater(state.x,state.z));}survivalDisplay.animate(dt,state,step);}
  if(wet&&playing){bathWetAge+=dt;if(bathWetAge>2.7){lensWater.showerContact();bathWetAge=0;}}else bathWetAge=3.0;
  lensWater.update(playing?dt:0,{enabled:playing,rain:0,humidity:wet?.92:.58,sheltered:true,hasWater:false,cameraHeight:camera.position.y,level:-10,aspect:camera.aspect,pitch:camera.rotation.x,roll:camera.rotation.z,accelX:0,cameraVelocity:cameraRig.velocity,waterCrossing:{submerged:false,crossing:0}});
  bathhouse.update(bathTime);bathhouse.beforeRender(renderer,camera);if(audio.ctx){audio.motion.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);audio.rain.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);showerAudio.update(bathhouse.presets,state,state.yaw,playing);}exitAudio.update(0,false,time);
  waterPipeline.focus.setZoom(playing&&(keys.has('KeyZ')||zoomHeld)?Math.max(3,zoomSetting):zoomSetting);waterPipeline.setBathSteam(bathhouse.presets.reduce((a,b)=>a+(b===2?1:b===1?.4:0),0));waterPipeline.focus.setMist(0);waterPipeline.update(playing?dt:0,camera,state,playing,false,bathhouse.scene.background,new T.Vector3(0,1,0),0,-10);renderer.toneMappingExposure=T.MathUtils.lerp(renderer.toneMappingExposure,1.0,1-Math.exp(-dt*2));
- uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent='BAÑOS · 热水浴室';const p=$('#interact');p.classList.remove('inspection');$('.crosshair').hidden=false;p.hidden=!playing;p.textContent=springSession.closing?'闭眼中…':near>=0?(springSession.preset===0?'E 打开这只花洒':springSession.preset===1?'E 调到最热预设':wet?'E 闭上眼睛':'E 关闭花洒 · 站到水下可闭眼'):state.z>2.7?'E 推门返回街道':state.x< -4?'各花洒可独立开关 · 最热预设 + 闭眼':'空池左侧 → 淋浴间';}
+ uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent='BAÑOS · 热水浴室';const p=$('#interact');p.classList.remove('inspection');$('.crosshair').hidden=false;p.hidden=!playing;p.textContent=springSession.closing?'闭眼中…':near>=0?(springSession.preset===0?'E 打开这只花洒':springSession.preset===1?'E 调到最热预设':wet?'E 闭上眼睛':'E 关闭花洒 · 站到水下可闭眼'):state.z>2.7?'E 推门返回街道':state.x< -4?'各花洒可独立开关 · 最热预设 + 闭眼':state.x>4.2?'水疗圆池 · 沿镀铬扶手下池': '空池左侧 → 淋浴间 · 右侧 → 水疗圆池';}
  performanceMeter.markSimulation();displayFilter.render(bathhouse.scene,camera,now,()=>performanceMeter.beforeRender());performanceMeter.end();document.documentElement.dataset.bootState='ready';frameCount++;frameTime+=rawDt;if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;}
 }
 
@@ -359,7 +361,7 @@ document.addEventListener('pointerlockchange',()=>{const held=document.pointerLo
 document.addEventListener('pointerlockerror',()=>{if(playing)toast('按住鼠标拖动环顾，W A S D 移动。')});
 function openModal(id){if(navigationMap.isOpen)navigationMap.hide();if(activeModal)activeModal.hidden=true;lastFocus=document.activeElement;if(playing)setPlay(false);activeModal=$('#'+id);activeModal.hidden=false;if(id==='world-map')navigationMap.show(mapPose());if(id==='developer'){settings.devMode=true;$('#devMode').checked=true;$('#developer-button').hidden=false;savePreferences();updateDeveloperCoordinates();}if(id==='journal')$('#expedition').textContent=started?`已探索 ${Math.round(state.distance)} 米 · ${Math.floor(state.elapsed/60)} 分钟 · 杏仁水 ${state.bottles} 瓶`:'尚未开始探索。';activeModal.querySelector('button,select,input')?.focus()}
 function closeModal(resume=true){if(!activeModal||teleportJob)return;const wasMap=activeModal.id==='world-map';if(developerSearch){developerSearch.return();developerSearch=null;developerBusy(false);$('#developer-status').textContent='已取消搜索。';}if(wasMap)navigationMap.hide();activeModal.hidden=true;activeModal=null;lastFocus?.focus();if(wasMap&&resume&&mapWasPlaying&&ready)start();}
-function toggleMap(){if(bathhouse.active&&state.level!==27){toast('前厅玻璃门返回街道；空池左侧通往淋浴间。');return;}if(state.level===27){toast('沿双扶手楼梯向上，跟随溪流穿过隧道，即可返回进入时的位置。');return;}if(teleportJob||developerSearch||!ready)return;if(activeModal?.id==='world-map'){closeModal();return;}if(activeModal)return;mapWasPlaying=playing;openModal('world-map');}
+function toggleMap(){if(bathhouse.active&&state.level!==27){toast('前厅玻璃门返回街道；空池左侧通往淋浴间。');return;}if(state.level===27){toast('沿原石踏步向上，跟随溪流穿过隧道，即可返回进入时的位置。');return;}if(teleportJob||developerSearch||!ready)return;if(activeModal?.id==='world-map'){closeModal();return;}if(activeModal)return;mapWasPlaying=playing;openModal('world-map');}
 function teleportFromMap(point){if(state.level===27){toast('沿溪流旁原石踏步返回入口。');return;}if(state.level===11){toast('沿城市街道步行探索；F2 可前往金融街、广场或返回麦田。');return;}if(teleportJob||developerSearch)return;if(streamFailed){navigationMap.setStatus('场景加载失败，请刷新后重试。');return;}try{const target=createMapTarget(point,seed);if(!target){navigationMap.setStatus('附近没有可用落点，请点击另一处地面。');return;}beginTeleport(target);}catch(error){console.error('Map destination failed',error);navigationMap.setBusy(false,'无法准备此处落点，请选择另一处地面。');}}
 $('#open-developer').onclick=()=>openModal('developer');$('#developer-button').onclick=()=>openModal('developer');
 $('#open-settings').onclick=()=>openModal('settings');$('#open-journal').onclick=()=>openModal('journal');$('#open-controls').onclick=()=>openModal('controls');document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal);document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal()}));

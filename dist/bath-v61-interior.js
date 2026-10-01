@@ -5,7 +5,7 @@ import {createHybridShower} from './bath-v62-water.js?v=62';
 import {bathRefitMaterials,bathRefitTextures,addBox,addPlane,addTube,rock,worldUV} from './bath-v61-materials.js?v=61';
 import {makeDispenser,makeTelephone,makePlasticChair,makeTowel,makeRockPlanter} from './bath-v61-props.js?v=61';
 import {wetFloorMaterial,createBathReflection} from './bath-v61-wet.js?v=61';
-import {SHOWER_HEADS} from './bathhouse-layout.js?v=61';
+import {SHOWER_HEADS} from './bathhouse-layout.js?v=65';
 export function buildBathRefit(scene,root,oldWood){
  const m=bathRefitMaterials(),tex=bathRefitTextures(),clock={value:0},presets=[0,0,0,0],streams=[],nozzles=[];
  oldWood=m.wood;

@@ -1,0 +1,544 @@
+{
+  "summary": {
+    "shell_sha256": "0fd639f70995f1843f21a5d9ead6663a3509f238aace6114efb573f23acfa7f8",
+    "authority_sha256": "7ffbfe1838603c0460b50b4bacc295d10f634e9adf984c55ffbf67e2ad8d6a71",
+    "vertices": 98027,
+    "triangles": 195944,
+    "actual_ribbon_vertices": 2737,
+    "actual_ribbon_out_of_air_count": 0,
+    "out_of_air_examples": [],
+    "water_to_shell_floor_gap_range_m": [
+      0.029005739996162738,
+      0.20778755767380175
+    ],
+    "lip": {
+      "x": 0.9140295557076563,
+      "y": 1.6999999999999993,
+      "z": -2.116819172211835,
+      "t": 1,
+      "width": 0.46
+    },
+    "selected_support_samples": [
+      {
+        "t": 0,
+        "side": -1,
+        "x": 2.6199734588484405,
+        "z": -10.494451393744713,
+        "water_y": 1.822,
+        "width": 1,
+        "authority_bed_y": 1.8461865569272975,
+        "runtime_raycast_bed_y": 1.8372713623702388,
+        "shell_hits": [
+          {
+            "y": 1.8372713270228493,
+            "ny": 0.8629723013221138,
+            "triangle": 648
+          },
+          {
+            "y": 4.3074154891237,
+            "ny": -0.7338522194415903,
+            "triangle": 4850
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.008915194557058692,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 0,
+        "side": 0,
+        "x": 2.04,
+        "z": -10.5,
+        "water_y": 1.822,
+        "width": 1,
+        "authority_bed_y": 1.6420000000000001,
+        "runtime_raycast_bed_y": 1.6318602030656137,
+        "shell_hits": [
+          {
+            "y": 1.6318602150537633,
+            "ny": 0.9986707093363723,
+            "triangle": 551
+          },
+          {
+            "y": 4.187912457912458,
+            "ny": -0.7276243435084488,
+            "triangle": 4704
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.01013979693438638,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": true
+      },
+      {
+        "t": 0,
+        "side": 1,
+        "x": 1.4600265411515596,
+        "z": -10.505548606255287,
+        "water_y": 1.822,
+        "width": 1,
+        "authority_bed_y": 1.8461865569272975,
+        "runtime_raycast_bed_y": 1.837277542683991,
+        "shell_hits": [
+          {
+            "y": 1.8372775199561369,
+            "ny": 0.9309327358943705,
+            "triangle": 620
+          },
+          {
+            "y": 3.943673512815985,
+            "ny": -0.844168554411539,
+            "triangle": 4314
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.00890901424330659,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 0.5,
+        "side": -1,
+        "x": 2.6550702622815496,
+        "z": -3.6034172173160908,
+        "water_y": 1.8040151631677843,
+        "width": 0.99,
+        "authority_bed_y": 1.8357015697480226,
+        "runtime_raycast_bed_y": 1.782938371129771,
+        "shell_hits": [
+          {
+            "y": 1.782938427817737,
+            "ny": 0.72103823043365,
+            "triangle": 58274
+          },
+          {
+            "y": 4.258215671669397,
+            "ny": -0.9755554383347457,
+            "triangle": 58987
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.05276319861825152,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 0.5,
+        "side": 0,
+        "x": 2.080347214812514,
+        "z": -3.6212615079409662,
+        "water_y": 1.8040151631677843,
+        "width": 0.99,
+        "authority_bed_y": 1.6240151631677844,
+        "runtime_raycast_bed_y": 1.6221945406804819,
+        "shell_hits": [
+          {
+            "y": 1.6221945494443561,
+            "ny": 0.9999709201935144,
+            "triangle": 57977
+          },
+          {
+            "y": 4.13140570926894,
+            "ny": -0.9291935323624438,
+            "triangle": 58903
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.0018206224873025256,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": true
+      },
+      {
+        "t": 0.5,
+        "side": 1,
+        "x": 1.505624167343479,
+        "z": -3.6391057985658417,
+        "water_y": 1.8040016644836236,
+        "width": 0.9898964433028552,
+        "authority_bed_y": 1.835719266724609,
+        "runtime_raycast_bed_y": 1.8359229942583042,
+        "shell_hits": [
+          {
+            "y": 1.8359229885380717,
+            "ny": 0.8979884340611126,
+            "triangle": 55380
+          },
+          {
+            "y": 3.8373412021652524,
+            "ny": -0.7876583027599269,
+            "triangle": 56051
+          }
+        ],
+        "ground_minus_authority_bed_m": 0.00020372753369524155,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 0.7,
+        "side": -1,
+        "x": 2.2136320572363903,
+        "z": -2.4073348777092156,
+        "water_y": 1.771795613660469,
+        "width": 0.8520092023718623,
+        "authority_bed_y": 1.7989415647736355,
+        "runtime_raycast_bed_y": 1.7996106412806685,
+        "shell_hits": [
+          {
+            "y": 1.7996106765092017,
+            "ny": 0.9005038410946457,
+            "triangle": 72819
+          },
+          {
+            "y": 4.283771098865508,
+            "ny": -0.9129240346176122,
+            "triangle": 73927
+          }
+        ],
+        "ground_minus_authority_bed_m": 0.0006690765070329618,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 0.7,
+        "side": 0,
+        "x": 1.8693784277864,
+        "z": -2.778185379976426,
+        "water_y": 1.771795613660469,
+        "width": 0.8520092023718623,
+        "authority_bed_y": 1.591795613661466,
+        "runtime_raycast_bed_y": 1.5929390256191205,
+        "shell_hits": [
+          {
+            "y": 1.592938988671308,
+            "ny": 0.998876074777186,
+            "triangle": 66671
+          },
+          {
+            "y": 4.108183519440213,
+            "ny": -0.8851428553377982,
+            "triangle": 67298
+          }
+        ],
+        "ground_minus_authority_bed_m": 0.0011434119576545498,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": true
+      },
+      {
+        "t": 0.7,
+        "side": 1,
+        "x": 1.52512479833641,
+        "z": -3.1490358822436364,
+        "water_y": 1.7892862058033343,
+        "width": 0.9318597173215014,
+        "authority_bed_y": 1.7964879165865721,
+        "runtime_raycast_bed_y": 1.79310759801202,
+        "shell_hits": [
+          {
+            "y": 1.7931076293246053,
+            "ny": 0.8710186532026416,
+            "triangle": 63182
+          },
+          {
+            "y": 3.826779913023629,
+            "ny": -0.7594205095986057,
+            "triangle": 63638
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.0033803185745522324,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 0.8,
+        "side": -1,
+        "x": 1.8089262852536705,
+        "z": -2.1844325246884044,
+        "water_y": 1.7439780946075807,
+        "width": 0.7099935412976351,
+        "authority_bed_y": 1.771369073290951,
+        "runtime_raycast_bed_y": 1.7773240385124502,
+        "shell_hits": [
+          {
+            "y": 1.777324070023349,
+            "ny": 0.7979492166986274,
+            "triangle": 79230
+          },
+          {
+            "y": 4.156709604463624,
+            "ny": -0.88477807655467,
+            "triangle": 80524
+          }
+        ],
+        "ground_minus_authority_bed_m": 0.005954965221499187,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 0.8,
+        "side": 0,
+        "x": 1.5483634337429732,
+        "z": -2.532755924544794,
+        "water_y": 1.7439780946075807,
+        "width": 0.7099935412976351,
+        "authority_bed_y": 1.5649101563421293,
+        "runtime_raycast_bed_y": 1.5666961899034888,
+        "shell_hits": [
+          {
+            "y": 1.566696177268333,
+            "ny": 0.999375459432678,
+            "triangle": 70100
+          },
+          {
+            "y": 3.921911529079852,
+            "ny": -0.7615511740345839,
+            "triangle": 70898
+          }
+        ],
+        "ground_minus_authority_bed_m": 0.0017860335613595346,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": true
+      },
+      {
+        "t": 0.8,
+        "side": 1,
+        "x": 1.287800582232276,
+        "z": -2.8810793244011834,
+        "water_y": 1.7439780946075807,
+        "width": 0.7099935412976351,
+        "authority_bed_y": 1.7713563684389355,
+        "runtime_raycast_bed_y": 1.7723119122546847,
+        "shell_hits": [
+          {
+            "y": 1.7723118548233638,
+            "ny": 0.9168809949383856,
+            "triangle": 65512
+          },
+          {
+            "y": 3.5711150318673064,
+            "ny": -0.5236151527868895,
+            "triangle": 65884
+          }
+        ],
+        "ground_minus_authority_bed_m": 0.000955543815749138,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 0.9,
+        "side": -1,
+        "x": 1.4655065482907592,
+        "z": -2.027663347393634,
+        "water_y": 1.717461800026238,
+        "width": 0.5770037749740753,
+        "authority_bed_y": 1.7526645557101779,
+        "runtime_raycast_bed_y": 1.7519977873328185,
+        "shell_hits": [
+          {
+            "y": 1.7519977796739619,
+            "ny": 0.7535461689393353,
+            "triangle": 82484
+          },
+          {
+            "y": 3.9556124683516902,
+            "ny": -0.7889510606149079,
+            "triangle": 83585
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.0006667683773593502,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 0.9,
+        "side": 0,
+        "x": 1.2633809201602102,
+        "z": -2.33578486811937,
+        "water_y": 1.717461800026238,
+        "width": 0.5770037749740753,
+        "authority_bed_y": 1.5601806869281134,
+        "runtime_raycast_bed_y": 1.5628638243245003,
+        "shell_hits": [
+          {
+            "y": 1.5628638287867331,
+            "ny": 0.9975877750975645,
+            "triangle": 75618
+          },
+          {
+            "y": 3.7230037534167244,
+            "ny": -0.6441934974606306,
+            "triangle": 77045
+          }
+        ],
+        "ground_minus_authority_bed_m": 0.0026831373963869254,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": true
+      },
+      {
+        "t": 0.9,
+        "side": 1,
+        "x": 1.0612552920296612,
+        "z": -2.643906388845106,
+        "water_y": 1.717461800026238,
+        "width": 0.5770037749740753,
+        "authority_bed_y": 1.7526549487301262,
+        "runtime_raycast_bed_y": 1.7489563547775868,
+        "shell_hits": [
+          {
+            "y": 1.7489563511445017,
+            "ny": 0.9333929882947568,
+            "triangle": 68126
+          },
+          {
+            "y": 3.407382129905478,
+            "ny": -0.8078030643607745,
+            "triangle": 68591
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.003698593952539353,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 1,
+        "side": -1,
+        "x": 1.078974467765505,
+        "z": -1.8543440762765662,
+        "water_y": 1.6999999999999993,
+        "width": 0.46,
+        "authority_bed_y": 1.7435502958579874,
+        "runtime_raycast_bed_y": 1.7033894585773557,
+        "shell_hits": [
+          {
+            "y": -1.045,
+            "ny": 1.0,
+            "triangle": 86809
+          },
+          {
+            "y": 1.5530457063595737,
+            "ny": -0.10005497430048822,
+            "triangle": 88070
+          },
+          {
+            "y": 1.703389480207363,
+            "ny": 0.7297030717005782,
+            "triangle": 88119
+          },
+          {
+            "y": 3.6100705371618917,
+            "ny": -0.556129492688042,
+            "triangle": 89020
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.04016083728063169,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": 0.15034375221778196,
+        "water_air_at_section_center": null
+      },
+      {
+        "t": 1,
+        "side": 0,
+        "x": 0.9140295557076563,
+        "z": -2.116819172211835,
+        "water_y": 1.6999999999999993,
+        "width": 0.46,
+        "authority_bed_y": 1.5599999999999994,
+        "runtime_raycast_bed_y": 1.5411952235751403,
+        "shell_hits": [
+          {
+            "y": -1.0159425202550456,
+            "ny": 0.8722278643062513,
+            "triangle": 80939
+          },
+          {
+            "y": -0.39679949397125136,
+            "ny": -0.2502930325980761,
+            "triangle": 81159
+          },
+          {
+            "y": -0.2951540442091041,
+            "ny": 0.7449867884666049,
+            "triangle": 81200
+          },
+          {
+            "y": 0.44256046525359816,
+            "ny": -0.30090271886324704,
+            "triangle": 81717
+          },
+          {
+            "y": 0.5280354030651395,
+            "ny": 0.7150442601779315,
+            "triangle": 81799
+          },
+          {
+            "y": 0.7938626293230634,
+            "ny": -0.5635960563965994,
+            "triangle": 81957
+          },
+          {
+            "y": 0.893889399063599,
+            "ny": 0.6110252420008531,
+            "triangle": 82051
+          },
+          {
+            "y": 1.3844387505311657,
+            "ny": -0.10106573707555223,
+            "triangle": 82298
+          },
+          {
+            "y": 1.5411951997462496,
+            "ny": 0.6558261174123557,
+            "triangle": 82410
+          },
+          {
+            "y": 3.4877610961631724,
+            "ny": -0.9925447992025498,
+            "triangle": 83481
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.018804776424859115,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": 0.15675647304397455,
+        "water_air_at_section_center": true
+      },
+      {
+        "t": 1,
+        "side": 1,
+        "x": 0.7490846436498075,
+        "z": -2.379294268147104,
+        "water_y": 1.6999999999999993,
+        "width": 0.46,
+        "authority_bed_y": 1.7435502958579874,
+        "runtime_raycast_bed_y": 1.7343744233313023,
+        "shell_hits": [
+          {
+            "y": 1.734374456479002,
+            "ny": 0.932431563172942,
+            "triangle": 72676
+          },
+          {
+            "y": 3.4137525498074504,
+            "ny": -0.674793915246646,
+            "triangle": 73701
+          }
+        ],
+        "ground_minus_authority_bed_m": -0.009175872526685058,
+        "solid_20mm_below_runtime_ground": true,
+        "solid_thickness_to_nearest_underside_m": null,
+        "water_air_at_section_center": null
+      }
+    ],
+    "caveat": "Uses CURRENT createCreekAuthority spine and actual createFlowStream geometry with widthAt and runtime-equivalent shell-raycast bedAt. No legacy route/bed formula. Tests vertices and selected vertical columns, not every triangle interior or rendered output."
+  },
+  "out_of_air": []
+}
