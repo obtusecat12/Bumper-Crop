@@ -1,9 +1,9 @@
 import {SHOWER_HEADS} from './bathhouse-layout.js?v=61';
 import {createShowerAudio} from './bath-v62-audio.js?v=62';
 import {initializeCanTextures} from './canned-food.js?v=60';
-import {initializeSpringTextures} from './level27-materials.js?v=60';
-import {createLevel27} from './level27-scene.js?v=60';
-import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=60';
+import {initializeSpringTextures} from './level27-materials.js?v=63';
+import {createLevel27} from './level27-scene.js?v=63';
+import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=63';
 import {nearBathEntrance} from './level27-entry.js?v=61';
 import {initializeBathTextures} from './bath-textures.js?v=62';
 import {createBathhouse} from './bathhouse-scene.js?v=62';
@@ -24,7 +24,7 @@ import {initializeVergeTextures} from './verge-cards.js?v=60';
 import {createSceneBatches} from './scene-batches.js?v=60';
 import {updateCropGroundTime} from './ground.js?v=60';
 import {bindTroughWater} from './trough-water.js?v=60';
-import {createWaterPipeline} from './water-pipeline.js?v=62';
+import {createWaterPipeline} from './water-pipeline.js?v=63';
 import {WaterState} from './water-state.js?v=60';
 import {WaterContactEffects} from './water-contact-effects.js?v=60';
 import {createWaterBubbles} from './water-bubbles.js?v=60';
@@ -37,7 +37,7 @@ import {createWeatherFlare} from './weather-flare.js?v=60';
 import {initializeWeatherTextures} from './weather-textures.js?v=60';
 import {createWaterImpact} from './water-impact.js?v=60';
 import {createWaterRipples} from './water-ripples.js?v=60';
-import {createLensWater} from './lens-water.js?v=62';
+import {createLensWater} from './lens-water.js?v=63';
 import {barnTarget,barnFootprintDistance,REFERENCE_BARN} from './reference-barn-layout.js?v=60';
 import {updateBarnDoors} from './reference-barn.js?v=60';
 import {initializeLandmarkTextures} from './landmark-textures.js?v=60';
@@ -48,7 +48,7 @@ import {createUIThemes} from './ui-themes.js?v=60';
 import {createMaterialFinish} from './material-finish.js?v=60';
 import {createRuralShadows} from './rural-shadows.js?v=60';
 import {createIrradianceField} from './irradiance-field.js?v=60';
-import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=60';
+import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=63';
 import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=60';
 import {createPerformanceMeter} from './performance-meter.js?v=60';
 import {createChunkStream} from './world-stream.js?v=60';
@@ -59,7 +59,7 @@ import {createWheatDetailLayer,initializeCerealTextures,releaseCerealGPU,resumeC
 import {createAtmosphere} from './atmosphere.js?v=60';
 import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=60';
 import {initializeRuralTextures} from './rural-textures.js?v=60';
-import {createNavigationMap} from './map-ui.js?v=60';
+import {createNavigationMap} from './map-ui.js?v=63';
 
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
@@ -187,7 +187,7 @@ function restoreRural(){
 const fieldJournal=$('#journal .journal-body').innerHTML;
 const cityJournal='<p><strong>Level 11 · 无垠城市</strong></p><p>道路延伸进楼宇之间。回望时，小麦与泥土已经不见了。</p><p>沿 Hope St 前行，低层商业街逐渐进入高楼之间。街道向四周延伸；可以进入骑楼、停车楼入口和公共广场。棕榈广场对面的 BAÑOS 热水浴室可进入岩体泉：推开巷内玻璃门，经过前厅与假风景空池，从左侧通道进入淋浴间。开启任一花洒，调至最高预设，在花洒下按 E 闭眼。F2 可前往浴室入口、商业边缘区、金融街与广场，也可返回麦田。</p><p class="reference-credit">设定参考：<a href="https://backrooms-wiki-cn.wikidot.com/level-11" target="_blank" rel="noopener noreferrer">Level 11 — 无垠城市</a>，Backrooms Wikidot，原作者 Nerdykiddo4884，重写 Stretchsterz，中文翻译 Kelf，CC BY-SA 3.0。1970—1990 年代北美与拉美建筑街景为本场景的美术演绎。</p>';
 
-const springJournal='<p><strong>Level 27 · 岩体泉</strong></p><p>可进入的主洞约 18.58 平方米。洞壁为石灰岩，没有植物、生物或实体。泉水平均 32.2°C，富含矿物质，可饮用。两股微型瀑布不断注入新水；角落的小渠将水排走，不要尝试爬入。</p><p>在池中按 <strong>E</strong> 坐下或起身，<strong>Q</strong> 饮泉水。水边静坐，或缓步探索岩壁。泡浴超过一小时后，精力与心情会逐渐恢复；不建议超过两小时。</p><p><strong>返回：</strong>走上瀑布旁 M.E.G. 建造的岸上石砌楼梯，沿溪流旁的干燥路面向隧道深处前行，即会回到进入时的位置。入口保持稳定。</p><p>请尊重其他使用泉水的人。超过三十人时不建议进入；泡浴结束后及时腾出空间。</p><p class="reference-credit">层级设定改编自 <a href="https://backrooms-wiki-cn.wikidot.com/level-27" target="_blank" rel="noopener noreferrer">Level 27 — 岩体泉</a>，原作 Kitty Rika，中文翻译 XD42，<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>。洞穴视觉参考 <a href="https://www.flickr.com/photos/50711561@N00/14440932785" target="_blank" rel="noopener noreferrer">Cave Lake (Cooler)</a>，Jacob Norlund，CC BY 2.0。洞穴几何与 PS2 风格石灰岩、沉积层和泉水材质为本场景新制作。动态波纹和菲涅耳计算改编自 <a href="https://github.com/Aureliengmz/clearwater" target="_blank" rel="noopener noreferrer">Clearwater</a>，© 2026 Lumaris，<a href="./licenses/clearwater-MIT.txt" target="_blank">MIT</a>。</p>';
+const springJournal='<p><strong>Level 27 · 岩体泉</strong></p><p>泉池水域约 18.58 平方米，岸边岩洞石滩向岩壁内部延伸。洞壁为沉积石灰岩，水线可见深色矿物膜。泉水平均 32.2°C，富含矿物质，可饮用。两股微型瀑布不断注入新水；角落的小渠将水排走，不要尝试爬入。</p><p>在池中按 <strong>E</strong> 坐下或起身，<strong>Q</strong> 饮泉水。水边静坐，或缓步探索岩壁。泡浴超过一小时后，精力与心情会逐渐恢复；不建议超过两小时。</p><p><strong>返回：</strong>走上瀑布旁 贴着洞壁蜿蜒上升的风化原石踏步，沿溪流旁的干燥路面向隧道深处前行，即会回到进入时的位置。入口保持稳定。</p><p>请尊重其他使用泉水的人。超过三十人时不建议进入；泡浴结束后及时腾出空间。</p><p class="reference-credit">层级设定改编自 <a href="https://backrooms-wiki-cn.wikidot.com/level-27" target="_blank" rel="noopener noreferrer">Level 27 — 岩体泉</a>，原作 Kitty Rika，中文翻译 XD42，<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>。洞穴视觉参考 <a href="https://www.flickr.com/photos/50711561@N00/14440932785" target="_blank" rel="noopener noreferrer">Cave Lake (Cooler)</a>，Jacob Norlund，CC BY 2.0。洞穴几何与 PS2 风格石灰岩、沉积层和泉水材质为本场景新制作。动态波纹和菲涅耳计算改编自 <a href="https://github.com/Aureliengmz/clearwater" target="_blank" rel="noopener noreferrer">Clearwater</a>，© 2026 Lumaris，<a href="./licenses/clearwater-MIT.txt" target="_blank">MIT</a>。</p>';
 function updateSpringEntry(dt){
  exitScene.bath.update(time,springSession.preset);
  if(!springSession.closing){if(springOpen>0){springOpen=Math.max(0,springOpen-dt*.72);eyelids.style.opacity=String(springOpen);}return;}
@@ -198,15 +198,16 @@ function updateSpringEntry(dt){
 }
 function enterSpring(){
  waterPipeline.setBathSteam(0);
- const pose=springSession.enter(state);state.level=27;state.cx=state.cz=0n;Object.assign(state,pose);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=1;keys.clear();joy.x=joy.z=0;
+ const pose=springSession.enter(state);state.level=27;renderer.shadowMap.type=T.PCFSoftShadowMap;navigationMap.setLevel(27);state.cx=state.cz=0n;Object.assign(state,pose);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=1;keys.clear();joy.x=joy.z=0;
  waterInspection.clear();lensWater.reset();waterState.reset();bodyWater.reset();waterBubbles.clear();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);
  showerAudio.mute();waterPipeline.focus.setSceneQuery(spring.focusDistance);uiThemes.applyLevel('27');$('#journal .journal-body').innerHTML=springJournal;$('#interact').hidden=true;renderer.domElement.setAttribute('aria-label','Level 27 岩体泉 · 洞穴温泉');renderer.shadowMap.needsUpdate=true;camera.far=40;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);resize();toast('Level 27 · 岩体泉。沿溪流向前，楼梯通往温泉。');
 }
 function leaveSpring(announce=true){
- const origin=springSession.leave();if(!origin)return;Object.assign(state,origin);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);spring.audio(audio.ctx,audio.master,false);keys.clear();joy.x=joy.z=0;
+ const origin=springSession.leave();if(!origin)return;Object.assign(state,origin);renderer.shadowMap.type=T.PCFShadowMap;navigationMap.setLevel(state.level);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;interaction=null;springSession.closing=0;springOpen=announce?1:0;eyelids.style.opacity=String(springOpen);spring.audio(audio.ctx,audio.master,false);keys.clear();joy.x=joy.z=0;
  waterPipeline.focus.setSceneQuery(bathhouse.active?bathhouse.focusDistance:null);uiThemes.applyLevel(String(state.level));$('#journal .journal-body').innerHTML=state.level===11?cityJournal:fieldJournal;renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');renderer.shadowMap.needsUpdate=true;camera.far=bathhouse.active?24:480;camera.updateProjectionMatrix();if(!bathhouse.active)exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);resize();if(announce)toast('你回到了进入时的热水淋浴间。');
 }
 function animateSpring(now,dt,rawDt){
+ navigationMap.update(mapPose(),now,playing,false);
  if(springOpen>0){springOpen=Math.max(0,springOpen-dt*.68);eyelids.style.opacity=String(springOpen);}
  let moved=0,dx=0,dz=0,wet=inPool(state.x,state.z);const crouch=keys.has('KeyC');
  if(playing){springTime+=dt;state.elapsed+=dt;let sx=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+joy.x,sz=Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp'))+joy.z;
@@ -223,7 +224,7 @@ function animateSpring(now,dt,rawDt){
  if(audio.ctx){audio.motion.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);audio.rain.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);spring.audio(audio.ctx,audio.master,playing,state,state.yaw);}exitAudio.update(0,false,time);
  spring.update(springTime,{x:state.x,z:state.z,moved,wet});waterPipeline.focus.setZoom(playing&&(keys.has('KeyZ')||zoomHeld)?Math.max(3,zoomSetting):zoomSetting);waterPipeline.focus.setMist(0);waterPipeline.update(playing?dt:0,camera,state,playing,false,spring.scene.background,new T.Vector3(0,1,0),0,0);
  renderer.toneMappingExposure=T.MathUtils.lerp(renderer.toneMappingExposure,1.08,1-Math.exp(-dt*1.4));
- uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent='岩体泉 · 32.2°C';const p=$('#interact');p.classList.remove('inspection');$('.crosshair').hidden=false;p.hidden=!playing;p.textContent=waterInspection.active?'鼠标 / 滑动旋转 · E 收起 · Q 饮用':wet?(springSession.sitting?'E 起身 · Q 饮泉水':'E 坐入泉水 · Q 饮泉水'):state.z<-2?'沿溪流前方下楼梯 · 身后隧道返回入口':'M.E.G. 楼梯 → 沿溪流返回';}
+ uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent='岩体泉 · 32.2°C';const p=$('#interact');p.classList.remove('inspection');$('.crosshair').hidden=false;p.hidden=!playing;p.textContent=waterInspection.active?'鼠标 / 滑动旋转 · E 收起 · Q 饮用':wet?(springSession.sitting?'E 起身 · Q 饮泉水':'E 坐入泉水 · Q 饮泉水'):state.z<-2?'沿溪流前方下楼梯 · 身后隧道返回入口':'原石踏步 → 沿溪流返回';}
  performanceMeter.markSimulation();displayFilter.render(spring.scene,camera,now,()=>{performanceMeter.beforeRender();spring.capture(renderer,camera);});performanceMeter.end();document.documentElement.dataset.bootState='ready';frameCount++;frameTime+=rawDt;if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;}
 }
 
@@ -359,7 +360,7 @@ document.addEventListener('pointerlockerror',()=>{if(playing)toast('按住鼠标
 function openModal(id){if(navigationMap.isOpen)navigationMap.hide();if(activeModal)activeModal.hidden=true;lastFocus=document.activeElement;if(playing)setPlay(false);activeModal=$('#'+id);activeModal.hidden=false;if(id==='world-map')navigationMap.show(mapPose());if(id==='developer'){settings.devMode=true;$('#devMode').checked=true;$('#developer-button').hidden=false;savePreferences();updateDeveloperCoordinates();}if(id==='journal')$('#expedition').textContent=started?`已探索 ${Math.round(state.distance)} 米 · ${Math.floor(state.elapsed/60)} 分钟 · 杏仁水 ${state.bottles} 瓶`:'尚未开始探索。';activeModal.querySelector('button,select,input')?.focus()}
 function closeModal(resume=true){if(!activeModal||teleportJob)return;const wasMap=activeModal.id==='world-map';if(developerSearch){developerSearch.return();developerSearch=null;developerBusy(false);$('#developer-status').textContent='已取消搜索。';}if(wasMap)navigationMap.hide();activeModal.hidden=true;activeModal=null;lastFocus?.focus();if(wasMap&&resume&&mapWasPlaying&&ready)start();}
 function toggleMap(){if(bathhouse.active&&state.level!==27){toast('前厅玻璃门返回街道；空池左侧通往淋浴间。');return;}if(state.level===27){toast('沿双扶手楼梯向上，跟随溪流穿过隧道，即可返回进入时的位置。');return;}if(teleportJob||developerSearch||!ready)return;if(activeModal?.id==='world-map'){closeModal();return;}if(activeModal)return;mapWasPlaying=playing;openModal('world-map');}
-function teleportFromMap(point){if(state.level===11){toast('沿城市街道步行探索；F2 可前往金融街、广场或返回麦田。');return;}if(teleportJob||developerSearch)return;if(streamFailed){navigationMap.setStatus('场景加载失败，请刷新后重试。');return;}try{const target=createMapTarget(point,seed);if(!target){navigationMap.setStatus('附近没有可用落点，请点击另一处地面。');return;}beginTeleport(target);}catch(error){console.error('Map destination failed',error);navigationMap.setBusy(false,'无法准备此处落点，请选择另一处地面。');}}
+function teleportFromMap(point){if(state.level===27){toast('沿溪流旁原石踏步返回入口。');return;}if(state.level===11){toast('沿城市街道步行探索；F2 可前往金融街、广场或返回麦田。');return;}if(teleportJob||developerSearch)return;if(streamFailed){navigationMap.setStatus('场景加载失败，请刷新后重试。');return;}try{const target=createMapTarget(point,seed);if(!target){navigationMap.setStatus('附近没有可用落点，请点击另一处地面。');return;}beginTeleport(target);}catch(error){console.error('Map destination failed',error);navigationMap.setBusy(false,'无法准备此处落点，请选择另一处地面。');}}
 $('#open-developer').onclick=()=>openModal('developer');$('#developer-button').onclick=()=>openModal('developer');
 $('#open-settings').onclick=()=>openModal('settings');$('#open-journal').onclick=()=>openModal('journal');$('#open-controls').onclick=()=>openModal('controls');document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal);document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal()}));
 for(const key of Object.keys(settings)){const el=$('#'+key);if(!el)continue;if(el.type==='checkbox')el.checked=Boolean(settings[key]);else el.value=settings[key];el.addEventListener('input',()=>{settings[key]=el.type==='checkbox'?el.checked:el.type==='range'?Number(el.value):el.value;try{localStorage.setItem('level10.preferences.v1',JSON.stringify(settings))}catch{}if(key==='quality'){autoScale=1;updateQueue()}if(key==='fov')leaveReferenceView();if(['quality','filter','fov'].includes(key))resize();if(key==='volume')audio.setVolume();if(key==='devMode')$('#developer-button').hidden=!settings.devMode;$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;})}$('#fov-value').textContent=settings.fov+'°';$('#fps').hidden=!settings.showfps;$('#developer-button').hidden=!settings.devMode;

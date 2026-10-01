@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "source_sha256": "fcf7f836457e39484053b971e993ae12d40a365162c12d9ecb0af7320dc565e9",
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "actual_shader_pairs_linked": [
+    "sheet",
+    "impact",
+    "particles",
+    "compute"
+  ],
+  "geometry": {
+    "meshes": 40,
+    "verts": 37085,
+    "triangles": 61606
+  },
+  "simulation": {
+    "particles": 4096,
+    "sources": 2,
+    "format": "RGBA32F",
+    "attachments": 2,
+    "ping_pong_targets": 2,
+    "frames": 90,
+    "gravity": 9.81,
+    "finite_every_frame": true,
+    "respawns": 25954,
+    "max_position_step_error": 2.384185791015625e-07,
+    "max_velocity_step_error": 7.057189943537878e-08,
+    "min_y": -0.03476862236857414,
+    "max_y": 0.2123873382806778,
+    "max_horizontal_radius": 0.33572466017071684
+  },
+  "limitations": [
+    "Software GLES shader and computation correctness",
+    "Visual integration is the caller responsibility"
+  ],
+  "source": "Standalone spring-cascades.js before integration into dist/spring-cascades-v63.js",
+  "verification_scope": "This report verifies shader source and GPU simulation before the only subsequent module change: adding diffuse, normal and roughness texture maps to the creek pebble material. Cascade, impact, particle and compute GLSL were unchanged."
+}

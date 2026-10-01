@@ -1,0 +1,6 @@
+*.bin
+__pycache__/
+volume-shaders.json
+volume-fixture.json
+scene-volume-shaders.json
+scene-volume-fixture.json

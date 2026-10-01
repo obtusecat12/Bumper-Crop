@@ -1,0 +1,34 @@
+{
+  "checks": [
+    {
+      "case": "before",
+      "native_gles_actual_shaders": true,
+      "optical_field": [
+        256,
+        128
+      ],
+      "fused_pass": [
+        720,
+        360
+      ],
+      "finitePixels": true
+    },
+    {
+      "case": "after",
+      "native_gles_actual_shaders": true,
+      "optical_field": [
+        1024,
+        512
+      ],
+      "fused_pass": [
+        1440,
+        720
+      ],
+      "finitePixels": true
+    }
+  ],
+  "physicsIdentical480Frames": true,
+  "baselineCommit": "77f1c2c96b975812162316f52c2f755937e94b7f",
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "limitations": "Native Mesa GLES diagnostic using synthetic geometry test pattern; not a browser screenshot or gameplay FPS measurement."
+}

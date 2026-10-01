@@ -1,0 +1,12 @@
+{
+  "before": {
+    "horizontal_silhouette_rms_error_internal_pixels": 1.5363013490776862,
+    "max_absolute_error": 4.408767626510137,
+    "sample_rows": 100
+  },
+  "after": {
+    "horizontal_silhouette_rms_error_internal_pixels": 0.07870269408352351,
+    "max_absolute_error": 0.17855885295196217,
+    "sample_rows": 100
+  }
+}

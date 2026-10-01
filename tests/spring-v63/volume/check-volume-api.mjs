@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import * as T from '../../../dist/vendor/three.module.min.js';
+import {createSpringVolume} from '../../../dist/spring-volume-v63.js';
+const volume=createSpringVolume(T),camera=new T.PerspectiveCamera(60,4/3,.06,40),source=new T.Texture(),depth=new T.Texture(),saved=new T.WebGLRenderTarget(23,17);
+saved.viewport.set(1,2,19,13);let target=saved;const draws=[];
+const renderer={extensions:{has:()=>true},autoClear:false,xr:{enabled:true},getRenderTarget:()=>target,setRenderTarget:t=>{target=t;},render(scene){const material=scene.children[0].material;draws.push(material.name);for(const u of Object.values(material.uniforms)){assert.notEqual(u.value,target?.texture,'No pass may sample its output attachment');}}};
+const reflection=volume.composeReflection(renderer,source,depth,camera,512,512,1);
+const main=volume.compose(renderer,source,depth,camera,960,720,1);
+assert.notEqual(reflection,main);assert.equal(volume.diagnostics.simulationPasses,1);assert.equal(volume.diagnostics.lightCachePasses,1);assert.equal(draws.length,6);assert.equal(target,saved);assert.equal(renderer.autoClear,false);assert.equal(renderer.xr.enabled,true);
+assert.equal(volume.composeReflection(renderer,source,depth,camera,512,512,1),reflection);assert.equal(volume.diagnostics.simulationPasses,1);
+volume.compose(renderer,source,depth,camera,960,720,1+1/60);assert.equal(volume.diagnostics.simulationPasses,2);assert.equal(volume.diagnostics.lightCachePasses,2);
+volume.compose(renderer,source,depth,camera,1280,720,1+1/60);assert.equal(volume.composeReflection(renderer,source,depth,camera,512,512,1+1/60),reflection);
+assert.throws(()=>volume.composeReflection(renderer,reflection,depth,camera,512,512,2),/previous output/);
+const hdrUnsupported={...renderer,extensions:{has:()=>false}};assert.equal(volume.compose(hdrUnsupported,source,depth,camera,32,32,3),source);
+volume.dispose();assert.throws(()=>volume.compose(renderer,source,depth,camera,32,32,4),/disposed/);
+console.log('PASS API: shared simulation/cache, distinct main/reflection outputs, no feedback, resize isolation, renderer state, HDR-safe bypass, disposal.');

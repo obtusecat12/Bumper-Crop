@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import * as T from '../../../dist/vendor/three.module.min.js';
+import {CAVE_PLAN} from '../../../dist/level27-layout.js';
+import {createSpringVolume,shaderSources} from '../../../dist/spring-volume-v63.js';
+const scenePath=process.argv[2];
+if(!scenePath)throw new Error('Usage: node export-scene-volume.mjs /path/to/spring-overview');
+const fixture=JSON.parse(fs.readFileSync(`${scenePath}/fullscene.json`,'utf8'));
+const volume=createSpringVolume(T,{waterY:0,density:.85,lights:fixture.pointLights,poolPlan:{points:CAVE_PLAN}}),u=volume.uniforms;
+fs.writeFileSync(new URL('./scene-volume-mask.bin',import.meta.url),u.poolMask.value.image.data);
+fs.writeFileSync(new URL('./scene-volume-noise.bin',import.meta.url),u.noiseVolume.value.image.data);
+fs.writeFileSync(new URL('./scene-volume-fixture.json',import.meta.url),JSON.stringify({boundsMin:u.boundsMin.value.toArray(),boundsMax:u.boundsMax.value.toArray(),lights:u.lampPositionPower.value.map(v=>v.toArray()),colors:u.lampColorRange.value.map(v=>v.toArray()),extinction:u.extinction.value,densityGain:u.densityGain.value}));
+fs.writeFileSync(new URL('./scene-volume-shaders.json',import.meta.url),JSON.stringify(Object.fromEntries(['advection','lightCache','raymarch','composite'].map(k=>[k,{vertex:'#version 300 es\n'+shaderSources.vertex,fragment:'#version 300 es\n'+shaderSources[k]}]))));
+volume.dispose();console.log('Exported actual CAVE_PLAN volume and all four scene lamp positions/colours.');

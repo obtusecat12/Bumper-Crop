@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "baselineCommit": "77f1c2c96b975812162316f52c2f755937e94b7f",
+  "cases": [
+    {
+      "name": "before",
+      "width": 256,
+      "height": 128,
+      "fieldWidth": 256,
+      "fieldHeight": 128
+    },
+    {
+      "name": "after",
+      "width": 1024,
+      "height": 512,
+      "fieldWidth": 256,
+      "fieldHeight": 128
+    }
+  ],
+  "physicsIdentical480Frames": true,
+  "physicsDeltaSeconds": 0.016666666666666666,
+  "equalAtEveryFrame": [
+    "droplet records",
+    "film array",
+    "total mass",
+    "wetWeight",
+    "washWeight"
+  ],
+  "sparseFilm": {
+    "aspects": [
+      0.4,
+      0.75,
+      1,
+      1.3333333333333333,
+      2,
+      3.1,
+      4
+    ],
+    "maxHeightError": 1.0590258603393465e-7,
+    "denseBilinearReferenceTolerance": 0.000001
+  },
+  "sourceSha256": {
+    "lens-physics.js": {
+      "before": "85d46c4964bd72716d708f6721c0782b0d7f0a9c16b8d940965e1d4695157f62",
+      "after": "9bd4595869a3a320e8a58e33076382877987c6c7b7363f07918f254007a67f57"
+    },
+    "lens-water.js": {
+      "before": "6616140e6fd41f709bc48842ff6385199090673d3a482c221f898f4622695890",
+      "after": "abfa6f79bbf9f5edef4653eca44c51d0e2eb540efb709f68d0bceb1c48c75d3f"
+    },
+    "water-pipeline.js": {
+      "before": "0e017c7da009f2efd0a3dfe945b58070eb553a79e1478979ca40192c3bb72343",
+      "after": "844bbd554ed99260e7476be063bddcc5e15aebfc22e8401487a5145feb8fcf9a"
+    }
+  },
+  "limitations": [
+    "Deterministic Node simulation/field checks; no browser rendering or gameplay FPS claim."
+  ]
+}

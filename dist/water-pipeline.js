@@ -60,7 +60,7 @@ export const fusedFragment=`precision highp float;precision highp sampler2D;
   if(wet<.001&&washWeight<.001)return vec4(0.);
   vec4 h=texture(wetHeight,vec2(q.x,1.-q.y));vec2 xy=(h.rg*255.-128.)/127.;
   vec3 rainN=normalize(vec3(xy,sqrt(max(.001,1.-dot(xy,xy)))));
-  float coverage=smoothstep(.025,.92,h.a)*wet*air,thickness=h.b*3.*wet;
+  float coverage=h.a*wet*air,thickness=h.b*3.*wet;
   if(washWeight<.001)return vec4(rainN.xy,coverage,thickness);
   vec3 wn=texture(washNoise,q*vec2(1.1,1.47)+vec2(time*.025,time*.19)).xyz*2.-1.;
   wn.xy*=1.35;vec3 washN=normalize(vec3(wn.xy,1.));
@@ -187,12 +187,12 @@ export const fusedFragment=`precision highp float;precision highp sampler2D;
  }`;
 export const resolveFragment=`precision highp float;precision highp sampler2D;uniform sampler2D fused,sharp,uiPicture,depth,cocField;
  ${lensGLSL}
-uniform float exposure;uniform int displayMode;uniform bool hasUI,uiOnly;in vec2 uv;out vec4 outColor;
+uniform vec2 fusedSize;uniform float exposure;uniform int displayMode;uniform bool hasUI,uiOnly;in vec2 uv;out vec4 outColor;
  vec3 encode(vec3 x){return mix(x*12.92,1.055*pow(max(x,vec3(0.)),vec3(1./2.4))-.055,step(vec3(.0031308),x));}
  vec3 aces(vec3 c){mat3 inM=mat3(vec3(.59719,.07600,.02840),vec3(.35458,.90834,.13383),vec3(.04823,.01566,.83777));mat3 outM=mat3(vec3(1.60475,-.10208,-.00327),vec3(-.53108,1.10813,-.07276),vec3(-.07367,-.00605,1.07602));c=inM*(c*exposure/.6);c=(c*(c+.0245786)-.000090537)/(c*(.983729*c+.4329510)+.238081);return clamp(outM*c,0.,1.);}
  void main(){vec2 p=displayMode==2?vec2(uv.x,1.-uv.y):uv;vec3 c=vec3(0.);
  if(!uiOnly){vec4 f=texture(fused,p);float z=linearZ(texture(depth,p).r);
-  vec2 halfSize=ceil(resolution*.5),centre=(floor(p*halfSize)+.5)/halfSize;
+  vec2 centre=(floor(p*fusedSize)+.5)/fusedSize;
   float hz=linearZ(texture(depth,centre).r);
   float protect=1.-smoothstep(.025,.12,(hz-z)/max(z,.3));
   c=encode(aces(mix(texture(sharp,p).rgb,f.rgb,f.a*protect)));}
@@ -211,8 +211,8 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky,
  const copy=mat(copyDepthFragment,{picture:{value:null},depth:{value:null}},true);
  const u={bathSteam:{value:0},picture:{value:null},depth:{value:null},wetHeight:{value:null},bubbleField:{value:null},bubbleWeight:{value:0},washNoise:{value:surface.normalA},bottomSoil:{value:surface.bottomSoil},resolution:{value:new T.Vector2()},fieldSize:{value:new T.Vector2()},inverseProjection:{value:new T.Matrix4()},cameraWorld:{value:new T.Matrix4()},nearPlane:{value:.1},farPlane:{value:480},focusDist:{value:2.58},focalMM:{value:2.478},fNumber:{value:2.8},sensorHeight:{value:3.6},dofEnabled:{value:1},cocField:{value:null},wet:{value:0},waterActive:{value:0},washWeight:{value:0},washAge:{value:0},exiting:{value:0},time:{value:0},level:{value:0},exitFlash:{value:0},eye:{value:new T.Vector3()},screenLight:{value:new T.Vector3(-.42,.67,.83)},flareSun:flare?.uniforms.uSun||{value:new T.Vector2()},flareStrength:flare?.uniforms.uStrength||{value:0},flareAspect:flare?.uniforms.uAspect||{value:4/3}};
  const cocPass=mat(cocFragment,Object.fromEntries(['depth','focalMM','fNumber','sensorHeight','focusDist','nearPlane','farPlane','dofEnabled','resolution'].map(k=>[k,u[k]]))),dilateU={coc:{value:null},direction:{value:new T.Vector2()},resolution:u.resolution},dilatePass=mat(dilateFragment,dilateU);
- const fused=mat(fusedFragment,u),resolve=mat(resolveFragment,{...u,fused:{value:null},sharp:{value:null},exposure:{value:1.23},uiPicture:{value:null},hasUI:{value:false},uiOnly:{value:false},displayMode:{value:0}}),quad=new T.Mesh(geometry,copy);quad.frustumCulled=false;scene.add(quad);
- let opaque=null,water=null,half=null,cocA=null,cocB=null,bottleTarget=null,width=0,height=0,clock=0;const waterMeshes=new Set(),visibility=createWaterVisibility();
+ const fused=mat(fusedFragment,u),resolve=mat(resolveFragment,{...u,fused:{value:null},fusedSize:{value:new T.Vector2()},sharp:{value:null},exposure:{value:1.23},uiPicture:{value:null},hasUI:{value:false},uiOnly:{value:false},displayMode:{value:0}}),quad=new T.Mesh(geometry,copy);quad.frustumCulled=false;scene.add(quad);
+ let opaque=null,water=null,half=null,wetComposite=null,cocA=null,cocB=null,bottleTarget=null,width=0,height=0,clock=0;const waterMeshes=new Set(),visibility=createWaterVisibility();
  // Keep the tiny sky cubemap warm even offscreen: returning to a lake must
  // not reveal stale reflections. Only full-screen water work is culled.
  const stats={internalWidth:0,internalHeight:0,compositeWidth:0,compositeHeight:0,fusedPasses:0,depthCopies:0,taps:16,cocPasses:0,waterVisible:false,waterSkips:0};
@@ -221,7 +221,7 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky,
   cocA=target(half.width,half.height,false);cocB=target(half.width,half.height,false);
   stats.internalWidth=w;stats.internalHeight=h;stats.compositeWidth=half.width;stats.compositeHeight=half.height;u.resolution.value.set(w,h);surface.uniforms.size.value.set(w,h);
  }
- function disposeTargets(){opaque?.dispose();water?.dispose();half?.dispose();cocA?.dispose();cocB?.dispose();bottleTarget?.dispose();opaque=water=half=cocA=cocB=bottleTarget=null;width=height=0;}
+ function disposeTargets(){opaque?.dispose();water?.dispose();half?.dispose();wetComposite?.dispose();cocA?.dispose();cocB?.dispose();bottleTarget?.dispose();opaque=water=half=wetComposite=cocA=cocB=bottleTarget=null;width=height=0;}
  function attach(chunk){bottleVisibility.attach(chunk);surface.attach(chunk);focus.attach(chunk);chunk.group.traverse(o=>{if(o.userData.waterSurface)waterMeshes.add(o);});}
  function detach(chunk){bottleVisibility.detach(chunk);focus.detach(chunk);chunk.group.traverse(o=>{if(o.userData.waterSurface){waterMeshes.delete(o);if(o.userData.originalWaterMaterial)o.material=o.userData.originalWaterMaterial;}});}
  function update(dt,camera,state,active,locked,color,sun,mist,level){if(active)clock+=dt;focus.update(dt,camera,active,locked,Math.hypot(state?.velocity?.x||0,state?.velocity?.z||0));camera.updateMatrixWorld();surface.update(clock,camera,color,sun,0);u.time.value=clock;u.level.value=level||0;u.focusDist.value=focus.result.distance;u.focalMM.value=focus.result.focalLength;u.dofEnabled.value=locked?0:1;u.nearPlane.value=camera.near;u.farPlane.value=camera.far;u.eye.value.copy(camera.position);u.inverseProjection.value.copy(camera.projectionMatrixInverse);u.cameraWorld.value.copy(camera.matrixWorld);
@@ -231,7 +231,7 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky,
  }
  function draw(m,target){quad.material=m;renderer.setRenderTarget(target);renderer.render(scene,screenCamera);}
  function render(world,camera,beforeScene,w,h,output,uiTexture=null,mode=0){allocate(w,h);const saved=renderer.getRenderTarget(),auto=renderer.autoClear,mask=camera.layers.mask,bg=world.background;
-  try{resolve.uniforms.uiOnly.value=false;resolve.uniforms.uiPicture.value=uiTexture;resolve.uniforms.hasUI.value=!!uiTexture;resolve.uniforms.displayMode.value=mode;beforeScene?.();world.userData.showerWater?.prepare(renderer);if(!world.userData.noAtmosphere)sky?.userData.renderClouds?.(camera,w,h);const visibleWater=!world.userData.noAtmosphere&&visibility.any(waterMeshes,camera),visibleBottles=!world.userData.noAtmosphere&&bottleVisibility.any(camera);stats.waterVisible=visibleWater;stats.bottleGlassVisible=visibleBottles;if(!visibleWater)stats.waterSkips++;if(environment&&!world.userData.noAtmosphere&&(waterMeshes.size||visibleBottles||inspection.active)){environment.update(clock,camera);surface.uniforms.environmentReady.value=environment.ready?1:0;if(environment.ready)almondEnvironment.value=environment.texture;}renderer.autoClear=true;camera.layers.set(0);renderer.setRenderTarget(opaque);renderer.render(world,camera);let source=opaque;
+  try{resolve.uniforms.uiOnly.value=false;resolve.uniforms.uiPicture.value=uiTexture;resolve.uniforms.hasUI.value=!!uiTexture;resolve.uniforms.displayMode.value=mode;beforeScene?.();world.userData.prepareMainVfx?.(camera,w,h);world.userData.showerWater?.prepare(renderer);if(!world.userData.noAtmosphere)sky?.userData.renderClouds?.(camera,w,h);const visibleWater=!world.userData.noAtmosphere&&visibility.any(waterMeshes,camera),visibleBottles=!world.userData.noAtmosphere&&bottleVisibility.any(camera);stats.waterVisible=visibleWater;stats.bottleGlassVisible=visibleBottles;if(!visibleWater)stats.waterSkips++;if(environment&&!world.userData.noAtmosphere&&(waterMeshes.size||visibleBottles||inspection.active)){environment.update(clock,camera);surface.uniforms.environmentReady.value=environment.ready?1:0;if(environment.ready)almondEnvironment.value=environment.texture;}renderer.autoClear=true;camera.layers.set(0);renderer.setRenderTarget(opaque);renderer.render(world,camera);let source=opaque;
    if(visibleWater){copy.uniforms.picture.value=opaque.texture;copy.uniforms.depth.value=opaque.depthTexture;draw(copy,water);stats.depthCopies++;
     surface.uniforms.sceneColor.value=opaque.texture;surface.uniforms.sceneDepth.value=opaque.depthTexture;
     renderer.autoClear=false;world.background=null;camera.layers.set(2);renderer.setRenderTarget(water);renderer.render(world,camera);source=water;}
@@ -240,6 +240,7 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky,
    if(visibleBottles){if(!bottleTarget)bottleTarget=target(w,h,true);renderer.autoClear=true;copy.uniforms.picture.value=source.texture;copy.uniforms.depth.value=source.depthTexture;draw(copy,bottleTarget);bottleVisibility.bind(source.texture,w,h,camera);renderer.autoClear=false;world.background=null;camera.layers.set(GLASS_LAYER);renderer.setRenderTarget(bottleTarget);renderer.render(world,camera);source=bottleTarget;}
    world.background=bg;camera.layers.mask=mask;renderer.autoClear=true;
    let picture=world.userData.noAtmosphere?source.texture:(fog?.compose(source,camera,{waterActive:waterState.hasWater,level:u.level.value})||source.texture);
+   if(world.userData.springVolume)picture=world.userData.springVolume.compose(renderer,picture,source.depthTexture,camera,w,h);
    if(inspection.active){
     // Ping-pong the three existing world targets. Preserve source.depthTexture
     // for the lens and never allocate a pair of fullscreen inspection buffers.
@@ -252,11 +253,17 @@ export function createWaterPipeline(renderer,{ripples,lens,waterState,flare,sky,
     }
     renderer.autoClear=true;
    }
-   u.picture.value=picture;u.depth.value=source.depthTexture;if(!waterState.wet||waterState.washWeight>0||!u.wetHeight.value)u.wetHeight.value=lens.prepareField();u.fieldSize.value.set(lens.physics.fieldWidth,lens.physics.fieldHeight);u.wet.value=lens.wetWeight;
+   u.picture.value=picture;u.depth.value=source.depthTexture;if(!waterState.wet||waterState.washWeight>0||!u.wetHeight.value)u.wetHeight.value=lens.prepareField();u.fieldSize.value.set(u.wetHeight.value.image.width,u.wetHeight.value.image.height);u.wet.value=lens.wetWeight;
    draw(cocPass,cocA);dilateU.coc.value=cocA.texture;dilateU.direction.value.set(1,0);draw(dilatePass,cocB);
    dilateU.coc.value=cocB.texture;dilateU.direction.value.set(0,1);draw(dilatePass,cocA);u.cocField.value=cocA.texture;stats.cocPasses+=3;
-   draw(fused,half);stats.fusedPasses++;
-   resolve.uniforms.fused.value=half.texture;resolve.uniforms.sharp.value=picture;resolve.uniforms.exposure.value=renderer.toneMappingExposure;draw(resolve,output);
+   // Lens silhouettes are resolved at scene resolution while physically wet.
+   // Dry DOF, steam and other ordinary frames retain the existing half-size pass.
+   const wetOptics=u.wet.value>.001||u.washWeight.value>.001||u.bubbleWeight.value>.001;
+   if(wetOptics&&!wetComposite)wetComposite=target(w,h,false);
+   const composite=wetOptics?wetComposite:half;draw(fused,composite);stats.fusedPasses++;
+   stats.compositeWidth=composite.width;stats.compositeHeight=composite.height;
+   resolve.uniforms.fusedSize.value.set(composite.width,composite.height);
+   resolve.uniforms.fused.value=composite.texture;resolve.uniforms.sharp.value=picture;resolve.uniforms.exposure.value=renderer.toneMappingExposure;draw(resolve,output);
   }finally{world.background=bg;camera.layers.mask=mask;renderer.autoClear=auto;renderer.setRenderTarget(saved);}
  }
  function renderUI(w,h,output,texture,mode){allocate(w,h);resolve.uniforms.uiOnly.value=true;resolve.uniforms.hasUI.value=!!texture;resolve.uniforms.uiPicture.value=texture;resolve.uniforms.displayMode.value=mode;draw(resolve,output);}

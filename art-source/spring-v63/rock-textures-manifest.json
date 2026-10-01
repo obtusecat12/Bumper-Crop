@@ -1,0 +1,49 @@
+{
+  "generation_mode": "built-in image_gen; four distinct separate tool calls",
+  "assets": [
+    {
+      "name": "limestone-dry",
+      "path": "/workspace/scratch/85111d38430a/assets-v63/rock-textures/limestone-dry.png",
+      "native_source": "/workspace/scratch/85111d38430a/generated_images/exec-46da324f-e085-4955-a007-b2c649ce15d8.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "sha256": "104f5226cd44f4eada21a467562999a3e6f9175cfd157a2e003c492caf2e2f01",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nmaterial: dry warm-gray sedimentary limestone, weathered horizontal layers and naturally eroded cracks, muted warm gray and chalk tones, fine worn stone grains, subtle natural variations.\nasset: a single seamless square tileable albedo texture for a wet eroded limestone hot-spring cave in a game.\nstyle: photographic PS2 / Source-era texture source, soft photographic detail, realistic mineral structure, slightly low-resolution softness, not pixel art.\ncomposition: edge-to-edge material surface only, flat orthographic close-up. One material texture fills the entire square. No scene, object silhouette, background, perspective, borders, atlas or collage.\nlighting: flat diffuse neutral lighting suitable for albedo; no directional baked shadow, no direct baked glare or hot spots.\naspect ratio: 1:1.\nAvoid: text, logos, artificial tiling grid, painted look, pixel art, excessive yellow, oversharpening, excessive highlights or glare.",
+      "visual_validation": "Inspected: photographic softened material, edge-to-edge surface, neutral diffuse lighting, no scene/text/atlas/pixel-art."
+    },
+    {
+      "name": "limestone-wet",
+      "path": "/workspace/scratch/85111d38430a/assets-v63/rock-textures/limestone-wet.png",
+      "native_source": "native built-in image_gen PNG returned as data URL, decoded without modification",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "sha256": "a423b90078df6168804c4e033d79d3bef9a2a01d9c69ae8d617414b31d19acba",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nmaterial: dark wet limestone with deep green mineral and moss staining and fine calcite veins. Irregular weathered cave-rock strata, dark olive charcoal and gray-green mineral surfaces, subdued pale calcite vein details. Moist stone darkness expressed in color only, no direct baked glare.\nasset: a single seamless square tileable albedo texture for a wet eroded limestone hot-spring cave in a game.\nstyle: photographic PS2 / Source-era texture source, soft photographic detail, realistic mineral structure, slightly low-resolution softness, not pixel art.\ncomposition: edge-to-edge material surface only, flat orthographic close-up. One material texture fills the entire square. No scene, object silhouette, background, perspective, borders, atlas or collage.\nlighting: flat diffuse neutral lighting suitable for albedo; no directional baked shadow, no direct baked glare or hot spots.\naspect ratio: 1:1.\nAvoid: text, logos, artificial tiling grid, painted look, pixel art, excessive yellow, oversharpening, excessive highlights or glare.",
+      "visual_validation": "Inspected: photographic softened material, edge-to-edge surface, neutral diffuse lighting, no scene/text/atlas/pixel-art."
+    },
+    {
+      "name": "riverbed-pebbles",
+      "path": "/workspace/scratch/85111d38430a/assets-v63/rock-textures/riverbed-pebbles.png",
+      "native_source": "native built-in image_gen PNG returned as data URL, decoded without modification",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "sha256": "97a220f394e5b8020f916d3691c26638641f5fd84077c99432273031764d47c8",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nmaterial: rough irregular wet pebbles and gravel for a natural cave riverbed, varied small rounded and angular stones densely packed with natural fine sediment between stones. Muted charcoal, dark gray, gray-brown and restrained olive tones, moist color saturation with no direct baked glare.\nasset: a single seamless square tileable albedo texture for a wet eroded limestone hot-spring cave in a game.\nstyle: photographic PS2 / Source-era texture source, soft photographic detail, realistic mineral structure, slightly low-resolution softness, not pixel art.\ncomposition: edge-to-edge material surface only, flat orthographic close-up. One material texture fills the entire square. No scene, object silhouette, background, perspective, borders, atlas or collage.\nlighting: flat diffuse neutral lighting suitable for albedo; no directional baked shadow, no direct baked glare or hot spots.\naspect ratio: 1:1.\nAvoid: text, logos, artificial tiling grid, painted look, pixel art, excessive yellow, oversharpening, excessive highlights or glare.",
+      "visual_validation": "Inspected: photographic softened material, edge-to-edge surface, neutral diffuse lighting, no scene/text/atlas/pixel-art."
+    },
+    {
+      "name": "tufa-step",
+      "path": "/workspace/scratch/85111d38430a/assets-v63/rock-textures/tufa-step.png",
+      "native_source": "/workspace/scratch/85111d38430a/generated_images/exec-f905c7fd-c0a0-4ad6-87a5-ffbbda45f90a.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "sha256": "63a5839614070cd021fdcab85005980fbb7ee2ca75c6a7bbdd436267829ea098",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nmaterial: coarse pale tufa limestone used for natural hot-spring stone steps, porous and pitted eroded calcite crust, irregular rough grain and small worn cavities, pale gray-beige chalk mineral tones. Surface texture only, no actual modeled steps or scene.\nasset: a single seamless square tileable albedo texture for a wet eroded limestone hot-spring cave in a game.\nstyle: photographic PS2 / Source-era texture source, soft photographic detail, realistic mineral structure, slightly low-resolution softness, not pixel art.\ncomposition: edge-to-edge material surface only, flat orthographic close-up. One material texture fills the entire square. No scene, object silhouette, background, perspective, borders, atlas or collage.\nlighting: flat diffuse neutral lighting suitable for albedo; no directional baked shadow, no direct baked glare or hot spots.\naspect ratio: 1:1.\nAvoid: text, logos, artificial tiling grid, painted look, pixel art, excessive yellow, oversharpening, excessive highlights or glare.",
+      "visual_validation": "Inspected: photographic softened material, edge-to-edge surface, neutral diffuse lighting, no scene/text/atlas/pixel-art."
+    }
+  ]
+}

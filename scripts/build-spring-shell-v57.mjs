@@ -3,8 +3,8 @@
 import fs from 'node:fs';
 import * as T from '../dist/vendor/three.module.min.js';
 import {mergeVertices} from '../dist/vendor/BufferGeometryUtils.js';
-import {wallPoint,roofPoint,roofHeight} from '../dist/level27-layout.js?v=59';
-const lo=[-2.9,-1.12,-10.65],hi=[5.8,4.9,3.0],h=.12;
+import {wallPoint,roofPoint,roofHeight,ANNEX,streamPath} from '../dist/level27-layout.js?v=63';
+const lo=[-2.9,-1.12,-10.65],hi=[6.65,4.9,3.1],h=.085;
 const nx=Math.ceil((hi[0]-lo[0])/h)+1,ny=Math.ceil((hi[1]-lo[1])/h)+1,nz=Math.ceil((hi[2]-lo[2])/h)+1;
 const values=new Float32Array(nx*ny*nz),at=(i,j,k)=>(k*ny+j)*nx+i;
 const smax=(a,b,k)=>{const t=Math.max(0,Math.min(1,.5+.5*(a-b)/k));return b*(1-t)+a*t+k*t*(1-t);};
@@ -16,8 +16,13 @@ for(let k=0;k<nz;k++)for(let i=0;i<nx;i++){
  for(let j=0;j<ny;j++){
   const y=lo[1]+j*h,p=wallPoint(a,y),room=Math.min(Math.hypot(p[0],p[2])-r,ro-y,y+1.045);
   const tunnel=Math.min(half-Math.abs(x-tunnelCenter)+.023*Math.sin(y*17+z*3),arch-y,y-1.58,-1.00-z,z+10.52);
-  const ar=Math.hypot((x-3.12)/2.38,(z-.10)/2.64),annex=Math.min((1-ar)*2.25+(y>.5?.025*Math.sin(y*14+z*3):0),4.14+.22*Math.sin(x*1.1+z*.7)-y,y+.12);
-  let d=smax(smax(room,annex,.30),tunnel,.20);
+  const ar=Math.hypot((x-ANNEX.x)/ANNEX.rx,(z-ANNEX.z)/ANNEX.rz),annex=Math.min((1-ar)*2.25+(y>.5?.045*Math.sin(y*9+z*3)*Math.sin(x*5-y):0),3.62+.30*Math.sin(x*1.1+z*.7)-y,y-.15);
+  let d=smax(smax(room,annex,.24),tunnel,.20);
+  // Carve the landing/stair descent and creek bend into the same rock boundary.
+  const access=Math.min(.91-Math.abs(x-(3.4+.17*Math.sin(z))),3.96-y,y+.12,-.03-z,z+3.6);
+  const bankDoor=Math.min(.86-Math.abs(z),3.15-y,y+1.02,x-1.62,3.35-x);
+  d=smax(smax(d,access,.22),bankDoor,.18);
+  const creek=streamPath();for(let n=5;n<9;n++){const p=creek[n];const c=Math.min(.66-Math.hypot(x-p[0],z-p[2]),3.45-y,y-p[1]+.19);d=smax(d,c,.18);}
   const bore=Math.min(.165-Math.hypot(tangent*.71,(y-2.12)*1.3),ax+.22,.39-ax);
   const drainCenter=-.85-.48*Math.max(0,Math.min(1,(z-1.45)/1.1));
   const drain=Math.min(.135-Math.abs(x-drainCenter),.075-y,y+.20,z-1.52,2.68-z);

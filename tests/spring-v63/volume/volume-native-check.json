@@ -1,0 +1,10 @@
+{
+  "shaderPrograms": 4,
+  "simulationFrames": 121,
+  "meanAdvectedStateChange": 0.08212358504533768,
+  "minTransmittance": 0.013031110167503357,
+  "meanTransmittance": 0.9200539588928223,
+  "foregroundOcclusionMaxError": 0.0,
+  "glErrors": 0,
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)"
+}

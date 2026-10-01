@@ -1,13 +1,14 @@
 import * as T from './vendor/three.module.min.js';
 import {createLensMicrobubbles} from './lens-microbubbles.js?v=60';
-import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=60';
+import {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker} from './lens-physics.js?v=63';
 export {LensDropletPhysics,WaterEntryTracker,CameraWaterTracker};
 // V28: simulation + cached data texture only. All screen optics live in the
-// single half-resolution water-pipeline shader; no capture/blur ping-pong here.
+// shared water-pipeline shader; no capture/blur ping-pong here.
 export function createLensWater(renderer,{limit=64,rng=Math.random}={}){
  const microbubbles=createLensMicrobubbles(rng);
  const physics=new LensDropletPhysics(limit,rng),entry=new WaterEntryTracker(),cameraEntry=new CameraWaterTracker();
- let texture=null,normals=null,width=0,height=0,uploaded=-1,enabled=true,disposed=false,drainAge=99,washAge=99,submerged=false,raining=false;
+ const flatNormalWord=new Uint32Array(new Uint8Array([128,128,0,0]).buffer)[0];
+ let texture=null,normals=null,normalWords=null,width=0,height=0,uploaded=-1,enabled=true,disposed=false,drainAge=99,washAge=99,submerged=false,raining=false;
  const diagnostics={normalUploads:0,wetPasses:0,copies:0};
  function reset(){microbubbles.reset();physics.clear();entry.reset();cameraEntry.reset();uploaded=-1;drainAge=washAge=99;submerged=raining=false;}
  function runoff(power=1){
@@ -42,14 +43,17 @@ export function createLensWater(renderer,{limit=64,rng=Math.random}={}){
  }
  function fade(){const t=Math.max(0,Math.min(1,(drainAge-5.0)/2.5));return 1-t*t*(3-2*t);}
  function prepareField(){
-  if(!texture||width!==physics.fieldWidth||height!==physics.fieldHeight){texture?.dispose();width=physics.fieldWidth;height=physics.fieldHeight;normals=new Uint8Array(width*height*4);
-   for(let i=0;i<normals.length;i+=4){normals[i]=normals[i+1]=128;}
+  const opticalWidth=physics.aspect>=1?1024:Math.max(256,Math.round(1024*physics.aspect));
+  const opticalHeight=physics.aspect>=1?Math.max(256,Math.round(1024/physics.aspect)):1024;
+  if(!texture||width!==opticalWidth||height!==opticalHeight){texture?.dispose();width=opticalWidth;height=opticalHeight;normals=new Uint8Array(width*height*4);
+   normalWords=new Uint32Array(normals.buffer);normalWords.fill(flatNormalWord);
    texture=new T.DataTexture(normals,width,height,T.RGBAFormat,T.UnsignedByteType);texture.colorSpace=T.NoColorSpace;texture.minFilter=texture.magFilter=T.LinearFilter;texture.generateMipmaps=false;texture.flipY=false;texture.needsUpdate=true;uploaded=-1;}
-  if(physics.wet&&uploaded!==physics.version){physics.buildTexture(false);const src=physics.pixels,w=width,h=height,gx=.5*w/physics.aspect*.0135/31.75,gy=.5*h*.0135/31.75;
-   for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(y*w+x)*4;
-    const dx=-(src[(y*w+Math.min(w-1,x+1))*4]-src[(y*w+Math.max(0,x-1))*4])*gx;
-    const dy=-(src[(Math.max(0,y-1)*w+x)*4]-src[(Math.min(h-1,y+1)*w+x)*4])*gy;
-    const inv=1/Math.sqrt(1+dx*dx+dy*dy);normals[i]=Math.round(128+dx*inv*127);normals[i+1]=Math.round(128+dy*inv*127);normals[i+2]=src[i+2];normals[i+3]=src[i+1];
+  if(physics.wet&&uploaded!==physics.version){const field=physics.buildOpticalField(width,height),H=field.heightField,C=field.coverageField,w=width,h=height,gx=.5*w/physics.aspect*.0135,gy=.5*h*.0135;normalWords.fill(flatNormalWord);
+   for(let y=0;y<h;y++)for(let x=0;x<w;x++){const index=y*w+x,i=index*4;
+    if(C[index]<=0)continue;
+    const dx=-(H[y*w+Math.min(w-1,x+1)]-H[y*w+Math.max(0,x-1)])*gx;
+    const dy=-(H[Math.max(0,y-1)*w+x]-H[Math.min(h-1,y+1)*w+x])*gy;
+    const inv=1/Math.sqrt(1+dx*dx+dy*dy);normals[i]=Math.round(128+dx*inv*127);normals[i+1]=Math.round(128+dy*inv*127);normals[i+2]=Math.round(Math.min(1,Math.abs(H[index])/3)*255);normals[i+3]=Math.round(Math.max(0,Math.min(1,C[index]))*255);
    }texture.needsUpdate=true;uploaded=physics.version;diagnostics.normalUploads++;
   }return texture;
  }

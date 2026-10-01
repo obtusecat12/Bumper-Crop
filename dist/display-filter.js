@@ -97,7 +97,8 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
   epoch++;readback.cancel();if(readJob){readJob.slot.busy=false;readJob=null;}
   mode=next;if(mode!=='vhs')stopWorkers();outputWidth=w;outputHeight=h;const scale=Math.min(1,720/h);width=Math.max(2,Math.round(w*scale/2)*2);height=Math.max(2,Math.round(h*scale/2)*2);lastCapture=-Infinity;lastOutput=0;displayed=-1;
   source?.dispose();texture?.dispose();internal?.dispose();source=texture=null;
-  internal=new T.WebGLRenderTarget(width,height,{depthBuffer:false,minFilter:T.NearestFilter,magFilter:T.NearestFilter});internal.texture.colorSpace=T.NoColorSpace;
+  const presentationFilter=mode==='native'?T.LinearFilter:T.NearestFilter;
+  internal=new T.WebGLRenderTarget(width,height,{depthBuffer:false,minFilter:presentationFilter,magFilter:presentationFilter});internal.texture.colorSpace=T.NoColorSpace;
   spare=null;values.ms=values.latency=null;values.fps=0;
   if(mode==='vhs'){failed=false;startWorkers();}
  }

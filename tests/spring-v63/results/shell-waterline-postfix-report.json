@@ -1,0 +1,137 @@
+{
+  "method": "Decoded mesh; y=0 triangle intersection; polygon boundary integration, endpoints rounded to 1e-8m.",
+  "layout_sha256": "e7750b9ff078d84de9695891c3b3a9b777a1c0889934ebdfcb47d9f53cb3320d",
+  "shell_sha256": "70ff5defd2cba1542046d0ce5ce9f0a8a0bedaa04ca2fa9354e94cf2bb19ac2e",
+  "vertices": 184267,
+  "triangles": 368530,
+  "waterline_segments": 1393,
+  "survey_area_m2": 18.57999999999999,
+  "air_intersection_area_m2": 18.57999999999999,
+  "solid_stone_inside_survey_at_y0_m2": 0.0,
+  "loss_percent": 0.0,
+  "maximum_tested_contour_vertex_intrusion": null,
+  "east_x_gt_1p5_maximum_tested_contour_vertex_intrusion": null,
+  "samples": [
+    {
+      "x": -2.1155681,
+      "z": -1.054441811,
+      "in_survey": true,
+      "air_at_y0": true,
+      "shell_hits_below_1m": [
+        {
+          "triangle": 199135,
+          "y": -0.1094949,
+          "normal_y": 0.98435
+        },
+        {
+          "triangle": 199435,
+          "y": 0.0814399,
+          "normal_y": -0.97532
+        }
+      ]
+    },
+    {
+      "x": 1.5544319,
+      "z": -1.824441811,
+      "in_survey": true,
+      "air_at_y0": true,
+      "shell_hits_below_1m": [
+        {
+          "triangle": 166962,
+          "y": -0.4827687,
+          "normal_y": -0.31362
+        },
+        {
+          "triangle": 166963,
+          "y": -0.4952918,
+          "normal_y": 0.31628
+        },
+        {
+          "triangle": 167091,
+          "y": -0.1426365,
+          "normal_y": 0.59148
+        },
+        {
+          "triangle": 167380,
+          "y": 0.1120385,
+          "normal_y": -0.51025
+        },
+        {
+          "triangle": 167534,
+          "y": 0.2268849,
+          "normal_y": 0.43392
+        },
+        {
+          "triangle": 167573,
+          "y": 0.2501437,
+          "normal_y": -0.5286
+        },
+        {
+          "triangle": 167705,
+          "y": 0.5487382,
+          "normal_y": 0.82638
+        },
+        {
+          "triangle": 167802,
+          "y": 0.7335076,
+          "normal_y": -0.73203
+        },
+        {
+          "triangle": 167973,
+          "y": 0.975225,
+          "normal_y": 0.7715
+        }
+      ]
+    },
+    {
+      "x": 2.4,
+      "z": 0,
+      "in_survey": true,
+      "air_at_y0": true,
+      "shell_hits_below_1m": [
+        {
+          "triangle": 242682,
+          "y": -1.0734131,
+          "normal_y": 0.93568
+        }
+      ]
+    },
+    {
+      "x": 2.46,
+      "z": 0.5,
+      "in_survey": true,
+      "air_at_y0": true,
+      "shell_hits_below_1m": [
+        {
+          "triangle": 261175,
+          "y": -1.0324964,
+          "normal_y": 0.99313
+        }
+      ]
+    },
+    {
+      "x": 1.705,
+      "z": 1.575,
+      "in_survey": true,
+      "air_at_y0": true,
+      "shell_hits_below_1m": [
+        {
+          "triangle": 303428,
+          "y": -1.045,
+          "normal_y": 1.0
+        },
+        {
+          "triangle": 304297,
+          "y": 0.4096867,
+          "normal_y": -0.90474
+        },
+        {
+          "triangle": 304364,
+          "y": 0.4121186,
+          "normal_y": 0.29969
+        }
+      ]
+    }
+  ],
+  "caveat": "Geometry only. Overhead walls/ledges are not automatically shoreline failures. Full planar area assumes one simple air loop with the origin inside; regeneration that changes this is rejected."
+}

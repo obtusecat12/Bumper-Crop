@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import * as T from '../../dist/vendor/three.module.min.js';
+import {createRequire} from 'node:module';
+const {createCanvas,loadImage}=createRequire(import.meta.url)(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/@napi-rs/canvas');globalThis.document={createElement:()=>createCanvas(1,1)};
+const {initializeSpringTextures}=await import('../../dist/level27-materials.js?v=63');
+await initializeSpringTextures(async(url,w,h)=>{const im=await loadImage(url.pathname),c=createCanvas(w,h);c.getContext('2d').drawImage(im,0,0,w,h);return{data:new Uint8Array(c.getContext('2d').getImageData(0,0,w,h).data),width:w,height:h};});
+const {createLevel27}=await import('../../dist/level27-scene.js?v=63');
+const spring=createLevel27(),camera=new T.PerspectiveCamera(75,16/9,.08,40);camera.position.set(.1,.98,1.1);camera.lookAt(.4,1,-1.5);camera.updateMatrixWorld();
+let target=null,draws=0;const renderer={extensions:{has:()=>true},xr:{enabled:false},autoClear:true,shadowMap:{autoUpdate:true},clippingPlanes:[],getRenderTarget:()=>target,setRenderTarget(t){target=t;},render(scene){draws++;const targets=new Set([target?.texture,target?.depthTexture,...(target?.textures||[])]);targets.delete(undefined);scene.traverseVisible(o=>{for(const mat of (Array.isArray(o.material)?o.material:[o.material]))for(const u of Object.values(mat?.uniforms||{}))assert(!targets.has(u.value),'Read/write feedback '+o.name);});}};
+for(let frame=0;frame<4;frame++){spring.update(frame/60);spring.capture(renderer,camera);spring.scene.userData.prepareMainVfx(camera,1280,720);spring.scene.traverse(o=>{if(o.material?.uniforms?.sceneColor)assert.deepEqual(o.material.uniforms.resolution.value.toArray(),[1280,720]);});const source=new T.DataTexture(new Uint8Array(16),2,2),depth=new T.DepthTexture(2,2);spring.scene.userData.springVolume.compose(renderer,source,depth,camera,1280,720);assert.equal(target,null);assert.equal(renderer.autoClear,true);assert.equal(renderer.clippingPlanes.length,0);source.dispose();depth.dispose();}
+assert(draws>20);spring.dispose();console.log('Capture/volume/main VFX: no sampled attachment feedback, correct 1280×720 viewport, state restored across four frames.',{draws});

@@ -1,0 +1,31 @@
+{
+  "mode": "built-in image_gen",
+  "dimensions": "1254x1254 native PNG",
+  "notes": "Four distinct separate square generated albedo images, visually inspected. No collage, no pixel art. Requested seamless four-edge tiling.",
+  "assets": [
+    {
+      "name": "aged-copper-verdigris",
+      "filename": "aged-copper-verdigris.png",
+      "nativeSource": "/workspace/scratch/85111d38430a/generated_images/exec-1ba5f026-7ad6-476b-b5c6-3fe02bab9170.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: square seamless albedo texture for caged mine lamps\nmaterial: aged copper bronze with verdigris corrosion\nsurface details: mottled oxidized bronze, muted turquoise and dark green verdigris patches, old weathered copper showing between corrosion, subtle pitting\nstyle: PS2 and Source-era photographic game material with soft natural detail; not pixel art\nview: flat straight-on material texture filling the entire frame; no lamp or other modeled object\nlighting: even neutral diffuse illumination; flat albedo without baked shadows, specular highlights, or directional light\naspect ratio: 1:1\nrecommendation: continuous seamless tiling across all four edges, natural irregular scale, no border or center focal point\nAvoid: text, labels, watermark, vignette, glare, excessive yellow, oversharpening, grids, collage, multiple panels"
+    },
+    {
+      "name": "handworked-ladle-wood",
+      "filename": "handworked-ladle-wood.png",
+      "nativeSource": "/workspace/scratch/85111d38430a/assets-v63/prop-textures/handworked-ladle-wood.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: square seamless albedo texture for an old hand-worked wooden ladle\nmaterial: aged old wood with longitudinal grain and naturally water-darkened pores\nsurface details: warm weathered brown wood, long irregular fibers running vertically, darkened open pores, subtle worn hand-worked unevenness\nstyle: PS2 and Source-era photographic game material with soft natural detail; not pixel art\nview: flat straight-on material texture filling the entire frame; no ladle silhouette or modeled object\nlighting: even neutral diffuse illumination; flat albedo without baked shadows, specular highlights, or directional light\naspect ratio: 1:1\nrecommendation: continuous seamless tiling across all four edges, grain naturally continues at boundaries, no border or center focal point\nAvoid: planks, seams, text, labels, watermark, vignette, glare, excessive yellow, oversharpening, grids, collage, multiple panels"
+    },
+    {
+      "name": "worn-cotton-terry",
+      "filename": "worn-cotton-terry.png",
+      "nativeSource": "/workspace/scratch/85111d38430a/assets-v63/prop-textures/worn-cotton-terry.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: square seamless albedo texture for an off-white cotton terry towel\nmaterial: cotton terry with woven loops and subtle beige wear\nsurface details: dense small cotton loops, soft irregular woven texture, off-white ivory color, subtle beige areas of age and wear\nstyle: PS2 and Source-era photographic game material with soft natural detail; not pixel art\nview: flat straight-on material texture filling the entire frame; no towel silhouette or modeled object\nlighting: even neutral diffuse illumination; flat albedo without baked shadows, specular highlights, or directional light\naspect ratio: 1:1\nrecommendation: continuous seamless tiling across all four edges, no border or center focal point\nAvoid: folds, creases, draping, hem, embroidery, decorative bands, text, labels, watermark, vignette, glare, excessive yellow, oversharpening, grids, collage, multiple panels"
+    },
+    {
+      "name": "mineral-waterline-scale",
+      "filename": "mineral-waterline-scale.png",
+      "nativeSource": "/workspace/scratch/85111d38430a/assets-v63/prop-textures/mineral-waterline-scale.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: square seamless albedo texture for mineral waterline scale crust on wet stone\nmaterial: dark stone with pale calcite crust and deep green mineral film\nsurface details: irregular crusty mineral accretions, chalky pale calcite against dark wet mineral stone, patchy deep green film\nstyle: PS2 and Source-era photographic game material with soft natural detail; not pixel art\nview: flat straight-on material texture filling the entire frame; no modeled object\nlighting: even neutral diffuse illumination; flat albedo without baked shadows, specular highlights, or directional light\naspect ratio: 1:1\nrecommendation: continuous seamless tiling across all four edges, distributed scale and film with no border or center focal point\nAvoid: standing water, reflection, plant leaves, moss clumps, text, labels, watermark, vignette, glare, excessive yellow, oversharpening, grids, collage, multiple panels"
+    }
+  ]
+}

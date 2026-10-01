@@ -320,22 +320,24 @@ export class LensDropletPhysics{
   while(this.accumulator+1e-10>=STEP){this._tick(STEP,state);this.accumulator-=STEP;}
   if(this.accumulator<0)this.accumulator=0;
  }
- _cap(d){
-  const w=this.fieldWidth,h=this.fieldHeight,r=d.r*RADIUS,stretch=clamp(d.stretch,1,1.5);
+ _cap(d,field=this){
+  const w=field.fieldWidth,h=field.fieldHeight,r=d.r*RADIUS,stretch=clamp(d.stretch,1,1.5);
   const ax=Math.sin(d.angle),ay=Math.cos(d.angle),extent=r*stretch;
   const x0=Math.max(0,Math.floor((d.x-extent/this.aspect)*w)),x1=Math.min(w-1,Math.ceil((d.x+extent/this.aspect)*w));
   const y0=Math.max(0,Math.floor((d.y-extent)*h)),y1=Math.min(h-1,Math.ceil((d.y+extent)*h));
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
    const dx=((x+.5)/w-d.x)*this.aspect,dy=(y+.5)/h-d.y;
    const along=dx*ax+dy*ay,cross=dx*ay-dy*ax;
-   const q=(cross/r)**2+(along/(r*stretch))**2;if(q>=1)continue;
-   this.heightField[y*w+x]+=d.r*.68*Math.sqrt(1-q);
+   const q=(cross/r)**2+(along/(r*stretch))**2,footprint=1/h;
+   const coverage=clamp(.5+(1-Math.sqrt(q))*r/footprint,0,1);if(coverage<=0)continue;
+   const i=y*w+x;field.heightField[i]+=d.r*.68*Math.sqrt(Math.max(0,1-q));
+   field.coverageField[i]=Math.max(field.coverageField[i],coverage);
   }
-  if(d.moving)this._tailCap(d);
+  if(d.moving)this._tailCap(d,field);
  }
- _tailCap(d){
+ _tailCap(d,field=this){
   const dx=(d.x-d.tailX)*this.aspect,dy=d.y-d.tailY,len=Math.hypot(dx,dy);if(len<.005)return;
-  const w=this.fieldWidth,h=this.fieldHeight,r=d.r*RADIUS,margin=r*.55;
+  const w=field.fieldWidth,h=field.fieldHeight,r=d.r*RADIUS,margin=r*.55;
   const x0=clamp(Math.floor((Math.min(d.x,d.tailX)-margin/this.aspect)*w),0,w-1),x1=clamp(Math.ceil((Math.max(d.x,d.tailX)+margin/this.aspect)*w),0,w-1);
   const y0=clamp(Math.floor((Math.min(d.y,d.tailY)-margin)*h),0,h-1),y1=clamp(Math.ceil((Math.max(d.y,d.tailY)+margin)*h),0,h-1);
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
@@ -345,15 +347,57 @@ export class LensDropletPhysics{
    const cross=(px*dy-py*dx)/len-bend;
    const neck=1-(1-d.neck)*Math.exp(-(((t-.30)/.16)**2));
    const radius=r*(.075+.49*t*t)*neck,q=(cross/Math.max(radius,.0005))**2;
-   if(q<1)this.heightField[y*w+x]+=d.r*.30*(.10+.9*t)*Math.sqrt(1-q)*neck;
+   const coverage=clamp(.5+(radius-Math.abs(cross))*h,0,1);if(coverage<=0)continue;
+   const i=y*w+x;field.heightField[i]+=d.r*.30*(.10+.9*t)*Math.sqrt(Math.max(0,1-q))*neck;
+   field.coverageField[i]=Math.max(field.coverageField[i],coverage);
   }
+ }
+ // Optical reconstruction is independent of the conserved 256-pixel film grid.
+ // Enlarging that simulation would change deposition/steering and its CPU cost.
+ buildOpticalField(width,height){
+  let field=this.opticalField;
+  if(!field||field.fieldWidth!==width||field.fieldHeight!==height){
+   const n=width*height;field=this.opticalField={fieldWidth:width,fieldHeight:height,heightField:new Float32Array(n),coverageField:new Float32Array(n),textureVersion:-1};
+  }
+  if(field.textureVersion!==this.version){this._buildTexture(field,false);field.textureVersion=this.version;}
+  return field;
  }
  buildTexture(includeSheet=true){
   if(this.textureVersion===this.version)return false;
-  const w=this.fieldWidth,h=this.fieldHeight,H=this.heightField,C=this.coverageField,out=this.pixels,filmScale=1/(this.cellArea*520);
-  C.fill(0);
-  for(let i=0;i<H.length;i++)H[i]=Math.max(0,Math.min(1.6,this.film[i]*filmScale)-.011);
-  for(const b of this.beads)this._cap(b);for(const d of this.drops)this._cap(d);
+  this._buildTexture(this,includeSheet);this.textureVersion=this.version;return true;
+ }
+ _buildTexture(field,includeSheet){
+  const w=field.fieldWidth,h=field.fieldHeight,H=field.heightField,C=field.coverageField,out=field.pixels;
+  const sw=this.fieldWidth,sh=this.fieldHeight,filmScale=1/(this.cellArea*520);
+  if(w===sw&&h===sh){
+   for(let i=0;i<H.length;i++){const value=Math.max(0,Math.min(1.6,this.film[i]*filmScale)-.011);H[i]=value;C[i]=clamp(value/.043,0,1);}
+  }else{
+   H.fill(0);C.fill(0);
+   // The footprint grid is sparse. Skip empty film, and cache the UV lookup.
+   if(this.filmTotal>0){
+    if(!field.sampleX){
+     field.sampleX=new Int32Array(sw+1);field.sampleY=new Int32Array(sh+1);field.sampleTX=new Float32Array(w);field.sampleTY=new Float32Array(h);
+     for(let x=0;x<=sw;x++)field.sampleX[x]=x===0?0:x===sw?w:Math.max(0,Math.min(w,Math.ceil((x+.5)*w/sw-.5)));
+     for(let y=0;y<=sh;y++)field.sampleY[y]=y===0?0:y===sh?h:Math.max(0,Math.min(h,Math.ceil((y+.5)*h/sh-.5)));
+     for(let x=0;x<w;x++){const q=clamp((x+.5)*sw/w-.5,0,sw-1);field.sampleTX[x]=q-Math.floor(q);}
+     for(let y=0;y<h;y++){const q=clamp((y+.5)*sh/h-.5,0,sh-1);field.sampleTY[y]=q-Math.floor(q);}
+    }
+    const visibleFilm=.011/filmScale;
+    for(let sy=0;sy<sh;sy++)for(let sx=0;sx<sw;sx++){
+     const nextX=Math.min(sw-1,sx+1),row0=sy*sw,row1=Math.min(sh-1,sy+1)*sw;
+     const a=this.film[row0+sx],b=this.film[row0+nextX],c=this.film[row1+sx],d=this.film[row1+nextX];
+     if(Math.max(a,b,c,d)<=visibleFilm)continue;
+     for(let y=field.sampleY[sy];y<field.sampleY[sy+1];y++){
+      const ty=field.sampleTY[y],left=a*(1-ty)+c*ty,right=b*(1-ty)+d*ty,row=y*w;
+      for(let x=field.sampleX[sx];x<field.sampleX[sx+1];x++){
+       const tx=field.sampleTX[x],value=Math.max(0,Math.min(1.6,(left*(1-tx)+right*tx)*filmScale)-.011),i=row+x;
+       H[i]=value;C[i]=clamp(value/.043,0,1);
+      }
+     }
+    }
+   }
+  }
+  for(const b of this.beads)this._cap(b,field);for(const d of this.drops)this._cap(d,field);
   const sheet=this.sheet;
   if(sheet.active&&includeSheet){
    const progress=sheet.submerged?0:clamp(sheet.age/sheet.life,0,1),threshold=-.18+progress*1.5;
@@ -377,14 +421,14 @@ export class LensDropletPhysics{
     C[i]=Math.max(C[i],clamp((1.52-q)*5,0,1)*(1-t*.78));
    }
   }
+  if(!out)return;
   for(let i=0;i<H.length;i++){
    const j=i*4,value=clamp(H[i],-3.9,3.9);
    // R is signed height (128 is zero), G coverage, B thickness; all non-color data.
    out[j]=clamp(Math.round(128+value*31.75),0,255);
-   out[j+1]=Math.round(clamp(Math.max(C[i],Math.max(0,value)/.043),0,1)*255);
+   out[j+1]=Math.round(clamp(C[i],0,1)*255);
    out[j+2]=Math.round(clamp(Math.abs(value)/3,0,1)*255);out[j+3]=255;
   }
-  this.textureVersion=this.version;return true;
  }
  mass(){let v=this.filmTotal;for(const d of this.drops)v+=d.volume;for(const b of this.beads)v+=b.volume;if(this.sheet.active)v+=this.sheet.volume;for(const r of this.rings)if(r.active)v+=r.volume;return v;}
 }

@@ -1,0 +1,27 @@
+{
+  "camera": "spring-bank",
+  "simulationFrames": 121,
+  "densityGain": 0.85,
+  "extinction": 2.55,
+  "volumeViews": [
+    {
+      "view": "reflection",
+      "minTransmission": 1.0,
+      "meanTransmission": 1.0,
+      "coveredFraction": 0.0
+    },
+    {
+      "view": "main",
+      "minTransmission": 1.0,
+      "meanTransmission": 1.0,
+      "coveredFraction": 0.0
+    }
+  ],
+  "glErrors": 0,
+  "renderSize": [
+    960,
+    640
+  ],
+  "source": "actual exported scene geometry, HDR water render, production volume shaders and actual scene lights",
+  "limitations": "Native GLES diagnostic; no browser UI, lens pass or runtime frame-rate measurement."
+}

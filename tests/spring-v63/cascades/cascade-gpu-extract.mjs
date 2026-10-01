@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+import * as T from '../../../dist/vendor/three.module.min.js';
+import {createSpringCascades,createFlowStream,shaderSources as s} from '../../../dist/spring-cascades-v63.js';
+import {streamPath,cascadePath} from '../../../dist/level27-layout.js';
+const paths=[streamPath().slice(5),cascadePath()].map(p=>p.map(q=>new T.Vector3(...q)));
+const cascade=createSpringCascades(T,{paths}),stream=createFlowStream(T,{points:streamPath().slice(0,6)});
+assert.equal(cascade.impacts.length,2);assert.equal(cascade.stats.particles,4096);
+let meshes=0,verts=0,triangles=0;for(const obj of [cascade.group,stream.group])obj.traverse(o=>{if(!o.isMesh)return;meshes++;assert.equal(o.layers.mask,1);const a=o.geometry.getAttribute('position');assert(Array.from(a.array).every(Number.isFinite));verts+=a.count;triangles+=o.geometry.index?o.geometry.index.count/3:a.count/3;});
+const camera=new T.PerspectiveCamera(64,1,.06,40),a=new T.Texture(),b=new T.Texture();cascade.bind(a,b,800,600,camera);stream.bind(a,b,800,600,camera);cascade.update(1,.016);stream.update(1);
+cascade.group.traverse(o=>{if(o.material){assert.equal(o.material.uniforms.sceneColor.value,a);assert.equal(o.material.uniforms.ready.value,1);}});
+const prefix='#version 300 es\n',src=fs.readFileSync(new URL('../../../dist/spring-cascades-v63.js',import.meta.url));
+const programs={sheet:{vertex:prefix+s.sheetVertex,fragment:prefix+s.sheetFragment},impact:{vertex:prefix+s.impactVertex,fragment:prefix+s.impactFragment},particles:{vertex:prefix+s.particleVertex,fragment:prefix+s.particleFragment},compute:{vertex:prefix+s.passVertex,fragment:prefix+s.computeFragment}};
+const fixture={source:'dist/spring-cascades-v63.js',sha256:crypto.createHash('sha256').update(src).digest('hex'),programs,impacts:cascade.impacts.map(p=>p.toArray()),geometry:{meshes,verts,triangles}};
+cascade.dispose();stream.dispose();
+console.log(JSON.stringify(process.argv.includes('--json')?fixture:{passed:true,source:fixture.source,source_sha256:fixture.sha256,meshes,verts,triangles,shaderPairs:Object.keys(programs)}));

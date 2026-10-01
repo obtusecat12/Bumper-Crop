@@ -1,3 +1,4 @@
+import {CAVE_PLAN,ANNEX,STAIRS,stairCenter,streamPath} from './level27-layout.js?v=63';
 import {exitPoint} from './exit-route.js?v=60';
 import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.js?v=60';
 import {BUILDING_TYPES} from './urban-buildings.js?v=60';
@@ -43,11 +44,11 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
  function relative(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,z:(e.clientY-r.top)*canvas.height/r.height};}
  function cursorPoint(p){return mapPoint(center,(p.x-canvas.width/2)/zoom,(p.z-canvas.height/2)/zoom);}
  function describe(p){const hit=tiles.hitTest?.(p.cx,p.cz,p.x,p.z);return `${hit?.label||'地面'} · ${pointText(p)}`;}
- function changeZoom(factor,anchor=null){if(busy)return;const old=zoom,next=Math.max(1,Math.min(8,zoom*factor));if(next===old)return;
+ function changeZoom(factor,anchor=null){if(busy)return;const old=zoom,next=Math.max(level===27?12:1,Math.min(level===27?80:8,zoom*factor));if(next===old)return;
   if(anchor){center=mapPoint(center,(anchor.x-canvas.width/2)*(1/old-1/next),(anchor.z-canvas.height/2)*(1/old-1/next));}
   zoom=next;dirty=true;modal.querySelector('.map-zoom').textContent=Math.round(zoom/1.5*100)+'%';tiles.cancelPending();
  }
- function teleport(p){if(busy)return;if(level===11){setStatus('Level 11 入口街区 · F2 返回麦田');return;}setStatus(`正在准备落点 · ${pointText(p)}`);onTeleport({...p,yaw:player?.yaw||0});}
+ function teleport(p){if(busy)return;if(level===27){setStatus('Level 27 · 沿溪流旁原石踏步返回入口');return;}if(level===11){setStatus('Level 11 入口街区 · F2 返回麦田');return;}setStatus(`正在准备落点 · ${pointText(p)}`);onTeleport({...p,yaw:player?.yaw||0});}
  miniButton.addEventListener('click',onOpen);modal.querySelector('.map-close').addEventListener('click',onClose);
  modal.querySelector('[data-map-action="out"]').onclick=()=>changeZoom(1/1.35);
  modal.querySelector('[data-map-action="in"]').onclick=()=>changeZoom(1.35);
@@ -89,8 +90,10 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   context.strokeStyle='#303735';context.lineWidth=13*scale;context.beginPath();for(let s=110;s<=430;s+=8){const p=xy(exitPoint(s));if(s===110)context.moveTo(...p);else context.lineTo(...p);}context.stroke();
   return 0;
  }
- function setLevel(value){if(level===value)return;level=value;tiles.dispose();if(level===10)tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});dirty=true;miniCenter=null;lastRevision=lastMapRevision=-1;modal.querySelector('.map-legend').hidden=level===11;setStatus(level===11?'Level 11 · 连续城市街网 · F2 前往金融街或广场':'点击地图可传送；湖泊会落在岸边。');}
+ function springPaint(context,c,w,h,scale){context.fillStyle='#18211d';context.fillRect(0,0,w,h);const x=p=>w/2+(p[0]-c.x)*scale,z=p=>h/2+(p[1]-c.z)*scale;context.fillStyle='#656956';context.beginPath();context.ellipse(x([ANNEX.x,0]),z([0,ANNEX.z]),ANNEX.rx*scale,ANNEX.rz*scale,0,0,Math.PI*2);context.fill();context.fillRect(x([1.1,0]),z([0,-10.4]),3.8*scale,7.4*scale);context.fillStyle='#276b60';context.beginPath();CAVE_PLAN.forEach((p,i)=>i?context.lineTo(x(p),z(p)):context.moveTo(x(p),z(p)));context.closePath();context.fill();context.strokeStyle='#9dc4ad';context.lineWidth=1.3;context.stroke();context.strokeStyle='#638d87';context.lineWidth=.60*scale;context.beginPath();streamPath().forEach((p,i)=>i?context.lineTo(x([p[0],0]),z([0,p[2]])):context.moveTo(x([p[0],0]),z([0,p[2]])));context.stroke();context.strokeStyle='#c0b494';context.lineWidth=1.2;for(let i=0;i<STAIRS.count;i++){const zz=STAIRS.start+(i+.5)*STAIRS.tread,xx=stairCenter(zz);context.beginPath();context.moveTo(x([xx-.53,0]),z([0,zz]));context.lineTo(x([xx+.53,0]),z([0,zz]));context.stroke();}return 0;}
+ function setLevel(value){if(level===value)return;level=value;zoom=level===27?28:1.5;tiles.dispose();if(level===10)tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});dirty=true;miniCenter=null;lastRevision=lastMapRevision=-1;modal.querySelector('.map-legend').hidden=level!==10;modal.querySelector('.map-header p').textContent=level===27?'岩体泉 · 泉池、石滩与返回通道':'拖动浏览 · 滚轮缩放 · 点击地面传送';setStatus(level===27?'Level 27 · 独立岩洞 · 沿溪流旁原石踏步返回':level===11?'Level 11 · 连续城市街网 · F2 前往金融街或广场':'点击地图可传送；湖泊会落在岸边。');}
  function terrainPaint(context,c,w,h,scale){
+  if(level===27)return springPaint(context,c,w,h,scale);
   if(level===11)return cityPaint(context,c,w,h,scale);
   context.fillStyle=uiPalette.mapBackground;context.fillRect(0,0,w,h);context.imageSmoothingEnabled=false;const list=visibleTiles(c,w,h,scale);let missing=0;
   for(const tile of list){const image=tiles.request(tile.cx,tile.cz,tile.d);if(image){context.drawImage(image,tile.x,tile.z,64*scale+.5,64*scale+.5);}else{missing++;context.strokeStyle=uiPalette.mapGrid;context.strokeRect(tile.x,tile.z,64*scale,64*scale);}}
@@ -101,7 +104,7 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
  }
  function paintMap(){const missing=terrainPaint(ctx,center,canvas.width,canvas.height,zoom);drawPlayer(ctx,center,canvas.width,canvas.height,zoom);
   const p=hover||keyboardTarget&&{x:canvas.width/2,z:canvas.height/2};if(p){ctx.strokeStyle=uiPalette.mapCursor;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x-8,p.z);ctx.lineTo(p.x+8,p.z);ctx.moveTo(p.x,p.z-8);ctx.lineTo(p.x,p.z+8);ctx.stroke();}
-  const metres=zoom>4?10:zoom>2?25:50;modal.querySelector('.map-scale i').style.width=(metres*zoom/canvas.width*surface.clientWidth)+'px';modal.querySelector('.map-scale span').textContent=metres+' m';loading.textContent=busy?'正在准备目的地…':missing?'正在绘制周边…':'';counts.mapPaints++;dirty=false;
+  const metres=level===27?2:zoom>4?10:zoom>2?25:50;modal.querySelector('.map-scale i').style.width=(metres*zoom/canvas.width*surface.clientWidth)+'px';modal.querySelector('.map-scale span').textContent=metres+' m';loading.textContent=busy?'正在准备目的地…':missing?'正在绘制周边…':'';counts.mapPaints++;dirty=false;
  }
  function update(state,now,visible,allowWork=true){if(disposed)return;player={cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw};if(mini.hidden!==(!visible||open))mini.hidden=!visible||open;
   if(!visible&&!open)return;
@@ -111,11 +114,11 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
    if(yaw!==lastYaw){miniCanvas.style.transform=`translate(-50%,-50%) rotate(${yaw}rad)`;const bearing=(Math.round(-yaw*180/Math.PI)+360)%360;mini.querySelector('.map-mini-bearing').textContent=`${['N','NE','E','SE','S','SW','W','NW'][Math.round(bearing/45)%8]} ${String(bearing).padStart(3,'0')}°`;
     cardinals.forEach((el,i)=>{const a=yaw+i*Math.PI/2;el.style.left=`${(128+Math.sin(a)*92)/256*100}%`;el.style.top=`${(140-Math.cos(a)*92)/292*100}%`;});lastYaw=yaw;}
    const offset=miniCenter&&mapOffset(player,miniCenter),revision=tiles.stats().revision;
-   if(now-lastMini>=100&&(!offset||Math.hypot(offset.x,offset.z)>.35||revision!==lastRevision)){terrainPaint(miniCtx,player,MINI,MINI,MINI_SCALE);miniCenter={...player};lastMini=now;lastRevision=revision;counts.minimapPaints++;}
+   if(now-lastMini>=100&&(!offset||Math.hypot(offset.x,offset.z)>.35||revision!==lastRevision)){terrainPaint(miniCtx,player,MINI,MINI,level===27?21:MINI_SCALE);miniCenter={...player};lastMini=now;lastRevision=revision;counts.minimapPaints++;}
   }
   if(allowWork&&level===10){const before=tiles.stats().revision;tiles.pump(open?2.5:.7,open?3:1);if(tiles.stats().revision!==before)dirty=true;}
  }
- function show(state){center={cx:state.cx,cz:state.cz,x:state.x,z:state.z};player={...center,yaw:state.yaw};open=true;modal.hidden=false;hover=null;keyboardTarget=false;dirty=true;tiles.cancelPending();resize();setStatus(level===11?'Level 11 入口街区 · F2 返回麦田':'点击地图可传送；湖泊会落在岸边。');}
+ function show(state){center={cx:state.cx,cz:state.cz,x:state.x,z:state.z};player={...center,yaw:state.yaw};open=true;modal.hidden=false;hover=null;keyboardTarget=false;dirty=true;tiles.cancelPending();resize();setStatus(level===27?'Level 27 · 独立岩洞 · 沿溪流旁原石踏步返回':level===11?'Level 11 入口街区 · F2 返回麦田':'点击地图可传送；湖泊会落在岸边。');}
  function hide(){open=false;modal.hidden=true;pointer=null;tiles.cancelPending();miniCenter=null;}
  function setBusy(value,text){busy=value;modal.setAttribute('aria-busy',String(value));modal.querySelectorAll('button').forEach(b=>b.disabled=value);if(text)setStatus(text);dirty=true;}
  function dispose(){disposed=true;observer.disconnect();tiles.dispose();mini.remove();modal.remove();}
