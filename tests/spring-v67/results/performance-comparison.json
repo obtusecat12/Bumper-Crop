@@ -1,0 +1,35 @@
+{
+  "method": "Production V66 vs V67 scene inventories, unculled per-view submissions. Not measured browser FPS.",
+  "before": {
+    "triangles": 397280,
+    "draws": 92,
+    "physicalTransmissionMaterials": 5,
+    "volume": {
+      "scale": 0.3333333333333333,
+      "reflectionScale": 0.25,
+      "raySteps": 28,
+      "reflectionRaySteps": 24,
+      "simulationHz": 30,
+      "lightingHz": 12,
+      "cullVolume": true
+    }
+  },
+  "after": {
+    "triangles": 376344,
+    "draws": 61,
+    "physicalTransmissionMaterials": 0,
+    "volume": {
+      "scale": 0.25,
+      "reflectionScale": 0.2,
+      "raySteps": 20,
+      "reflectionRaySteps": 16,
+      "simulationHz": 24,
+      "lightingHz": 8,
+      "cullVolume": true
+    },
+    "npcTriangles": 3316
+  },
+  "drawReductionPercent": 33.69565217391305,
+  "triangleReductionPercent": 5.269834877164725,
+  "mainVolumeRaySampleReductionPercent": 59.821428571428555
+}

@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: One square seamless muted dusty seafoam cotton/terry cloth diffuse texture for low-poly PS1 / early PS2 hot-spring NPC towels.
+subject: Flat cotton terry surface covering the entire canvas, coarse pixel cloth grain.
+style: Realistic nostalgic PS1 / early PS2 game diffuse texture, hand-painted baked diffuse shading, deliberate low-resolution character art. Restrained grain, broad stepped tonal shadows and subtle painted highlights. No modern polished or PBR style.
+palette: Muted dusty seafoam, subtle darker seafoam shadows and pale seafoam thread highlights.
+layout: Seamless repeating texture at every edge, no folds silhouette and no background.
+resolution: Author at normal generation resolution; intended runtime texture is exactly 128x128 with nearest sampling.
+aspect ratio: 1:1
+Avoid: Folded towel object, towel silhouette, background, text, labels, grid, borders, watermark, polished modern PBR fabric, strong glare.
+

@@ -1,0 +1,170 @@
+[
+  {
+    "key": "a",
+    "loadedBy": "official Three.js r180 GLTFLoader",
+    "skinnedMeshes": 3,
+    "joints": 20,
+    "animations": 1,
+    "duration": 12,
+    "tracks": 11,
+    "discreteTracks": true,
+    "decodedPngs": [
+      {
+        "width": 128,
+        "height": 128,
+        "byteSize": 46601
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "byteSize": 112211
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "byteSize": 110664
+      }
+    ],
+    "supportDriftMeters": 3.93846571909159e-8,
+    "morphSamples": [
+      {
+        "t": 0,
+        "weights": [
+          0,
+          0.10000000149011612,
+          0.2423253208398819
+        ]
+      },
+      {
+        "t": 2.45,
+        "weights": [
+          1,
+          0.15706339478492737,
+          0.307761549949646
+        ]
+      },
+      {
+        "t": 6.9,
+        "weights": [
+          1,
+          0.0741693377494812,
+          0.07463090866804123
+        ]
+      },
+      {
+        "t": 10.45,
+        "weights": [
+          1,
+          0.056477539241313934,
+          0.14014704525470734
+        ]
+      }
+    ],
+    "boneNames": [
+      "root",
+      "pelvis",
+      "spine",
+      "chest",
+      "neck",
+      "head",
+      "clavicleL",
+      "upper_armL",
+      "forearmL",
+      "handL",
+      "clavicleR",
+      "upper_armR",
+      "forearmR",
+      "handR",
+      "thighL",
+      "shinL",
+      "footL",
+      "thighR",
+      "shinR",
+      "footR"
+    ]
+  },
+  {
+    "key": "b",
+    "loadedBy": "official Three.js r180 GLTFLoader",
+    "skinnedMeshes": 3,
+    "joints": 20,
+    "animations": 1,
+    "duration": 12,
+    "tracks": 13,
+    "discreteTracks": true,
+    "decodedPngs": [
+      {
+        "width": 128,
+        "height": 128,
+        "byteSize": 46601
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "byteSize": 111992
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "byteSize": 123310
+      }
+    ],
+    "supportDriftMeters": 4.249335720149871e-8,
+    "morphSamples": [
+      {
+        "t": 0,
+        "weights": [
+          0,
+          0.10000000149011612,
+          0.2423253208398819
+        ]
+      },
+      {
+        "t": 2.45,
+        "weights": [
+          1,
+          0.15706339478492737,
+          0.307761549949646
+        ]
+      },
+      {
+        "t": 6.9,
+        "weights": [
+          1,
+          0.0741693377494812,
+          0.07463090866804123
+        ]
+      },
+      {
+        "t": 10.45,
+        "weights": [
+          1,
+          0.056477539241313934,
+          0.14014704525470734
+        ]
+      }
+    ],
+    "boneNames": [
+      "root",
+      "pelvis",
+      "spine",
+      "chest",
+      "neck",
+      "head",
+      "clavicleL",
+      "upper_armL",
+      "forearmL",
+      "handL",
+      "clavicleR",
+      "upper_armR",
+      "forearmR",
+      "handR",
+      "thighL",
+      "shinL",
+      "footL",
+      "thighR",
+      "shinR",
+      "footR"
+    ]
+  }
+]

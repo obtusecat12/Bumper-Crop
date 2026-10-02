@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: One square cylindrical unwrapped HEAD diffuse UV map for a low-poly adult male hot-spring NPC. It is a flat texture map, NOT a portrait, NOT a rendered head.
+subject: A distinct older adult man around 50, receding dark grey hair, warmer medium tan skin, neutral tired expression, closed mouth.
+layout: Full square canvas is head texture, with no blank background. Front face centered at U=0.5 and spanning U=0.25 to 0.75. Head top is image y=0. Eyes are at image y=0.39, nose y=0.55, closed mouth y=0.70, chin y=0.86 to 0.90. Front hair and forehead at top. Ears at U=0.2 and U=0.8 around the vertical center. Side-head and back-head hair and skin extend all the way to left and right canvas edges; seam is at rear of head. No shoulders or neck.
+style: Realistic nostalgic PS1 / early PS2 game diffuse texture, hand-painted baked diffuse shading, deliberate low-resolution character art. Restrained grain, broad stepped tonal shadows and subtle painted highlights. No modern polished or PBR style.
+shading: Painted mature face planes, brow, eyelids, nose, cheekbones, mouth and chin volume, tired neutral eyes, muted damp skin highlights.
+resolution: Author at normal generation resolution; intended runtime texture is exactly 256x256 with nearest sampling.
+aspect ratio: 1:1
+Avoid: Portrait composition, a head silhouette surrounded by background, shoulders, neck, text, labels, grid, layout borders, watermarks, photoreal photography, smooth polished rendering, excessive glare.
+

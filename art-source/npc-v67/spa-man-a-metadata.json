@@ -1,0 +1,159 @@
+{
+  "file": "/workspace/scratch/85111d38430a/npc-models-v67/spa-man-a.glb",
+  "triangles": 1674,
+  "bones": 20,
+  "materialPrimitives": 3,
+  "bounds": [
+    [
+      -0.4298531552120244,
+      0.0,
+      -0.11866666666666667
+    ],
+    [
+      0.5532222870594061,
+      1.383,
+      0.547
+    ]
+  ],
+  "contacts": {
+    "left_palm": [
+      -0.385,
+      0.77,
+      0.3
+    ],
+    "feet_ground_y": 0.0,
+    "seated_pelvis_y": 0.5
+  },
+  "height": 1.383,
+  "animationFrames": 241,
+  "duration": 12,
+  "sampleRate": 20,
+  "interpolation": "STEP",
+  "embeddedTextures": true,
+  "uvConvention": "glTF image top is v=0; PNGs not flipped",
+  "weightsNormalized": true,
+  "degenerateTriangles": 0,
+  "support": {
+    "foot.L": {
+      "maxOriginDisplacementMeters": 1.3877787807814457e-17
+    },
+    "foot.R": {
+      "maxOriginDisplacementMeters": 1.3877787807814457e-17
+    }
+  },
+  "skinBindIdentityMaxError": 0.0,
+  "boneOriginsMeters": {
+    "root": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "pelvis": [
+      0.0,
+      0.5,
+      -0.05
+    ],
+    "spine": [
+      0.0,
+      0.67,
+      -0.015
+    ],
+    "chest": [
+      0.0,
+      0.9249999999999999,
+      0.0
+    ],
+    "neck": [
+      0.0,
+      1.0619999999999998,
+      -0.012
+    ],
+    "head": [
+      0.0,
+      1.14,
+      -0.012
+    ],
+    "clavicle.L": [
+      -0.13,
+      1.01,
+      0.0
+    ],
+    "upper_arm.L": [
+      -0.23,
+      1.025,
+      0.0
+    ],
+    "forearm.L": [
+      -0.385,
+      0.87,
+      0.06
+    ],
+    "hand.L": [
+      -0.39,
+      0.78,
+      0.255
+    ],
+    "clavicle.R": [
+      0.13,
+      1.01,
+      0.0
+    ],
+    "upper_arm.R": [
+      0.23,
+      1.025,
+      0.0
+    ],
+    "forearm.R": [
+      0.37,
+      0.91,
+      0.025
+    ],
+    "hand.R": [
+      0.48,
+      0.83,
+      0.205
+    ],
+    "thigh.L": [
+      -0.125,
+      0.5,
+      -0.035
+    ],
+    "shin.L": [
+      -0.16,
+      0.44,
+      0.36
+    ],
+    "foot.L": [
+      -0.18,
+      0.075,
+      0.4
+    ],
+    "thigh.R": [
+      0.125,
+      0.5,
+      -0.035
+    ],
+    "shin.R": [
+      0.19,
+      0.44,
+      0.345
+    ],
+    "foot.R": [
+      0.21,
+      0.075,
+      0.39
+    ]
+  },
+  "animationBounds": [
+    [
+      -0.4312190962290752,
+      1.3877787807814457e-17,
+      -0.11870785266654586
+    ],
+    [
+      0.5546963401397931,
+      1.3843997080905102,
+      0.547
+    ]
+  ]
+}

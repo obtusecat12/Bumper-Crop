@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: Correct the vertical facial landmark positions only in this cylindrical unwrapped adult male HEAD diffuse UV texture map.
+input image: Existing texture map to edit, retaining identity, colors, short dark hair, skin, rectangular unwrapped layout, hand-painted PS1 / early PS2 style.
+exact layout correction: Both eyes must be centered exactly at 39 percent of the image height measured down from the top edge (image y=.39), nose center exactly 55 percent (y=.55), closed mouth center exactly 70 percent (y=.70), chin exactly 88 percent (y=.88). Move the eye/brow band upwards and extend the middle-face skin as needed; do not leave eyes at the current 45 percent height. Face horizontal center stays u=.50. Side and rear head texture continues to all edges. Ears remain around middle height. No shoulders or neck.
+style: Preserve baked painted face shading, restrained grain, realistic nostalgic PS1 / early PS2 texture quality.
+aspect ratio: 1:1
+Avoid: Portrait silhouette, background, grid, guide lines, text, polished smooth style, PBR glare.
+

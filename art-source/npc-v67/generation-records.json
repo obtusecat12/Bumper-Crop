@@ -1,0 +1,18 @@
+{
+  "generator": "Built-in image_gen.imagegen",
+  "method": "Five separate independently generated assets; no contact-sheet generation and no shared source imagery across asset identities.",
+  "required_prompt_prefix": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - ",
+  "records": [
+    {"asset":"face-a","stage":"independent original","prompt":"prompts/face-a.txt","generated_file":"/workspace/scratch/85111d38430a/generated_images/exec-a5e1bc05-900d-4564-b0f1-005355d61b93.png","saved_original":"originals/face-a-initial.png","status":"succeeded"},
+    {"asset":"face-b","stage":"independent original","prompt":"prompts/face-b.txt","generated_file":"/workspace/scratch/85111d38430a/generated_images/exec-50910b61-e314-4fbb-84e8-b1705ba99b60.png","saved_original":"originals/face-b-initial.png","status":"succeeded"},
+    {"asset":"body-a","stage":"independent original","prompt":"prompts/body-a.txt","generated_file":"/workspace/scratch/85111d38430a/generated_images/exec-804a5384-ffa7-4a74-a48f-6e76bf65dae6.png","saved_original":"originals/body-a-initial.png","status":"succeeded"},
+    {"asset":"body-b","stage":"independent original initial attempt","prompt":"prompts/body-b.txt","status":"rejected by output safety filter","request_id":"8025bac5-738c-4787-894c-3d607d0f3465","category":"sexual","image_saved":false},
+    {"asset":"towel","stage":"independent original","prompt":"prompts/towel.txt","generated_file":"/workspace/scratch/85111d38430a/generated_images/exec-29025cdd-e8ec-4ebd-91da-e436d1c6f80e.png","saved_original":"originals/towel-initial.png","status":"succeeded"},
+    {"asset":"face-a","stage":"imagegen layout refinement using its own original only","prompt":"prompts/face-a-refined.txt","generated_file":"/workspace/scratch/85111d38430a/generated_images/exec-dba4b40f-d215-4a41-8166-666aad6b63cd.png","saved_original":"originals/face-a-final-source.png","input":"originals/face-a-initial.png","status":"succeeded"},
+    {"asset":"face-b","stage":"imagegen layout refinement using its own original only","prompt":"prompts/face-b-refined.txt","generated_file":"/workspace/scratch/85111d38430a/generated_images/exec-ada57160-41d8-4fb0-9052-259f96f503ae.png","saved_original":"originals/face-b-final-source.png","input":"originals/face-b-initial.png","status":"succeeded"},
+    {"asset":"body-a","stage":"imagegen layout refinement attempt","prompt":"prompts/body-a-refined.txt","input":"originals/body-a-initial.png","status":"rejected by output safety filter","request_id":"20ee8a72-e44d-42b2-8c1e-4c244f3b0c23","category":"sexual","image_saved":false},
+    {"asset":"body-b","stage":"independent original with explicit chest-to-waist cropping clarification","prompt":"prompts/body-b-retry.txt","generated_file":"/workspace/scratch/85111d38430a/generated_images/exec-e42e1949-a9e2-40bd-b800-bb497b715104.png","saved_original":"originals/body-b-final-source.png","status":"succeeded"}
+  ],
+  "postprocessing": "Mechanically repacked and nearest-neighbor resampled using export_runtime.py; no manual painting, recoloring, procedural texture substitutes, or model/animation edits.",
+  "inspection": "Every successful original was visually inspected. All five runtime PNGs and labeled face/body UV diagnostics were visually inspected."
+}

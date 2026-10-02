@@ -30,7 +30,9 @@ export function createMineLamp(T,m={}){
  mesh(T,group,'Solid domed rain hood',lathe(T,[[0,.179],[.028,.178],[.052,.17],[.078,.153],[.106,.129],[.132,.111],[.148,.105],[.148,.095],[.133,.091],[.112,.099],[.085,.119],[.057,.14],[.027,.158],[0,.158]],64),copper,[0,0,.27]);
  ring(T,group,'Rolled thick hood rim',.145,.006,.099,.27,edges);
  mesh(T,group,'Hood suspension neck',lathe(T,[[0,.171],[.021,.171],[.022,.195],[.018,.207],[0,.207]],28),copper,[0,0,.27]);
- const glass=new T.MeshPhysicalMaterial({name:'Frosted thick amber glass, Fresnel edge',color:0xf4e6ce,roughness:.40,metalness:0,transmission:.56,thickness:.015,ior:1.47,transparent:true,opacity:.88,attenuationColor:new T.Color(0xd8b481),attenuationDistance:.42,emissive:0xf4aa53,emissiveIntensity:.36,clearcoat:.17,clearcoatRoughness:.32,depthWrite:false});
+ // Frosted glass scatters the inner globe; it does not need a full-scene
+ // physical transmission capture for four tiny lamps (including mirror views).
+ const glass=new T.MeshStandardMaterial({name:'Frosted amber glass / cached-scene-free Fresnel',color:0xf4e6ce,roughness:.40,metalness:0,transparent:true,opacity:.62,emissive:0xf4aa53,emissiveIntensity:.36,depthWrite:false});
  // Keep the supplied grain normal map at very low strength to break the lens sheen.
  if(m.glass?.normalMap||m.scale?.normalMap){glass.normalMap=m.glass?.normalMap||m.scale.normalMap;glass.normalScale=new T.Vector2(.055,.055);}
  glass.onBeforeCompile=s=>{s.fragmentShader=s.fragmentShader.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\nfloat lampFr=pow(1.0-clamp(dot(normalize(normal),normalize(vViewPosition)),0.0,1.0),5.0);\ntotalEmissiveRadiance *= mix(1.0,0.34,lampFr);');};
@@ -58,7 +60,9 @@ function stoneBasin(T){
  for(let j=0;j<profile.length;j++){const[r,y]=profile[j];for(let i=0;i<=N;i++){const a=i/N*TAU,ir=1+.047*Math.sin(a*3+.6)+.026*Math.cos(a*5-1)+.013*Math.sin(a*11+.5);const exterior=j<12,noise=(exterior?.006:.0025)*Math.sin(a*19+y*19)*Math.sin(a*9-y*21);const rr=r*ir+noise*Math.min(r/.2,1),yy=y+Math.min(y/.08,1)*r/.59*(.006*Math.sin(a*3+.7)+.006*Math.cos(a*7)+.003*Math.sin(a*17+y*13));p.push(rr*Math.cos(a),yy,rr*Math.sin(a));uv.push(i/N*2.7,j/(profile.length-1)*2.3);const shade=.94+.035*Math.sin(a*9+y*5)+.027*Math.cos(a*17-y*23);colors.push(shade,shade,shade*.984);}}
  for(let j=0;j<profile.length-1;j++)for(let i=0;i<N;i++){const a=j*(N+1)+i,b=a+1,c=a+N+1,d=c+1;ix.push(a,c,b,b,c,d);}
  const g=finishGeo(T,p,uv,ix,colors);
- for(let j=0;j<profile.length-1;j++)g.addGroup(j*N*6,N*6,j<12?0:j<15?1:2);
+ // Contiguous profile strips share one draw per surface, rather than one
+ // draw per lathe row (23 submissions for an otherwise static stone bowl).
+ g.addGroup(0,12*N*6,0);g.addGroup(12*N*6,3*N*6,1);g.addGroup(15*N*6,(profile.length-1-15)*N*6,2);
  return g;
 }
 const benchTop=(x,z)=>.405-.025*Math.pow(Math.abs(x)/.44,6)-.014*Math.pow(Math.abs(z)/.28,6)+.003*Math.sin(x*17+z*9)+.002*Math.cos(x*25-z*19);
@@ -103,10 +107,12 @@ function towelCloth(T){
 }
 
 function basinWater(T,m){
- const material=new T.MeshPhysicalMaterial({name:'Clear mineral wash water IOR 1.3335',color:0xc2d8ca,roughness:.095,metalness:0,transmission:.92,thickness:.20,ior:1.3335,transparent:true,opacity:.79,depthWrite:false,attenuationColor:new T.Color(0x81a597),attenuationDistance:2.2,clearcoat:.7,clearcoatRoughness:.08});
- if(m.water?.normalMap){material.normalMap=m.water.normalMap;material.normalScale=new T.Vector2(.025,.025);}
  const timeUniform={value:0};
- material.onBeforeCompile=s=>{s.uniforms.v63Time=timeUniform;s.vertexShader='uniform float v63Time;\nvarying vec2 v63WaterXZ;\n'+s.vertexShader;s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nv63WaterXZ=position.xz;\ntransformed.y+=.0012*sin(position.x*27.0+v63Time*.8)*sin(position.z*23.0-v63Time*.63);');s.fragmentShader='uniform float v63Time;\nvarying vec2 v63WaterXZ;\n'+s.fragmentShader;s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\nnormal=normalize(normal+vec3(.018*cos(v63WaterXZ.x*27.0+v63Time*.8),.018*sin(v63WaterXZ.y*23.0-v63Time*.63),0.));');};material.customProgramCacheKey=()=> 'v63-basin-water-wave-v1';
+ const material=new T.ShaderMaterial({name:'Mineral bowl / shared opaque depth refraction',uniforms:{time:timeUniform,refraction:{value:null},sceneDepth:{value:null},eye:{value:new T.Vector3()},nearFar:{value:new T.Vector2(.06,40)},ready:{value:0}},side:T.DoubleSide,depthWrite:true,
+ vertexShader:`uniform float time;varying vec3 wp;varying vec2 basinXZ;varying vec4 screenP;void main(){vec3 p=position;basinXZ=p.xz;p.y+=.0012*sin(p.x*27.+time*.8)*sin(p.z*23.-time*.63);vec4 w=modelMatrix*vec4(p,1.);wp=w.xyz;screenP=projectionMatrix*viewMatrix*w;gl_Position=screenP;}`,
+ fragmentShader:`precision highp float;uniform float time,ready;uniform sampler2D refraction,sceneDepth;uniform vec3 eye;uniform vec2 nearFar;varying vec3 wp;varying vec2 basinXZ;varying vec4 screenP;
+ float linearZ(float d){return nearFar.x*nearFar.y/(nearFar.y-d*(nearFar.y-nearFar.x));}
+ void main(){vec2 slope=vec2(.018*cos(basinXZ.x*27.+time*.8),.018*sin(basinXZ.y*23.-time*.63));vec3 N=normalize(vec3(-slope.x,1.,-slope.y)),V=normalize(eye-wp);vec2 uv=clamp(screenP.xy/screenP.w*.5+.5+slope*.028,.001,.999);float d=clamp(linearZ(texture2D(sceneDepth,uv).r)-linearZ(gl_FragCoord.z),0.,.65);vec3 c=texture2D(refraction,uv).rgb*exp(-vec3(.6,.22,.36)*d);float f=.02037+.97963*pow(1.-max(dot(N,V),0.),5.);c=mix(c,vec3(.12,.17,.15),f*.72);vec3 L=normalize(vec3(1.,1.9,.3));c+=vec3(.30,.20,.09)*pow(max(dot(reflect(-L,N),V),0.),160.);gl_FragColor=vec4(mix(vec3(.035,.07,.06),c,ready),1.);}`});
  const N=96,p=[0,.650,0],uv=[.5,.5],ix=[];for(let i=0;i<=N;i++){const a=i/N*TAU,r=.410*(1+.046*Math.sin(a*3+.6)+.026*Math.cos(a*5-1));p.push(r*Math.cos(a),.650,r*Math.sin(a));uv.push(.5+Math.cos(a)*.5,.5+Math.sin(a)*.5);if(i<N)ix.push(0,i+2,i+1);}return {geometry:finishGeo(T,p,uv,ix),material,timeUniform};
 }
 

@@ -1,5 +1,6 @@
 // Metres. CAVE_PLAN is the WATER surface survey, exactly 18.58 m².
 // The carved east bank and access tunnel are additional land outside this polygon.
+import {SPRING_OCCUPANTS} from './level27-occupants-v67.js';
 export const CAVE_AREA=18.58, WATER_Y=0, TUNNEL_Y=1.88;
 export const STAIRS={x:3.65,width:1.16,start:-3.10,tread:.30,count:10,rise:.16,base:.28};
 export const DRY_BANK_Y=.28;
@@ -34,6 +35,7 @@ export function poolFloor(x,z){const r=Math.hypot(x,z),lim=radialLimit(x||.00000
  return y;}
 export function springFloor(x,z){if(inTunnel(x,z)&&z<STAIRS.start)return TUNNEL_Y;if(Math.abs(x-stairCenter(z))<STAIRS.width/2+.025&&z>=STAIRS.start&&z<STAIRS.start+STAIRS.count*STAIRS.tread)return stairHeight(z,x)+treadRelief(x,z);return poolFloor(x,z);}
 export function springAllowed(x,z){
+ if(SPRING_OCCUPANTS.some(p=>Math.hypot(x-p.x,z-p.z)<p.radius+.18))return false;
  if(Math.hypot(x-WASH_BASIN.x,z-WASH_BASIN.z)<WASH_BASIN.radius+.19)return false;
  if(Math.abs(x-(WASH_BASIN.x-.90))<.64&&Math.abs(z-(WASH_BASIN.z+.65))<.45)return false;
  if(inTunnel(x,z,.25)&&x>2.98&&x<4.57)return true;

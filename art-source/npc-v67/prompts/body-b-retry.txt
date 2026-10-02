@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: A flat rectangular UV skin texture atlas for a clothed low-poly adult male game character. This atlas contains only chest-to-waist surfaces and limb surface patches; the character wears a towel around his waist. No pelvic anatomy is part of this texture.
+subject: Older adult male around50, warm medium tan skin. Front chest-to-waist diffuse shading, back shoulders-to-waist diffuse shading, separate arm skin, shin skin and simple hand/foot surface patches.
+exact layout: Two rows. Upper row occupies exactly 62.5 percent of total square height. Upper-left x=0 to50 percent is front torso cropped from neck edge to waist; upper-right x=50 to100 percent is back torso cropped from neck edge to waist. Lower row occupies only 37.5 percent of total square height, starting y=62.5 percent. Lower-left x=0 to25 percent is smooth arm skin. Lower second x=25 to50 percent is shin skin. Lower-right x=50 to100 percent is warm hand and foot surface patches. Fill each rectangle to the edges. No background, no borders, no layout lines.
+exact runtime rectangles: Front [0,0,128,160], back [128,0,256,160], arm [0,160,64,256], shin [64,160,128,256], hand/foot [128,160,256,256].
+torso details: Neck edge at top, broad shoulders, pectoral and clavicle shading upper third, abdomen below, waist at bottom. Back shoulder-blade and spine shading. Hand-painted baked muscle volume.
+style: Realistic nostalgic PS1 / early PS2 game diffuse texture, hand-painted, deliberate low resolution, broad stepped tonal shadows, muted highlight dampness, restrained grain.
+resolution: Normal generation resolution, intended runtime exactly256x256 nearest sampling.
+aspect ratio: 1:1
+Avoid: Pelvic anatomy, full body person, head, blank background, layout lines, text, watermarks, photographic skin pores, polished modern rendering, PBR, strong glare.
+

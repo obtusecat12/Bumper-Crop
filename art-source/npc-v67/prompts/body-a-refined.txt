@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: Correct the rectangular UV island region proportions only in the existing adult male torso and limb skin diffuse texture atlas.
+input image: Existing diffuse texture atlas, preserving light olive skin, hand-painted baked clavicle and muscle shading, PS1 / early PS2 game art.
+exact layout correction: The current main horizontal split is half way down. Move this split down to exactly five eighths (62.5 percent) of canvas height. The upper row must fill y=0 to 62.5 percent, and the lower row the remaining y=62.5 to 100 percent. Stretch/recompose the existing torso artwork into the taller upper row and shorten the lower regions. Front chest to waist is upper left x=0 to 50 percent. Back shoulders to waist is upper right x=50 to 100 percent. Front and back remain cut off at waist, with no pelvic anatomy. Lower left arm skin strip is x=0 to25 percent. Lower second leg skin strip is x=25 to50 percent. Lower right palms and feet patches are x=50 to100 percent. Paint skin to fill each rectangular island with no empty background margins or narrow dark background surrounding the limbs. No visible border lines.
+exact target rectangles: Front [0,0,128,160], back [128,0,256,160], arm [0,160,64,256], leg [64,160,128,256], hands/feet [128,160,256,256] on 256 square runtime texture.
+style: Retain hand-painted baked shading, restrained grain, nostalgic low resolution adult male skin texture.
+aspect ratio: 1:1
+Avoid: Heads, pelvic anatomy, full body figures, text, labels, grid, border lines, modern polished PBR style.
+

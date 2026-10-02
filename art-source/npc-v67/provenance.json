@@ -1,0 +1,336 @@
+{
+  "description": "Five independently generated diffuse texture assets for two adult male low-poly hot-spring NPCs. No model or animation assets are created by this export.",
+  "generator": "Built-in image_gen.imagegen",
+  "date": "2026-10-02",
+  "normal_generation_resolution": [
+    1254,
+    1254
+  ],
+  "export_method": "Nearest-neighbor resampling and mechanical atlas packing only; no pixels painted or color-modified.",
+  "coordinate_system": "Image coordinates, top-left origin. u=x/width and image_v=y/height.",
+  "sampler": {
+    "magFilter": 9728,
+    "minFilter": 9728,
+    "mipmaps": false,
+    "colorSpace": "sRGB",
+    "body_wrap": "ClampToEdge",
+    "face_wrap_s": "Repeat",
+    "face_wrap_t": "ClampToEdge",
+    "towel_wrap": "Repeat"
+  },
+  "face_layout": {
+    "front_u": [
+      0.25,
+      0.75
+    ],
+    "front_center_u": 0.5,
+    "runtime_eyes": {
+      "face-a": [
+        [
+          0.39952153110047844,
+          0.39
+        ],
+        [
+          0.60207336523126,
+          0.39
+        ]
+      ],
+      "face-b": [
+        [
+          0.38596491228070173,
+          0.39
+        ],
+        [
+          0.6164274322169059,
+          0.39
+        ]
+      ]
+    },
+    "runtime_nose_v": 0.55,
+    "runtime_mouth_v": 0.7,
+    "runtime_chin_v": 0.88,
+    "rear_seam_u": [
+      0,
+      1
+    ],
+    "note": "Use actual eye u coordinates above for eyelids, or adapt mesh UVs. The runtime x coordinates were not repainted or warped."
+  },
+  "body_layout_pixels": {
+    "front_torso": [
+      0,
+      0,
+      128,
+      160
+    ],
+    "back_torso": [
+      128,
+      0,
+      256,
+      160
+    ],
+    "arm_strip": [
+      0,
+      160,
+      64,
+      256
+    ],
+    "leg_strip": [
+      64,
+      160,
+      128,
+      256
+    ],
+    "palm_foot_patches": [
+      128,
+      160,
+      256,
+      256
+    ]
+  },
+  "body_layout_uv": {
+    "front_torso": [
+      0,
+      0,
+      0.5,
+      0.625
+    ],
+    "back_torso": [
+      0.5,
+      0,
+      1,
+      0.625
+    ],
+    "arm_strip": [
+      0,
+      0.625,
+      0.25,
+      1
+    ],
+    "leg_strip": [
+      0.25,
+      0.625,
+      0.5,
+      1
+    ],
+    "palm_foot_patches": [
+      0.5,
+      0.625,
+      1,
+      1
+    ]
+  },
+  "notes": [
+    "Initial body-b attempt was rejected by output safety; retry explicitly restricted the texture to chest-to-waist and limb surfaces and succeeded.",
+    "Body-a imagegen layout correction was rejected by output safety. The accepted independent original is retained and mechanically repacked.",
+    "Generated face refinements retained intended character identity but did not precisely match the requested eye row. Runtime vertical landmark resampling is documented.",
+    "Generated body islands contain internal limb/hand/foot drawings and dark baked shadows; use interior subregions when mapping simple low-poly limbs."
+  ],
+  "assets": {
+    "face-a": {
+      "source": "/workspace/scratch/85111d38430a/npc-assets-v67/originals/face-a-final-source.png",
+      "runtime": "/workspace/scratch/85111d38430a/npc-assets-v67/runtime/face-a.png",
+      "root_copy": "/workspace/scratch/85111d38430a/npc-assets-v67/face-a.png",
+      "size": [
+        256,
+        256
+      ],
+      "source_sha256": "c6ef2b760a329067d00cf0e838082a0d6d009317e5a75e260a50b7159c9036e6",
+      "runtime_sha256": "cff0d4dd2c7e01fbcdfa1cdc37f9b92f24d54eaac896853bec2ca9e5e5467fee",
+      "palette": [
+        "#271c16",
+        "#9e6546",
+        "#a76d4b",
+        "#8a553a",
+        "#b47754",
+        "#493226"
+      ],
+      "mapping": {
+        "type": "vertical piecewise linear UV coordinate resampling, nearest source pixels",
+        "source_y_landmarks": [
+          0,
+          0.42143137878787884,
+          0.5853269537480064,
+          0.69377990430622,
+          0.8572567783094099,
+          1
+        ],
+        "runtime_y_landmarks": [
+          0,
+          0.39,
+          0.55,
+          0.7,
+          0.88,
+          1
+        ],
+        "x": "identity normalized mapping"
+      }
+    },
+    "face-b": {
+      "source": "/workspace/scratch/85111d38430a/npc-assets-v67/originals/face-b-final-source.png",
+      "runtime": "/workspace/scratch/85111d38430a/npc-assets-v67/runtime/face-b.png",
+      "root_copy": "/workspace/scratch/85111d38430a/npc-assets-v67/face-b.png",
+      "size": [
+        256,
+        256
+      ],
+      "source_sha256": "751ce8801c47107cdbfdce6ef40a647798c39b0302deb68faa07d995a939da93",
+      "runtime_sha256": "ee2ba24abdb1a7b8299f703dd8f2ee0bb0ce238295a714a983dc33edcea653d3",
+      "palette": [
+        "#44362d",
+        "#a6653e",
+        "#af6c43",
+        "#955b38",
+        "#7c4b30",
+        "#b9774e"
+      ],
+      "mapping": {
+        "type": "vertical piecewise linear UV coordinate resampling, nearest source pixels",
+        "source_y_landmarks": [
+          0,
+          0.4157280023923445,
+          0.5877192982456141,
+          0.7033492822966507,
+          0.8931419457735247,
+          1
+        ],
+        "runtime_y_landmarks": [
+          0,
+          0.39,
+          0.55,
+          0.7,
+          0.88,
+          1
+        ],
+        "x": "identity normalized mapping"
+      }
+    },
+    "body-a": {
+      "source": "/workspace/scratch/85111d38430a/npc-assets-v67/originals/body-a-initial.png",
+      "runtime": "/workspace/scratch/85111d38430a/npc-assets-v67/runtime/body-a.png",
+      "root_copy": "/workspace/scratch/85111d38430a/npc-assets-v67/body-a.png",
+      "size": [
+        256,
+        256
+      ],
+      "source_sha256": "fc729beee937a846003446875e4e1b54bbf628307c03e9ee5b1cb15c763d611c",
+      "runtime_sha256": "7f30b9dbd7821779a70f3e822b2dfbe683efe86dc2248b68f1be4d91dee3fc08",
+      "palette": [
+        "#533524",
+        "#a06b48",
+        "#af7953",
+        "#764d34",
+        "#8e5b3d",
+        "#bd8860"
+      ],
+      "mapping": {
+        "type": "mechanical atlas row repacking with nearest sampling",
+        "source_torso_rect": [
+          0,
+          0,
+          1254,
+          627
+        ],
+        "runtime_torso_rect": [
+          0,
+          0,
+          256,
+          160
+        ],
+        "source_limb_rect": [
+          0,
+          627,
+          1254,
+          1254
+        ],
+        "runtime_limb_rect": [
+          0,
+          160,
+          256,
+          256
+        ],
+        "body_b_crop_note": null
+      }
+    },
+    "body-b": {
+      "source": "/workspace/scratch/85111d38430a/npc-assets-v67/originals/body-b-final-source.png",
+      "runtime": "/workspace/scratch/85111d38430a/npc-assets-v67/runtime/body-b.png",
+      "root_copy": "/workspace/scratch/85111d38430a/npc-assets-v67/body-b.png",
+      "size": [
+        256,
+        256
+      ],
+      "source_sha256": "5352f1f011f197e2608809dc561f2a490374f5e1542ea5d8baae72a92c84e9e0",
+      "runtime_sha256": "eebd38c466d58c235f081bf0ca11fcca5142f4b9726cc3cd2c15731e1c123883",
+      "palette": [
+        "#472616",
+        "#9e5d3a",
+        "#aa6943",
+        "#7c452a",
+        "#8f5131",
+        "#b97850"
+      ],
+      "mapping": {
+        "type": "mechanical atlas row repacking with nearest sampling",
+        "source_torso_rect": [
+          0,
+          0,
+          1254,
+          539
+        ],
+        "runtime_torso_rect": [
+          0,
+          0,
+          256,
+          160
+        ],
+        "source_limb_rect": [
+          0,
+          627,
+          1254,
+          1254
+        ],
+        "runtime_limb_rect": [
+          0,
+          160,
+          256,
+          256
+        ],
+        "body_b_crop_note": "Source rows 539:627 contain a towel waist fringe; omitted from skin atlas."
+      }
+    },
+    "towel": {
+      "source": "/workspace/scratch/85111d38430a/npc-assets-v67/originals/towel-initial.png",
+      "runtime": "/workspace/scratch/85111d38430a/npc-assets-v67/runtime/towel.png",
+      "root_copy": "/workspace/scratch/85111d38430a/npc-assets-v67/towel.png",
+      "size": [
+        128,
+        128
+      ],
+      "source_sha256": "e2a43715b1854c52700b4898b1de6d9eb2edbbcf82d4eb319cf78614994cbfe9",
+      "runtime_sha256": "f2d7a6bc1531881ca6fb519bc24cb4cb3a253aa5d692bcfe1b96aec329f588ab",
+      "palette": [
+        "#4c7563",
+        "#85ab98",
+        "#648e7b",
+        "#9bbdab",
+        "#719a87",
+        "#b0cfbd"
+      ],
+      "mapping": {
+        "type": "uniform nearest-neighbor downsample",
+        "source_rect": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "runtime_rect": [
+          0,
+          0,
+          128,
+          128
+        ]
+      }
+    }
+  }
+}

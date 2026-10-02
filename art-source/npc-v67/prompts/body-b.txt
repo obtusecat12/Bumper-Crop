@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: One square flat diffuse anatomy UV atlas for an adult male low-poly hot-spring NPC, torso and limb skin only. NOT a full-body person, NOT a rendered model.
+subject: Nonsexual older adult male torso and limbs with warmer medium tan skin matching a man around 50. No genitals.
+layout: Use these exact rectangular regions, measured on the intended 256x256 runtime map and scaled proportionally to this generated canvas. Top-left front torso: x=0..128, y=0..160. Top-right back torso: x=128..256, y=0..160. Lower-left forearm/upper-arm smooth skin strip: x=0..64, y=160..256, with no head. Second lower strip for shins/thigh: x=64..128, y=160..256. Lower-right simple palms/feet warm skin patches: x=128..256, y=160..256. Artwork fills every region all the way to its edges with no surrounding blank background.
+torso details: Front and back torso neck edge at top, shoulder, pectoral and clavicle shading in the upper third, abdomen lower, waist at bottom of each top region. Painted muscle volume; shoulders and chest wide across the front region. Back has shoulder-blade and spine shading.
+style: Realistic nostalgic PS1 / early PS2 game diffuse texture, hand-painted baked diffuse shading, deliberate low-resolution character art. Restrained grain, broad stepped tonal shadows and subtle painted highlights. No modern polished or PBR style.
+shading: Simple baked stepped tonal shadows and highlight dampness. Restrained grain.
+resolution: Author at normal generation resolution; intended runtime texture is exactly 256x256 with nearest sampling.
+aspect ratio: 1:1
+Avoid: Genitals, head, full-body figure, visible layout borders, grid, text, labels, watermark, environment, modern PBR material, photographic skin pores, polished smooth rendering, strong specular glare.
+
