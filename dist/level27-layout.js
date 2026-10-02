@@ -1,6 +1,6 @@
 // Metres. CAVE_PLAN is the WATER surface survey, exactly 18.58 m².
 // The carved east bank and access tunnel are additional land outside this polygon.
-import {SPRING_OCCUPANTS} from './level27-occupants-v67.js';
+import {SPRING_OCCUPANTS} from './level27-occupants-v68.js';
 export const CAVE_AREA=18.58, WATER_Y=0, TUNNEL_Y=1.88;
 export const STAIRS={x:3.65,width:1.16,start:-3.10,tread:.30,count:10,rise:.16,base:.28};
 export const DRY_BANK_Y=.28;

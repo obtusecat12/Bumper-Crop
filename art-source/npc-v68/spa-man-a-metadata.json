@@ -1,0 +1,213 @@
+{
+  "file": "/workspace/scratch/85111d38430a/npc-models-v68/final/spa-man-a.glb",
+  "triangles": 2162,
+  "bones": 20,
+  "materialPrimitives": 3,
+  "bounds": [
+    [
+      -0.3389891013422891,
+      0.0,
+      -0.24490835404364109
+    ],
+    [
+      0.3489999131116187,
+      1.3289916430543929,
+      0.619
+    ]
+  ],
+  "contacts": {
+    "left_palm": [
+      -0.2,
+      0.5305804410128152,
+      0.301
+    ],
+    "right_palm": [
+      0.214,
+      0.5177890389992307,
+      0.313
+    ],
+    "feet_ground_y": 0.0,
+    "seated_pelvis_y": 0.5,
+    "seated_waterline_y": 0.86,
+    "eye_state": "permanently closed",
+    "supports": "Both seated palms rest on towel-covered thighs; standing left palm rests on basin. Both feet flat."
+  },
+  "height": 1.3289916430543929,
+  "animationFrames": 241,
+  "duration": 12,
+  "sampleRate": 20,
+  "interpolation": "STEP",
+  "embeddedTextures": true,
+  "uvConvention": "glTF image top is v=0; PNGs not flipped",
+  "weightsNormalized": true,
+  "degenerateTriangles": 0,
+  "support": {
+    "hand.L": {
+      "maxOriginDisplacementMeters": 2.2887833992611187e-16
+    },
+    "hand.R": {
+      "maxOriginDisplacementMeters": 2.2887833992611187e-16
+    },
+    "foot.L": {
+      "maxOriginDisplacementMeters": 1.3877787807814457e-17
+    },
+    "foot.R": {
+      "maxOriginDisplacementMeters": 1.3877787807814457e-17
+    },
+    "leftPalmToTowelVerticalGapMeters": 0.0,
+    "rightPalmToTowelVerticalGapMeters": 0.0
+  },
+  "measurementsMeters": {
+    "crownHeight": 1.3289916430543929,
+    "nominalAnatomicalHeadHeight": 0.242,
+    "headCraniumWidth": 0.176,
+    "maximumCheekBreadth": 0.176,
+    "jawBreadth": 0.146,
+    "chinBreadth": 0.126,
+    "pectoralCrossSectionWidth": 0.398,
+    "pectoralCrossSectionDepth": 0.252,
+    "waistCrossSectionWidth": 0.322,
+    "neckBreadth": 0.112,
+    "exposedNeckBelowChin": 0.05799999999999983,
+    "shoulderJointSpan": 0.41404951394730555,
+    "upperArmFullDiameters": [
+      0.118,
+      0.126
+    ],
+    "forearmFullDiameters": [
+      0.098,
+      0.102
+    ],
+    "wristFullDiameters": [
+      0.06,
+      0.064
+    ],
+    "standingHeightInNominalHeadUnits": null
+  },
+  "permanentlyClosedEyes": true,
+  "animationNotes": {
+    "supportedArms": "Both clavicle roots are world-pinned, so all hand surfaces stay fixed.",
+    "feet": "Both foot roots and sole surfaces stay fixed.",
+    "breathRadians": {
+      "spine": 0.0015,
+      "chest": 0.002
+    },
+    "headRotationRadians": 0.0025,
+    "blinkMorphWeights": "Always zero. No moving lid plates exist."
+  },
+  "skinBindIdentityMaxError": 0.0,
+  "boneOriginsMeters": {
+    "root": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "pelvis": [
+      0.0,
+      0.5,
+      -0.045
+    ],
+    "spine": [
+      0.0,
+      0.6799999999999999,
+      -0.07487551867219916
+    ],
+    "chest": [
+      0.0,
+      0.872,
+      -0.10674273858921163
+    ],
+    "neck": [
+      0.0,
+      1.032,
+      -0.13329875518672202
+    ],
+    "head": [
+      0.0,
+      1.137,
+      -0.141
+    ],
+    "clavicle.L": [
+      -0.1,
+      0.962,
+      -0.1216804979253112
+    ],
+    "upper_arm.L": [
+      -0.207,
+      0.982,
+      -0.125
+    ],
+    "forearm.L": [
+      -0.295,
+      0.724,
+      0.02
+    ],
+    "hand.L": [
+      -0.219,
+      0.564,
+      0.242
+    ],
+    "clavicle.R": [
+      0.1,
+      0.962,
+      -0.1216804979253112
+    ],
+    "upper_arm.R": [
+      0.207,
+      0.977,
+      -0.121
+    ],
+    "forearm.R": [
+      0.305,
+      0.704,
+      0.039
+    ],
+    "hand.R": [
+      0.23,
+      0.549,
+      0.259
+    ],
+    "thigh.L": [
+      -0.096,
+      0.5,
+      -0.025
+    ],
+    "shin.L": [
+      -0.153,
+      0.412,
+      0.371
+    ],
+    "foot.L": [
+      -0.163,
+      0.082,
+      0.425
+    ],
+    "thigh.R": [
+      0.096,
+      0.5,
+      -0.025
+    ],
+    "shin.R": [
+      0.168,
+      0.408,
+      0.387
+    ],
+    "foot.R": [
+      0.195,
+      0.08,
+      0.421
+    ]
+  },
+  "animationBounds": [
+    [
+      -0.3389891013422891,
+      1.3877787807814457e-17,
+      -0.24653693066428298
+    ],
+    [
+      0.3489999131116187,
+      1.3291198733854992,
+      0.619
+    ]
+  ]
+}

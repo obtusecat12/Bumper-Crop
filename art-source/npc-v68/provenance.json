@@ -1,0 +1,97 @@
+{
+  "generator": "built-in image_gen.imagegen",
+  "references": [
+    "/workspace/scratch/85111d38430a/upload/01-IMG_4272.png",
+    "/workspace/scratch/85111d38430a/upload/02-IMG_4274.png"
+  ],
+  "prompts": "prompts.json",
+  "successful_images": 4,
+  "generation_notes": "Exactly one successful generation per asset, no variants. Initial parallel body request returned no artifact; single sequential recovery generated body. Fourth distinct asset towel was expressly required after model inspection revealed inherited cloth defect; generated once without reference-image inputs.",
+  "assets": {
+    "faceA": {
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-9026fef8-e988-4d2d-8b61-597e3e894436.png",
+      "original": "/workspace/scratch/85111d38430a/npc-textures-v68/originals/npc-face-a-v68.png",
+      "runtime256": "/workspace/scratch/85111d38430a/npc-textures-v68/runtime256/npc-face-a-v68.png",
+      "unregistered256_preview": "/workspace/scratch/85111d38430a/npc-textures-v68/preview256/npc-face-a-v68.png",
+      "original_dimensions": [
+        1254,
+        1254
+      ],
+      "source_sha256": "50dab6f938ee9cc83b6c98f1da0dcb6a6a6cd859f1e95d45a0453ceb816217ef",
+      "runtime_sha256": "07e7ec92878f1a3692b427e08d7155e6dcfaa3b300107d34e3c11a77bc80118b",
+      "method": "Built-in image_gen; piecewise vertical UV registration using recorded source/target rows, then BOX downsample. No procedural painting."
+    },
+    "faceB": {
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-8fa478ca-0912-46b7-8bc9-1037fb4a0a2e.png",
+      "original": "/workspace/scratch/85111d38430a/npc-textures-v68/originals/npc-face-b-v68.png",
+      "runtime256": "/workspace/scratch/85111d38430a/npc-textures-v68/runtime256/npc-face-b-v68.png",
+      "unregistered256_preview": "/workspace/scratch/85111d38430a/npc-textures-v68/preview256/npc-face-b-v68.png",
+      "original_dimensions": [
+        1254,
+        1254
+      ],
+      "source_sha256": "37adc9f73bf2f0e12ebe5c10fc72a0537dce75c7ab2a42324ab8e60d0df93a3a",
+      "runtime_sha256": "2052d85e7efefc9f72c315f4567da87ae4422d7c90a5adfa18c9e1d3e5139e7a",
+      "method": "Built-in image_gen; piecewise vertical UV registration using recorded source/target rows, then BOX downsample. No procedural painting."
+    },
+    "body": {
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-fb1014bb-0bab-456f-9e59-7b641bc6549f.png",
+      "original": "/workspace/scratch/85111d38430a/npc-textures-v68/originals/npc-body-v68.png",
+      "runtime256": "/workspace/scratch/85111d38430a/npc-textures-v68/runtime256/npc-body-v68.png",
+      "unregistered256_preview": "/workspace/scratch/85111d38430a/npc-textures-v68/preview256/npc-body-v68.png",
+      "original_dimensions": [
+        1254,
+        1254
+      ],
+      "source_sha256": "a937307186838404bb9e12159e6bf3759d655bdae44a0844045495a6e7feed1b",
+      "runtime_sha256": "28ec5c08f68764bb696d3ef1a18403bac2fc9133c516dcb2187c719be9a24f32",
+      "method": "Built-in image_gen; rectangular atlas repack from generated y=702 split into exact 256px layout. BOX resize only, no procedural painting."
+    },
+    "towel": {
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-1b969b69-eb98-4314-bce6-622e19101afd.png",
+      "original": "/workspace/scratch/85111d38430a/npc-textures-v68/originals/towel.png",
+      "runtime256": "/workspace/scratch/85111d38430a/npc-textures-v68/runtime256/towel.png",
+      "unregistered256_preview": "/workspace/scratch/85111d38430a/npc-textures-v68/preview256/towel.png",
+      "original_dimensions": [
+        1254,
+        1254
+      ],
+      "source_sha256": "4543e980300d4f770ed19727a538854f8982e213c288e48d3f67c2b426851f46",
+      "runtime_sha256": "ba46d075d463e812d6e94b254c90989a7fdff6254a258806826dc1e92aa3b623",
+      "method": "Built-in image_gen; BOX downsample only. Required new ivory towel replaces observed high-frequency turquoise cloth defect. No procedural painting."
+    }
+  },
+  "uv_landmarks": "uv-landmarks.json",
+  "atlas_layout": {
+    "front_torso": [
+      0,
+      0,
+      128,
+      160
+    ],
+    "back_torso": [
+      128,
+      0,
+      256,
+      160
+    ],
+    "arm": [
+      0,
+      160,
+      64,
+      256
+    ],
+    "leg": [
+      64,
+      160,
+      128,
+      256
+    ],
+    "hand_foot_neck": [
+      128,
+      160,
+      256,
+      256
+    ]
+  }
+}

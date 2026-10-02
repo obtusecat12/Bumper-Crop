@@ -1,9 +1,9 @@
 import * as T from './vendor/three.module.min.js';
-import * as L from './level27-layout.js?v=67';
+import * as L from './level27-layout.js?v=68';
 import {createCreekAuthority} from './level27-creek.js?v=65';
 import {SPRING_SHELL} from './level27-shell-data.js?v=67';
 import {mergeGeometries,mergeVertices} from './vendor/BufferGeometryUtils.js';
-import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit,inAnnex,ANNEX,streamPath,stairCenter} from './level27-layout.js?v=67';
+import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit,inAnnex,ANNEX,streamPath,stairCenter} from './level27-layout.js?v=68';
 import {springMaterials,springTextures} from './level27-materials.js?v=63';
 
 import {createSpringDynamics} from './spring-dynamics.js?v=63';
@@ -12,7 +12,7 @@ import {createMineLamp,createPrimitiveWashStation} from './spring-props-v63.js?v
 import {paintGeology,configureGeology,naturalTreads,organicStone} from './spring-geology-v63.js?v=67';
 import {createSpringVolume} from './spring-volume-v65.js';
 import {createSpringCascades,createFlowStream} from './spring-cascades-v63.js?v=65';
-import {createSpringNPCs} from './level27-npcs-v67.js';
+import {createSpringNPCs} from './level27-npcs-v68.js';
 const UP=new T.Vector3(0,1,0);
 export const SPRING_LIGHTS=[
  {p:[-1.72,2.00,1.16],color:0xffc58f,power:5.8,range:7},

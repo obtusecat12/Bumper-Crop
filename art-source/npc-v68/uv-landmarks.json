@@ -1,0 +1,51 @@
+{
+  "labels": [
+    "top",
+    "hairline",
+    "brows",
+    "eyes",
+    "nose_tip",
+    "mouth",
+    "chin",
+    "bottom"
+  ],
+  "target_v_from_top": [
+    0,
+    0.16,
+    0.33,
+    0.39,
+    0.55,
+    0.7,
+    0.88,
+    1
+  ],
+  "faceA_source_v_from_top": [
+    0,
+    0.195,
+    0.367,
+    0.44,
+    0.57,
+    0.675,
+    0.855,
+    1
+  ],
+  "faceB_source_v_from_top": [
+    0,
+    0.164,
+    0.352,
+    0.415,
+    0.585,
+    0.7,
+    0.88,
+    1
+  ],
+  "faceA_eye_u": [
+    0.385,
+    0.615
+  ],
+  "faceB_eye_u": [
+    0.38,
+    0.62
+  ],
+  "measurement_note": "Source feature positions visually measured; target registration exact at these control rows."
+}
