@@ -1,0 +1,242 @@
+{
+  "method": "Production GLTFLoader + AnimationMixer and render-pass instrumentation; not browser FPS",
+  "skinnedMeshes": 6,
+  "motion": {
+    "frames": 240,
+    "closedSamples": 15,
+    "blinkTransitions": 3,
+    "maximumFinger": 0.5299971699714661,
+    "chestScaleRange": [
+      1,
+      1.0149999856948853
+    ],
+    "headYawRange": [
+      -0.045507818595804106,
+      0.04549397653276368
+    ]
+  },
+  "npcs": {
+    "actors": 2,
+    "triangles": 4520,
+    "bones": [
+      20,
+      20
+    ],
+    "animationHz": 20,
+    "mainFrameCap": false,
+    "updates": 282,
+    "material": "Unlit baked diffuse + five half-Lambert bands",
+    "nearest": true
+  },
+  "generatedDiffuseSizes": [
+    [
+      256,
+      256
+    ],
+    [
+      256,
+      256
+    ],
+    [
+      256,
+      256
+    ],
+    [
+      256,
+      256
+    ],
+    [
+      256,
+      256
+    ],
+    [
+      256,
+      256
+    ]
+  ],
+  "contacts": [
+    {
+      "id": "seated",
+      "feet": [
+        {
+          "bone": "footL",
+          "world": [
+            -0.8522441246904211,
+            -0.7972957188149608,
+            1.38158988871505
+          ],
+          "floor": -0.8716282436368206
+        },
+        {
+          "bone": "footR",
+          "world": [
+            -1.1389558363002594,
+            -0.7992957188149608,
+            1.16716882066026
+          ],
+          "floor": -0.8920522747926328
+        }
+      ],
+      "root": [
+        -1.24,
+        -0.8792957188149608,
+        1.62
+      ]
+    },
+    {
+      "id": "standing",
+      "feet": [
+        {
+          "bone": "footL",
+          "world": [
+            5.103,
+            0.3554725763200046,
+            0.16699999944865707
+          ],
+          "floor": 0.2769642151588891
+        },
+        {
+          "bone": "footR",
+          "world": [
+            5.4339999999254935,
+            0.35347255533916966,
+            0.1489999999171123
+          ],
+          "floor": 0.26921054153347124
+        }
+      ],
+      "root": [
+        5.22,
+        0.27347256892902877,
+        0.14
+      ]
+    }
+  ],
+  "lapSupports": [
+    {
+      "side": "left_palm",
+      "world": [
+        -0.8982321107111336,
+        -0.3487152778021456,
+        1.502544860261319
+      ],
+      "gap": 6.8114165419075334e-9
+    },
+    {
+      "side": "right_palm",
+      "world": [
+        -1.2196872506853729,
+        -0.36150667981573015,
+        1.241380940501827
+      ],
+      "gap": -5.154010329633252e-9
+    }
+  ],
+  "closedEyesRemainClosed": true,
+  "soleSamples": 224,
+  "maxFootSoleTerrainDifference": 0.016820368203795177,
+  "handToStoneRimMetres": -0.00048232316237495354,
+  "pinnedSupportMaxDriftMetres": 7.153510229797467e-8,
+  "physicalTransmissionMaterials": 0,
+  "sceneTriangles": 377548,
+  "sceneDraws": 61,
+  "measuredPasses": 522,
+  "stats": {
+    "mirrorHz": 10,
+    "mirrorCaptures": 19,
+    "mirrorCulls": 2,
+    "mainSceneRecaptures": 0,
+    "physicalTransmissionMaterials": 0,
+    "shadowBakePolicy": "scene entry only",
+    "shellTriangles": 192576,
+    "volume": {
+      "active": true,
+      "profile": {
+        "scale": 0.25,
+        "reflectionScale": 0.2,
+        "raySteps": 20,
+        "reflectionRaySteps": 16,
+        "simulationHz": 24,
+        "lightingHz": 8,
+        "cullVolume": true
+      },
+      "raySteps": 20,
+      "reflectionRaySteps": 16,
+      "shadowSteps": 4,
+      "noiseSize": 64,
+      "noiseChannels": "fBm, Worley",
+      "simulationCells": 32768,
+      "simulationModel": "GPU semi-Lagrangian density/heat grid",
+      "independentParticleSprites": 0,
+      "lightCacheCells": 32768,
+      "halfResolution": false,
+      "resolutionScale": 0.25,
+      "reflectionScale": 0.2,
+      "simulationHz": 24,
+      "lightingHz": 8,
+      "depthOcclusion": true,
+      "singleScattering": true,
+      "multipleScattering": false,
+      "geometryLightShadows": false,
+      "composeCalls": 139,
+      "frames": 139,
+      "simulationPasses": 40,
+      "simulationReuses": 99,
+      "lightCachePasses": 15,
+      "lightCacheReuses": 124,
+      "raymarchPasses": 139,
+      "compositePasses": 139,
+      "culledViews": 0,
+      "zeroDensityViews": 0,
+      "raySampleBudget": 140042416,
+      "lightDensitySampleBudget": 7864320,
+      "halfWidth": 320,
+      "halfHeight": 180,
+      "renderTargetType": "RGBA16F",
+      "channels": {
+        "reflection": {
+          "width": 384,
+          "height": 384,
+          "halfWidth": 77,
+          "halfHeight": 77,
+          "raymarchWidth": 77,
+          "raymarchHeight": 77,
+          "scale": 0.2,
+          "raySteps": 16,
+          "frames": 19,
+          "raySampleBudget": 1802416
+        },
+        "main": {
+          "width": 1280,
+          "height": 720,
+          "halfWidth": 320,
+          "halfHeight": 180,
+          "raymarchWidth": 320,
+          "raymarchHeight": 180,
+          "scale": 0.25,
+          "raySteps": 20,
+          "frames": 120,
+          "raySampleBudget": 138240000
+        }
+      }
+    },
+    "staticMeshesBefore": 133,
+    "staticMaterialDraws": 16,
+    "npcs": {
+      "actors": 2,
+      "triangles": 4520,
+      "bones": [
+        20,
+        20
+      ],
+      "animationHz": 20,
+      "mainFrameCap": false,
+      "updates": 282,
+      "material": "Unlit baked diffuse + five half-Lambert bands",
+      "nearest": true
+    }
+  },
+  "waterArea": 18.58,
+  "noAttachmentFeedback": true,
+  "renderStateRestored": true
+}

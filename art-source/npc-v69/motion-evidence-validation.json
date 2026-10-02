@@ -1,0 +1,10 @@
+{
+  "sourceFrames": 240,
+  "uniqueRenderedFrameHashes": 240,
+  "sourceSampleRate": 20,
+  "sourceSeconds": 12,
+  "gifFrames": 240,
+  "gifDurationMs": 12000,
+  "modelSimulation": "authoring model bone hierarchy + inverse-bind skinning + real morph deltas, independently checked against exported GLB TRS animation",
+  "motionAmplification": 1
+}

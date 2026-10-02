@@ -1,0 +1,14 @@
+{
+  "README.md": "8fdade6cdde91532bb912651df56340cf56acbb1017e7e940e9b4c5c2938556a",
+  "originals/body-a.png": "e62f3d067265ea57f76190115312396fa3efda0bf0309e8ce1e0fd8285504b80",
+  "originals/face-a.png": "4f8f6677245058758c5c5e46569ca53d323ab774a986a12cf298b0c63d60754a",
+  "prompts/body-a-safe-retry.prompt.txt": "0a7be62480f495366dab63f8ee605aa8c5565151cbc147156d391878ef76074f",
+  "prompts/body-a.prompt.txt": "4bd11a342f9f23395958715a3abf8ebcc4a4e812d9e1911b7663e29843e9bbd7",
+  "prompts/face-a.prompt.txt": "38831b5b5af756824b2989e37b644e86996cdf69811a8b406a10ac9036024e80",
+  "provenance/body-a-generation-error.json": "a3e2f2d31f8027847505093d4af2e42fdf6671581cf7f72eadc2f2222658dbaa",
+  "provenance/gpt_image_2_prompt_skill.md": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+  "provenance/manifest.json": "cfdd4a4f7a228892df27cd444ec334691587d2a2d99afb497e352432267e9956",
+  "register_textures.py": "49ee528ccb428a93f56f1dc021b7e568326a3fa0dd6bd851a85a17e2e3fa023d",
+  "runtime256/body-a.png": "f0d9f4846eda03dae44cb4396e36ce11763d186ed07cf8e5a7ffc767e340feb4",
+  "runtime256/face-a.png": "3090e5ca5ef77c41ee21d871601d135710ed5e1d2d2b7e87e32e1461d95c20cf"
+}

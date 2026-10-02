@@ -1,0 +1,28 @@
+{
+  "method": "Production AnimationMixer and exact focusDistance CPU only; no WebGL or FPS estimate",
+  "actors": {
+    "actors": 2,
+    "triangles": 4164,
+    "bones": [
+      20,
+      20
+    ],
+    "animationHz": 20,
+    "mainFrameCap": false,
+    "updates": 400,
+    "material": "Unlit baked diffuse + five half-Lambert bands",
+    "nearest": true
+  },
+  "npc": {
+    "minMs": 0.008972999999969034,
+    "medianMs": 0.011968000000024404,
+    "p95Ms": 0.06229400000000851,
+    "maxMs": 1.096554000000026
+  },
+  "focus": {
+    "minMs": 0.007350999999971464,
+    "medianMs": 0.009474000000011529,
+    "p95Ms": 0.0378069999999866,
+    "maxMs": 0.27223000000003594
+  }
+}

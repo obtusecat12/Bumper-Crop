@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "checks": 15,
+  "events": [
+    {
+      "case": "16 mouse reports, one render frame",
+      "frame": {
+        "x": 0.09000000000000001,
+        "y": -0.030000000000000013,
+        "mode": "camera",
+        "recovered": false
+      }
+    },
+    {
+      "case": "600 ms stall + stale input burst",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "mode": "camera",
+        "recovered": true
+      }
+    }
+  ],
+  "stats": {
+    "stale": 81,
+    "invalid": 2,
+    "warps": 2,
+    "stalls": 2,
+    "capped": 1
+  },
+  "scope": "Production input accumulator + entrypoint wiring. Synthetic stall replay; not measured browser FPS."
+}

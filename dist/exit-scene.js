@@ -8,12 +8,12 @@ import * as T from './vendor/three.module.min.js';
 import {exitPoint,exitSample,exitSurface,ease,EXIT_CITY_Y} from './exit-route.js?v=60';
 import {height} from './world.js?v=60';
 import {createUrbanMaterials} from './urban-materials.js?v=60';
-import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=60';
+import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=69';
 import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=60';
 import * as P from './urban-props.js?v=60';
 import * as S from './urban-smallprops.js?v=60';
-import {addStreetwallBuilding} from './urban-streetwall.js?v=60';
-import {addBlockStreets,pavement,curb,roadHeight} from './urban-streets.js?v=60';
+import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=69';
+import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=69';
 import {addReferenceMaterials} from './reference-materials.js?v=60';
 import {createReferenceScenes,referenceWaypoint,clinicToWorld} from './reference-scenes.js?v=60';
 import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=60';
@@ -91,10 +91,10 @@ function referenceGround(mats){
  b.pop();return{object:b.finish('Landmark sidewalk returns / shared street ground'),colliders:b.colliders,walks:b.walks};
 }
 function* buildBlock(mats,plan,lod){
- const b=new UrbanBatch(mats);b.push(CITY_ORIGIN.x,0,CITY_ORIGIN.z,CITY_ANGLE);addBlockStreets(b,plan,lod);yield;
- for(const spec of plan.buildings){b.push(spec.x,Y+.15,spec.z,spec.ry);addStreetwallBuilding(b,{...spec,lod});b.pop();yield;}
+ const b=new UrbanBatch(mats);try{b.push(CITY_ORIGIN.x,0,CITY_ORIGIN.z,CITY_ANGLE);yield* addBlockStreetsTask(b,plan,lod);
+ for(const spec of plan.buildings){b.push(spec.x,Y+.15,spec.z,spec.ry);yield* addStreetwallBuildingTask(b,{...spec,lod});b.pop();yield;}
 
- b.pop();return{object:b.finish('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district),colliders:b.colliders,walks:b.walks,plan,lod};
+ b.pop();return{object:yield* b.finishTask('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district),colliders:b.colliders,walks:b.walks,plan,lod};}finally{b.discard();}
 }
 export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
  const mats=addApproachGroundMaterial(addDistrictMaterials(addReferenceMaterials(createUrbanMaterials()))),district=createClinicDistrict(mats),approach=makeApproach(mats),references=createReferenceScenes(mats),joinedGround=referenceGround(mats),fabric=createLandmarkFabric(mats),fabricGround=createLandmarkGround(mats),bath=createSpringEntrance(mats),root=new T.Group(),blocks=new Map();root.name='Level 10 to Level 11 / urban fabric';root.add(bath.object,approach.object,approach.early,references.object,joinedGround.object,district.object,fabric.object,fabricGround.object);root.visible=false;
@@ -111,7 +111,7 @@ export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
   next.sort((a,b)=>a.d-b.d);queue=next;for(const[k,v]of blocks){if(!wanted.has(k))removeBlock(k);else if(v.lod===1&&Math.abs(v.plan.ix-ix)<=1&&Math.abs(v.plan.iz-iz)<=1&&job?.key!==k)queue.push({key:k,ix:v.plan.ix,iz:v.plan.iz,d:0,lod:0});}
   if(job&&!wanted.has(job.key)){job.generator.return();job=null;}stats.district=cityDistrict(p.x,p.z);recount();
  }
- function advance(all=false){const start=performance.now();let step=0;do{if(!job){const q=queue.shift();if(!q)break;job={...q,generator:buildBlock(mats,cityBlockPlan(q.ix,q.iz,BUILDING_TYPES),q.lod)};}const result=job.generator.next();step++;if(result.done){const key=job.key;if(blocks.has(key))removeBlock(key);commitBlock(result.value,key);job=null;}}while((all||performance.now()-start<3)&&step<(all?10000:3));stats.pending=queue.length+Number(!!job);}
+ function advance(all=false){const start=performance.now();let step=0;do{if(!job){const q=queue.shift();if(!q)break;job={...q,generator:buildBlock(mats,cityBlockPlan(q.ix,q.iz,BUILDING_TYPES),q.lod)};}const result=job.generator.next();step++;if(result.done){const key=job.key;if(blocks.has(key))removeBlock(key);commitBlock(result.value,key);job=null;}}while((all||performance.now()-start<3)&&step<(all?10000:64));stats.pending=queue.length+Number(!!job);}
  function update(state){
   fountainClock.value=performance.now()*.001;
   const near=state.cx>=4n&&state.cx<=13n&&state.cz>=-1n&&state.cz<=17n;root.visible=city||near;if(!root.visible||disposed)return;

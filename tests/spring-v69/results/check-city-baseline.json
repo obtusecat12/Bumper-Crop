@@ -1,0 +1,12 @@
+{
+  "synchronous": {
+    "sha256": "282fdf16318cf92bb605e41fdc7610713df96424efeb09ed742119379875265f",
+    "stats": {
+      "triangles": 218818,
+      "draws": 35,
+      "parts": 15102
+    },
+    "colliders": 101,
+    "walks": 40
+  }
+}

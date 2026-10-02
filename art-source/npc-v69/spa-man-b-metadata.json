@@ -1,0 +1,206 @@
+{
+  "file": "/workspace/scratch/85111d38430a/npc-models-v69/final/spa-man-b.glb",
+  "triangles": 2190,
+  "bones": 20,
+  "materialPrimitives": 3,
+  "bounds": [
+    [
+      -0.4254194937246589,
+      0.0,
+      -0.135625
+    ],
+    [
+      0.29815585071735096,
+      1.7295844344519968,
+      0.28741661275820024
+    ]
+  ],
+  "contacts": {
+    "left_palm": [
+      -0.37,
+      0.737,
+      0.19
+    ],
+    "right_palm": null,
+    "feet_ground_y": 0.0,
+    "seated_pelvis_y": null,
+    "seated_waterline_y": null,
+    "eye_state": "calm open",
+    "supports": "Both seated palms rest on towel-covered thighs; standing left palm rests on basin. Both feet flat."
+  },
+  "height": 1.7295844344519968,
+  "animationFrames": 241,
+  "duration": 12,
+  "sampleRate": 20,
+  "interpolation": "STEP",
+  "embeddedTextures": true,
+  "uvConvention": "glTF image top is v=0; PNGs not flipped",
+  "weightsNormalized": true,
+  "degenerateTriangles": 8,
+  "support": {
+    "hand.L": {
+      "maxOriginDisplacementMeters": 3.3422138886441676e-16
+    },
+    "hand.R": {
+      "maxOriginDisplacementMeters": 0.010669017348328431
+    },
+    "foot.L": {
+      "maxOriginDisplacementMeters": 1.4304896245381992e-17
+    },
+    "foot.R": {
+      "maxOriginDisplacementMeters": 1.3877787807814457e-17
+    },
+    "leftPalmSurfaceDistanceToTargetMeters": 1.8808403568091894e-13
+  },
+  "measurementsMeters": {
+    "crownHeight": 1.7295844344519968,
+    "nominalAnatomicalHeadHeight": 0.242,
+    "headCraniumWidth": 0.176,
+    "maximumCheekBreadth": 0.176,
+    "jawBreadth": 0.146,
+    "chinBreadth": 0.126,
+    "pectoralCrossSectionWidth": 0.398,
+    "pectoralCrossSectionDepth": 0.252,
+    "waistCrossSectionWidth": 0.322,
+    "neckBreadth": 0.112,
+    "exposedNeckBelowChin": 0.06399999999999983,
+    "shoulderJointSpan": 0.42314536509336836,
+    "upperArmFullDiameters": [
+      0.118,
+      0.126
+    ],
+    "forearmFullDiameters": [
+      0.098,
+      0.102
+    ],
+    "wristFullDiameters": [
+      0.06,
+      0.064
+    ],
+    "standingHeightInNominalHeadUnits": 7.147043117570235
+  },
+  "permanentlyClosedEyes": false,
+  "animationNotes": {
+    "supportedArms": "Clavicles remain live. B left hand alone is world-pinned; A wrists follow 1.5 mm slow forward/back motion with <=0.5 mm vertical lift.",
+    "feet": "Both foot roots and sole surfaces stay fixed.",
+    "breath": "Chest uniform expansion 1.5% (about 3 mm per side); shoulder lift about 3 mm over six seconds; neck cancels scale to preserve head size.",
+    "headRotationRadians": 0.05,
+    "blinkMorphWeights": "A always zero; B 200-250 ms full closes at 2.4, 6.8, 10.4 seconds, real nonzero fitted lids.",
+    "fingerMorphs": "Real distal grouped-finger deltas; supported palms remain unchanged."
+  },
+  "skinBindIdentityMaxError": 0.0,
+  "boneOriginsMeters": {
+    "root": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "pelvis": [
+      0.013,
+      0.935,
+      -0.014
+    ],
+    "spine": [
+      -0.007361990950226242,
+      1.115,
+      0.0002533936651583687
+    ],
+    "chest": [
+      -0.024556561085972844,
+      1.267,
+      0.012289592760180991
+    ],
+    "neck": [
+      -0.042656108597285074,
+      1.427,
+      0.024959276018099552
+    ],
+    "head": [
+      -0.038,
+      1.538,
+      0.019
+    ],
+    "clavicle.L": [
+      -0.134737556561086,
+      1.357,
+      0.019416289592760184
+    ],
+    "upper_arm.L": [
+      -0.245,
+      1.367,
+      0.02
+    ],
+    "forearm.L": [
+      -0.314,
+      1.078,
+      0.058
+    ],
+    "hand.L": [
+      -0.355,
+      0.795,
+      0.142
+    ],
+    "clavicle.R": [
+      0.06526244343891403,
+      1.357,
+      0.019416289592760184
+    ],
+    "upper_arm.R": [
+      0.177,
+      1.389,
+      -0.002
+    ],
+    "forearm.R": [
+      0.225,
+      1.098,
+      -0.015
+    ],
+    "hand.R": [
+      0.26,
+      0.834,
+      0.045
+    ],
+    "thigh.L": [
+      -0.079,
+      0.935,
+      -0.01
+    ],
+    "shin.L": [
+      -0.104,
+      0.506,
+      0.005
+    ],
+    "foot.L": [
+      -0.117,
+      0.082,
+      0.027
+    ],
+    "thigh.R": [
+      0.127,
+      0.935,
+      -0.018
+    ],
+    "shin.R": [
+      0.182,
+      0.507,
+      0.009
+    ],
+    "foot.R": [
+      0.214,
+      0.08,
+      0.009
+    ]
+  },
+  "animationBounds": [
+    [
+      -0.4253956317257414,
+      1.3877787807814457e-17,
+      -0.136625
+    ],
+    [
+      0.30799653689440076,
+      1.7337330550942198,
+      0.2873402543616641
+    ]
+  ]
+}

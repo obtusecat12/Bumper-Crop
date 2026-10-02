@@ -1,0 +1,100 @@
+{
+  "assetVersion": "v69",
+  "files": [
+    {
+      "path": "build_npcs.py",
+      "bytes": 40901,
+      "sha256": "81e33e0c9a3b63d1e71820d95df47cbb3cc2c7625722066a8158b5ca0357a3d6"
+    },
+    {
+      "path": "verify_assets.py",
+      "bytes": 5004,
+      "sha256": "17894f99899a280b063059d9399fd9cb23172c033b7aeb12bac0377c1a23c903"
+    },
+    {
+      "path": "render_motion.py",
+      "bytes": 2328,
+      "sha256": "94bf4acdd68c7b98ceea6bb7897eebf1eeae9823594fbdfffc0d6c9626e700d9"
+    },
+    {
+      "path": "MODELS.md",
+      "bytes": 5291,
+      "sha256": "b4ca416d170b719bc838c472b79041b539ef5643c59efdac48fb659a68b3a6d8"
+    },
+    {
+      "path": "runtime/body-a.png",
+      "bytes": 91473,
+      "sha256": "f0d9f4846eda03dae44cb4396e36ce11763d186ed07cf8e5a7ffc767e340feb4"
+    },
+    {
+      "path": "runtime/face-a.png",
+      "bytes": 125005,
+      "sha256": "3090e5ca5ef77c41ee21d871601d135710ed5e1d2d2b7e87e32e1461d95c20cf"
+    },
+    {
+      "path": "runtime/body-b.png",
+      "bytes": 79400,
+      "sha256": "28ec5c08f68764bb696d3ef1a18403bac2fc9133c516dcb2187c719be9a24f32"
+    },
+    {
+      "path": "runtime/face-b.png",
+      "bytes": 79439,
+      "sha256": "2052d85e7efefc9f72c315f4567da87ae4422d7c90a5adfa18c9e1d3e5139e7a"
+    },
+    {
+      "path": "runtime/towel.png",
+      "bytes": 130149,
+      "sha256": "ba46d075d463e812d6e94b254c90989a7fdff6254a258806826dc1e92aa3b623"
+    },
+    {
+      "path": "final/spa-man-a.glb",
+      "bytes": 1051084,
+      "sha256": "9a7e1129c55ad8ab0773162432ee1db18b6d757334485b8912fec6c2b9d5a92a"
+    },
+    {
+      "path": "final/spa-man-b.glb",
+      "bytes": 957992,
+      "sha256": "85957e1a8aeaca37cd149dfac4823a5b111cf1e1a3f61712a4e2f54bc1c2b7a1"
+    },
+    {
+      "path": "final/spa-man-a-metadata.json",
+      "bytes": 4407,
+      "sha256": "37ede5e1e84d898accf5699df640c5a15d21a0b5a6f5bc6490db8c17918bdc63"
+    },
+    {
+      "path": "final/spa-man-b-metadata.json",
+      "bytes": 4398,
+      "sha256": "66be4d72d08073a59623ac416ccd3011eb94691407c4a0a68f28ff6949499f83"
+    },
+    {
+      "path": "final/validation.json",
+      "bytes": 10515,
+      "sha256": "88b2a914596ff41b9fc6cdad490c74d0bb7b903a8650ef00f59edfa131ed5f3e"
+    },
+    {
+      "path": "final/exported-animation-validation.json",
+      "bytes": 1316,
+      "sha256": "be545c664b7802bd168a5c6b32c69a57ef91a6fb66cb368e1cd083931bc3242a"
+    },
+    {
+      "path": "final/model-contact-sheet.png",
+      "bytes": 782774,
+      "sha256": "7dadc8d18be78d74f30b79670455b3986525d54c842cfaa678a004de70a67212"
+    },
+    {
+      "path": "final/b-eyes-open-closed.png",
+      "bytes": 71996,
+      "sha256": "ab3d1a2dd3607e91531da373ba89a7badb7af5df2b1950fbdfb5da1265944cf2"
+    },
+    {
+      "path": "final/npc-v69-motion.webm",
+      "bytes": 763680,
+      "sha256": "01b0a4023a805f1e3c213eec5ffd8043f7885a2c8ada3c7907738cbbc66256de"
+    },
+    {
+      "path": "final/b-head-blink-motion.gif",
+      "bytes": 1812982,
+      "sha256": "b05e0d8a9c0233dd4abbdc29e681d39ff291c68d4e07dcb660a14718dce01a12"
+    }
+  ]
+}

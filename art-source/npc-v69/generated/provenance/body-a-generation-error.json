@@ -1,0 +1,12 @@
+{
+  "asset": "body-a",
+  "tool": "image_gen.imagegen",
+  "attempts": 1,
+  "status": "failed",
+  "stage": "output",
+  "reason": "moderation_blocked",
+  "category": "sexual",
+  "request_id": "fec3d16c-f606-4ead-9d41-b311caa54323",
+  "prompt": "../prompts/body-a.prompt.txt",
+  "note": "Requested non-explicit elderly male game skin UV atlas covering torso, back, arms, legs and neck/hand patch, no explicit anatomy. No output image returned. No retries made."
+}

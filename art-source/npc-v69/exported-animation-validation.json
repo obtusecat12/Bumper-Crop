@@ -1,0 +1,70 @@
+[
+  {
+    "file": "spa-man-a.glb",
+    "joints": 20,
+    "skinnedMeshNodes": 1,
+    "materials": 3,
+    "triangles": 2330,
+    "samples": 241,
+    "seconds": 12.0,
+    "allInterpolation": "STEP",
+    "boneTracks": 13,
+    "blinkMovingVertices": 0,
+    "blinkFullClosedSamples": 0,
+    "bodyVertexMaxTravelMeters": 0.006578904239135186,
+    "soleMaxTravelMeters": 0.0,
+    "leftPalmRigidPatchMaxTravelMeters": 0.0015212832725635212,
+    "fingerTargetMovingVertices": [
+      88,
+      88
+    ],
+    "textures": [
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ]
+    ]
+  },
+  {
+    "file": "spa-man-b.glb",
+    "joints": 20,
+    "skinnedMeshNodes": 1,
+    "materials": 3,
+    "triangles": 2190,
+    "samples": 241,
+    "seconds": 12.0,
+    "allInterpolation": "STEP",
+    "boneTracks": 14,
+    "blinkMovingVertices": 564,
+    "blinkFullClosedSamples": 15,
+    "bodyVertexMaxTravelMeters": 0.013751764323977577,
+    "soleMaxTravelMeters": 5.972106009721756e-08,
+    "leftPalmRigidPatchMaxTravelMeters": 1.0060483492547815e-07,
+    "fingerTargetMovingVertices": [
+      88,
+      88
+    ],
+    "textures": [
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ]
+    ]
+  }
+]

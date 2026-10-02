@@ -12,7 +12,7 @@ import {createMineLamp,createPrimitiveWashStation} from './spring-props-v63.js?v
 import {paintGeology,configureGeology,naturalTreads,organicStone} from './spring-geology-v63.js?v=67';
 import {createSpringVolume} from './spring-volume-v65.js';
 import {createSpringCascades,createFlowStream} from './spring-cascades-v63.js?v=65';
-import {createSpringNPCs} from './level27-npcs-v68.js';
+import {createSpringNPCs} from './level27-npcs-v69.js';
 const UP=new T.Vector3(0,1,0);
 export const SPRING_LIGHTS=[
  {p:[-1.72,2.00,1.16],color:0xffc58f,power:5.8,range:7},

@@ -1,0 +1,27 @@
+{
+  "camera": "spring-npc-seated",
+  "simulationFrames": 101,
+  "densityGain": 0.85,
+  "extinction": 2.55,
+  "volumeViews": [
+    {
+      "view": "reflection",
+      "minTransmission": 0.2744140625,
+      "meanTransmission": 0.8429182767868042,
+      "coveredFraction": 0.455012077294686
+    },
+    {
+      "view": "main",
+      "minTransmission": 0.26025390625,
+      "meanTransmission": 0.6851509213447571,
+      "coveredFraction": 1.0
+    }
+  ],
+  "glErrors": 0,
+  "renderSize": [
+    960,
+    686
+  ],
+  "source": "actual exported scene geometry, HDR water render, production volume shaders and actual scene lights",
+  "limitations": "Native GLES diagnostic; no browser UI, lens pass or runtime frame-rate measurement."
+}

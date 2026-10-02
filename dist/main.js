@@ -1,11 +1,12 @@
+import {LookInput} from './look-input-v69.js';
 import {SHOWER_HEADS} from './bathhouse-layout.js?v=66';
 import {initializeSpaTextures} from './spa-materials-v66.js';
 import {inSpaWater} from './spa-layout-v66.js';
 import {createShowerAudio} from './bath-v62-audio.js?v=62';
 import {initializeCanTextures} from './canned-food.js?v=60';
 import {initializeSpringTextures} from './level27-materials.js?v=63';
-import {createLevel27} from './level27-scene.js?v=68';
-import {initializeSpringNPCs} from './level27-npcs-v68.js';
+import {createLevel27} from './level27-scene.js?v=69';
+import {initializeSpringNPCs} from './level27-npcs-v69.js';
 import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=68';
 import {nearBathEntrance} from './level27-entry.js?v=61';
 import {initializeBathTextures} from './bath-textures.js?v=62';
@@ -18,7 +19,7 @@ import {initializeExitTextures} from './exit-textures.js?v=60';
 import {initializeReferenceTextures} from './reference-materials.js?v=60';
 import {initializeUrbanAssets} from './urban-assets.js?v=60';
 import {referenceEnvironment} from './reference-scenes.js?v=60';
-import {createExitScene} from './exit-scene.js?v=60';
+import {createExitScene} from './exit-scene.js?v=69';
 import {ExitAudio} from './exit-audio.js?v=60';
 import {initializeAlmondTextures,hydrateAlmondPickups,releaseAlmondBottle,almondVariant} from './almond-water-assets.js?v=60';
 import {createRuralPowerNetwork} from './rural-power-render.js?v=60';
@@ -134,6 +135,8 @@ const seed=stringSeed('CHLORINE / ABUNDANCE / 10'),chunks=new Map(),collected=ne
 const wheatView={value:new T.Vector3()};let chunkStream=createChunkStream({wind,viewUniform:wheatView});
 let queue=[],activeBuild=null,playing=false,started=false,ready=false,lastFrame=performance.now(),time=0,uiTick=0,step=0,toastTimer,activeModal=null,lastFocus=null,hadMovement=false,lastWeather='',qualityTimer=0,frameCount=0,frameTime=0,fps=60,autoScale=1,contextLost=false,streamFailed=false;
 let developerSearch=null,teleportJob=null,coverageRadius=0,referenceView=null,mapWasPlaying=false;
+const lookInput=new LookInput(performance.now());
+let joyPointer=null,lookPointer=null;
 let interaction=null;const keys=new Set(),joy={x:0,z:0};let touchRun=false,mouseDragging=false,zoomHeld=false,zoomSetting=1;
 const navigationMap=createNavigationMap({host:game,parts:instrumentParts,seed,onOpen:toggleMap,onClose:()=>closeModal(),onTeleport:teleportFromMap});
 const uiThemes=createUIThemes();
@@ -355,10 +358,10 @@ const weatherDirector=new WeatherDirector({onCue:kind=>audio.powerCue(kind)});le
 for(const button of document.querySelectorAll('[data-weather]'))button.onclick=()=>{if(!ready||teleportJob)return;if(state.level===27||bathhouse.active){$('#weather-status').textContent='洞穴与室外天气隔离。返回街道后可更改天气。';return;}audio.start();const kind=button.dataset.weather;weatherDirector.start(kind,{manual:true});if(kind==='normal'){weatherDirector.wetness=0;rainEffects.clear();lensWater.reset();waterRipples.reset();waterImpact.clear();weatherFlare.reset();}weatherState=weatherDirector.update(0);closeModal(false);start();toast(kind==='sunbreak'?'晴空已触发 · 4 秒后开始转入黄昏':WEATHER_LABELS[kind]+' · 已触发');};
 
 function toast(text){$('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),3600)}
-function setPlay(value){if(value!==playing){weatherDirector.resetClock();cameraRig.resume();wetPoseFresh=true;lastFrame=performance.now();}survivalDisplay.resetMotion();playing=value;$('#menu').hidden=value;$('#hud').hidden=!value;$('#touch').hidden=!value||!touchDevice;if(value){audio.start();if(!started){started=true;toast('沿着小径前行。地上的瓶子可以按 E 拾取。')}$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';$('#eyebrow').textContent='PAUSED';}else{springSession.closing=0;springOpen=0;eyelids.style.opacity='0';pointerLockHeld=false;audio.ctx?.suspend().catch(()=>{});keys.clear();joy.x=joy.z=0;touchRun=false;zoomHeld=false;zoomSetting=1;waterPipeline.focus.setZoom(1);$('#touch-zoom').textContent='1×';$('#stick').style.transform='';if(document.pointerLockElement)document.exitPointerLock();}}
+function setPlay(value){resetLookInput();if(value!==playing){weatherDirector.resetClock();cameraRig.resume();wetPoseFresh=true;lastFrame=performance.now();}survivalDisplay.resetMotion();playing=value;$('#menu').hidden=value;$('#hud').hidden=!value;$('#touch').hidden=!value||!touchDevice;if(value){audio.start();if(!started){started=true;toast('沿着小径前行。地上的瓶子可以按 E 拾取。')}$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';$('#eyebrow').textContent='PAUSED';}else{springSession.closing=0;springOpen=0;eyelids.style.opacity='0';pointerLockHeld=false;audio.ctx?.suspend().catch(()=>{});keys.clear();joy.x=joy.z=0;touchRun=false;zoomHeld=false;zoomSetting=1;waterPipeline.focus.setZoom(1);$('#touch-zoom').textContent='1×';$('#stick').style.transform='';if(document.pointerLockElement)document.exitPointerLock();}}
 function start(){if(!ready||teleportJob||developerSearch)return;setPlay(true);if(!touchDevice){try{const p=renderer.domElement.requestPointerLock?.();if(p&&p.catch)p.catch(()=>toast('按住鼠标拖动环顾，W A S D 移动。'))}catch{toast('按住鼠标拖动环顾，W A S D 移动。')}}}
 $('#start').onclick=start;$('#pause-button').onclick=()=>setPlay(false);
-document.addEventListener('pointerlockchange',()=>{const held=document.pointerLockElement===renderer.domElement,lost=pointerLockHeld&&!held;pointerLockHeld=held;if(lost&&playing&&!touchDevice&&!activeModal)setPlay(false);});
+document.addEventListener('pointerlockchange',()=>{const held=document.pointerLockElement===renderer.domElement,lost=pointerLockHeld&&!held;pointerLockHeld=held;resetLookInput(held);if(lost&&playing&&!touchDevice&&!activeModal)setPlay(false);});
 document.addEventListener('pointerlockerror',()=>{if(playing)toast('按住鼠标拖动环顾，W A S D 移动。')});
 function openModal(id){if(navigationMap.isOpen)navigationMap.hide();if(activeModal)activeModal.hidden=true;lastFocus=document.activeElement;if(playing)setPlay(false);activeModal=$('#'+id);activeModal.hidden=false;if(id==='world-map')navigationMap.show(mapPose());if(id==='developer'){settings.devMode=true;$('#devMode').checked=true;$('#developer-button').hidden=false;savePreferences();updateDeveloperCoordinates();}if(id==='journal')$('#expedition').textContent=started?`已探索 ${Math.round(state.distance)} 米 · ${Math.floor(state.elapsed/60)} 分钟 · 杏仁水 ${state.bottles} 瓶`:'尚未开始探索。';activeModal.querySelector('button,select,input')?.focus()}
 function closeModal(resume=true){if(!activeModal||teleportJob)return;const wasMap=activeModal.id==='world-map';if(developerSearch){developerSearch.return();developerSearch=null;developerBusy(false);$('#developer-status').textContent='已取消搜索。';}if(wasMap)navigationMap.hide();activeModal.hidden=true;activeModal=null;lastFocus?.focus();if(wasMap&&resume&&mapWasPlaying&&ready)start();}
@@ -467,24 +470,35 @@ document.addEventListener('keydown',e=>{if(e.code==='KeyF'){e.preventDefault();i
  return;
 } if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.repeat)return;if(e.code==='Escape')setPlay(false);if(e.code==='KeyE')use();if(e.code==='KeyQ')drink();if(e.code==='KeyR'&&waterInventory.length&&!waterInspection.active)waterInspection.begin(waterInventory.at(-1),null,camera);if(e.code==='Space')jump();if(e.code==='KeyJ')openModal('journal');if(e.code==='F10'){e.preventDefault();fullscreen();}});
 document.addEventListener('keyup',e=>keys.delete(e.code));
-addEventListener('blur',()=>{keys.clear();mouseDragging=false;if(playing)setPlay(false)});
+addEventListener('blur',()=>{keys.clear();resetLookInput();if(playing)setPlay(false)});
 document.addEventListener('visibilitychange',()=>{irradiance.pause(document.hidden||state.level===11);weatherDirector.resetClock();if(document.hidden&&playing)setPlay(false)});
-document.addEventListener('mousemove',e=>{if(!playing||touchDevice||(!document.pointerLockElement&&!mouseDragging))return;if(waterInspection.active){waterInspection.rotate(e.movementX,e.movementY);return;}if(e.movementX||e.movementY)leaveReferenceView();const sens=Number(settings.sensitivity)*.000025/waterPipeline.focus.result.zoom;state.yaw-=e.movementX*sens;state.pitch-=e.movementY*sens;state.pitch=T.MathUtils.clamp(state.pitch,-1.4,1.4)});
-renderer.domElement.addEventListener('mousedown',e=>{if(playing){if(e.button===2){zoomHeld=true;leaveReferenceView();}mouseDragging=true;if(!document.pointerLockElement&&!touchDevice){try{renderer.domElement.requestPointerLock?.()?.catch?.(()=>{});}catch{}}}});addEventListener('mouseup',e=>{mouseDragging=false;if(e.button===2)zoomHeld=false;});renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
+function resetLookInput(locked=document.pointerLockElement===renderer.domElement){
+ lookInput.reset(performance.now(),{locked});mouseDragging=false;
+ for(const [element,id] of [[renderer.domElement,lookPointer],[$('#joystick'),joyPointer]])if(id!==null&&element.hasPointerCapture?.(id))element.releasePointerCapture(id);
+ lookPointer=joyPointer=null;joy.x=joy.z=0;touchRun=false;$('#stick').style.transform='';
+}
+function lookOptions(e,touch=false){const inspect=waterInspection.active;return{now:performance.now(),stamp:e.timeStamp,origin:performance.timeOrigin,locked:!touch&&document.pointerLockElement===renderer.domElement,mode:inspect?'inspection':'camera',scale:inspect?(touch?1.5:1):(touch?.004:Number(settings.sensitivity)*.000025)/Math.max(1,waterPipeline.focus.result.zoom)};}
+document.addEventListener('mousemove',e=>{
+ if(!playing||touchDevice)return;const locked=document.pointerLockElement===renderer.domElement;
+ if(!locked&&!mouseDragging)return;const options=lookOptions(e);
+ if(locked)lookInput.push(e.movementX,e.movementY,options);else lookInput.drag(e.clientX,e.clientY,options);
+});
+renderer.domElement.addEventListener('mousedown',e=>{if(playing){if(e.button===2){zoomHeld=true;leaveReferenceView();}mouseDragging=true;if(document.pointerLockElement!==renderer.domElement){lookInput.beginDrag(e.clientX,e.clientY);if(!touchDevice){try{renderer.domElement.requestPointerLock?.()?.catch?.(()=>{});}catch{}}}}});
+addEventListener('mouseup',e=>{mouseDragging=false;lookInput.endDrag();if(e.button===2)zoomHeld=false;});renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
 renderer.domElement.addEventListener('wheel',e=>{if(!playing||activeModal)return;e.preventDefault();if(waterInspection.active){waterInspection.zoom(e.deltaY);return;}leaveReferenceView();zoomSetting=T.MathUtils.clamp(zoomSetting*Math.exp(-e.deltaY*.0015),1,4.5);},{passive:false});
 $('#touch-zoom').onclick=()=>{leaveReferenceView();zoomSetting=zoomSetting<1.5?2:zoomSetting<3?4.5:1;$('#touch-zoom').textContent=zoomSetting+'×';};
-let joyPointer=null,lookPointer=null,lastTouch={x:0,y:0};
 $('#joystick').addEventListener('pointerdown',e=>{joyPointer=e.pointerId;$('#joystick').setPointerCapture(e.pointerId);moveJoy(e)});
 function moveJoy(e){if(e.pointerId!==joyPointer)return;const r=$('#joystick').getBoundingClientRect();let x=(e.clientX-r.left-r.width/2)/40,z=(e.clientY-r.top-r.height/2)/40,l=Math.hypot(x,z);if(l>1){x/=l;z/=l}joy.x=x;joy.z=z;$('#stick').style.transform=`translate(${x*33}px,${z*33}px)`}
 $('#joystick').addEventListener('pointermove',moveJoy);for(const event of['pointerup','pointercancel'])$('#joystick').addEventListener(event,()=>{joyPointer=null;joy.x=joy.z=0;$('#stick').style.transform=''})
-renderer.domElement.addEventListener('pointerdown',e=>{if(!playing||e.pointerType==='mouse')return;lookPointer=e.pointerId;lastTouch={x:e.clientX,y:e.clientY};renderer.domElement.setPointerCapture(e.pointerId)});
-renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerId!==lookPointer||!playing)return;if(waterInspection.active){waterInspection.rotate((e.clientX-lastTouch.x)*1.5,(e.clientY-lastTouch.y)*1.5);lastTouch.x=e.clientX;lastTouch.y=e.clientY;return;}if(e.clientX!==lastTouch.x||e.clientY!==lastTouch.y)leaveReferenceView();state.yaw-=(e.clientX-lastTouch.x)*.004/waterPipeline.focus.result.zoom;state.pitch=T.MathUtils.clamp(state.pitch-(e.clientY-lastTouch.y)*.004/waterPipeline.focus.result.zoom,-1.4,1.4);lastTouch={x:e.clientX,y:e.clientY}});
-for(const event of['pointerup','pointercancel'])renderer.domElement.addEventListener(event,()=>lookPointer=null);
+renderer.domElement.addEventListener('pointerdown',e=>{if(!playing||e.pointerType==='mouse')return;lookPointer=e.pointerId;lookInput.beginDrag(e.clientX,e.clientY);renderer.domElement.setPointerCapture(e.pointerId)});
+renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerId!==lookPointer||!playing)return;lookInput.drag(e.clientX,e.clientY,lookOptions(e,true));});
+for(const event of['pointerup','pointercancel','lostpointercapture'])renderer.domElement.addEventListener(event,e=>{if(e.pointerId===lookPointer){lookPointer=null;lookInput.endDrag();if(event==='pointercancel')lookInput.reset(performance.now());}});
 $('#touch-run').addEventListener('pointerdown',e=>{touchRun=true;e.currentTarget.setPointerCapture(e.pointerId)});for(const event of['pointerup','pointercancel'])$('#touch-run').addEventListener(event,()=>touchRun=false);$('#touch-use').onclick=use;$('#touch-drink').onclick=drink;$('#touch-jump').onclick=jump;
 
 function currentChunk(){return chunks.get(`${state.cx},${state.cz}`)}
 function cameraFloor(){if(state.level===27)return springFloor(state.x,state.z);if(bathhouse.active)return bathFloor(state.x,state.z);if(state.level===11)return exitScene.floorAt(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z);const f=currentChunk()?.field;const base=f?surfaceHeight(state.x,state.z,f):height(state.x,state.z,state.cx,state.cz);return transitionProgress.value>.6?Math.max(base,exitScene.floorAt(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z)):base}
 function resetCameraRig(){
+ resetLookInput();
  const eyeY=cameraFloor()+(referenceView?.eye??1.77);state.y=eyeY;
  cameraRig.reset({x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,eyeY,jump:state.jump});wetPoseFresh=true;
 }
@@ -573,7 +587,7 @@ function weather(dt,renderDt=dt){
 
 renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();irradiance.pause();displayFilter.contextLost();waterRipples.contextLost();waterState.reset();bodyWater.reset();waterBubbles.clear();waterImpact.clear();rainEffects.clear();performanceMeter.reset();contextLost=true;if(playing)setPlay(false);$('#start').disabled=true;$('#start').innerHTML='<span>画面正在恢复</span><small>…</small>'});
 renderer.domElement.addEventListener('webglcontextrestored',()=>{contextLost=false;if(state.level===27||bathhouse.active)renderer.shadowMap.needsUpdate=true;naturalShadows.invalidate();irradiance.restore();$('#start').disabled=!ready||!!teleportJob;$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';resize()});
-function animate(now){requestAnimationFrame(animate);const rawDt=(now-lastFrame)/1000,last=lastFrame;lastFrame=now;const dt=Math.min(.035,Math.max(.001,rawDt));if(document.hidden||contextLost)return;performanceMeter.begin(settings.showfps||settings.devMode);time+=dt;if(state.level===27){animateSpring(now,dt,rawDt);return;}if(bathhouse.active){animateBath(now,dt,rawDt);return;}retireOldFields();advanceDeveloperSearch();wind.time.value=time;waterTime.value=time;updateCropGroundTime(time);
+function animate(now){requestAnimationFrame(animate);const rawDt=(now-lastFrame)/1000;lastFrame=now;const look=lookInput.frame(now);if(look.recovered){cameraRig.resume();wetPoseFresh=true;}if(playing&&(look.x||look.y)){if(look.mode==='inspection'){if(waterInspection.active)waterInspection.rotate(look.x,look.y);}else if(!waterInspection.active){leaveReferenceView();state.yaw-=look.x;state.pitch=T.MathUtils.clamp(state.pitch-look.y,-1.4,1.4);}}const dt=Math.min(.035,Math.max(.001,rawDt));if(document.hidden||contextLost)return;performanceMeter.begin(settings.showfps||settings.devMode);time+=dt;if(state.level===27){animateSpring(now,dt,rawDt);return;}if(bathhouse.active){animateBath(now,dt,rawDt);return;}retireOldFields();advanceDeveloperSearch();wind.time.value=time;waterTime.value=time;updateCropGroundTime(time);
  if((queue.length||activeBuild)&&!streamFailed&&(!playing||frameCount%3===0)){try{streamOne()}catch(e){streamFailed=true;console.error('World streaming failed',e);if(developerSearch){developerSearch.return();developerSearch=null;}if(teleportJob)teleportJob=null;developerBusy(false);$('#developer-status').textContent='场景加载失败，请刷新页面重试。';
 $('#start').disabled=true;$('#start').innerHTML='<span>场景加载失败 · 请刷新</span><small>↻</small>';return}const total=(radius()*2+1)**2,progress=Math.round(chunks.size/total*100);if(teleportJob&&navigationMap.isOpen)navigationMap.setStatus(`正在准备${teleportJob.target.label} · ${Math.min(100,progress)}%`);$('#load-number').textContent=progress+'%';$('#load-bar').style.width=progress+'%';if(!ready&&!teleportJob&&neighbourhoodReady()){ready=true;$('#start').disabled=false;$('#start').innerHTML='<span>进入麦田</span><small>ENTER ↵</small>'}if(!queue.length&&!activeBuild)$('#loading').hidden=true;}
  completeTeleport();

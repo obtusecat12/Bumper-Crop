@@ -1,0 +1,210 @@
+{
+  "generation_tool": "built-in image_gen.imagegen",
+  "face_original_size": [
+    1254,
+    1254
+  ],
+  "face_runtime_size": [
+    256,
+    256
+  ],
+  "body_original_size": [
+    1254,
+    1254
+  ],
+  "body_runtime_size": [
+    256,
+    256
+  ],
+  "resampling": "nearest neighbor only; piecewise-linear UV row registration; no recoloring or paint added",
+  "uv_origin": "top-left image, U rightward, V downward",
+  "head_seam": "U=0/1 wrapping back of head",
+  "landmarks": {
+    "left_closed_eyelid": {
+      "u": 0.37,
+      "v": 0.39
+    },
+    "right_closed_eyelid": {
+      "u": 0.625,
+      "v": 0.39
+    },
+    "eyebrows": {
+      "v": 0.33,
+      "color": "white"
+    },
+    "nose_tip": {
+      "u": 0.5,
+      "v": 0.55
+    },
+    "mouth_center": {
+      "u": 0.5,
+      "v": 0.7
+    },
+    "chin": {
+      "u": 0.5,
+      "v": 0.88
+    },
+    "lower_white_beard": {
+      "u_range": [
+        0.23,
+        0.78
+      ],
+      "v_range": [
+        0.77,
+        0.97
+      ]
+    },
+    "side_white_beard": {
+      "u_ranges": [
+        [
+          0.15,
+          0.32
+        ],
+        [
+          0.69,
+          0.85
+        ]
+      ],
+      "v_range": [
+        0.56,
+        0.9
+      ]
+    },
+    "white_moustache": {
+      "u_range": [
+        0.31,
+        0.68
+      ],
+      "v_range": [
+        0.6,
+        0.69
+      ]
+    },
+    "white_side_hair": {
+      "u_ranges": [
+        [
+          0,
+          0.26
+        ],
+        [
+          0.73,
+          1
+        ]
+      ],
+      "v_range": [
+        0.07,
+        0.4
+      ]
+    },
+    "forehead_skin_sample": {
+      "u_range": [
+        0.44,
+        0.56
+      ],
+      "v_range": [
+        0.16,
+        0.22
+      ]
+    }
+  },
+  "median_palette_rgb": {
+    "forehead_skin": [
+      206,
+      159,
+      128
+    ],
+    "nose_skin": [
+      197,
+      140,
+      109
+    ],
+    "white_beard": [
+      182,
+      169,
+      158
+    ],
+    "white_side_hair": [
+      180,
+      168,
+      158
+    ]
+  },
+  "registration_knots": {
+    "destination_v": [
+      0.0,
+      0.16,
+      0.33,
+      0.39,
+      0.55,
+      0.7,
+      0.88,
+      1.0
+    ],
+    "source_v": [
+      0.0,
+      0.16,
+      0.353,
+      0.436,
+      0.586,
+      0.69,
+      0.88,
+      1.0
+    ]
+  },
+  "body_generation_status": "first request blocked by service at output moderation; parent-authorized safer skin-material-only retry succeeded",
+  "body_atlas_rectangles": {
+    "front": [
+      0,
+      0,
+      128,
+      160
+    ],
+    "back": [
+      128,
+      0,
+      256,
+      160
+    ],
+    "arm": [
+      0,
+      160,
+      64,
+      256
+    ],
+    "leg": [
+      64,
+      160,
+      128,
+      256
+    ],
+    "neck_hands": [
+      128,
+      160,
+      256,
+      256
+    ]
+  },
+  "body_palette_rgb": {
+    "neck_hands_median": [
+      206,
+      162,
+      125
+    ]
+  },
+  "prompt_skill_source": "https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md",
+  "prompt_skill_copy": "provenance/gpt_image_2_prompt_skill.md",
+  "prompts": [
+    "prompts/face-a.prompt.txt",
+    "prompts/body-a.prompt.txt",
+    "prompts/body-a-safe-retry.prompt.txt"
+  ],
+  "generation_requests": {
+    "face-a": 1,
+    "body-a": 2
+  },
+  "successful_assets": {
+    "face-a": 1,
+    "body-a": 1
+  },
+  "retry_authorization": "Root authorized one safer retry after output moderation failure, retaining exact initial failure record. Retry depicts only skin-material color swatches and gradients, with no anatomical drawing."
+}
