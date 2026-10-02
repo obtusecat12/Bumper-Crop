@@ -1,0 +1,840 @@
+{
+  "renderer": "Mesa llvmpipe OpenGL ES 3.2, actual Three.js scene shader compilation with authored geometry and decoded textures",
+  "classification": "software GLES diagnostic, not a browser screenshot or FPS measurement",
+  "limitations": [
+    "No envMap/PMREM in this diagnostic; polished metal appears darker than the game with its existing fixed CubeStandard environment.",
+    "Single fixed authored sun and hemisphere lighting, diagnostic native shadow pass; dynamic weather and live browser postprocessing are not measured.",
+    "Reference camera is an eight-landmark estimate with 8.6 px RMS, not a recorded original camera."
+  ],
+  "static_views": [
+    {
+      "view": "backcourt-reference",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/results-final/backcourt-reference/inspection-backcourt-reference-compound.png",
+      "draws": 284,
+      "linked_shaders": 113,
+      "gl_errors": 0,
+      "camera": {
+        "label": "backcourt-reference",
+        "aspect": 1.6410912190963343,
+        "inverseViewProjection": [
+          -0.7578007254380764,
+          0,
+          -0.539757318637228,
+          0,
+          -0.014391421216822778,
+          0.566382376341834,
+          0.02020506079607799,
+          0,
+          -3646.5689998955963,
+          -15.697716363636363,
+          -2524.8690913820565,
+          -6.249090909090908,
+          3647.0503804080595,
+          15.658527610880046,
+          2526.4174355009054,
+          6.25090909090909
+        ],
+        "eye": [
+          583.5359179349952,
+          2.5120000000000005,
+          404.03782375913045
+        ],
+        "projection": [
+          1.0748340115166963,
+          0,
+          0,
+          0,
+          0,
+          1.7639006582861385,
+          0,
+          0,
+          0,
+          0,
+          -1.0002909514111145,
+          -1,
+          0,
+          0,
+          -0.16002327611288916,
+          0
+        ],
+        "view": [
+          -0.814509993652871,
+          -0.02538503735802682,
+          0.5795938837823709,
+          0,
+          6.938893903907233e-18,
+          0.9990422464710288,
+          0.043756025483589624,
+          0,
+          -0.5801495240363478,
+          0.03563972003891343,
+          -0.8137298938320674,
+          0,
+          709.6981879599965,
+          -2.096307970512155,
+          -9.546108706812738,
+          1.0000000000000002
+        ]
+      }
+    },
+    {
+      "view": "vend-front",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/results-final/vend-front/inspection-vend-front-compound.png",
+      "draws": 246,
+      "linked_shaders": 71,
+      "gl_errors": 0,
+      "camera": {
+        "label": "vend-front",
+        "aspect": 1.28,
+        "inverseViewProjection": [
+          -0.02321790131637225,
+          -2.8934492116322567e-17,
+          -0.694595357121115,
+          0,
+          -0.09601628315346376,
+          0.5343888699399097,
+          0.003209489617468373,
+          0,
+          -3577.4207397193477,
+          -9.998545454545456,
+          -2604.7124821553757,
+          -6.249090909090909,
+          3577.4779228601033,
+          9.824515783661177,
+          2605.50320766909,
+          6.250909090909091
+        ],
+        "eye": [
+          572.4705868040853,
+          1.6,
+          416.81462472663856
+        ],
+        "projection": [
+          1.438883504713639,
+          0,
+          0,
+          0,
+          0,
+          1.8417708860334578,
+          0,
+          0,
+          0,
+          0,
+          -1.0002909514111145,
+          -1,
+          0,
+          0,
+          -0.16002327611288916,
+          0
+        ],
+        "view": [
+          -0.03340785521819695,
+          -0.17683999489719432,
+          0.9836724716156695,
+          0,
+          -2.7755575615628914e-17,
+          0.9842218624756459,
+          0.17693876179336984,
+          0,
+          -0.9994418018122515,
+          0.005911144536479925,
+          -0.032880741484170695,
+          0,
+          435.7069740391162,
+          97.19708917758943,
+          -549.7014851452585,
+          1
+        ]
+      }
+    },
+    {
+      "view": "power-oblique",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/results-final/power-oblique/inspection-power-oblique-compound.png",
+      "draws": 281,
+      "linked_shaders": 95,
+      "gl_errors": 0,
+      "camera": {
+        "label": "power-oblique",
+        "aspect": 1.5,
+        "inverseViewProjection": [
+          -0.5305920355546409,
+          -9.196471965526863e-18,
+          -0.706515153686196,
+          0,
+          -0.03420866376314753,
+          0.5874893942834597,
+          0.025690665578780435,
+          0,
+          -3561.181299804273,
+          -4.06190909090909,
+          -2595.8764383856274,
+          -6.249090909090908,
+          3561.41992577393,
+          3.9904626075222884,
+          2597.230637415605,
+          6.250909090909091
+        ],
+        "eye": [
+          569.8718984266367,
+          0.65,
+          415.4006520547266
+        ],
+        "projection": [
+          1.1317754128840594,
+          0,
+          0,
+          0,
+          0,
+          1.6976631193260894,
+          0,
+          0,
+          0,
+          0,
+          -1.0002909514111145,
+          -1,
+          0,
+          0,
+          -0.16002327611288916,
+          0
+        ],
+        "view": [
+          -0.6005110201128472,
+          -0.058074786832122374,
+          0.7975047547553751,
+          0,
+          -2.081668171172168e-17,
+          0.9973590776702529,
+          0.07262830156862049,
+          0,
+          -0.7996164797720389,
+          0.043614095464035774,
+          -0.5989251171505718,
+          0,
+          674.3755621488345,
+          14.329581927720593,
+          -205.7288727964335,
+          1
+        ]
+      }
+    },
+    {
+      "view": "seats-close",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/results-final/seats-close/inspection-seats-close-compound.png",
+      "draws": 238,
+      "linked_shaders": 66,
+      "gl_errors": 0,
+      "camera": {
+        "label": "seats-close",
+        "aspect": 1.4,
+        "inverseViewProjection": [
+          -0.024347440118690826,
+          1.0114046694215738e-17,
+          -0.7283870593545368,
+          0,
+          -0.08484491634504297,
+          0.5135984336023671,
+          0.0028360697702631437,
+          0,
+          -3572.942687577447,
+          -8.12381818181818,
+          -2582.9781340174304,
+          -6.249090909090907,
+          3572.9961776086557,
+          7.9631052212577575,
+          2583.7626157884047,
+          6.250909090909089
+        ],
+        "eye": [
+          571.7539942297342,
+          1.3,
+          413.3366231334266
+        ],
+        "projection": [
+          1.37213009069369,
+          0,
+          0,
+          0,
+          0,
+          1.920982126971166,
+          0,
+          0,
+          0,
+          0,
+          -1.0002909514111145,
+          -1,
+          0,
+          0,
+          -0.16002327611288916,
+          0
+        ],
+        "view": [
+          -0.033407855218218534,
+          -0.16298556786319127,
+          0.9860626855722873,
+          0,
+          -1.1275702593849246e-17,
+          0.9866134113905345,
+          0.16307659692405857,
+          0,
+          -0.999441801812251,
+          0.005448039339518727,
+          -0.03296063800408756,
+          0,
+          432.20697403912834,
+          89.65317780947858,
+          -550.3734398039222,
+          0.9999999999999999
+        ]
+      }
+    },
+    {
+      "view": "scale-close",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/results-final/scale-close/inspection-scale-close-compound.png",
+      "draws": 172,
+      "linked_shaders": 65,
+      "gl_errors": 0,
+      "camera": {
+        "label": "scale-close",
+        "aspect": 0.75,
+        "inverseViewProjection": [
+          -0.011155601593337058,
+          -2.317045957749024e-18,
+          -0.33373511959744734,
+          0,
+          -0.03726195674718935,
+          0.44366493825604536,
+          0.0012455373128281977,
+          0,
+          -3574.320561158067,
+          -8.123818181818182,
+          -2624.1991116913755,
+          -6.249090909090909,
+          3574.3645832401617,
+          8.042443350399044,
+          2624.9959166450017,
+          6.250909090909092
+        ],
+        "eye": [
+          571.9744860741743,
+          1.3,
+          419.93293902538744
+        ],
+        "projection": [
+          2.994715698538954,
+          0,
+          0,
+          0,
+          0,
+          2.2460367739042155,
+          0,
+          0,
+          0,
+          0,
+          -1.0002909514111145,
+          -1,
+          0,
+          0,
+          -0.16002327611288916,
+          0
+        ],
+        "view": [
+          -0.03340785521821283,
+          -0.08369172512181558,
+          0.9959315289495828,
+          0,
+          -1.5178830414797065e-17,
+          0.9964877666150213,
+          0.0837384677827768,
+          0,
+          -0.9994418018122512,
+          0.002797522607881966,
+          -0.033290519033794715,
+          0,
+          438.8069740391251,
+          45.39932547789416,
+          -555.7764989445799,
+          1
+        ]
+      }
+    }
+  ],
+  "drink_views": [
+    {
+      "view": "drink-pet-front",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/drink-results/drink-pet-front/inspection-drink-pet-front-compound.png"
+    },
+    {
+      "view": "drink-can-front",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/drink-results/drink-can-front/inspection-drink-can-front-compound.png"
+    },
+    {
+      "view": "drink-can-top",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/drink-results/drink-can-top/inspection-drink-can-top-compound.png"
+    },
+    {
+      "view": "drink-soy-front",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/drink-results/drink-soy-front/inspection-drink-soy-front-compound.png"
+    },
+    {
+      "view": "drink-soy-back",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/drink-results/drink-soy-back/inspection-drink-soy-back-compound.png"
+    }
+  ],
+  "route_report": "geometry-and-routes.json",
+  "build_check": {
+    "command": "node scripts/check.mjs",
+    "parsed_modules": 200,
+    "result": "pass before final physics copy; root also ran scene checks"
+  },
+  "dynamic_views": [
+    {
+      "view": "fronttray12",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/results-final/fronttray12/inspection-fronttray12-compound.png",
+      "actual_bodies": 12,
+      "actual_tray_bodies": 2,
+      "records": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "position": [
+            0.1619078665971756,
+            0.04285459592938423,
+            0.5136662721633911
+          ],
+          "quaternion": [
+            0.6611992716789246,
+            -0.7056025862693787,
+            -0.2506258487701416,
+            -0.04612181708216667
+          ]
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "position": [
+            -0.03553977608680725,
+            0.03187805414199829,
+            0.05501104146242142
+          ],
+          "quaternion": [
+            -0.01594545505940914,
+            0.16832402348518372,
+            0.7069109082221985,
+            0.6867967247962952
+          ]
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "position": [
+            0.02988222800195217,
+            0.04899263009428978,
+            0.45280131697654724
+          ],
+          "quaternion": [
+            0.6801825761795044,
+            -0.6846426129341125,
+            -0.193216934800148,
+            -0.17687104642391205
+          ]
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "position": [
+            0.20212870836257935,
+            0.029941052198410034,
+            0.02378580905497074
+          ],
+          "quaternion": [
+            0.6427704095840454,
+            -0.6628669500350952,
+            0.2946842908859253,
+            0.24620075523853302
+          ]
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "position": [
+            -0.6334928870201111,
+            0.031873345375061035,
+            0.9257749319076538
+          ],
+          "quaternion": [
+            -0.4895978569984436,
+            0.014386490918695927,
+            0.5101874470710754,
+            0.7069623470306396
+          ]
+        },
+        {
+          "id": "vend-6",
+          "type": "soy",
+          "position": [
+            0.13952504098415375,
+            0.04517844691872597,
+            0.4385417699813843
+          ],
+          "quaternion": [
+            -0.014265069738030434,
+            0.5037853121757507,
+            0.5370325446128845,
+            0.676456093788147
+          ]
+        },
+        {
+          "id": "vend-7",
+          "type": "pet",
+          "position": [
+            0.059980083256959915,
+            0.041522156447172165,
+            0.26636162400245667
+          ],
+          "quaternion": [
+            -0.4083772897720337,
+            0.46660763025283813,
+            0.5778165459632874,
+            0.530691385269165
+          ]
+        },
+        {
+          "id": "vend-8",
+          "type": "can",
+          "position": [
+            -0.1929001808166504,
+            0.04387497529387474,
+            0.5395572781562805
+          ],
+          "quaternion": [
+            0.05612938106060028,
+            0.1281859576702118,
+            -0.7048755288124084,
+            0.6953908205032349
+          ]
+        },
+        {
+          "id": "vend-9",
+          "type": "soy",
+          "position": [
+            0.11441881209611893,
+            0.04771282151341438,
+            0.339006245136261
+          ],
+          "quaternion": [
+            -0.6664164066314697,
+            0.639062225818634,
+            -0.23649264872074127,
+            -0.302588552236557
+          ]
+        },
+        {
+          "id": "vend-10",
+          "type": "pet",
+          "position": [
+            0.09220367670059204,
+            0.09426584094762802,
+            0.29184791445732117
+          ],
+          "quaternion": [
+            -0.24406582117080688,
+            0.3103450834751129,
+            0.6637280583381653,
+            0.6352816820144653
+          ]
+        },
+        {
+          "id": "vend-11",
+          "type": "can",
+          "position": [
+            0.006476094480603933,
+            0.40022099018096924,
+            0.07838278263807297
+          ],
+          "quaternion": [
+            0.3749319016933441,
+            -0.18980231881141663,
+            0.604539692401886,
+            0.6767074465751648
+          ]
+        },
+        {
+          "id": "vend-12",
+          "type": "soy",
+          "position": [
+            0.11656247079372406,
+            0.4089908301830292,
+            -0.019481193274259567
+          ],
+          "quaternion": [
+            -0.3820820450782776,
+            0.4075654149055481,
+            0.59581059217453,
+            0.57698655128479
+          ]
+        }
+      ],
+      "linked_shaders": 93,
+      "gl_errors": 0,
+      "native_shadows": "supports actual instanced drink matrices"
+    },
+    {
+      "view": "tray-side",
+      "image": "/workspace/scratch/85111d38430a/v70-work/verification/results-final/tray-side/inspection-tray-side-compound.png",
+      "actual_bodies": 12,
+      "actual_tray_bodies": 2,
+      "records": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "position": [
+            0.1619078665971756,
+            0.04285459592938423,
+            0.5136662721633911
+          ],
+          "quaternion": [
+            0.6611992716789246,
+            -0.7056025862693787,
+            -0.2506258487701416,
+            -0.04612181708216667
+          ]
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "position": [
+            -0.03553977608680725,
+            0.03187805414199829,
+            0.05501104146242142
+          ],
+          "quaternion": [
+            -0.01594545505940914,
+            0.16832402348518372,
+            0.7069109082221985,
+            0.6867967247962952
+          ]
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "position": [
+            0.02988222800195217,
+            0.04899263009428978,
+            0.45280131697654724
+          ],
+          "quaternion": [
+            0.6801825761795044,
+            -0.6846426129341125,
+            -0.193216934800148,
+            -0.17687104642391205
+          ]
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "position": [
+            0.20212870836257935,
+            0.029941052198410034,
+            0.02378580905497074
+          ],
+          "quaternion": [
+            0.6427704095840454,
+            -0.6628669500350952,
+            0.2946842908859253,
+            0.24620075523853302
+          ]
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "position": [
+            -0.6334928870201111,
+            0.031873345375061035,
+            0.9257749319076538
+          ],
+          "quaternion": [
+            -0.4895978569984436,
+            0.014386490918695927,
+            0.5101874470710754,
+            0.7069623470306396
+          ]
+        },
+        {
+          "id": "vend-6",
+          "type": "soy",
+          "position": [
+            0.13952504098415375,
+            0.04517844691872597,
+            0.4385417699813843
+          ],
+          "quaternion": [
+            -0.014265069738030434,
+            0.5037853121757507,
+            0.5370325446128845,
+            0.676456093788147
+          ]
+        },
+        {
+          "id": "vend-7",
+          "type": "pet",
+          "position": [
+            0.059980083256959915,
+            0.041522156447172165,
+            0.26636162400245667
+          ],
+          "quaternion": [
+            -0.4083772897720337,
+            0.46660763025283813,
+            0.5778165459632874,
+            0.530691385269165
+          ]
+        },
+        {
+          "id": "vend-8",
+          "type": "can",
+          "position": [
+            -0.1929001808166504,
+            0.04387497529387474,
+            0.5395572781562805
+          ],
+          "quaternion": [
+            0.05612938106060028,
+            0.1281859576702118,
+            -0.7048755288124084,
+            0.6953908205032349
+          ]
+        },
+        {
+          "id": "vend-9",
+          "type": "soy",
+          "position": [
+            0.11441881209611893,
+            0.04771282151341438,
+            0.339006245136261
+          ],
+          "quaternion": [
+            -0.6664164066314697,
+            0.639062225818634,
+            -0.23649264872074127,
+            -0.302588552236557
+          ]
+        },
+        {
+          "id": "vend-10",
+          "type": "pet",
+          "position": [
+            0.09220367670059204,
+            0.09426584094762802,
+            0.29184791445732117
+          ],
+          "quaternion": [
+            -0.24406582117080688,
+            0.3103450834751129,
+            0.6637280583381653,
+            0.6352816820144653
+          ]
+        },
+        {
+          "id": "vend-11",
+          "type": "can",
+          "position": [
+            0.006476094480603933,
+            0.40022099018096924,
+            0.07838278263807297
+          ],
+          "quaternion": [
+            0.3749319016933441,
+            -0.18980231881141663,
+            0.604539692401886,
+            0.6767074465751648
+          ]
+        },
+        {
+          "id": "vend-12",
+          "type": "soy",
+          "position": [
+            0.11656247079372406,
+            0.4089908301830292,
+            -0.019481193274259567
+          ],
+          "quaternion": [
+            -0.3820820450782776,
+            0.4075654149055481,
+            0.59581059217453,
+            0.57698655128479
+          ]
+        }
+      ],
+      "linked_shaders": 116,
+      "gl_errors": 0,
+      "native_shadows": "supports actual instanced drink matrices"
+    }
+  ],
+  "identified_and_fixed": {
+    "scale_dial": "Cylinder helper received radial segment count as rz rotation; root fixed 48/20 arguments to explicit 0,48 / 0,20; final scale-close has unobstructed full dial."
+  },
+  "cream_visibility": "Cream seat shells are complete. Final full-view mesh-ID pixels (710,327), (705,339), (706,335) hit actual cream batch; similar gray wall color makes silhouette subtle. See seats-close.",
+  "physics_capture": {
+    "physical_module": "main checkout final vending-physics-v70.js",
+    "step_Hz": 120,
+    "real_dispense_sequence": "pet, can, soy repeated 4 times, 75 x 1/60 seconds after each spawn (15 seconds total)",
+    "diagnostic_budget_override": {
+      "maxCpuMs": "Infinity",
+      "maxSolverSteps": 24
+    },
+    "product_budget": {
+      "maxCpuMs": 3,
+      "maxSolverSteps": 8
+    },
+    "reason": "Keeps reproducible simulation time during Mesa/CPU parallel diagnostics; model, collision contacts, friction, paddle, positions and quaternions remain real physics.",
+    "notHardwareFPS": true
+  },
+  "actual_physics_node_cpu_report": {
+    "nodeCPUOnly": true,
+    "notBrowserFPS": true,
+    "scenarios": [
+      {
+        "name": "successive real dispenses",
+        "bodies": 12,
+        "awake": 6,
+        "medianMs": 1.9314429999999447,
+        "p95Ms": 3.7641469999998662
+      },
+      {
+        "name": "after settling",
+        "bodies": 12,
+        "awake": 0,
+        "medianMs": 0.0020629999999073334,
+        "p95Ms": 0.002764000000070155
+      },
+      {
+        "name": "successive real dispenses",
+        "bodies": 32,
+        "awake": 28,
+        "medianMs": 4.115697000000182,
+        "p95Ms": 6.503298000000541
+      },
+      {
+        "name": "after settling",
+        "bodies": 32,
+        "awake": 18,
+        "medianMs": 3.812949999999546,
+        "p95Ms": 4.359965999999986
+      },
+      {
+        "name": "32 simultaneously falling",
+        "bodies": 32,
+        "awake": 32,
+        "medianMs": 0.4731130000000121,
+        "p95Ms": 0.8864770000000135
+      },
+      {
+        "name": "32 sleeping",
+        "bodies": 32,
+        "awake": 0,
+        "medianMs": 0.011327000000164844,
+        "p95Ms": 0.1396100000001752
+      }
+    ]
+  }
+}

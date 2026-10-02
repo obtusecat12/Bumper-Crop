@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: exact single-text correction to an existing 2005-style soy milk bottle back label texture.
+Input image: the provided LUCKY SOY MILK INGREDIENTS back label is the edit target. Preserve it.
+Required change: change only the capacity text at the bottom right from "250 mL" to "500 mL". Use exactly "500 mL", in the same black bold serif typeface, same approximate letter height, same baseline and centered alignment within the existing lower-right space.
+Invariants: preserve every other detail, including LUCKY SOY MILK, INGREDIENTS, the leaf emblem, barcode and its numbers, KEEP REFRIGERATED, green borders, cream paper, all scuffs, colors and layout. The four ingredient rows must remain exactly "Soybeans: 100%", "Sugar: 0%", "Natural Preservatives: 300%", "Artificial Flavors / Colors: 0%". Do not alter any ingredient word or number. The intentionally fictional 300% value must remain 300%. Keep the original flat edge-to-edge label composition. Do not redesign packaging, add text or invent nutrition information.
+Aspect ratio: 4:5.
+Avoid: any change outside the lower-right capacity text, typographic errors, 250 mL remaining, bottle mockup, watermark, sharpening, altered crop.

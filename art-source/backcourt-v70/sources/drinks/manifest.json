@@ -1,0 +1,97 @@
+{
+  "version": 70,
+  "generator": "built-in image_gen",
+  "prompt_skill_source": "https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "key": "petLabel",
+      "file": "almond-pet-label.png",
+      "pixels": [
+        2172,
+        724
+      ],
+      "sha256": "e2c288bf9bbff221915b5dc5acc1784327c1c7c844c86cc0aec8fb19dea4cd3e"
+    },
+    {
+      "key": "canLabel",
+      "file": "almond-can-label.png",
+      "pixels": [
+        1774,
+        887
+      ],
+      "sha256": "f7ee08f55ffb0ac97058a49e0a175b382f16f6cc84c9437dd9a835355bfe25eb"
+    },
+    {
+      "key": "canTop",
+      "file": "almond-can-top.png",
+      "pixels": [
+        1254,
+        1254
+      ],
+      "sha256": "23b9decc190b397cc0a60aa17238069bef98ccfeb87aa8c8f35d945132b43f54"
+    },
+    {
+      "key": "soyFront",
+      "file": "lucky-soy-front.png",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "5fa04f96ba317028691e92f0edf823119d51973555785ed5d24c6fa5b8e1eb83"
+    },
+    {
+      "key": "soyBack",
+      "file": "lucky-soy-back.png",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "4b17dae1e4721475ecaab2d3baf5604bc44224b9a87d5278dee25c1148b5edd1"
+    },
+    {
+      "key": "plasticBody",
+      "file": "bottle-plastic-shell.png",
+      "pixels": [
+        1254,
+        1254
+      ],
+      "sha256": "07d8cc4751831771e78f0cdb10c3e955e6e5b7d7d364baaca0886fe1e06dfe90"
+    },
+    {
+      "key": "soyFrontCorrected500ml",
+      "file": "lucky-soy-front-corrected500ml.png",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "cd524fd9c2b2efceea73ff66155e891ef702770744e65b6b4e57ee3d93fcd908",
+      "edit": "Single capacity text correction from 250 mL to 500 mL using built-in imagegen."
+    },
+    {
+      "key": "soyBackCorrected500ml",
+      "file": "lucky-soy-back-corrected500ml.png",
+      "pixels": [
+        1122,
+        1402
+      ],
+      "sha256": "98b1b193c32da0e317a634670966af92f458f4bf032be811d407c5611419acd2",
+      "edit": "Single capacity text correction from 250 mL to 500 mL using built-in imagegen."
+    }
+  ],
+  "text_validation": {
+    "soy_back": "Visually inspected: Soybeans: 100%; Sugar: 0%; Natural Preservatives: 300%; Artificial Flavors / Colors: 0%; all exact spelling and percent values.",
+    "soy_capacity_corrected": "Visually checked front and back net volume 500 mL. Original patterns and ingredient rows retain Soybeans:100%; Sugar:0%; Natural Preservatives:300%; Artificial Flavors / Colors:0%."
+  },
+  "uv_notes": {
+    "petLabel": "Full-wrap 3:1, front at u=.5. Edge-to-edge printed artwork.",
+    "canLabel": "Full-wrap 2:1, front at u=.5. Edge-to-edge printed artwork.",
+    "canTop": "Square disk, center (.5,.5), lid outer rim extends nearly to image edges; pull tab finger ring points toward image top. Physical ring should be separate mesh.",
+    "soyFront": "Full rectangular portrait 4:5 front label; +Z bottle front.",
+    "soyBack": "Full rectangular portrait 4:5 back label; -Z bottle back.",
+    "plasticBody": "Seamless neutral ivory HDPE shell/cap material source. Tint material to blue for PET cap; subtle normal amplitude is enough."
+  },
+  "selected_assets": {
+    "soyFront": "lucky-soy-front-corrected500ml.png",
+    "soyBack": "lucky-soy-back-corrected500ml.png"
+  }
+}

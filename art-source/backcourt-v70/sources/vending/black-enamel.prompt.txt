@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset type: one seamless tileable diffuse material texture for the black spray-painted steel shell of the vending machine in the reference.
+subject: close-up of aged charcoal-black powder-coated steel with fine orange-peel enamel grain, occasional short gray hairline scuffs, tiny chipped enamel speckles revealing dull gunmetal, faint dust and very restrained oily hand smudges. Keep it predominately dark neutral charcoal black.
+framing: perfectly flat orthographic material scan, evenly distributed fine surface detail, no object shape; the entire square is the same surface, seamlessly repeating horizontally and vertically. Do not draw a border or a seam.
+style and lighting: realistic PS2-era photographic game material, soft photographic texture density, detailed surface microstructure, even diffuse shadow-free scan illumination, no directional baked highlight, no artificial 3D rendering. No oversharpening, no oversaturation. Suitable as albedo under actual game lights.
+aspect ratio: 1:1.
+constraints: all four edges tile seamlessly, no labels, no buttons, no visible machine silhouette, no large dent, no huge rust spot, no scratches concentrated on the edges, no light gradient, no text, no logo, no watermark, no contact sheet.

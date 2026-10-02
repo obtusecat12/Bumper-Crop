@@ -4,7 +4,7 @@ import {createWaterEnvironment} from './water-environment.js?v=60';
 import {createWaterVisibility} from './water-visibility.js?v=60';
 import {createCameraFocus} from './camera-focus.js?v=60';
 import {cocFragment,dilateFragment,lensGLSL,discGLSL} from './dof-shaders.js?v=60';
-import {createAlmondInspection,createAlmondWorldVisibility} from './almond-water-inspection.js?v=60';
+import {createAlmondInspection,createAlmondWorldVisibility} from './almond-water-inspection.js?v=70';
 import {almondEnvironment,GLASS_LAYER} from './almond-water-assets.js?v=60';
 export const INTERNAL_HEIGHT=720,DOF_SCALE=.5,DOF_TAPS=16;
 export const passVertex=`precision highp float;precision highp sampler2D;in vec3 position;out vec2 uv;void main(){uv=position.xy*.5+.5;gl_Position=vec4(position,1.);}`;

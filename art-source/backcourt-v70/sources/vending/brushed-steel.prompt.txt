@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset type: one seamless tileable diffuse material texture of aged satin brushed stainless steel for the tall narrow coffee vending machine in the reference.
+subject: evenly brushed warm-gray stainless metal, very fine vertical brushing lines, faint worn hand contact scuffs and fine micro scratches, small low-contrast dark oxidation speckles, subtle realistic metallic grain. Keep the original warm-gray silver machine feeling, not bright mirror chrome and not brown stone.
+framing: flat orthographic material scan, no object shape or cabinet geometry; square surface filling every pixel, seamless repeat on all four edges. The brushing runs vertically and consistently over the whole texture.
+style and lighting: realistic early-2000s PS2 photographic game material with soft texture density, evenly lit neutral diffuse scan illumination, no directional baked reflection or hotspot, no oversharpening, no oversaturation. This is albedo surface detail under actual game lighting.
+aspect ratio: 1:1.
+constraints: tileable horizontal and vertical edges, no dark border, no large seam, no frame, no labels, no holes, no screws, no buttons, no machine silhouette, no big rust patches, no dramatic lighting gradient, no text, no watermark, no contact sheet.

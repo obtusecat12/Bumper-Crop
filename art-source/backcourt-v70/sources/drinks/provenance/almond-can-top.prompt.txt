@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: one square realistic top-down PBR albedo source texture of a standard unopened 330 mL aluminum beverage can lid, including beautifully detailed pull-tab, for a PS2-style Three.js drink model.
+Subject: a perfectly round silver aluminum can top, a real stamped stay-on ring pull-tab resting flat, with its oval finger hole, central rivet, folded edges, rounded puncturing end, the unopened oval scored drinking aperture, fine die-stamped concentric perimeter grooves and the rolled rim. Closely accurate physical details of a normal 2005–2010 soda can lid.
+Composition: exact orthographic top-down view, camera perpendicular to the lid, no perspective. Center the circular lid exactly at the image center and make its diameter exactly 94 percent of the square image. The tab is aligned vertically along the image's top-bottom axis, oval finger hole toward the top, unopened aperture toward the bottom. All circular rim geometry must stay fully inside the frame. The small outside corners are neutral medium gray.
+Materials and lighting: pale brushed aluminum, fine radial and circumferential metal grain, tiny realistic handling scratches and dull oxidation specks, soft restrained aluminum highlights and contact shading, no severe glare. Lifelike stamped metal with distinct formed thickness, soft photo texture suitable for PS2-era game assets, clear enough to inspect.
+Text: no text, no logos.
+Aspect ratio: 1:1.
+Avoid: open can, black empty drinking hole, missing pull ring, missing rivet, side view, elliptical or tilted lid, modern stylized icon, SVG look, cartoon metal, background objects, condensation, dramatic lighting, strong cast shadows, watermarks.

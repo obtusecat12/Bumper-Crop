@@ -1,0 +1,317 @@
+{
+  "frame": {
+    "origin": {
+      "x": 551.5354939890623,
+      "z": 452.0336804894834
+    },
+    "angle": 1.604210399469424,
+    "baseY": 0.28
+  },
+  "wall": {
+    "module": "clinic-district.js",
+    "localCenter": [
+      33.75,
+      3.26,
+      11.97
+    ],
+    "size": [
+      16.3,
+      6.52,
+      12.74
+    ],
+    "backFaceZ": 18.34,
+    "x0": 25.6,
+    "x1": 41.9,
+    "roofTop": 7.22
+  },
+  "props": [
+    {
+      "id": "waterfall-vendor",
+      "local": [
+        34.5,
+        19.04
+      ],
+      "size": [
+        1.02,
+        1.89,
+        0.9
+      ],
+      "facing": 0,
+      "ground": 0.02,
+      "collider": true,
+      "world": {
+        "x": 569.4122948905398,
+        "z": 416.91685276360624
+      },
+      "worldGroundY": 0.30000000000000004,
+      "worldYaw": 1.604210399469424
+    },
+    {
+      "id": "tandem-seat",
+      "local": [
+        38,
+        19.08
+      ],
+      "size": [
+        2.15,
+        0.9,
+        0.64
+      ],
+      "facing": 0,
+      "ground": 0.02,
+      "collider": true,
+      "world": {
+        "x": 569.3353450693486,
+        "z": 413.4174701430547
+      },
+      "worldGroundY": 0.30000000000000004,
+      "worldYaw": 1.604210399469424
+    },
+    {
+      "id": "coin-scale",
+      "local": [
+        31.4,
+        19.12
+      ],
+      "size": [
+        0.65,
+        1.92,
+        0.8
+      ],
+      "facing": 0,
+      "ground": 0.02,
+      "collider": true,
+      "world": {
+        "x": 569.5958145858611,
+        "z": 420.0124497208068
+      },
+      "worldGroundY": 0.30000000000000004,
+      "worldYaw": 1.604210399469424
+    },
+    {
+      "id": "notice-frame",
+      "local": [
+        38,
+        18.395
+      ],
+      "size": [
+        1.62,
+        0.88,
+        0.075
+      ],
+      "facing": 0,
+      "centerY": 1.95,
+      "collider": false,
+      "world": {
+        "x": 568.6507274351072,
+        "z": 413.44035452387914
+      },
+      "worldGroundY": 0.28,
+      "worldYaw": 1.604210399469424
+    },
+    {
+      "id": "ring-rubber-mat",
+      "local": [
+        34.5,
+        20.02
+      ],
+      "size": [
+        1.42,
+        0.016,
+        0.68
+      ],
+      "facing": 0,
+      "ground": 0.02,
+      "collider": false,
+      "world": {
+        "x": 570.3917478563158,
+        "z": 416.88411306549244
+      },
+      "worldGroundY": 0.30000000000000004,
+      "worldYaw": 1.604210399469424
+    },
+    {
+      "id": "opal-bulkhead",
+      "local": [
+        34.5,
+        18.48
+      ],
+      "size": [
+        0.42,
+        0.23,
+        0.18
+      ],
+      "facing": 0,
+      "centerY": 2.58,
+      "collider": false,
+      "world": {
+        "x": 568.852607481525,
+        "z": 416.9355611625285
+      },
+      "worldGroundY": 0.28,
+      "worldYaw": 1.604210399469424
+    }
+  ],
+  "camera": {
+    "position": [
+      46.9,
+      2.232,
+      33.586
+    ],
+    "yaw": 0.91847,
+    "pitch": -0.04377,
+    "fov": 59.1035,
+    "aspect": 1.6410912190963343,
+    "confidence": "estimated from eight screenshot landmarks, reprojection RMS 8.6 pixels; verify visually, not recorded original pose",
+    "world": [
+      583.5359179349952,
+      2.5120000000000005,
+      404.03782375913045
+    ],
+    "worldYaw": 2.522680399469424
+  },
+  "routes": {
+    "clinic-main-to-plaza": [
+      [
+        -6,
+        -8
+      ],
+      [
+        20,
+        -9
+      ],
+      [
+        20,
+        2.1
+      ],
+      [
+        49,
+        2.1
+      ],
+      [
+        49,
+        21
+      ],
+      [
+        48,
+        35
+      ],
+      [
+        58,
+        36
+      ],
+      [
+        58,
+        52
+      ],
+      [
+        57,
+        61
+      ],
+      [
+        43,
+        61
+      ]
+    ],
+    "clinic-service-to-plaza": [
+      [
+        -19,
+        33
+      ],
+      [
+        -19,
+        42.1
+      ],
+      [
+        23,
+        42.1
+      ],
+      [
+        24.1,
+        47.4
+      ],
+      [
+        26.8,
+        47.4
+      ],
+      [
+        26.8,
+        26
+      ],
+      [
+        48,
+        26
+      ],
+      [
+        73,
+        26
+      ],
+      [
+        80,
+        30
+      ],
+      [
+        86.5,
+        30
+      ]
+    ],
+    "new-vendor-approach": [
+      [
+        48,
+        26
+      ],
+      [
+        38,
+        24
+      ],
+      [
+        34.5,
+        22.6
+      ],
+      [
+        34.5,
+        20.32
+      ]
+    ],
+    "waiting-seat-approach": [
+      [
+        38,
+        24
+      ],
+      [
+        38,
+        20.22
+      ]
+    ]
+  },
+  "checks": {
+    "clinic-main-to-plaza": {
+      "samples": 606,
+      "maxDisplacement": 0,
+      "maxHeightStep": 0.020000000000000018,
+      "failures": [],
+      "pass": true
+    },
+    "clinic-service-to-plaza": {
+      "samples": 577,
+      "maxDisplacement": 0,
+      "maxHeightStep": 0.15000000000000002,
+      "failures": [],
+      "pass": true
+    },
+    "new-vendor-approach": {
+      "samples": 70,
+      "maxDisplacement": 0,
+      "maxHeightStep": 0,
+      "failures": [],
+      "pass": true
+    },
+    "waiting-seat-approach": {
+      "samples": 17,
+      "maxDisplacement": 0,
+      "maxHeightStep": 0,
+      "failures": [],
+      "pass": true
+    }
+  }
+}

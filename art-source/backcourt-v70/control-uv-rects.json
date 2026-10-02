@@ -1,0 +1,824 @@
+{
+  "right-control": {
+    "runtime": "right-control.webp",
+    "size": [
+      256,
+      2048
+    ],
+    "source_crop": [
+      252,
+      0,
+      473,
+      2172
+    ],
+    "rectangles": {
+      "full_control_strip": {
+        "source_pixels_top_left_xyxy": [
+          252,
+          0,
+          473,
+          2172
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          0.0,
+          0.0,
+          256.0,
+          2048.0
+        ],
+        "threejs_texture_offset": [
+          0.0,
+          0.0
+        ],
+        "threejs_texture_repeat": [
+          1.0,
+          1.0
+        ]
+      },
+      "need_instructions": {
+        "source_pixels_top_left_xyxy": [
+          260,
+          52,
+          463,
+          232
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          9.266968325791856,
+          49.03130755064457,
+          244.4162895927602,
+          218.75506445672193
+        ],
+        "threejs_texture_offset": [
+          0.03619909502262444,
+          0.8931860036832413
+        ],
+        "threejs_texture_repeat": [
+          0.918552036199095,
+          0.08287292817679558
+        ]
+      },
+      "lcd_select_drink": {
+        "source_pixels_top_left_xyxy": [
+          304,
+          297,
+          421,
+          341
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          60.23529411764706,
+          280.04419889502765,
+          195.76470588235293,
+          321.5322283609576
+        ],
+        "threejs_texture_offset": [
+          0.23529411764705882,
+          0.8430018416206262
+        ],
+        "threejs_texture_repeat": [
+          0.5294117647058824,
+          0.020257826887661142
+        ]
+      },
+      "warning": {
+        "source_pixels_top_left_xyxy": [
+          297,
+          503,
+          428,
+          709
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          52.126696832579185,
+          474.28360957642724,
+          203.8733031674208,
+          668.5230202578269
+        ],
+        "threejs_texture_offset": [
+          0.20361990950226244,
+          0.673572744014733
+        ],
+        "threejs_texture_repeat": [
+          0.5927601809954751,
+          0.09484346224677716
+        ]
+      },
+      "insert_bills": {
+        "source_pixels_top_left_xyxy": [
+          294,
+          741,
+          431,
+          812
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          48.65158371040724,
+          698.6961325966851,
+          207.34841628959276,
+          765.6427255985267
+        ],
+        "threejs_texture_offset": [
+          0.19004524886877827,
+          0.6261510128913443
+        ],
+        "threejs_texture_repeat": [
+          0.6199095022624435,
+          0.03268876611418048
+        ]
+      },
+      "price": {
+        "source_pixels_top_left_xyxy": [
+          293,
+          1065,
+          433,
+          1105
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          47.49321266968326,
+          1004.1988950276243,
+          209.66515837104072,
+          1041.915285451197
+        ],
+        "threejs_texture_offset": [
+          0.18552036199095023,
+          0.49125230202578274
+        ],
+        "threejs_texture_repeat": [
+          0.6334841628959276,
+          0.01841620626151013
+        ]
+      },
+      "almond_water_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1138,
+          408,
+          1199
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1073.0313075506447,
+          180.7058823529412,
+          1130.548802946593
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.4479742173112339
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.028084714548802948
+        ]
+      },
+      "lucky_soy_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1215,
+          408,
+          1275
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1145.635359116022,
+          180.7058823529412,
+          1202.2099447513813
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.4129834254143646
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.027624309392265192
+        ]
+      },
+      "spring_water_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1293,
+          408,
+          1353
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1219.1823204419888,
+          180.7058823529412,
+          1275.756906077348
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.3770718232044199
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.027624309392265192
+        ]
+      },
+      "cola_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1370,
+          408,
+          1430
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1291.7863720073665,
+          180.7058823529412,
+          1348.3609576427257
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.34162062615101285
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.027624309392265192
+        ]
+      },
+      "lemon_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1447,
+          408,
+          1509
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1364.390423572744,
+          180.7058823529412,
+          1422.8508287292818
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.30524861878453036
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.0285451197053407
+        ]
+      },
+      "orange_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1525,
+          408,
+          1585
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1437.937384898711,
+          180.7058823529412,
+          1494.51197053407
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.2702578268876611
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.027624309392265192
+        ]
+      },
+      "iced_tea_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1602,
+          408,
+          1660
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1510.5414364640883,
+          180.7058823529412,
+          1565.230202578269
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.2357274401473296
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.026703499079189688
+        ]
+      },
+      "coffee_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1678,
+          408,
+          1738
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1582.2025782688766,
+          180.7058823529412,
+          1638.7771639042357
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.1998158379373849
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.027624309392265192
+        ]
+      },
+      "milk_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1755,
+          408,
+          1817
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1654.8066298342542,
+          180.7058823529412,
+          1713.267034990792
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.1634438305709024
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.0285451197053407
+        ]
+      },
+      "energy_label": {
+        "source_pixels_top_left_xyxy": [
+          280,
+          1834,
+          408,
+          1895
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          32.43438914027149,
+          1729.2965009208103,
+          180.7058823529412,
+          1786.8139963167587
+        ],
+        "threejs_texture_offset": [
+          0.12669683257918551,
+          0.12753222836095768
+        ],
+        "threejs_texture_repeat": [
+          0.579185520361991,
+          0.028084714548802948
+        ]
+      }
+    }
+  },
+  "left-control": {
+    "runtime": "left-control.webp",
+    "size": [
+      256,
+      2048
+    ],
+    "source_crop": [
+      212,
+      0,
+      512,
+      2172
+    ],
+    "rectangles": {
+      "full_coffee_strip": {
+        "source_pixels_top_left_xyxy": [
+          212,
+          0,
+          512,
+          2172
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          0.0,
+          0.0,
+          256.0,
+          2048.0
+        ],
+        "threejs_texture_offset": [
+          0.0,
+          0.0
+        ],
+        "threejs_texture_repeat": [
+          1.0,
+          1.0
+        ]
+      },
+      "coffee_portrait_ad": {
+        "source_pixels_top_left_xyxy": [
+          269,
+          122,
+          454,
+          362
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          48.64,
+          115.03499079189687,
+          206.50666666666666,
+          341.3333333333333
+        ],
+        "threejs_texture_offset": [
+          0.19,
+          0.8333333333333334
+        ],
+        "threejs_texture_repeat": [
+          0.6166666666666667,
+          0.11049723756906077
+        ]
+      },
+      "coffee_brand_plaque": {
+        "source_pixels_top_left_xyxy": [
+          275,
+          485,
+          449,
+          562
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          53.76,
+          457.31123388581955,
+          202.24,
+          529.9152854511971
+        ],
+        "threejs_texture_offset": [
+          0.21,
+          0.7412523020257826
+        ],
+        "threejs_texture_repeat": [
+          0.58,
+          0.035451197053407
+        ]
+      },
+      "lcd_hot_drinks": {
+        "source_pixels_top_left_xyxy": [
+          303,
+          740,
+          447,
+          799
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          77.65333333333334,
+          697.7532228360958,
+          200.53333333333333,
+          753.3848987108655
+        ],
+        "threejs_texture_offset": [
+          0.30333333333333334,
+          0.6321362799263353
+        ],
+        "threejs_texture_repeat": [
+          0.48,
+          0.02716390423572744
+        ]
+      },
+      "press_selection": {
+        "source_pixels_top_left_xyxy": [
+          305,
+          804,
+          444,
+          820
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          79.36,
+          758.0994475138122,
+          197.97333333333333,
+          773.1860036832412
+        ],
+        "threejs_texture_offset": [
+          0.31,
+          0.6224677716390423
+        ],
+        "threejs_texture_repeat": [
+          0.4633333333333333,
+          0.007366482504604052
+        ]
+      },
+      "insert_coins": {
+        "source_pixels_top_left_xyxy": [
+          291,
+          1161,
+          452,
+          1192
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          67.41333333333333,
+          1094.7182320441989,
+          204.8,
+          1123.9484346224679
+        ],
+        "threejs_texture_offset": [
+          0.2633333333333333,
+          0.4511970534069981
+        ],
+        "threejs_texture_repeat": [
+          0.5366666666666666,
+          0.01427255985267035
+        ]
+      },
+      "exact_change_only": {
+        "source_pixels_top_left_xyxy": [
+          301,
+          1264,
+          440,
+          1289
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          75.94666666666667,
+          1191.8379373848986,
+          194.56,
+          1215.4106813996316
+        ],
+        "threejs_texture_offset": [
+          0.2966666666666667,
+          0.40653775322283614
+        ],
+        "threejs_texture_repeat": [
+          0.4633333333333333,
+          0.01151012891344383
+        ]
+      },
+      "payment_lcd": {
+        "source_pixels_top_left_xyxy": [
+          291,
+          1373,
+          406,
+          1413
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          67.41333333333333,
+          1294.6151012891344,
+          165.54666666666665,
+          1332.3314917127072
+        ],
+        "threejs_texture_offset": [
+          0.2633333333333333,
+          0.34944751381215466
+        ],
+        "threejs_texture_repeat": [
+          0.38333333333333336,
+          0.01841620626151013
+        ]
+      },
+      "digit_1": {
+        "source_pixels_top_left_xyxy": [
+          307,
+          891,
+          335,
+          919
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          81.06666666666666,
+          840.1325966850828,
+          104.96,
+          866.5340699815838
+        ],
+        "threejs_texture_offset": [
+          0.31666666666666665,
+          0.5768876611418048
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_2": {
+        "source_pixels_top_left_xyxy": [
+          361,
+          891,
+          389,
+          919
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          127.14666666666666,
+          840.1325966850828,
+          151.04,
+          866.5340699815838
+        ],
+        "threejs_texture_offset": [
+          0.49666666666666665,
+          0.5768876611418048
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_3": {
+        "source_pixels_top_left_xyxy": [
+          415,
+          891,
+          443,
+          919
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          173.22666666666666,
+          840.1325966850828,
+          197.12,
+          866.5340699815838
+        ],
+        "threejs_texture_offset": [
+          0.6766666666666666,
+          0.5768876611418048
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_4": {
+        "source_pixels_top_left_xyxy": [
+          307,
+          948,
+          335,
+          976
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          81.06666666666666,
+          893.878453038674,
+          104.96,
+          920.279926335175
+        ],
+        "threejs_texture_offset": [
+          0.31666666666666665,
+          0.5506445672191529
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_5": {
+        "source_pixels_top_left_xyxy": [
+          361,
+          948,
+          389,
+          976
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          127.14666666666666,
+          893.878453038674,
+          151.04,
+          920.279926335175
+        ],
+        "threejs_texture_offset": [
+          0.49666666666666665,
+          0.5506445672191529
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_6": {
+        "source_pixels_top_left_xyxy": [
+          415,
+          948,
+          443,
+          976
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          173.22666666666666,
+          893.878453038674,
+          197.12,
+          920.279926335175
+        ],
+        "threejs_texture_offset": [
+          0.6766666666666666,
+          0.5506445672191529
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_7": {
+        "source_pixels_top_left_xyxy": [
+          307,
+          1004,
+          335,
+          1032
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          81.06666666666666,
+          946.6813996316758,
+          104.96,
+          973.0828729281768
+        ],
+        "threejs_texture_offset": [
+          0.31666666666666665,
+          0.5248618784530387
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_8": {
+        "source_pixels_top_left_xyxy": [
+          361,
+          1004,
+          389,
+          1032
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          127.14666666666666,
+          946.6813996316758,
+          151.04,
+          973.0828729281768
+        ],
+        "threejs_texture_offset": [
+          0.49666666666666665,
+          0.5248618784530387
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_9": {
+        "source_pixels_top_left_xyxy": [
+          415,
+          1004,
+          443,
+          1032
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          173.22666666666666,
+          946.6813996316758,
+          197.12,
+          973.0828729281768
+        ],
+        "threejs_texture_offset": [
+          0.6766666666666666,
+          0.5248618784530387
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_star": {
+        "source_pixels_top_left_xyxy": [
+          307,
+          1060,
+          335,
+          1088
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          81.06666666666666,
+          999.4843462246777,
+          104.96,
+          1025.8858195211787
+        ],
+        "threejs_texture_offset": [
+          0.31666666666666665,
+          0.49907918968692444
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_0": {
+        "source_pixels_top_left_xyxy": [
+          361,
+          1060,
+          389,
+          1088
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          127.14666666666666,
+          999.4843462246777,
+          151.04,
+          1025.8858195211787
+        ],
+        "threejs_texture_offset": [
+          0.49666666666666665,
+          0.49907918968692444
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      },
+      "digit_hash": {
+        "source_pixels_top_left_xyxy": [
+          415,
+          1060,
+          443,
+          1088
+        ],
+        "runtime_pixels_top_left_xyxy": [
+          173.22666666666666,
+          999.4843462246777,
+          197.12,
+          1025.8858195211787
+        ],
+        "threejs_texture_offset": [
+          0.6766666666666666,
+          0.49907918968692444
+        ],
+        "threejs_texture_repeat": [
+          0.09333333333333334,
+          0.01289134438305709
+        ]
+      }
+    }
+  }
+}

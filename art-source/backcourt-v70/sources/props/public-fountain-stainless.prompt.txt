@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: one seamless photographic stainless-steel surface base-color texture for a physically modeled old public drinking fountain basin and public coin-operated weighing-scale platform, not a photograph of the whole object.
+Subject: ordinary softly brushed silver stainless steel, closely spaced fine horizontal machining grain, small fine scuffs, desaturated mineral water marks and faint sanitizing-water residue, maintained but used public refreshment-area metal from 2005–2010.
+Composition: perfectly perpendicular close-up; metal material fills all of the square image. All four opposite edges tile seamlessly. Very faint irregular pale-gray mineral traces, restrained and small-scale, no dominant central stain.
+Style: realistic PS2-era photographic environmental material, slightly soft detail, neutral gray silver, no oversharpening.
+Lighting: even neutral diffuse albedo illumination. Subtle uniform tone, no baked directional highlight, reflections or cast shadows; modeled PBR material supplies actual metal reflections.
+Aspect ratio: 1:1.
+Avoid: basin silhouette, drain, spout, screws, mat, object boundary, colored reflected scenery, strong glare, huge concentric rings, text, logos, watermark, collage.

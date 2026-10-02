@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: one flat unfolded 360-degree wrap label texture for a small aluminum beverage can, for UV mapping in a Three.js PS2-style environment.
+Subject: ALMOND WATER, ordinary commercial vending-machine canned drink from 2005–2010. Fill the entire image edge-to-edge with the printed wrap artwork, perfectly flat and straight-on, no can mockup or three-dimensional objects.
+Composition: wide 2:1 rectangular complete wrap. The front occupies the central 45 percent, with the exact brand ALMOND WATER centered at u=0.5, large dark teal serif uppercase letters, a soft photographic cluster of almonds underneath and a small pale aqua water ripple. The outer 27.5 percent left and right are matching quieter wrap sides: left English ingredients/product information, right black barcode and small commodity information block. Narrow dark teal bands and thin burgundy rules at top and bottom.
+Style and palette: convincingly ordinary 2005–2010 printed aluminum drink can design, warm cream, muted pale aqua, dark teal, faded burgundy accent. Restrained gradient and slightly dated serif typesetting, faint ink halftone, subtle handling scuffs, gentle soft PS2-era photographic print detail. Print-art texture, not a modern minimalist logo presentation.
+Text (verbatim, front): "ALMOND WATER"; "REFRESHING ALMOND DRINK"; "330 mL". Smaller side text: "SERVE CHILLED"; "ALMOND INFUSED BEVERAGE"; "PLEASE RECYCLE"; "Ingredients: Water, Almonds, Natural Flavors.".
+Lighting: neutral diffuse scan-like light, minimal printed-metal sheen, no cylinder-shaped shading or cast shadows.
+Aspect ratio: 2:1.
+Avoid: brand repeated in the outer panels, cylindrical mockup, curved perspective, actual can top or base, blank margins, Chinese text, modern premium design, cartoon flat vector almonds, watermarks, excessive noise, harsh glare, decorative presentation frame.

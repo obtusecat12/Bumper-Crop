@@ -1,0 +1,86 @@
+{
+  "task": "Level 11 Palm Court rear refreshment area props v70",
+  "generation_mode": "Five independent builtin image_gen calls, no collage, no third-party paid 3D task",
+  "date": "2026-10-02",
+  "prompt_skill_url": "https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md",
+  "download_url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "source_reference_inspected": "/workspace/scratch/85111d38430a/upload/image(20261002-123017).png",
+  "reference_role": "Palette, time-period atmosphere; no direct image editing",
+  "assets": [
+    {
+      "asset": "waiting-seat-plastic.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "0b68b45cf3d6f07c846330ed5bd8e4446033365cfde0823d60f77b326beca740",
+      "prompt": "waiting-seat-plastic.prompt.txt",
+      "prompt_skill_download": "gpt_image_2_prompt_skill-01.md",
+      "tool": "builtin image_gen.imagegen",
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-6a5d732b-fb8c-457c-81f7-3393856012a1.png",
+      "inspection": "view_image inspected; material/label requirements verified"
+    },
+    {
+      "asset": "rubber-mat-teal.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "a9e47e7418e9fb36efe003433ded8078834b9d2f61b53199a00f5ec54b84825b",
+      "prompt": "rubber-mat-teal.prompt.txt",
+      "prompt_skill_download": "gpt_image_2_prompt_skill-02.md",
+      "tool": "builtin image_gen.imagegen",
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-86311e1f-d393-4d45-b1fc-39d7634411b2.png",
+      "inspection": "view_image inspected; material/label requirements verified"
+    },
+    {
+      "asset": "palm-court-noticeboard.png",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "mode": "RGB",
+      "sha256": "f974dd084f49702a18a8d9ebce43217e50968128f0e64397bd9e6e2016e04421",
+      "prompt": "palm-court-noticeboard.prompt.txt",
+      "prompt_skill_download": "gpt_image_2_prompt_skill-03.md",
+      "tool": "builtin image_gen.imagegen",
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-432c3140-dbc2-483b-9bbc-443eb04b163a.png",
+      "inspection": "view_image inspected; material/label requirements verified"
+    },
+    {
+      "asset": "public-fountain-stainless.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "2ff7ae04724fc667106d9141aeff268b78a95f268347f18e8cdc7bee36bbd4a6",
+      "prompt": "public-fountain-stainless.prompt.txt",
+      "prompt_skill_download": "gpt_image_2_prompt_skill-04.md",
+      "tool": "builtin image_gen.imagegen",
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-54056970-e449-4fee-8941-77b994aa1494.png",
+      "inspection": "view_image inspected; material/label requirements verified"
+    },
+    {
+      "asset": "public-weight-dial.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "add446f4c0542c3725591e7cc97c6305207f755cd9e3f7ca45ea023e743c56f5",
+      "prompt": "public-weight-dial.prompt.txt",
+      "prompt_skill_download": "gpt_image_2_prompt_skill-05.md",
+      "tool": "builtin image_gen.imagegen",
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-a449174b-f331-4d78-b66e-2aff4cd9603d.png",
+      "inspection": "view_image inspected; material/label requirements verified"
+    }
+  ],
+  "notes": [
+    "Material textures are generated albedo sources; normal and roughness derivation and runtime reduction are owned by root.",
+    "Noticeboard visible spelling matches PALM COURT, REFRESHMENT AREA, OPEN 24 HOURS, PLEASE KEEP THIS AREA CLEAR and weekday schedule.",
+    "Dial is needle-free. Major KG labels are 0,20,40,60,80,100,120,140,160 in ascending order. Circumference occupies about 97% of source width; map as a circular dial under the real modeled bezel."
+  ]
+}

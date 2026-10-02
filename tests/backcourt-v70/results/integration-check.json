@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "tests": [
+    "pet: factory / scale / drag / wheel / ordinary opaque pass / stow lifecycle",
+    "can: factory / scale / drag / wheel / ordinary opaque pass / stow lifecycle",
+    "soy: factory / scale / drag / wheel / ordinary opaque pass / stow lifecycle",
+    "StandardMaterial inspection environment remains frozen; original glass uniforms keep their existing dynamic binding",
+    "legacy thermos and refractive glass retain original factory, distance and pass",
+    "E dispenses only world bodies; E collects each body once; held prompt wins; R variant can be inspected; Q consumes correct named beverage",
+    "exit scene composes backcourt; F2 waypoint / map colliders / world-space collision / 64 m BigInt rebasing / disposal"
+  ],
+  "worldInventory": [
+    {
+      "kind": "vending",
+      "type": "pet"
+    },
+    {
+      "kind": "vending",
+      "type": "can"
+    }
+  ],
+  "shadowInvalidations": 6,
+  "uiCommits": 4,
+  "showerAndNPCScopes": "unchanged"
+}

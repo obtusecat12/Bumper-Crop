@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: a single front-facing photographic wall noticeboard artwork texture for a 2005 public refreshment rest area. This image will be applied to a physically modeled board; include its flat paper-and-pinboard face only, no external frame, wall or perspective.
+Subject: quietly neglected but maintained property-management noticeboard at PALM COURT. A faded pale blue-gray backing, several ordinary printed white paper notices taped and pinned flat, slightly curled worn edges, old translucent tape, faint removed-paper outlines. Believable early-2000s office printing with Times and Arial fonts. Small cream and pale turquoise accents.
+Layout: perfectly straight-on rectangle; large PALM COURT heading on a horizontal upper paper strip. Below it two main vertical printed notices, and a small weekly cleaning schedule. Real photographed paper detail and softly uneven ink, no clean vector mockup. Text remains readable.
+Text (verbatim): Upper heading: "PALM COURT". Left notice: "REFRESHMENT AREA" and "OPEN 24 HOURS". Right notice: "PLEASE KEEP THIS AREA CLEAR" and "For everyone's comfort, return empty containers to the bin.". Small schedule: "WEEKLY CLEANING" followed by "MONDAY 08:00", "TUESDAY 08:00", "WEDNESDAY 08:00", "THURSDAY 08:00", "FRIDAY 08:00".
+Style: realistic PS2-era environmental photography texture, 2005–2010 municipal leisure-complex atmosphere, understated familiar liminal waiting-area feeling, slight photographic softness without over-sharpening.
+Lighting: soft even diffuse light, no specular glare or hard directional shadows.
+Aspect ratio: 4:3.
+Avoid: scary warnings, faces, blood, modern QR codes, web app layout, loud decorative graphics, extra slogans, watermark, exaggerated tears or stains, collage layout of multiple alternative boards.

@@ -1,0 +1,90 @@
+{
+  "created_utc": "2026-10-02T12:55:30.073576+00:00",
+  "source_reference": "/workspace/scratch/85111d38430a/v70-assets/vending/reference.png",
+  "source_upload": "/workspace/scratch/85111d38430a/upload/image(20261002-122628).png",
+  "prompt_skill_url": "https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md",
+  "prompt_skill_raw_download_url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "prompt_skill_downloads": [
+    "/workspace/scratch/85111d38430a/v70-assets/vending/prompt-skill-right-panel.md",
+    "/workspace/scratch/85111d38430a/v70-assets/vending/prompt-skill-brushed-metal.md",
+    "/workspace/scratch/85111d38430a/v70-assets/vending/prompt-skill.md",
+    "/workspace/scratch/85111d38430a/v70-assets/vending/prompt-skill-black-metal.md",
+    "/workspace/scratch/85111d38430a/v70-assets/vending/prompt-skill-left-panel.md"
+  ],
+  "assets": [
+    {
+      "asset": "waterfall-ad.png",
+      "absolute_path": "/workspace/scratch/85111d38430a/v70-assets/vending/waterfall-ad.png",
+      "dimensions": [
+        887,
+        1774
+      ],
+      "sha256": "b73c357d5baab29a427181569c9e5a0f1c0d1fa2c5026604dadea8abbbfcadd8",
+      "prompt_file": "/workspace/scratch/85111d38430a/v70-assets/vending/waterfall-ad.prompt.txt",
+      "generation_mode": "builtin image_gen",
+      "original_output_path": "/workspace/scratch/85111d38430a/generated_images/exec-e53cf833-bcdc-4e16-8591-6b0edb8e59ef.png",
+      "reference_used": true
+    },
+    {
+      "asset": "right-control.png",
+      "absolute_path": "/workspace/scratch/85111d38430a/v70-assets/vending/right-control.png",
+      "dimensions": [
+        724,
+        2172
+      ],
+      "sha256": "dde1396636ab99d5ec5fbb2cc80bedbb475eeb255f09e61ce6d35cbafa083428",
+      "prompt_file": "/workspace/scratch/85111d38430a/v70-assets/vending/right-control.prompt.txt",
+      "generation_mode": "builtin image_gen",
+      "original_output_path": "/workspace/scratch/85111d38430a/generated_images/exec-82310478-cf78-43d6-8979-f50de0b0e938.png",
+      "reference_used": true
+    },
+    {
+      "asset": "left-coffee-control.png",
+      "absolute_path": "/workspace/scratch/85111d38430a/v70-assets/vending/left-coffee-control.png",
+      "dimensions": [
+        724,
+        2172
+      ],
+      "sha256": "4f3d27670f061dedd94b76cb253d0619b5c1894678dd8caafe01c2d2340e0dea",
+      "prompt_file": "/workspace/scratch/85111d38430a/v70-assets/vending/left-coffee-control.prompt.txt",
+      "generation_mode": "builtin image_gen",
+      "original_output_path": "/workspace/scratch/85111d38430a/generated_images/exec-03271b52-8d86-433e-ad82-ed63d712b970.png",
+      "reference_used": true
+    },
+    {
+      "asset": "black-enamel.png",
+      "absolute_path": "/workspace/scratch/85111d38430a/v70-assets/vending/black-enamel.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "faf8d6f12825845ff7f139b06f5471b3db85a93409b8964a626796e1ce44272c",
+      "prompt_file": "/workspace/scratch/85111d38430a/v70-assets/vending/black-enamel.prompt.txt",
+      "generation_mode": "builtin image_gen",
+      "original_output_path": "/workspace/scratch/85111d38430a/generated_images/exec-c0163180-7d06-4468-a723-758d11138b6f.png",
+      "reference_used": false
+    },
+    {
+      "asset": "brushed-steel.png",
+      "absolute_path": "/workspace/scratch/85111d38430a/v70-assets/vending/brushed-steel.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "aab9d0729894791f4899a6e1a4fab4ae9a9a5c182610b7a1a78b8500e4224de6",
+      "prompt_file": "/workspace/scratch/85111d38430a/v70-assets/vending/brushed-steel.prompt.txt",
+      "generation_mode": "builtin image_gen",
+      "original_output_path": "/workspace/scratch/85111d38430a/generated_images/exec-09d09a21-3e42-448e-bc70-2dc081718195.png",
+      "reference_used": false
+    }
+  ],
+  "inspection_notes": [
+    "All five generated images inspected inline or with view_image.",
+    "Waterfall advert preserves tiered cascades, turquoise middle pool, dark forest and foreground moss rock; cabinet and delivery chute removed.",
+    "Control label hierarchy matches source; blurred source typography is replaced by plausible English, not represented as verbatim recovered text.",
+    "Physical buttons and metallic borders must be modeled separately. Use cropped label rectangles rather than a flat full-panel model.",
+    "Coffee exact-change crop excludes duplicate ONLY generated on lower line.",
+    "Material images were requested seamless, but image generation does not guarantee mathematical pixel continuity. Derive normal/roughness as data maps, and wrap sampling at texture edges if needed.",
+    "No Tripo or paid external 3D API used."
+  ]
+}

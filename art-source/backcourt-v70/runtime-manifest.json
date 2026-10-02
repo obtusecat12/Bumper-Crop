@@ -1,0 +1,659 @@
+{
+  "version": 70,
+  "created_utc": "2026-10-02T13:14:26.542681+00:00",
+  "generator": "builtin image_gen.imagegen",
+  "independently_generated_asset_count": 16,
+  "successful_generation_call_count": 18,
+  "generation_note": "16 independent assets; two additional imagegen edits corrected soy front/back capacity to 500 mL. All original and corrected PNGs retained.",
+  "runtime_texture_count": 33,
+  "runtime_breakdown": {
+    "albedo": 16,
+    "surface_normal": 6,
+    "surface_roughness": 6,
+    "label_and_can_top_normal": 5
+  },
+  "runtime_total_bytes": 5140030,
+  "estimated_gpu_rgba8_with_mips_bytes": 75147947,
+  "reported_image_generation_cost": null,
+  "cost_note": "Builtin image generation did not expose a monetary or credit bill; no value is invented. No Tripo or third-party paid 3D generation task was submitted.",
+  "processing": "Mechanical crops and LANCZOS resizing only for artwork. Micro-normal and roughness are restrained technical inferences from generated source detail, not independently generated painted artwork or measured height. Periodic padding and finite differences for repeating surface data maps; clamp sampling for printed-label data maps.",
+  "runtime_color_space": "albedo=sRGB; normal/roughness=NoColorSpace; normals use OpenGL tangent-space +Y convention",
+  "reference_directory": "references",
+  "research_directory": "research",
+  "source_directory": "sources; per-asset prompts and original provenance preserved here",
+  "assets": [
+    {
+      "name": "waterfall-ad",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/waterfall-ad.webp",
+      "size": [
+        768,
+        1536
+      ],
+      "bytes": 397514,
+      "sha256": "79b8b27bd99bd168ca16b91a6686369fe81ed85b9c975125e53e794b090b2dc7",
+      "source": "art-source/backcourt-v70/sources/vending/waterfall-ad.png",
+      "source_size": [
+        887,
+        1774
+      ],
+      "source_sha256": "b73c357d5baab29a427181569c9e5a0f1c0d1fa2c5026604dadea8abbbfcadd8",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 92
+    },
+    {
+      "name": "right-control",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/right-control.webp",
+      "size": [
+        256,
+        2048
+      ],
+      "bytes": 145306,
+      "sha256": "480ff9c16627c9b3b54ffc71db88d213127bf66160bc16c9930b455232de9703",
+      "source": "art-source/backcourt-v70/sources/vending/right-control.png",
+      "source_size": [
+        724,
+        2172
+      ],
+      "source_sha256": "dde1396636ab99d5ec5fbb2cc80bedbb475eeb255f09e61ce6d35cbafa083428",
+      "source_crop_xyxy": [
+        252,
+        0,
+        473,
+        2172
+      ],
+      "resample": "LANCZOS",
+      "webp_quality": 94
+    },
+    {
+      "name": "left-control",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/left-control.webp",
+      "size": [
+        256,
+        2048
+      ],
+      "bytes": 125770,
+      "sha256": "dba3d43bd944d2bd9dc65ec142636f3ba607350693aa5ed61324de18ce1c24a1",
+      "source": "art-source/backcourt-v70/sources/vending/left-coffee-control.png",
+      "source_size": [
+        724,
+        2172
+      ],
+      "source_sha256": "4f3d27670f061dedd94b76cb253d0619b5c1894678dd8caafe01c2d2340e0dea",
+      "source_crop_xyxy": [
+        212,
+        0,
+        512,
+        2172
+      ],
+      "resample": "LANCZOS",
+      "webp_quality": 94
+    },
+    {
+      "name": "black-metal",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/black-metal.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 92338,
+      "sha256": "f50452adb2efe6ae96a02bf17993a90cf1f5744991efb1bd5ce07af8a137a7ea",
+      "source": "art-source/backcourt-v70/sources/vending/black-enamel.png",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_sha256": "faf8d6f12825845ff7f139b06f5471b3db85a93409b8964a626796e1ce44272c",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 92
+    },
+    {
+      "name": "brushed-metal",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/brushed-metal.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 82360,
+      "sha256": "6c753888983a7c6599bab1fe931f41b18ef8ed7d6cd67c9392d54bab63405de6",
+      "source": "art-source/backcourt-v70/sources/vending/brushed-steel.png",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_sha256": "aab9d0729894791f4899a6e1a4fab4ae9a9a5c182610b7a1a78b8500e4224de6",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 92
+    },
+    {
+      "name": "seat-plastic",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/seat-plastic.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 68062,
+      "sha256": "d182e5a9100309ca0ef4addefb21ef09d3f3d1ef5d79db7505625661cbd64185",
+      "source": "art-source/backcourt-v70/sources/props/waiting-seat-plastic.png",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_sha256": "0b68b45cf3d6f07c846330ed5bd8e4446033365cfde0823d60f77b326beca740",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 92
+    },
+    {
+      "name": "rubber-mat",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/rubber-mat.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 108400,
+      "sha256": "81eef2d532a513849dba0fa83bbabdfade95e537fb1ae312ea2eb0212de4115e",
+      "source": "art-source/backcourt-v70/sources/props/rubber-mat-teal.png",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_sha256": "a9e47e7418e9fb36efe003433ded8078834b9d2f61b53199a00f5ec54b84825b",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 92
+    },
+    {
+      "name": "notice-board",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/notice-board.webp",
+      "size": [
+        1024,
+        768
+      ],
+      "bytes": 242646,
+      "sha256": "d4dc5590d7d34d5cd69d033aeb5404e061d0f46587937e60ad65b7c783703fef",
+      "source": "art-source/backcourt-v70/sources/props/palm-court-noticeboard.png",
+      "source_size": [
+        1448,
+        1086
+      ],
+      "source_sha256": "f974dd084f49702a18a8d9ebce43217e50968128f0e64397bd9e6e2016e04421",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 94
+    },
+    {
+      "name": "scale-dial",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/scale-dial.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 49056,
+      "sha256": "2e2c4fbbb0dbae231b8d063c3067842ea967fd63a916ffe24ccf77cbcff3d244",
+      "source": "art-source/backcourt-v70/sources/props/public-weight-dial.png",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_sha256": "add446f4c0542c3725591e7cc97c6305207f755cd9e3f7ca45ea023e743c56f5",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 94
+    },
+    {
+      "name": "stained-steel",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/stained-steel.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 83444,
+      "sha256": "9543f9af97d6a410b660bff15397e72487e346248ec77771d31967d85f3608e7",
+      "source": "art-source/backcourt-v70/sources/props/public-fountain-stainless.png",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_sha256": "2ff7ae04724fc667106d9141aeff268b78a95f268347f18e8cdc7bee36bbd4a6",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 92
+    },
+    {
+      "name": "drink-plastic",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/drink-plastic.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 50162,
+      "sha256": "d9c627ebbc9b262d260ab3e63b2e8a538eb59bcafa1c35b8c1921f16d7bbb787",
+      "source": "art-source/backcourt-v70/sources/drinks/bottle-plastic-shell.png",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_sha256": "07d8cc4751831771e78f0cdb10c3e955e6e5b7d7d364baaca0886fe1e06dfe90",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 92
+    },
+    {
+      "name": "pet-label",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/pet-label.webp",
+      "size": [
+        1536,
+        512
+      ],
+      "bytes": 250748,
+      "sha256": "f71a0ac6dc66d3a8f10ad9ed58a1703add4c61a67dd57b5b65e92fc24000a0d4",
+      "source": "art-source/backcourt-v70/sources/drinks/almond-pet-label.png",
+      "source_size": [
+        2172,
+        724
+      ],
+      "source_sha256": "e2c288bf9bbff221915b5dc5acc1784327c1c7c844c86cc0aec8fb19dea4cd3e",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 94
+    },
+    {
+      "name": "can-label",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/can-label.webp",
+      "size": [
+        1024,
+        512
+      ],
+      "bytes": 198620,
+      "sha256": "0122d9ff89cc243fa7dada7593077d146e96cef06ec1968eef0fefffa3f91da1",
+      "source": "art-source/backcourt-v70/sources/drinks/almond-can-label.png",
+      "source_size": [
+        1774,
+        887
+      ],
+      "source_sha256": "f7ee08f55ffb0ac97058a49e0a175b382f16f6cc84c9437dd9a835355bfe25eb",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 94
+    },
+    {
+      "name": "can-top",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/can-top.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 77992,
+      "sha256": "7bc0667a61cd1bb09864e8c270babb06360fb543b1c6f2291c271752f6088986",
+      "source": "art-source/backcourt-v70/sources/drinks/almond-can-top.png",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_sha256": "23b9decc190b397cc0a60aa17238069bef98ccfeb87aa8c8f35d945132b43f54",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 94
+    },
+    {
+      "name": "soy-front",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/soy-front.webp",
+      "size": [
+        768,
+        960
+      ],
+      "bytes": 196136,
+      "sha256": "0912a72340f84193547681cc4412c9fc905e1eda071a799f0269075cc54c07a7",
+      "source": "art-source/backcourt-v70/sources/drinks/lucky-soy-front-corrected500ml.png",
+      "source_size": [
+        1122,
+        1402
+      ],
+      "source_sha256": "cd524fd9c2b2efceea73ff66155e891ef702770744e65b6b4e57ee3d93fcd908",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 94
+    },
+    {
+      "name": "soy-back",
+      "kind": "generated-albedo",
+      "file": "dist/textures/vending-v70/soy-back.webp",
+      "size": [
+        768,
+        960
+      ],
+      "bytes": 230304,
+      "sha256": "aa3e521723ef1e6054d554c92d5a53c049bcf731d4aea617d3fbff49da713a5a",
+      "source": "art-source/backcourt-v70/sources/drinks/lucky-soy-back-corrected500ml.png",
+      "source_size": [
+        1122,
+        1402
+      ],
+      "source_sha256": "98b1b193c32da0e317a634670966af92f458f4bf032be811d407c5611419acd2",
+      "source_crop_xyxy": null,
+      "resample": "LANCZOS",
+      "webp_quality": 94
+    },
+    {
+      "name": "black-metal-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/black-metal-normal.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 258218,
+      "sha256": "7ea6d5e752581413f13c7a8d7644cd4840a6fa30dd4bbdea302616e804111b97",
+      "source_albedo": "black-metal",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 1.25,
+        "roughness_mean": 0.84,
+        "roughness_spread": 0.065
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "black-metal-roughness",
+      "kind": "derived-roughness",
+      "file": "dist/textures/vending-v70/black-metal-roughness.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 97566,
+      "sha256": "eced9b48ce52d15182fe8d8fffb5996237d1685ed6bfadde5ae4d71615337822",
+      "source_albedo": "black-metal",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 1.25,
+        "roughness_mean": 0.84,
+        "roughness_spread": 0.065
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "brushed-metal-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/brushed-metal-normal.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 212114,
+      "sha256": "5ad97344581aaef424fa85900cf272c91295773af943f4444b2cc59386a62c7b",
+      "source_albedo": "brushed-metal",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 0.9,
+        "roughness_mean": 0.7,
+        "roughness_spread": 0.08
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "brushed-metal-roughness",
+      "kind": "derived-roughness",
+      "file": "dist/textures/vending-v70/brushed-metal-roughness.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 108810,
+      "sha256": "9eb4b7d7a45e85bf2edb958addfd4b6e088169661f9fdc3daf59c30c0dfde488",
+      "source_albedo": "brushed-metal",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 0.9,
+        "roughness_mean": 0.7,
+        "roughness_spread": 0.08
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "seat-plastic-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/seat-plastic-normal.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 201156,
+      "sha256": "e4ee2e7626e6e139eb68885d4384ba1a5fb9a45f182586769ba55ec325aff093",
+      "source_albedo": "seat-plastic",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 1.1,
+        "roughness_mean": 0.89,
+        "roughness_spread": 0.04
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "seat-plastic-roughness",
+      "kind": "derived-roughness",
+      "file": "dist/textures/vending-v70/seat-plastic-roughness.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 55572,
+      "sha256": "3611c0366f0f4df655b00fb31b6d1fdf1defb586803838562da09ef1b3489e3f",
+      "source_albedo": "seat-plastic",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 1.1,
+        "roughness_mean": 0.89,
+        "roughness_spread": 0.04
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "rubber-mat-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/rubber-mat-normal.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 380210,
+      "sha256": "bfe00bf002fcd7201ee4edaa3fec88e4bb657f93cb6102d96f649b1c6e652186",
+      "source_albedo": "rubber-mat",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 2.5,
+        "roughness_mean": 0.95,
+        "roughness_spread": 0.035
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "rubber-mat-roughness",
+      "kind": "derived-roughness",
+      "file": "dist/textures/vending-v70/rubber-mat-roughness.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 87208,
+      "sha256": "15ccaef8ce0943556757d358a657ba5dacb3d79a0ee042bb6527611c6c17de0e",
+      "source_albedo": "rubber-mat",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 2.5,
+        "roughness_mean": 0.95,
+        "roughness_spread": 0.035
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "drink-plastic-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/drink-plastic-normal.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 164258,
+      "sha256": "8b75228d92558c48cf5b9ccbaa88c536c8197dcba4d677a95e84427bd93ab0ba",
+      "source_albedo": "drink-plastic",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 0.85,
+        "roughness_mean": 0.88,
+        "roughness_spread": 0.035
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "drink-plastic-roughness",
+      "kind": "derived-roughness",
+      "file": "dist/textures/vending-v70/drink-plastic-roughness.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 41030,
+      "sha256": "2eaf956609a2ccaae3b35a47bba02f58eded9dbb335256502cd8e93a57a219b3",
+      "source_albedo": "drink-plastic",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 0.85,
+        "roughness_mean": 0.88,
+        "roughness_spread": 0.035
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "stained-steel-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/stained-steel-normal.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 199030,
+      "sha256": "e24560be19490ded786f4821c75f70519bf4fca4a46b00d3553e02774f5f9838",
+      "source_albedo": "stained-steel",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 0.8,
+        "roughness_mean": 0.82,
+        "roughness_spread": 0.065
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "stained-steel-roughness",
+      "kind": "derived-roughness",
+      "file": "dist/textures/vending-v70/stained-steel-roughness.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 88978,
+      "sha256": "6b9146a2628ddfc5dc03cd7c16371662a766287e425c68cd8ec6e956b8ee3cfe",
+      "source_albedo": "stained-steel",
+      "sampling": "periodic wrap",
+      "parameters": {
+        "normal_gain": 0.8,
+        "roughness_mean": 0.82,
+        "roughness_spread": 0.065
+      },
+      "webp_lossless": true
+    },
+    {
+      "name": "pet-label-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/pet-label-normal.webp",
+      "size": [
+        1536,
+        512
+      ],
+      "bytes": 171030,
+      "sha256": "97ce86a41ad0d25c8de9020832eea07d9164239224ac4dc5b6e0e24462bcf273",
+      "source_albedo": "pet-label",
+      "sampling": "clamp",
+      "normal_gain": 0.2,
+      "webp_lossless": true
+    },
+    {
+      "name": "can-label-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/can-label-normal.webp",
+      "size": [
+        1024,
+        512
+      ],
+      "bytes": 145240,
+      "sha256": "016b064ea55cda707a107eaae355bc8de2795798d52a2e85b0ec45d313bafb9b",
+      "source_albedo": "can-label",
+      "sampling": "clamp",
+      "normal_gain": 0.2,
+      "webp_lossless": true
+    },
+    {
+      "name": "can-top-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/can-top-normal.webp",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 207756,
+      "sha256": "8930316b38c02980677a7a6db575fb6cc2e848a399a3b735db1f9244089afb0b",
+      "source_albedo": "can-top",
+      "sampling": "clamp",
+      "normal_gain": 1.25,
+      "webp_lossless": true
+    },
+    {
+      "name": "soy-front-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/soy-front-normal.webp",
+      "size": [
+        768,
+        960
+      ],
+      "bytes": 155098,
+      "sha256": "238cfcb92961f3777982606028cb662ba45260b55d4a9a3680480a35cde8c143",
+      "source_albedo": "soy-front",
+      "sampling": "clamp",
+      "normal_gain": 0.2,
+      "webp_lossless": true
+    },
+    {
+      "name": "soy-back-normal",
+      "kind": "derived-normal",
+      "file": "dist/textures/vending-v70/soy-back-normal.webp",
+      "size": [
+        768,
+        960
+      ],
+      "bytes": 167898,
+      "sha256": "5e18752a5c72c3196bc871acb772a4e8ec912e157204e16d587f1555ae7443c3",
+      "source_albedo": "soy-back",
+      "sampling": "clamp",
+      "normal_gain": 0.2,
+      "webp_lossless": true
+    }
+  ]
+}

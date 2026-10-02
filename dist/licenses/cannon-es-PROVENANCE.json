@@ -1,0 +1,12 @@
+{
+  "package": "cannon-es",
+  "version": "0.20.0",
+  "source": "https://registry.npmjs.org/cannon-es/-/cannon-es-0.20.0.tgz",
+  "upstream": "https://github.com/pmndrs/cannon-es",
+  "license": "MIT",
+  "npmSha1": "bf2f62a674701f37e3d861c90668a32d4d32f082",
+  "compiledBy": "esbuild --minify --format=esm --target=es2020",
+  "bytes": 124991,
+  "gzipBytes": 36029,
+  "sha256": "e9dc266b780a5fea8b29489f6092e09cb2dca9ce1373bea2a6c9ee082b7f0dd2"
+}

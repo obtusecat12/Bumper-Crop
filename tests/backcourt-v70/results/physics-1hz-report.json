@@ -1,0 +1,21 @@
+{
+  "nodeCPUOnly": true,
+  "notBrowserFPS": true,
+  "cadenceSeconds": 1,
+  "productionMaxCpuMs": 3,
+  "at32": {
+    "bodies": 32,
+    "awake": 25,
+    "medianMs": 3.828744999999799,
+    "p95Ms": 5.644132000000354,
+    "activeSolverTime": 21.501388888887345,
+    "budgetDroppedTime": 10.498611111111172
+  },
+  "afterTail": {
+    "awake": 0,
+    "medianMs": 0.0016519999990123324,
+    "p95Ms": 0.0021230000002105953,
+    "activeSolverTime": 45.37083333333037,
+    "budgetDroppedTime": 21.87083333333279
+  }
+}

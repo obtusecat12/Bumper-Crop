@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: one flat front paper label texture for a small milk-shaped LUCKY SOY MILK bottle, for precise UV mapping in a Three.js PS2 game.
+Subject: ordinary grocery-store soy milk packaging printed around 2005, full English typography, the cheerful yet quiet fictional product LUCKY SOY MILK. Fill the entire image with the rectangular front label, no bottle or product mockup.
+Composition: a portrait 4:5 label. Top third carries the brand in clearly legible dark forest-green serif capitals, three stacked lines: LUCKY / SOY / MILK. Beneath is a small pale gold four-leaf-clover emblem and a broad soft photographic illustration of round tan soybeans, two green soybean pods, and a little milk in a simple glass; bottom carries ORIGINAL and 250 mL. Simple green ruled border inset around the entire edge, muted cream background, restrained oval/circle motifs from 2005 supermarket label design.
+Text (verbatim): "LUCKY SOY MILK"; "ORIGINAL"; "Soy beverage"; "250 mL".
+Style and materials: authentic ordinary 2005 food packaging rather than designer branding, cream matte printed paper, slightly dated serif typesetting, soft pale green gradients, subtle scanned print grain, a few faint handling scuffs, subdued color. Clear large brand lettering, realistic softly printed food photography, PS2-era photo texture quality without oversharpening.
+Lighting: uniform diffuse front scan with no cast shadow and no three-dimensional curvature.
+Aspect ratio: 4:5.
+Avoid: Chinese characters, non-English writing, extra brands, modern minimal packaging, luxury graphics, bottle outlines, four-panel sheets, unreadable main title, strong yellow cast, harsh highlights, modern vector illustration, shadows around a floating label, watermarks.

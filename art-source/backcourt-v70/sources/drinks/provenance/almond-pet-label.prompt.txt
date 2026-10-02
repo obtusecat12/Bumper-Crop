@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: one flat unfolded full-wrap printed label texture for a 2010 plastic PET beverage bottle, for exact UV mapping in a Three.js PS2-style game.
+Subject: ALMOND WATER, plain 500 mL commercial vending-machine drink packaging. The entire image is the rectangular label artwork, edge-to-edge, perfectly flat and viewed straight on, no bottle, no curved mockup, no perspective and no external background.
+Layout: horizontally wide 3:1 label. Center 40 percent is a large readable front panel with ALMOND WATER in soft dark blue serif capitals, a small photographed cluster of three almonds and a pale aqua splash beneath. Left and right 30 percent are quieter matching wraparound panels, one with small English product information and a realistic black barcode, the other with a modest white information box. Keep all important text comfortably inside the image; top and bottom show narrow muted aqua printed bands.
+Style and era: authentic ordinary American beverage shrink-wrap artwork from 2005–2010, glossy inexpensive printed plastic, gentle pale blue gradient, cream paper tone, faded seafoam accents, slight halftone printing grain and faint scuffs. Soft photographic printing appropriate to PS2 texture art, sufficiently clear text, subdued colors, not luxury branding and not cartoon vector art.
+Text (verbatim, dominant front): "ALMOND WATER"; "Naturally refreshing"; "500 mL". Smaller side wording: "ALMOND INFUSED BEVERAGE"; "SERVE CHILLED"; "BOTTLED FOR DISTRIBUTION".
+Lighting and materials: even diffuse scanning light with only subtle printed-plastic sheen; the artwork itself has no lighting gradient from a three-dimensional bottle.
+Aspect ratio: 3:1.
+Avoid: product mockup, caps, bottle geometry, decorative frame, extra separate panels, four images, Chinese text, illegible main brand, modern minimalist premium design, strong glare, shadows, watermarks.

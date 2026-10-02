@@ -1,0 +1,1067 @@
+{
+  "passed": true,
+  "physics": "cannon-es 0.20.0, real convex contacts",
+  "bodyCountBeforeCapacity": 12,
+  "groundedAfter12Drops": 10,
+  "sleepingAfterSettling": 12,
+  "earlierDrinkOnGround": true,
+  "minimumGroundVertexY": -0.006714433143020251,
+  "maxAngularVelocity": 32.49851243815361,
+  "maximumContactPenetration": 0.008560266515408355,
+  "fixedTimeStep": 0.008333333333333333,
+  "maximumFrameSubsteps": 8,
+  "pauseInvariant": true,
+  "heldItemRemovedAndRestored": true,
+  "capacityInvariant": true,
+  "stats": {
+    "steps": 3119,
+    "acceptedTime": 28.266666666666346,
+    "simulatedTime": 14.658333333333307,
+    "droppedTime": 3.933333333333333,
+    "budgetDroppedTime": 0,
+    "budgetOverruns": 0,
+    "spawned": 33,
+    "removed": 1,
+    "groundImpacts": 1707,
+    "trayImpacts": 504,
+    "dynamicImpacts": 1494,
+    "maxPenetration": 0.008560266515408355,
+    "maxPenetrationAfterBirthStep": 0.008560266515408355,
+    "lastContactPenetration": 0.00001434860120249487,
+    "maxSpawnRaise": 0
+  },
+  "frames": [
+    {
+      "afterDrop": 1,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.031147976281992045,
+            0.5080506022902644,
+            0.1250937037487702
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 2,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.031192988978071618,
+            0.5079946760120947,
+            0.12530989770672737
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.0496182839699198,
+            0.5112247699219448,
+            0.05764390435988702
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 3,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.035730566989042874,
+            0.03197723131384927,
+            0.49842280291023466
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.03589732597626848,
+            0.3062289662796507,
+            0.2239383660922461
+          ],
+          "grounded": false,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.00010714659669517528,
+            0.519192044707676,
+            0.19902137571526912
+          ],
+          "grounded": false,
+          "inTray": false,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 4,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.03573704882003966,
+            0.031170889206146402,
+            0.6244035786220284
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.053866202891239404,
+            0.03273709544735925,
+            0.2878782671179838
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.04292112377223142,
+            0.03697712179744798,
+            0.5323040799988725
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "center": [
+            -0.002446122587201315,
+            0.5110039181095276,
+            0.03810972473299599
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 5,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.035724864465807624,
+            0.030965048870190706,
+            0.6228896038477745
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.05325704262021488,
+            0.03185851988676557,
+            0.28317123839589065
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.038043301644486424,
+            0.03573883200528931,
+            0.5024657648168362
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "center": [
+            -0.004559539051068226,
+            0.5090090795458798,
+            0.08717225217419372
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "center": [
+            -0.032034036648350604,
+            0.5196892883985423,
+            0.14892764760888846
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 6,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.03572407561504791,
+            0.030909519193930896,
+            0.623073203176708
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.05149551244084011,
+            0.032668591562098816,
+            0.26459795897998395
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.03802516651638474,
+            0.03573711510914728,
+            0.5023529336678493
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "center": [
+            -0.07237378472359447,
+            0.03193311075978711,
+            0.18753877550714382
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "center": [
+            -0.03773927009703533,
+            0.03233709812323288,
+            0.4003888120487297
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-6",
+          "type": "soy",
+          "center": [
+            0.06606019509878146,
+            0.0885926472017727,
+            0.34185205433893834
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 7,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.035723217346895556,
+            0.030909750059082926,
+            0.623049552401085
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.049408427172326054,
+            0.031862225345410736,
+            0.25095917507599114
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.03802516651638474,
+            0.03573711510914728,
+            0.5023529336678493
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "center": [
+            -0.17902277064335534,
+            0.0312589310714387,
+            0.05099438209037169
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "center": [
+            -0.037830315935486906,
+            0.0318557933033438,
+            0.3985933425005438
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-6",
+          "type": "soy",
+          "center": [
+            0.028780599159638903,
+            0.06554506831804391,
+            0.3351078026950338
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-7",
+          "type": "pet",
+          "center": [
+            0.017413656270910485,
+            0.5072565501148804,
+            0.12593162036302596
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 8,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.035723217346895556,
+            0.030909750059082926,
+            0.623049552401085
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.04823156794687564,
+            0.03130460834336854,
+            0.2504706411556587
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.03802516651638474,
+            0.03573711510914728,
+            0.5023529336678493
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "center": [
+            -0.19026874721668005,
+            0.030897502081818018,
+            0.036577321836371995
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "center": [
+            -0.03840370949155241,
+            0.031820930095717674,
+            0.3990779516624559
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-6",
+          "type": "soy",
+          "center": [
+            0.026479894050562062,
+            0.06395903155629705,
+            0.3344136805412272
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-7",
+          "type": "pet",
+          "center": [
+            0.017412730460487472,
+            0.5072241965950919,
+            0.12534415117395306
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        },
+        {
+          "id": "vend-8",
+          "type": "can",
+          "center": [
+            0.0008871844472229746,
+            0.5119453111111725,
+            0.0390756609437274
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 9,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.03536326506407649,
+            0.03197016375813908,
+            0.6305646368493336
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.048606692220069005,
+            0.0324339921275552,
+            0.25371786241408045
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.03962072625404343,
+            0.04052651412410952,
+            0.5294331641239642
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "center": [
+            -0.1903433752510554,
+            0.030909704620226092,
+            0.03648211690756364
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "center": [
+            -0.039051959819426794,
+            0.032735808324344515,
+            0.4171802881833294
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-6",
+          "type": "soy",
+          "center": [
+            0.009816556952502387,
+            0.05764518815713518,
+            0.3428244107512281
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-7",
+          "type": "pet",
+          "center": [
+            0.0007342733131311197,
+            0.09082224366665914,
+            0.4553069964988476
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-8",
+          "type": "can",
+          "center": [
+            -0.04642098471639952,
+            0.08043544000975796,
+            0.23126882118759304
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-9",
+          "type": "soy",
+          "center": [
+            -0.11291252376125702,
+            0.09383717191898795,
+            0.6035463266221471
+          ],
+          "grounded": false,
+          "inTray": false,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 10,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.035971046928272354,
+            0.03090685553002926,
+            0.6740345663949774
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.048467002221957524,
+            0.032729752818930063,
+            0.24496640122652266
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.04193072269829524,
+            0.03573680504544534,
+            0.528463750951545
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "center": [
+            -0.1903433752510554,
+            0.030909704620226092,
+            0.03648211690756364
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "center": [
+            -0.03864465024009247,
+            0.03237123879307678,
+            0.4120404536533742
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-6",
+          "type": "soy",
+          "center": [
+            0.023049581353115293,
+            0.03672434863743443,
+            0.3418922749984833
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-7",
+          "type": "pet",
+          "center": [
+            0.024773694458457743,
+            0.0653525315354261,
+            0.4685362306038731
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-8",
+          "type": "can",
+          "center": [
+            -0.07071543839156368,
+            0.03282183930558906,
+            0.09926253002952806
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-9",
+          "type": "soy",
+          "center": [
+            -0.2839435642577844,
+            0.036417163377746455,
+            0.8030089794613221
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-10",
+          "type": "pet",
+          "center": [
+            -0.01650917647774014,
+            0.5079301011432569,
+            0.120975596069443
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 11,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.03595972943079733,
+            0.03090215186695219,
+            0.673695832871724
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.04871477566648301,
+            0.03234356449168776,
+            0.24324004230430513
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.041111699564732845,
+            0.03423110977738221,
+            0.5273172361346307
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "center": [
+            -0.1903433752510554,
+            0.030909704620226092,
+            0.03648211690756364
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "center": [
+            -0.039529207066627985,
+            0.03233971251714351,
+            0.40829076645535944
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-6",
+          "type": "soy",
+          "center": [
+            0.0245482222197199,
+            0.03521740898372243,
+            0.3382081029880327
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-7",
+          "type": "pet",
+          "center": [
+            0.02382012954545765,
+            0.05778110253883449,
+            0.4650579573186561
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-8",
+          "type": "can",
+          "center": [
+            -0.07282430186164837,
+            0.03185880079117531,
+            0.09409728302405776
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-9",
+          "type": "soy",
+          "center": [
+            -0.3119585161635469,
+            0.03611011306726318,
+            0.8205980584297791
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-10",
+          "type": "pet",
+          "center": [
+            -0.016420766111049964,
+            0.5075304589889975,
+            0.11797101193301239
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        },
+        {
+          "id": "vend-11",
+          "type": "can",
+          "center": [
+            -0.03757382013801537,
+            0.5114070021951694,
+            0.051550903068524535
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        }
+      ]
+    },
+    {
+      "afterDrop": 12,
+      "drinks": [
+        {
+          "id": "vend-1",
+          "type": "pet",
+          "center": [
+            -0.03595972943079733,
+            0.03090215186695219,
+            0.673695832871724
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-2",
+          "type": "can",
+          "center": [
+            0.04862262588931951,
+            0.03298834182893468,
+            0.23991782617426793
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-3",
+          "type": "soy",
+          "center": [
+            0.041110657783271616,
+            0.03573663576237224,
+            0.5285643873944442
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-4",
+          "type": "pet",
+          "center": [
+            -0.1903433752510554,
+            0.030909704620226092,
+            0.03648211690756364
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-5",
+          "type": "can",
+          "center": [
+            -0.04106964536285474,
+            0.0318625846307598,
+            0.40478605339105367
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-6",
+          "type": "soy",
+          "center": [
+            0.02528240400596351,
+            0.035771624036282104,
+            0.3339387351719147
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-7",
+          "type": "pet",
+          "center": [
+            0.02405444427457681,
+            0.04865169399896355,
+            0.46260269122620207
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-8",
+          "type": "can",
+          "center": [
+            -0.07287084363319668,
+            0.03187406194608485,
+            0.09398764273951467
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": true
+        },
+        {
+          "id": "vend-9",
+          "type": "soy",
+          "center": [
+            -0.3134061256945976,
+            0.035738247281105896,
+            0.821508211586625
+          ],
+          "grounded": true,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-10",
+          "type": "pet",
+          "center": [
+            -0.0255686106755291,
+            0.09537499027050694,
+            0.4070303528420304
+          ],
+          "grounded": false,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-11",
+          "type": "can",
+          "center": [
+            -0.04535898113805543,
+            0.08385583046404693,
+            0.22443882475013588
+          ],
+          "grounded": false,
+          "inTray": false,
+          "sleeping": false
+        },
+        {
+          "id": "vend-12",
+          "type": "soy",
+          "center": [
+            0.0589551093511108,
+            0.5321997658429491,
+            -0.049487149062069954
+          ],
+          "grounded": false,
+          "inTray": true,
+          "sleeping": false
+        }
+      ]
+    }
+  ],
+  "settledCurrentGeometryOverlap": 0.0008446852876377448,
+  "authoredLayout": {
+    "passed": true,
+    "width": 0.46,
+    "floorY": 0.37,
+    "spawn": [
+      0,
+      0.66,
+      -0.04
+    ],
+    "grounded": 10,
+    "sleeping": 12,
+    "minimumGroundVertexY": -0.0023841870064877993,
+    "settledCurrentGeometryOverlap": 0.00081299541032041,
+    "stats": {
+      "steps": 3098,
+      "acceptedTime": 26.199999999999793,
+      "simulatedTime": 15.474999999999964,
+      "droppedTime": 0,
+      "budgetDroppedTime": 0,
+      "budgetOverruns": 0,
+      "spawned": 12,
+      "removed": 0,
+      "groundImpacts": 1072,
+      "trayImpacts": 451,
+      "dynamicImpacts": 890,
+      "maxPenetration": 0.010226259940375848,
+      "maxPenetrationAfterBirthStep": 0.010226259940375848,
+      "lastContactPenetration": 0.000022372195530716288,
+      "maxSpawnRaise": 0
+    }
+  },
+  "rubberMatSupport": true,
+  "frontwardSlope": true,
+  "settledContactPenetration": 0.00001434860120249487,
+  "spawnClearance": true
+}

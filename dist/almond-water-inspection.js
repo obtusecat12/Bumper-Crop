@@ -1,5 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {makeAlmondBottle,releaseAlmondBottle,almondName,heroRotation,bindAlmondGlass,GLASS_LAYER} from './almond-water-assets.js?v=60';
+import {makeAlmondBottle,releaseAlmondBottle,almondName,heroRotation,bindAlmondGlass,almondEnvironment,GLASS_LAYER} from './almond-water-assets.js?v=60';
+import {createVendingDrink,releaseVendingDrink,vendingDrinkName} from './vending-drinks-v70.js';
+import {vendingDrinkTextures} from './vending-materials-v70.js';
 import {almondProfile,profileRadius,liquidVolume} from './almond-water-profiles.js?v=60';
 import {almondFillTables as fillTables} from './almond-water-fill-tables.js?v=60';
 export {liquidVolume};
@@ -18,14 +20,18 @@ export class AlmondSlosh {
  }
 }
 export function createAlmondInspection(){
- const scene=new T.Scene(),camera=new T.PerspectiveCamera(50,4/3,.025,20),pose=new T.Group();scene.add(pose);scene.add(new T.HemisphereLight('#cdd7d8','#756340',1.65));const key=new T.DirectionalLight('#e4e7df',1.55);key.position.set(-.6,.85,.9);scene.add(key);const fill=new T.DirectionalLight('#98a7b0',.40);fill.position.set(.8,.1,-.3);scene.add(fill);
+ // Geometry/textures stay shared. The inspector's one cached material set is
+ // independent of world fog, weather wear and cascaded-shadow decorations.
+ const heroVendingMaps={...vendingDrinkTextures()};
+ const scene=new T.Scene(),camera=new T.PerspectiveCamera(50,4/3,.025,20),pose=new T.Group();scene.environment=almondEnvironment.value;scene.add(pose);scene.add(new T.HemisphereLight('#cdd7d8','#756340',1.65));const key=new T.DirectionalLight('#e4e7df',1.55);key.position.set(-.6,.85,.9);scene.add(key);const fill=new T.DirectionalLight('#98a7b0',.40);fill.position.set(.8,.1,-.3);scene.add(fill);
  const start=new T.Vector3(),destination=new T.Vector3(0,0,-.58),ndc=new T.Vector3(),inverse=new T.Quaternion(),up=new T.Vector3(),slosh=new AlmondSlosh();
  let item=null,variant=null,phase='idle',age=0,clock=0,yaw=0,pitch=-.055,targetYaw=0,targetPitch=-.055,oldX=0,oldY=0,oldZ=0,oldVx=0,oldVz=0;
  const stats={activeUpdates:0,inactiveUpdates:0,opaqueDraws:0,glassDraws:0,worldGeometryReplays:0};
- function clear(){releaseAlmondBottle(item,{hero:true});item=null;variant=null;phase='idle';pose.clear();}
- function begin(v,worldPosition,worldCamera){clear();variant={...v};item=makeAlmondBottle(v,{hero:true});item.position.y=-item.userData.almondHeight*.5;pose.add(item);camera.aspect=worldCamera.aspect;camera.updateProjectionMatrix();worldCamera.updateMatrixWorld();
-  destination.z=-.58;
-  if(worldPosition){ndc.copy(worldPosition);ndc.y+=item.userData.almondHeight*.5;ndc.project(worldCamera);start.copy(worldPosition).applyMatrix4(worldCamera.matrixWorldInverse);start.z=clamp(start.z,-3,-.35);start.x=ndc.x*(-start.z)/camera.projectionMatrix.elements[0];start.y=ndc.y*(-start.z)/camera.projectionMatrix.elements[5];}
+ const releaseItem=g=>g?.userData.vendingDrink?releaseVendingDrink(g):releaseAlmondBottle(g,{hero:true});
+ function clear(){releaseItem(item);item=null;variant=null;phase='idle';pose.clear();}
+ function begin(v,worldPosition,worldCamera){clear();variant={...v};item=v.kind==='vending'?createVendingDrink(T,v.type,{textures:heroVendingMaps}).group:makeAlmondBottle(v,{hero:true});item.position.y=-item.userData.almondHeight*.5;pose.add(item);camera.aspect=worldCamera.aspect;camera.updateProjectionMatrix();worldCamera.updateMatrixWorld();
+  destination.z=v.kind==='vending'?-clamp(item.userData.almondHeight*2.15,.26,.58):-.58;
+  if(worldPosition){ndc.copy(worldPosition);if(v.kind!=='vending')ndc.y+=item.userData.almondHeight*.5;ndc.project(worldCamera);start.copy(worldPosition).applyMatrix4(worldCamera.matrixWorldInverse);start.z=clamp(start.z,-3,-.35);start.x=ndc.x*(-start.z)/camera.projectionMatrix.elements[0];start.y=ndc.y*(-start.z)/camera.projectionMatrix.elements[5];}
   else start.set(.22,-.32,-.85);
   pose.position.copy(start);yaw=targetYaw=0;pitch=targetPitch=-.055;age=clock=0;phase='arriving';oldX=start.x;oldY=start.y;oldZ=start.z;oldVx=oldVz=0;Object.assign(slosh,{kind:v.kind,x:0,z:0,vx:.9,vz:-.5,time:0,motion:0,fill:almondProfile(v.kind).fill});pose.rotation.set(pitch,yaw,-.035);
  }
@@ -47,8 +53,8 @@ export function createAlmondInspection(){
  }
  function opaque(renderer,target){if(!item)return;camera.layers.set(0);renderer.setRenderTarget(target);renderer.clearDepth();renderer.render(scene,camera);stats.opaqueDraws++;}
  function glass(renderer,target,source,w,h){if(!item?.userData.glass)return;const u=item.userData.glass.material.uniforms;u.sceneColor.value=source;u.resolution.value.set(w,h);u.projectionScale.value.set(camera.projectionMatrix.elements[0]*.5,camera.projectionMatrix.elements[5]*.5);camera.layers.set(GLASS_LAYER);renderer.setRenderTarget(target);renderer.render(scene,camera);stats.glassDraws++;}
- async function warmup(renderer){const temporary=[];try{for(const kind of ['thermos','glass']){const g=makeAlmondBottle({kind,finish:0,label:0,closure:0,paint:0,seed:0},{hero:true});g.position.z=-1;temporary.push(g);scene.add(g);}camera.layers.enable(GLASS_LAYER);await renderer.compileAsync(scene,camera);}finally{camera.layers.set(0);for(const g of temporary)releaseAlmondBottle(g,{hero:true});}}
- return {scene,camera,pose,slosh,stats,begin,rotate,stow,update,opaque,glass,clear,warmup,zoom(delta){destination.z=clamp(destination.z*Math.exp(clamp(delta,-200,200)*.001),-.82,-.39);},dispose:clear,get active(){return !!item;},get hasGlass(){return !!item?.userData.glass;},get phase(){return phase;},get variant(){return variant;},get name(){return variant?almondName(variant):'';}};
+ async function warmup(renderer){const temporary=[];try{for(const kind of ['thermos','glass']){const g=makeAlmondBottle({kind,finish:0,label:0,closure:0,paint:0,seed:0},{hero:true});g.position.z=-1;temporary.push(g);scene.add(g);}for(const type of ['pet','can','soy']){const g=createVendingDrink(T,type,{textures:heroVendingMaps}).group;g.position.z=-1;temporary.push(g);scene.add(g);}camera.layers.enable(GLASS_LAYER);await renderer.compileAsync(scene,camera);}finally{camera.layers.set(0);for(const g of temporary)releaseItem(g);}}
+ return {scene,camera,pose,slosh,stats,begin,rotate,stow,update,opaque,glass,clear,warmup,zoom(delta){const h=item?.userData.almondHeight||.25,min=variant?.kind==='vending'?Math.max(.18,h*1.25):.39,max=variant?.kind==='vending'?Math.max(.40,h*3.2):.82;destination.z=clamp(destination.z*Math.exp(clamp(delta,-200,200)*.001),-max,-min);},dispose:clear,get active(){return !!item;},get hasGlass(){return !!item?.userData.glass;},get phase(){return phase;},get variant(){return variant;},get name(){return variant?(variant.kind==='vending'?vendingDrinkName(variant.type):almondName(variant)):'';}};
 }
 export function createAlmondWorldVisibility(){const meshes=new Set(),frustum=new T.Frustum(),matrix=new T.Matrix4(),sphere=new T.Sphere();
  return {attach(chunk){for(const p of chunk.pickups){const m=p.mesh?.userData.glass;if(m)meshes.add(m);}},detach(chunk){for(const p of chunk.pickups){const m=p.mesh?.userData.glass;if(m)meshes.delete(m);}},remove(group){if(group?.userData.glass)meshes.delete(group.userData.glass);},any(camera){frustum.setFromProjectionMatrix(matrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));for(const m of meshes){if(!m.parent||!m.visible)continue;sphere.copy(m.boundingSphere||m.geometry.boundingSphere).applyMatrix4(m.matrixWorld);if(frustum.intersectsSphere(sphere))return true;}return false;},bind:bindAlmondGlass,clear(){meshes.clear();}};

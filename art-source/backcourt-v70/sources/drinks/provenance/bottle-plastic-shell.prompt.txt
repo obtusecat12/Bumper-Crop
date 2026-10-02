@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: a single seamless physically realistic plastic bottle-shell surface texture for a small 2005 milk-shaped beverage bottle and its molded screw cap in a Three.js PS2-style scene.
+Subject: close-up ivory HDPE plastic, faint realistic injection-molded stipple and exceptionally fine shallow micro scratches, tiny handling marks, a few subtle dull discoloration specks. Quiet believable manufactured plastic, with delicate micro bump detail suitable to derive a normal and roughness map.
+Composition: square edge-to-edge material photograph, perfectly frontal and planar, no bottle shape, no label, no cap shape, no object outlines, no margins, the surface fills the whole image. Tile seamlessly in all directions; no feature at a seam, no directional lighting gradient. The microscopic pores are tiny, evenly distributed but naturally irregular, and fine scratches remain subdued.
+Style: soft realistic 2005–2010 photographic game material, ivory slightly gray rather than yellow, subtle print/film grain, low contrast, not shiny glossy marble and not paper fiber. Fine details to give physical depth without looking dirty or cracked.
+Lighting: flat neutral diffuse texture-scan light, no cast shadows or specular glare.
+Text: none.
+Aspect ratio: 1:1.
+Avoid: packaging text, flat vector solid white, cracks, foam, leather, paper fibers, woven fabric, rust, deep scratches, rough concrete, dramatic sheen, noise overwhelming the plastic, borders, watermark.

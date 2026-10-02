@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: single seamless photographic base-color texture for a modeled old public waiting seat, not an image of the chair.
+Subject: pale warm gray / cream injection-moulded public seating plastic from 2005–2010.
+Composition: orthographic close-up, material fills the entire square image, all four opposite edges tile seamlessly. Fine even mould grain, subtle rubbed areas, fine scratches, a few soft scuffs and slight gray dirt caught in the plastic texture. No seams or borders.
+Style: believable early-2000s game photography texture, PS2 environmental material, realistic wear with slightly soft photographic detail, no oversharpening. Restrained warm gray color.
+Lighting: even diffuse light suitable for albedo; no directional shadows, no specular highlights baked into the image.
+Aspect ratio: 1:1.
+Avoid: any chair silhouette, screws, labels, text, logos, watermark, modern glossy render, strong yellow coloration, repeated conspicuous stains, collage.

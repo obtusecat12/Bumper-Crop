@@ -1,0 +1,48 @@
+{
+  "nodeCPUOnly": true,
+  "notBrowserFPS": true,
+  "scenarios": [
+    {
+      "name": "successive real dispenses",
+      "bodies": 12,
+      "awake": 6,
+      "medianMs": 1.9314429999999447,
+      "p95Ms": 3.7641469999998662
+    },
+    {
+      "name": "after settling",
+      "bodies": 12,
+      "awake": 0,
+      "medianMs": 0.0020629999999073334,
+      "p95Ms": 0.002764000000070155
+    },
+    {
+      "name": "successive real dispenses",
+      "bodies": 32,
+      "awake": 28,
+      "medianMs": 4.115697000000182,
+      "p95Ms": 6.503298000000541
+    },
+    {
+      "name": "after settling",
+      "bodies": 32,
+      "awake": 18,
+      "medianMs": 3.812949999999546,
+      "p95Ms": 4.359965999999986
+    },
+    {
+      "name": "32 simultaneously falling",
+      "bodies": 32,
+      "awake": 32,
+      "medianMs": 0.4731130000000121,
+      "p95Ms": 0.8864770000000135
+    },
+    {
+      "name": "32 sleeping",
+      "bodies": 32,
+      "awake": 0,
+      "medianMs": 0.011327000000164844,
+      "p95Ms": 0.1396100000001752
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: one seamless photographic top-down base-color texture for a dark public-space rubber floor mat.
+Subject: worn dark teal-gray rubber with a fine diagonal cross-grid grip pattern, alternating shallow diamond channels and raised narrow rubber ridges. A believable 2005–2010 public refreshment area mat surface.
+Composition: perpendicular flat top-down close-up; material fills the entire square image; pattern continues seamlessly across all four opposite edges. Some rubbed ridge tops and very subtle dirt lodged in channels, a few softly darker wet patches and slight residual water staining.
+Style: realistic surface photography for a PS2-era environmental texture, slightly soft detail, quiet desaturated dark teal / charcoal gray palette, no oversharpening.
+Lighting: neutral even diffuse albedo lighting, no dramatic cast shadows, no baked bright reflections.
+Aspect ratio: 1:1.
+Avoid: a complete mat outline, rim, floor outside the texture, text, logos, feet, metal grating, high glossy highlights, puddles that obscure the grid, collage.

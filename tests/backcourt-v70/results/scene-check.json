@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "scope": "Actual source geometry/materials, camera queries, tray opening, paused/distant physics, inventory handoff and 64m origin rebase. Not browser FPS.",
+  "runtimeTextures": 33,
+  "generatedDiffuseAssets": 16,
+  "static": {
+    "triangles": 11427,
+    "draws": 14,
+    "parts": 217
+  },
+  "drinkInstanceDraws": 14,
+  "geometryBytes": 1311072,
+  "cables": [
+    {
+      "minimumY": 0,
+      "start": [
+        34.76,
+        0.17,
+        18.671
+      ],
+      "end": [
+        35.37,
+        0.246,
+        18.441
+      ]
+    },
+    {
+      "minimumY": 0,
+      "start": [
+        33.74,
+        0.14,
+        18.693
+      ],
+      "end": [
+        35.37,
+        0.35,
+        18.441
+      ]
+    }
+  ],
+  "drinkType": "pet",
+  "physics": {
+    "steps": 370,
+    "acceptedTime": 3.9999999999999907,
+    "simulatedTime": 2.4499999999999926,
+    "droppedTime": 0,
+    "budgetDroppedTime": 0,
+    "budgetOverruns": 0,
+    "spawned": 1,
+    "removed": 1,
+    "groundImpacts": 0,
+    "trayImpacts": 41,
+    "dynamicImpacts": 0,
+    "maxPenetration": 0,
+    "maxPenetrationAfterBirthStep": 0,
+    "lastContactPenetration": 0,
+    "maxSpawnRaise": 0
+  }
+}

@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: single orthographic front-view texture of the flat circular printed face of an old public coin-operated mechanical weighing scale, no needle. A 1990s public scale still being used in 2005.
+Subject: cream-white analog weight dial with clear dark navy-black numerals and finely graduated printed scale marks from 0 to 160 kilograms. Quiet mundane leisure-complex / public waiting-area appliance aesthetic.
+Composition: square image, round face precisely centered, outer circle diameter 90% of the image width. Flat paper/enamel dial face only; plain matching cream-white background outside the circle. One neat arc of small scale marks extends clockwise from 0 in the lower-left quadrant to 160 in the lower-right quadrant across the upper part of the circle. Major readable numerals occur once each in ascending order: 0, 20, 40, 60, 80, 100, 120, 140, 160. Fine subdivisions between the major marks. Empty circular central pivot area reserved for a real modeled moving needle.
+Text (verbatim): "YOUR WEIGHT" printed horizontally above the center in small plain 1990s uppercase type; "KG" centered beneath the pivot region.
+Materials: softly aged off-white printed enamel/paper face, very faint gray scuffs and edge patina, clean enough for every numeral to be legible. No dramatic stains.
+Lighting: even flat light without glass reflections, glare or baked shadows. Photographic material softness with readable lettering, not a modern flat vector illustration.
+Aspect ratio: 1:1.
+Avoid: needle or pointer of any kind, digital display, pounds/LB scale, numbers above 160, extra text, metal housing, perspective, strong glass highlights, watermark, collage.
