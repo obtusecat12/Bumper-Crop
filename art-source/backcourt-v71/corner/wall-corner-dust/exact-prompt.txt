@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - asset: transparent RGBA material decal for dusty buildup along an aged urban wall corner
+subject: realistic vertical soot and muted ochre dusty buildup only, an irregular vertical accumulation streak with fine wisps and uneven dusty residue
+composition: tall 1:2 vertical decal; denser accumulation in a narrow central band, fading organically outward at both side edges into full transparency; uneven and softly fading ends, no rectangular boundary
+material: charcoal-brown soot, muted ochre urban dust, realistic fine aged rough residue
+style: photographic soft PS2-era texture; softly resolved, natural raw texture quality, no oversharpening, not pixel art
+background: genuinely transparent background; the image contains only the soot and dust material overlay without any masonry, plaster, wall, ground, or backdrop
+aspect ratio: 1:2
+Avoid: solid rectangle, rectangular backdrop, masonry backdrop, photographic scene, bricks, architectural elements, objects, labels, text, watermark, hard graphic outlines, pixel art, sharp polished detail

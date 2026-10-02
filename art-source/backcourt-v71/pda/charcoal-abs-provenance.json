@@ -1,0 +1,18 @@
+{
+  "asset": "charcoal-abs",
+  "file": "charcoal-pbr-atlas.png",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "mode": "RGB",
+  "generator": "built-in image_gen.imagegen",
+  "promptFile": "prompt-charcoal-pbr.txt",
+  "promptSha256": "136c3dc6f1772f3086062ad7cb3b69f5db4cf489ddfc96fb730c4422d5d599db",
+  "customSkillFile": "custom-prompt-skill-charcoal.md",
+  "customSkillURL": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "customSkillSha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+  "originalOutput": "/workspace/scratch/85111d38430a/generated_images/exec-919a0e93-5dbe-4c3a-99c1-df005cc4d60b.png",
+  "imageSha256": "9bad78518f379627e252eec9f2c02e408a3530b6ddf09e4c4362b11973a9d168",
+  "inspection": "Exact 3\u00d72 layout, channel tiles cropped without creative edits. Microrelief has approximate generated registration."
+}

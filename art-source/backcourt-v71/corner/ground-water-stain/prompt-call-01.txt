@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: isolated ground water stain decal for placement over aged paving in a soft photographic PS2 style 3D environment.
+aspect ratio: 1:1.
+subject: a single amorphous dark gray, low opacity water stain with a broken coarse mineral deposit ring and a subtle dirty damp interior. The stain is an irregular localized patch with uneven scalloped edges and scattered faint weathering speckles.
+transparency: genuinely transparent RGBA background. Transparent exterior, softly feathered low-alpha ring edges, very faint low-alpha interior so the underlying stone remains clearly visible when the decal is overlaid. Only stain pigment and mineral residue, no opaque stone tile or ground backdrop.
+color and material: dark gray weather stain with desaturated warm mineral dust and occasional darker damp spots, muted realistic urban wear.
+style: natural photographic grime texture, soft low-resolution PS2 material character and mild CCD grain, no pixel art, no oversharpening.
+composition: top-down orthographic decal, stain centered with transparent padding, no directional illumination, no cast shadows, no scene.
+avoid: stone backdrop, solid rectangular background, checkerboard graphic, text, labels, watermarks, objects, puddle reflections, excessive yellow, hard sharp contours, glossy highlights, cartoon style.

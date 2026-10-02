@@ -1,0 +1,19 @@
+{
+  "asset": "crt-screen",
+  "file": "crt-ui-final.png",
+  "dimensions": [
+    1448,
+    1086
+  ],
+  "mode": "RGB",
+  "generator": "built-in image_gen.imagegen",
+  "promptFile": "prompt-crt-edit.txt",
+  "promptSha256": "2265d881ddcd152fbfdfaa9fb5504b93ac22c4e155252f0e913258130a59804b",
+  "customSkillFile": "custom-prompt-skill-crt-edit.md",
+  "customSkillURL": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "customSkillSha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+  "originalOutput": "/workspace/scratch/85111d38430a/generated_images/exec-91d9fc91-53de-4fba-8f4c-01b361b92b98.png",
+  "imageSha256": "d701aff249bd0bc7abc329dcc94d428960ef501e2bb9666e3253aec6384793c1",
+  "inspection": "Targeted edit replaced taskbar logo with unmarked blue-green glass orb. Dialog text and composition retained.",
+  "editSource": "crt-ui.png"
+}

@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: flat emissive screen texture for a 2009–2010 PDA display, edge-to-edge image, no device body or bezel
+style: period-correct skeuomorphic PDA interface, blue-green Frutiger Aero gloss, soft realistic rendered app icons, crisp readable period system typography
+composition: upright portrait 3:4 display, straight front-facing screen, zero perspective; a narrow dark blue status bar at the top, quiet date and clock panel, glossy translucent blue-green panels over a restrained abstract blue-green wallpaper; generous empty screen area in the middle; four realistic app icons near the lower portion with small English labels
+text (verbatim): "08:17" in the status bar; "Tuesday, Oct 12" in the date panel; app labels "Mail", "Calendar", "Notes", "Connections"
+icons: Mail is a small cream envelope with blue backing; Calendar is a realistic tear-off page; Notes is a small yellow paper notepad; Connections is a realistic blue-green network or linked-device icon
+mood: quiet empty device in the morning, lightly aged color reproduction, believable soft PS2-era rendering, subtle fine screen noise, restrained reflections and gloss within the screen image
+quality: maximum clean image quality, legible exact English type and clear small icon detail
+aspect ratio: 3:4
+avoid: external glow, device frame, buttons, perspective, brand marks, advertisements, extra notifications, extra dialog windows, extra text, watermark, severe bloom, deep shadows, clipped elements

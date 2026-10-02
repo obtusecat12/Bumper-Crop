@@ -1,0 +1,18 @@
+{
+  "asset": "keyboard-legends",
+  "file": "keyboard-legend-atlas.png",
+  "dimensions": [
+    1086,
+    1448
+  ],
+  "mode": "RGB",
+  "generator": "built-in image_gen.imagegen",
+  "promptFile": "prompt-keyboard-atlas.txt",
+  "promptSha256": "5164f9bb62a24ffe20a8a9d7b31a101e945f9d665424db84634cbafd89a1ca9c",
+  "customSkillFile": "custom-prompt-skill-keyboard.md",
+  "customSkillURL": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "customSkillSha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+  "originalOutput": "/workspace/scratch/85111d38430a/generated_images/exec-c3c2bd35-6179-4381-8ee1-f07b7af220f3.png",
+  "imageSha256": "ce58a1ddb0445d62178072409a2c88ec5e7777c6b185a9854062fcfe88869444",
+  "inspection": "All 48 glyphs manually inspected and ordered correctly; adjusted UV crop rectangles center each glyph."
+}

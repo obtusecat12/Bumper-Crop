@@ -1,0 +1,401 @@
+{
+  "method": "Built-in imagegen sources, exact six-channel atlas crops, Pillow asset packing only",
+  "maps": [
+    {
+      "texture": "dist/textures/backcourt-v71/stone-basecolor.webp",
+      "source": "art-source/backcourt-v71/corner/stone-paving/stone-paving-BaseColor.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "sRGB",
+      "sha256": "27f7b402956a6fb68fcffecd921cee42f5fbba0ad6d17575fbc6b6e99d5b62ab",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/stone-normal.webp",
+      "source": "art-source/backcourt-v71/corner/stone-paving/stone-paving-Normal.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "85dec3cf02229eb2070efce479149838035d57674678682741ed3eec8a1567d0",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/stone-roughness.webp",
+      "source": "art-source/backcourt-v71/corner/stone-paving/stone-paving-Roughness.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "fc05d24adffb0400cf0abff90beda431b69cabebe6d81c80b499766aa68862ae",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/stone-metallic.webp",
+      "source": "art-source/backcourt-v71/corner/stone-paving/stone-paving-Metallic.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "3726f84cf72916cef34a09697f26a7637d788cf962838dabe3daa9275719f542",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/stone-ao.webp",
+      "source": "art-source/backcourt-v71/corner/stone-paving/stone-paving-AO.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "d966cf3550cf2037763170c2e7204ab66462ad32b704c554c26c0c96a54f4350",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/stone-height.webp",
+      "source": "art-source/backcourt-v71/corner/stone-paving/stone-paving-Height.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "514e582ae4dfc0e6c182767fe3ed454f0940e0daa66272b0e03e174ff1e1c08b",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/pda-black-basecolor.webp",
+      "source": "art-source/backcourt-v71/pda/charcoal-basecolor.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "sRGB",
+      "sha256": "3e2a7eec77792a17318d904a5f0a9c14b5685815dad2a6c88bae2088734e2c14",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/pda-black-normal.webp",
+      "source": "art-source/backcourt-v71/pda/charcoal-normal.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "01723890703b9ddcd0f2d07f9747e677314dfa5c1bc610593c334659e0e15475",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/pda-black-roughness.webp",
+      "source": "art-source/backcourt-v71/pda/charcoal-roughness.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "b36b7303be2aa45ebc32ecac6038cbdc6c24fc82bb680282a14335615a2450ee",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/pda-black-metallic.webp",
+      "source": "art-source/backcourt-v71/pda/charcoal-metallic.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "0c6e5323aa10377dbd9dbe18dcedf9d5fa6ae54c760742b432c4f14530bceaca",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/pda-black-ao.webp",
+      "source": "art-source/backcourt-v71/pda/charcoal-ao.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "7f28e33c91d60e0cf3b9fd7f2f8a1038c4b6ce4039007682335a05fd6a06a260",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/pda-black-height.webp",
+      "source": "art-source/backcourt-v71/pda/charcoal-height.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "c032a6c039f43a5ffb63ce505947631dd5651c45677390663d6cd91dc592234d",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/steel-basecolor.webp",
+      "source": "art-source/backcourt-v71/relic/steel-basecolor.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "sRGB",
+      "sha256": "f13a3d0d63939dcbf05d721df1c5851d695b757bd3cca57a4b89ef644ff6a4f3",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/steel-normal.webp",
+      "source": "art-source/backcourt-v71/relic/steel-normal.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "4083d10532fa2e5a68ca7d8e5efb8bdeed63ec8ab821e8921d138fdbd13755bf",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/steel-roughness.webp",
+      "source": "art-source/backcourt-v71/relic/steel-roughness.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "e8865e3025374972ab06ee4a5bf6d9c2a7bd30b2c0407a651635c21512b1ecc4",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/steel-metallic.webp",
+      "source": "art-source/backcourt-v71/relic/steel-metallic.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "187505589f3428d840c1205ccbdb2708597f0b8464568b59d5fe9cd653c0702b",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/steel-ao.webp",
+      "source": "art-source/backcourt-v71/relic/steel-ao.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "d5f3fcde38ddd3ba26dca6734a70ad22db3044da27c6ba75a26a937cf1de411a",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/steel-height.webp",
+      "source": "art-source/backcourt-v71/relic/steel-height.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "c6b3683c8338c37c341cf67248dd6da94d3fd7557fe3ece3c179ada4d2ccffb4",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/cream-basecolor.webp",
+      "source": "art-source/backcourt-v71/relic/abs-basecolor.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "sRGB",
+      "sha256": "d799cc4fb1852b1b73d0ad94c0fa89e428ce25aa8dc1a8f2fa9a92d763932cd3",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/cream-normal.webp",
+      "source": "art-source/backcourt-v71/relic/abs-normal.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "a2aa867fde4408866a70c2cee1e16ef278785d9296fdb5345da19333e3285644",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/cream-roughness.webp",
+      "source": "art-source/backcourt-v71/relic/abs-roughness.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "c040016c9f19edd27f55b46765341f1addb46c745ede7761b5d5c66c4a3573a7",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/cream-metallic.webp",
+      "source": "art-source/backcourt-v71/relic/abs-metallic.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "d11023793ce565ffbef91eddeca9ec554d2bbdd6e466385a8707ea3fe4183be9",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/cream-ao.webp",
+      "source": "art-source/backcourt-v71/relic/abs-ao.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "9e6997ee0347149829e1750bd1bac56c63cf0d8d8fc82a7278bf4c7e37fee2c9",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/cream-height.webp",
+      "source": "art-source/backcourt-v71/relic/abs-height.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "8c38a18a5ba48ffa69af3f3d991f7bd7af2beb4a543e015111cc306efadd4936",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/rubber-basecolor.webp",
+      "source": "art-source/backcourt-v71/relic/rubber-basecolor.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "sRGB",
+      "sha256": "4d7b7f7871bd62ad7b26c0bc3b22134c793be5ffd490a500779bf83e1e651599",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/rubber-normal.webp",
+      "source": "art-source/backcourt-v71/relic/rubber-normal.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "568a0d14776df9e5cc5b91b72eefd966f13aa7e7cef0158c1adbfe0ad768b9e5",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/rubber-roughness.webp",
+      "source": "art-source/backcourt-v71/relic/rubber-roughness.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "6abf17fd67aa7aad01d187006a905c236b36d9b078b42a389b24e186966b1ae2",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/rubber-metallic.webp",
+      "source": "art-source/backcourt-v71/relic/rubber-metallic.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "5a5424af1ebd90c6a7915b7e6b67680bf6544fe357661f16cd77bd43eff2729a",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/rubber-ao.webp",
+      "source": "art-source/backcourt-v71/relic/rubber-ao.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "de1918aebbc4d573a8fbeb31df1af4c34b8530057cf4e9cd9bce3035fbc4cb74",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/rubber-height.webp",
+      "source": "art-source/backcourt-v71/relic/rubber-height.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "linear-data",
+      "sha256": "ab1b83b1669c5480bb5c6c313dd0d21914177e9a6b747e9b33b0dc29372d1102",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/pda-ui.webp",
+      "source": "art-source/backcourt-v71/pda/pda-ui.png",
+      "size": [
+        768,
+        1024
+      ],
+      "space": "sRGB",
+      "sha256": "8fd683e51d96f853fe85646ac32b1eb9a7230ee10519603221cd919bb50d1a07",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/crt-ui.webp",
+      "source": "art-source/backcourt-v71/pda/crt-ui-final.png",
+      "size": [
+        1024,
+        768
+      ],
+      "space": "sRGB",
+      "sha256": "04268f85bb0956ce19e8f13782a35d894c375111812c5d57aff01eea98321e70",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/keyboard.webp",
+      "source": "art-source/backcourt-v71/pda/keyboard-legend-atlas.png",
+      "size": [
+        768,
+        1024
+      ],
+      "space": "sRGB",
+      "sha256": "86d6a8b97cc0a5792b798dc6a460ada191e7d3f8d929b2b7b6a1ba05001f7f83",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/wall-foot.webp",
+      "source": "art-source/backcourt-v71/corner/wall-foot-grime/wall-foot-grime-original.png",
+      "size": [
+        1024,
+        512
+      ],
+      "space": "sRGB",
+      "sha256": "6d0bcd4e50f72e45cbbd146e5fe046f3897787d8798cd0edcbc1c12a0b4eb35e",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/wall-dust.webp",
+      "source": "art-source/backcourt-v71/corner/wall-corner-dust/wall-corner-dust-original.png",
+      "size": [
+        512,
+        1024
+      ],
+      "space": "sRGB",
+      "sha256": "403ad41ded9bafee5a21f006b9dea27bd015b17359aa3cf6bee8fe856137db4b",
+      "process": "resize and encode only; no invented texture content"
+    },
+    {
+      "texture": "dist/textures/backcourt-v71/water-stain.webp",
+      "source": "art-source/backcourt-v71/corner/ground-water-stain/generated-rgba.png",
+      "size": [
+        512,
+        512
+      ],
+      "space": "sRGB",
+      "sha256": "4fbb8d6710018213473e438b0d0a5576c9741487018e7bd6a47e25773cb29b9c",
+      "process": "resize and encode only; no invented texture content"
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "directory": "/workspace/scratch/85111d38430a/v71-pda-art",
+  "generator": "built-in image_gen.imagegen",
+  "defaultColorSpace": {
+    "pda-ui.png": "sRGB",
+    "crt-ui-final.png": "sRGB",
+    "keyboard-legend-atlas.png": "sRGB",
+    "charcoal-basecolor.png": "sRGB",
+    "charcoal-normal.png": "linear",
+    "charcoal-roughness.png": "linear",
+    "charcoal-metallic.png": "linear",
+    "charcoal-ao.png": "linear",
+    "charcoal-height.png": "linear"
+  },
+  "assets": [
+    {
+      "file": "pda-ui.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/pda-ui.png",
+      "bytes": 1817277,
+      "sha256": "7ad9e3d68a8b9fb9b379ed07ed914adaee0b512fbf819c126b39515456d167f2",
+      "dimensions": [
+        1086,
+        1448
+      ],
+      "mode": "RGB"
+    },
+    {
+      "file": "crt-ui-final.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/crt-ui-final.png",
+      "bytes": 1866646,
+      "sha256": "d701aff249bd0bc7abc329dcc94d428960ef501e2bb9666e3253aec6384793c1",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "mode": "RGB"
+    },
+    {
+      "file": "keyboard-legend-atlas.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/keyboard-legend-atlas.png",
+      "bytes": 1064362,
+      "sha256": "ce58a1ddb0445d62178072409a2c88ec5e7777c6b185a9854062fcfe88869444",
+      "dimensions": [
+        1086,
+        1448
+      ],
+      "mode": "RGB"
+    },
+    {
+      "file": "keyboard-legend-lookup.json",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/keyboard-legend-lookup.json",
+      "bytes": 26155,
+      "sha256": "8c22b583b959a102e3fc78a2b6a173c68e67e9a3252e0c4d2bfe06fb80fcc1a9"
+    },
+    {
+      "file": "charcoal-basecolor.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-basecolor.png",
+      "bytes": 622290,
+      "sha256": "b58605a5e92aedd1ae137eefc4b82469dc579c20ca096e5f567d8be76f0de1a9",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB"
+    },
+    {
+      "file": "charcoal-normal.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-normal.png",
+      "bytes": 552487,
+      "sha256": "023055d5cf174ea84fe1c7b6a85f550cd90df6658144a04383a76f7a422db148",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB"
+    },
+    {
+      "file": "charcoal-roughness.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-roughness.png",
+      "bytes": 602360,
+      "sha256": "54bececfa892321d703dd7f9090454e2a4620c176542d28d132171c2644afe27",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB"
+    },
+    {
+      "file": "charcoal-metallic.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-metallic.png",
+      "bytes": 64927,
+      "sha256": "cfc1a5219ffca8271942cffe29e43d8040a3f3dc2bd86c44fa52f85be8f537bc",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB"
+    },
+    {
+      "file": "charcoal-ao.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-ao.png",
+      "bytes": 565779,
+      "sha256": "557296fa0e89c09d0e663030ee7cd61134456ee6d172db9a13757c9a1ee55a80",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB"
+    },
+    {
+      "file": "charcoal-height.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-height.png",
+      "bytes": 596782,
+      "sha256": "ee3b66c5b0923db60fb3d41b1e2c2684b22637ec14778a964756d7a18690eaff",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB"
+    },
+    {
+      "file": "charcoal-pbr-atlas.png",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-pbr-atlas.png",
+      "bytes": 3429790,
+      "sha256": "9bad78518f379627e252eec9f2c02e408a3530b6ddf09e4c4362b11973a9d168",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB"
+    }
+  ],
+  "packingNotes": [
+    "Use screen RGB for both BaseColor and Emissive as needed; physical screen channels are technical constants handled by the owner.",
+    "Charcoal maps were cropped from exact 3\u00d72 generated atlas. Microscopic channel registration is approximate as common with generated PBR; use restrained normal scale around 0.12\u20130.22.",
+    "Use keyboard-legend-lookup.json adjusted UV crop rectangles rather than nominal grid cells to center every printed legend.",
+    "All final PNGs preserve generator pixels; channel cropping and UV measurement are the only local image processing."
+  ]
+}

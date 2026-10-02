@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "geometry": "13 material batches, 19646 triangles, 307 authored parts",
+  "textures": "36 real decoded runtime textures, correct dimensions and color spaces",
+  "protectedV70": "V70 geometry/source files untouched, 11427 triangles / 14 static material batches unchanged; dispensing, pickup, inspection, stow and drink regression pass",
+  "routes": "539 new-collider path samples, zero displacement; original ground heights unchanged",
+  "rebase": "ground shader origin remains accurate through 64 m rebasing",
+  "wetness": "generic wear no longer clamps authored local wet roughness",
+  "visual": "Actual Three shaders via Mesa llvmpipe GLES3.2; five views, 63\u2013126 programs linked per view, GL error0",
+  "limitations": [
+    "Software diagnostic, not browser/live capture or measured hardware FPS",
+    "Diagnostic omits resident reflection-cube PBR contribution",
+    "Independent generated PBR channels have approximate microscopic correspondence"
+  ]
+}

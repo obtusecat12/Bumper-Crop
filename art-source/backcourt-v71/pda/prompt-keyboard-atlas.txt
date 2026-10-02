@@ -1,0 +1,16 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: generated white keyboard legend atlas for physical charcoal PDA keyboard caps, flat albedo texture, front view, zero perspective
+layout: portrait 3:4 atlas exactly six columns and eight rows; 48 identical square cells arranged edge-to-edge with zero gaps or drawn grid lines. Every cell has the same uniform deep charcoal background, every glyph is white and centered exactly in its virtual square cell, with generous empty padding around it. One glyph per cell, all letter sizes identical, clear bold period PDA sans-serif key lettering.
+row 1, left to right: Q W E R T Y
+row 2, left to right: U I O P A S
+row 3, left to right: D F G H J K
+row 4, left to right: L Z X C V B
+row 5, left to right: N M 0 1 2 3
+row 6, left to right: 4 5 6 7 8 9
+row 7, left to right: up arrow, down arrow, left arrow, right arrow, white telephone receiver icon, white backspace icon
+row 8, left to right: white return arrow, white shift arrow, white horizontal spacebar line, asterisk *, number sign #, at sign @
+surface: flat uniform charcoal background with white printed glyphs only, no lighting gradients, no shadow, no depth, no button bodies, no bevel, no border
+quality: maximum precision and clean readable glyph detail, correct exact glyph order, perfectly evenly spaced cell centers and equal glyph scale
+aspect ratio: 3:4
+avoid: extra letters, extra numbers, repeated glyphs, missing glyphs, labels, captions, grid lines, gaps, decorative elements, device body, perspective, bevel, shadows, highlights, watermark

@@ -1,0 +1,124 @@
+{
+  "asset": "aged stone paving PBR atlas",
+  "generation_tool": "builtin image_gen.imagegen",
+  "source_generated_image": "/workspace/scratch/85111d38430a/generated_images/exec-e96d7f4c-09e0-4bd5-a934-2120dcd7167a.png",
+  "output": "/workspace/scratch/85111d38430a/v71-corner-art/stone-paving/generated-pbr-atlas.png",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "mode": "RGB",
+  "transparent_background_requested": false,
+  "prompt_file": "/workspace/scratch/85111d38430a/v71-corner-art/stone-paving/prompt-call-01.txt",
+  "prompt_skill_file": "/workspace/scratch/85111d38430a/v71-corner-art/stone-paving/prompt-skill-call-01.md",
+  "prompt_skill_source": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "prompt_skill_downloaded_and_read_before_call": true,
+  "sha256": "d67238c23a1660c0408e803076264bcac01aabd6c2bab28328e28d42eac7049b",
+  "inspection": "Visually inspected generated image and checked dimensions and alpha.",
+  "atlas_layout": {
+    "columns": 3,
+    "rows": 2,
+    "square_size": 512,
+    "map_order": [
+      "BaseColor",
+      "Normal",
+      "Roughness",
+      "Metallic",
+      "AO",
+      "Height"
+    ],
+    "channels": [
+      {
+        "map": "BaseColor",
+        "path": "/workspace/scratch/85111d38430a/v71-corner-art/stone-paving/stone-paving-BaseColor.png",
+        "dimensions": [
+          512,
+          512
+        ],
+        "source_rectangle": [
+          0,
+          0,
+          512,
+          512
+        ],
+        "operation": "exact crop from directly generated atlas; no derived map or postpaint"
+      },
+      {
+        "map": "Normal",
+        "path": "/workspace/scratch/85111d38430a/v71-corner-art/stone-paving/stone-paving-Normal.png",
+        "dimensions": [
+          512,
+          512
+        ],
+        "source_rectangle": [
+          512,
+          0,
+          1024,
+          512
+        ],
+        "operation": "exact crop from directly generated atlas; no derived map or postpaint"
+      },
+      {
+        "map": "Roughness",
+        "path": "/workspace/scratch/85111d38430a/v71-corner-art/stone-paving/stone-paving-Roughness.png",
+        "dimensions": [
+          512,
+          512
+        ],
+        "source_rectangle": [
+          1024,
+          0,
+          1536,
+          512
+        ],
+        "operation": "exact crop from directly generated atlas; no derived map or postpaint"
+      },
+      {
+        "map": "Metallic",
+        "path": "/workspace/scratch/85111d38430a/v71-corner-art/stone-paving/stone-paving-Metallic.png",
+        "dimensions": [
+          512,
+          512
+        ],
+        "source_rectangle": [
+          0,
+          512,
+          512,
+          1024
+        ],
+        "operation": "exact crop from directly generated atlas; no derived map or postpaint"
+      },
+      {
+        "map": "AO",
+        "path": "/workspace/scratch/85111d38430a/v71-corner-art/stone-paving/stone-paving-AO.png",
+        "dimensions": [
+          512,
+          512
+        ],
+        "source_rectangle": [
+          512,
+          512,
+          1024,
+          1024
+        ],
+        "operation": "exact crop from directly generated atlas; no derived map or postpaint"
+      },
+      {
+        "map": "Height",
+        "path": "/workspace/scratch/85111d38430a/v71-corner-art/stone-paving/stone-paving-Height.png",
+        "dimensions": [
+          512,
+          512
+        ],
+        "source_rectangle": [
+          1024,
+          512,
+          1536,
+          1024
+        ],
+        "operation": "exact crop from directly generated atlas; no derived map or postpaint"
+      }
+    ]
+  },
+  "limitations": "AI-generated PBR maps are visually coordinated and carry the same stone pattern, but are not calibrated scan data; tangent normal and relief intensity should be moderated in renderer."
+}

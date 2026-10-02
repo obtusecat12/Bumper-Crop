@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: aged stone paving PBR texture atlas for a soft photographic PS2 style 3D environment.
+aspect ratio: 3:2.
+layout: exactly three columns and two rows, six square texture maps touching edge to edge, no gutters, borders, labels, captions, or text. Upper row left to right: Base Color, tangent-space Normal, Roughness. Lower row left to right: Metallic, Ambient Occlusion, Height.
+material: light gray to warm gray irregular stone paving slabs, dented and chipped rounded edges, dirt in narrow joints, subtly worn rough faces and mild CCD grain. Stone must look aged and physically plausible with soft photographic surface detail, not pixel art and not oversharpened.
+alignment: all six maps show the exact same top-down stone layout at the exact same scale, crop, and orientation. Every chip, slab outline, and joint must align in the corresponding position of every square map.
+map conventions: Base Color is unlit diffuse albedo with no baked directional illumination or cast shadows. Normal uses standard tangent-space RGB, predominantly lavender-blue flat regions with color direction changes only at relief, and no fake lighting. Roughness is grayscale with mostly light rough stone and variable slightly darker worn/damp recesses. Metallic is a black square because stone is nonmetallic. Ambient Occlusion is grayscale white exposed stone and dark dirt joints and crevices, with only localized crevice occlusion. Height is grayscale bright raised stone surfaces and dark recessed joints, softly worn and chipped.
+composition: orthographic top-down texture only, no perspective, no objects, no surrounding scene, no water, no large painted marks.
+avoid: labels, text, grids, separators, directional sunlight, dramatic highlights, excessive yellow, checkerboard pattern, too sharp or overly sharpened detail, pixel art.

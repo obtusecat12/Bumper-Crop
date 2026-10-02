@@ -1,0 +1,29 @@
+{
+  "asset": "ground water stain RGBA decal",
+  "generation_tool": "builtin image_gen.imagegen",
+  "source_generated_image": "/workspace/scratch/85111d38430a/generated_images/exec-661a0e12-37bd-4e4b-a46e-26609a189285.png",
+  "output": "/workspace/scratch/85111d38430a/v71-corner-art/ground-water-stain/generated-rgba.png",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "transparent_background_requested": true,
+  "prompt_file": "/workspace/scratch/85111d38430a/v71-corner-art/ground-water-stain/prompt-call-01.txt",
+  "prompt_skill_file": "/workspace/scratch/85111d38430a/v71-corner-art/ground-water-stain/prompt-skill-call-01.md",
+  "prompt_skill_source": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "prompt_skill_downloaded_and_read_before_call": true,
+  "sha256": "7f21199f8790b72545bd93dfc97ae0cbffa4df282b046edfa986cbca5e8a66d7",
+  "inspection": "Visually inspected generated image and checked dimensions and alpha.",
+  "alpha": {
+    "extrema": [
+      0,
+      252
+    ],
+    "fully_transparent_fraction": 0.4706667531522732,
+    "fully_opaque_fraction": 0.0,
+    "nonzero_mean": 143.66601872931395,
+    "original_preserved": true
+  },
+  "limitations": "Generated stain has high alpha in its central residue despite low-alpha prompt. Lower material overlay opacity (~0.2\u20130.35) to retain underlying paving. No post-generated pigment or procedural substitute."
+}

@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - asset: transparent RGBA material decal for the foot of an aged urban wall
+subject: realistic accumulated urban grime and dust only; a broad horizontal crescent-like irregular dark ambient-occlusion band with ochre urban dust and occasional damp spots
+composition: broad 2:1 horizontal decal, darkest and densest close to the bottom, irregular deposits fading upward and at both side edges into full transparency; uneven natural silhouette, no straight rectangular boundary
+material: layered charcoal-brown soot, muted ochre street dust, subtle damp staining, realistic fine rough residue
+style: photographic soft PS2-era texture; softly resolved, natural raw texture quality, no oversharpening, not pixel art
+background: genuinely transparent background; the image contains only the grime material overlay without any masonry, plaster, wall, ground, or backdrop
+aspect ratio: 2:1
+Avoid: solid rectangle, rectangular backdrop, masonry backdrop, photographic scene, bricks, architectural elements, objects, labels, text, watermark, hard graphic outlines, pixel art, sharp polished detail

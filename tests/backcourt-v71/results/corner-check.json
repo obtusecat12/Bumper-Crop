@@ -1,0 +1,190 @@
+{
+  "stats": {
+    "draws": 13,
+    "triangles": 19646,
+    "parts": 307,
+    "sourceBatches": 24
+  },
+  "materials": [
+    {
+      "name": "V71 pda-black",
+      "map": "V71 generated pda-black-basecolor",
+      "normal": "V71 generated pda-black-normal",
+      "roughness": "V71 generated pda-black-roughness",
+      "metal": "V71 generated pda-black-metallic",
+      "ao": "V71 generated pda-black-ao"
+    },
+    {
+      "name": "V71 rubber",
+      "map": "V71 generated rubber-basecolor",
+      "normal": "V71 generated rubber-normal",
+      "roughness": "V71 generated rubber-roughness",
+      "metal": "V71 generated rubber-metallic",
+      "ao": "V71 generated rubber-ao"
+    },
+    {
+      "name": "V71 steel",
+      "map": "V71 generated steel-basecolor",
+      "normal": "V71 generated steel-normal",
+      "roughness": "V71 generated steel-roughness",
+      "metal": "V71 generated steel-metallic",
+      "ao": "V71 generated steel-ao"
+    },
+    {
+      "name": "V71 display cover glass"
+    },
+    {
+      "name": "V71 pda-ui",
+      "map": "V71 generated pda-ui"
+    },
+    {
+      "name": "V71 generated keyboard",
+      "map": "V71 generated keyboard",
+      "normal": "V71 generated pda-black-normal",
+      "roughness": "V71 generated pda-black-roughness",
+      "metal": "V71 generated pda-black-metallic",
+      "ao": "V71 generated pda-black-ao"
+    },
+    {
+      "name": "V71 rubber",
+      "map": "V71 generated rubber-basecolor",
+      "normal": "V71 generated rubber-normal",
+      "roughness": "V71 generated rubber-roughness",
+      "metal": "V71 generated rubber-metallic",
+      "ao": "V71 generated rubber-ao"
+    },
+    {
+      "name": "V71 cream",
+      "map": "V71 generated cream-basecolor",
+      "normal": "V71 generated cream-normal",
+      "roughness": "V71 generated cream-roughness",
+      "metal": "V71 generated cream-metallic",
+      "ao": "V71 generated cream-ao"
+    },
+    {
+      "name": "V71 crt-ui",
+      "map": "V71 generated crt-ui"
+    },
+    {
+      "name": "V71 cream",
+      "map": "V71 generated cream-basecolor",
+      "normal": "V71 generated cream-normal",
+      "roughness": "V71 generated cream-roughness",
+      "metal": "V71 generated cream-metallic",
+      "ao": "V71 generated cream-ao"
+    },
+    {
+      "name": "V71 stone",
+      "map": "V71 generated stone-basecolor",
+      "normal": "V71 generated stone-normal",
+      "roughness": "V71 generated stone-roughness",
+      "metal": "V71 generated stone-metallic",
+      "ao": "V71 generated stone-ao"
+    },
+    {
+      "name": "V71 generated wall-foot",
+      "map": "V71 generated wall-foot",
+      "normal": "V71 generated stone-normal",
+      "roughness": "V71 generated stone-roughness"
+    },
+    {
+      "name": "V71 generated wall-dust",
+      "map": "V71 generated wall-dust",
+      "normal": "V71 generated stone-normal",
+      "roughness": "V71 generated stone-roughness"
+    }
+  ],
+  "clipping": [
+    "fountain",
+    "monitor",
+    "chair"
+  ],
+  "colliders": [
+    {
+      "kind": "obb",
+      "x": 569.6159151760867,
+      "z": 421.21244804008586,
+      "w": 0.56,
+      "d": 0.48,
+      "ry": 1.4842103994694238
+    },
+    {
+      "kind": "obb",
+      "x": 570.0191723750702,
+      "z": 422.79986217365905,
+      "w": 0.52,
+      "d": 0.52,
+      "ry": 1.8142103994694239
+    },
+    {
+      "kind": "obb",
+      "x": 568.6921659608355,
+      "z": 411.23774065654203,
+      "w": 0.46,
+      "d": 0.24,
+      "ry": 1.454210399469424
+    }
+  ],
+  "plan": {
+    "pda": {
+      "x": 35.25,
+      "z": 20.3,
+      "yaw": -0.38
+    },
+    "charger": {
+      "x": 35.43,
+      "z": 20.32,
+      "yaw": 0.32
+    },
+    "fountain": {
+      "x": 30.2,
+      "z": 19.1,
+      "y": -0.45,
+      "yaw": -0.12
+    },
+    "monitor": {
+      "x": 40.2,
+      "z": 18.4,
+      "y": 1.06,
+      "yaw": -0.15
+    },
+    "chair": {
+      "x": 28.6,
+      "z": 19.45,
+      "y": -0.35,
+      "yaw": 0.21
+    },
+    "wallZ": 18.34,
+    "groundY": 0.30000000000000004
+  },
+  "routes": {
+    "vendor": {
+      "samples": 135,
+      "maxDisplacement": 0
+    },
+    "seat": {
+      "samples": 32,
+      "maxDisplacement": 0
+    },
+    "service": {
+      "samples": 372,
+      "maxDisplacement": 0
+    }
+  },
+  "rebase": {
+    "before": [
+      35.24999999999995,
+      20.299999999999994
+    ],
+    "after": [
+      35.24999999999995,
+      20.299999999999994
+    ]
+  },
+  "oldVending": {
+    "triangles": 11427,
+    "draws": 14,
+    "parts": 217
+  },
+  "source": "Actual authored geometry and decoded textures; no hardware FPS measurement"
+}

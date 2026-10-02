@@ -1,0 +1,18 @@
+{
+  "asset": "crt-screen-original",
+  "file": "crt-ui.png",
+  "dimensions": [
+    1448,
+    1086
+  ],
+  "mode": "RGB",
+  "generator": "built-in image_gen.imagegen",
+  "promptFile": "prompt-crt-ui.txt",
+  "promptSha256": "e5fa8b6d69541b4b9df152411d949f3a6e0fb4252f006045e83e94a445ca1292",
+  "customSkillFile": "custom-prompt-skill-crt.md",
+  "customSkillURL": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "customSkillSha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+  "originalOutput": "/workspace/scratch/85111d38430a/generated_images/exec-fa406484-3a96-40bf-ac9e-ac73260abaeb.png",
+  "imageSha256": "7b703fc161a6c155a855710202900e36cd097284c450e45be94b5a24e793df2b",
+  "inspection": "Dialog text correct; unwanted taskbar brand mark pending targeted edit."
+}

@@ -1,0 +1,252 @@
+{
+  "version": "v71",
+  "generator": "built-in image_gen.imagegen",
+  "generated_utc": "2026-10-02T14:29:37.262059+00:00",
+  "custom_prompt_skill_url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "processing": "Exact 512 by 512 panel crops only. Source atlas pixels unchanged; no color, contrast, lighting, normal-map or grayscale transformations.",
+  "maps": {
+    "steel": {
+      "source_atlas": "/workspace/scratch/85111d38430a/v71-relic-art/steel-atlas.png",
+      "original_source": "/workspace/scratch/85111d38430a/generated_images/exec-3e222742-7dbe-4035-ae5a-03b081fb0e9d.png",
+      "source_sha256": "10e6ccc943f176dedbe4e03acff21b836415ddb4e7a823492891bfb5a058a497",
+      "prompt": "/workspace/scratch/85111d38430a/v71-relic-art/steel-prompt.txt",
+      "skill_copy": "/workspace/scratch/85111d38430a/v71-relic-art/prompt-skill-steel.md",
+      "channels": {
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/steel-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            0,
+            0
+          ],
+          "sha256": "c890ab063aff25ef4fb35ffd22811df6ae9f8aaf142fba73898e8492475a1ffc"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/steel-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            1,
+            0
+          ],
+          "sha256": "b7ebf16c20087584053444a7465e66965cc9389635cd48fe49e3a3bba77ccf30"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/steel-roughness.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            2,
+            0
+          ],
+          "sha256": "40d9a8bca25c5d7693107e8232aaf4894b1094821acd86deccdf8a13cf557a23"
+        },
+        "metallic": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/steel-metallic.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            0,
+            1
+          ],
+          "sha256": "d4e6d2e525b706f47c29f709c775460fad371fcd57e69ec22d8d8cb862a6bc1f"
+        },
+        "ao": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/steel-ao.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            1,
+            1
+          ],
+          "sha256": "94509aaf8e1697b07015865750020d601a7b9ce638e1f9e6a200e9d90e640335"
+        },
+        "height": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/steel-height.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            2,
+            1
+          ],
+          "sha256": "6e8737790ceb9cc58d8a3eee3b1dd733e26d74c629cb2b0e4e2d24971141756d"
+        }
+      }
+    },
+    "abs": {
+      "source_atlas": "/workspace/scratch/85111d38430a/v71-relic-art/abs-atlas.png",
+      "original_source": "/workspace/scratch/85111d38430a/generated_images/exec-a14ef7cf-2037-451f-b38a-0e6be967e919.png",
+      "source_sha256": "23b353137d1a9a658784682a2be367517fd7fdd41f1f4ba748597d9ab9799d84",
+      "prompt": "/workspace/scratch/85111d38430a/v71-relic-art/abs-prompt.txt",
+      "skill_copy": "/workspace/scratch/85111d38430a/v71-relic-art/prompt-skill-abs.md",
+      "channels": {
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/abs-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            0,
+            0
+          ],
+          "sha256": "e960d9bbf6143bef6ecda7045786fcf55c260e69ba8b032f940fbab42ee5033b"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/abs-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            1,
+            0
+          ],
+          "sha256": "7eaf6d938549bf9328c662160c320f7844fbbbd2d610bc8ccafbc7c49cf12c69"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/abs-roughness.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            2,
+            0
+          ],
+          "sha256": "4a06fb9fd72c12d5cad9d231a8e23e74d0da96bd107b314f2a2e3b4b650c0302"
+        },
+        "metallic": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/abs-metallic.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            0,
+            1
+          ],
+          "sha256": "6680ba95095aa4e321caa185b9bf484015ed04d3518bdee848a79017d10c1d58"
+        },
+        "ao": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/abs-ao.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            1,
+            1
+          ],
+          "sha256": "f79eaf7eb3510470dcd0057ba15d74f1b1d68605fa8344c153c490391c529e96"
+        },
+        "height": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/abs-height.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            2,
+            1
+          ],
+          "sha256": "f9a9f88598799e28978a0e2251e259f867259eaa7691e001703573ac08d9e9be"
+        }
+      }
+    },
+    "rubber": {
+      "source_atlas": "/workspace/scratch/85111d38430a/v71-relic-art/rubber-atlas.png",
+      "original_source": "/workspace/scratch/85111d38430a/generated_images/exec-f2c7eafc-4457-4769-a896-57963f65e8dc.png",
+      "source_sha256": "968529ba4551fc7f74c6f90cf8cf09ed94d815f6ac184efc291e63b3a40e432e",
+      "prompt": "/workspace/scratch/85111d38430a/v71-relic-art/rubber-prompt.txt",
+      "skill_copy": "/workspace/scratch/85111d38430a/v71-relic-art/prompt-skill-rubber.md",
+      "channels": {
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/rubber-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            0,
+            0
+          ],
+          "sha256": "0b0617888363402a9c7cfaf00099454ffc22b9b8f63625a7d1a89d4318f07d7d"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/rubber-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            1,
+            0
+          ],
+          "sha256": "bc28c26c8b485455b2147fe512c93ab98ad0cc8a2ea53917363db0598bdb099a"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/rubber-roughness.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            2,
+            0
+          ],
+          "sha256": "2ae09455082adf27cfdeed8ad679dbd3fbf246914d10c4f484b67c1b0fabcf57"
+        },
+        "metallic": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/rubber-metallic.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            0,
+            1
+          ],
+          "sha256": "955e2dd1452e402ad050204669f8ade47d43a458459473a6c03af9ed53d60d6a"
+        },
+        "ao": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/rubber-ao.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            1,
+            1
+          ],
+          "sha256": "dbcebb9264459e1b2cd7ced2bf2a8d6fb67c081e379a80ee99bd7963eac0e24d"
+        },
+        "height": {
+          "path": "/workspace/scratch/85111d38430a/v71-relic-art/rubber-height.png",
+          "size": [
+            512,
+            512
+          ],
+          "panel": [
+            2,
+            1
+          ],
+          "sha256": "678268dafe795a41b48d1e1dbdfe86c3c20c6acf75c770589a7ad20eca3a150e"
+        }
+      }
+    }
+  }
+}

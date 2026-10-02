@@ -1,0 +1,18 @@
+{
+  "asset": "pda-screen",
+  "file": "pda-ui.png",
+  "dimensions": [
+    1086,
+    1448
+  ],
+  "mode": "RGB",
+  "generator": "built-in image_gen.imagegen",
+  "promptFile": "prompt-pda-ui.txt",
+  "promptSha256": "5842c2cef53963f5e6268926e44db1de2dcdec22ccdea069dfda1c595d869014",
+  "customSkillFile": "custom-prompt-skill-first.md",
+  "customSkillURL": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "customSkillSha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+  "originalOutput": "/workspace/scratch/85111d38430a/generated_images/exec-513c0557-5769-4d9a-8b34-9984ea919fa9.png",
+  "imageSha256": "7ad9e3d68a8b9fb9b379ed07ed914adaee0b512fbf819c126b39515456d167f2",
+  "inspection": "Exact English time/date/app labels inspected, no device frame."
+}

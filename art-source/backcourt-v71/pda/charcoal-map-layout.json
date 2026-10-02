@@ -1,0 +1,95 @@
+{
+  "source": "charcoal-pbr-atlas.png",
+  "sourceSize": [
+    1536,
+    1024
+  ],
+  "columns": 3,
+  "rows": 2,
+  "channels": [
+    {
+      "channel": "basecolor",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-basecolor.png",
+      "sourceRectPixels": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "channel": "normal",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-normal.png",
+      "sourceRectPixels": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "channel": "roughness",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-roughness.png",
+      "sourceRectPixels": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "channel": "metallic",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-metallic.png",
+      "sourceRectPixels": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "channel": "ao",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-ao.png",
+      "sourceRectPixels": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "channel": "height",
+      "path": "/workspace/scratch/85111d38430a/v71-pda-art/charcoal-height.png",
+      "sourceRectPixels": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "dimensions": [
+        512,
+        512
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: flat landscape screen texture for a 2006 CRT monitor desktop, edge-to-edge display image, no monitor frame
+style: period-correct 2006 Frutiger Aero desktop, abstract blue-green soft hills and translucent glass bubbles, faint aged CRT grain, crisp small period system typography, glossy restrained rounded desktop dialog
+composition: landscape 4:3 screen viewed perfectly straight-on with zero perspective, plenty of empty wallpaper; subtle dark-blue taskbar along the bottom; one modest rounded network status dialog near the center, composed with an empty desktop and no additional icons
+text (verbatim): dialog heading "Connecting..."; a small quiet status message "No signal" below a restrained empty blue-green progress bar
+mood: residual desktop left quietly running, soft PS2-era rendered wallpaper, no external glow, subtle phosphor-like fine screen texture without thick scanlines
+quality: maximum clean texture quality, precise legible English text, clear period glass rendering and generous open screen
+aspect ratio: 4:3
+avoid: monitor body, bezel, device frame, perspective, brand logos, extra windows, extra text, people, dramatic bloom, fake vignette, burn-in stains, thick scanlines, screen cracks, watermark

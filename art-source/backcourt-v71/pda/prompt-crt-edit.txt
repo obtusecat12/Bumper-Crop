@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+operation: precise local edit of the provided CRT desktop screen texture
+change only: remove the multicolor Windows-style logo inside the round taskbar button in the bottom-left corner and replace that logo with a simple unmarked blue-green glass orb with no symbol. The bottom taskbar remains blue and the button remains the same size and position.
+preserve exactly: the entire wallpaper, hills, bubbles, sky, dialog, progress bar, layout, image proportions, colors, fine screen grain, and all existing text "Connecting..." and "No signal"
+aspect ratio: 4:3
+avoid: any brand logo, lettering added to the button, changed wallpaper, changed dialog, changed text, added symbols, extra windows, new device frame, new shadows, new watermark

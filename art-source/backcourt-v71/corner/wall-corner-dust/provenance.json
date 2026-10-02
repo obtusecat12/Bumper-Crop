@@ -1,0 +1,27 @@
+{
+  "asset": "wall-corner-dust",
+  "tool": "builtin image_gen__imagegen",
+  "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-cd72a95a-e816-45b7-a413-0eb763895867.png",
+  "preserved_original_path": "/workspace/scratch/85111d38430a/v71-corner-art/wall-corner-dust/wall-corner-dust-original.png",
+  "original_file_sha256": "023a30d331593e0932de65ccd7e033020a62259c1020df96973e8f97a3dd1a13",
+  "dimensions": [
+    887,
+    1774
+  ],
+  "mode": "RGBA",
+  "alpha_min": 0,
+  "alpha_max": 253,
+  "transparent_pixel_fraction": 0.5874576908851263,
+  "opaque_pixel_fraction": 0.0,
+  "partial_alpha_pixel_fraction": 0.4125423091148736,
+  "alpha_bbox": [
+    0,
+    0,
+    882,
+    1774
+  ],
+  "prompt_file": "/workspace/scratch/85111d38430a/v71-corner-art/wall-corner-dust/exact-prompt.txt",
+  "prompt_skill_source": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "prompt_skill_per_call_copy": "/workspace/scratch/85111d38430a/v71-corner-art/wall-corner-dust/prompt-skill-per-call.md",
+  "visual_inspection": "Original is transparent RGBA with irregular silhouette and no text. Visible light tan residue around the darker grime can read like a thin plaster/substrate cutout, rather than fully translucent dust. Inspect in-scene before integrating."
+}

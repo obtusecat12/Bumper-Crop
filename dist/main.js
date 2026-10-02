@@ -1,4 +1,5 @@
 import {LookInput} from './look-input-v69.js';
+import {initializeCornerTextures} from './backcourt-materials-v71.js';
 import {initializeVendingTextures} from './vending-materials-v70.js';
 import {vendingDrinkName} from './vending-drinks-v70.js';
 import {SHOWER_HEADS} from './bathhouse-layout.js?v=66';
@@ -21,7 +22,7 @@ import {initializeExitTextures} from './exit-textures.js?v=60';
 import {initializeReferenceTextures} from './reference-materials.js?v=60';
 import {initializeUrbanAssets} from './urban-assets.js?v=60';
 import {referenceEnvironment} from './reference-scenes.js?v=60';
-import {createExitScene} from './exit-scene.js?v=70';
+import {createExitScene} from './exit-scene.js?v=71';
 import {ExitAudio} from './exit-audio.js?v=60';
 import {initializeAlmondTextures,hydrateAlmondPickups,releaseAlmondBottle,almondVariant} from './almond-water-assets.js?v=60';
 import {createRuralPowerNetwork} from './rural-power-render.js?v=60';
@@ -51,7 +52,7 @@ import {loadInstrumentParts} from './retro-instruments.js?v=60';
 import {createUIRaster} from './ui-raster.js?v=60';
 import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=60';
 import {createUIThemes} from './ui-themes.js?v=60';
-import {createMaterialFinish} from './material-finish.js?v=60';
+import {createMaterialFinish} from './material-finish.js?v=71';
 import {createRuralShadows} from './rural-shadows.js?v=60';
 import {createIrradianceField} from './irradiance-field.js?v=60';
 import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=63';
@@ -111,7 +112,7 @@ if(!['high','balanced','low'].includes(settings.quality))settings.quality='balan
 let renderer;
 try{renderer=new T.WebGLRenderer({antialias:false,powerPreference:'high-performance',alpha:false});renderer.setPixelRatio(1);renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','Level 10 三维麦田');game.prepend(renderer.domElement)}catch(e){e.userTitle='无法启动 3D 画面';e.userMessage='当前浏览器无法创建 3D 画面。请确认已启用硬件加速，并使用支持 WebGL 2 的浏览器。';throw e}
 $('#loading').firstChild.textContent='正在载入地面与植被材质 ';
-try{await Promise.all([initializeVendingTextures(),initializeCanTextures(),initializeSpringTextures(),initializeSpringNPCs(),initializeBathTextures(),initializeSpaTextures(),initializeAlmondTextures(),initializeExitTextures(),initializeReferenceTextures(),initializeDistrictTextures(),initializeUrbanAssets(),initializeAdvertising(),initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
+try{await Promise.all([initializeCornerTextures(),initializeVendingTextures(),initializeCanTextures(),initializeSpringTextures(),initializeSpringNPCs(),initializeBathTextures(),initializeSpaTextures(),initializeAlmondTextures(),initializeExitTextures(),initializeReferenceTextures(),initializeDistrictTextures(),initializeUrbanAssets(),initializeAdvertising(),initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
 $('#loading').firstChild.textContent='LOADING ';
 const performanceMeter=createPerformanceMeter(renderer);
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.23;
@@ -156,7 +157,7 @@ try{await Promise.all([waterPipeline.surface.ready,waterInspection.warmup(render
 const wetInput={},rigInput={},moveNext={x:0,z:0},moveLocal={x:0,z:0},impactLighting={sunDirection:weatherLight,color:scene.fog.color,intensity:1,ambientIntensity:1},rippleInput={state,chunks,active:false,lightDirection:weatherLight};
 let barnDoorAngle=0,barnDoorGoal=0,wetLastYaw=0,wetLastVx=0,wetLastVz=0;
 const uiRaster=createUIRaster(game,{survival:survivalDisplay,navigation:navigationMap});displayFilter.setCompositor(uiRaster);
-const exitScene=createExitScene({onAdd:root=>{atmosphere.attachFog(root);materialFinish.attach(root);naturalShadows.attach(root);naturalShadows.invalidate();},onRemove:root=>naturalShadows.detach(root)}),exitAudio=new ExitAudio();scene.add(exitScene.object);atmosphere.attachFog(exitScene.object);materialFinish.attach(exitScene.object);naturalShadows.attach(exitScene.object);extraBudgetRoots.push(exitScene.object);navigationMap.setUrbanReferenceShapes([...exitScene.references.colliders,...exitScene.district.colliders,...exitScene.fabric.colliders,...exitScene.bath.colliders,...exitScene.backcourt.colliders]);
+const exitScene=createExitScene({onAdd:root=>{atmosphere.attachFog(root);materialFinish.attach(root);naturalShadows.attach(root);naturalShadows.invalidate();},onRemove:root=>naturalShadows.detach(root)}),exitAudio=new ExitAudio();scene.add(exitScene.object);atmosphere.attachFog(exitScene.object);materialFinish.attach(exitScene.object);naturalShadows.attach(exitScene.object);extraBudgetRoots.push(exitScene.object);navigationMap.setUrbanReferenceShapes([...exitScene.references.colliders,...exitScene.district.colliders,...exitScene.fabric.colliders,...exitScene.bath.colliders,...exitScene.backcourt.colliders,...exitScene.residue.colliders]);
 const bathhouse=createBathhouse();let bathOrigin=null,bathTime=0,bathWetAge=0,bathStepTravel=0;
 const spring=createLevel27(),springSession=new SpringSession();let springOpen=0,springTime=0,springSteps=0;
 const eyelids=document.createElement('div');eyelids.setAttribute('aria-hidden','true');eyelids.style.cssText='position:fixed;inset:0;background:#020303;opacity:0;pointer-events:none;z-index:99999';document.body.append(eyelids);

@@ -1,0 +1,148 @@
+{
+  "pass": true,
+  "stats": {
+    "triangles": 8716,
+    "drawCalls": 10,
+    "parts": 191,
+    "groups": {
+      "pda": {
+        "triangles": 7072,
+        "drawCalls": 6,
+        "parts": 162
+      },
+      "charger": {
+        "triangles": 1644,
+        "drawCalls": 4,
+        "parts": 29
+      }
+    },
+    "bodySize": [
+      0.075,
+      0.135,
+      0.021
+    ],
+    "displaySize": [
+      0.048,
+      0.064
+    ],
+    "atlasGrid": [
+      6,
+      8
+    ]
+  },
+  "physicalQwertyLetters": 26,
+  "physicalKeys": 37,
+  "finitePositionsNormalsUVs": true,
+  "ownerMapsRetained": true,
+  "miniUSBProbeX": -0.0348999984562397,
+  "stylusRecessProbeX": 0.035599999129772186,
+  "chargerMinimumY": -1.8626451769865326e-10,
+  "cableMinimumY": 0.0002000000000000001,
+  "layGroundedMinimumY": 0,
+  "uprightBounds": {
+    "min": [
+      -0.037620000541210175,
+      -0.06762000173330307,
+      -0.013700000010430813
+    ],
+    "max": [
+      0.06048257276415825,
+      0.06864999979734421,
+      0.01765848696231842
+    ]
+  },
+  "chargerBounds": {
+    "min": [
+      -0.11538072675466537,
+      -1.8626451769865326e-10,
+      -0.03291148319840431
+    ],
+    "max": [
+      0.05009999871253967,
+      0.025750000029802322,
+      0.06764999777078629
+    ]
+  },
+  "meshes": [
+    {
+      "name": "PDA / pdaBlack",
+      "triangles": 4112,
+      "uvRange": [
+        -0.3866666853427887,
+        1.3866666555404663
+      ]
+    },
+    {
+      "name": "PDA / dark",
+      "triangles": 1532,
+      "uvRange": [
+        -0.40160003304481506,
+        1.4016000032424927
+      ]
+    },
+    {
+      "name": "PDA / steel",
+      "triangles": 1144,
+      "uvRange": [
+        -0.17144949734210968,
+        1.1714495420455933
+      ]
+    },
+    {
+      "name": "PDA / glass",
+      "triangles": 208,
+      "uvRange": [
+        0.07200000435113907,
+        0.9279999732971191
+      ]
+    },
+    {
+      "name": "PDA / screen",
+      "triangles": 2,
+      "uvRange": [
+        0,
+        1
+      ]
+    },
+    {
+      "name": "PDA / keyLegends",
+      "triangles": 74,
+      "uvRange": [
+        0.007941990159451962,
+        0.9774401783943176
+      ]
+    },
+    {
+      "name": "Charger / pdaBlack",
+      "triangles": 208,
+      "uvRange": [
+        0.13333334028720856,
+        0.8666666746139526
+      ]
+    },
+    {
+      "name": "Charger / dark",
+      "triangles": 524,
+      "uvRange": [
+        0.13100001215934753,
+        0.8689999580383301
+      ]
+    },
+    {
+      "name": "Charger / steel",
+      "triangles": 352,
+      "uvRange": [
+        0.4099999964237213,
+        0.5899999737739563
+      ]
+    },
+    {
+      "name": "Charger / rubber",
+      "triangles": 560,
+      "uvRange": [
+        -2.7755136489868164,
+        1.8689531087875366
+      ]
+    }
+  ]
+}

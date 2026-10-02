@@ -1,0 +1,14 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: consistent six-channel PBR texture atlas for worn charcoal injection-molded ABS plastic on a PDA body, no labels
+surface: realistic flat charcoal black ABS, fine injection mold stipple, tiny rounded pores, subtle rubbed smoother areas, quiet handling wear, photographic soft PS2-era material appearance; seamless tileable material, no border, no perspective, no object silhouette, no large scratches
+layout: exact 3 columns by 2 rows with six equally sized square tiles touching edge-to-edge, no gaps, no separators, no text. The overall atlas is 3:2. Each tile uses exactly the same aligned material relief and subtle wear pattern, so every coordinate corresponds across all six channels.
+top left tile: BaseColor map, diffuse charcoal gray ABS color only, no directional lighting, no baked highlight, no cast shadow, no ambient shading gradient
+top center tile: tangent-space Normal map, neutral blue-violet 128/128/255 with only subtle fine stipple relief and smoother rubs, RGB normal information, no dramatic bumps or cracks
+top right tile: Roughness map in grayscale; mostly medium-high roughness pale gray with subtle slightly darker rubbed areas and fine correlated stipple, no dramatic contrast
+bottom left tile: Metallic map, pure black across the full tile because ABS plastic is a nonmetal
+bottom center tile: Ambient Occlusion map in grayscale; predominantly near white with extremely subtle correlated dark stipple recesses, no lighting gradient or cast shadows
+bottom right tile: Height map in grayscale; soft midgray with very small correlated fine stipple and quiet smoother worn areas, no large topographic features
+quality: maximum texture quality, physically restrained microscopic relief, all six maps exactly registered and square
+aspect ratio: 3:2
+avoid: labels, channel names, captions, borders, gaps, cube preview, sphere preview, device render, fake lighting, fake shadows, directional highlight, glossy glare, heavy dirt, fingerprints, coarse orange-peel bumps, large scratches, oversharpening, logos, watermark
