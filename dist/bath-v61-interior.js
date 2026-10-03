@@ -1,4 +1,4 @@
-import {buildReception72} from './bath-reception-v72.js';
+import {buildReception72} from './bath-reception-v72.js?v=73';
 import * as T from './vendor/three.module.min.js';
 import {createStallKit} from './bath-v62-stall-kit.js?v=62';
 import {showerMaterials} from './bath-v62-materials.js?v=62';
@@ -63,5 +63,5 @@ export function buildBathRefit(scene,root,oldWood){
    finally{renderer.shadowMap.autoUpdate=old;renderer.shadowMap.needsUpdate=needs;}}
   reflector.render(renderer,camera);
  }
- return {clock,presets,streams,materials:m,wetMaterials:[lobbyFloor,showerFloor],beforeRender,update(t){clock.value=t;showerWater.update(t);for(const mat of[lobbyFloor,showerFloor]){mat.userData.wetUniforms.bTime.value=t;mat.userData.wetUniforms.bFlow.value.fromArray(presets.map(v=>v>0?1:0));}},dispose(){reflector.dispose();showerWater.dispose();environment?.dispose();}};
+ return {clock,presets,streams,reception,materials:m,wetMaterials:[lobbyFloor,showerFloor],beforeRender,update(t){clock.value=t;showerWater.update(t);for(const mat of[lobbyFloor,showerFloor]){mat.userData.wetUniforms.bTime.value=t;mat.userData.wetUniforms.bFlow.value.fromArray(presets.map(v=>v>0?1:0));}},dispose(){reflector.dispose();showerWater.dispose();environment?.dispose();}};
 }

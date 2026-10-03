@@ -1,10 +1,12 @@
+import {OPEN_LOCKERS73} from './reception-plan-v73.js';
+import {addLockerContents73} from './locker-contents-v73.js';
 import * as T from './vendor/three.module.min.js';
 import {addBox,addPlane,addTube,worldUV} from './bath-v61-materials.js?v=61';
 import {changingMaterials} from './changing-materials-v72.js';
 import {LOCKER_ROWS,BENCHES,POOL_DOOR} from './bathhouse-plan-v72.js';
 import {RectAreaLightUniformsLib} from './vendor/RectAreaLightUniformsLib.js';
-export const CHANGING_POINT_LIGHTS=[{p:[0,2.52,3.55],color:0xe1e6b8,power:8,range:8},{p:[2.25,.36,-.25],color:0x74cedb,power:.65,range:3.2}];
-export const BATH_AREA_LIGHTS=[{p:[0,2.79,8.3],power:3.3,w:1.42,h:.28,color:0xf0e7c6},{p:[0,2.79,11.5],power:3.3,w:1.42,h:.28,color:0xf0e7c6},{p:[-1.1,2.69,3.65],power:4.1,w:.28,h:1.38,color:0xdfe8b9},{p:[1.3,2.69,4.05],power:3.7,w:.28,h:1.38,color:0xe6e9bf}];
+export const CHANGING_POINT_LIGHTS=[{p:[0,2.52,3.55],color:0xe6e9ca,power:11,range:8},{p:[2.25,.36,-.25],color:0x74cedb,power:.65,range:3.2}];
+export const BATH_AREA_LIGHTS=[{p:[0,2.79,8.3],power:3.3,w:1.42,h:.28,color:0xf0e7c6},{p:[0,2.79,11.5],power:3.3,w:1.42,h:.28,color:0xf0e7c6},{p:[-1.1,2.69,3.65],power:5.1,w:.28,h:1.38,color:0xdfe8b9},{p:[1.3,2.69,4.05],power:4.7,w:.28,h:1.38,color:0xe6e9bf}];
 function rectHole(s,x,y,w,h){const q=new T.Path();q.moveTo(x-w/2,y-h/2);q.lineTo(x-w/2,y+h/2);q.lineTo(x+w/2,y+h/2);q.lineTo(x+w/2,y-h/2);q.closePath();s.holes.push(q);}
 function numberMaterial(){const canvas=document.createElement('canvas');canvas.width=512;canvas.height=256;const c=canvas.getContext('2d');c.fillStyle='#d9d3b1';c.fillRect(0,0,512,256);c.fillStyle='#273a37';c.textAlign='center';c.font='bold 29px monospace';for(let i=0;i<26;i++)c.fillText(String(i+1).padStart(2,'0'),(i%8)*64+32,Math.floor(i/8)*64+42);const t=new T.CanvasTexture(canvas);t.colorSpace=T.SRGBColorSpace;return new T.MeshStandardMaterial({name:'Functional enamel locker numerals',map:t,roughness:.65});}
 function locker(T,m,numbers,number){
@@ -13,6 +15,7 @@ function locker(T,m,numbers,number){
  for(const y of[.098,1.015,1.972])box(m.locker,0,y,0,.414,.028,.45,'Locker shelf and top return');
  for(const x of[-.162,.162])for(const z of[-.16,.16])box(m.dark,x,.050,z,.045,.10,.045,'Grounded rusted locker foot');
  for(let tier=0;tier<2;tier++){
+  const firstChild=root.children.length;
   const y=.552+tier*.932,w=.375,h=.859,s=new T.Shape();s.moveTo(-w/2,-h/2);s.lineTo(w/2,-h/2);s.lineTo(w/2,h/2);s.lineTo(-w/2,h/2);s.closePath();
   for(const dy of[-.265,.245])for(let i=0;i<3;i++)rectHole(s,0,dy+i*.040,.222,.019);
   const g=new T.ExtrudeGeometry(s,{depth:.013,steps:1,bevelEnabled:true,bevelSegments:1,bevelSize:.002,bevelThickness:.002,curveSegments:2});g.translate(0,0,-.005);
@@ -25,6 +28,7 @@ function locker(T,m,numbers,number){
   for(const x of[-.037,.037])box(m.chrome,x,y+.369,.244,.008,.048,.008,'Recessed plaque frame',.001);for(const yy of[y+.345,y+.393])box(m.chrome,0,yy,.244,.081,.007,.008,'Plaque frame lip',.001);
   const lock=new T.Mesh(new T.TorusGeometry(.020,.006,6,14),m.chrome);lock.position.set(.115,y-.062,.254);root.add(lock);box(m.dark,.115,y-.062,.252,.009,.022,.003,'Mechanical key slot',.001);
   addTube(root,m.chrome,[[.116,y+.083,.247],[.116,y+.069,.279],[.116,y+.002,.279],[.116,y-.012,.247]],.009,'Bent locker pull',10);
+  const open=OPEN_LOCKERS73.find(p=>p.column===number&&p.tier===tier);if(open){const parts=root.children.slice(firstChild).filter(o=>!['Uneven recessed door reveal','Physical folded hinge'].includes(o.name)),hinge=new T.Group();hinge.name='Open '+open.content+' locker door';hinge.position.set(-.191,y,.24);root.add(hinge);for(const p of parts){p.removeFromParent();p.position.sub(hinge.position);hinge.add(p);}hinge.rotation.y=open.angle;addLockerContents73(root,m,open.content);}
  }
  return root;
 }

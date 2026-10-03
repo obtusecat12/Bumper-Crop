@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: four long drooping Boston fern fronds alone, spreading from one joined stem base at the bottom center, a transparent alpha cutout for crossed gently bent foliage cards in a Three.js PS2 photographic European vintage bath lobby.
+composition: exactly 1024 x 1024 pixels, aspect ratio 1:1. A joined stem base at bottom center with four long arching fronds fanning upward and outward, their outer ends curving gently downward. Each frond has many small natural narrow green leaflets along its stem. Keep all fronds and leaflet tips fully inside the image with transparent space around the silhouette. Clearly readable separated frond silhouettes, not a dense bush.
+style: natural green photographic fern texture, softly detailed PS2-era photographic texture character, realistic plant anatomy, slightly imperfect leaves, no pixel art, no illustration.
+lighting: soft neutral even light with restrained leaf shading, no hard directional highlights, no cast ground shadow.
+background: genuinely transparent alpha background, including transparent gaps between individual leaflets. Clean natural edges without a white or colored matte.
+constraints: fronds alone, no potted plant, no pot, no soil, no roots, no vase, no scene, no labels, no text, no border, no watermark, no checkerboard drawn into the image.

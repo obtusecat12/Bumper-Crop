@@ -1,0 +1,12 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: unfolded printed carton or paper wrapper artwork for a small rectangular bar of bath soap, a game texture for a PS2 photographic low-poly bath locker.
+asset format: one flat 1024 x 1024 pixel square texture. The top half (pixels y=0 through 511) is the front label panel; the bottom half (pixels y=512 through 1023) is the back label panel. Each half is a separate clean rectangular 1024 x 512 panel. Both panels fill their half edge to edge and align exactly; no gutters and no margins outside the artwork. This image is the printable surface itself, not a photograph of a physical package.
+design: iconic 1950s mid-century commercial packaging typography. Creamy ivory paper with muted orange, teal, and navy geometric blocks. Believable vintage commercial label composition.
+front panel text, verbatim: "VELORA", "BATH SOAP", "GENTLE PALM SOAP", "NET WT. 3.5 OZ."
+front text hierarchy: "VELORA" is the largest brand name, clearly legible; "BATH SOAP" is the second level; "GENTLE PALM SOAP" and "NET WT. 3.5 OZ." are smaller, clearly separated supporting text.
+back panel: restrained matching geometric print and legible small English ingredients typography. Include "VELORA", "BATH SOAP", and "INGREDIENTS: SODIUM PALMATE, SODIUM PALM KERNELATE, WATER, GLYCERIN, FRAGRANCE, SODIUM CHLORIDE." Keep this panel clearly distinct from the front.
+material and finish: subtly aged printed paper, gentle paper grain, minor ink wear; photographic period texture quality suitable for PS2 aesthetics, without obscuring the letters.
+view and lighting: perfectly front-facing flat artwork, uniform diffuse illumination, no perspective, no dimensional folds or baked shadows.
+aspect ratio: 1:1.
+Avoid: rendered 3D package, mockup, packaging perspective, borders or text outside the two panel designs, watermarks, unrelated logos, extra panels, oversharpening, modern branding, strong glare.

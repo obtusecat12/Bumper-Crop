@@ -1,0 +1,390 @@
+{
+  "task": "v73 bath locker prop textures",
+  "generated_call_count": 3,
+  "generation_method": "built-in image_gen.imagegen",
+  "guide_policy": "Freshly downloaded and read before each of the three generation calls. Exact supplied guide and rewritten prompts retained.",
+  "uv_conventions": {
+    "image_uv": "Origin top-left; u right and v down. Bounds are [u_min,v_min,u_max,v_max].",
+    "pixel_bounds": "[left,top,right,bottom], right and bottom exclusive.",
+    "three_flipY_true": "Conventional mesh UV origin bottom-left with Texture.flipY=true. Set texture.offset and texture.repeat as shown for atlas subrects, or assign equivalent UVs. Individual fabric WebP files use full [0,1] UVs.",
+    "packing": "No rescale, repack, or generative alterations after output. Fabric tiles are exact crops authorized by parent."
+  },
+  "assets": [
+    {
+      "asset": "soap",
+      "original": "soap-wrapper-original.png",
+      "runtime": "soap-wrapper.webp",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "source_generation_file": "/workspace/scratch/85111d38430a/generated_images/exec-482a28cc-d488-4464-b216-dd9d3f165f17.png",
+      "runtime_encoding": "WebP lossless; original dimensions and pixels preserved",
+      "guide_source": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+      "guide_copy": "guide-01-soap.md",
+      "guide_sha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+      "guide_downloaded_at_utc": "2026-10-03T04:06:46.001629+00:00",
+      "guide_contents": "---\nname: gpt-image-2-prompt-generation/modifying\ndescription: Make any prompt for gpt image 2 several times better\n---\n\n\nyou are a prompt writer/structuring assistant for gpt image 2.\n\n# your task:\nthe user gives you a raw image idea. rewrite it into a clean, structured image prompt that the user will pass to gpt image 2(Don't add unnecessary details and don't change the prompt, it's better to just divide the text into groups).If you have an image gen tool, then use this tool immediately with the final prompt.\n\n# main rules:\n- do not use any external instructions for photo generation except those from the user and this skill\n- DON'T CHANGE THE PROMPT, JUST STRUCTURE IT\n- YOU CAN ONLY ADD RECOMMENDATIONS\n- structure the prompt using fields\n- if a recommendation contradicts the user’s request, do not add it.\n- always include the most suitable aspect ratio from 3:1 to 1:3.\n- always start the final prompt exactly with:\n\"Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \"\n\n# output format:\nwrite only the final structured prompt. no explanations, no commentary, no extra notes.\n\n# recommendations:\n(if anything in the recommendation contradicts what the user wrote, don’t add it. You may also occasionally modify the recommendation if you think it will improve the result)\nonly include fields that make sense for the user’s idea\n\nfor regular photo / real-life / everyday photography:\nif the idea is a realistic everyday-life photo, add:\nphoto quality and vibe: non-studio lighting,no oversharpening, real light from the location, iphone photo vibe, imperfect photo quality/raw quality (for realism), random realistic photo taken during a random moment of the day, make sure the lighting is natural and matches the background, 2k. It’s better to make it slightly blurry, like a phone photo.\n\nfor cinematic / high-quality photography:\nif the idea asks for premium quality, cinematic look, movie still, luxury, aesthetic visual, or best photo quality, add:\nphoto quality and vibe: focused cinematic shot, natural light, highly aesthetic scene, movie-still composition, raw quality, warm rim light, subtle film grain, clean composition, cool ambient shadows, colors with a slight gray tone, make sure the lighting is natural and matches the background, no oversaturation, no oversharpening,a lively vibe, as if the frame was taken while the characters were doing something, strong vignette, raw quality\n\nfor infographics:\nif the idea is an infographic, diagram, technical explanation, system flow, process, or visual breakdown, always add:\ni'd like to understand technically and visually the flow.\n\nfor ads generation:\nif the idea is an ad, product promo, commercial banner, marketing creative, or social media advertisement, add something like:\nno extra text, no watermarks, no unrelated logos. use clean composition, strong color direction.\n\n# OPTIONAL\nIf it doesn't conflict with the user's request, try to make the characters prettier, for example, \"beautiful vibe girl\"\nIf the prompt says something about selfies, then if it doesn't contradict the user, then \"characters should do something vibe\".\n\n\n# negative instructions:\nif useful, add a final line:\nAvoid : [things to avoid] (Be sure to add - avoid excessive yellow in the photo,  too sharp or overly sharpened and too many highlights/glare on the characters faces)\n\n# example\nuser prompt: Generate a Snapchat meme of a dog sitting on the grass\n\nfinal prompt:\nGenerate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nobject: dog\nscene: a dog is sitting on the grass\nvibe: snapchat meme\nphoto quality and vibe: photo quality and vibe: non-studio lighting,no oversharpening, real light from the location, iphone 7 photo, imperfect photo quality (for realism), natural focus,raw quality, random realistic photo taken during a random moment of the day, make sure the lighting is natural and matches the background, 2k.\naspect ratio: 4:3\n\nAvoid next - studio lighting, overpolished look, artificial background, oversharpening.\n",
+      "prompt_file": "prompt-01-soap.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: unfolded printed carton or paper wrapper artwork for a small rectangular bar of bath soap, a game texture for a PS2 photographic low-poly bath locker.\nasset format: one flat 1024 x 1024 pixel square texture. The top half (pixels y=0 through 511) is the front label panel; the bottom half (pixels y=512 through 1023) is the back label panel. Each half is a separate clean rectangular 1024 x 512 panel. Both panels fill their half edge to edge and align exactly; no gutters and no margins outside the artwork. This image is the printable surface itself, not a photograph of a physical package.\ndesign: iconic 1950s mid-century commercial packaging typography. Creamy ivory paper with muted orange, teal, and navy geometric blocks. Believable vintage commercial label composition.\nfront panel text, verbatim: \"VELORA\", \"BATH SOAP\", \"GENTLE PALM SOAP\", \"NET WT. 3.5 OZ.\"\nfront text hierarchy: \"VELORA\" is the largest brand name, clearly legible; \"BATH SOAP\" is the second level; \"GENTLE PALM SOAP\" and \"NET WT. 3.5 OZ.\" are smaller, clearly separated supporting text.\nback panel: restrained matching geometric print and legible small English ingredients typography. Include \"VELORA\", \"BATH SOAP\", and \"INGREDIENTS: SODIUM PALMATE, SODIUM PALM KERNELATE, WATER, GLYCERIN, FRAGRANCE, SODIUM CHLORIDE.\" Keep this panel clearly distinct from the front.\nmaterial and finish: subtly aged printed paper, gentle paper grain, minor ink wear; photographic period texture quality suitable for PS2 aesthetics, without obscuring the letters.\nview and lighting: perfectly front-facing flat artwork, uniform diffuse illumination, no perspective, no dimensional folds or baked shadows.\naspect ratio: 1:1.\nAvoid: rendered 3D package, mockup, packaging perspective, borders or text outside the two panel designs, watermarks, unrelated logos, extra panels, oversharpening, modern branding, strong glare.\n",
+      "original_sha256": "c0a9d83b324126600f6874a454a15b97edce5a8375c59bc6806eaf57feb6c2bd",
+      "runtime_sha256": "c6223ad53840c014cf8d892e312bdcb083bc3d36e934f5ba160be7340496eb65",
+      "requested_dimensions": [
+        1024,
+        1024
+      ],
+      "actual_dimensions_note": "Built-in generator returned 1254 x 1254; preserved exactly at parent request. Front/back were not repacked.",
+      "panels": {
+        "front": {
+          "pixel_bounds_xyxy": [
+            0,
+            0,
+            1254,
+            706
+          ],
+          "image_uv_bounds": [
+            0,
+            0,
+            1,
+            0.5629984051036683
+          ],
+          "three_flipY_true": {
+            "offset": [
+              0,
+              0.4370015948963317
+            ],
+            "repeat": [
+              1,
+              0.5629984051036683
+            ]
+          }
+        },
+        "back": {
+          "pixel_bounds_xyxy": [
+            0,
+            706,
+            1254,
+            1254
+          ],
+          "image_uv_bounds": [
+            0,
+            0.5629984051036683,
+            1,
+            1
+          ],
+          "three_flipY_true": {
+            "offset": [
+              0,
+              0
+            ],
+            "repeat": [
+              1,
+              0.4370015948963317
+            ]
+          }
+        }
+      },
+      "text_visual_check": {
+        "front": [
+          "VELORA",
+          "BATH SOAP",
+          "GENTLE PALM SOAP",
+          "NET WT. 3.5 OZ."
+        ],
+        "back": [
+          "VELORA",
+          "BATH SOAP",
+          "INGREDIENTS: SODIUM PALMATE, SODIUM PALM KERNELATE, WATER, GLYCERIN, FRAGRANCE, SODIUM CHLORIDE."
+        ],
+        "result": "All requested front strings and back ingredients are legible. The separator is at y=706 rather than y=627."
+      }
+    },
+    {
+      "asset": "fabric",
+      "original": "fabric-atlas-original.png",
+      "runtime": "fabric-atlas.webp",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "source_generation_file": "/workspace/scratch/85111d38430a/generated_images/exec-0da4141b-e70e-4a25-969a-e028a1d7e47d.png",
+      "runtime_encoding": "WebP lossless; original dimensions and pixels preserved",
+      "guide_source": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+      "guide_copy": "guide-02-fabric.md",
+      "guide_sha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+      "guide_downloaded_at_utc": "2026-10-03T04:08:55.441776+00:00",
+      "guide_contents": "---\nname: gpt-image-2-prompt-generation/modifying\ndescription: Make any prompt for gpt image 2 several times better\n---\n\n\nyou are a prompt writer/structuring assistant for gpt image 2.\n\n# your task:\nthe user gives you a raw image idea. rewrite it into a clean, structured image prompt that the user will pass to gpt image 2(Don't add unnecessary details and don't change the prompt, it's better to just divide the text into groups).If you have an image gen tool, then use this tool immediately with the final prompt.\n\n# main rules:\n- do not use any external instructions for photo generation except those from the user and this skill\n- DON'T CHANGE THE PROMPT, JUST STRUCTURE IT\n- YOU CAN ONLY ADD RECOMMENDATIONS\n- structure the prompt using fields\n- if a recommendation contradicts the user’s request, do not add it.\n- always include the most suitable aspect ratio from 3:1 to 1:3.\n- always start the final prompt exactly with:\n\"Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \"\n\n# output format:\nwrite only the final structured prompt. no explanations, no commentary, no extra notes.\n\n# recommendations:\n(if anything in the recommendation contradicts what the user wrote, don’t add it. You may also occasionally modify the recommendation if you think it will improve the result)\nonly include fields that make sense for the user’s idea\n\nfor regular photo / real-life / everyday photography:\nif the idea is a realistic everyday-life photo, add:\nphoto quality and vibe: non-studio lighting,no oversharpening, real light from the location, iphone photo vibe, imperfect photo quality/raw quality (for realism), random realistic photo taken during a random moment of the day, make sure the lighting is natural and matches the background, 2k. It’s better to make it slightly blurry, like a phone photo.\n\nfor cinematic / high-quality photography:\nif the idea asks for premium quality, cinematic look, movie still, luxury, aesthetic visual, or best photo quality, add:\nphoto quality and vibe: focused cinematic shot, natural light, highly aesthetic scene, movie-still composition, raw quality, warm rim light, subtle film grain, clean composition, cool ambient shadows, colors with a slight gray tone, make sure the lighting is natural and matches the background, no oversaturation, no oversharpening,a lively vibe, as if the frame was taken while the characters were doing something, strong vignette, raw quality\n\nfor infographics:\nif the idea is an infographic, diagram, technical explanation, system flow, process, or visual breakdown, always add:\ni'd like to understand technically and visually the flow.\n\nfor ads generation:\nif the idea is an ad, product promo, commercial banner, marketing creative, or social media advertisement, add something like:\nno extra text, no watermarks, no unrelated logos. use clean composition, strong color direction.\n\n# OPTIONAL\nIf it doesn't conflict with the user's request, try to make the characters prettier, for example, \"beautiful vibe girl\"\nIf the prompt says something about selfies, then if it doesn't contradict the user, then \"characters should do something vibe\".\n\n\n# negative instructions:\nif useful, add a final line:\nAvoid : [things to avoid] (Be sure to add - avoid excessive yellow in the photo,  too sharp or overly sharpened and too many highlights/glare on the characters faces)\n\n# example\nuser prompt: Generate a Snapchat meme of a dog sitting on the grass\n\nfinal prompt:\nGenerate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nobject: dog\nscene: a dog is sitting on the grass\nvibe: snapchat meme\nphoto quality and vibe: photo quality and vibe: non-studio lighting,no oversharpening, real light from the location, iphone 7 photo, imperfect photo quality (for realism), natural focus,raw quality, random realistic photo taken during a random moment of the day, make sure the lighting is natural and matches the background, 2k.\naspect ratio: 4:3\n\nAvoid next - studio lighting, overpolished look, artificial background, oversharpening.\n",
+      "prompt_file": "prompt-02-fabric.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: seamless thin off-white cotton shirt fabric with pale blue woven stripes, subtle restrained wear and textile grain, for a PS2 photographic low-poly bath locker shirt.\nasset format: exactly one 1536 x 1024 pixel image containing six coordinated material maps in a precise 3-column by 2-row atlas. Every tile is exactly 512 x 512 pixels. No spacing, no gutters, no borders, no labels. Vertical tile boundaries are x=512 and x=1024; horizontal tile boundary is y=512.\ntop row from left to right: base color, tangent-space normal, roughness.\nbottom row from left to right: metallic, ambient occlusion, height.\ntop-left base color: flat evenly lit off-white thin woven cotton, narrow pale blue vertical yarn-dyed stripes, visibly fine woven fibers, restrained wear, seamless repeating pattern. Color information only, no highlights or shadows.\ntop-middle normal: the exact same fabric weave encoded as a conventional purple-blue tangent-space normal map, centered on RGB 128,128,255; shallow yarn detail only, no large folds.\ntop-right roughness: matching grayscale roughness map, high roughness for matte cotton, mostly light gray with restrained fine fiber variation, white means rough.\nbottom-left metallic: solid black, since cotton is nonmetallic.\nbottom-middle ambient occlusion: mostly white, with only subtle gray contact occlusion between tiny woven fibers; no broad shadows.\nbottom-right height: grayscale fine woven fiber relief, middle gray average, white means higher and black means lower, no large folds.\nmap alignment: all six tiles depict the same seamless aligned textile area. Thin vertical stripes continue without a seam at all edges. Texture-map data only, no sphere previews or physical fabric samples.\nstyle: photographic period fabric texture suitable for PS2 aesthetics. Actual shirt folds will be made in geometry, so the maps contain only restrained cloth grain and shallow fiber wear.\naspect ratio: 3:2.\nAvoid: printed shirt silhouette, physical garment, buttons, collars, large wrinkles, baked lighting or shadows, perspective, rendered objects, text, map-name labels, watermarks, grids, borders, gaps.\n",
+      "original_sha256": "b0aa38a3a2e3caa8d71724e593c927f29064b2d12efaecd6c87d76073e39c390",
+      "runtime_sha256": "14f2e5d85432d35cf9efb2f60bc41dadf1796471b9bea3140cdac860f87b4bcb",
+      "atlas_grid": [
+        3,
+        2
+      ],
+      "tile_dimensions": [
+        512,
+        512
+      ],
+      "maps": [
+        {
+          "map": "basecolor",
+          "runtime": "fabric-basecolor.webp",
+          "dimensions": [
+            512,
+            512
+          ],
+          "pixel_bounds_xyxy": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "image_uv_bounds": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.5
+          ],
+          "three_atlas_flipY_true": {
+            "offset": [
+              0.0,
+              0.5
+            ],
+            "repeat": [
+              0.3333333333333333,
+              0.5
+            ]
+          },
+          "color_space": "sRGB",
+          "encoding": "WebP lossless, exact crop of original atlas",
+          "sha256": "706f52c755ab4bb1890908bcb0f06e71f3a54a9298c991dc8fa277d0d54709c9"
+        },
+        {
+          "map": "normal",
+          "runtime": "fabric-normal.webp",
+          "dimensions": [
+            512,
+            512
+          ],
+          "pixel_bounds_xyxy": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "image_uv_bounds": [
+            0.3333333333333333,
+            0.0,
+            0.6666666666666666,
+            0.5
+          ],
+          "three_atlas_flipY_true": {
+            "offset": [
+              0.3333333333333333,
+              0.5
+            ],
+            "repeat": [
+              0.3333333333333333,
+              0.5
+            ]
+          },
+          "color_space": "linear / NoColorSpace",
+          "encoding": "WebP lossless, exact crop of original atlas",
+          "sha256": "77c4c8da4d24ebda49aa6cd3ed026a802c5172ff207e63878a703d82fc2762f6"
+        },
+        {
+          "map": "roughness",
+          "runtime": "fabric-roughness.webp",
+          "dimensions": [
+            512,
+            512
+          ],
+          "pixel_bounds_xyxy": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "image_uv_bounds": [
+            0.6666666666666666,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "three_atlas_flipY_true": {
+            "offset": [
+              0.6666666666666666,
+              0.5
+            ],
+            "repeat": [
+              0.3333333333333333,
+              0.5
+            ]
+          },
+          "color_space": "linear / NoColorSpace",
+          "encoding": "WebP lossless, exact crop of original atlas",
+          "sha256": "127fb19e2f950cc819c1228ad939dba4c7d1f1e63ecede79c78cec86efe061c5"
+        },
+        {
+          "map": "metallic",
+          "runtime": "fabric-metallic.webp",
+          "dimensions": [
+            512,
+            512
+          ],
+          "pixel_bounds_xyxy": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "image_uv_bounds": [
+            0.0,
+            0.5,
+            0.3333333333333333,
+            1.0
+          ],
+          "three_atlas_flipY_true": {
+            "offset": [
+              0.0,
+              0.0
+            ],
+            "repeat": [
+              0.3333333333333333,
+              0.5
+            ]
+          },
+          "color_space": "linear / NoColorSpace",
+          "encoding": "WebP lossless, exact crop of original atlas",
+          "sha256": "7b3f1ad9e23c88e918b394eb293981f81250888fb5f90872ca162809b065528f"
+        },
+        {
+          "map": "ao",
+          "runtime": "fabric-ao.webp",
+          "dimensions": [
+            512,
+            512
+          ],
+          "pixel_bounds_xyxy": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "image_uv_bounds": [
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666,
+            1.0
+          ],
+          "three_atlas_flipY_true": {
+            "offset": [
+              0.3333333333333333,
+              0.0
+            ],
+            "repeat": [
+              0.3333333333333333,
+              0.5
+            ]
+          },
+          "color_space": "linear / NoColorSpace",
+          "encoding": "WebP lossless, exact crop of original atlas",
+          "sha256": "01d8cb5830ce17bece13a5627a369442ef60266fa56592eb62f91a182bb1c7fb"
+        },
+        {
+          "map": "height",
+          "runtime": "fabric-height.webp",
+          "dimensions": [
+            512,
+            512
+          ],
+          "pixel_bounds_xyxy": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "image_uv_bounds": [
+            0.6666666666666666,
+            0.5,
+            1.0,
+            1.0
+          ],
+          "three_atlas_flipY_true": {
+            "offset": [
+              0.6666666666666666,
+              0.0
+            ],
+            "repeat": [
+              0.3333333333333333,
+              0.5
+            ]
+          },
+          "color_space": "linear / NoColorSpace",
+          "encoding": "WebP lossless, exact crop of original atlas",
+          "sha256": "e7fab0cbfe884d560ccf2b9b5b0fe5a64c3e150870d94515f7a7441f5ecd2e15"
+        }
+      ],
+      "visual_check": "Correct map order, narrow blue stripes on off-white cotton; no shirt silhouette, large folds, or text labels. Cotton metallic tile is black.",
+      "normal_convention": "Tangent-space RGB; nominal flat value 128,128,255, requested OpenGL-style interpretation. AI-generated material maps are approximate."
+    },
+    {
+      "asset": "watch",
+      "original": "watch-face-original.png",
+      "runtime": "watch-face.webp",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "source_generation_file": "/workspace/scratch/85111d38430a/generated_images/exec-c195aa85-7fe5-4259-8134-9f972f67b209.png",
+      "runtime_encoding": "WebP lossless; original dimensions and pixels preserved",
+      "guide_source": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+      "guide_copy": "guide-03-watch.md",
+      "guide_sha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+      "guide_downloaded_at_utc": "2026-10-03T04:10:36.023014+00:00",
+      "guide_contents": "---\nname: gpt-image-2-prompt-generation/modifying\ndescription: Make any prompt for gpt image 2 several times better\n---\n\n\nyou are a prompt writer/structuring assistant for gpt image 2.\n\n# your task:\nthe user gives you a raw image idea. rewrite it into a clean, structured image prompt that the user will pass to gpt image 2(Don't add unnecessary details and don't change the prompt, it's better to just divide the text into groups).If you have an image gen tool, then use this tool immediately with the final prompt.\n\n# main rules:\n- do not use any external instructions for photo generation except those from the user and this skill\n- DON'T CHANGE THE PROMPT, JUST STRUCTURE IT\n- YOU CAN ONLY ADD RECOMMENDATIONS\n- structure the prompt using fields\n- if a recommendation contradicts the user’s request, do not add it.\n- always include the most suitable aspect ratio from 3:1 to 1:3.\n- always start the final prompt exactly with:\n\"Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \"\n\n# output format:\nwrite only the final structured prompt. no explanations, no commentary, no extra notes.\n\n# recommendations:\n(if anything in the recommendation contradicts what the user wrote, don’t add it. You may also occasionally modify the recommendation if you think it will improve the result)\nonly include fields that make sense for the user’s idea\n\nfor regular photo / real-life / everyday photography:\nif the idea is a realistic everyday-life photo, add:\nphoto quality and vibe: non-studio lighting,no oversharpening, real light from the location, iphone photo vibe, imperfect photo quality/raw quality (for realism), random realistic photo taken during a random moment of the day, make sure the lighting is natural and matches the background, 2k. It’s better to make it slightly blurry, like a phone photo.\n\nfor cinematic / high-quality photography:\nif the idea asks for premium quality, cinematic look, movie still, luxury, aesthetic visual, or best photo quality, add:\nphoto quality and vibe: focused cinematic shot, natural light, highly aesthetic scene, movie-still composition, raw quality, warm rim light, subtle film grain, clean composition, cool ambient shadows, colors with a slight gray tone, make sure the lighting is natural and matches the background, no oversaturation, no oversharpening,a lively vibe, as if the frame was taken while the characters were doing something, strong vignette, raw quality\n\nfor infographics:\nif the idea is an infographic, diagram, technical explanation, system flow, process, or visual breakdown, always add:\ni'd like to understand technically and visually the flow.\n\nfor ads generation:\nif the idea is an ad, product promo, commercial banner, marketing creative, or social media advertisement, add something like:\nno extra text, no watermarks, no unrelated logos. use clean composition, strong color direction.\n\n# OPTIONAL\nIf it doesn't conflict with the user's request, try to make the characters prettier, for example, \"beautiful vibe girl\"\nIf the prompt says something about selfies, then if it doesn't contradict the user, then \"characters should do something vibe\".\n\n\n# negative instructions:\nif useful, add a final line:\nAvoid : [things to avoid] (Be sure to add - avoid excessive yellow in the photo,  too sharp or overly sharpened and too many highlights/glare on the characters faces)\n\n# example\nuser prompt: Generate a Snapchat meme of a dog sitting on the grass\n\nfinal prompt:\nGenerate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -\n\nobject: dog\nscene: a dog is sitting on the grass\nvibe: snapchat meme\nphoto quality and vibe: photo quality and vibe: non-studio lighting,no oversharpening, real light from the location, iphone 7 photo, imperfect photo quality (for realism), natural focus,raw quality, random realistic photo taken during a random moment of the day, make sure the lighting is natural and matches the background, 2k.\naspect ratio: 4:3\n\nAvoid next - studio lighting, overpolished look, artificial background, oversharpening.\n",
+      "prompt_file": "prompt-03-watch.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nobject: retro digital watch face texture for a 1980s rectangular steel electronic wristwatch in a PS2 photographic low-poly bath locker.\nasset format: one 1024 x 1024 pixel square front orthographic texture crop. The worn watch face and its dark bezel perimeter fill the entire canvas edge to edge. This is flat front-surface texture artwork for a 3D model.\nface design: period-correct rectangular electronic watch with a gray-green monochrome segmented LCD. A worn dark bezel surrounds the display. Silver steel shows through chipped black coating around the perimeter, with restrained scratches and believable age.\ntext, verbatim: \"MERIDIAN\", \"QUARTZ\", \"10:08\", \"WE 24\", \"AM\".\ntext placement: \"MERIDIAN\" is small, crisp 1980s watch branding above the LCD. \"QUARTZ\" is small below the LCD. Large clear seven-segment digits show exactly \"10:08\" at the center of the LCD. Smaller segmented \"WE 24\" sits above the time inside the display. Tiny \"AM\" sits beside the time. All text is English, upright, legible, and correctly spelled.\ncomposition: perfectly front-on, symmetrical face, no angle or perspective. Keep the LCD centered, with generous dark bezel above and below. The center will map to the physical watch face; a separately generated steel material will be used for the band.\nmaterial and quality: photographic late-20th-century watch texture, gray-green liquid crystal display, softened period surface detail suitable for PS2 aesthetics, gently worn black coating and exposed steel, no strong reflected environment or glare.\naspect ratio: 1:1.\nAvoid: strap, bracelet, background, tabletop, hand, wrist, complete rendered watch, rendered perspective, side view, modern smartwatch, OLED screen, touchscreen icons, extra time digits, watermarks, unrelated logos.\n",
+      "original_sha256": "252e9f59307ab00b1e57708f1900f165e7bb7cefd0d21a1f1c4d6f5da7956853",
+      "runtime_sha256": "0b004dc6cf15150a61e93232a1bebfd5f4707896ce8756b63a374244058af6fd",
+      "requested_dimensions": [
+        1024,
+        1024
+      ],
+      "actual_dimensions_note": "Built-in generator returned 1254 x 1254; preserved exactly at parent request.",
+      "image_uv_bounds": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "three_flipY_true": {
+        "offset": [
+          0,
+          0
+        ],
+        "repeat": [
+          1,
+          1
+        ]
+      },
+      "lcd_approx_image_uv_bounds": [
+        0.12,
+        0.29,
+        0.88,
+        0.72
+      ],
+      "text_visual_check": {
+        "strings": [
+          "MERIDIAN",
+          "QUARTZ",
+          "10:08",
+          "WE 24",
+          "AM"
+        ],
+        "result": "All five requested text strings are legible. The LCD letters are segmented. No strap or background."
+      }
+    }
+  ]
+}

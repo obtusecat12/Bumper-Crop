@@ -1,5 +1,7 @@
-import {buildChangingRoom72,CHANGING_POINT_LIGHTS} from './changing-room-v72.js';
-import {createChangingEffects,createChangingMirror} from './changing-effects-v72.js';
+import {createReceptionAtmosphere73} from './reception-furniture-v73.js';
+import {buildChangingRoom72,CHANGING_POINT_LIGHTS} from './changing-room-v72.js?v=73';
+import {createChangingEffects} from './changing-effects-v72.js';
+import {createChangingMirror73} from './changing-mirror-v73.js';
 import {POOL_DOOR} from './bathhouse-plan-v72.js';
 import * as T from './vendor/three.module.min.js';
 import {SPA} from './spa-layout-v66.js';
@@ -7,11 +9,11 @@ import {createSpa,SPA_LIGHTS} from './spa-scene-v66.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {bathTextures} from './bath-textures.js?v=62';
 import {BATH_POOL,SHOWER_HEADS} from './bathhouse-layout.js?v=66';
-import {buildBathRefit} from './bath-v61-interior.js?v=72';
+import {buildBathRefit} from './bath-v61-interior.js?v=73';
 import {showerMaterials} from './bath-v62-materials.js?v=62';
 import {bathRefitMaterials} from './bath-v61-materials.js?v=61';
 import {foldedTowel,propMesh,propRod} from './bathing-props.js?v=60';
-export const BATH_LIGHTS=[{p:[0,2.50,-3.90],color:0xf1f3ec,power:19,range:10},{p:[0,2.73,8.3],color:0xf4e4bb,power:6.5,range:10},{p:[-6.4,2.67,-3.6],color:0xe3efe9,power:11,range:8},{p:[-3.0,2.55,-1.2],color:0xe8e6dc,power:3.5,range:5}];
+export const BATH_LIGHTS=[{p:[0,2.50,-3.90],color:0xf1f3ec,power:19,range:10},{p:[0,2.29,10],color:0xffd398,power:26,range:9},{p:[-6.4,2.67,-3.6],color:0xe3efe9,power:11,range:8},{p:[-3.0,2.55,-1.2],color:0xe8e6dc,power:3.5,range:5,shadow:false}];
 export function bathLabel(text,sub=''){const c=document.createElement('canvas');c.width=768;c.height=256;const g=c.getContext('2d');g.fillStyle='#d9dbcd';g.fillRect(0,0,c.width,c.height);g.fillStyle='#294a47';g.textAlign='center';g.font='bold 62px sans-serif';g.fillText(text,384,108,728);g.font='25px sans-serif';g.fillText(sub,384,178,710);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return new T.MeshStandardMaterial({name:text,map:t,roughness:.8});}
 export function* buildBathhouseSteps(){
  const scene=new T.Scene();scene.name='Level 11 / Baños interior';scene.background=new T.Color(0x080b0a);scene.userData.noAtmosphere=true;
@@ -57,30 +59,30 @@ export function* buildBathhouseSteps(){
  for(const o of root.children){if(!o.isMesh)continue;o.updateMatrix();o.geometry.applyMatrix4(o.matrix);const pp=o.geometry.attributes.position;for(let i=0;i<pp.count;i++)if(pp.getY(i)>0)pp.setY(i,pp.getY(i)*.88);o.geometry.computeVertexNormals();o.position.set(0,0,0);o.rotation.set(0,0,0);o.scale.set(1,1,1);}
  yield{progress:.10,label:'铺设空池与回廊'};
  const refit=buildBathRefit(scene,root,wood);const {clock,presets,streams}=refit;yield{progress:.25,label:'准备前厅与淋浴间'};
- const lockerBuilder=buildChangingRoom72(scene,root);let built;while(!(built=lockerBuilder.next()).done)yield{progress:.30+(built.value.count||13)*.018,label:'准备更衣室'};const changing=built.value,changingFX=createChangingEffects();
- const changingMirror=createChangingMirror(scene,changing.mirror);yield{progress:.60,label:'准备灯光与镜面'};
- const lights=[];for(const l of BATH_LIGHTS){const o=new T.PointLight(l.color,l.power,l.range,2);o.position.fromArray(l.p);o.castShadow=true;o.shadow.mapSize.set(512,512);o.shadow.bias=-.0007;o.shadow.normalBias=.022;o.shadow.camera.near=.08;o.shadow.camera.far=l.range;scene.add(o);lights.push(o);}scene.add(new T.AmbientLight(0xc1ced0,.18));
+ const lockerBuilder=buildChangingRoom72(scene,root);let built;while(!(built=lockerBuilder.next()).done)yield{progress:.30+(built.value.count||13)*.018,label:'准备更衣室'};const changing=built.value,changingFX=createChangingEffects();const receptionAtmosphere=createReceptionAtmosphere73(scene,refit.reception.furnishing.bank);
+ const changingMirror=createChangingMirror73(scene,changing.mirror);yield{progress:.60,label:'准备灯光与镜面'};
+ const lights=[];for(const l of BATH_LIGHTS){const o=new T.PointLight(l.color,l.power,l.range,2);o.position.fromArray(l.p);o.castShadow=l.shadow!==false;o.shadow.mapSize.set(512,512);o.shadow.bias=-.0007;o.shadow.normalBias=.022;o.shadow.camera.near=.08;o.shadow.camera.far=l.range;scene.add(o);lights.push(o);}scene.add(new T.AmbientLight(0xc1ced0,.18));
  // Static material batching keeps the column flutes and balusters affordable.
- root.updateMatrixWorld(true);const groups=new Map(),partsToBatch=[];root.traverse(o=>{if(o.isMesh)partsToBatch.push(o);});
+ root.updateMatrixWorld(true);const groups=new Map(),partsToBatch=[];const spatialBounds=new T.Box3(),spatialCenter=new T.Vector3();root.traverse(o=>{if(o.isMesh)partsToBatch.push(o);});
  const sharedMaterials=new Map();
  for(const o of partsToBatch){const m=o.material;if(!m.isMeshStandardMaterial||m.onBeforeCompile!==T.Material.prototype.onBeforeCompile||m.userData.dynamic)continue;
   const key=JSON.stringify([m.type,m.color.toArray(),m.emissive.toArray(),m.emissiveIntensity,m.roughness,m.metalness,m.opacity,m.transparent,m.depthWrite,m.side,m.alphaTest,m.displacementScale,m.displacementBias,m.normalScale?.toArray(),...['map','normalMap','roughnessMap','metalnessMap','aoMap','displacementMap','emissiveMap'].map(k=>m[k]?.uuid)]);
   if(sharedMaterials.has(key))o.material=sharedMaterials.get(key);else sharedMaterials.set(key,m);
  }let partCount=0;
- for(const o of partsToBatch){if(!groups.has(o.material))groups.set(o.material,[]);const count=o.isInstancedMesh?o.count:1;for(let i=0;i<count;i++){const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone(),matrix=o.matrixWorld.clone();if(o.isInstancedMesh){const instance=new T.Matrix4();o.getMatrixAt(i,instance);matrix.multiply(instance);}g.applyMatrix4(matrix);if(!g.attributes.uv1&&g.attributes.uv)g.setAttribute('uv1',g.attributes.uv.clone());groups.get(o.material).push(g);}if(++partCount%40===0)yield{progress:.61+.10*partCount/partsToBatch.length,label:'整理室内模型'};}
+ for(const o of partsToBatch){spatialBounds.setFromObject(o);spatialBounds.getCenter(spatialCenter);const zone=spatialCenter.z>6.32?'reception':spatialBounds.max.z>.19?'changing':'pool-shower';const key=o.material.uuid+'/'+zone+'/'+o.castShadow;if(!groups.has(key))groups.set(key,{material:o.material,zone,castShadow:o.castShadow,parts:[]});const bucket=groups.get(key).parts;const count=o.isInstancedMesh?o.count:1;for(let i=0;i<count;i++){const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone(),matrix=o.matrixWorld.clone();if(o.isInstancedMesh){const instance=new T.Matrix4();o.getMatrixAt(i,instance);matrix.multiply(instance);}g.applyMatrix4(matrix);if(!g.attributes.uv1&&g.attributes.uv)g.setAttribute('uv1',g.attributes.uv.clone());bucket.push(g);}if(++partCount%40===0)yield{progress:.61+.10*partCount/partsToBatch.length,label:'整理室内模型'};}
  // Shared source geometries are released once after all instances are copied.
  new Set(partsToBatch.map(o=>o.geometry)).forEach(g=>g.dispose());root.clear();let batchCount=0;
- for(const [m,parts]of groups){mesh(mergeGeometries(parts),m,0,0,0,m.name);parts.forEach(g=>g.dispose());if(++batchCount%5===0)yield{progress:.72+.08*batchCount/groups.size,label:'整理室内材质'};}
- const spa=createSpa(scene),showers=scene.userData.showerWater;yield{progress:.94,label:'准备水疗池'};
+ for(const {material:m,zone,castShadow,parts}of groups.values()){const batch=mesh(mergeGeometries(parts),m,0,0,0,m.name+' / '+zone);batch.userData.bathZone=zone;batch.castShadow=castShadow;if(zone!=='pool-shower')batch.layers.enable(5);parts.forEach(g=>g.dispose());if(++batchCount%5===0)yield{progress:.72+.08*batchCount/groups.size,label:'整理室内材质'};}
+ const spa=createSpa(scene),showers=scene.userData.showerWater;scene.traverse(o=>{if(o.isLight||o===changing.fan||o.parent===changing.fan)o.layers.enable(5);});yield{progress:.94,label:'准备水疗池'};
  scene.userData.showerWater={get active(){return showers.active||spa.stats.visible;},prepare(renderer){showers.prepare(renderer);},bind(color,depth,w,h,camera){showers.bind(color,depth,w,h,camera);if(spa.stats.visible)spa.water.bind(color,depth,w,h,camera);}};
  scene.userData.springVolume={compose(renderer,color,depth,camera,w,h){const picture=spa.compose(renderer,color,depth,camera,w,h);return changingFX.compose(renderer,picture,depth,camera,w,h);}};
  let active=false;
- function update(t,player){refit.update(t);spa.update(t,player);changing.update(t);changingFX.setTime(t);lights[2].intensity=BATH_LIGHTS[2].power;}
- function beforeRender(renderer,camera){spa.prepare(renderer,camera);refit.beforeRender(renderer,camera);changingMirror.prepare(renderer,camera,clock.value);}
+ function update(t,player){refit.update(t);spa.update(t,player);changing.update(t);receptionAtmosphere.update(t,player);changingFX.setTime(t);lights[2].intensity=BATH_LIGHTS[2].power;}
+ function beforeRender(renderer,camera){spa.prepare(renderer,camera);refit.beforeRender(renderer,camera);changingMirror.prepare(renderer,camera);}
  function focusDistance(camera,max){const d=new T.Vector3();camera.getWorldDirection(d);for(let t=.25;t<max;t+=.18){const x=camera.position.x+d.x*t,y=camera.position.y+d.y*t,z=camera.position.z+d.z*t,spaZone=x>4.1&&z<5,ceiling=spaZone?3.2:z>6.4?3.05:2.88;if(y<-.99||y>ceiling||z<(spaZone?SPA.z0:-7)||x>(z>6.4?4.9:SPA.x1)||x< -8.35||z>13.77)return t;}return max;}
 
- function dispose(){spa.dispose();refit.dispose();changing.dispose();changingFX.dispose();changingMirror.dispose();const materials=new Set();scene.traverse(o=>{o.geometry?.dispose();if(o.material)materials.add(o.material);});materials.forEach(m=>m.dispose());}
- return{scene,presets,streams,spa,changing,update,beforeRender,focusDistance,dispose,get active(){return active;},set active(v){active=v;}};
+ function dispose(){receptionAtmosphere.dispose();spa.dispose();refit.dispose();changing.dispose();changingFX.dispose();changingMirror.dispose();const materials=new Set();scene.traverse(o=>{o.geometry?.dispose();if(o.material)materials.add(o.material);});materials.forEach(m=>m.dispose());}
+ return{scene,presets,streams,spa,changing,receptionAtmosphere,mirror:changingMirror,update,beforeRender,focusDistance,dispose,get active(){return active;},set active(v){active=v;}};
 }
 
 export function createBathhouse(){const builder=buildBathhouseSteps();let step;while(!(step=builder.next()).done){}return step.value;}

@@ -1,0 +1,33 @@
+{
+  "cameraFov": 78,
+  "renderer": "Chrome / ANGLE SwiftShader software WebGL2; not hardware gameplay FPS",
+  "programsBefore": 168,
+  "programsAfterDoorway": 168,
+  "newDoorwayPrograms": 0,
+  "doorwayCalls": 222,
+  "doorwayTriangles": 694645,
+  "mirrorCalls": 88,
+  "mirrorTriangles": 158968,
+  "sameFrame": {
+    "captures": 2,
+    "timeStepSeconds": 0.016,
+    "firstPosition": [
+      0.4,
+      1.68,
+      2.7
+    ],
+    "nextPosition": [
+      0.48000000000000004,
+      1.68,
+      2.7
+    ],
+    "firstPixelHash": 1456006963,
+    "nextPixelHash": 198029810,
+    "reflectionCameraChanged": true
+  },
+  "offscreenCaptureDelta": 0,
+  "globalClipPlanes": 0,
+  "maxFragmentSamplers": 16,
+  "minimumWebGL2Budget": 16,
+  "passed": true
+}

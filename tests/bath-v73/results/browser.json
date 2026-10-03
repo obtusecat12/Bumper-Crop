@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "renderer": "Chrome 154 / ANGLE SwiftShader software WebGL2",
+  "viewport": [
+    960,
+    720
+  ],
+  "screenshots": [
+    "lobby.png",
+    "sofa.png",
+    "counter.png",
+    "fern.png",
+    "lockers.png",
+    "soap.png",
+    "clothes-watch.png",
+    "watch-closeup.png",
+    "mirror.png",
+    "empty-pool.png"
+  ],
+  "consoleErrors": [],
+  "warnings": [
+    "KHR_parallel_shader_compile extension not supported; synchronous fallback exercised under photo transition"
+  ],
+  "observations": [
+    "Three waiting chairs replaced; one retained on the Persian rug beside the tufted sofa",
+    "Frosted sconce diffusion no longer casts enormous opaque near-source silhouettes",
+    "Tiffany shade connects to chain through a physical closed crown",
+    "Right-front sconce relocated to the front return wall to avoid the original sign",
+    "Original counter, water dispenser, telephone and books retained",
+    "Both upper open lockers have grounded contents, hanging fabric and connected hinges",
+    "Original dry pool and doorway remain visible and geometrically unchanged",
+    "Mirror target pixel hashes change for two successive 16 ms camera poses"
+  ],
+  "limits": [
+    "Harness renders production scene and indoor effects without game HUD/display filter",
+    "Software GPU result, not a measured hardware gameplay frame rate"
+  ]
+}

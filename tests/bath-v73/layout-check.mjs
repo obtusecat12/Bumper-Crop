@@ -1,0 +1,8 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {BATH_ARRIVAL,bathAllowed,bathFloor,resolveBath,BATH_POOL} from '../../dist/bathhouse-layout.js?v=72';
+import {RECEPTION,CHANGING,POOL_DOOR,LOCKER_ROWS} from '../../dist/bathhouse-plan-v72.js';
+const routes={entry:[BATH_ARRIVAL,{x:-2.2,z:11.8},{x:-2.2,z:6.0},{x:-2.2,z:1.65},{x:2.25,z:1.65},{x:2.25,z:-.62}],counter:[BATH_ARRIVAL,{x:3.85,z:12.3},{x:3.85,z:8.0}],shower:[{x:2.25,z:-.62},{x:-2.8,z:-.62},{x:-3.27,z:-1.36},{x:-4.6,z:-1.36},{x:-5.2,z:-2.0}],spa:[{x:2.25,z:-.62},{x:3.15,z:-.62},{x:3.33,z:-1.5},{x:5.6,z:-1.5}]};
+let steps=0;for(const[name,points]of Object.entries(routes)){let last=points[0];assert(bathAllowed(last.x,last.z),name+' start');for(const dest of points.slice(1)){const from=last,n=Math.ceil(Math.hypot(dest.x-from.x,dest.z-from.z)/.035);for(let j=1;j<=n;j++){const q={x:from.x+(dest.x-from.x)*j/n,z:from.z+(dest.z-from.z)*j/n};assert(bathAllowed(q.x,q.z),`${name} blocked at ${JSON.stringify(q)}`);assert.deepEqual(resolveBath(last,q),q,name+' collision');assert.equal(bathFloor(q.x,q.z),0,name+' floor');last=q;steps++;}}}
+for(const p of[{x:2.8,z:9.7},{x:-4.1,z:9.6},{x:-3.55,z:3},{x:3.55,z:4},{x:-1.16,z:3.56},{x:1.35,z:4.42},{x:0,z:.65},{x:0,z:6.4}])assert(!bathAllowed(p.x,p.z),'furniture must block '+JSON.stringify(p));
+const report={passed:true,routeSamples:steps,rooms:{reception:{width:RECEPTION.x1-RECEPTION.x0,length:RECEPTION.z1-RECEPTION.z0},changing:{width:8.2,length:6.24}},lockers:LOCKER_ROWS.reduce((a,b)=>a+b.count*2,0),poolDoor:POOL_DOOR,poolVertices:BATH_POOL.length};fs.writeFileSync(new URL('./results/layout.json',import.meta.url),JSON.stringify(report,null,2));console.log(report);

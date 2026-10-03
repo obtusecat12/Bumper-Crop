@@ -1,0 +1,210 @@
+{
+  "tool": "built-in image_gen__imagegen",
+  "generation_calls": 3,
+  "source_guide_url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "source_guide_copies": [
+    "guide-brass.md",
+    "guide-tiffany.md",
+    "guide-fern.md"
+  ],
+  "prompts": [
+    "prompt-brass.txt",
+    "prompt-tiffany.txt",
+    "prompt-fern.txt"
+  ],
+  "atlas_layout": {
+    "canvas": [
+      1536,
+      1024
+    ],
+    "tile": [
+      512,
+      512
+    ],
+    "top_row": [
+      "basecolor",
+      "normal",
+      "roughness"
+    ],
+    "bottom_row": [
+      "metallic",
+      "ao",
+      "height"
+    ]
+  },
+  "processing": "Original PNGs preserved. Atlas maps cropped directly into lossless WebP; fern encoded to lossless WebP with original alpha. No derived maps, color alterations or resizing.",
+  "assets": [
+    {
+      "file": "brass-ao.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 383286,
+      "sha256": "491a419c4eb4e3eaadd5f7cead9121c05e9005e57d4058d7e26fe3a9340b57b4"
+    },
+    {
+      "file": "brass-atlas.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "bytes": 3778672,
+      "sha256": "711b51ae04c00c214a6cfa9b37051d0efc6c02666f97a723ab9da27903f91f44"
+    },
+    {
+      "file": "brass-basecolor.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 425448,
+      "sha256": "bd280a30b1a93bc86b460c714b391486b99fd4e2d008987379a60733aa6179cf"
+    },
+    {
+      "file": "brass-height.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 388170,
+      "sha256": "907fc9f1c0b12938da11b59a9bc139e44e32e22d99964e7413792601fa786b6d"
+    },
+    {
+      "file": "brass-metallic.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 462210,
+      "sha256": "5ce937bc159884fe12b7768131ce7b446c437b05511ae1119e91cfda6465cfab"
+    },
+    {
+      "file": "brass-normal.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 395828,
+      "sha256": "997e9610f9d02036d5352f42b26f1c18a08d671c3aa3c7d484952a3f85e99ae5"
+    },
+    {
+      "file": "brass-roughness.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 423172,
+      "sha256": "4f05505b49c493b8d83e492f9f5c6ff78449559c6c36b4f1574089065ef0b5c2"
+    },
+    {
+      "file": "fern-fronds.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "bytes": 1679026,
+      "sha256": "3f0c27d0630c4bfd7477ac80cad87a44403216c846bd93c90fc367fff071a860"
+    },
+    {
+      "file": "fern-fronds.webp",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "bytes": 1362382,
+      "sha256": "0133db7ec08f1d9f32e39455820c61d1d116b8e71bcbf208ef18a3a057473a18"
+    },
+    {
+      "file": "tiffany-ao.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 301220,
+      "sha256": "c5d16c53b008bf171d5624a7efe91522a1090372db9a5cc136fc1f0731d33495"
+    },
+    {
+      "file": "tiffany-atlas.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "bytes": 3265667,
+      "sha256": "641d4146c8a90c63f5ace5d6960f70d8edef83b5c1d20f3fa6515b184bd899f8"
+    },
+    {
+      "file": "tiffany-basecolor.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 413356,
+      "sha256": "a33df929847cbcf95b7532611d087c61e97e865701f570e6611c07ba9a006747"
+    },
+    {
+      "file": "tiffany-height.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 321216,
+      "sha256": "fb78501aeebaecbb21d68cac7e50e5500bc94c034ec478db275c795850256c6a"
+    },
+    {
+      "file": "tiffany-metallic.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 326540,
+      "sha256": "1e25a6acd8a5d1678c5c3a801777fbe1674766aa2f8b9ba7345d27349610d657"
+    },
+    {
+      "file": "tiffany-normal.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 364504,
+      "sha256": "e4d488950a278933541301ddd601b48c424b656701166e4c25fdcbe65f2c81af"
+    },
+    {
+      "file": "tiffany-roughness.webp",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "bytes": 326790,
+      "sha256": "2dc5eaab244cfed1290ae7f2e077b310de8d502fc8d77d1a05c43429f2de09cd"
+    }
+  ],
+  "inspection": {
+    "brass": "1536x1024 flush six-map atlas; surface only; directly generated maps visually aligned.",
+    "tiffany": "1536x1024 flush six-map atlas; flat floral leaf strip only; no rendered lamp. Lead and pane boundaries visually aligned across maps. Generated roughness is brighter on glass than lead; tune material roughness in application if desired.",
+    "fern": "Four joined drooping fronds with actual alpha. Requested 1024x1024; built-in returned 1254x1254. Preserved native size and alpha per crop/encode-only restriction. Thin foliage edges include partial alpha; alphaTest is suitable for PS2-style cards.",
+    "fern_alpha": {
+      "minimum": 0,
+      "maximum": 255,
+      "fully_transparent_pixels": 889831,
+      "pixels_alpha_at_least_128": 405917,
+      "canvas_pixels": 1572516
+    }
+  }
+}

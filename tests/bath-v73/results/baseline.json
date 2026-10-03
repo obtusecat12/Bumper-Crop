@@ -1,0 +1,16 @@
+{
+  "version": 72,
+  "renderer": "Chrome154 ANGLE SwiftShader; not hardware FPS",
+  "lobbyPrograms": 108,
+  "firstDoorwayPrograms": 141,
+  "newPrograms": 33,
+  "firstDoorwayCalls": 231,
+  "firstDoorwayTriangles": 865894,
+  "firstDoorwayCpuSubmitMs": 15618,
+  "sourceFindings": [
+    "6.25Hz reflection update cap",
+    "first global clipping shader variant only starts at z<7",
+    "whole-scene reflection",
+    "texture and reflection targets not warmed from changing-room viewpoint"
+  ]
+}

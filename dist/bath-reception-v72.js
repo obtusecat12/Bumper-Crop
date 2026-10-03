@@ -1,3 +1,4 @@
+import {buildReceptionFurniture73} from './reception-furniture-v73.js';
 import * as T from './vendor/three.module.min.js';
 import {addBox,addPlane,addTube} from './bath-v61-materials.js?v=61';
 import {makeDispenser,makeTelephone,makePlasticChair,makeRockPlanter} from './bath-v61-props.js?v=61';
@@ -5,7 +6,7 @@ import {wetFloorMaterial} from './bath-v61-wet.js?v=61';
 import {changingMaterials} from './changing-materials-v72.js';
 import {RECEPTION,LOBBY_DOOR,RECEPTION_COUNTER,WAITING_Z} from './bathhouse-plan-v72.js';
 export function buildReception72(root,m){
- const c=changingMaterials(),floor=wetFloorMaterial(m.floor,{baseWet:.22});
+ const c=changingMaterials();c.glow=c.glow.clone();c.glow.emissive.set(0xffdba1);c.glow.emissiveIntensity=.65;const floor=wetFloorMaterial(m.floor,{baseWet:.22});
  const box=(mat,x,y,z,w,h,d,n='',r=.02)=>addBox(root,mat,x,y,z,w,h,d,n,r),plane=(mat,x,y,z,w,h,ry=0,rx=0,n='')=>addPlane(root,mat,x,y,z,w,h,ry,rx,n);
  box(floor,0,-.09,10,9.6,.18,7.2,'Enlarged continuous reception floor');
  for(const x of[-4.8,4.8]){
@@ -31,11 +32,11 @@ export function buildReception72(root,m){
  cb(m.wood,0,.51,0,2.10,1.02,.77,'Oak reception cabinet',.034);cb(m.dark,0,.052,0,2.05,.105,.72,'Grounded counter plinth');
  for(const x of[-.91,-.32,.28,.88])cb(m.wood,x,.56,.396,.04,.80,.035,'Raised cabinet stile',.009);cb(m.stone,0,1.055,0,2.20,.08,.88,'Worn rounded counter slab',.025);
  const put=(p,x,y,z,ry=0,s=1)=>{p.position.set(x,y,z);p.rotation.y=ry;p.scale.setScalar(s);counter.add(p);};
- const dispenser=makeDispenser(T,m);const lead=dispenser.getObjectByName('Trailing_power_cord');if(lead){lead.removeFromParent();lead.geometry.dispose();}put(dispenser,.64,1.095,.135,0,.91);put(makeTelephone(T,m),-.21,1.095,-.02,-.16,.91);
- for(let i=0;i<3;i++){cb(c.wood,-.81,1.12+i*.045,.09,.27,.043,.34,'Ledger cover');cb(m.plaster,-.81,1.12+i*.045,.12,.25,.031,.29,'Ledger paper',.002);}
+ const dispenser=makeDispenser(T,m);const lead=dispenser.getObjectByName('Trailing_power_cord');if(lead){lead.removeFromParent();lead.geometry.dispose();}put(dispenser,.64,1.095,.135,0,.91);put(makeTelephone(T,m),-.17,1.095,-.19,-.16,.91);
+ for(let i=0;i<3;i++){cb(c.wood,.22,1.12+i*.045,-.25,.27,.043,.34,'Ledger cover');cb(m.plaster,.22,1.12+i*.045,-.22,.25,.031,.29,'Ledger paper',.002);}
  // Actual connected outlet, cable and strain relief for the moved dispenser.
  addBox(root,m.plastic,4.666,.35,10.53,.075,.14,.095,'Wall outlet housing');addBox(root,m.dark,4.617,.35,10.53,.031,.061,.049,'Inserted mains plug');addTube(root,m.dark,[[4.59,.35,10.53],[4.51,.07,10.51],[4.13,.018,10.47],[3.47,.018,10.46],[3.24,.12,10.45],[3.13,.64,10.39],[3.11,1.105,10.43],[2.98,1.11,10.43],[2.84,1.137,10.467],[2.846,1.158,10.455]],.010,'Counter dispenser grounded power cable',30);
- for(const z of WAITING_Z){const chair=makePlasticChair(T,m);chair.position.set(-4.13,0,z);chair.rotation.y=Math.PI/2;chair.scale.setScalar(.94);root.add(chair);}
+ for(const z of [WAITING_Z[3]]){const chair=makePlasticChair(T,m);chair.position.set(-4.13,0,z);chair.rotation.y=Math.PI/2;chair.scale.setScalar(.94);root.add(chair);}
  const planter=makeRockPlanter(T,m);planter.position.set(-3.93,0,12.74);planter.scale.setScalar(.85);root.add(planter);
  plane(m.sign,4.688,2.06,9.35,1.65,.55,-Math.PI/2,0,'Existing generated BAÑOS sign');
  box(m.wood,4.62,1.67,11.11,.12,.87,1.01,'Original key cabinet');
@@ -46,5 +47,5 @@ export function buildReception72(root,m){
  for(let i=0;i<3;i++){const y=.26+i*.28;addBox(rack,c.steel,0,y,-.10,.59,.035,.23,'Newspaper shelf');addBox(rack,c.steel,0,y+.12,.014,.59,.018,.018,'Pocket retaining rail');for(const x of[-.28,0,.28])addTube(rack,c.steel,[[x,y+.01,.01],[x,y+.12,.014]],.007,'Pocket wire',4);
   for(let n=0;n<2;n++){const paper=addPlane(rack,c.paper,-.123+n*.246,y+.155,-.094,.232,.31,0,-.20,'Generated English 2006 broadsheet');paper.rotation.z=(n-.5)*.035;addBox(rack,m.plaster,-.123+n*.246,y+.155,-.103,.232,.009,.295,'Folded newspaper thickness',.002).rotation.x=Math.PI/2-.20;}}
  for(const z of[8.3,11.5]){box(c.steel,0,2.92,z,1.63,.12,.38,'Reception enclosed twin tube trough');for(const x of[-.095,.095]){const t=new T.Mesh(new T.CylinderGeometry(.025,.025,1.43,10),c.glow);t.rotation.z=Math.PI/2;t.position.set(0,2.842,z+x);root.add(t);}}
- return{floor,materials:c};
+ const furnishing=buildReceptionFurniture73(root,counter,m);return{floor,materials:c,furnishing};
 }

@@ -1,3 +1,5 @@
+import {warmBath73} from './bath-warmup-v73.js';
+import {initializeReceptionTextures73} from './reception-materials-v73.js';
 import {createBathLoading,nextPaint} from './bath-loading-v72.js';
 import {initializeChangingTextures} from './changing-materials-v72.js';
 import {atBathExit,inChanging} from './bathhouse-plan-v72.js';
@@ -5,7 +7,7 @@ import {LookInput} from './look-input-v69.js';
 import {initializeCornerTextures} from './backcourt-materials-v71.js';
 import {initializeVendingTextures} from './vending-materials-v70.js';
 import {vendingDrinkName} from './vending-drinks-v70.js';
-import {SHOWER_HEADS} from './bathhouse-layout.js?v=72';
+import {SHOWER_HEADS} from './bathhouse-layout.js?v=73';
 import {initializeSpaTextures} from './spa-materials-v66.js';
 import {inSpaWater} from './spa-layout-v66.js';
 import {createShowerAudio} from './bath-v62-audio.js?v=62';
@@ -16,8 +18,8 @@ import {initializeSpringNPCs} from './level27-npcs-v69.js';
 import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=68';
 import {nearBathEntrance} from './level27-entry.js?v=61';
 import {initializeBathTextures} from './bath-textures.js?v=62';
-import {prepareBathhouse} from './bathhouse-scene.js?v=72';
-import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=72';
+import {prepareBathhouse} from './bathhouse-scene.js?v=73';
+import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=73';
 import {initializeAdvertising} from './advertising-assets.js?v=60';
 import {initializeDistrictTextures} from './clinic-district-materials.js?v=60';
 import {exitForField,exitTeleport,exitPoint,transitionProgress,ease} from './exit-route.js?v=60';
@@ -244,11 +246,11 @@ async function enterBath(){
  if(bathLoading||bathhouse.active)return;bathLoading=true;keys.clear();joy.x=joy.z=0;lookInput.reset(performance.now());
  try{
   await bathTransition.show();bathTransition.progress(3,'正在读取浴室材质');
-  if(!bathhouse.scene){await initializeChangingTextures(null,p=>bathTransition.progress(3+p*25,'正在读取更衣室材质'));await nextPaint();bathhouse=await prepareBathhouse((p,text)=>bathTransition.progress(28+p*39,text));}
+  if(!bathhouse.scene){const loaded=[0,0],progress=(i,v)=>{loaded[i]=v;bathTransition.progress(3+(loaded[0]+loaded[1])*12.5,'正在读取浴室材质');};await Promise.all([initializeChangingTextures(null,p=>progress(0,p)),initializeReceptionTextures73(null,p=>progress(1,p))]);await nextPaint();bathhouse=await prepareBathhouse((p,text)=>bathTransition.progress(28+p*39,text));}
   bathOrigin={level:state.level,cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch};bathhouse.active=true;bathShadowType=renderer.shadowMap.type;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.type=T.PCFSoftShadowMap;state.cx=state.cz=0n;Object.assign(state,BATH_ARRIVAL);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=0;eyelids.style.opacity='0';
   lensWater.reset();waterState.reset();bodyWater.reset();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);waterPipeline.focus.setSceneQuery(bathhouse.focusDistance);camera.far=32;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);bathhouse.update(bathTime,state);
   bathTransition.progress(70,'正在准备室内灯光');await nextPaint();await renderer.compileAsync(bathhouse.scene,camera);
-  bathTransition.progress(83,'正在准备玻璃与倒影');await nextPaint();renderer.shadowMap.needsUpdate=true;bathhouse.beforeRender(renderer,camera);await renderer.compileAsync(bathhouse.scene,camera);
+  bathTransition.progress(83,'正在准备玻璃与倒影');await nextPaint();renderer.shadowMap.needsUpdate=true;bathhouse.beforeRender(renderer,camera);await renderer.compileAsync(bathhouse.scene,camera);await warmBath73(bathhouse,renderer,camera,(p,text)=>bathTransition.progress(83+p*11,text));
   bathTransition.progress(95,'正在打开前厅');await nextPaint();waterPipeline.setBathSteam(0);waterPipeline.update(0,camera,state,false,false,bathhouse.scene.background,new T.Vector3(0,1,0),0,-10);displayFilter.render(bathhouse.scene,camera,performance.now());await nextPaint();
   renderer.domElement.setAttribute('aria-label','Baños 浴室 · 前厅、更衣室、空浴池与淋浴间');keys.clear();joy.x=joy.z=0;lookInput.reset(performance.now(),{locked:document.pointerLockElement===renderer.domElement});await bathTransition.finish();bathLoading=false;lastFrame=performance.now();toast('前厅左侧进入更衣室，向前走后从右侧门进入空浴池。');
  }catch(error){console.error('Bath entry failed',error);if(bathhouse.active)leaveBath(false);bathTransition.fail(()=>{bathLoading=false;keys.clear();lookInput.reset(performance.now());lastFrame=performance.now();});}

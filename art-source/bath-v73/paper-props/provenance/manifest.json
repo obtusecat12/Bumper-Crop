@@ -1,0 +1,104 @@
+{
+  "created_utc": "2026-10-03T04:15:52.968175+00:00",
+  "generator": "built-in image_gen.imagegen",
+  "generation_calls": 4,
+  "guide_url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "guide_modified_date": "2026-05-01T06:47:53Z",
+  "guide_retrieval": "Fresh approved GitHub fetch call before each generation; complete returned text independently read and saved. Shell proxy and search open failed before successful first fetch.",
+  "postprocessing": "Originals retained without change. WebP copies resized to requested dimensions using Lanczos where necessary; magazine WebP quality 94, register quality 96, ashtray lossless RGBA. No painting, compositing, recoloring or generated content replacement.",
+  "assets": [
+    {
+      "filename": "magazine-weekend-away-1994.webp",
+      "dimensions": [
+        768,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "0f1d4cc5d7f5fdab32139d2b9d77ce0ce6791e6f5531aa8b1f0fc4fe924c3f2e",
+      "original_filename": "magazine-weekend-away-1994.original.png",
+      "original_dimensions": [
+        1086,
+        1448
+      ],
+      "original_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-94e97821-cb43-479c-9bd5-03331a29bc23.png",
+      "prompt": "provenance/prompt-01-weekend-away.txt",
+      "guide": "provenance/guide-01-weekend-away.md",
+      "text_visually_verified": [
+        "WEEKEND / AWAY",
+        "JUNE 1994",
+        "$2.95"
+      ]
+    },
+    {
+      "filename": "magazine-room-home-1997.webp",
+      "dimensions": [
+        768,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "1e6ad45d6998337f4548339943322643c93306acf1a1a5b2d98a2d6f5007ca61",
+      "original_filename": "magazine-room-home-1997.original.png",
+      "original_dimensions": [
+        1086,
+        1448
+      ],
+      "original_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-c4c418db-d952-44a8-b7b4-b84bd26c2f1c.png",
+      "prompt": "provenance/prompt-02-room-home.txt",
+      "guide": "provenance/guide-02-room-home.md",
+      "text_visually_verified": [
+        "ROOM & HOME",
+        "OCTOBER 1997"
+      ]
+    },
+    {
+      "filename": "guest-register-spread.webp",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "aec2dc2e1e2a0cbb577230d970a732dd41bb89f6425f11324d4e34c28eb7e1ee",
+      "original_filename": "guest-register-spread.original.png",
+      "original_dimensions": [
+        1536,
+        1024
+      ],
+      "original_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-955d682b-7871-4386-9c86-7333a0e0ba62.png",
+      "prompt": "provenance/prompt-03-guest-register.txt",
+      "guide": "provenance/guide-03-guest-register.md",
+      "text_visually_verified": [
+        "GUEST REGISTER",
+        "DATE",
+        "NAME",
+        "ROOM",
+        "SIGNATURE"
+      ],
+      "uv_note": "Two page halves split at u=0.5; flat texture, no book body. Seven fictional cursive entries; generated entry dates are June 1926."
+    },
+    {
+      "filename": "ashtray-contents.webp",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "sha256": "e874b5ea24706f1700fd0ab59bfe8f6927f3e6048898110a6b317786d1f403dd",
+      "original_filename": "ashtray-contents.original.png",
+      "original_dimensions": [
+        1254,
+        1254
+      ],
+      "original_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-786b20ed-e6ea-47d2-80fe-8b22d4ed6f14.png",
+      "prompt": "provenance/prompt-04-ashtray.txt",
+      "guide": "provenance/guide-04-ashtray.md",
+      "text_visually_verified": [],
+      "transparent_background_requested": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_preserved_in_webp": true,
+      "five_butts_visually_verified": true
+    }
+  ]
+}

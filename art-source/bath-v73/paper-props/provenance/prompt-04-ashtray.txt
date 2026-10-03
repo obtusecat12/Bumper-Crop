@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: A small top-down ashtray-contents albedo texture for the top surface of a physical glass ashtray in a retro European bathhouse lobby game scene.
+subject: One circular clear thick-glass ashtray dish, centered in the image, containing faint gray ash and exactly five unequally burned, fully extinguished cigarette butts. The five butts have different remaining lengths and lie irregularly at different angles, with naturally crushed burned ends. No brands.
+composition: Strict straight-down orthographic top view. The round ashtray is fully visible and centered with only a small transparent margin. Circular top surface, not an oblique product photograph. Keep all ash and five cigarette butts within the dish.
+materials: Clear thick glass with restrained rim highlights; faint gray ash; stained paper and tan cigarette filters; realistic photographic surface detail suitable for a small PS2-era photographic environment texture.
+background: Genuine transparent alpha outside the circular dish, with alpha retained in the clear areas of the glass. No tabletop, floor, environment or photographic backdrop. No painted checkerboard.
+lighting: Soft neutral even illumination, restrained surface shading and reflections, no cast shadow outside the dish.
+aspect ratio: 1:1 square.
+output size: 1024 x 1024 pixels.
+Avoid: Smoke, embers, flames, hands, people, brands, logos, text, extra cigarettes, large background, opaque square background, perspective, overly sharpened detail, studio glare.

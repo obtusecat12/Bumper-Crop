@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: retro digital watch face texture for a 1980s rectangular steel electronic wristwatch in a PS2 photographic low-poly bath locker.
+asset format: one 1024 x 1024 pixel square front orthographic texture crop. The worn watch face and its dark bezel perimeter fill the entire canvas edge to edge. This is flat front-surface texture artwork for a 3D model.
+face design: period-correct rectangular electronic watch with a gray-green monochrome segmented LCD. A worn dark bezel surrounds the display. Silver steel shows through chipped black coating around the perimeter, with restrained scratches and believable age.
+text, verbatim: "MERIDIAN", "QUARTZ", "10:08", "WE 24", "AM".
+text placement: "MERIDIAN" is small, crisp 1980s watch branding above the LCD. "QUARTZ" is small below the LCD. Large clear seven-segment digits show exactly "10:08" at the center of the LCD. Smaller segmented "WE 24" sits above the time inside the display. Tiny "AM" sits beside the time. All text is English, upright, legible, and correctly spelled.
+composition: perfectly front-on, symmetrical face, no angle or perspective. Keep the LCD centered, with generous dark bezel above and below. The center will map to the physical watch face; a separately generated steel material will be used for the band.
+material and quality: photographic late-20th-century watch texture, gray-green liquid crystal display, softened period surface detail suitable for PS2 aesthetics, gently worn black coating and exposed steel, no strong reflected environment or glare.
+aspect ratio: 1:1.
+Avoid: strap, bracelet, background, tabletop, hand, wrist, complete rendered watch, rendered perspective, side view, modern smartwatch, OLED screen, touchscreen icons, extra time digits, watermarks, unrelated logos.

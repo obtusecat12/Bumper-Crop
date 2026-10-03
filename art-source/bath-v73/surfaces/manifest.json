@@ -1,0 +1,387 @@
+{
+  "schema_version": 1,
+  "asset_set": "v73 bath reception surface atlases",
+  "directory": "/workspace/scratch/85111d38430a/v73-assets/surfaces",
+  "generator": {
+    "tool": "image_gen.imagegen",
+    "mode": "built-in generation",
+    "independent_calls": 3,
+    "channel_provenance": "Every channel panel was image-generated in its corresponding atlas. No procedural normal, roughness, metallic, AO or height derivation was performed.",
+    "postprocessing": "Original PNGs copied unchanged. Pillow crop at exact 512-pixel grid; lossless WebP encoding only. No retouching or resampling."
+  },
+  "guide": {
+    "url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+    "procedure": "Fresh guide separately downloaded with curl and read before each of the three generation calls; exact guide copies retained per asset."
+  },
+  "atlas_size_px": [
+    1536,
+    1024
+  ],
+  "tile_size_px": [
+    512,
+    512
+  ],
+  "grid": {
+    "columns": 3,
+    "rows": 2,
+    "top": [
+      "basecolor",
+      "normal",
+      "roughness"
+    ],
+    "bottom": [
+      "metallic",
+      "ao",
+      "height"
+    ]
+  },
+  "color_space": {
+    "basecolor": "sRGB",
+    "normal": "linear / NoColorSpace",
+    "roughness": "linear / NoColorSpace",
+    "metallic": "linear / NoColorSpace",
+    "ao": "linear / NoColorSpace",
+    "height": "linear / NoColorSpace"
+  },
+  "normal_convention_requested": "OpenGL tangent space (+Y)",
+  "visual_validation": "All three atlases inspected at generation output. Six correctly ordered panels, no text or labels. Natural photographic materials; full rug with no repeating-fragment crop. Exact image dimensions and lossless export pixel identity mechanically checked. Seamlessness and perfect physical cross-channel registration are generative intents, not measured guarantees.",
+  "assets": {
+    "leather": {
+      "atlas": "leather-atlas.png",
+      "original_generator_output": "/workspace/scratch/85111d38430a/generated_images/exec-7ff70fef-f624-4dbf-b768-0e01ef800fe0.png",
+      "prompt_file": "leather-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: six-channel physically based texture atlas for aged dark bottle-green / forest-green Chesterfield leather in a photographic PlayStation 2 era bathhouse reception environment.\nsubject: a flat seamless leather surface, fine natural leather grain, fine creasing, restrained oil-polished contact marks and subtle age variation. Geometry will supply all sofa shape and tufting; this image contains only the leather material surface.\nstyle: natural photographic material texture with restrained low-resolution game realism, not pixel art. Neutral albedo without baked directional lighting, highlights, cast shadows or ambient illumination gradients.\nlayout: output exactly 1536 pixels wide by 1024 pixels high, aspect ratio 3:2. Exactly six contiguous square 512-by-512 pixel panels in a precise 3-column by 2-row grid. No gutters, no borders, no headings, no captions, no panel labels. The six panels show precisely the same material patch with identical grain and crease positions and scale.\npanel positions: upper left (x 0\u2013511, y 0\u2013511) BaseColor; upper middle (x 512\u20131023, y 0\u2013511) tangent-space Normal; upper right (x 1024\u20131535, y 0\u2013511) Roughness. Lower left (x 0\u2013511, y 512\u20131023) Metallic; lower middle (x 512\u20131023, y 512\u20131023) Ambient Occlusion; lower right (x 1024\u20131535, y 512\u20131023) Height.\nchannel appearance: BaseColor is deeply colored muted bottle/forest green leather with fine photographic pores and creases, never gray or black. Normal is an OpenGL tangent-space purple-blue normal map, flat value approximately RGB 128,128,255, with low-relief fine grain and shallow creases. Roughness is a grayscale map, medium-gray polished leather with locally darker smooth contact areas and slightly lighter fine creases. Metallic is solid black because leather is nonmetal. Ambient Occlusion is predominantly white with delicate darkening only in matching tiny crevices. Height is mid-gray with subtly brighter raised grain and darker fine creases. All six channel images must be generated directly and correspond spatially.\nframing: orthographic flat texture scan, edge-to-edge material, no perspective, seamless wrap in both directions; one square patch represents approximately 0.6 by 0.6 meters.\nAvoid: pictured sofa, tuft buttons, quilting diamonds, upholstery seams, pictured objects or furniture, deep folds, neon green, excessive yellow, pixel-art blocks, excessive sharpness, exaggerated cracks, glare, text, borders, labels, watermarks.\n",
+      "guide_copy": "leather-guide.md",
+      "guide_sha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+      "material_usage": {
+        "world_scale_m": [
+          0.6,
+          0.6
+        ],
+        "wrap": "RepeatWrapping",
+        "normal_scale_suggested": 0.15,
+        "ao_intensity_suggested": 0.2,
+        "metalness": 0,
+        "notes": "Dark bottle/forest green natural leather grain and shallow creases. Geometry must provide tufting, no tuft buttons baked into texture."
+      },
+      "maps": {
+        "basecolor": {
+          "filename": "leather-basecolor.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "bytes": 371244,
+          "sha256": "a6c1c869419ddcc909f51a315abff4dee4ba76dfeec067ec0a6e94658c932df4"
+        },
+        "normal": {
+          "filename": "leather-normal.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "bytes": 437188,
+          "sha256": "be32b2c5165ea294cda7ef804e73aa7baba4ea4a669d69a2f31582d50702bf83"
+        },
+        "roughness": {
+          "filename": "leather-roughness.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "bytes": 391514,
+          "sha256": "81a7ecb7ee1f122b74fce060464ec059aedcb7b139bb7cb2f009606db8f7e076"
+        },
+        "metallic": {
+          "filename": "leather-metallic.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "bytes": 28920,
+          "sha256": "ab5b97acc3b2cc16f28d5300e971840b781d5b26c4a32d78d50baa9b56e6e5a4"
+        },
+        "ao": {
+          "filename": "leather-ao.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "bytes": 362858,
+          "sha256": "418c96a17c9e429de644b82d0aedb7ee4b9cbe1d9357dc3ed31aef0abc4e4ec1"
+        },
+        "height": {
+          "filename": "leather-height.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "bytes": 354496,
+          "sha256": "aafe25a040876ee0a1a3b776e5bf751f5143a7fade6444b2988b4f713da46276"
+        }
+      }
+    },
+    "rug": {
+      "atlas": "rug-atlas.png",
+      "original_generator_output": "/workspace/scratch/85111d38430a/generated_images/exec-4e70062c-c71a-4558-b472-1e91c2edf392.png",
+      "prompt_file": "rug-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: six-channel physically based atlas of one COMPLETE rectangular Persian rug for a photographic PlayStation 2 era bathhouse reception environment.\nsubject: full top-down Persian rug, 3:2 width-to-height shape, intricate and highly legible muted burgundy, ochre and cream geometric pattern, complete decorative outer border on every side, natural wear, worn short cream fringe on the left and right short ends. Include the entire rug, all corners, all borders, and all fringe. This is a whole rug, never a repeating fragment or a cropped pattern.\nUV encoding: the full 3:2 rectangular rug is horizontally compressed into each square 512-by-512 map so that applying the map once across a 2.7 by 1.8 meter rectangular mesh restores the correct 3:2 physical rug shape. Each square panel must contain exactly the same entire rug, edge to edge, with fringe at the left and right. Avoid a large exterior margin; only tiny dark gaps between fringe strands are allowed. No floor or surrounding scene.\nstyle: flat photographic textile scan, naturally worn woven fibers, intricate readable geometry, restrained photographic PS2 game texture quality, not pixel art. Base color contains neutral material color without baked lights, cast shadows, directional shading or glare.\nlayout: output exactly 1536 pixels wide by 1024 pixels high, aspect ratio 3:2. Exactly six contiguous square 512-by-512 pixel panels in a precise 3-column by 2-row grid. No gutters, no borders between panels, no headings, no captions, no panel labels. The six panels show precisely the same complete rug with identical pattern, fringe, edge, and wear positions.\npanel positions: upper left (x 0\u2013511, y 0\u2013511) BaseColor; upper middle (x 512\u20131023, y 0\u2013511) tangent-space Normal; upper right (x 1024\u20131535, y 0\u2013511) Roughness. Lower left (x 0\u2013511, y 512\u20131023) Metallic; lower middle (x 512\u20131023, y 512\u20131023) Ambient Occlusion; lower right (x 1024\u20131535, y 512\u20131023) Height.\nchannel appearance: BaseColor has a balanced detailed burgundy central field, muted ochre and cream geometric medallion motifs and complete richly patterned border. Normal is an OpenGL tangent-space purple-blue normal map, flat value approximately RGB 128,128,255, containing only tiny textile relief, worn pile and short fringe details, not deeply embossed color motifs. Roughness is a predominantly light-gray grayscale textile map with subtle wear variation. Metallic is solid black because wool textile is nonmetal. Ambient Occlusion is predominantly white with restrained crevice darkening among matching weave and fringe. Height is gray with subtle pile variation and matching fringe, slight brighter intact fibers, never bold relief of printed colors. All six channel images must be generated directly and correspond spatially.\nframing: exact orthographic overhead scan, zero perspective, full rug visible, use once without repeating; material mapped to the full 2.7 by 1.8 meter rug.\nAvoid: cropped border, missing corners, partial rug, infinite rug pattern, multiple rugs within one map, furniture, floor, room, large black exterior mask, text, labels, watermarks, oblique camera, cartoon or pixel-art blocks, excessive yellow, oversharpening, excessive highlights.\n",
+      "guide_copy": "rug-guide.md",
+      "guide_sha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+      "material_usage": {
+        "world_scale_m": [
+          2.7,
+          1.8
+        ],
+        "wrap": "ClampToEdgeWrapping",
+        "repeat": [
+          1,
+          1
+        ],
+        "normal_scale_suggested": 0.06,
+        "ao_intensity_suggested": 0.15,
+        "metalness": 0,
+        "notes": "Complete rug encoded into square UV tile. Map once onto a 2.7 by 1.8 m rectangle to restore its 3:2 world aspect. All corners, borders and left/right short fringe are visible. Small dark gaps around fringe are opaque. Generated roughness/AO follow pattern more strongly than ideal textile microstructure; keep normal and AO contribution restrained, keep rug visually rough. Metallic panel has faint gray fringe; material metalness=0 preserves nonmetal behavior."
+      },
+      "maps": {
+        "basecolor": {
+          "filename": "rug-basecolor.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "bytes": 463512,
+          "sha256": "4edcb36a9e4de2d0e58405eaab26275462142af453cb1a1f8b699c8586a1a1a3"
+        },
+        "normal": {
+          "filename": "rug-normal.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "bytes": 451880,
+          "sha256": "33e78c85dd395ee2a404586117f5112ba704c7bec176b58b2f67c5fdc03cd1fe"
+        },
+        "roughness": {
+          "filename": "rug-roughness.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "bytes": 449780,
+          "sha256": "06270f6191376e868dab6d7425561a94db4dfdda2fab8137237e3a637bf11779"
+        },
+        "metallic": {
+          "filename": "rug-metallic.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "bytes": 57420,
+          "sha256": "f74873bd84780b20b6ecf8184eec47cab0129277143364727961f889ade64cec"
+        },
+        "ao": {
+          "filename": "rug-ao.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "bytes": 452060,
+          "sha256": "7ec41fc8be1f80943c6d251b0ffd9939d5fb1c4f5e5f761abc98fe751eea20f4"
+        },
+        "height": {
+          "filename": "rug-height.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "bytes": 427974,
+          "sha256": "50b6161cee99fda14c0390ce376c0624bf29f807ca8dc0d3c221a248575ed35c"
+        }
+      }
+    },
+    "walnut": {
+      "atlas": "walnut-atlas.png",
+      "original_generator_output": "/workspace/scratch/85111d38430a/generated_images/exec-985f1325-da75-4c83-8dfb-c20223b9afab.png",
+      "prompt_file": "walnut-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: six-channel physically based texture atlas of dark polished European walnut for aged carved wood surfaces in a photographic PlayStation 2 era bathhouse reception environment.\nsubject: seamless dark European walnut material, horizontal flowing natural wood grain from left to right, low subtle patina, old polished finish, restrained fine pores and shallow worn carving-tool surface traces. Only the flat material surface is shown; furniture or architectural carving shapes are supplied by geometry.\nstyle: neutral photographic material scan with restrained PS2-era realistic texture fidelity, not pixel art. Dark rich muted walnut-brown albedo with balanced grain detail, no baked directional light, specular highlight, cast shadow or lighting gradient.\nlayout: output exactly 1536 pixels wide by 1024 pixels high, aspect ratio 3:2. Exactly six contiguous square 512-by-512 pixel panels in a precise 3-column by 2-row grid. No gutters, no borders, no headings, no captions, no panel labels. The six panels show precisely the same material patch with identical grain, pores, wear, and patina positions and scale.\npanel positions: upper left (x 0\u2013511, y 0\u2013511) BaseColor; upper middle (x 512\u20131023, y 0\u2013511) tangent-space Normal; upper right (x 1024\u20131535, y 0\u2013511) Roughness. Lower left (x 0\u2013511, y 512\u20131023) Metallic; lower middle (x 512\u20131023, y 512\u20131023) Ambient Occlusion; lower right (x 1024\u20131535, y 512\u20131023) Height.\nchannel appearance: BaseColor is rich dark brown European walnut with subtle horizontal flowing grain and restrained age, no shiny baked reflection. Normal is an OpenGL tangent-space purple-blue normal map, flat value approximately RGB 128,128,255, with shallow pores and very subtle grain relief. Roughness is a grayscale medium-dark map for polished aged wood, subtle lighter rough pores and wear with no stark variation. Metallic is solid black because wood is nonmetal. Ambient Occlusion is predominantly white with delicate darkening only in the matching smallest wood pores. Height is mid-gray with subtly lighter raised grain and darker shallow pores. All six channel images must be generated directly and correspond spatially.\nframing: perfectly flat orthographic material scan, edge-to-edge wood surface, horizontal grain across the whole tile, seamless wrap in both directions; one square patch represents approximately 0.8 by 0.8 meters.\nAvoid: pictured furniture, carved object silhouettes, strong carved ornament patterns, large knots, plank divisions, panel seams, nails, gaps, excessive scratches, distressed white paint, high orange or yellow saturation, glare, baked light, pixel-art blocks, excessive sharpness, text, borders, labels, watermarks.\n",
+      "guide_copy": "walnut-guide.md",
+      "guide_sha256": "ab5c01f6ef0bb080617de589661ae3b5a655a73a67dde5523e12f8ac5f9d58f0",
+      "material_usage": {
+        "world_scale_m": [
+          0.8,
+          0.8
+        ],
+        "wrap": "RepeatWrapping",
+        "normal_scale_suggested": 0.08,
+        "ao_intensity_suggested": 0.15,
+        "metalness": 0,
+        "notes": "Dark polished European walnut, predominantly horizontal grain, subtle aged patina. Material only; no furniture silhouettes or ornament shapes."
+      },
+      "maps": {
+        "basecolor": {
+          "filename": "walnut-basecolor.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "bytes": 293218,
+          "sha256": "91635ae2a2e71861c5869c21fe4e4e4db54b9b271a7ac5c9c12faf8c6b6bd2b6"
+        },
+        "normal": {
+          "filename": "walnut-normal.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "bytes": 366804,
+          "sha256": "d90ebcd1cecc8ca18715910385e0dc8401af2b614e494757721b253e86033ee3"
+        },
+        "roughness": {
+          "filename": "walnut-roughness.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "bytes": 290844,
+          "sha256": "adb7907b19f1a2f02224931acbc254021428f0fee6cd9d31faa9d53a47efa27a"
+        },
+        "metallic": {
+          "filename": "walnut-metallic.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "bytes": 43868,
+          "sha256": "3db1b6df1618087e3144c7356b638d439788cec6138eb24cb25de2513bdc4ba5"
+        },
+        "ao": {
+          "filename": "walnut-ao.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "bytes": 283168,
+          "sha256": "0b9b7e55fe89fbe0c98bec3514f756df825e76047b502039c1229ef75c78546d"
+        },
+        "height": {
+          "filename": "walnut-height.webp",
+          "dimensions_px": [
+            512,
+            512
+          ],
+          "source_crop_xyxy": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "bytes": 266400,
+          "sha256": "c4044575c46faafb500e8834e6617d4df03cd55b8b7242060c7508ffb0e95000"
+        }
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import {loungeBlocked73,OPEN_LOCKERS73} from './reception-plan-v73.js';
 // Metres. The original dry pool and all showers keep their surveyed positions.
 // New path: street -> large reception -> left door -> changing -> right pool door.
 export const RECEPTION={x0:-4.8,x1:4.8,z0:6.4,z1:13.6,ceiling:3.05};
@@ -17,12 +18,14 @@ export function newBathAllowed(x,z){
  if(Math.abs(z-LOBBY_DOOR.z)<.30&&Math.abs(x-LOBBY_DOOR.x)>LOBBY_DOOR.width/2-.21)return false;
  if(inReception(x,z)&&z>6.69){
   if(Math.abs(x-2.8)<.66&&Math.abs(z-9.7)<1.30)return false;
-  if(x< -3.56&&z>8.03&&z<12.21)return false;
+  if(x< -3.56&&z>11.23&&z<12.21)return false;
+  if(loungeBlocked73(x,z))return false;
   if(Math.hypot(x+3.93,z-12.74)<.58)return false;
   if(x< -3.16&&z>6.91&&z<7.91)return false;
  }
  if(inChanging(x,z)&&z<6.12){
   if(x< -3.15&&z>1.73&&z<5.31)return false;
+  for(const door of OPEN_LOCKERS73){const hingeZ=LOCKER_ROWS[0].z+(door.column-(LOCKER_ROWS[0].count-1)/2)*.432+.191;if(x< -2.96&&x> -3.55&&Math.abs(z-hingeZ)<.25)return false;}
   if(x>3.15&&z>3.14&&z<5.5)return false;
   for(const b of BENCHES)if(Math.abs(x-b.x)<.46&&Math.abs(z-b.z)<b.length/2+.21)return false;
   if(x>-.35&&x<1.51&&z<1.07)return false;

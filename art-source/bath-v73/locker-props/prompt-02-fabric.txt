@@ -1,0 +1,16 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: seamless thin off-white cotton shirt fabric with pale blue woven stripes, subtle restrained wear and textile grain, for a PS2 photographic low-poly bath locker shirt.
+asset format: exactly one 1536 x 1024 pixel image containing six coordinated material maps in a precise 3-column by 2-row atlas. Every tile is exactly 512 x 512 pixels. No spacing, no gutters, no borders, no labels. Vertical tile boundaries are x=512 and x=1024; horizontal tile boundary is y=512.
+top row from left to right: base color, tangent-space normal, roughness.
+bottom row from left to right: metallic, ambient occlusion, height.
+top-left base color: flat evenly lit off-white thin woven cotton, narrow pale blue vertical yarn-dyed stripes, visibly fine woven fibers, restrained wear, seamless repeating pattern. Color information only, no highlights or shadows.
+top-middle normal: the exact same fabric weave encoded as a conventional purple-blue tangent-space normal map, centered on RGB 128,128,255; shallow yarn detail only, no large folds.
+top-right roughness: matching grayscale roughness map, high roughness for matte cotton, mostly light gray with restrained fine fiber variation, white means rough.
+bottom-left metallic: solid black, since cotton is nonmetallic.
+bottom-middle ambient occlusion: mostly white, with only subtle gray contact occlusion between tiny woven fibers; no broad shadows.
+bottom-right height: grayscale fine woven fiber relief, middle gray average, white means higher and black means lower, no large folds.
+map alignment: all six tiles depict the same seamless aligned textile area. Thin vertical stripes continue without a seam at all edges. Texture-map data only, no sphere previews or physical fabric samples.
+style: photographic period fabric texture suitable for PS2 aesthetics. Actual shirt folds will be made in geometry, so the maps contain only restrained cloth grain and shallow fiber wear.
+aspect ratio: 3:2.
+Avoid: printed shirt silhouette, physical garment, buttons, collars, large wrinkles, baked lighting or shadows, perspective, rendered objects, text, map-name labels, watermarks, grids, borders, gaps.

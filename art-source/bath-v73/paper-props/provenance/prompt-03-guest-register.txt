@@ -1,0 +1,12 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: A flat two-page paper albedo texture for an open aged bathhouse visitor register. The texture will be mapped onto physically curled book pages in a Three.js scene.
+subject: Two adjacent aged paper pages, left page and right page, with a subtle straight center fold exactly halfway across the image. Ruled paper, thin registration columns, a few faded fictional cursive visitor entries and mostly empty lines.
+printed text: The exact heading "GUEST REGISTER" at the top of each page. Beneath each heading are four thin ruled columns labelled exactly "DATE", "NAME", "ROOM", "SIGNATURE" in that order. The typography is small, simple, period printed lettering. Render every printed word legibly and correctly.
+handwriting: Only a few faded, fictional cursive names, dates, room numbers and signatures occupying early rows; the majority of the ruled rows are empty.
+materials: Cream paper, yellowed worn edges, shallow paper creases, slight age spotting and faded ink. Photographic scanned-paper realism suitable for a retro European bathhouse lobby, with restrained PS2-era photographic texture character.
+composition: Full top-down orthographic view of the two flat page surfaces only. The two pages together fill the entire rectangular texture edge to edge. No book body, no cover, no exposed page stack, no page curl geometry, no tabletop or surrounding scene. Do not render the physical book; render only its flat paper surface texture.
+lighting: Even neutral surface light, minimal baked shadows, no perspective.
+aspect ratio: 3:2 landscape.
+output size: 1536 x 1024 pixels.
+Avoid: Hands, pens, objects, people, real personal information, watermarks, perspective, rendered book thickness, dark gutter shadow, extra headings, excessive yellow, oversharpening.

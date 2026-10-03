@@ -1,0 +1,8 @@
+{
+  "component": "Three.js Reflector",
+  "version": "r180",
+  "source": "https://raw.githubusercontent.com/mrdoob/three.js/r180/examples/jsm/objects/Reflector.js",
+  "license": "MIT; see three-MIT.txt",
+  "local_file": "dist/vendor/Reflector.js",
+  "modification": "The bare three import is changed to ./three.module.min.js. Implementation is otherwise unchanged."
+}

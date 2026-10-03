@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: A single complete front-cover texture for a fictional 1994 American travel magazine, for a European retro bathhouse lobby game prop.
+subject: An aged printed magazine cover with the exact masthead "WEEKEND / AWAY", the date "JUNE 1994", and a small "$2.95" price.
+cover photograph: A faded, actual-1990s-looking photograph of a deserted Mediterranean spa hotel's indoor swimming pool. Quiet pale stone and tile, still pool water, period hotel architecture, no people. The photograph must look optically photographed and printed on paper, with natural light from the location, soft imperfect analog detail and muted printed colors.
+cover typography: Coherent American travel-magazine cover typography from 1994. A prominent clean editorial masthead reading exactly "WEEKEND / AWAY", with "JUNE 1994" and "$2.95" small and legible. All print sits on the cover photograph in a restrained period layout. No additional cover text.
+composition: The flat rectangular front cover fills the entire image edge to edge. Full-bleed photograph. No surrounding border, no table, no visible book thickness, no perspective or photographed object mockup.
+materials: Faded paper print, restrained tiny scuffs and worn edges, slight print grain. Photographic PS2-era environment-texture visual language, not an illustration and not a CGI render.
+aspect ratio: 3:4 portrait.
+output size: 768 x 1024 pixels.
+Avoid: People, hands, extra objects outside the cover, watermarks, unrelated logos, present-day design, artificial studio gloss, oversharpening, excessive yellow, strong glare, borders, perspective.

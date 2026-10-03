@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: A single complete front-cover texture for a fictional 1997 home design magazine, for a European retro bathhouse lobby game prop.
+subject: An aged printed magazine cover with the exact masthead "ROOM & HOME" and the date "OCTOBER 1997".
+cover photograph: A warm, quiet conservatory lounge with a fern and wicker furniture. The room is empty. The cover photograph looks like an actual 1990s interiors photograph reproduced on magazine paper, with natural light from the conservatory, soft imperfect analog detail and slightly faded printed colors.
+cover typography: Coherent home design magazine typography and restrained editorial layout from 1997. The masthead reads exactly "ROOM & HOME", and the date "OCTOBER 1997" is small and legible. A period home-interiors cover design with no additional cover text.
+composition: The flat rectangular front cover fills the entire image edge to edge. Full-bleed cover photograph. No border, no surrounding tabletop, no visible magazine thickness, no perspective or photographed object mockup.
+materials: Lightly aged paper print with subtle edge wear and print grain. Photographic PS2-era environment-texture visual language, not an illustration and not a CGI render.
+aspect ratio: 3:4 portrait.
+output size: 768 x 1024 pixels.
+Avoid: People, hands, watermarks, unrelated logos, extra text, contemporary design, artificial studio polish, oversharpening, excessive yellow, glare, borders, perspective.
