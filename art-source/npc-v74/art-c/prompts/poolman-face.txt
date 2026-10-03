@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Purpose: One frontal face diffuse mother texture for an adult human retro PS1 / early PS2 low polygon NPC.
+Subject: One man age 30–40, warm dark brown skin, broad rounded nose, short black cropped hair with natural slightly squared hairline, a full short black beard along cheeks, moustache and jaw. Broad cheekbones, ordinary thick eyebrows, adult masculine face. Quiet ordinary neutral expression, closed relaxed lips, eyes open naturally and looking straight ahead.
+View and composition: Perfectly frontal and upright, centered camera with very weak perspective. Close square crop from top of short black hairline to bottom of bearded chin. Face occupies almost the whole square, cheeks near side edges, no neck, no shoulders, no scenery. One single face, not a contact sheet.
+Surface style: Real photographic human information compressed into coarse low-resolution photographic color shapes. A real human face scanned into a 1999–2002 game diffuse texture, visible eye sockets, broad nose shadows, beard mass and mouth shape. Ordinary imperfect skin. This is a flat texture to map onto a faceted 3D head; do not render a polygon model, do not make a cartoon or painting.
+Lighting: Even diffuse weak-direction light, warm dark brown skin clearly readable, no strong side shadow, no beauty lighting, no specular highlights.
+Detail budget: Broad readable natural face features at 128x128, short beard is a dark coarse hair mass, modest blur and muted skin variation, no fine pores, no individual sharp hair strands, no sharpening halos, no artificial grain or dense noise.
+Aspect ratio: 1:1.
+Avoid: Multiple views, collage, multiple faces, teeth, smile, eyewear, hats, props, text, UI, watermark, modern stylized cartoon face, glamour portrait, exaggerated expression, excessive yellow, high gloss.

@@ -1,3 +1,4 @@
+import {prepareStaticProbe74} from './bath-preparation-v74.js';
 import {buildReception72} from './bath-reception-v72.js?v=73';
 import * as T from './vendor/three.module.min.js';
 import {createStallKit} from './bath-v62-stall-kit.js?v=62';
@@ -55,13 +56,8 @@ export function buildBathRefit(scene,root,oldWood){
  for(let i=0;i<2;i++){const bottle=new T.Mesh(new T.CylinderGeometry(.035,.039,.17,10),m.plastic);bottle.rotation.z=Math.PI/2; bottle.rotation.y=.5+i; bottle.position.set(-5.95+i*.22,.042,-5.98);root.add(bottle);}
  for(const z of[-2.08,-5.25]){box(m.plastic,-6.30,2.85,z,1.28,.12,.30,'Fluorescent sealed casing');box(m.lamp,-6.30,2.774,z,1.12,.033,.20,'Soft diffuser');}
  const reflector=createBathReflection(scene,[showerFloor]);
- let environment=null,environmentReady=false;
- function beforeRender(renderer,camera){
-  if(!environmentReady){environmentReady=true;environment=new T.WebGLCubeRenderTarget(128,{type:renderer.extensions.has('EXT_color_buffer_float')?T.HalfFloatType:T.UnsignedByteType,generateMipmaps:true,minFilter:T.LinearMipmapLinearFilter});
-   const cube=new T.CubeCamera(.08,15,environment);cube.position.set(-7.0,1.73,-3.0);const old=renderer.shadowMap.autoUpdate,needs=renderer.shadowMap.needsUpdate;
-   try{renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=false;cube.update(renderer,scene);const metals=new Set();scene.traverse(o=>{if(o.material?.metalness>=.9)metals.add(o.material);});for(const material of metals){material.envMap=environment.texture;material.envMapIntensity=.8;material.needsUpdate=true;}}
-   finally{renderer.shadowMap.autoUpdate=old;renderer.shadowMap.needsUpdate=needs;}}
-  reflector.render(renderer,camera);
- }
- return {clock,presets,streams,reception,materials:m,wetMaterials:[lobbyFloor,showerFloor],beforeRender,update(t){clock.value=t;showerWater.update(t);for(const mat of[lobbyFloor,showerFloor]){mat.userData.wetUniforms.bTime.value=t;mat.userData.wetUniforms.bFlow.value.fromArray(presets.map(v=>v>0?1:0));}},dispose(){reflector.dispose();showerWater.dispose();environment?.dispose();}};
+ let environment=null;
+ async function prepareEnvironment(renderer,report){if(environment)return;const metals=new Set();scene.traverse(o=>{for(const m of Array.isArray(o.material)?o.material:[o.material])if(m?.metalness>=.9)metals.add(m);});environment=await prepareStaticProbe74(scene,renderer,[-7,1.73,-3],[...metals],report);}
+ function beforeRender(renderer,camera){reflector.render(renderer,camera);}
+ return {clock,presets,streams,reception,materials:m,wetMaterials:[lobbyFloor,showerFloor],prepareEnvironment,beforeRender,update(t){clock.value=t;showerWater.update(t);for(const mat of[lobbyFloor,showerFloor]){mat.userData.wetUniforms.bTime.value=t;mat.userData.wetUniforms.bFlow.value.fromArray(presets.map(v=>v>0?1:0));}},dispose(){reflector.dispose();showerWater.dispose();environment?.dispose();}};
 }

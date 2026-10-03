@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Use case: stylized-concept.
+Asset type: one flat transparent raster texture for a tiny animated water stream effect in a PS1-era low-poly 3D game, to be scrolled vertically along a curved narrow strip.
+Object: sparse vertical streak noise in muted yellow ochre. Small elongated broken pixel-like streaks, subtle gaps, irregular lengths, softly varying low opacity. Only the streak pattern, distributed across the square with plentiful fully transparent space between strands. Thin texture details should remain legible after resizing to exactly 128 by 128 pixels.
+Composition: flat 2D surface texture, orthographic, full-frame pattern, seamlessly repeatable on the vertical Y axis. No single illustrated stream shape or jet silhouette. Top and bottom must join without a visible edge when tiled. Left and right edges remain transparent.
+Color and material: pale muted golden yellow ochre in semitransparent specks and thin flow lines; maximum visual density restrained, weak highlights. The texture should feel like low-resolution flowing water noise rather than solid paint.
+Background: actual transparent alpha, never a baked checkerboard or opaque color.
+Aspect ratio: 1:1.
+Avoid: world scene, people, anatomy, source nozzle, container, puddle, splash illustration, typography, UI, fake checkerboard, black or white background, rainbow colors, solid opaque blocks, horizontal streaks, heavy glow.

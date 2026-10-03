@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Purpose: One male bare-torso front diffuse texture for an adult pool visitor NPC in a PS1 / early PS2 game. Nonsexual ordinary adult bare chest only.
+Subject: Front surface of a slim adult man's torso, age 30–40, warm dark brown skin with muted warm midtones around brown #8c5739. Broad soft collarbones at the upper edge, ordinary modest pectoral definition, slim soft abdomen, naturally small male nipples, subtle natural sparse chest hair. Everyday build, not a muscular bodybuilder. No scars or tattoos.
+View and composition: One perfectly frontal, flat orthographic rectangular skin texture plate filling the full square. Crop from just below the neck at the upper edge to just above the hips at the lower edge. Crop through the lateral torso on both side edges so there is no background and no body silhouette. No head, face, arms or hands. A thin navy swimming-shorts waistband may touch the very bottom edge. No below-waist anatomy.
+Surface style: Real photographic human skin information compressed into coarse low-resolution color shapes, like a 1999–2002 game diffuse texture used on a faceted human model. Do not render a polygon model, no cartoon or painting.
+Lighting: Flat even diffuse illumination, restrained broad anatomy shadows only, warm dark brown skin readable without gloss, no rim light or hard side shadows.
+Detail budget: Broad collarbone, chest, abdomen and mild skin-tone variations readable at 128x128. No fine pores, no sharp individual hair, no sharpening halos, no dense noise or artificial grain.
+Aspect ratio: 1:1.
+Avoid: Child, female torso, sexual pose, genitalia, below-waist anatomy, face, hands, arms, props, duck ring, cutout silhouette, background, collage, multiple views, text, UI, watermark, gloss, dramatic abs or superhero musculature.

@@ -1,0 +1,9 @@
+{
+  "id": "npc-v74-props",
+  "scope": "Asset generation only, no Site checkout modifications",
+  "assets": [
+    {"id":"old-pier-label","status":"generate","use":"octahedral bottle paper label","targetSize":[128,128],"crop":"full frame","output":"old-pier-label-128.png"},
+    {"id":"ochre-water-streaks","status":"generate","use":"tiny nonsexual animated water stream on curved strip","targetSize":[128,128],"crop":"full frame","output":"ochre-water-streaks-128.png"},
+    {"id":"reader-newspaper","status":"reuse-crop","source":"/workspace/scratch/85111d38430a/level10/dist/textures/changing-v72/newspaper.webp","targetSize":[128,128],"crop":"square top portion retaining masthead and pool image","output":"reader-newspaper-128.png"}
+  ]
+}

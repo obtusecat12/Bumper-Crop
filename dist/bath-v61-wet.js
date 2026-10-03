@@ -1,4 +1,5 @@
 import * as T from './vendor/three.module.min.js';
+import {Reflector} from './vendor/Reflector.js';
 import {bathRefitTextures} from './bath-v61-materials.js?v=61';
 export function wetFloorMaterial(base,{heads=[],baseWet=.16}={}){
  const m=base.clone();m.name='Integrated wet ground / dielectric tile, wetness and ripple normals';
@@ -27,16 +28,15 @@ export function wetFloorMaterial(base,{heads=[],baseWet=.16}={}){
  m.customProgramCacheKey=()=>`bathWet61-${coords.join(',')}`;m.userData.wetUniforms=uniforms;return m;
 }
 export function createBathReflection(scene,materials){
- const target=new T.WebGLRenderTarget(384,256,{depthBuffer:true});target.texture.colorSpace=T.LinearSRGBColorSpace;
- const mirror=new T.PerspectiveCamera(),look=new T.Vector3(),dir=new T.Vector3(),textureMatrix=new T.Matrix4(),bias=new T.Matrix4().set(.5,0,0,.5,0,.5,0,.5,0,0,.5,.5,0,0,0,1);
- let tick=0,rendering=false;const plane=new T.Plane(new T.Vector3(0,1,0),-.035);
- return {render(renderer,camera){if(rendering||camera.position.x> -4.0)return;if(++tick%3!==1)return;rendering=true;
-  mirror.copy(camera,false);mirror.position.copy(camera.position);mirror.position.y=.03-camera.position.y;camera.getWorldDirection(dir);look.copy(camera.position).add(dir);look.y=.03-look.y;mirror.up.set(0,-1,0);mirror.lookAt(look);mirror.updateMatrixWorld();mirror.projectionMatrix.copy(camera.projectionMatrix);mirror.projectionMatrixInverse.copy(camera.projectionMatrixInverse);
-  textureMatrix.copy(bias).multiply(mirror.projectionMatrix).multiply(mirror.matrixWorldInverse);
-  const hidden=[];scene.traverse(o=>{if(o.isMesh&&materials.includes(o.material)&&o.visible){hidden.push(o);o.visible=false;}});
-  const prev=renderer.getRenderTarget(),oldClip=renderer.clippingPlanes,oldAuto=renderer.shadowMap.autoUpdate,oldNeeds=renderer.shadowMap.needsUpdate;
-  renderer.clippingPlanes=[plane];renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=false;
-  try{renderer.setRenderTarget(target);renderer.clear();renderer.render(scene,mirror);materials.forEach(m=>{const u=m.userData.wetUniforms;u.bReflect.value=target.texture;u.bReflectMatrix.value.copy(textureMatrix);u.bReflectReady.value=1;});}
-  finally{renderer.setRenderTarget(prev);renderer.clippingPlanes=oldClip;renderer.shadowMap.autoUpdate=oldAuto;renderer.shadowMap.needsUpdate=oldNeeds;hidden.forEach(o=>o.visible=true);rendering=false;}
- },dispose(){target.dispose();}};
+ // Oblique near plane avoids a second set of globally clipped PBR programs.
+ const reflector=new Reflector(new T.PlaneGeometry(1,1),{textureWidth:384,textureHeight:256,multisample:0,clipBias:.002});
+ reflector.rotation.x=-Math.PI/2;reflector.position.y=.015;reflector.updateMatrixWorld(true);reflector.camera.layers.set(0);
+ const target=reflector.getRenderTarget(),worldTextureMatrix=new T.Matrix4(),inverseModel=reflector.matrixWorld.clone().invert(),hidden=[];
+ let tick=0,rendering=false,initialized=false;
+ return{render(renderer,camera){if(rendering||camera.position.x>-4)return;if(++tick%3!==1)return;rendering=true;
+  if(!initialized){renderer.initRenderTarget(target);initialized=true;scene.traverse(o=>{if(o.isMesh&&materials.includes(o.material))hidden.push(o);});}
+  const visible=hidden.map(o=>o.visible),auto=renderer.shadowMap.autoUpdate,needs=renderer.shadowMap.needsUpdate;hidden.forEach(o=>o.visible=false);renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=false;
+  try{reflector.onBeforeRender(renderer,scene,camera);worldTextureMatrix.copy(reflector.material.uniforms.textureMatrix.value).multiply(inverseModel);for(const m of materials){const u=m.userData.wetUniforms;u.bReflect.value=target.texture;u.bReflectMatrix.value.copy(worldTextureMatrix);u.bReflectReady.value=1;}}
+  finally{hidden.forEach((o,i)=>o.visible=visible[i]);renderer.shadowMap.autoUpdate=auto;renderer.shadowMap.needsUpdate=needs;rendering=false;}
+ },dispose(){reflector.geometry.dispose();reflector.dispose();}};
 }

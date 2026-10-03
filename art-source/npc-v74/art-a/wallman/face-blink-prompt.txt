@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Purpose: exact identity-preserving eyelid-only edit of the supplied frontal face mother image, for a closed-eye blink texture on the same PS1/early PS2 photo-textured NPC.
+Edit target: the supplied square face photograph of the pale ruddy square-faced adult man with receding blond-gray hair, stubble and prominent nose.
+Change only: close both eyes naturally and fully in a relaxed blink. Paint matching natural upper eyelid skin across the existing eye openings, with a thin realistic closure crease at their lower edge. Preserve the eye positions and shape of the surrounding sockets. No eyeball or iris remains visible.
+Keep unchanged: exactly the same face, identity, head shape, photographic texture, size, frontal angle, crop, composition, eyebrows, forehead, nose, lips, jaw, stubble, hair, ears, skin color, lighting and background. Every area outside the immediate upper/lower eyelid areas must remain unchanged. Do not regenerate or beautify the face.
+Style: actual photographic diffuse facial skin, neutral even lighting; final asset will be downsampled to 128x128 and only eye patches composited back onto the original.
+Aspect ratio: 1:1.
+Avoid: open eyes, half-open eyes, squeezed-shut angry expression, extra wrinkles, moved eyebrows, whole-face changes, altered mouth, changed crop, cartoon, painting, rendered low-poly shapes, text, watermark, oversharpening, glare.

@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Purpose: One square front blouse diffuse texture to map onto the torso of an elderly receptionist in a PS1 / early PS2 game.
+Subject: Worn modest blouse fabric in muted burgundy with a small old-fashioned cream floral print and a few desaturated olive leaves. Subtle center-front vertical button seam, a few small dark buttons, modest vertical fabric folds. The print scale must remain readable at 128x128.
+View and composition: Single perfectly straight frontal rectangular garment surface, flat texture plate. Burgundy floral fabric fills all four edges continuously, no cutout silhouette and no background. Small folded collar area can touch the upper edge, center seam vertical at the horizontal midpoint. One blouse front texture only, no back or side view.
+Surface style: Photographic information from a real old blouse compressed into broad low resolution color shapes for a retro low polygon human. Coarse practical 1999–2002 diffuse texture feel, not cartoon fabric, not decorative illustration.
+Lighting: Flat even diffuse light, mild baked broad folds only, no hard shadows or highlights, muted neutral-warm colors.
+Detail budget: Clear floral clusters, cloth creases and central buttons at small resolution, no fabric microfibers, no oversharpening, no noise.
+Aspect ratio: 1:1.
+Avoid: Person, face, neck, hands, skin, mannequin, body parts, fashion pose, hanger, background, collage, text, logos, watermarks, metallic shine, cartoon illustration.

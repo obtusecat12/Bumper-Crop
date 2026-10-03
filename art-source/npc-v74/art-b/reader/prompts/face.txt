@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Use case: stylized-concept.
+Asset type: single frontal human face diffuse mother texture for a PS1 / early PS2 faceted adult NPC; continuous photographic tones to be mechanically reduced to 128x128.
+Subject: one fictional adult man aged 35–40, pale skin, elongated oval face, clean-shaven, narrow straight nose, reserved neutral expression, ordinary slightly tired brown eyes, dark eyebrows, dark brown hair with a tidy side part.
+Composition: square 1:1, perfectly straight-on frontal view, weak perspective, single face filling the entire square. Hairline and a narrow strip of hair across top; full forehead, cheeks, nose, mouth and chin. Hair top touches the top edge and chin touches the bottom edge. The ear edges may be clipped. Face occupies practically all width. No neck, shoulders, clothes, blank background, padding or borders. This is one continuous front face image, no atlas subdivisions.
+Surface style: photographic human skin information compressed into broad imperfect diffuse color patches for a crude faceted 3D character. Real adult anatomy and asymmetry. Slightly soft source photograph. Preserve readable eyebrow shapes, eye sockets, nose shadows, mouth corners and chin. No drawn or cartoon appearance, no geometric polygons painted over the face.
+Lighting: very even soft neutral diffuse light with weak directionality; restrained natural pale warm skin, no shiny highlights.
+Detail budget: broad facial information for a 128x128 texture, no exaggerated pores, no eyelashes as graphic lines, no sharpening halos, no dense grain.
+Aspect ratio: 1:1.
+Avoid: other characters, multiple views, collage, text, watermark, UI, face atlas, cartoon, illustration, painted facial features, glamour retouching, lens blur, dramatic lighting, cast shadows, yellow lighting, heavy glare.

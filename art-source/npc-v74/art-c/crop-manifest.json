@@ -1,0 +1,327 @@
+{
+  "version": "v74",
+  "assetType": "generated photographic diffuse texture set",
+  "generator": "builtin image_gen.imagegen",
+  "promptFormatSource": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "promptFormatDownloadedAndReadBeforeEveryGeneration": true,
+  "pixelCoordinates": "top-left origin, right and bottom exclusive",
+  "runtimeSize": [
+    128,
+    128
+  ],
+  "processing": "Pillow full-frame BOX downsample, generated eyelid patches composited with 1px internal edge feather. All non-eye pixels remain original face bytes. Optional skin maps are mechanical cheek crops.",
+  "characters": {
+    "receptionist": {
+      "identity": "Elderly woman about 70, light olive skin, age lines and nasolabial folds, small nose, gray permed hair, no baked glasses.",
+      "source": {
+        "face": {
+          "file": "originals/receptionist-face.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "2a966f8a3ac0a159de82e1ffa020f7e20fc5730d7db4d8233b59218269da1848",
+          "toolOutputPath": "/workspace/scratch/85111d38430a/generated_images/exec-bdedcb4a-2ccb-4ecc-9d61-27c1489e42fd.png",
+          "promptFile": "prompts/receptionist-face.txt",
+          "promptFormatSnapshot": "prompts/prompt-skill-before-receptionist-face.md"
+        },
+        "blink-edit": {
+          "file": "originals/receptionist-blink-edit.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "f033aad836028b27da3a03bb4383e490eec4f831238638ed18d4e4416e79e170",
+          "toolOutputPath": "/workspace/scratch/85111d38430a/generated_images/exec-c3f3af2e-f66a-4af4-b9b2-605b064682a6.png",
+          "promptFile": "prompts/receptionist-blink.txt",
+          "promptFormatSnapshot": "prompts/prompt-skill-before-receptionist-blink.md"
+        },
+        "body": {
+          "file": "originals/receptionist-body.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "43856a2e3ad262926ce0125ea5bf33ee7316a4810a41f90cb1e29af8fb0913f8",
+          "toolOutputPath": "/workspace/scratch/85111d38430a/generated_images/exec-b5e14586-af9e-43d1-ba31-6d117cc703b9.png",
+          "promptFile": "prompts/receptionist-body.txt",
+          "promptFormatSnapshot": "prompts/prompt-skill-before-receptionist-body.md"
+        }
+      },
+      "textures": {
+        "face": {
+          "file": "receptionist/face.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "e6895784ba1b956891521053e114945c7e4f0ecc747279e98599a27d0683dc6d"
+        },
+        "face-blink": {
+          "file": "receptionist/face-blink.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "010d90262bfc07a2e45827fb72c5c0e7e5da9afb4e9c5799fb413d390df261a4"
+        },
+        "body": {
+          "file": "receptionist/body.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "fc8f2006415fdafa746eb9c97b774c294259a8ec3d9e61980a78d2b829a1b9bf"
+        },
+        "skin": {
+          "file": "receptionist/skin.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "d78c30849da026ff449eab34231b404f88d45b26c16ac9aa382f61dddc4c1791"
+        }
+      },
+      "faceCrop": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "bodyCrop": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "skinCropOriginalPixels": [
+        200,
+        700,
+        400,
+        900
+      ],
+      "eyeRectsRuntimePixels": [
+        [
+          23,
+          42,
+          57,
+          61
+        ],
+        [
+          71,
+          42,
+          105,
+          61
+        ]
+      ],
+      "eyeRectsNormalized": [
+        [
+          0.179688,
+          0.328125,
+          0.445312,
+          0.476562
+        ],
+        [
+          0.554688,
+          0.328125,
+          0.820312,
+          0.476562
+        ]
+      ],
+      "atlasRects": {
+        "face": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "face-blink": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "body": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "skin": [
+          0,
+          0,
+          128,
+          128
+        ]
+      },
+      "blinkMode": "Open/closed generated face textures; eyelid-region composite preserves other pixels.",
+      "blinkOutsideEyeChangedPixels": 0,
+      "blinkChangedPixels": 1292,
+      "rigType": "not part of texture task",
+      "animations": [],
+      "seed": null,
+      "bounds": null,
+      "validation": "PASS: all runtime textures 128x128 RGB; nearest-neighbor enlarged low-resolution strip inspected; open and closed states visually readable; zero pixels changed outside declared eye rectangles. 3D integration not part of this task."
+    },
+    "poolman": {
+      "identity": "Adult man 30\u201340, warm dark brown skin, broad nose, black crop and full short black beard.",
+      "source": {
+        "face": {
+          "file": "originals/poolman-face.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "4628778b84f31ba304f8c44fc989093a1299ab966442330f6682abc8bd142065",
+          "toolOutputPath": "/workspace/scratch/85111d38430a/generated_images/exec-8afc6c50-90ef-47a6-bc5d-45f534b1baa8.png",
+          "promptFile": "prompts/poolman-face.txt",
+          "promptFormatSnapshot": "prompts/prompt-skill-before-poolman-face.md"
+        },
+        "blink-edit": {
+          "file": "originals/poolman-blink-edit.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "85562c3590fdca81fb900c663027edb3030ebdfe8b040d798b0a4c938d1de930",
+          "toolOutputPath": "/workspace/scratch/85111d38430a/generated_images/exec-b42c2a94-fc96-4d75-812e-cbb896b64e58.png",
+          "promptFile": "prompts/poolman-blink.txt",
+          "promptFormatSnapshot": "prompts/prompt-skill-before-poolman-blink.md"
+        },
+        "body": {
+          "file": "originals/poolman-body.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "b03dcf2866fd612c0de503d51f1a8512ab58aa47a31816cf1eee12224fae3f9f",
+          "toolOutputPath": "/workspace/scratch/85111d38430a/generated_images/exec-33fdd4d0-8e86-46a2-a267-1d092d9bbe36.png",
+          "promptFile": "prompts/poolman-body.txt",
+          "promptFormatSnapshot": "prompts/prompt-skill-before-poolman-body.md"
+        }
+      },
+      "textures": {
+        "face": {
+          "file": "poolman/face.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "ac6f4098317691ed7cb455d75666e9c918885952d24a61917243e84e119a19b2"
+        },
+        "face-blink": {
+          "file": "poolman/face-blink.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "74f24f94283e7fe8400270cfe3543e5ab4d8b83edc9291a539f09a18113e0470"
+        },
+        "body": {
+          "file": "poolman/body.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "dd7a0c8b5d4bc3d4d2900abb4a9e410c9c54b1db73f27253375b19f8fccacee6"
+        },
+        "skin": {
+          "file": "poolman/skin.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "2d3490f8ef9aa54201cdbffb04996a7d81a7cf79af34c4e8346c2828bb473496"
+        }
+      },
+      "faceCrop": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "bodyCrop": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "skinCropOriginalPixels": [
+        240,
+        600,
+        400,
+        750
+      ],
+      "eyeRectsRuntimePixels": [
+        [
+          24,
+          44,
+          57,
+          61
+        ],
+        [
+          72,
+          44,
+          104,
+          61
+        ]
+      ],
+      "eyeRectsNormalized": [
+        [
+          0.1875,
+          0.34375,
+          0.445312,
+          0.476562
+        ],
+        [
+          0.5625,
+          0.34375,
+          0.8125,
+          0.476562
+        ]
+      ],
+      "atlasRects": {
+        "face": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "face-blink": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "body": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "skin": [
+          0,
+          0,
+          128,
+          128
+        ]
+      },
+      "blinkMode": "Open/closed generated face textures; eyelid-region composite preserves other pixels.",
+      "blinkOutsideEyeChangedPixels": 0,
+      "blinkChangedPixels": 1105,
+      "rigType": "not part of texture task",
+      "animations": [],
+      "seed": null,
+      "bounds": null,
+      "validation": "PASS: all runtime textures 128x128 RGB; nearest-neighbor enlarged low-resolution strip inspected; open and closed states visually readable; zero pixels changed outside declared eye rectangles. 3D integration not part of this task."
+    }
+  }
+}

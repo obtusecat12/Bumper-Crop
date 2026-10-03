@@ -1,0 +1,15 @@
+{
+  "version": "v74",
+  "scope": "Generated texture assets only; no Site repository changes",
+  "runtimeSize": [128, 128],
+  "styleReference": "/workspace/scratch/85111d38430a/attachments/250e2ccc-5cd9-4c54-b010-0f85762aae25/image.png",
+  "promptGuide": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {"id":"reader-face","purpose":"Single front face diffuse texture","source":"built-in imagegen new independent identity","target":"reader/face.png","crop":"full square front face"},
+    {"id":"reader-blink","purpose":"Closed eyelids on reader identity","source":"built-in imagegen edit of reader mother face","target":"reader/face-blink.png","modification":"eyelids only; composite eye patches into exact mother image"},
+    {"id":"reader-body","purpose":"Front suit torso diffuse texture","source":"built-in imagegen","target":"reader/body.png","crop":"front torso full square, no face"},
+    {"id":"plaid-face","purpose":"Single front face diffuse texture","source":"built-in imagegen new independent identity","target":"plaid/face.png","crop":"full square front face"},
+    {"id":"plaid-blink","purpose":"Closed eyelids on plaid identity","source":"built-in imagegen edit of plaid mother face","target":"plaid/face-blink.png","modification":"eyelids only; composite eye patches into exact mother image"},
+    {"id":"plaid-body","purpose":"Front plaid shirt torso diffuse texture","source":"built-in imagegen","target":"plaid/body.png","crop":"front torso full square, no face"}
+  ]
+}

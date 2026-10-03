@@ -35,7 +35,7 @@
       showFailure(new Error('游戏加载超时。请检查网络连接后重试。'));
     }
   }, 30000);
-  import('./main.js?v=73').then(() => clearTimeout(timeout)).catch(error => {
+  import('./main.js?v=74').then(() => clearTimeout(timeout)).catch(error => {
     clearTimeout(timeout);
     console.error('Game startup failed', error);
     showFailure(error);

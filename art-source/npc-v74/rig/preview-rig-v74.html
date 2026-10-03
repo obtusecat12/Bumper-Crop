@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><title>V74 six-role rig / neutral-light check</title>
+<style>html,body{margin:0;background:#191d1d;color:#e8e6da;font:14px monospace}#bar{padding:10px;display:flex;gap:12px;align-items:center}canvas{display:block;width:1600px;height:1040px}button{padding:6px 14px}#status{white-space:pre}</style>
+<div id="bar"><b>V74 rig — generated sources, temporary 128² preview reduction</b><button onclick="check74.pose(0)">Base pose</button><button onclick="check74.pose(6.75)">Hand to head</button><button onclick="check74.view('side')">Side</button><button onclick="check74.view('front')">Front</button><button onclick="check74.eyes()">Eyes</button><span id="status">Loading…</span></div>
+<script type="module">
+import * as T from '../../level10/dist/vendor/three.module.min.js';
+import {createRetroActor74,RETRO_ROLES74} from './retro-cast-v74.js';
+const paths={
+homeless:['../art-a/homeless/face.png','../art-a/homeless/face.png','../art-a/homeless/body.png'],
+wallman:['../art-a/wallman/face.png','../art-a/wallman/face-blink.png','../art-a/wallman/body.png'],
+reader:['../art-b/reader/face.png','../art-b/reader/face-blink.png','../art-b/reader/body.png'],
+plaid:['../art-b/plaid/face.png','../art-b/plaid/face-blink.png','../art-b/plaid/body.png'],
+receptionist:['../art-c/receptionist/face.png','../art-c/receptionist/face-blink.png','../art-c/receptionist/body.png'],
+poolman:['../art-c/poolman/face.png','../art-c/poolman/face-blink.png','../art-c/poolman/body.png']};
+const scene=new T.Scene();scene.background=new T.Color('#878c84');scene.add(new T.HemisphereLight(0xffffff,0x787269,2.2));const sun=new T.DirectionalLight(0xfff3df,2.5);sun.position.set(2,5,4);scene.add(sun);
+const floor=new T.Mesh(new T.PlaneGeometry(200,200),new T.MeshLambertMaterial({color:0x77796d}));floor.rotation.x=-Math.PI/2;floor.position.y=-.004;scene.add(floor);
+const camera=new T.PerspectiveCamera(40,800/520,.01,30),renderer=new T.WebGLRenderer({antialias:false,preserveDrawingBuffer:true});renderer.setSize(1600,1040);renderer.setPixelRatio(1);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.82;document.body.append(renderer.domElement);
+const loader=async path=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=128;c.getContext('2d').drawImage(im,0,0,128,128);resolve(new T.CanvasTexture(c));};im.onerror=reject;im.src=path;});
+const actors=[];for(const role of RETRO_ROLES74){const [face,faceBlink,body]=await Promise.all(paths[role].map(loader));const newspaper=role==='reader'?await loader('../props/reader-newspaper-128.png'):null;const a=createRetroActor74(T,role,{face,faceBlink,body,newspaper},{phase:0,seatHeight:role==='plaid'?.42347:.557});actors.push(a);scene.add(a.group);}
+let view='front',time=0,closed=false;
+function draw(){renderer.setScissorTest(true);actors.forEach((a,i)=>{for(const b of actors)b.group.visible=a===b;const x=(i%3)*(1600/3),y=i<3?520:0,w=1600/3;renderer.setViewport(x,y,w,520);renderer.setScissor(x,y,w,520);camera.aspect=w/520;camera.updateProjectionMatrix();
+if(a.diagnostics.role==='homeless'){camera.position.set(view==='side'?2.25:.7,1.00,view==='side'?0:2.8);camera.lookAt(-.12,.27,.10);}else{camera.position.set(view==='side'?3.0:.36,1.20,view==='side'?.05:3.1);camera.lookAt(0,.87,.06);}renderer.render(scene,camera);});document.querySelector('#status').textContent=`t=${time.toFixed(2)}; ${actors.map(a=>a.diagnostics.role+':'+a.diagnostics.triangles).join(' | ')}`;}
+window.check74={actors,scene,renderer,pose(t){time=t;actors.forEach(a=>a.samplePose(t));draw()},view(v){view=v;draw()},eyes(){closed=!closed;actors.forEach(a=>a.forceBlink(closed));draw()},draw};window.check74.pose(0);window.ready74=true;
+</script>

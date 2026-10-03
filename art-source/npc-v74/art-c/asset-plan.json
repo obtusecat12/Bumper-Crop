@@ -1,0 +1,18 @@
+{
+  "version": "v74",
+  "characters": {
+    "receptionist": {"identity":"Elderly woman about 70; light olive skin; nasolabial folds; gray permed hair; small nose; quiet normal expression; no baked glasses", "body":"muted burgundy and cream floral blouse"},
+    "poolman": {"identity":"Man 30–40; warm dark skin; broad nose; short black crop; full short beard", "body":"slim adult male bare torso; navy shorts represented separately in geometry"}
+  },
+  "assets": [
+    {"character":"receptionist", "name":"face", "operation":"generate", "output":"receptionist/face.png", "dimensions":[128,128], "crop":"determine after inspection"},
+    {"character":"receptionist", "name":"face-blink", "operation":"edit only eyelids of face original then composite eye regions", "output":"receptionist/face-blink.png", "dimensions":[128,128]},
+    {"character":"receptionist", "name":"body", "operation":"generate", "output":"receptionist/body.png", "dimensions":[128,128]},
+    {"character":"poolman", "name":"face", "operation":"generate", "output":"poolman/face.png", "dimensions":[128,128], "crop":"determine after inspection"},
+    {"character":"poolman", "name":"face-blink", "operation":"edit only eyelids of face original then composite eye regions", "output":"poolman/face-blink.png", "dimensions":[128,128]},
+    {"character":"poolman", "name":"body", "operation":"generate", "output":"poolman/body.png", "dimensions":[128,128]}
+  ],
+  "reference":"/workspace/scratch/85111d38430a/attachments/250e2ccc-5cd9-4c54-b010-0f85762aae25/image.png",
+  "style":"Photographic low resolution diffuse color textures for faceted PS1 / early PS2 adult humans, not cartoon.",
+  "mechanicalProcessing":"Pillow cropping, BOX downsampling; blink eye-patch compositing to preserve all other pixels. No drawn replacement features."
+}

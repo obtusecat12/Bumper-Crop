@@ -1,3 +1,4 @@
+import {prepareStaticProbe74} from './bath-preparation-v74.js';
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {bevelBox,worldUV} from './bath-v61-materials.js?v=61';
@@ -144,7 +145,7 @@ export function createSpa(scene){
  architecture.updateMatrixWorld(true);const batches=new Map(),sourceMeshes=[];architecture.traverse(o=>{if(o.isMesh)sourceMeshes.push(o);});
  for(const o of sourceMeshes){const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();g.applyMatrix4(o.matrixWorld);const sig=o.material.uuid+'|'+Object.keys(g.attributes).sort().join(',')+'|'+o.castShadow+'|'+o.receiveShadow;let b=batches.get(sig);if(!b){b={mat:o.material,parts:[],cast:o.castShadow,receive:o.receiveShadow,names:[]};batches.set(sig,b);}b.parts.push(g);b.names.push(o.name);o.geometry.dispose();}
  architecture.clear();for(const b of batches.values()){const merged=mergeGeometries(b.parts);if(!merged)throw new Error('Incompatible V66 architecture batch');const o=add(merged,b.mat,b.mat.name+' / batched geometry');o.castShadow=b.cast;o.receiveShadow=b.receive;o.userData.sourceNames=b.names;b.parts.forEach(g=>g.dispose());}
- let time=0,last=0,visible=true,environment=null,environmentReady=false,footIndex=0,wetUntil=0,lastFoot=new T.Vector2(-100,-100);const stats={visible:true,staticDraws:batches.size,water:water.stats,steam:steam.diagnostics,inventory,furniture:furniture.userData};
+ let time=0,last=0,visible=true,environment=null,footIndex=0,wetUntil=0,lastFoot=new T.Vector2(-100,-100);const stats={visible:true,staticDraws:batches.size,water:water.stats,steam:steam.diagnostics,inventory,furniture:furniture.userData};
  function setView(camera){camera.updateMatrixWorld();viewFrustum.setFromProjectionMatrix(viewMatrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));visible=camera.position.x>4.0||viewFrustum.intersectsBox(portalBounds);stats.visible=visible;
   // Opaque architecture always exists across the doorway. GPU frustum culling
   // handles its batches; only costly water/post passes use the portal test.
@@ -153,10 +154,9 @@ export function createSpa(scene){
  function update(t,player){const dt=Math.min(.05,Math.max(0,t-last));last=t;time=t;m.clock.value=t;if(visible)water.update(t,dt);
   if(player&&player.x>4.1){if(inSpaWater(player.x,player.z))wetUntil=t+32;const r=Math.hypot(player.x-SPA.cx,player.z-SPA.cz);if(t<wetUntil&&r>2.40&&lastFoot.distanceTo(new T.Vector2(player.x,player.z))>.36){const side=footIndex%2?1:-1,a=player.yaw||0; m.marks.value[footIndex%12].set(player.x+Math.cos(a)*.075*side,player.z-Math.sin(a)*.075*side,t,-a);lastFoot.set(player.x,player.z);footIndex++;}}
  }
- function prepare(renderer,camera){setView(camera);if(visible)water.prepare(renderer);
-  if(visible&&!environmentReady&&typeof renderer.getActiveCubeFace==='function'){environmentReady=true;environment=new T.WebGLCubeRenderTarget(128,{type:renderer.extensions.has('EXT_color_buffer_float')?T.HalfFloatType:T.UnsignedByteType,generateMipmaps:true,minFilter:T.LinearMipmapLinearFilter});const cube=new T.CubeCamera(.08,15,environment);cube.position.set(9.0,1.25,-2.30);const saved=renderer.getRenderTarget(),oldAuto=renderer.shadowMap.autoUpdate,oldNeeds=renderer.shadowMap.needsUpdate;try{renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=false;cube.update(renderer,scene);for(const mat of[m.chrome,m.acrylic,m.glass,m.floor,m.ceramic,m.brass,...Object.values(statues.materials)]){mat.envMap=environment.texture;mat.envMapIntensity=.68;mat.needsUpdate=true;}}finally{renderer.setRenderTarget(saved);renderer.shadowMap.autoUpdate=oldAuto;renderer.shadowMap.needsUpdate=oldNeeds;}}
- }
+ async function prepareEnvironment(renderer,report){if(environment)return;environment=await prepareStaticProbe74(scene,renderer,[9,1.25,-2.30],[m.chrome,m.acrylic,m.glass,m.floor,m.ceramic,m.brass,...Object.values(statues.materials)],report);}
+ function prepare(renderer,camera){setView(camera);if(visible)water.prepare(renderer);}
  function compose(renderer,color,depth,camera,w,h){if(!visible)return color;let c=steam.compose(renderer,color,depth,camera,w,h,time);c=reflections.compose(renderer,c,depth,camera,w,h);return bloom.compose(renderer,c,depth,camera,w,h,time);}
  function dispose(){sound.dispose();environment?.dispose();water.dispose();steam.dispose();reflections.dispose();bloom.dispose();statues.group.traverse(o=>o.geometry?.dispose());architecture.traverse(o=>o.geometry?.dispose());for(const mat of new Set([...Object.values(m),...Object.values(statues.materials)]))if(mat?.isMaterial)mat.dispose();}
- return{group:architecture,statues,water,bloom,steam,reflections,lights,stats,materials:m,audio:sound.update,muteAudio:sound.mute,setView,update,prepare,compose,dispose};
+ return{group:architecture,statues,water,bloom,steam,reflections,lights,stats,materials:m,audio:sound.update,muteAudio:sound.mute,setView,update,prepare,prepareEnvironment,compose,dispose};
 }

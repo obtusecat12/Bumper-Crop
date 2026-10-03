@@ -1,4 +1,5 @@
-import {warmBath73} from './bath-warmup-v73.js';
+import {initializeRetroTextures74} from './retro-occupants-v74.js';
+import {warmBath74} from './bath-warmup-v74.js';
 import {initializeReceptionTextures73} from './reception-materials-v73.js';
 import {createBathLoading,nextPaint} from './bath-loading-v72.js';
 import {initializeChangingTextures} from './changing-materials-v72.js';
@@ -117,7 +118,7 @@ if(!['high','balanced','low'].includes(settings.quality))settings.quality='balan
 let renderer;
 try{renderer=new T.WebGLRenderer({antialias:false,powerPreference:'high-performance',alpha:false});renderer.setPixelRatio(1);renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','Level 10 三维麦田');game.prepend(renderer.domElement)}catch(e){e.userTitle='无法启动 3D 画面';e.userMessage='当前浏览器无法创建 3D 画面。请确认已启用硬件加速，并使用支持 WebGL 2 的浏览器。';throw e}
 $('#loading').firstChild.textContent='正在载入地面与植被材质 ';
-try{await Promise.all([initializeCornerTextures(),initializeVendingTextures(),initializeCanTextures(),initializeSpringTextures(),initializeSpringNPCs(),initializeBathTextures(),initializeSpaTextures(),initializeAlmondTextures(),initializeExitTextures(),initializeReferenceTextures(),initializeDistrictTextures(),initializeUrbanAssets(),initializeAdvertising(),initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
+try{await Promise.all([initializeRetroTextures74(),initializeCornerTextures(),initializeVendingTextures(),initializeCanTextures(),initializeSpringTextures(),initializeSpringNPCs(),initializeBathTextures(),initializeSpaTextures(),initializeAlmondTextures(),initializeExitTextures(),initializeReferenceTextures(),initializeDistrictTextures(),initializeUrbanAssets(),initializeAdvertising(),initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
 $('#loading').firstChild.textContent='LOADING ';
 const performanceMeter=createPerformanceMeter(renderer);
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.23;
@@ -203,7 +204,7 @@ const cityJournal='<p><strong>Level 11 · 无垠城市</strong></p><p>道路延�
 
 const springJournal='<p><strong>Level 27 · 岩体泉</strong></p><p>泉池水域约 18.58 平方米，岸边岩洞石滩向岩壁内部延伸。洞壁为沉积石灰岩，水线可见深色矿物膜。泉水平均 32.2°C，富含矿物质，可饮用。两股微型瀑布不断注入新水；角落的小渠将水排走，不要尝试爬入。</p><p>在池中按 <strong>E</strong> 坐下或起身，<strong>Q</strong> 饮泉水。水边静坐，或缓步探索岩壁。泡浴超过一小时后，精力与心情会逐渐恢复；不建议超过两小时。</p><p><strong>返回：</strong>走上瀑布旁 贴着洞壁蜿蜒上升的风化原石踏步，沿溪流旁的干燥路面向隧道深处前行，即会回到进入时的位置。入口保持稳定。</p><p>请尊重其他使用泉水的人。超过三十人时不建议进入；泡浴结束后及时腾出空间。</p><p class="reference-credit">层级设定改编自 <a href="https://backrooms-wiki-cn.wikidot.com/level-27" target="_blank" rel="noopener noreferrer">Level 27 — 岩体泉</a>，原作 Kitty Rika，中文翻译 XD42，<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>。洞穴视觉参考 <a href="https://www.flickr.com/photos/50711561@N00/14440932785" target="_blank" rel="noopener noreferrer">Cave Lake (Cooler)</a>，Jacob Norlund，CC BY 2.0。洞穴几何与 PS2 风格石灰岩、沉积层和泉水材质为本场景新制作。动态波纹和菲涅耳计算改编自 <a href="https://github.com/Aureliengmz/clearwater" target="_blank" rel="noopener noreferrer">Clearwater</a>，© 2026 Lumaris，<a href="./licenses/clearwater-MIT.txt" target="_blank">MIT</a>。</p>';
 function updateSpringEntry(dt){
- exitScene.bath.update(time,springSession.preset);
+ exitScene.bath.update(time,springSession.preset,dt,state,playing&&state.level===11);
  if(!springSession.closing){if(springOpen>0){springOpen=Math.max(0,springOpen-dt*.72);eyelids.style.opacity=String(springOpen);}return;}
  if(!playing)return;
  const under=bathhouse.active&&bathUnderShower(state.x,state.z);
@@ -249,9 +250,9 @@ async function enterBath(){
   if(!bathhouse.scene){const loaded=[0,0],progress=(i,v)=>{loaded[i]=v;bathTransition.progress(3+(loaded[0]+loaded[1])*12.5,'正在读取浴室材质');};await Promise.all([initializeChangingTextures(null,p=>progress(0,p)),initializeReceptionTextures73(null,p=>progress(1,p))]);await nextPaint();bathhouse=await prepareBathhouse((p,text)=>bathTransition.progress(28+p*39,text));}
   bathOrigin={level:state.level,cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch};bathhouse.active=true;bathShadowType=renderer.shadowMap.type;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.type=T.PCFSoftShadowMap;state.cx=state.cz=0n;Object.assign(state,BATH_ARRIVAL);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=0;eyelids.style.opacity='0';
   lensWater.reset();waterState.reset();bodyWater.reset();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);waterPipeline.focus.setSceneQuery(bathhouse.focusDistance);camera.far=32;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);bathhouse.update(bathTime,state);
-  bathTransition.progress(70,'正在准备室内灯光');await nextPaint();await renderer.compileAsync(bathhouse.scene,camera);
-  bathTransition.progress(83,'正在准备玻璃与倒影');await nextPaint();renderer.shadowMap.needsUpdate=true;bathhouse.beforeRender(renderer,camera);await renderer.compileAsync(bathhouse.scene,camera);await warmBath73(bathhouse,renderer,camera,(p,text)=>bathTransition.progress(83+p*11,text));
-  bathTransition.progress(95,'正在打开前厅');await nextPaint();waterPipeline.setBathSteam(0);waterPipeline.update(0,camera,state,false,false,bathhouse.scene.background,new T.Vector3(0,1,0),0,-10);displayFilter.render(bathhouse.scene,camera,performance.now());await nextPaint();
+  bathTransition.progress(68,'正在预载室内贴图');await nextPaint();
+  await warmBath74(bathhouse,renderer,camera,(p,text)=>bathTransition.progress(68+p*30,text),c=>{waterPipeline.setBathSteam(0);waterPipeline.update(0,c,{...state,x:c.position.x,z:c.position.z},false,false,bathhouse.scene.background,new T.Vector3(0,1,0),0,-10);displayFilter.render(bathhouse.scene,c,performance.now());});
+  bathTransition.progress(99,'正在打开前厅');await nextPaint();waterPipeline.setBathSteam(0);waterPipeline.update(0,camera,state,false,false,bathhouse.scene.background,new T.Vector3(0,1,0),0,-10);displayFilter.render(bathhouse.scene,camera,performance.now());await nextPaint();
   renderer.domElement.setAttribute('aria-label','Baños 浴室 · 前厅、更衣室、空浴池与淋浴间');keys.clear();joy.x=joy.z=0;lookInput.reset(performance.now(),{locked:document.pointerLockElement===renderer.domElement});await bathTransition.finish();bathLoading=false;lastFrame=performance.now();toast('前厅左侧进入更衣室，向前走后从右侧门进入空浴池。');
  }catch(error){console.error('Bath entry failed',error);if(bathhouse.active)leaveBath(false);bathTransition.fail(()=>{bathLoading=false;keys.clear();lookInput.reset(performance.now());lastFrame=performance.now();});}
 }

@@ -1,0 +1,27 @@
+{
+  "version": 74,
+  "reference": "User image(20261003-053222).png; aesthetic/proportions, no identity copying",
+  "runtime": "dist/textures/npc-v74",
+  "maps": "All runtime NPC maps 128x128 PNG, nearest, no mipmaps",
+  "provenance": [
+    "art-a/manifest.json",
+    "art-b/manifest.json",
+    "art-c/crop-manifest.json",
+    "props/asset-manifest.json"
+  ],
+  "derivedMat": {
+    "source": "art-source/bath-v72 / generated rubber basecolor",
+    "runtime": "rubber-mat-128.png",
+    "operation": "Lanczos downsample to 128x128"
+  },
+  "geometry": "dist/retro-cast-v74.js",
+  "integration": "dist/retro-occupants-v74.js",
+  "boneCount": 19,
+  "animationHz": 15,
+  "environmentPreserved": [
+    "original dry pool",
+    "Level27 original two bathers",
+    "existing reception/changing/shower/spa geometry"
+  ],
+  "note": "Root additionally adjusted seated floor contacts to rug top; runtime is authoritative."
+}

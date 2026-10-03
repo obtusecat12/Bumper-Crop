@@ -1,0 +1,40 @@
+{
+  "homeless": {
+    "actorTriangles": 1050,
+    "draws": 3,
+    "bones": 19,
+    "poseHz": 15,
+    "withBottlesSpillAndMat": 1196
+  },
+  "wallman": {
+    "actorTriangles": 1002,
+    "draws": 3,
+    "bones": 19,
+    "poseHz": 15,
+    "withStreamAndWetPatch": 1022
+  },
+  "reader": {
+    "actorTriangles": 1010,
+    "draws": 4,
+    "bones": 19,
+    "poseHz": 15
+  },
+  "plaid": {
+    "actorTriangles": 1002,
+    "draws": 3,
+    "bones": 19,
+    "poseHz": 15
+  },
+  "receptionist": {
+    "actorTriangles": 1318,
+    "draws": 5,
+    "bones": 19,
+    "poseHz": 15
+  },
+  "poolman": {
+    "actorTriangles": 1250,
+    "draws": 4,
+    "bones": 19,
+    "poseHz": 15
+  }
+}

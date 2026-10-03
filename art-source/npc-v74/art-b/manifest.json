@@ -1,0 +1,298 @@
+{
+  "version": "npc-v74-art-b",
+  "generator": "Built-in image_gen.imagegen; independent face generations and reference-image eyelid edits",
+  "promptGuide": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "promptGuideReadBeforeEachImagegen": true,
+  "styleReference": "/workspace/scratch/85111d38430a/attachments/250e2ccc-5cd9-4c54-b010-0f85762aae25/image.png",
+  "colorSpace": "sRGB",
+  "runtimeDimensions": [
+    128,
+    128
+  ],
+  "resize": "Pillow Resampling.BOX area downsample, no sharpening or palette quantization",
+  "coordinates": "Image pixel origin is top-left. Rectangles are [left, top, right, bottom], right/bottom exclusive.",
+  "characters": [
+    {
+      "id": "reader",
+      "seed": null,
+      "seedNote": "Built-in tool did not expose seed.",
+      "definition": "Adult man 35\u201340; pale elongated oval face, clean-shaven, dark side-part hair; charcoal suit, white shirt, black tie.",
+      "source": {
+        "face": "exec-4827c229-b93c-4dd5-b0a0-ab540afa2d3d.png",
+        "blink": "exec-c128d225-00c0-41a9-ba94-34c678f87a80.png",
+        "body": "exec-dc25e23f-423f-402b-9fb6-8aca338baefe.png"
+      },
+      "status": {
+        "face": "generated independent identity",
+        "face-blink": "generated eyelid edit, composited only within eye rectangles",
+        "body": "generated clothing-only torso"
+      },
+      "textures": {
+        "face.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/face.png",
+          "relativePath": "reader/face.png",
+          "dimensions": [
+            128,
+            128
+          ],
+          "sha256": "af2aab6d1151a3bd06eac8ea779ab84b8ee98777d5dc5014555014d4a0186026"
+        },
+        "face-blink.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/face-blink.png",
+          "relativePath": "reader/face-blink.png",
+          "dimensions": [
+            128,
+            128
+          ],
+          "sha256": "780ff2d2c19c8d4201770157b8157cdc24791e3e27e04d592aebbf2fb6ee09f1"
+        },
+        "body.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/body.png",
+          "relativePath": "reader/body.png",
+          "dimensions": [
+            128,
+            128
+          ],
+          "sha256": "3fa5554d345c6a8835074ee62be74c72f0e92a3182130bc84ff0bcc4b606c44d"
+        }
+      },
+      "originals": {
+        "face-mother.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/originals/face-mother.png",
+          "dimensions": [
+            1254,
+            1254
+          ],
+          "sha256": "0bdde42b185a12e891ecb00a0c5eace525c84b196d489b6be3c67c9d17184468"
+        },
+        "face-blink-edit.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/originals/face-blink-edit.png",
+          "dimensions": [
+            1254,
+            1254
+          ],
+          "sha256": "c853c8b57da645510f895ef2af138c5e3bb51970b200fa8e71ecbe3f1eda4f82"
+        },
+        "body-mother.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/originals/body-mother.png",
+          "dimensions": [
+            1254,
+            1254
+          ],
+          "sha256": "36b610c8f824ded855285775dfc504e292e39a3e658819b4965e38ef16a234d0"
+        }
+      },
+      "cropBox": {
+        "face": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "body": [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      },
+      "eyeRegions": [
+        [
+          23,
+          42,
+          55,
+          57
+        ],
+        [
+          73,
+          42,
+          105,
+          57
+        ]
+      ],
+      "atlasRects": {
+        "face": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "face-blink": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "body": [
+          0,
+          0,
+          128,
+          128
+        ]
+      },
+      "rigType": null,
+      "blinkMode": "two full-square face maps; changes confined to two eyelid regions",
+      "animations": [
+        "open/closed texture states"
+      ],
+      "bounds": null,
+      "statistics": {
+        "changedBlinkPixels": 861,
+        "changedPixelsOutsideEyeRegions": 0
+      },
+      "verification": {
+        "dimensions": "passed",
+        "blinkPixelInvariance": "passed",
+        "visualLowResolution": "passed: inspected final 128x128 open/closed/body maps at nearest-neighbor 3x enlargement; faces remain distinct, eyes close naturally, clothing reads clearly",
+        "inSceneUV": "not in asset-only scope",
+        "visualInspectionArtifact": "/workspace/scratch/85111d38430a/npc-v74/art-b/inspection-128-nearest.png"
+      },
+      "prompts": {
+        "face": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/prompts/face.txt",
+        "blink": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/prompts/blink.txt",
+        "body": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/prompts/body.txt"
+      }
+    },
+    {
+      "id": "plaid",
+      "seed": null,
+      "seedNote": "Built-in tool did not expose seed.",
+      "definition": "Adult man around 55; stocky round ruddy/tanned face, broad nose, chevron moustache, receding brown-gray hair; tan/rust/blue plaid shirt.",
+      "source": {
+        "face": "exec-2ce821d6-4835-4146-8684-53ab315b46a6.png",
+        "blink": "exec-1581654e-1e1b-46c3-8633-d7cbfdf9665e.png",
+        "body": "exec-051e7693-7dbd-48f6-9ad6-711c5378744d.png"
+      },
+      "status": {
+        "face": "generated independent identity",
+        "face-blink": "generated eyelid edit, composited only within eye rectangles",
+        "body": "generated clothing-only torso"
+      },
+      "textures": {
+        "face.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/plaid/face.png",
+          "relativePath": "plaid/face.png",
+          "dimensions": [
+            128,
+            128
+          ],
+          "sha256": "dc0b7a71ea40c6aeb094ab1d408063e4eb80eb8fc585694bdffaa951fac51fed"
+        },
+        "face-blink.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/plaid/face-blink.png",
+          "relativePath": "plaid/face-blink.png",
+          "dimensions": [
+            128,
+            128
+          ],
+          "sha256": "ac1900b5491f52d16c41c1dc20341b41b0bd5c13b46d4644fd179b729de92e8e"
+        },
+        "body.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/plaid/body.png",
+          "relativePath": "plaid/body.png",
+          "dimensions": [
+            128,
+            128
+          ],
+          "sha256": "0510cead0722ebc0bca472c3969e248e7ac1efbab243ac0ef9669f62d21cb4b9"
+        }
+      },
+      "originals": {
+        "face-mother.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/plaid/originals/face-mother.png",
+          "dimensions": [
+            1254,
+            1254
+          ],
+          "sha256": "29214743bb9c687794af6221c86d72aa658c76eff26d405de6baa9796ee59a8e"
+        },
+        "face-blink-edit.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/plaid/originals/face-blink-edit.png",
+          "dimensions": [
+            1254,
+            1254
+          ],
+          "sha256": "dd1c1e19e2d9cf358bff5ae574dd09b0247f6386774b564b0224bbc342496915"
+        },
+        "body-mother.png": {
+          "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/plaid/originals/body-mother.png",
+          "dimensions": [
+            1254,
+            1254
+          ],
+          "sha256": "7ac40ecb48da3291bf4ae069acba1c280699e0a66143d5fcd0cb7ba06f465097"
+        }
+      },
+      "cropBox": {
+        "face": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "body": [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      },
+      "eyeRegions": [
+        [
+          23,
+          43,
+          57,
+          57
+        ],
+        [
+          72,
+          43,
+          104,
+          57
+        ]
+      ],
+      "atlasRects": {
+        "face": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "face-blink": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "body": [
+          0,
+          0,
+          128,
+          128
+        ]
+      },
+      "rigType": null,
+      "blinkMode": "two full-square face maps; changes confined to two eyelid regions",
+      "animations": [
+        "open/closed texture states"
+      ],
+      "bounds": null,
+      "statistics": {
+        "changedBlinkPixels": 768,
+        "changedPixelsOutsideEyeRegions": 0
+      },
+      "verification": {
+        "dimensions": "passed",
+        "blinkPixelInvariance": "passed",
+        "visualLowResolution": "passed: inspected final 128x128 open/closed/body maps at nearest-neighbor 3x enlargement; faces remain distinct, eyes close naturally, clothing reads clearly",
+        "inSceneUV": "not in asset-only scope",
+        "visualInspectionArtifact": "/workspace/scratch/85111d38430a/npc-v74/art-b/inspection-128-nearest.png"
+      },
+      "prompts": {
+        "face": "/workspace/scratch/85111d38430a/npc-v74/art-b/plaid/prompts/face.txt",
+        "blink": "/workspace/scratch/85111d38430a/npc-v74/art-b/plaid/prompts/blink.txt",
+        "body": "/workspace/scratch/85111d38430a/npc-v74/art-b/plaid/prompts/body.txt"
+      }
+    }
+  ]
+}

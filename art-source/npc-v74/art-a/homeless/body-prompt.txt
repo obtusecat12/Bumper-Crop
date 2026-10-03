@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Purpose: single frontal torso clothing diffuse texture mother image for a fully clothed realistic PS1 / early PS2 low-polygon homeless adult NPC. Final texture reduced to 128x128.
+Subject: the central front of a filthy old olive-drab pullover hoodie, faded brown-green cotton fleece fabric. Frayed worn seams, dust and irregular ingrained brown grime patches, flattened folds and broad fabric color wear. Wide simple ribbed lower hem, large kangaroo pocket across the lower middle, hood-opening seam and two old olive drawstrings at the upper center. No printed design.
+Composition: straight-on orthographic-like view of only the front torso clothing surface, from the neck opening at top to lower hem at bottom. Flat rectangular fabric crop fills the entire square edge-to-edge; upper center hood opening contains only dark olive cloth, no skin. No sleeves extended sideways, no complete garment silhouette, no empty background. Broad shoulders at the upper corners; left and right cut edges continue the fabric.
+Surface style: photographic old real cloth with large readable seams and compressed soft tonal folds, matching photo-textured 1990s/early2000s low-polygon game characters. Continuous photographic mother image for mechanical low-resolution downsampling.
+Lighting: even soft weak-directional illumination suitable for a diffuse/albedo map, no dramatic hard shadows, no shine.
+Aspect ratio: 1:1.
+Avoid: head, face, neck, skin, hands, person, mannequin, background, scene, cartoon, illustration, rendered polygon garment, brand logo, letters, text, watermark, atlas, multiple garments, excessive yellow, oversharpening, high frequency noise, glossy glare.

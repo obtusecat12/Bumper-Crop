@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Use case: stylized-concept.
+Asset type: one flat diffuse texture for a tiny cheap beer or wine bottle prop in a PS1-era low-poly 3D game.
+Object: a worn inexpensive paper bottle label from roughly 1970–1990. Fictional English brand name: "OLD PIER". Old printed serif typography, simple green and ochre border details, warm ivory paper, faded ink, a few restrained rubbed patches and edge stains.
+View and composition: single flat front view; a rectangular label design filling the entire square image edge to edge; the label surface itself is the image. Large readable OLD PIER centered, no perspective, no surrounding surface, no bottle or 3D object.
+Surface style: photograph of real cheap aged printed paper compressed into broad low-resolution color patches, suitable for a 128 by 128 pixel game texture. Not cartoon, not a modern premium brand mockup. Modest coarse details which survive downsampling.
+Lighting: uniform weakly directional diffuse illumination baked only as subtle paper color, no cast shadows or highlights.
+Palette: warm ivory, faded deep green, muted yellow ochre, dark aged ink.
+Aspect ratio: 1:1.
+Avoid: scenes, bottle silhouettes, hands, people, glossy foil, modern typography, tiny dense readable copy, thick fake pixel grids, watercolor, UI, watermarks, unrelated logos.

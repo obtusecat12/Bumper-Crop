@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><title>V74 alley model inspection</title><style>body{margin:0;background:#858d8d}canvas{display:block}</style><script type="module">
+import * as T from '/vendor/three.module.min.js';
+import {initializeBathTextures} from '/bath-textures.js?v=62';
+import {initializeRetroTextures74} from '/retro-occupants-v74.js';
+import {createSpringEntrance,BATH_ADDRESS,bathPoint} from '/level27-entry.js?v=61';
+await Promise.all([initializeBathTextures(),initializeRetroTextures74()]);
+const scene=new T.Scene();scene.background=new T.Color(0x959b95);scene.add(new T.HemisphereLight(0xc7d6d9,0x5b6051,2.15));
+const sun=new T.DirectionalLight(0xffe9c7,2.05);sun.position.set(BATH_ADDRESS.x-10,18,BATH_ADDRESS.z+8);scene.add(sun);
+const entry=createSpringEntrance();scene.add(entry.object);
+const ground=new T.Mesh(new T.PlaneGeometry(20,12),new T.MeshStandardMaterial({color:0x8b897b,roughness:.85}));ground.rotation.x=-Math.PI/2;ground.position.set(BATH_ADDRESS.x,.445,BATH_ADDRESS.z+9.3);scene.add(ground);
+const camera=new T.PerspectiveCamera(57,innerWidth/innerHeight,.03,70),renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;document.body.append(renderer.domElement);
+const pos=(x,y,z)=>{const q=bathPoint(x,z);return[q.x,y+.45,q.z];};
+const views={homeless:{p:[-.8,1.4,6.3],look:[1.24,.22,4.08]},wallman:{p:[.4,1.6,-12.43],look:[-2.13,1.00,-14.32]},profile:{p:[-1.07,1.64,-15.32],look:[-2.1,1.28,-14.34]}};
+function view(name){const v=views[name];camera.position.fromArray(pos(...v.p));camera.lookAt(...pos(...v.look));camera.updateMatrixWorld();renderer.render(scene,camera);}
+window.alleyCheck={view,entry,renderer,scene,camera,pose(t){entry.occupants.actors.forEach(a=>a.samplePose(t));renderer.render(scene,camera);}};view('homeless');window.ready=true;
+</script>

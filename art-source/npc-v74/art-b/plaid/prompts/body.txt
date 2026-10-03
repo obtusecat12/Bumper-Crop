@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Use case: stylized-concept.
+Asset type: single front torso clothing diffuse texture for a PS1 / early PS2 faceted human NPC, to be downsampled to 128x128.
+Subject: slightly worn tan, muted rust-brown and faded blue plaid button-up shirt for a stocky adult man about 55. Plain practical cotton shirt with broad medium-scale plaid checks, soft collar, center button placket and one chest pocket. No branding.
+Composition: square 1:1 front clothing surface, straight-on orthographic-like view from collar opening at top center to shirt hem below waist at bottom. Both shoulders extend to the square top corners. Shirt fabric fills left and right image edges, hem cropped at bottom, no empty background. Readable collar in the upper center, straight vertical button placket on centerline, check pattern and a few broad natural folds. Torso only. No face, head, hands, arms beyond shoulder edge, feet or scene.
+Style: photographic diffuse worn cotton and seam information compressed into broad slightly imperfect color patches for retro low-poly texture mapping, no cartoon or painted polygon facets. Keep recognizable collar, buttons and plaid pattern at low resolution.
+Lighting: flat even neutral diffuse illumination, weak shading in folds, no shiny highlights or cast shadows.
+Detail budget: broad construction shapes and medium broad plaid checks, modest cloth detail, no tiny weave or excessive noise.
+Aspect ratio: 1:1.
+Avoid: person portrait, skin, neck, mannequin, hanger, background, text, logos, watermark, atlas subdivisions, collage, perspective tilt, glossy modern material, cartoon, illustration, over-sharpening.

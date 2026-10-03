@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "actualGame": true,
+  "renderer": "Chrome ANGLE SwiftShader software WebGL2",
+  "checks": [
+    "normal startup",
+    "F2 bath alley waypoint",
+    "two alley residents on original city ground",
+    "actual E bath-door entry",
+    "photo overlay finished with no WebGL errors"
+  ],
+  "performanceCaveat": "These are software WebGL checks; no hardware gameplay FPS claim."
+}

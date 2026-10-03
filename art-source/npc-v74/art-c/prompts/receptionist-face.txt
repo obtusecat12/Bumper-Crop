@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Purpose: One frontal face diffuse mother texture for an adult human retro PS1 / early PS2 low polygon NPC.
+Subject: One elderly woman about 70, light olive skin, visible natural nasolabial folds and age lines, small nose, gray short permed hair, thin normal lips, quiet ordinary neutral expression, eyes open naturally and looking straight ahead. NO glasses: separate 3D reading glasses will be added later.
+View and composition: Perfectly frontal and straight, symmetrical camera with very weak perspective, close crop from top of gray hairline to bottom of chin. Entire face fills almost the entire square, cheeks near side edges, no neck, no shoulders, no scenery. One single face, not a contact sheet.
+Surface style: Real photographic human information compressed into coarse low-resolution photographic color shapes. The look of a real face scanned into a 1999–2002 game diffuse texture, recognizable age, eye sockets, nose shadows and mouth corners. Ordinary imperfect skin. This is a flat image texture to be mapped onto a faceted 3D head; do not render a polygon model, do not make a cartoon or drawing.
+Lighting: Even diffuse weak-direction light, warm-neutral skin color, no hard shadows, no beauty lighting, no specular highlights.
+Detail budget: Broad readable natural face features that remain legible at 128x128, modest blur and muted color variation, no fine pores, no sharpening halos, no artificial grain or dense noise.
+Aspect ratio: 1:1.
+Avoid: Multiple views, collage, multiple faces, teeth, smile, eyewear, cosmetics, props, text, UI, watermark, modern stylized cartoon face, beautiful glamour portrait, exaggerated expression, excessive yellow, high gloss.

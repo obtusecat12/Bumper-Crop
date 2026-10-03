@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Use case: identity-preserve.
+Asset type: closed-eyelid blink frame for the same single frontal face diffuse texture.
+Input image: edit target is the supplied older ruddy moustached man's face mother texture; it defines the exact identity, crop, position, colors and lighting.
+Edit: close both eyes naturally in a relaxed blink. Change only the small eyelid surfaces within the existing eye openings. Skin-toned upper eyelids cover the irises and eye whites, with a soft anatomically natural meeting crease near the lower eyelid. Eyes fully closed, no visible pupil, iris or white.
+Preserve: every other facial feature and all other pixels unchanged: receding hair, eyebrows, brow position, broad nose, cheeks, ears, chevron moustache, mouth, chin, face proportions, expression, texture, crop, exposure, color, exact framing and dimensions. This is the same man and same image, not a recreated portrait. Do not lower the eyebrows or move the eye sockets.
+Style: retain the supplied photographic diffuse skin surface for eventual 128x128 PS1 / early PS2 texture; no cartoon drawing or painted black-line eye symbols.
+Aspect ratio: 1:1.
+Avoid: changed identity, altered head position, different face shape, changed mouth or moustache, moved eyes, squinting, tightly squeezed eyelids, black bars, eye masks, makeup, text, border, extra views, background changes, rescaling.

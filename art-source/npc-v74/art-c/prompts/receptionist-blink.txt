@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+Purpose: Exact closed-eyelid edit of the supplied receptionist frontal face texture, for a blink frame of the same NPC.
+Edit target: The attached single frontal elderly woman's face. Preserve her exact identity, camera, proportions, wrinkles, skin color, lighting, mouth, nose, eyebrows, gray hair, framing, dimensions and every non-eye feature.
+Allowed change: ONLY close both eyelids naturally. Replace each exposed eye surface with that woman's own relaxed closed eyelid skin and one natural subtle curved lash seam, in the same eye position. Eyes fully closed in a normal brief blink, no squint, no facial expression change. Eyebrows must remain exactly where they were.
+Surface style: Match the supplied photographic low-resolution diffuse face texture exactly, including its modest blur and muted skin shades. No cartoon outlines.
+Pixel invariants: Outside the two small eyelid regions leave the source image completely unchanged. Do not regenerate, recrop or reposition the face.
+Aspect ratio: 1:1.
+Avoid: New identity, changed expression, forehead or eyebrow change, cheek change, color grading, glasses, open eye white, partial blink, tears, smile, extra features, collage, words, watermark.

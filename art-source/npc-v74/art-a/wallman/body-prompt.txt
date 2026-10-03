@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Purpose: single front-torso clothing diffuse texture mother image for a fully clothed realistic PS1 / early PS2 adult NPC wearing a worn beige windbreaker. Final texture reduced to 128x128.
+Subject: central front torso panel of an old beige/taupe windbreaker, dull thin matte nylon-cotton fabric, slightly discolored with worn seams and dusty smudges. Simple high turned collar along the top edge, old straight central zipper fully closed, two shallow slanted hand-pocket openings low on the front, dull folded waistband at bottom. Simple ordinary 1990s jacket. Cloth has broad compressed wrinkles around shoulders, chest and lower pockets.
+Composition: straight-on orthographic-like flat photographic crop of the front clothing surface only, from the collar at top to the waistband at bottom. Front cloth fills the square edge-to-edge, with upper shoulders at top corners and left/right cloth cut edges continuing outside the image. At the neckline only dark interior cloth is visible. No skin. No full garment silhouette, no extended sleeves, no background.
+Surface style: believable photographic old fabric represented as large soft diffuse color areas appropriate for photo-textured early game characters. Central seam, zipper, pocket edges and folds readable after mechanical downsampling to low resolution.
+Lighting: even soft diffuse lighting with weak directionality and no shine, suitable for a diffuse/albedo texture.
+Aspect ratio: 1:1.
+Avoid: head, face, skin, neck, hands, human, mannequin, background, illustration, cartoon, rendered polygon garment, text, brand logos, symbols, atlas, multiple jackets, dramatic shadows, excessive yellow, sharpened weave, high frequency noise, glossy glare.

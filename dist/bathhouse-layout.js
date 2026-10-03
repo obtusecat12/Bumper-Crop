@@ -1,3 +1,4 @@
+import {blockedByOccupant74} from './retro-occupants-v74.js';
 import {newBathAllowed,POOL_DOOR,BATH_V72_ARRIVAL} from './bathhouse-plan-v72.js';
 import {spaFloor,spaAllowed,inSpa,inSpaPortal} from './spa-layout-v66.js';
 // One metre-scale authority for the empty pool, its deck and all indoor routes.
@@ -14,6 +15,7 @@ export function bathFloor(x,z){if(inSpa(x,z))return spaFloor(x,z);if(x>-2.48&&x<
 export function bathShowerAt(x,z,r=.66){return SHOWER_HEADS.findIndex(p=>Math.hypot(p.x-x,p.z-z)<r);}
 export function bathUnderShower(x,z){return bathShowerAt(x,z,.34)>=0;}
 export function bathAllowed(x,z){
+ if(blockedByOccupant74(x,z))return false;
  if(inSpaPortal(x,z))return true;
  if(inSpa(x,z))return spaAllowed(x,z);
  const lobby=newBathAllowed(x,z);

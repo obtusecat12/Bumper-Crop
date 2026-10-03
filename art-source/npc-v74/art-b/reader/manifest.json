@@ -1,0 +1,141 @@
+{
+  "id": "reader",
+  "seed": null,
+  "seedNote": "Built-in tool did not expose seed.",
+  "definition": "Adult man 35\u201340; pale elongated oval face, clean-shaven, dark side-part hair; charcoal suit, white shirt, black tie.",
+  "source": {
+    "face": "exec-4827c229-b93c-4dd5-b0a0-ab540afa2d3d.png",
+    "blink": "exec-c128d225-00c0-41a9-ba94-34c678f87a80.png",
+    "body": "exec-dc25e23f-423f-402b-9fb6-8aca338baefe.png"
+  },
+  "status": {
+    "face": "generated independent identity",
+    "face-blink": "generated eyelid edit, composited only within eye rectangles",
+    "body": "generated clothing-only torso"
+  },
+  "textures": {
+    "face.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/face.png",
+      "relativePath": "reader/face.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "sha256": "af2aab6d1151a3bd06eac8ea779ab84b8ee98777d5dc5014555014d4a0186026"
+    },
+    "face-blink.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/face-blink.png",
+      "relativePath": "reader/face-blink.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "sha256": "780ff2d2c19c8d4201770157b8157cdc24791e3e27e04d592aebbf2fb6ee09f1"
+    },
+    "body.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/body.png",
+      "relativePath": "reader/body.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "sha256": "3fa5554d345c6a8835074ee62be74c72f0e92a3182130bc84ff0bcc4b606c44d"
+    }
+  },
+  "originals": {
+    "face-mother.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/originals/face-mother.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "0bdde42b185a12e891ecb00a0c5eace525c84b196d489b6be3c67c9d17184468"
+    },
+    "face-blink-edit.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/originals/face-blink-edit.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "c853c8b57da645510f895ef2af138c5e3bb51970b200fa8e71ecbe3f1eda4f82"
+    },
+    "body-mother.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/originals/body-mother.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "36b610c8f824ded855285775dfc504e292e39a3e658819b4965e38ef16a234d0"
+    }
+  },
+  "cropBox": {
+    "face": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "body": [
+      0,
+      0,
+      1254,
+      1254
+    ]
+  },
+  "eyeRegions": [
+    [
+      23,
+      42,
+      55,
+      57
+    ],
+    [
+      73,
+      42,
+      105,
+      57
+    ]
+  ],
+  "atlasRects": {
+    "face": [
+      0,
+      0,
+      128,
+      128
+    ],
+    "face-blink": [
+      0,
+      0,
+      128,
+      128
+    ],
+    "body": [
+      0,
+      0,
+      128,
+      128
+    ]
+  },
+  "rigType": null,
+  "blinkMode": "two full-square face maps; changes confined to two eyelid regions",
+  "animations": [
+    "open/closed texture states"
+  ],
+  "bounds": null,
+  "statistics": {
+    "changedBlinkPixels": 861,
+    "changedPixelsOutsideEyeRegions": 0
+  },
+  "verification": {
+    "dimensions": "passed",
+    "blinkPixelInvariance": "passed",
+    "visualLowResolution": "passed: inspected final 128x128 open/closed/body maps at nearest-neighbor 3x enlargement; faces remain distinct, eyes close naturally, clothing reads clearly",
+    "inSceneUV": "not in asset-only scope",
+    "visualInspectionArtifact": "/workspace/scratch/85111d38430a/npc-v74/art-b/inspection-128-nearest.png"
+  },
+  "prompts": {
+    "face": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/prompts/face.txt",
+    "blink": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/prompts/blink.txt",
+    "body": "/workspace/scratch/85111d38430a/npc-v74/art-b/reader/prompts/body.txt"
+  }
+}

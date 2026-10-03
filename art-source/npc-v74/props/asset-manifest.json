@@ -1,0 +1,121 @@
+{
+  "id": "npc-v74-props",
+  "version": 74,
+  "seed": null,
+  "seedNote": "Built-in generation does not expose a seed.",
+  "generationTool": "image_gen.imagegen",
+  "source": {
+    "old-pier-label": {
+      "status": "generated",
+      "original": "old-pier-label-original.png",
+      "originalSha256": "b57af8b868a19f2211bc35acaa21384c2e4909f92ef0d43634d93cacd3c6ec10",
+      "originalSize": [
+        1254,
+        1254
+      ],
+      "prompt": "label-prompt.txt",
+      "guide": "prompt-guide-before-label.md",
+      "crop": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    },
+    "ochre-water-streaks": {
+      "status": "generated",
+      "original": "ochre-water-streaks-original.png",
+      "originalSha256": "d317c5d2c27d9f91d3e2c93f62a92760f68f237eb19dce4101a8360f3c92fc24",
+      "originalSize": [
+        1254,
+        1254
+      ],
+      "prompt": "stream-prompt.txt",
+      "guide": "prompt-guide-before-stream.md",
+      "crop": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "postprocess": "Premultiplied BOX resize; symmetric blend of 8 edge rows for exact Y repeat. No new marks drawn."
+    },
+    "reader-newspaper": {
+      "status": "reused-existing-generated-art",
+      "path": "/workspace/scratch/85111d38430a/level10/dist/textures/changing-v72/newspaper.webp",
+      "sha256": "d0cedd61dc80338428d18bb254ba544e58e89248341610617022a9de422d2a14",
+      "sourceSize": [
+        1086,
+        1448
+      ],
+      "crop": [
+        0,
+        0,
+        1086,
+        1086
+      ],
+      "originalGenerationArt": "/workspace/scratch/85111d38430a/level10/art-source/bath-v72/materials/newspaper.png",
+      "originalPrompt": "/workspace/scratch/85111d38430a/level10/art-source/bath-v72/materials/newspaper-prompt.txt"
+    }
+  },
+  "textures": [
+    {
+      "file": "old-pier-label-128.png",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGB",
+      "sha256": "5216e321dffec1bf85009aefd39b806fa75f12abaafbd93bcfad0f01b95e8033"
+    },
+    {
+      "file": "ochre-water-streaks-128.png",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "sha256": "c846017230926e7835cddfa0dc298dde31101316d240224cccc6b534225a3296",
+      "alphaRange": [
+        0,
+        234
+      ],
+      "meanAlpha": 9.1428,
+      "fullyTransparentFraction": 0.3179,
+      "verticalEdgePixelMismatch": 0
+    },
+    {
+      "file": "reader-newspaper-128.png",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGB",
+      "sha256": "ae69af7a067e05270a30b80de0c8be46ad4969da385ab490f9c31263f76fd35e"
+    }
+  ],
+  "atlasRects": null,
+  "rigType": null,
+  "blinkMode": null,
+  "animations": [],
+  "bounds": null,
+  "runtimeNotes": {
+    "label": "sRGB color, nearest magnification, opaque",
+    "stream": "sRGB color, transparent alpha, RepeatWrapping Y, offset Y animation, depthWrite false; source mean alpha is already low; tune material opacity to scene",
+    "newspaper": "sRGB color, nearest magnification, opaque"
+  },
+  "validation": {
+    "allRuntimeTexturesExactly128Square": true,
+    "streamHasRealAlpha": true,
+    "streamYSeamExact": true,
+    "runtimeInScene": "Not tested by asset-only worker"
+  },
+  "guideProvenance": {
+    "requestedURL": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+    "rawFetchResult": "Blocked: web DisabledError; shell browser-proxy unavailable. These failures occurred before generation; no new raw download claimed.",
+    "liveReadableFallback": "https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md",
+    "fallbackRead": "Live rendered guide read separately before each image call. Fixed prefix, relevant fields and aspect ratio applied.",
+    "savedSnapshotSource": "/workspace/scratch/85111d38430a/level10/art-source/bath-v72/materials/gpt_image_2_prompt_skill-call01.md",
+    "savedSnapshotRead": "Cached raw guide copied and read before each image call; its relevant content matches the live rendered document."
+  }
+}

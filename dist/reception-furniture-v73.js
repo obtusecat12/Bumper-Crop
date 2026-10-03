@@ -33,7 +33,7 @@ function coffeeTable(root,m,old){
  const q=LOUNGE73.table,g=new T.Group();g.name='Walnut lounge table with magazines and ashtray';g.position.set(q.x,0,q.z);g.rotation.y=q.yaw;root.add(g);
  addBox(g,m.walnut,0,.398,0,1.23,.07,.63,'Thick molded coffee table top',.028);addBox(g,m.walnut,0,.312,0,1.07,.14,.46,'Carved table apron',.025);
  for(const x of[-.49,.49])for(const z of[-.217,.217])lathe(g,m.walnut,[[.034,0],[.04,.025],[.026,.105],[.043,.18],[.035,.245],[.046,.35]],x,0,z,'Turned solid wood table leg',20);
- for(const [x,z,w,d,ry,art]of[[-.24,-.10,.242,.322,-.17,'magazine-weekend-away-1994'],[-.17,-.035,.252,.336,.21,'magazine-room-home-1997']]){const pages=addBox(g,old.plastic,x,.442,z,w,.013,d,'Uneven yellowed magazine page block',.004);pages.rotation.y=ry;curledPaper(g,m[art],x,.450,z,w,d,ry,[0,0,1,1],.019,'Generated 1990s magazine curled cover');}
+ for(const [x,z,w,d,ry,art]of[[-.43,-.07,.242,.322,-.12,'magazine-weekend-away-1994'],[-.10,.01,.252,.336,.13,'magazine-room-home-1997']]){const pages=addBox(g,old.plastic,x,.4395,z,w,.013,d,'Uneven yellowed magazine page block',.004);pages.rotation.y=ry;curledPaper(g,m[art],x,.445,z,w,d,ry,[0,0,1,1],.019,'Generated 1990s magazine curled cover');}
  const bowl=lathe(g,m.glass,[[0,0],[.063,0],[.088,.009],[.10,.027],[.101,.041],[.085,.049],[.078,.037],[.071,.018],[0,.018]],.325,.436,.068,'Heavy pressed glass ashtray',36);
  addPlane(g,m['ashtray-contents'],.325,.455,.068,.181,.181,0,-Math.PI/2,'Generated ash and five cigarette butts');
  for(let i=0;i<8;i++){const a=i*Math.PI/4;ball(g,m.glass,.325+Math.cos(a)*.095,.473,.068+Math.sin(a)*.095,.009,.010,.014,'Faceted ashtray scallop');}

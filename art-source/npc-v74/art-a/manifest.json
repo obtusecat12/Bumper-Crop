@@ -1,0 +1,224 @@
+{
+  "version": "npc-v74-art-a",
+  "scope": "generated texture assets only; no Site repository modifications",
+  "tool": "builtin image_gen__imagegen",
+  "reference": "/workspace/scratch/85111d38430a/attachments/250e2ccc-5cd9-4c54-b010-0f85762aae25/image.png",
+  "promptGuide": {
+    "url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+    "beforeEveryImageCall": true,
+    "savedCopies": [
+      "guides/guide-before-homeless-body.md",
+      "guides/guide-before-homeless-face.md",
+      "guides/guide-before-wallman-blink.md",
+      "guides/guide-before-wallman-body.md",
+      "guides/guide-before-wallman-face.md"
+    ]
+  },
+  "uv": {
+    "coordinateConvention": "image pixel coordinates from top left, rectangles right/bottom exclusive",
+    "faceAtlasRect": [
+      0,
+      0,
+      128,
+      128
+    ],
+    "bodyAtlasRect": [
+      0,
+      0,
+      128,
+      128
+    ],
+    "faceMapping": "central front facial surface only; do not extend across side/back cranium; use separate side/back material",
+    "webglUV": "for conventional flipY=true Three.TextureLoader, pixel (x,y) -> (x/128,1-y/128)",
+    "wrap": "clamp to edge",
+    "magFilter": "NearestFilter",
+    "colorSpace": "SRGBColorSpace"
+  },
+  "processing": {
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "sourceCrop": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "outputSize": [
+      128,
+      128
+    ],
+    "resampler": "Pillow BOX area mean",
+    "paletteReduction": false,
+    "sharpening": false
+  },
+  "blinkValidation": {
+    "role": "wallman",
+    "eyeRects": [
+      [
+        27,
+        47,
+        57,
+        62
+      ],
+      [
+        72,
+        47,
+        103,
+        62
+      ]
+    ],
+    "composition": "generated closed-eyelid patches only, edge feather 3 pixels inside the two bounded rectangles",
+    "changedPixelCount": 906,
+    "changedPixelsOutsideEyeRects": 0
+  },
+  "roles": [
+    {
+      "id": "homeless",
+      "seed": null,
+      "source": "generated with builtin image tool; prompt saved beside each mother image",
+      "rigType": "not supplied; texture-only task",
+      "blinkMode": "permanently-closed-static",
+      "animations": [
+        "static closed eyes"
+      ],
+      "bounds": null,
+      "atlasRects": {
+        "face": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "body": [
+          0,
+          0,
+          128,
+          128
+        ]
+      },
+      "textures": {
+        "face": {
+          "file": "homeless/face.png",
+          "size": [
+            128,
+            128
+          ],
+          "sha256": "9677e34c3cef65ad4ef5bbe5fde6940eb232c06e1cc2f12d9a60b45c2bc372fd",
+          "original": "homeless/face-original.png",
+          "prompt": "homeless/face-prompt.txt",
+          "sourceCrop": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "status": "generated and area-downsampled"
+        },
+        "body": {
+          "file": "homeless/body.png",
+          "size": [
+            128,
+            128
+          ],
+          "sha256": "abf93c789fce30a283c8a6972a4b60e86f548718d9c2c973f63de6a84062de1b",
+          "original": "homeless/body-original.png",
+          "prompt": "homeless/body-prompt.txt",
+          "sourceCrop": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "status": "generated and area-downsampled"
+        }
+      }
+    },
+    {
+      "id": "wallman",
+      "seed": null,
+      "source": "generated with builtin image tool; prompt saved beside each mother image",
+      "rigType": "not supplied; texture-only task",
+      "blinkMode": "independent-open-closed-eye-texture",
+      "animations": [
+        "eye patch blink"
+      ],
+      "bounds": null,
+      "atlasRects": {
+        "face": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "body": [
+          0,
+          0,
+          128,
+          128
+        ]
+      },
+      "textures": {
+        "face": {
+          "file": "wallman/face.png",
+          "size": [
+            128,
+            128
+          ],
+          "sha256": "42efc107da16467ab2485169cd043e2bcc4c76988a4ef54586a7ed3a48adcfea",
+          "original": "wallman/face-original.png",
+          "prompt": "wallman/face-prompt.txt",
+          "sourceCrop": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "status": "generated and area-downsampled"
+        },
+        "face-blink": {
+          "file": "wallman/face-blink.png",
+          "size": [
+            128,
+            128
+          ],
+          "sha256": "f80951b7da77d13d6c93180f825e1e739fd449c2d519ff4d9e93c3021d70892b",
+          "original": "wallman/face-blink-original.png",
+          "prompt": "wallman/face-blink-prompt.txt",
+          "sourceCrop": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "status": "edited original + bounded eye compositing"
+        },
+        "body": {
+          "file": "wallman/body.png",
+          "size": [
+            128,
+            128
+          ],
+          "sha256": "2a3e86512b79d6845aa86904989392c5a9ad5d35b2a1343f41c36a482864bbe7",
+          "original": "wallman/body-original.png",
+          "prompt": "wallman/body-prompt.txt",
+          "sourceCrop": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "status": "generated and area-downsampled"
+        }
+      }
+    }
+  ],
+  "validation": {
+    "finalTexturesExact128": true,
+    "photographicFaces": true,
+    "bodiesContainNoFaces": true,
+    "visualQA": "nearest-neighbor 3x contact sheet inspected",
+    "inSceneTest": "not within texture-asset scope"
+  }
+}

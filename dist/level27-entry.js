@@ -1,3 +1,4 @@
+import {createAlleyOccupants74,ALLEY_OCCUPANTS74} from './retro-occupants-v74.js';
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {UrbanBatch} from './urban-batch.js?v=60';
@@ -73,5 +74,7 @@ export function createSpringEntrance(){
  pavingGeo.computeVertexNormals();worldUV(pavingGeo,1.25);const pavingMesh=new T.Mesh(pavingGeo,floor);pavingMesh.position.z=-6.3;pavingMesh.receiveShadow=true;local.add(pavingMesh);
  // Batch static opaque architecture by material, retaining grounded details.
  local.updateMatrixWorld(true);const groups=new Map();local.traverse(o=>{if(!o.isMesh)return;const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();g.applyMatrix4(o.matrixWorld);if(!groups.has(o.material))groups.set(o.material,[]);groups.get(o.material).push(g);});root.clear();let triangles=0;for(const [mat,parts]of groups){const g=mergeGeometries(parts);parts.forEach(p=>p.dispose());g.computeBoundingBox();g.computeBoundingSphere();const mesh=new T.Mesh(g,mat);mesh.castShadow=!mat.transparent;mesh.receiveShadow=true;mesh.userData.exitStatic=true;mesh.name=mat.name;root.add(mesh);triangles+=g.attributes.position.count/3;}
- root.userData.cityStats={triangles,draws:root.children.length,parts:root.children.length};b.pop();return{object:root,colliders:b.colliders,walks:b.walks,waypoint:BATH_WAYPOINT,update(t){floor.userData.wetUniforms.bTime.value=t||0;}};
+ const peopleRoot=new T.Group();peopleRoot.name='Alley residents / origin-rebased dynamic actors';peopleRoot.position.set(center.x,Y,center.z);peopleRoot.rotation.y=angle;root.add(peopleRoot);const occupants=createAlleyOccupants74(peopleRoot);
+ b.solid(1.25,3.99,1.76,.73);b.circle(-2.1497,-14.34,.33);
+ root.userData.cityStats={triangles:triangles+occupants.stats.triangles,draws:root.children.length-1+occupants.stats.draws,parts:root.children.length};b.pop();return{object:root,colliders:b.colliders,walks:b.walks,waypoint:BATH_WAYPOINT,occupants,dispose(){occupants.dispose();},update(t,preset,dt,state,active=true){floor.userData.wetUniforms.bTime.value=t||0;const player=state?bathLocal(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z):null;occupants.update(dt,player,active);}};
 }

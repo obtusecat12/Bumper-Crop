@@ -1,0 +1,366 @@
+{
+  "renderer": "Chrome ANGLE SwiftShader software WebGL2; not hardware FPS",
+  "durationMs": 30016.599999999627,
+  "frames": 1803,
+  "updateMaxMs": 0.30000000074505806,
+  "longestRenderIntervalSeconds": 0.11669999999998254,
+  "before": {
+    "geometries": 201,
+    "textures": 280,
+    "programs": 72
+  },
+  "after": {
+    "geometries": 201,
+    "textures": 280,
+    "programs": 72
+  },
+  "actors": [
+    {
+      "role": "homeless",
+      "seed": 7401,
+      "rigType": "THREE.SkinnedMesh",
+      "bones": 19,
+      "triangles": 1050,
+      "drawCalls": 3,
+      "materials": [
+        "V74 homeless / body",
+        "V74 homeless / front face",
+        "V74 homeless / skin and hair patches"
+      ],
+      "partTriangles": {
+        "torso": 160,
+        "neck": 48,
+        "arms": 192,
+        "hands": 96,
+        "thumbs": 16,
+        "legs": 192,
+        "feet": 24,
+        "head": 168,
+        "nose": 6,
+        "ears": 16,
+        "hair": 84,
+        "hood": 48
+      },
+      "poseHz": 15,
+      "mainFrameCap": false,
+      "interpolation": "THREE.InterpolateDiscrete",
+      "clip": "homeless / held 15 Hz idle",
+      "clipDuration": 12,
+      "sourceTexturesCallerOwned": true,
+      "faceUV": "full image on front arc only; sampled patches on sides/back",
+      "blinkMode": "always closed",
+      "blinkPeriod": 3.540546502894722,
+      "blinkPhase": 2.352750982305298,
+      "updates": 451,
+      "eyeChanges": 0,
+      "eyeClosed": true,
+      "dimensions": {
+        "scale": 0.96,
+        "seatHeight": null
+      },
+      "bounds": {
+        "min": [
+          -0.8568243050526656,
+          0.012744965451339128,
+          -0.1377068413010272
+        ],
+        "max": [
+          0.6442522243471903,
+          0.6055039868736517,
+          0.3664975858718489
+        ]
+      }
+    },
+    {
+      "role": "wallman",
+      "seed": 7402,
+      "rigType": "THREE.SkinnedMesh",
+      "bones": 19,
+      "triangles": 1002,
+      "drawCalls": 3,
+      "materials": [
+        "V74 wallman / body",
+        "V74 wallman / front face",
+        "V74 wallman / skin and hair patches"
+      ],
+      "partTriangles": {
+        "torso": 160,
+        "neck": 48,
+        "arms": 192,
+        "hands": 96,
+        "thumbs": 16,
+        "legs": 192,
+        "feet": 24,
+        "head": 168,
+        "nose": 6,
+        "ears": 16,
+        "hair": 84
+      },
+      "poseHz": 15,
+      "mainFrameCap": false,
+      "interpolation": "THREE.InterpolateDiscrete",
+      "clip": "wallman / held 15 Hz idle",
+      "clipDuration": 10,
+      "sourceTexturesCallerOwned": true,
+      "faceUV": "full image on front arc only; sampled patches on sides/back",
+      "blinkMode": "independent preloaded image swap",
+      "blinkPeriod": 4.929188433336094,
+      "blinkPhase": 3.770795545037941,
+      "updates": 451,
+      "eyeChanges": 12,
+      "eyeClosed": false,
+      "dimensions": {
+        "scale": 1,
+        "seatHeight": null
+      },
+      "bounds": {
+        "min": [
+          -0.4538235752077957,
+          0.0006280865551306276,
+          -0.11929019801262462
+        ],
+        "max": [
+          0.33265665398443384,
+          1.7564345870583618,
+          0.4301339478842272
+        ]
+      }
+    },
+    {
+      "role": "reader",
+      "seed": 7403,
+      "rigType": "THREE.SkinnedMesh",
+      "bones": 19,
+      "triangles": 1010,
+      "drawCalls": 4,
+      "materials": [
+        "V74 reader / body",
+        "V74 reader / front face",
+        "V74 reader / skin and hair patches",
+        "V74 reader / newspaper"
+      ],
+      "partTriangles": {
+        "torso": 160,
+        "neck": 48,
+        "arms": 192,
+        "hands": 96,
+        "thumbs": 16,
+        "legs": 192,
+        "feet": 24,
+        "head": 168,
+        "nose": 6,
+        "ears": 16,
+        "hair": 84,
+        "newspaper": 8
+      },
+      "poseHz": 15,
+      "mainFrameCap": false,
+      "interpolation": "THREE.InterpolateDiscrete",
+      "clip": "reader / held 15 Hz idle",
+      "clipDuration": 12,
+      "sourceTexturesCallerOwned": true,
+      "faceUV": "full image on front arc only; sampled patches on sides/back",
+      "blinkMode": "independent preloaded image swap",
+      "blinkPeriod": 3.1404982855310664,
+      "blinkPhase": 0.12262424408109554,
+      "updates": 451,
+      "eyeChanges": 26,
+      "eyeClosed": false,
+      "dimensions": {
+        "scale": 1.01,
+        "seatHeight": 0.56
+      },
+      "bounds": {
+        "min": [
+          -0.3687664324193584,
+          1.6114437626067083e-08,
+          -0.10972278343046779
+        ],
+        "max": [
+          0.370346870790806,
+          1.5830910618965364,
+          0.6292300346890553
+        ]
+      }
+    },
+    {
+      "role": "plaid",
+      "seed": 7404,
+      "rigType": "THREE.SkinnedMesh",
+      "bones": 19,
+      "triangles": 1002,
+      "drawCalls": 3,
+      "materials": [
+        "V74 plaid / body",
+        "V74 plaid / front face",
+        "V74 plaid / skin and hair patches"
+      ],
+      "partTriangles": {
+        "torso": 160,
+        "neck": 48,
+        "arms": 192,
+        "hands": 96,
+        "thumbs": 16,
+        "legs": 192,
+        "feet": 24,
+        "head": 168,
+        "nose": 6,
+        "ears": 16,
+        "hair": 84
+      },
+      "poseHz": 15,
+      "mainFrameCap": false,
+      "interpolation": "THREE.InterpolateDiscrete",
+      "clip": "plaid / held 15 Hz idle",
+      "clipDuration": 8,
+      "sourceTexturesCallerOwned": true,
+      "faceUV": "full image on front arc only; sampled patches on sides/back",
+      "blinkMode": "independent preloaded image swap",
+      "blinkPeriod": 3.3622238242300226,
+      "blinkPhase": 1.674276223400786,
+      "updates": 451,
+      "eyeChanges": 24,
+      "eyeClosed": false,
+      "dimensions": {
+        "scale": 0.98,
+        "seatHeight": 0.47
+      },
+      "bounds": {
+        "min": [
+          -0.3823946635968082,
+          -1.7511961576055013e-08,
+          -0.12193120777606964
+        ],
+        "max": [
+          0.37430367037670575,
+          1.4412016078599812,
+          0.6774990066867996
+        ]
+      }
+    },
+    {
+      "role": "receptionist",
+      "seed": 7405,
+      "rigType": "THREE.SkinnedMesh",
+      "bones": 19,
+      "triangles": 1214,
+      "drawCalls": 4,
+      "materials": [
+        "V74 receptionist / body",
+        "V74 receptionist / front face",
+        "V74 receptionist / skin and hair patches",
+        "V74 receptionist / solid prop"
+      ],
+      "partTriangles": {
+        "torso": 160,
+        "neck": 48,
+        "arms": 192,
+        "hands": 96,
+        "thumbs": 16,
+        "legs": 192,
+        "feet": 24,
+        "head": 168,
+        "nose": 6,
+        "ears": 16,
+        "hair": 244,
+        "glasses": 52
+      },
+      "poseHz": 15,
+      "mainFrameCap": false,
+      "interpolation": "THREE.InterpolateDiscrete",
+      "clip": "receptionist / held 15 Hz idle",
+      "clipDuration": 10,
+      "sourceTexturesCallerOwned": true,
+      "faceUV": "full image on front arc only; sampled patches on sides/back",
+      "blinkMode": "independent preloaded image swap",
+      "blinkPeriod": 4.555795183544978,
+      "blinkPhase": 3.7755457577621057,
+      "updates": 452,
+      "eyeChanges": 16,
+      "eyeClosed": false,
+      "dimensions": {
+        "scale": 0.93,
+        "seatHeight": null
+      },
+      "bounds": {
+        "min": [
+          -0.2767913571411499,
+          0.0005396002113812489,
+          -0.10495606963868627
+        ],
+        "max": [
+          0.27300220976832307,
+          1.6453096369245088,
+          0.18579616115693415
+        ]
+      }
+    },
+    {
+      "role": "poolman",
+      "seed": 7406,
+      "rigType": "THREE.SkinnedMesh",
+      "bones": 19,
+      "triangles": 1250,
+      "drawCalls": 4,
+      "materials": [
+        "V74 poolman / body",
+        "V74 poolman / front face",
+        "V74 poolman / skin and hair patches",
+        "V74 poolman / solid prop"
+      ],
+      "partTriangles": {
+        "torso": 160,
+        "neck": 48,
+        "arms": 192,
+        "hands": 96,
+        "thumbs": 16,
+        "legs": 192,
+        "shorts": 48,
+        "feet": 24,
+        "head": 168,
+        "nose": 6,
+        "ears": 16,
+        "hair": 84,
+        "duckRing": 200
+      },
+      "poseHz": 15,
+      "mainFrameCap": false,
+      "interpolation": "THREE.InterpolateDiscrete",
+      "clip": "poolman / held 15 Hz idle",
+      "clipDuration": 10,
+      "sourceTexturesCallerOwned": true,
+      "faceUV": "full image on front arc only; sampled patches on sides/back",
+      "blinkMode": "independent preloaded image swap",
+      "blinkPeriod": 5.128030601888895,
+      "blinkPhase": 1.7905304910938555,
+      "updates": 451,
+      "eyeChanges": 14,
+      "eyeClosed": false,
+      "dimensions": {
+        "scale": 1.02,
+        "seatHeight": null
+      },
+      "bounds": {
+        "min": [
+          -0.5490915619643352,
+          0.0006089869736121857,
+          -0.38804924954194575
+        ],
+        "max": [
+          0.5466453959653813,
+          1.8021562270372318,
+          0.5472907460806893
+        ]
+      }
+    }
+  ],
+  "noAnimationTextureUploads": true,
+  "samplersAtMost16": true,
+  "maxSamplers": 16,
+  "noResourceGrowth": true,
+  "afterDispose": {
+    "geometries": 195,
+    "textures": 273
+  },
+  "passed": true
+}

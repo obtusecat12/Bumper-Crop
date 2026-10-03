@@ -7,7 +7,7 @@ export function createBathLoading(host=document.body){
  host.append(panel);const images=[...panel.querySelectorAll('img')],label=panel.querySelector('.bath-loading-label'),percent=panel.querySelector('.bath-loading-percent'),bar=panel.querySelector('i'),track=panel.querySelector('[role="progressbar"]'),back=panel.querySelector('button');
  let timer=0,sequence=0,index=0,front=0,value=0,open=false;const cache=new Map();
  function preload(i){i%=10;if(!cache.has(i)){const im=new Image();im.src=BATH_SLIDES[i];cache.set(i,im.decode().then(()=>im).catch(()=>null));}return cache.get(i);}
- function progress(v,text){value=Math.max(value,Math.min(100,v));bar.style.transform=`scaleX(${value/100})`;percent.textContent=`${Math.floor(value)}%`;track.setAttribute('aria-valuenow',String(Math.floor(value)));if(text){panel.setAttribute('aria-label',text);label.textContent=value>=100?'READY':'LOADING';}}
+ function progress(v,text){value=Math.max(value,Math.min(100,v));bar.style.transform=`scaleX(${value/100})`;percent.textContent=`${Math.floor(value)}%`;track.setAttribute('aria-valuenow',String(Math.floor(value)));if(text){panel.setAttribute('aria-label',text);label.textContent=value>=100?'READY':text;}}
  async function advance(token){const image=await preload((index+1)%10);if(!open||token!==sequence)return;if(image){index=(index+1)%10;front=1-front;images[front].src=image.src;images[front].classList.add('is-visible');images[1-front].classList.remove('is-visible');}preload((index+1)%10);}
  // One small first photo is warmed while outdoors. The other nine are decoded
  // one ahead, avoiding a ten-image decode burst when the door is touched.
