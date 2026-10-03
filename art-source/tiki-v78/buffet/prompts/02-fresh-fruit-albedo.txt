@@ -1,0 +1,17 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Use case: product-mockup
+Asset type: six-panel UV base-color albedo atlas for modeled whole tropical fruits and pineapple crown leaves
+Primary request: generate an accurately organized texture atlas whose six equal square panels each fill edge-to-edge with the distinct fresh surface material described below, matching the whole fruit pile in the supplied original buffet-canoe reference.
+Input images: Image 1 is a reference photograph only, defining fruit colors and material identity; do not reproduce its scene or camera view.
+Layout: exactly three equal columns and two equal rows, no margins, no dividers, no labels; each panel is a continuous flat material swatch without an object silhouette.
+Panel top-left: pale cream-to-light sage whole netted melon rind, fine raised beige netting, understated narrow green longitudinal grooves; fresh and clean.
+Panel top-middle: whole ripe elongated yellow papaya skin, warm yellow with small light green mottling, smooth soft waxy surface, subtle tiny pores, very few small natural speckles.
+Panel top-right: whole round or pear-shaped green papaya skin, smooth fresh medium green with a slight yellow-green variation, soft waxy surface and subtle tiny pores.
+Panel bottom-left: fresh pineapple body skin, regular small diamond-shaped fibrous eyes, tan-gold and olive green with pale straw fibers and thin brown borders; visibly fresh tropical pineapple, readable eye structure, never charred or nearly black.
+Panel bottom-middle: pineapple crown leaf upper surface, fresh muted sage green elongated longitudinal fibrous veins aligned vertically, slight silver-green waxy bloom, uniform flat albedo.
+Panel bottom-right: pineapple crown leaf lower surface, slightly paler silver-sage green elongated longitudinal fibers aligned vertically, fresh and clean, uniform flat albedo.
+Lighting: neutral evenly lit diffuse albedo with no baked directional lighting, no cast shadows, no specular highlights or dramatic shading; geometry will supply curvature and lighting.
+Constraints: texture surfaces only; every material must remain visibly distinct; each panel may tile horizontally; do not include whole fruit object renderings, metal, ice, trays, dolls, labels, borders, normal maps or grayscale maps.
+Aspect ratio: 3:2
+Avoid: burned black pineapple, coarse stone-like pineapple, orange flesh, cut fruits, bruising, large brown scars, rotten leaves, dark vignettes, hard shadows, text, watermark, glossy glare.

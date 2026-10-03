@@ -1,0 +1,15 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Object: the reference olive-green seated ceramic figure ashtray at the center front of the bar, kept distinct from every drinking mug.
+Reference image: the supplied original bar photo is the sole factual source; the ashtray is the little pale olive seated figure at x=0.57–0.63, y=0.83–0.99 and round ash bowl at x=0.59–0.68, y=0.90–0.99.
+Asset type: high-detail photographic diffuse/base-color UV atlas for a small sculpted ceramic seated figure and its attached shallow round ashtray bowl; flat surface artwork, not a finished prop photograph.
+Composition: exact 2 by 2 layout of four equal square panels, no gutters or drawn borders; every panel fully filled with surface texture.
+Top-left panel: olive ceramic figure front surface artwork laid flat; a small carved elongated humanoid tiki face at upper center with low brows, narrow eyes, broad small nose and gently toothy low mouth, muted features matching the blurry reference, torso ridges below; faint outstretched arm ridges on the lower sides; all this stays in the same olive glaze, no bright teeth or painted decoration, no free-standing figure silhouette, no bowl drawn in this panel.
+Top-right panel: the same worn pale olive ceramic surface for figure sides, back and bowl outside, shallow irregular carved ridges and granular glazing, no face, no object outline.
+Bottom-left panel: the shallow bowl floor surface in completely flat top-down form, dull olive/gray glaze with an irregular dark gray soot patch near the middle, scattered small powdery white ash fragments and one tiny pale cigarette-filter-like fragment as visible in the reference, sparse details, no circular boundary.
+Bottom-right panel: the same pale olive rim and outer bowl ceramic glaze, fine mottled weathered surface, small grooves and chips; flat surface fully filling the square, no face, no ash, no ellipse.
+Materials: muted yellowish olive ceramic seen under amber bar light, subdued rough glaze, local micro shading only.
+Lighting: neutral diffuse material capture with soft shadows in shallow grooves, avoid major highlights and scene lighting.
+Detail: render at 2048 by 2048 pixels if supported; retain the restrained small sculpture quality instead of inventing an ornate tiki idol.
+Aspect ratio: 1:1.
+Avoid: mug, drinking cup, tall tiki-head object, disconnected limbs, finished-object photograph, product silhouette, painted green face, glossy neon glaze, extra ashtrays, enlarged invented facial features, text, labels, hard panel dividers, excessive yellow, oversharpening, excessive glare.

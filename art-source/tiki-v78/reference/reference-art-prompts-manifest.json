@@ -1,0 +1,122 @@
+{
+  "generated_at": "2026-10-03",
+  "scope": "Three supplied-image AI enlargement passes and one optional interpreted material atlas. No source artwork was overwritten.",
+  "prompt_prefix": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - ",
+  "records": [
+    {
+      "key": "currentgame-lantern-upscale",
+      "source_dimensions": [
+        1764,
+        1146
+      ],
+      "actual_dimensions": [
+        1556,
+        1011
+      ],
+      "requested_dimensions": [
+        3840,
+        2495
+      ],
+      "validation": "Composition substantially retained; AI re-render changes tiny labels/UI glyphs and sharpness. The output is smaller than original and did not satisfy requested 3840-pixel long edge. Do not use as source evidence or describe as true 4K.",
+      "source": "/workspace/scratch/85111d38430a/upload/image(20261003-121806).png",
+      "output": "/workspace/scratch/85111d38430a/tiki-v78/reference/currentgame-lantern-upscale.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-01e3238f-09f3-4554-a0af-9f0b40485aea.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nedit target: the supplied current game screenshot, a wooden tiki bar counter with a red glowing lantern and bottle shelves.\nprimary request: enlarge this exact image through the image model for detailed reference inspection. Target a 3840-pixel long edge, with the same uncropped composition.\naspect ratio: 294:191 (same as the source, approximately 1.539:1).\noutput dimensions: requested 3840 × 2495 pixels.\ncontent: retain every existing object, screen overlay, HUD, sign, position, proportion, and visible edge in exactly the same place; keep the pixelated game-render character.\nlighting: preserve the existing dark exposure, black shadows, red lantern glow and strong red counter reflection exactly; this is a faithful enlargement of a problematic current screenshot, so do not improve or repair its lighting.\ndetail: clarify only information already visible in the source. Preserve illegible or ambiguous bottle-label marks as ambiguous marks. Preserve all source text and UI placement without rewriting.\nAvoid: invented objects, new labels, new shelves, redesigned lantern, altered perspective, cropping, relighting, raised shadow exposure, beautification, extra text, watermark, oversharpening.",
+      "mode": "built-in image_gen edit",
+      "source_only_notes_file": "/workspace/scratch/85111d38430a/tiki-v78/reference/idolbar-source-notes.md"
+    },
+    {
+      "key": "original-idolbar-upscale",
+      "source_dimensions": [
+        736,
+        552
+      ],
+      "actual_dimensions": [
+        1448,
+        1086
+      ],
+      "requested_dimensions": [
+        3840,
+        2880
+      ],
+      "validation": "Enlarged approximately 1.97x per edge. Composition broadly retained, but AI synthesizes bottle-label, sign, card and prop microdetail. Text, exact counts, and finer material patterns must be checked against original. Not true 4K.",
+      "source": "/workspace/scratch/85111d38430a/upload/44a1ab9f4f5921d96b1b48faded3b0f3.png",
+      "output": "/workspace/scratch/85111d38430a/tiki-v78/reference/original-idolbar-upscale.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-e2671230-fc0c-4143-b5ac-f2e01c52c058.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nedit target: the supplied original phone photograph of a tiki idol at a bar, copper lantern in front, dense stirrer glass and a small blue-and-white T1 van toy at lower left, bottle shelves behind, cold-beer sign to the idol's right and a souvenir metal rack at the right edge.\nprimary request: enlarge this exact photograph through the image model for detailed reference inspection. Target a 3840-pixel long edge, with the same uncropped composition.\naspect ratio: 4:3 (same as the source).\noutput dimensions: requested 3840 × 2880 pixels.\ncontent: retain every existing visible object, edge, placement, depth relation, perspective, crop, and proportion. Keep the original slightly blurry handheld phone-photo character.\nlighting: keep the original warm ambient exposure, glowing red lantern, colored string bulbs, warm wood, and existing shadows unchanged. Do not make it dark or cinematic.\ndetail: clarify only source-visible information; preserve overlapping bottle silhouettes, dense pale stirrers, metal rack clips, cards, and original worn surfaces. Ambiguous tiny details must remain ambiguous and must not turn into newly invented items or readable fictional labels.\ntext: preserve existing visible lettering including COLD BEER on the right-side sign, without adding or rewriting labels.\nAvoid: imagined objects, changed shelf counts, relocated sign, changing the lantern into a different design, moving the idol, emptying the stirrer glass, removing the T1 toy, new lettering, added decorations, scene expansion, cropping, oversharpening, watermark.",
+      "mode": "built-in image_gen edit",
+      "source_only_notes_file": "/workspace/scratch/85111d38430a/tiki-v78/reference/idolbar-source-notes.md"
+    },
+    {
+      "key": "currentgame-dining-upscale",
+      "source_dimensions": [
+        2048,
+        1050
+      ],
+      "actual_dimensions": [
+        1751,
+        898
+      ],
+      "requested_dimensions": [
+        3840,
+        1969
+      ],
+      "validation": "Dark exposure and broad layout preserved; small UI/sign glyphs and floor detail synthesized. The output is smaller than original and did not satisfy requested 3840-pixel long edge. Original remains authoritative.",
+      "source": "/workspace/scratch/85111d38430a/upload/image(20261003-122131).png",
+      "output": "/workspace/scratch/85111d38430a/tiki-v78/reference/currentgame-dining-upscale.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-bc4d736c-f42e-4f3f-ae60-90de4e1c5a7a.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nedit target: the supplied current game screenshot of the very dark dining area, with a Lantern Reef sign above the central bamboo door and foreground game HUD.\nprimary request: enlarge this exact image through the image model for detailed reference inspection. Target a 3840-pixel long edge, with the same uncropped composition.\naspect ratio: 1024:525 (same as the source, approximately 1.9505:1).\noutput dimensions: requested 3840 × 1969 pixels.\ncontent: retain all existing source silhouettes, furniture, door, sign, UI and HUD, text marks, placements, proportions, perspective and visible edges exactly.\nlighting: preserve the almost-black original exposure and sparse warm highlights exactly. This screenshot documents the current unreadably dark lighting, so do not brighten it, lift shadows, relight the dining room, invent details in black areas, or repair the visibility.\ndetail: clarify only source-visible information while keeping black areas black, source text unchanged and the pixelated game-render character.\nAvoid: imagined furniture or objects, new lamps, new light, visible invented wall details, changed door/sign layout, altered HUD, raised brightness, cropping, polishing, oversharpening, watermark.",
+      "mode": "built-in image_gen edit",
+      "source_only_notes_file": "/workspace/scratch/85111d38430a/tiki-v78/reference/idolbar-source-notes.md"
+    },
+    {
+      "key": "souvenir-baraccents-atlas",
+      "source": "/workspace/scratch/85111d38430a/upload/44a1ab9f4f5921d96b1b48faded3b0f3.png",
+      "output": "/workspace/scratch/85111d38430a/tiki-v78/reference/souvenir-baraccents-atlas.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-93b19012-10d5-44e5-a128-25499d0617cc.png",
+      "requested_dimensions": [
+        2048,
+        2048
+      ],
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "built-in image_gen interpreted texture atlas",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: one photographic material texture atlas for the right-side souvenir metal rack, paper cards and bar accents in a 3D tiki-bar recreation.\nsource reference: supplied original idol-and-lantern bar photograph. This is an interpreted material asset informed by that photograph, not a faithful scanned extraction and not additional evidence of source objects.\nprimary request: create one square 2 by 2 texture atlas with four equally sized material tiles, aligned flush to the exact half-width and half-height boundaries, no gutters or labels.\naspect ratio: 1:1.\noutput dimensions: requested 2048 × 2048 pixels.\ntop-left tile: straight-on thin worn reflective silver/chrome souvenir-rack metal surface, soft gray chrome streaks and warm brown tarnish, opaque and usable as a material for metal wire geometry; no modeled rack silhouette.\ntop-right tile: one straight-on cream souvenir paper card face with tiny blurred green-blue-red illustrative print marks inspired by the visible right-edge cards; no readable lettering, no invented logo, no external scene.\nbottom-left tile: dense red and hot-pink decorative feather/fiber surface inspired by the rack decoration at the lower-right of the photo, flat texture with natural frayed fibers.\nbottom-right tile: worn warm copper/bronze surface inspired by the lantern metal in the original photo, soft orange-brown tarnish and subtle scratches.\nlighting: neutral diffuse illumination, no cast object shadows or glowing light baked in; original material color families preserved.\nAvoid: written labels, UV grid lines, watermark, transparency, fictional souvenir text, additional props, strong glare, dramatic perspective, glossy plastic materials.",
+      "tiles": {
+        "top_left": "tarnished silver/chrome",
+        "top_right": "interpreted cream souvenir card print",
+        "bottom_left": "red/pink feathers",
+        "bottom_right": "worn copper"
+      },
+      "uv_coordinates_image_origin_top_left": {
+        "top_left": [
+          0,
+          0,
+          0.5,
+          0.5
+        ],
+        "top_right": [
+          0.5,
+          0,
+          1,
+          0.5
+        ],
+        "bottom_left": [
+          0,
+          0.5,
+          0.5,
+          1
+        ],
+        "bottom_right": [
+          0.5,
+          0.5,
+          1,
+          1
+        ]
+      },
+      "validation": "Four flush square tiles, no grid labels. The card print and all exact material textures are interpretation, not source facts. Atlas not guaranteed seamless. UV origin listed in image coordinates; a Three.js texture may require vertical orientation adjustment."
+    }
+  ]
+}

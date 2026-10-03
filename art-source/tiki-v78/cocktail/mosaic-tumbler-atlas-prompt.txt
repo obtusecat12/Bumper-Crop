@@ -1,0 +1,15 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Object: the cream and tobacco-brown mosaic-pattern ceramic tumblers in the supplied Tiki bar reference.
+Reference image: the bar photograph is the sole factual design source, especially the two short tapered ceramic cups at image coordinates x=0.55–0.72, y=0.76–0.92.
+Asset type: high-detail photographic base-color UV texture atlas for these precise 3D ceramic cups, not a photograph of finished cups.
+Composition: exact 2 by 2 grid of four equal square panels, no gutters and no drawn grid, all panels filled to their edges with completely flat texture surfaces.
+Top-left panel: flat exterior wrap surface for the rear-left cup; warm ivory ceramic covered with numerous irregular tobacco/chocolate brown rectangular mosaic marks, thin continuous off-white grout-like negative spaces between marks, mostly narrow vertical rectangles with varied heights and a few near-square patches; no pictorial face, no lettering, pattern reaches every edge.
+Top-right panel: same reference pattern for the foreground-right cup; narrow uneven brown ceramic rectangular patches with thin cream connecting gaps, equal density to the actual reference, no tidy modern brick wall or regular checkerboard; tiling surface only.
+Bottom-left panel: warm ivory interior ceramic glaze for the cups, subtly mottled and imperfect, very fine brown speckle, no edges or circular object silhouette.
+Bottom-right panel: short repeating horizontal rim strip surface, warm ivory glaze with small irregular brown vertical rectangular mosaic marks descending from one straight top edge, an ivory band at the very top; flat rectangular surface only.
+Materials: slightly uneven glazed ceramic, worn ivory ground and mid-to-deep brown glazed pattern, restrained local highlights and soft surface texture.
+Lighting: flat neutral diffuse texture lighting with only subtle ceramic relief cues, no scene shadows, no glare.
+Detail: preserve the observed fine mosaic proportions and cream/brown ratio; render at 2048 by 2048 pixels if supported.
+Aspect ratio: 1:1.
+Avoid: complete cups, object silhouettes, round rims, perspective, product photography, bar background, faces, figures, text, labels, logos, neat checkerboards, wide dark mortar, gold grout, excessive yellow, oversharpening, strong baked lighting.

@@ -1,0 +1,13 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Object: targeted correction of the supplied four-panel olive ashtray texture atlas.
+Input image: this existing atlas is the edit target; retain its exact 2 by 2 layout.
+Change: replace only the top-right and bottom-right square panels with flat nonfigurative pale olive weathered ceramic material, matching the same olive glaze colors, tiny grain, speckle and imperfections.
+Keep: top-left carved figure front artwork and bottom-left soot/ash surface exactly unchanged, same position, scale and texture colors.
+Top-right panel: uniform completely flat olive ceramic material extending to all four panel edges, small random speckle and very fine rough glaze only.
+Bottom-right panel: uniform completely flat olive ceramic material extending to all four panel edges, fine irregular speckle and glaze wear only.
+Composition: both changed panels must contain no bowl, no rim, no ellipse, no figure, no relief sculpture, no cast shadow, no shading gradient, no outline; they are photographic material surfaces only.
+Lighting: flat diffuse neutral texture illumination, subdued micro-detail.
+Detail: preserve native resolution and all canvas edges, use 2048 by 2048 if supported.
+Aspect ratio: 1:1.
+Avoid: object photograph, perspective, macro shapes, bright highlights, gradients, text, labels, borders, strong yellow tint, oversharpening.

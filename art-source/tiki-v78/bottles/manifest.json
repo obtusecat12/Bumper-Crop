@@ -1,0 +1,3570 @@
+{
+  "generation_mode": "built-in image_gen",
+  "prompts_file": "prompts.json",
+  "crop_manifest_file": "crop-manifest.json",
+  "reference_inventory_file": "reference-inventory.json",
+  "assets": [
+    {
+      "sheet": 1,
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v78/bottles/labels-atlas-01.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v78/bottles/originals/labels-atlas-01-original.png",
+      "runtime_size": [
+        2048,
+        2048
+      ],
+      "original_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "sheet": 2,
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v78/bottles/labels-atlas-02.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v78/bottles/originals/labels-atlas-02-original.png",
+      "runtime_size": [
+        2048,
+        2048
+      ],
+      "original_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "sheet": 3,
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v78/bottles/labels-atlas-03.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v78/bottles/originals/labels-atlas-03-original.png",
+      "runtime_size": [
+        2048,
+        2048
+      ],
+      "original_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "sheet": 4,
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v78/bottles/labels-atlas-04.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v78/bottles/originals/labels-atlas-04-original.png",
+      "runtime_size": [
+        2048,
+        2048
+      ],
+      "original_size": [
+        1254,
+        1254
+      ]
+    }
+  ],
+  "layout": {
+    "columns": 4,
+    "rows": 4,
+    "atlas_size": [
+      2048,
+      2048
+    ],
+    "cell_size": [
+      512,
+      512
+    ],
+    "body_local_pixel_box": [
+      32,
+      112,
+      480,
+      480
+    ],
+    "neck_local_pixel_box": [
+      64,
+      32,
+      448,
+      82
+    ],
+    "pixel_origin": "top-left",
+    "uv_origin": "bottom-left",
+    "pixel_box_right_bottom_exclusive": true,
+    "body_local_uv_box": [
+      0.0625,
+      0.0625,
+      0.9375,
+      0.78125
+    ],
+    "neck_local_uv_box": [
+      0.125,
+      0.83984375,
+      0.875,
+      0.9375
+    ]
+  },
+  "validation": {
+    "labels": 64,
+    "unique_body_hashes": 64,
+    "visual_checks": "Viewed all four generated originals. Each has exactly 16 body labels, 16 matching neck strips, distinctive colors and motifs, readable generic category titles; no bottle artwork or directional lighting. Mechanical crops preserve the full body artwork and regularize cell positions.",
+    "source_counts": {
+      "reference_1_visible_minimum": 17,
+      "reference_2_visible_minimum": 41,
+      "source_total_visible_minimum": 58,
+      "planned_scene_count": 64,
+      "planned_distribution": "48 main-room bottles + 10 cocktail standing bottles + 6 inverted optic bottles; this is a fuller reconstruction, not an exact source census"
+    },
+    "readable_brand_policy": "BACARDI is recognizable in reference1; all other brand text is deliberately indistinct. Generic product category words describe chosen model variants."
+  },
+  "labels": [
+    {
+      "label_id": 1,
+      "row": 0,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        59,
+        310,
+        310
+      ],
+      "neck_source_crop": [
+        19,
+        2,
+        295,
+        57
+      ],
+      "body_pixel_box": [
+        32,
+        112,
+        480,
+        480
+      ],
+      "neck_pixel_box": [
+        64,
+        32,
+        448,
+        82
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.765625,
+        0.234375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.95996094,
+        0.21875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "BACARDI",
+      "appearance": "cream label, red triangular bat-like commercial rum emblem, small black serif hierarchy, thin turquoise footer band; matching cream-red neck strip. Only exact text permitted on this label: BACARDI.",
+      "suggested_profile": "rounded-clear-rum",
+      "suggested_glass_or_liquid": "clear with colorless liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "82bb0426b05ddd12e94f01bb8d0226969b74d76b89c33f98be3c8c226778c18a"
+    },
+    {
+      "label_id": 2,
+      "row": 0,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        59,
+        623,
+        310
+      ],
+      "neck_source_crop": [
+        333,
+        2,
+        608,
+        57
+      ],
+      "body_pixel_box": [
+        544,
+        112,
+        992,
+        480
+      ],
+      "neck_pixel_box": [
+        576,
+        32,
+        960,
+        82
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.765625,
+        0.484375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.95996094,
+        0.46875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "RUM",
+      "appearance": "very dark burgundy label, gold serif typography, oval heraldic seal and two gold horizontal bands; matching burgundy-gold neck strip, dark-rum appearance.",
+      "suggested_profile": "tall-round-rum",
+      "suggested_glass_or_liquid": "dark brown",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "a4a482c2920118a52e5b9fd0c2f689ecd2f004fdb6c4b39e3b4925397c482707"
+    },
+    {
+      "label_id": 3,
+      "row": 0,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        59,
+        936,
+        310
+      ],
+      "neck_source_crop": [
+        646,
+        2,
+        921,
+        57
+      ],
+      "body_pixel_box": [
+        1056,
+        112,
+        1504,
+        480
+      ],
+      "neck_pixel_box": [
+        1088,
+        32,
+        1472,
+        82
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.765625,
+        0.734375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.95996094,
+        0.71875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "WHISKY",
+      "appearance": "broad pale ivory whisky label, dense narrow black serif hierarchy, small rust-red rectangular header, double black rule border; matching ivory neck strip with black bars.",
+      "suggested_profile": "squat-round-whisky",
+      "suggested_glass_or_liquid": "warm amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "2bd4e5c336ef4465283f4a0c50518ed79ad0d6cd3e012c6e87340d0fd648042f"
+    },
+    {
+      "label_id": 4,
+      "row": 0,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        59,
+        1250,
+        310
+      ],
+      "neck_source_crop": [
+        959,
+        2,
+        1235,
+        57
+      ],
+      "body_pixel_box": [
+        1568,
+        112,
+        2016,
+        480
+      ],
+      "neck_pixel_box": [
+        1600,
+        32,
+        1984,
+        82
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.765625,
+        0.984375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.95996094,
+        0.96875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        1536,
+        0,
+        2048,
+        512
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "WHISKEY",
+      "appearance": "black Tennessee-whiskey-style label, white ornate scroll border, flowing serif letterforms, central white oval cartouche; matching black-and-white neck strip.",
+      "suggested_profile": "square-tennessee",
+      "suggested_glass_or_liquid": "dark brown",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "2dd2ee96ab439ee29bd1f40fb1f1639d73f37ec9800f7a81683f3708a67a4bc9"
+    },
+    {
+      "label_id": 5,
+      "row": 1,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        373,
+        310,
+        623
+      ],
+      "neck_source_crop": [
+        19,
+        316,
+        295,
+        370
+      ],
+      "body_pixel_box": [
+        32,
+        624,
+        480,
+        992
+      ],
+      "neck_pixel_box": [
+        64,
+        544,
+        448,
+        594
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.515625,
+        0.234375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.70996094,
+        0.21875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "GIN",
+      "appearance": "olive green gin-style label, cream tall serif shapes, red round wax-seal-like emblem, very narrow white border; green neck strip with white chevrons.",
+      "suggested_profile": "round-gin",
+      "suggested_glass_or_liquid": "dark green",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "9705237969412918e948b074fb96103a1ed31e0a25918f11af2d3a7c0ac6bc1f"
+    },
+    {
+      "label_id": 6,
+      "row": 1,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        373,
+        623,
+        623
+      ],
+      "neck_source_crop": [
+        333,
+        316,
+        608,
+        370
+      ],
+      "body_pixel_box": [
+        544,
+        624,
+        992,
+        992
+      ],
+      "neck_pixel_box": [
+        576,
+        544,
+        960,
+        594
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.515625,
+        0.484375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.70996094,
+        0.46875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "GIN",
+      "appearance": "bright mustard-yellow gin-style label with red decorative ribbon and black compact lettering, small round botanical crest; yellow-red neck strip.",
+      "suggested_profile": "tall-green-gin",
+      "suggested_glass_or_liquid": "olive green",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "877fef57ba7319027ee90bc95d68d2fd0a407966af85adb8a84586226b831a07"
+    },
+    {
+      "label_id": 7,
+      "row": 1,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        373,
+        936,
+        623
+      ],
+      "neck_source_crop": [
+        646,
+        316,
+        921,
+        370
+      ],
+      "body_pixel_box": [
+        1056,
+        624,
+        1504,
+        992
+      ],
+      "neck_pixel_box": [
+        1088,
+        544,
+        1472,
+        594
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.515625,
+        0.734375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.70996094,
+        0.71875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "GIN",
+      "appearance": "pale blue gin-style label with blue oval medallion, thin gold rules, black slender serif type; pale blue neck strip with gold central lozenge.",
+      "suggested_profile": "square-blue-gin",
+      "suggested_glass_or_liquid": "pale blue glass",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "88889662b6d3436b353f3d1ee0c74fc0b45ecf67f6c886e1db7078a612111529"
+    },
+    {
+      "label_id": 8,
+      "row": 1,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        373,
+        1250,
+        623
+      ],
+      "neck_source_crop": [
+        959,
+        316,
+        1235,
+        370
+      ],
+      "body_pixel_box": [
+        1568,
+        624,
+        2016,
+        992
+      ],
+      "neck_pixel_box": [
+        1600,
+        544,
+        1984,
+        594
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.515625,
+        0.984375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.70996094,
+        0.96875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        1536,
+        512,
+        2048,
+        1024
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "VODKA",
+      "appearance": "offwhite vodka-style label, scarlet diagonal pennant and metallic-silver printed border, simple tall condensed characters; scarlet-white neck strip.",
+      "suggested_profile": "tall-clear-cylinder",
+      "suggested_glass_or_liquid": "clear with colorless liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "7246e61ec0fcbda669ed4cdf2a20c62759db60e53e513af6ef991e3b1fe541d5"
+    },
+    {
+      "label_id": 9,
+      "row": 2,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        686,
+        310,
+        936
+      ],
+      "neck_source_crop": [
+        19,
+        629,
+        295,
+        683
+      ],
+      "body_pixel_box": [
+        32,
+        1136,
+        480,
+        1504
+      ],
+      "neck_pixel_box": [
+        64,
+        1056,
+        448,
+        1106
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.265625,
+        0.234375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.45996094,
+        0.21875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        0,
+        1024,
+        512,
+        1536
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "RUM",
+      "appearance": "cream amber-rum label, red sunburst circular emblem, widely spaced black serif typography, no triangle; narrow red-and-cream neck strip.",
+      "suggested_profile": "square-shoulder-rum",
+      "suggested_glass_or_liquid": "warm amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "c3caf14fbd4b6bac4564d2505411a890531b6d3911d31de594e921bc7bdce149"
+    },
+    {
+      "label_id": 10,
+      "row": 2,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        686,
+        623,
+        936
+      ],
+      "neck_source_crop": [
+        333,
+        629,
+        608,
+        683
+      ],
+      "body_pixel_box": [
+        544,
+        1136,
+        992,
+        1504
+      ],
+      "neck_pixel_box": [
+        576,
+        1056,
+        960,
+        1106
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.265625,
+        0.484375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.45996094,
+        0.46875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        512,
+        1024,
+        1024,
+        1536
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "RUM",
+      "appearance": "black spiced-rum label, copper-gold curved crest and red pirate-like small bust medallion, warm cream heavy letterforms; copper-and-black neck strip.",
+      "suggested_profile": "tapered-round-rum",
+      "suggested_glass_or_liquid": "dark green",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "c816d81765c7227d023ab5ec6a687a2abb7fb7f66f0f33387b0bf6ea80ad71b7"
+    },
+    {
+      "label_id": 11,
+      "row": 2,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        686,
+        936,
+        936
+      ],
+      "neck_source_crop": [
+        646,
+        629,
+        921,
+        683
+      ],
+      "body_pixel_box": [
+        1056,
+        1136,
+        1504,
+        1504
+      ],
+      "neck_pixel_box": [
+        1088,
+        1056,
+        1472,
+        1106
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.265625,
+        0.734375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.45996094,
+        0.71875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        1024,
+        1024,
+        1536,
+        1536
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "RUM",
+      "appearance": "white transparent-rum label, red circular seal, black horizontal lines, rectangular navy footer; white neck strip with tiny navy repeat ornament.",
+      "suggested_profile": "broad-shoulder-rum",
+      "suggested_glass_or_liquid": "clear with pale liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "049a67b740abc78674b26f902bbfbebb8dba5015b43f28883f39c3ba739a43fe"
+    },
+    {
+      "label_id": 12,
+      "row": 2,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        686,
+        1250,
+        936
+      ],
+      "neck_source_crop": [
+        959,
+        629,
+        1235,
+        683
+      ],
+      "body_pixel_box": [
+        1568,
+        1136,
+        2016,
+        1504
+      ],
+      "neck_pixel_box": [
+        1600,
+        1056,
+        1984,
+        1106
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.265625,
+        0.984375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.45996094,
+        0.96875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        1536,
+        1024,
+        2048,
+        1536
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "LIQUEUR",
+      "appearance": "warm orange liqueur label, black oval cartouche, light cream flourishes, compact horizontal type; orange-black neck strip.",
+      "suggested_profile": "squat-wide-liqueur",
+      "suggested_glass_or_liquid": "dark brown",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "d9ea5ffb5757faf9230ef7fe4a118fbb7f7e3a738c8cb1baeb18e7889de86871"
+    },
+    {
+      "label_id": 13,
+      "row": 3,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        999,
+        310,
+        1250
+      ],
+      "neck_source_crop": [
+        19,
+        942,
+        295,
+        997
+      ],
+      "body_pixel_box": [
+        32,
+        1648,
+        480,
+        2016
+      ],
+      "neck_pixel_box": [
+        64,
+        1568,
+        448,
+        1618
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.015625,
+        0.234375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.20996094,
+        0.21875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        0,
+        1536,
+        512,
+        2048
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "BRANDY",
+      "appearance": "brown brandy label, tan shield shape, white script-like lettering and russet lower band; matching tan-russet neck strip.",
+      "suggested_profile": "round-brandy",
+      "suggested_glass_or_liquid": "dark amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "cf00c6f68163655ff43d61128de889ed1598c738db5e01044a202fc20159df5a"
+    },
+    {
+      "label_id": 14,
+      "row": 3,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        999,
+        623,
+        1250
+      ],
+      "neck_source_crop": [
+        333,
+        942,
+        608,
+        997
+      ],
+      "body_pixel_box": [
+        544,
+        1648,
+        992,
+        2016
+      ],
+      "neck_pixel_box": [
+        576,
+        1568,
+        960,
+        1618
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.015625,
+        0.484375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.20996094,
+        0.46875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        512,
+        1536,
+        1024,
+        2048
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "LIQUEUR",
+      "appearance": "ivory cream-liqueur label with broad dark green arch, small sepia countryside rectangle, warm bronze border; dark green cream neck strip.",
+      "suggested_profile": "long-neck-round-liqueur",
+      "suggested_glass_or_liquid": "clear red liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "36b36dc8cc37ec64636de5f76b3dc18c267804870d2c15c8e4a4332d4418d637"
+    },
+    {
+      "label_id": 15,
+      "row": 3,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        999,
+        936,
+        1250
+      ],
+      "neck_source_crop": [
+        646,
+        942,
+        921,
+        997
+      ],
+      "body_pixel_box": [
+        1056,
+        1648,
+        1504,
+        2016
+      ],
+      "neck_pixel_box": [
+        1088,
+        1568,
+        1472,
+        1618
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.015625,
+        0.734375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.20996094,
+        0.71875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        1024,
+        1536,
+        1536,
+        2048
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "APERITIF",
+      "appearance": "small dark maroon aperitif label, cream capital letterforms, fan-shaped gold rays, tiny red seal; maroon-gold neck strip.",
+      "suggested_profile": "tall-shouldered-aperitif",
+      "suggested_glass_or_liquid": "dark wine red",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "16c517bc1a0062fba386522df8f8a95c17eb8b3a61a1c35c80025687e0ed8d2a"
+    },
+    {
+      "label_id": 16,
+      "row": 3,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        999,
+        1250,
+        1250
+      ],
+      "neck_source_crop": [
+        959,
+        942,
+        1235,
+        997
+      ],
+      "body_pixel_box": [
+        1568,
+        1648,
+        2016,
+        2016
+      ],
+      "neck_pixel_box": [
+        1600,
+        1568,
+        1984,
+        1618
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.015625,
+        0.984375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.20996094,
+        0.96875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        1536,
+        1536,
+        2048,
+        2048
+      ],
+      "atlas": "labels-atlas-01.png",
+      "category_text": "SCHNAPPS",
+      "appearance": "pale gray clear-schnapps label, black narrow double border, turquoise circular fruit medallion, dark teal condensed type; gray-turquoise neck strip.",
+      "suggested_profile": "tall-clear-schnapps",
+      "suggested_glass_or_liquid": "clear colorless",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "495601bfe1b7cbe21326aed4adc668a30e5974f01024b05dce87e6b96d0abad9"
+    },
+    {
+      "label_id": 17,
+      "row": 0,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        59,
+        310,
+        310
+      ],
+      "neck_source_crop": [
+        19,
+        2,
+        295,
+        57
+      ],
+      "body_pixel_box": [
+        32,
+        112,
+        480,
+        480
+      ],
+      "neck_pixel_box": [
+        64,
+        32,
+        448,
+        82
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.765625,
+        0.234375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.95996094,
+        0.21875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "WHISKY",
+      "appearance": "aged parchment single-malt-style label, dense brown serif columns, bronze medallion at top, thin scalloped border; parchment-brown neck strip.",
+      "suggested_profile": "square-whisky",
+      "suggested_glass_or_liquid": "dark amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "4421303fbfbec50716b43d7e9be823e5d2d1f819b6b2f0cae62b41c849104972"
+    },
+    {
+      "label_id": 18,
+      "row": 0,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        59,
+        623,
+        310
+      ],
+      "neck_source_crop": [
+        333,
+        2,
+        608,
+        57
+      ],
+      "body_pixel_box": [
+        544,
+        112,
+        992,
+        480
+      ],
+      "neck_pixel_box": [
+        576,
+        32,
+        960,
+        82
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.765625,
+        0.484375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.95996094,
+        0.46875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "WHISKY",
+      "appearance": "cream square whisky label, forest green diagonal sash, red rectangular crest and wide black header; forest-green-red neck strip.",
+      "suggested_profile": "tall-rounded-whisky",
+      "suggested_glass_or_liquid": "clear glass with amber liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "aed66bd1e92970a99570dd36e8d6c232fdd034c5341a139cadc9ef5f3833ec3d"
+    },
+    {
+      "label_id": 19,
+      "row": 0,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        59,
+        936,
+        310
+      ],
+      "neck_source_crop": [
+        646,
+        2,
+        921,
+        57
+      ],
+      "body_pixel_box": [
+        1056,
+        112,
+        1504,
+        480
+      ],
+      "neck_pixel_box": [
+        1088,
+        32,
+        1472,
+        82
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.765625,
+        0.734375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.95996094,
+        0.71875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "WHISKY",
+      "appearance": "taupe whisky label with dark red horizontal banner across middle, arched navy typography and small gold lion-like emblem; taupe-red neck strip.",
+      "suggested_profile": "flat-sided-whisky",
+      "suggested_glass_or_liquid": "smoky olive with amber liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "729d1873331de4c385d385680af52713746454967a715a58154391171557217a"
+    },
+    {
+      "label_id": 20,
+      "row": 0,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        59,
+        1250,
+        310
+      ],
+      "neck_source_crop": [
+        959,
+        2,
+        1235,
+        57
+      ],
+      "body_pixel_box": [
+        1568,
+        112,
+        2016,
+        480
+      ],
+      "neck_pixel_box": [
+        1600,
+        32,
+        1984,
+        82
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.765625,
+        0.984375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.95996094,
+        0.96875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        1536,
+        0,
+        2048,
+        512
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "BOURBON",
+      "appearance": "pale yellow bourbon label, black serif central block and red curved lower panel, rough faded paper border; pale yellow black neck strip.",
+      "suggested_profile": "square-bourbon",
+      "suggested_glass_or_liquid": "clear amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "925f1c44aef6fc0ddb1fc9a7c9187c5a71afea25fe7e1f197c1061eaed3f7f41"
+    },
+    {
+      "label_id": 21,
+      "row": 1,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        373,
+        310,
+        623
+      ],
+      "neck_source_crop": [
+        19,
+        316,
+        295,
+        370
+      ],
+      "body_pixel_box": [
+        32,
+        624,
+        480,
+        992
+      ],
+      "neck_pixel_box": [
+        64,
+        544,
+        448,
+        594
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.515625,
+        0.234375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.70996094,
+        0.21875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "WHISKY",
+      "appearance": "dark blue whisky label, gold top arch and gold narrow sans characters, white small rectangle at foot; navy-gold neck strip.",
+      "suggested_profile": "squat-round-whisky",
+      "suggested_glass_or_liquid": "warm amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "1198d9e0cd92257dd298d795c663bf6170594489a87877bd3235f8f3752f29a2"
+    },
+    {
+      "label_id": 22,
+      "row": 1,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        373,
+        623,
+        623
+      ],
+      "neck_source_crop": [
+        333,
+        316,
+        608,
+        370
+      ],
+      "body_pixel_box": [
+        544,
+        624,
+        992,
+        992
+      ],
+      "neck_pixel_box": [
+        576,
+        544,
+        960,
+        594
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.515625,
+        0.484375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.70996094,
+        0.46875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "RYE",
+      "appearance": "white rye-style label, vivid green shield within black ornamental rules, italic red accent strokes; white-green neck strip.",
+      "suggested_profile": "straight-sided-rye",
+      "suggested_glass_or_liquid": "clear amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "241a74038b05045647dcb327fa60ab52e8058fd4812ff8e27d659a132c4b80ce"
+    },
+    {
+      "label_id": 23,
+      "row": 1,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        373,
+        936,
+        623
+      ],
+      "neck_source_crop": [
+        646,
+        316,
+        921,
+        370
+      ],
+      "body_pixel_box": [
+        1056,
+        624,
+        1504,
+        992
+      ],
+      "neck_pixel_box": [
+        1088,
+        544,
+        1472,
+        594
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.515625,
+        0.734375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.70996094,
+        0.71875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "WHISKY",
+      "appearance": "tan Scotch label, cream central rectangle surrounded by rust-red frame, black compact serif print and small gold oval; tan-rust neck strip.",
+      "suggested_profile": "square-whisky",
+      "suggested_glass_or_liquid": "dark amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "e40f5e53856d5a04ab6c6832e86c55b56094228ccc6431d700875d87158f9d83"
+    },
+    {
+      "label_id": 24,
+      "row": 1,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        373,
+        1250,
+        623
+      ],
+      "neck_source_crop": [
+        959,
+        316,
+        1235,
+        370
+      ],
+      "body_pixel_box": [
+        1568,
+        624,
+        2016,
+        992
+      ],
+      "neck_pixel_box": [
+        1600,
+        544,
+        1984,
+        594
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.515625,
+        0.984375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.70996094,
+        0.96875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        1536,
+        512,
+        2048,
+        1024
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "WHISKEY",
+      "appearance": "black whisky label, cream diamond emblem and copper printed triangles, bold compressed white letterforms; black-copper neck strip.",
+      "suggested_profile": "tall-shouldered-whiskey",
+      "suggested_glass_or_liquid": "clear glass with amber liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "50ea170178924dcd51d8a42023150c200ebf48bf9c5cec8e05225bd8647b5fe3"
+    },
+    {
+      "label_id": 25,
+      "row": 2,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        686,
+        310,
+        936
+      ],
+      "neck_source_crop": [
+        19,
+        629,
+        295,
+        683
+      ],
+      "body_pixel_box": [
+        32,
+        1136,
+        480,
+        1504
+      ],
+      "neck_pixel_box": [
+        64,
+        1056,
+        448,
+        1106
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.265625,
+        0.234375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.45996094,
+        0.21875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        0,
+        1024,
+        512,
+        1536
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "WHISKEY",
+      "appearance": "deep green Irish-whiskey-style label, burgundy bottom bar, yellow oval seal, white letterform arc; green-burgundy neck strip.",
+      "suggested_profile": "rounded-irish-whiskey",
+      "suggested_glass_or_liquid": "green glass with amber liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "b4fee97b28ea58f56b8ff0007594641bcd88887493c53c963078f637ce9e14e8"
+    },
+    {
+      "label_id": 26,
+      "row": 2,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        686,
+        623,
+        936
+      ],
+      "neck_source_crop": [
+        333,
+        629,
+        608,
+        683
+      ],
+      "body_pixel_box": [
+        544,
+        1136,
+        992,
+        1504
+      ],
+      "neck_pixel_box": [
+        576,
+        1056,
+        960,
+        1106
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.265625,
+        0.484375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.45996094,
+        0.46875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        512,
+        1024,
+        1024,
+        1536
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "RUM",
+      "appearance": "light ocher rum label with black anchor-like crest, scarlet vertical rules and thin blue footer line; ocher-blue neck strip.",
+      "suggested_profile": "tall-round-rum",
+      "suggested_glass_or_liquid": "dark brown",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "f538d570c7da5e7450f95bb2081faeea5261ef45244253ae3828254b1b4d2597"
+    },
+    {
+      "label_id": 27,
+      "row": 2,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        686,
+        936,
+        936
+      ],
+      "neck_source_crop": [
+        646,
+        629,
+        921,
+        683
+      ],
+      "body_pixel_box": [
+        1056,
+        1136,
+        1504,
+        1504
+      ],
+      "neck_pixel_box": [
+        1088,
+        1056,
+        1472,
+        1106
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.265625,
+        0.734375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.45996094,
+        0.71875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        1024,
+        1024,
+        1536,
+        1536
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "BRANDY",
+      "appearance": "burgundy brandy label, ivory stepped border, thin gold vine flourish, pale large italic type; burgundy-ivory neck strip.",
+      "suggested_profile": "flat-sided-brandy",
+      "suggested_glass_or_liquid": "clear amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "835a65a4a1da70bdc32e942d772fb24ef2f8b25d35a9f826bc4fcd940ce888a2"
+    },
+    {
+      "label_id": 28,
+      "row": 2,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        686,
+        1250,
+        936
+      ],
+      "neck_source_crop": [
+        959,
+        629,
+        1235,
+        683
+      ],
+      "body_pixel_box": [
+        1568,
+        1136,
+        2016,
+        1504
+      ],
+      "neck_pixel_box": [
+        1600,
+        1056,
+        1984,
+        1106
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.265625,
+        0.984375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.45996094,
+        0.96875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        1536,
+        1024,
+        2048,
+        1536
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "WHISKY",
+      "appearance": "antique white whisky label, broad diagonal black stripe, tiny orange shield, dark navy serif type; white-black-orange neck strip.",
+      "suggested_profile": "tall-rounded-whisky",
+      "suggested_glass_or_liquid": "clear glass with amber liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "f7d69f7545fb7a40a01b90f01a8218a74dd586ca5b391c48d6e0494cc8f1c866"
+    },
+    {
+      "label_id": 29,
+      "row": 3,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        999,
+        310,
+        1250
+      ],
+      "neck_source_crop": [
+        19,
+        942,
+        295,
+        997
+      ],
+      "body_pixel_box": [
+        32,
+        1648,
+        480,
+        2016
+      ],
+      "neck_pixel_box": [
+        64,
+        1568,
+        448,
+        1618
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.015625,
+        0.234375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.20996094,
+        0.21875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        0,
+        1536,
+        512,
+        2048
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "LIQUEUR",
+      "appearance": "deep brown coffee-liqueur label, dull gold angular frame, red circle and large tan condensed letterforms; brown-red neck strip.",
+      "suggested_profile": "faceted-liqueur",
+      "suggested_glass_or_liquid": "amber liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "632bc8b504c71ce2e0663a30d218247534dc49bf8d0bedd1d7fad48451f2f9de"
+    },
+    {
+      "label_id": 30,
+      "row": 3,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        999,
+        623,
+        1250
+      ],
+      "neck_source_crop": [
+        333,
+        942,
+        608,
+        997
+      ],
+      "body_pixel_box": [
+        544,
+        1648,
+        992,
+        2016
+      ],
+      "neck_pixel_box": [
+        576,
+        1568,
+        960,
+        1618
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.015625,
+        0.484375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.20996094,
+        0.46875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        512,
+        1536,
+        1024,
+        2048
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "LIQUEUR",
+      "appearance": "coral-red cherry-liqueur label, ivory elongated oval, black side ornaments and ruby border; coral-ivory neck strip.",
+      "suggested_profile": "narrow-clear-liqueur",
+      "suggested_glass_or_liquid": "clear pale-yellow liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "af4938d795fd4f14987c72e67c56ebd31056b6da5742877de24c625af30b1c40"
+    },
+    {
+      "label_id": 31,
+      "row": 3,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        999,
+        936,
+        1250
+      ],
+      "neck_source_crop": [
+        646,
+        942,
+        921,
+        997
+      ],
+      "body_pixel_box": [
+        1056,
+        1648,
+        1504,
+        2016
+      ],
+      "neck_pixel_box": [
+        1088,
+        1568,
+        1472,
+        1618
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.015625,
+        0.734375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.20996094,
+        0.71875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        1024,
+        1536,
+        1536,
+        2048
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "LIQUEUR",
+      "appearance": "sage-gray herbal liqueur label, cream outlined shield, vermilion small cross-like motif and dark green dense type; sage-vermilion neck strip.",
+      "suggested_profile": "squat-wide-liqueur",
+      "suggested_glass_or_liquid": "dark brown",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "e4c07055e9d8d17a25827114b7512dc67cd744b9bbaa1e25d9a57e6da4c71d75"
+    },
+    {
+      "label_id": 32,
+      "row": 3,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        999,
+        1250,
+        1250
+      ],
+      "neck_source_crop": [
+        959,
+        942,
+        1235,
+        997
+      ],
+      "body_pixel_box": [
+        1568,
+        1648,
+        2016,
+        2016
+      ],
+      "neck_pixel_box": [
+        1600,
+        1568,
+        1984,
+        1618
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.015625,
+        0.984375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.20996094,
+        0.96875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        1536,
+        1536,
+        2048,
+        2048
+      ],
+      "atlas": "labels-atlas-02.png",
+      "category_text": "VERMOUTH",
+      "appearance": "wine-red vermouth label, cream big round cartouche, black narrow typography and gold horizontal rules; wine-red cream neck strip.",
+      "suggested_profile": "tall-green-vermouth",
+      "suggested_glass_or_liquid": "dark green",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "bd8d72f79851c48c0d60ca17cb4fc927d060ac4180bad4261b861e2b6bff0b39"
+    },
+    {
+      "label_id": 33,
+      "row": 0,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        59,
+        310,
+        310
+      ],
+      "neck_source_crop": [
+        19,
+        2,
+        295,
+        57
+      ],
+      "body_pixel_box": [
+        32,
+        112,
+        480,
+        480
+      ],
+      "neck_pixel_box": [
+        64,
+        32,
+        448,
+        82
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.765625,
+        0.234375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.95996094,
+        0.21875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "VODKA",
+      "appearance": "bright white vodka label, cobalt blue rectangular frame, silver gray serif lettering and tiny red seal at foot; cobalt-silver neck strip.",
+      "suggested_profile": "slender-faceted-vodka",
+      "suggested_glass_or_liquid": "frosted pale gray",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "2b907bdc6fa6437c045ac343f9f5066d98da6e8ae8504e07fffd599217a5e55d"
+    },
+    {
+      "label_id": 34,
+      "row": 0,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        59,
+        623,
+        310
+      ],
+      "neck_source_crop": [
+        333,
+        2,
+        608,
+        57
+      ],
+      "body_pixel_box": [
+        544,
+        112,
+        992,
+        480
+      ],
+      "neck_pixel_box": [
+        576,
+        32,
+        960,
+        82
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.765625,
+        0.484375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.95996094,
+        0.46875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "VODKA",
+      "appearance": "white vodka label with black upper band, cyan vertical accent stripe, rounded navy sans letterforms; cyan-black neck strip.",
+      "suggested_profile": "broad-shouldered-vodka",
+      "suggested_glass_or_liquid": "clear pale blue",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "06d7938e18fbd4a2415d9644e3e00ab7521f5a4d66d20a1d2846b4e12b3fae71"
+    },
+    {
+      "label_id": 35,
+      "row": 0,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        59,
+        936,
+        310
+      ],
+      "neck_source_crop": [
+        646,
+        2,
+        921,
+        57
+      ],
+      "body_pixel_box": [
+        1056,
+        112,
+        1504,
+        480
+      ],
+      "neck_pixel_box": [
+        1088,
+        32,
+        1472,
+        82
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.765625,
+        0.734375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.95996094,
+        0.71875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "VODKA",
+      "appearance": "pale cream vodka label, burgundy double-headed-bird-like tiny crest, black elongated serif hierarchy, red narrow lower band; burgundy-cream neck strip.",
+      "suggested_profile": "long-neck-clear-vodka",
+      "suggested_glass_or_liquid": "clear with colorless liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "a57be30d9dbc29c4dea80bcbaa10ea28938dc6dd4581166fdb01805e8b51c78d"
+    },
+    {
+      "label_id": 36,
+      "row": 0,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        59,
+        1250,
+        310
+      ],
+      "neck_source_crop": [
+        959,
+        2,
+        1235,
+        57
+      ],
+      "body_pixel_box": [
+        1568,
+        112,
+        2016,
+        480
+      ],
+      "neck_pixel_box": [
+        1600,
+        32,
+        1984,
+        82
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.765625,
+        0.984375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.95996094,
+        0.96875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        1536,
+        0,
+        2048,
+        512
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "VODKA",
+      "appearance": "frosty pale gray vodka label, midnight-blue horizontal rectangle and light gold star motif, angular thin type; gray-blue neck strip.",
+      "suggested_profile": "tall-clear-cylinder",
+      "suggested_glass_or_liquid": "clear with colorless liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "be9d3f2f0130d6f600a573f8ec0faba5429a6f6363de90fcdea4f1a77eea927f"
+    },
+    {
+      "label_id": 37,
+      "row": 1,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        373,
+        310,
+        623
+      ],
+      "neck_source_crop": [
+        19,
+        316,
+        295,
+        370
+      ],
+      "body_pixel_box": [
+        32,
+        624,
+        480,
+        992
+      ],
+      "neck_pixel_box": [
+        64,
+        544,
+        448,
+        594
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.515625,
+        0.234375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.70996094,
+        0.21875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "GIN",
+      "appearance": "white gin label with green rectangular border, red small oval center, black compact slab-serif shapes; white-green neck strip.",
+      "suggested_profile": "squat-round-gin",
+      "suggested_glass_or_liquid": "clear with colorless liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "a036ef025cbe369b28a752bbc852e8aafed03ddd95916e13489f76d1a79b003f"
+    },
+    {
+      "label_id": 38,
+      "row": 1,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        373,
+        623,
+        623
+      ],
+      "neck_source_crop": [
+        333,
+        316,
+        608,
+        370
+      ],
+      "body_pixel_box": [
+        544,
+        624,
+        992,
+        992
+      ],
+      "neck_pixel_box": [
+        576,
+        544,
+        960,
+        594
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.515625,
+        0.484375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.70996094,
+        0.46875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "GIN",
+      "appearance": "muted turquoise gin label, aged-gold rectangular top banner and silver printed lower medallion, delicate black serif letterforms; turquoise-gold neck strip.",
+      "suggested_profile": "round-gin",
+      "suggested_glass_or_liquid": "dark green",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "58412e95615213b3db93ad22251e70c2b30d28980b4e77c7434a2b7db839f51a"
+    },
+    {
+      "label_id": 39,
+      "row": 1,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        373,
+        936,
+        623
+      ],
+      "neck_source_crop": [
+        646,
+        316,
+        921,
+        370
+      ],
+      "body_pixel_box": [
+        1056,
+        624,
+        1504,
+        992
+      ],
+      "neck_pixel_box": [
+        1088,
+        544,
+        1472,
+        594
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.515625,
+        0.734375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.70996094,
+        0.71875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "GIN",
+      "appearance": "pale lime gin label, black circle with white crest at upper center, dark green block type and red tiny diamond; lime-black neck strip.",
+      "suggested_profile": "tall-green-gin",
+      "suggested_glass_or_liquid": "olive green",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "b83c802144ae6c885bf7675bda91050a2418df2ebba4a8e1a64d6f7196b14cbc"
+    },
+    {
+      "label_id": 40,
+      "row": 1,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        373,
+        1250,
+        623
+      ],
+      "neck_source_crop": [
+        959,
+        316,
+        1235,
+        370
+      ],
+      "body_pixel_box": [
+        1568,
+        624,
+        2016,
+        992
+      ],
+      "neck_pixel_box": [
+        1600,
+        544,
+        1984,
+        594
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.515625,
+        0.984375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.70996094,
+        0.96875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        1536,
+        512,
+        2048,
+        1024
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "GIN",
+      "appearance": "ivory gin label, cobalt-blue circular botanical stamp, fine gold line border and red side tickmarks; ivory-cobalt neck strip.",
+      "suggested_profile": "square-blue-gin",
+      "suggested_glass_or_liquid": "pale blue glass",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "ea8c38db6792f2b6212a1abc5965e1697aade5f7a83a2b2a4d06104999a4f6e5"
+    },
+    {
+      "label_id": 41,
+      "row": 2,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        686,
+        310,
+        936
+      ],
+      "neck_source_crop": [
+        19,
+        629,
+        295,
+        683
+      ],
+      "body_pixel_box": [
+        32,
+        1136,
+        480,
+        1504
+      ],
+      "neck_pixel_box": [
+        64,
+        1056,
+        448,
+        1106
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.265625,
+        0.234375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.45996094,
+        0.21875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        0,
+        1024,
+        512,
+        1536
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "RUM",
+      "appearance": "eggshell white rum label, bright red wide central rectangle, black serif type above and green narrow base band; red-white neck strip.",
+      "suggested_profile": "square-shoulder-rum",
+      "suggested_glass_or_liquid": "warm amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "3c6a746fbd11376c70e3969f4af96e0c4773a00480bf10282fd274248faeeba7"
+    },
+    {
+      "label_id": 42,
+      "row": 2,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        686,
+        623,
+        936
+      ],
+      "neck_source_crop": [
+        333,
+        629,
+        608,
+        683
+      ],
+      "body_pixel_box": [
+        544,
+        1136,
+        992,
+        1504
+      ],
+      "neck_pixel_box": [
+        576,
+        1056,
+        960,
+        1106
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.265625,
+        0.484375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.45996094,
+        0.46875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        512,
+        1024,
+        1024,
+        1536
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "RUM",
+      "appearance": "pale beige transparent rum label, gray oval bird emblem, blue serif hierarchy, one russet diagonal flourish; beige-blue neck strip.",
+      "suggested_profile": "tapered-round-rum",
+      "suggested_glass_or_liquid": "dark green",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "99b4a10167014bfd1306154731aa1e6437db5c3771a50d7adc027e7bcf92b3ef"
+    },
+    {
+      "label_id": 43,
+      "row": 2,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        686,
+        936,
+        936
+      ],
+      "neck_source_crop": [
+        646,
+        629,
+        921,
+        683
+      ],
+      "body_pixel_box": [
+        1056,
+        1136,
+        1504,
+        1504
+      ],
+      "neck_pixel_box": [
+        1088,
+        1056,
+        1472,
+        1106
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.265625,
+        0.734375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.45996094,
+        0.71875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        1024,
+        1024,
+        1536,
+        1536
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "TEQUILA",
+      "appearance": "metallic silver-look printed white tequila label, black agave-like geometric emblem, orange small border squares, all matte albedo; silver-orange neck strip.",
+      "suggested_profile": "square-clear-tequila",
+      "suggested_glass_or_liquid": "clear colorless",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "667bf0825fa43ba1ff73de4a5edcfa2ee108c226a0ce3c2d7cffc3cb9a6b7d9f"
+    },
+    {
+      "label_id": 44,
+      "row": 2,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        686,
+        1250,
+        936
+      ],
+      "neck_source_crop": [
+        959,
+        629,
+        1235,
+        683
+      ],
+      "body_pixel_box": [
+        1568,
+        1136,
+        2016,
+        1504
+      ],
+      "neck_pixel_box": [
+        1600,
+        1056,
+        1984,
+        1106
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.265625,
+        0.984375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.45996094,
+        0.96875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        1536,
+        1024,
+        2048,
+        1536
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "TEQUILA",
+      "appearance": "cream tequila label with ocher top arch, dusty green leaf ornament, bold brown serif shapes; ocher-green neck strip.",
+      "suggested_profile": "round-amber-tequila",
+      "suggested_glass_or_liquid": "pale amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "8eb8c7cb38632334e0d2f22a6dca1094869d9809796003cc304cea0ee649cc5a"
+    },
+    {
+      "label_id": 45,
+      "row": 3,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        999,
+        310,
+        1250
+      ],
+      "neck_source_crop": [
+        19,
+        942,
+        295,
+        997
+      ],
+      "body_pixel_box": [
+        32,
+        1648,
+        480,
+        2016
+      ],
+      "neck_pixel_box": [
+        64,
+        1568,
+        448,
+        1618
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.015625,
+        0.234375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.20996094,
+        0.21875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        0,
+        1536,
+        512,
+        2048
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "LIQUEUR",
+      "appearance": "crimson liqueur label, cream crest badge and muted silver straight rules, tall white capitals; crimson-silver neck strip.",
+      "suggested_profile": "long-neck-round-liqueur",
+      "suggested_glass_or_liquid": "clear red liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "6813685a8aa14d377f31121ccc11a8b2396a58fbd5d743dc59835d3351c47398"
+    },
+    {
+      "label_id": 46,
+      "row": 3,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        999,
+        623,
+        1250
+      ],
+      "neck_source_crop": [
+        333,
+        942,
+        608,
+        997
+      ],
+      "body_pixel_box": [
+        544,
+        1648,
+        992,
+        2016
+      ],
+      "neck_pixel_box": [
+        576,
+        1568,
+        960,
+        1618
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.015625,
+        0.484375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.20996094,
+        0.46875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        512,
+        1536,
+        1024,
+        2048
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "LIQUEUR",
+      "appearance": "ivory orange-liqueur label, brown oval frame and orange fruit-stamp medallion, black fine-serif type; ivory-orange neck strip.",
+      "suggested_profile": "faceted-liqueur",
+      "suggested_glass_or_liquid": "amber liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "fd3893e1eaa07757869500ae1bca09c4bf0f143b909afd8837b6c2c5c5cd2922"
+    },
+    {
+      "label_id": 47,
+      "row": 3,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        999,
+        936,
+        1250
+      ],
+      "neck_source_crop": [
+        646,
+        942,
+        921,
+        997
+      ],
+      "body_pixel_box": [
+        1056,
+        1648,
+        1504,
+        2016
+      ],
+      "neck_pixel_box": [
+        1088,
+        1568,
+        1472,
+        1618
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.015625,
+        0.734375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.20996094,
+        0.71875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        1024,
+        1536,
+        1536,
+        2048
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "LIQUEUR",
+      "appearance": "yellow lemon-liqueur label, blue rounded cartouche, small green leaf border and white angular letterforms; yellow-blue neck strip.",
+      "suggested_profile": "narrow-clear-liqueur",
+      "suggested_glass_or_liquid": "clear pale-yellow liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "acbd14e0ed3c054441c8becf6ebb8db9476fbf9895148c4198fd5b9b7f43324f"
+    },
+    {
+      "label_id": 48,
+      "row": 3,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        999,
+        1250,
+        1250
+      ],
+      "neck_source_crop": [
+        959,
+        942,
+        1235,
+        997
+      ],
+      "body_pixel_box": [
+        1568,
+        1648,
+        2016,
+        2016
+      ],
+      "neck_pixel_box": [
+        1600,
+        1568,
+        1984,
+        1618
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.015625,
+        0.984375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.20996094,
+        0.96875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        1536,
+        1536,
+        2048,
+        2048
+      ],
+      "atlas": "labels-atlas-03.png",
+      "category_text": "LIQUEUR",
+      "appearance": "white anise liqueur label, dark blue horizontal bands, red tiny circle, elegant black italic lettering; dark-blue-red neck strip.",
+      "suggested_profile": "squat-wide-liqueur",
+      "suggested_glass_or_liquid": "dark brown",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "a07c1ec5d10fbba649b47b2b7736f911a5e9fd5e1fd9331563f23f042f70fba6"
+    },
+    {
+      "label_id": 49,
+      "row": 0,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        59,
+        310,
+        310
+      ],
+      "neck_source_crop": [
+        19,
+        2,
+        295,
+        57
+      ],
+      "body_pixel_box": [
+        32,
+        112,
+        480,
+        480
+      ],
+      "neck_pixel_box": [
+        64,
+        32,
+        448,
+        82
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.765625,
+        0.234375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.95996094,
+        0.21875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "RUM",
+      "appearance": "burnt-sienna dark-rum label, cream upper arch and black rectangular central medallion, old gold border; burnt-sienna cream neck strip.",
+      "suggested_profile": "broad-shoulder-rum",
+      "suggested_glass_or_liquid": "clear with pale liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "43d1f2a80fce16af00c75662f94d9eba7ce2e1c98e6b5e5194e005537b0f4f4b"
+    },
+    {
+      "label_id": 50,
+      "row": 0,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        59,
+        623,
+        310
+      ],
+      "neck_source_crop": [
+        333,
+        2,
+        608,
+        57
+      ],
+      "body_pixel_box": [
+        544,
+        112,
+        992,
+        480
+      ],
+      "neck_pixel_box": [
+        576,
+        32,
+        960,
+        82
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.765625,
+        0.484375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.95996094,
+        0.46875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "RUM",
+      "appearance": "sandy white amber-rum label, black sailing-vessel-like tiny printer ornament, dark teal serif type and ruby rectangular footer; sandy-teal neck strip.",
+      "suggested_profile": "tall-round-rum",
+      "suggested_glass_or_liquid": "dark brown",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "3ff31980550b9442946dbce6dfd5254aa6fb7dce0375108676e12f9f3372b3c5"
+    },
+    {
+      "label_id": 51,
+      "row": 0,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        59,
+        936,
+        310
+      ],
+      "neck_source_crop": [
+        646,
+        2,
+        921,
+        57
+      ],
+      "body_pixel_box": [
+        1056,
+        112,
+        1504,
+        480
+      ],
+      "neck_pixel_box": [
+        1088,
+        32,
+        1472,
+        82
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.765625,
+        0.734375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.95996094,
+        0.71875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "RUM",
+      "appearance": "purple-brown rum label, gold oval portrait medallion, ivory condensed line hierarchy and red fringe rules; purple-gold neck strip.",
+      "suggested_profile": "square-shoulder-rum",
+      "suggested_glass_or_liquid": "warm amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "a18c389f7ea6dca1d1bfb770dcc30f0f443156626a89fbf2f433d82b0e5234c9"
+    },
+    {
+      "label_id": 52,
+      "row": 0,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        59,
+        1250,
+        310
+      ],
+      "neck_source_crop": [
+        959,
+        2,
+        1235,
+        57
+      ],
+      "body_pixel_box": [
+        1568,
+        112,
+        2016,
+        480
+      ],
+      "neck_pixel_box": [
+        1600,
+        32,
+        1984,
+        82
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.765625,
+        0.984375,
+        0.9453125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.95996094,
+        0.96875,
+        0.984375
+      ],
+      "cell_pixel_box": [
+        1536,
+        0,
+        2048,
+        512
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "RUM",
+      "appearance": "cream Jamaican-rum-style label, olive botanical side ornaments, orange round seal, broad burgundy center type; olive-orange neck strip.",
+      "suggested_profile": "tapered-round-rum",
+      "suggested_glass_or_liquid": "dark green",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "ea8776bc611fd23f0b1c7ba2aecee1f01b4f2a66702a911d9f26e9a6648ad473"
+    },
+    {
+      "label_id": 53,
+      "row": 1,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        373,
+        310,
+        623
+      ],
+      "neck_source_crop": [
+        19,
+        316,
+        295,
+        370
+      ],
+      "body_pixel_box": [
+        32,
+        624,
+        480,
+        992
+      ],
+      "neck_pixel_box": [
+        64,
+        544,
+        448,
+        594
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.515625,
+        0.234375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.70996094,
+        0.21875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "BRANDY",
+      "appearance": "dark chocolate brandy label, tan horizontal band and gold shield, red small oval footer, wide cream serif characters; chocolate-gold neck strip.",
+      "suggested_profile": "round-brandy",
+      "suggested_glass_or_liquid": "dark amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "ecce1249baa1383cf274987c2238d40bc2b3be87a5c9a8419bafdc272527f4c5"
+    },
+    {
+      "label_id": 54,
+      "row": 1,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        373,
+        623,
+        623
+      ],
+      "neck_source_crop": [
+        333,
+        316,
+        608,
+        370
+      ],
+      "body_pixel_box": [
+        544,
+        624,
+        992,
+        992
+      ],
+      "neck_pixel_box": [
+        576,
+        544,
+        960,
+        594
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.515625,
+        0.484375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.70996094,
+        0.46875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "COGNAC",
+      "appearance": "warm ivory cognac-style label, rust-red narrow double frame, blue tiny shield and strong black script-like shapes; ivory-rust neck strip.",
+      "suggested_profile": "squat-cognac",
+      "suggested_glass_or_liquid": "warm amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "5a40cddf8c226417a38b25322af8b9335a4bd60fdc2061bbda7dd8c81efcae1e"
+    },
+    {
+      "label_id": 55,
+      "row": 1,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        373,
+        936,
+        623
+      ],
+      "neck_source_crop": [
+        646,
+        316,
+        921,
+        370
+      ],
+      "body_pixel_box": [
+        1056,
+        624,
+        1504,
+        992
+      ],
+      "neck_pixel_box": [
+        1088,
+        544,
+        1472,
+        594
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.515625,
+        0.734375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.70996094,
+        0.71875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "LIQUEUR",
+      "appearance": "muted peach almond-liqueur label, mahogany oval central frame, ocher curved rules and black tall type; peach-mahogany neck strip.",
+      "suggested_profile": "long-neck-round-liqueur",
+      "suggested_glass_or_liquid": "clear red liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "28cbc69cc1ae942ab913b235921bb930016aa8c526dfc749343a27626dbdd3ba"
+    },
+    {
+      "label_id": 56,
+      "row": 1,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        373,
+        1250,
+        623
+      ],
+      "neck_source_crop": [
+        959,
+        316,
+        1235,
+        370
+      ],
+      "body_pixel_box": [
+        1568,
+        624,
+        2016,
+        992
+      ],
+      "neck_pixel_box": [
+        1600,
+        544,
+        1984,
+        594
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.515625,
+        0.984375,
+        0.6953125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.70996094,
+        0.96875,
+        0.734375
+      ],
+      "cell_pixel_box": [
+        1536,
+        512,
+        2048,
+        1024
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "LIQUEUR",
+      "appearance": "deep olive herbal-liqueur label, orange stag-like tiny printer mark inside cream rectangle, black capital letterforms; orange-olive neck strip.",
+      "suggested_profile": "faceted-liqueur",
+      "suggested_glass_or_liquid": "amber liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "92bbe6977a9ad1b842d7322e8ee98a49ff9aed87694a4fbf3439e6490e28fac9"
+    },
+    {
+      "label_id": 57,
+      "row": 2,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        686,
+        310,
+        936
+      ],
+      "neck_source_crop": [
+        19,
+        629,
+        295,
+        683
+      ],
+      "body_pixel_box": [
+        32,
+        1136,
+        480,
+        1504
+      ],
+      "neck_pixel_box": [
+        64,
+        1056,
+        448,
+        1106
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.265625,
+        0.234375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.45996094,
+        0.21875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        0,
+        1024,
+        512,
+        1536
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "LIQUEUR",
+      "appearance": "cream honey-liqueur label, burgundy angular frame and gold honeycomb-like stamp, black italic central type; cream-gold neck strip.",
+      "suggested_profile": "narrow-clear-liqueur",
+      "suggested_glass_or_liquid": "clear pale-yellow liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "6c42401681e2877e1ccc1f6702deb6b7178783f2e374a7a738fe03ba0fa633a8"
+    },
+    {
+      "label_id": 58,
+      "row": 2,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        686,
+        623,
+        936
+      ],
+      "neck_source_crop": [
+        333,
+        629,
+        608,
+        683
+      ],
+      "body_pixel_box": [
+        544,
+        1136,
+        992,
+        1504
+      ],
+      "neck_pixel_box": [
+        576,
+        1056,
+        960,
+        1106
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.265625,
+        0.484375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.45996094,
+        0.46875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        512,
+        1024,
+        1024,
+        1536
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "CURACAO",
+      "appearance": "royal blue curacao-style label, warm white curved top field, coral small circle, black thin typography; blue-coral neck strip.",
+      "suggested_profile": "round-clear-blue-liqueur",
+      "suggested_glass_or_liquid": "clear with blue liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "9e8497baaad2a9ad486ddfe622ed213702c400cb3bf01640a8e69d2878457d05"
+    },
+    {
+      "label_id": 59,
+      "row": 2,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        686,
+        936,
+        936
+      ],
+      "neck_source_crop": [
+        646,
+        629,
+        921,
+        683
+      ],
+      "body_pixel_box": [
+        1056,
+        1136,
+        1504,
+        1504
+      ],
+      "neck_pixel_box": [
+        1088,
+        1056,
+        1472,
+        1106
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.265625,
+        0.734375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.45996094,
+        0.71875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        1024,
+        1024,
+        1536,
+        1536
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "LIQUEUR",
+      "appearance": "muted rose cream-liqueur label, black decorative arch, sepia rectangular stamp, cream chunky type; rose-black neck strip.",
+      "suggested_profile": "squat-wide-liqueur",
+      "suggested_glass_or_liquid": "dark brown",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "b15fdcc6e80773218ba858e2bc708c7a8ac5b9f31bbfc7db4471a282a061f3c4"
+    },
+    {
+      "label_id": 60,
+      "row": 2,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        686,
+        1250,
+        936
+      ],
+      "neck_source_crop": [
+        959,
+        629,
+        1235,
+        683
+      ],
+      "body_pixel_box": [
+        1568,
+        1136,
+        2016,
+        1504
+      ],
+      "neck_pixel_box": [
+        1600,
+        1056,
+        1984,
+        1106
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.265625,
+        0.984375,
+        0.4453125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.45996094,
+        0.96875,
+        0.484375
+      ],
+      "cell_pixel_box": [
+        1536,
+        1024,
+        2048,
+        1536
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "LIQUEUR",
+      "appearance": "pale ivory coconut-liqueur label, thin brown palm-like printer ornament, dusty red footer and emerald small seal; brown-emerald neck strip.",
+      "suggested_profile": "long-neck-round-liqueur",
+      "suggested_glass_or_liquid": "clear red liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "77e6fd031dd4f1c25dd2db57e3285fb8fe5f7c822e71d0b5e7a1c56ca65e371c"
+    },
+    {
+      "label_id": 61,
+      "row": 3,
+      "col": 0,
+      "body_source_crop": [
+        4,
+        999,
+        310,
+        1250
+      ],
+      "neck_source_crop": [
+        19,
+        942,
+        295,
+        997
+      ],
+      "body_pixel_box": [
+        32,
+        1648,
+        480,
+        2016
+      ],
+      "neck_pixel_box": [
+        64,
+        1568,
+        448,
+        1618
+      ],
+      "body_uv_box": [
+        0.015625,
+        0.015625,
+        0.234375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.03125,
+        0.20996094,
+        0.21875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        0,
+        1536,
+        512,
+        2048
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "PORT",
+      "appearance": "dark wine port-style label, white stepped rectangular frame, ocher oval crest and bold black tiny hierarchy; wine-white neck strip.",
+      "suggested_profile": "wine-shoulder",
+      "suggested_glass_or_liquid": "dark wine red",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "87ab69a3f543902e82a2fdc1ac260447c6fe82dc7ae8c6ad64565e13945ebe28"
+    },
+    {
+      "label_id": 62,
+      "row": 3,
+      "col": 1,
+      "body_source_crop": [
+        318,
+        999,
+        623,
+        1250
+      ],
+      "neck_source_crop": [
+        333,
+        942,
+        608,
+        997
+      ],
+      "body_pixel_box": [
+        544,
+        1648,
+        992,
+        2016
+      ],
+      "neck_pixel_box": [
+        576,
+        1568,
+        960,
+        1618
+      ],
+      "body_uv_box": [
+        0.265625,
+        0.015625,
+        0.484375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.28125,
+        0.20996094,
+        0.46875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        512,
+        1536,
+        1024,
+        2048
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "BITTER",
+      "appearance": "pale gray bitter-liqueur label, carmine large circular disk, gold fine border, narrow black sans type; gray-carmine neck strip.",
+      "suggested_profile": "tall-round-red-bitter",
+      "suggested_glass_or_liquid": "clear with scarlet liquid",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "da357dd936598add6a26b2d5a9b76e3adce31d4d77da3953fe24bcaab817e2c4"
+    },
+    {
+      "label_id": 63,
+      "row": 3,
+      "col": 2,
+      "body_source_crop": [
+        631,
+        999,
+        936,
+        1250
+      ],
+      "neck_source_crop": [
+        646,
+        942,
+        921,
+        997
+      ],
+      "body_pixel_box": [
+        1056,
+        1648,
+        1504,
+        2016
+      ],
+      "neck_pixel_box": [
+        1088,
+        1568,
+        1472,
+        1618
+      ],
+      "body_uv_box": [
+        0.515625,
+        0.015625,
+        0.734375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.53125,
+        0.20996094,
+        0.71875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        1024,
+        1536,
+        1536,
+        2048
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "SPIRIT",
+      "appearance": "amber yellow spiced spirit label, black curved rectangular cartouche, green tiny diamond and cream serif letterforms; amber-black neck strip.",
+      "suggested_profile": "squat-amber-spirit",
+      "suggested_glass_or_liquid": "warm amber",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "34029c5f7feae40d7e9a0925d8ef514ea90f17912675b08c4b09f03c0912fbe0"
+    },
+    {
+      "label_id": 64,
+      "row": 3,
+      "col": 3,
+      "body_source_crop": [
+        944,
+        999,
+        1250,
+        1250
+      ],
+      "neck_source_crop": [
+        959,
+        942,
+        1235,
+        997
+      ],
+      "body_pixel_box": [
+        1568,
+        1648,
+        2016,
+        2016
+      ],
+      "neck_pixel_box": [
+        1600,
+        1568,
+        1984,
+        1618
+      ],
+      "body_uv_box": [
+        0.765625,
+        0.015625,
+        0.984375,
+        0.1953125
+      ],
+      "neck_uv_box": [
+        0.78125,
+        0.20996094,
+        0.96875,
+        0.234375
+      ],
+      "cell_pixel_box": [
+        1536,
+        1536,
+        2048,
+        2048
+      ],
+      "atlas": "labels-atlas-04.png",
+      "category_text": "EAU DE VIE",
+      "appearance": "aged ivory eau-de-vie label, indigo horizontal bands, russet pear-shaped fruit emblem and faint gray fine print; ivory-indigo neck strip.",
+      "suggested_profile": "long-neck-clear-spirit",
+      "suggested_glass_or_liquid": "clear colorless",
+      "shape_and_tint_policy": "Geometry and tint are suggested modeling variation. Only texture design is generated; source-photo classification remains uncertain.",
+      "body_sha256": "62cec1b3e12d6e38837183e25031e1817ef16508cf00dea21b7f2d93a260a031"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "tool": "built-in image_gen",
+  "generation_calls": [
+    {
+      "purpose": "Full-frame reference restoration",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/reference-restoration-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nObject: the entire supplied photograph of the bamboo Tiki bar, including every vessel, bottle, garnish, lei, sign, lamp, rack, dispenser, surfboard, bamboo part and background detail.\nInput image: supplied image is the exact edit target and sole factual reference.\nRequest: reference restoration and upscale; longest image edge 3840 pixels, preserve the original full-frame 3:2 composition and all four image edges.\nScene: the identical photographed bar and tabletop, at the identical camera position.\nRestoration: improve legibility of existing shapes, reduce compression artifacts gently, recover natural texture only where the source supports it, do not redesign or invent details.\nLighting: retain the original warm amber lamps, green wall light, dark opening on the left, original shadows, reflections, exposure and photographed color balance.\nComposition: keep every existing object at its exact original image position, scale, pose, outline and occlusion; retain the crop and camera perspective exactly.\nPhoto quality and vibe: original non-studio snapshot, real light from the location, imperfect raw phone-photo character, natural focus, no oversharpening.\nAspect ratio: 3:2.\nAvoid: added objects, removed objects, rearrangement, new readable text, changed faces or vessel designs, fake sharp edges, excessive glare, changed colors, cinematic relighting, changed depth of field.",
+      "input_images": [
+        "/workspace/scratch/85111d38430a/upload/image(20261003-121618).png"
+      ],
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-9276c4c5-5f04-409a-b3b1-a95e99ae85ae.png",
+      "selected_output": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/reference-restored.png",
+      "actual_size": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "purpose": "Mosaic tumbler texture atlas",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/mosaic-tumbler-atlas-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nObject: the cream and tobacco-brown mosaic-pattern ceramic tumblers in the supplied Tiki bar reference.\nReference image: the bar photograph is the sole factual design source, especially the two short tapered ceramic cups at image coordinates x=0.55–0.72, y=0.76–0.92.\nAsset type: high-detail photographic base-color UV texture atlas for these precise 3D ceramic cups, not a photograph of finished cups.\nComposition: exact 2 by 2 grid of four equal square panels, no gutters and no drawn grid, all panels filled to their edges with completely flat texture surfaces.\nTop-left panel: flat exterior wrap surface for the rear-left cup; warm ivory ceramic covered with numerous irregular tobacco/chocolate brown rectangular mosaic marks, thin continuous off-white grout-like negative spaces between marks, mostly narrow vertical rectangles with varied heights and a few near-square patches; no pictorial face, no lettering, pattern reaches every edge.\nTop-right panel: same reference pattern for the foreground-right cup; narrow uneven brown ceramic rectangular patches with thin cream connecting gaps, equal density to the actual reference, no tidy modern brick wall or regular checkerboard; tiling surface only.\nBottom-left panel: warm ivory interior ceramic glaze for the cups, subtly mottled and imperfect, very fine brown speckle, no edges or circular object silhouette.\nBottom-right panel: short repeating horizontal rim strip surface, warm ivory glaze with small irregular brown vertical rectangular mosaic marks descending from one straight top edge, an ivory band at the very top; flat rectangular surface only.\nMaterials: slightly uneven glazed ceramic, worn ivory ground and mid-to-deep brown glazed pattern, restrained local highlights and soft surface texture.\nLighting: flat neutral diffuse texture lighting with only subtle ceramic relief cues, no scene shadows, no glare.\nDetail: preserve the observed fine mosaic proportions and cream/brown ratio; render at 2048 by 2048 pixels if supported.\nAspect ratio: 1:1.\nAvoid: complete cups, object silhouettes, round rims, perspective, product photography, bar background, faces, figures, text, labels, logos, neat checkerboards, wide dark mortar, gold grout, excessive yellow, oversharpening, strong baked lighting.",
+      "input_images": [
+        "/workspace/scratch/85111d38430a/upload/image(20261003-121618).png"
+      ],
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-6bddb49a-cf47-4df2-aa0d-32bab1b7b18e.png",
+      "selected_output": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/mosaic-tumbler-atlas.png",
+      "actual_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "purpose": "Ashtray atlas first draft",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/olive-ashtray-atlas-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nObject: the reference olive-green seated ceramic figure ashtray at the center front of the bar, kept distinct from every drinking mug.\nReference image: the supplied original bar photo is the sole factual source; the ashtray is the little pale olive seated figure at x=0.57–0.63, y=0.83–0.99 and round ash bowl at x=0.59–0.68, y=0.90–0.99.\nAsset type: high-detail photographic diffuse/base-color UV atlas for a small sculpted ceramic seated figure and its attached shallow round ashtray bowl; flat surface artwork, not a finished prop photograph.\nComposition: exact 2 by 2 layout of four equal square panels, no gutters or drawn borders; every panel fully filled with surface texture.\nTop-left panel: olive ceramic figure front surface artwork laid flat; a small carved elongated humanoid tiki face at upper center with low brows, narrow eyes, broad small nose and gently toothy low mouth, muted features matching the blurry reference, torso ridges below; faint outstretched arm ridges on the lower sides; all this stays in the same olive glaze, no bright teeth or painted decoration, no free-standing figure silhouette, no bowl drawn in this panel.\nTop-right panel: the same worn pale olive ceramic surface for figure sides, back and bowl outside, shallow irregular carved ridges and granular glazing, no face, no object outline.\nBottom-left panel: the shallow bowl floor surface in completely flat top-down form, dull olive/gray glaze with an irregular dark gray soot patch near the middle, scattered small powdery white ash fragments and one tiny pale cigarette-filter-like fragment as visible in the reference, sparse details, no circular boundary.\nBottom-right panel: the same pale olive rim and outer bowl ceramic glaze, fine mottled weathered surface, small grooves and chips; flat surface fully filling the square, no face, no ash, no ellipse.\nMaterials: muted yellowish olive ceramic seen under amber bar light, subdued rough glaze, local micro shading only.\nLighting: neutral diffuse material capture with soft shadows in shallow grooves, avoid major highlights and scene lighting.\nDetail: render at 2048 by 2048 pixels if supported; retain the restrained small sculpture quality instead of inventing an ornate tiki idol.\nAspect ratio: 1:1.\nAvoid: mug, drinking cup, tall tiki-head object, disconnected limbs, finished-object photograph, product silhouette, painted green face, glossy neon glaze, extra ashtrays, enlarged invented facial features, text, labels, hard panel dividers, excessive yellow, oversharpening, excessive glare.",
+      "input_images": [
+        "/workspace/scratch/85111d38430a/upload/image(20261003-121618).png"
+      ],
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-c8019dcf-12a8-4ccc-bb95-d3e2d8bb83e7.png",
+      "selected_output": null,
+      "archived_output": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/olive-ashtray-atlas-first-draft.png",
+      "rejection_reason": "Side/rim panels contained perspective bowl/figure forms and required targeted flattening.",
+      "actual_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "purpose": "Ashtray atlas targeted correction",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/olive-ashtray-atlas-correction-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nObject: targeted correction of the supplied four-panel olive ashtray texture atlas.\nInput image: this existing atlas is the edit target; retain its exact 2 by 2 layout.\nChange: replace only the top-right and bottom-right square panels with flat nonfigurative pale olive weathered ceramic material, matching the same olive glaze colors, tiny grain, speckle and imperfections.\nKeep: top-left carved figure front artwork and bottom-left soot/ash surface exactly unchanged, same position, scale and texture colors.\nTop-right panel: uniform completely flat olive ceramic material extending to all four panel edges, small random speckle and very fine rough glaze only.\nBottom-right panel: uniform completely flat olive ceramic material extending to all four panel edges, fine irregular speckle and glaze wear only.\nComposition: both changed panels must contain no bowl, no rim, no ellipse, no figure, no relief sculpture, no cast shadow, no shading gradient, no outline; they are photographic material surfaces only.\nLighting: flat diffuse neutral texture illumination, subdued micro-detail.\nDetail: preserve native resolution and all canvas edges, use 2048 by 2048 if supported.\nAspect ratio: 1:1.\nAvoid: object photograph, perspective, macro shapes, bright highlights, gradients, text, labels, borders, strong yellow tint, oversharpening.",
+      "input_images": [
+        "/workspace/scratch/85111d38430a/generated_images/exec-c8019dcf-12a8-4ccc-bb95-d3e2d8bb83e7.png"
+      ],
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-c0859d54-aee4-4a02-9bbe-f0da2118a912.png",
+      "selected_output": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/olive-ashtray-atlas.png",
+      "actual_size": [
+        1254,
+        1254
+      ]
+    }
+  ],
+  "technical_postprocessing": "Only selected-image copying and inset panel extraction; all texture artwork generated by built-in image_gen. No project code changed."
+}

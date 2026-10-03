@@ -1,0 +1,12 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Use case: product-mockup
+Asset type: dedicated equirectangular diffuse albedo UV wrap for a real modeled whole melon ellipsoid
+Primary request: create only the unwrapped rind surface of the original near-right melon, preserving its pale cream and pale green rind, clearly visible dark olive longitudinal grooves and ribs, and fine subtle netting.
+Input images: Image 1 is a direct crop of the original melon photograph, used only as the color and rind-pattern reference. Do not reproduce its sphere, shadows, background or camera perspective.
+Composition: a flat rectangular equirectangular material surface filling the entire image edge to edge, width twice height. Exactly ten narrow darker olive green longitudinal rib stripes are evenly distributed across the horizontal wrap; each stripe runs vertically from the top edge to the bottom edge. The pale cream/light green rind fills the broad regions between stripes. Left and right edges match for a continuous horizontal wrap.
+Materials/textures: subtle small natural variation in stripe width and green pigment; longitudinal darker green grooves remain clearly readable; fine pale beige netting is gentle and secondary to the stripes; fresh clean whole melon rind with delicate tiny pores.
+Lighting: strictly diffuse unlit base color, evenly bright across the whole rectangle, no directional lighting, no curvature shading, no cast shadow, no highlight, no ambient occlusion or vignette; the ellipsoid geometry and renderer will supply the lighting and ribs.
+Constraints: flat UV surface only, no melon silhouette, no sphere photograph, no fruit object, no polar shading, no backdrop, no divider, no labels, no watermark; no changes to other fruit textures.
+Aspect ratio: 2:1
+Avoid: uniform netting with missing stripes, bright orange flesh, black or burned rind, deep brown dirt, thick black outlines, heavy coarse webbing, photograph of a melon, baked lighting, glare, shadows, text.

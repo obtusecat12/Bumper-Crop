@@ -1,0 +1,244 @@
+{
+  "assets": {
+    "bottleLabels0": {
+      "file": "bottleLabels0.webp",
+      "data": false,
+      "repeat": false,
+      "source": "bottles/labels-atlas-01.png",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "bottleLabels1": {
+      "file": "bottleLabels1.webp",
+      "data": false,
+      "repeat": false,
+      "source": "bottles/labels-atlas-02.png",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "bottleLabels2": {
+      "file": "bottleLabels2.webp",
+      "data": false,
+      "repeat": false,
+      "source": "bottles/labels-atlas-03.png",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "bottleLabels3": {
+      "file": "bottleLabels3.webp",
+      "data": false,
+      "repeat": false,
+      "source": "bottles/labels-atlas-04.png",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "mosaicCups": {
+      "file": "mosaicCups.webp",
+      "data": false,
+      "repeat": false,
+      "source": "cocktail/mosaic-tumbler-atlas.png",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    "oliveAsh": {
+      "file": "oliveAsh.webp",
+      "data": false,
+      "repeat": false,
+      "source": "cocktail/olive-ashtray-atlas.png",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    "moai/basecolor": {
+      "file": "moai-basecolor.webp",
+      "data": false,
+      "repeat": true,
+      "source": "pond/moai-resin-basecolor.png",
+      "size": [
+        512,
+        512
+      ]
+    },
+    "moai/normal": {
+      "file": "moai-normal.png",
+      "data": true,
+      "repeat": true,
+      "source": "pond/moai-resin-normal.png",
+      "size": [
+        512,
+        512
+      ]
+    },
+    "moai/roughness": {
+      "file": "moai-roughness.png",
+      "data": true,
+      "repeat": true,
+      "source": "pond/moai-resin-roughness.png",
+      "size": [
+        512,
+        512
+      ]
+    },
+    "moai/ao": {
+      "file": "moai-ao.png",
+      "data": true,
+      "repeat": true,
+      "source": "pond/moai-resin-ao.png",
+      "size": [
+        512,
+        512
+      ]
+    },
+    "moai/height": {
+      "file": "moai-height.png",
+      "data": true,
+      "repeat": true,
+      "source": "pond/moai-resin-height.png",
+      "size": [
+        512,
+        512
+      ]
+    },
+    "pondFoam": {
+      "file": "pondFoam.webp",
+      "data": false,
+      "repeat": true,
+      "source": "pond/foam-breakup.png",
+      "size": [
+        1254,
+        1254
+      ]
+    },
+    "pineappleNew": {
+      "file": "pineappleNew.webp",
+      "data": false,
+      "repeat": true,
+      "source": "buffet/pineapple-basecolor.png",
+      "size": [
+        512,
+        512
+      ]
+    },
+    "melonNew": {
+      "file": "melonNew.webp",
+      "data": false,
+      "repeat": true,
+      "source": "buffet/melon-striped-wrap.png",
+      "size": [
+        1774,
+        887
+      ]
+    },
+    "papayaYellowNew": {
+      "file": "papayaYellowNew.webp",
+      "data": false,
+      "repeat": true,
+      "source": "buffet/papaya-yellow-basecolor.png",
+      "size": [
+        512,
+        512
+      ]
+    },
+    "papayaGreenNew": {
+      "file": "papayaGreenNew.webp",
+      "data": false,
+      "repeat": true,
+      "source": "buffet/papaya-green-basecolor.png",
+      "size": [
+        512,
+        512
+      ]
+    },
+    "dollFaceWhite": {
+      "file": "dollFaceWhite.webp",
+      "data": false,
+      "repeat": false,
+      "source": "buffet/menehune-white-face.png",
+      "size": [
+        342,
+        285
+      ]
+    },
+    "dollFacePink": {
+      "file": "dollFacePink.webp",
+      "data": false,
+      "repeat": false,
+      "source": "buffet/menehune-pink-face.png",
+      "size": [
+        342,
+        285
+      ]
+    },
+    "dollTorsoWhite": {
+      "file": "dollTorsoWhite.webp",
+      "data": false,
+      "repeat": false,
+      "source": "buffet/menehune-white-torso-front.png",
+      "size": [
+        627,
+        627
+      ]
+    },
+    "dollTorsoPink": {
+      "file": "dollTorsoPink.webp",
+      "data": false,
+      "repeat": false,
+      "source": "buffet/menehune-pink-torso-front.png",
+      "size": [
+        627,
+        627
+      ]
+    },
+    "trayFar": {
+      "file": "trayFar.webp",
+      "data": false,
+      "repeat": false,
+      "source": "buffet/tray-contents-far.png",
+      "size": [
+        724,
+        724
+      ]
+    },
+    "trayMiddle": {
+      "file": "trayMiddle.webp",
+      "data": false,
+      "repeat": false,
+      "source": "buffet/tray-contents-middle.png",
+      "size": [
+        724,
+        724
+      ]
+    },
+    "trayNear": {
+      "file": "trayNear.webp",
+      "data": false,
+      "repeat": false,
+      "source": "buffet/tray-contents-near.png",
+      "size": [
+        724,
+        724
+      ]
+    },
+    "barAccents": {
+      "file": "barAccents.webp",
+      "data": false,
+      "repeat": false,
+      "source": "reference/souvenir-baraccents-atlas.png",
+      "size": [
+        1254,
+        1254
+      ]
+    }
+  }
+}

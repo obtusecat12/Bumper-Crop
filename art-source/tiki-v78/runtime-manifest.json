@@ -1,0 +1,290 @@
+[
+  {
+    "id": "bottleLabels0",
+    "path": "textures/tiki-v78/bottleLabels0.webp",
+    "file": "bottleLabels0.webp",
+    "data": false,
+    "repeat": false,
+    "source": "bottles/labels-atlas-01.png",
+    "size": [
+      2048,
+      2048
+    ]
+  },
+  {
+    "id": "bottleLabels1",
+    "path": "textures/tiki-v78/bottleLabels1.webp",
+    "file": "bottleLabels1.webp",
+    "data": false,
+    "repeat": false,
+    "source": "bottles/labels-atlas-02.png",
+    "size": [
+      2048,
+      2048
+    ]
+  },
+  {
+    "id": "bottleLabels2",
+    "path": "textures/tiki-v78/bottleLabels2.webp",
+    "file": "bottleLabels2.webp",
+    "data": false,
+    "repeat": false,
+    "source": "bottles/labels-atlas-03.png",
+    "size": [
+      2048,
+      2048
+    ]
+  },
+  {
+    "id": "bottleLabels3",
+    "path": "textures/tiki-v78/bottleLabels3.webp",
+    "file": "bottleLabels3.webp",
+    "data": false,
+    "repeat": false,
+    "source": "bottles/labels-atlas-04.png",
+    "size": [
+      2048,
+      2048
+    ]
+  },
+  {
+    "id": "mosaicCups",
+    "path": "textures/tiki-v78/mosaicCups.webp",
+    "file": "mosaicCups.webp",
+    "data": false,
+    "repeat": false,
+    "source": "cocktail/mosaic-tumbler-atlas.png",
+    "size": [
+      1254,
+      1254
+    ]
+  },
+  {
+    "id": "oliveAsh",
+    "path": "textures/tiki-v78/oliveAsh.webp",
+    "file": "oliveAsh.webp",
+    "data": false,
+    "repeat": false,
+    "source": "cocktail/olive-ashtray-atlas.png",
+    "size": [
+      1254,
+      1254
+    ]
+  },
+  {
+    "id": "moai/basecolor",
+    "path": "textures/tiki-v78/moai-basecolor.webp",
+    "file": "moai-basecolor.webp",
+    "data": false,
+    "repeat": true,
+    "source": "pond/moai-resin-basecolor.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "moai/normal",
+    "path": "textures/tiki-v78/moai-normal.png",
+    "file": "moai-normal.png",
+    "data": true,
+    "repeat": true,
+    "source": "pond/moai-resin-normal.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "moai/roughness",
+    "path": "textures/tiki-v78/moai-roughness.png",
+    "file": "moai-roughness.png",
+    "data": true,
+    "repeat": true,
+    "source": "pond/moai-resin-roughness.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "moai/ao",
+    "path": "textures/tiki-v78/moai-ao.png",
+    "file": "moai-ao.png",
+    "data": true,
+    "repeat": true,
+    "source": "pond/moai-resin-ao.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "moai/height",
+    "path": "textures/tiki-v78/moai-height.png",
+    "file": "moai-height.png",
+    "data": true,
+    "repeat": true,
+    "source": "pond/moai-resin-height.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "pondFoam",
+    "path": "textures/tiki-v78/pondFoam.webp",
+    "file": "pondFoam.webp",
+    "data": false,
+    "repeat": true,
+    "source": "pond/foam-breakup.png",
+    "size": [
+      1254,
+      1254
+    ]
+  },
+  {
+    "id": "pineappleNew",
+    "path": "textures/tiki-v78/pineappleNew.webp",
+    "file": "pineappleNew.webp",
+    "data": false,
+    "repeat": true,
+    "source": "buffet/pineapple-basecolor.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "melonNew",
+    "path": "textures/tiki-v78/melonNew.webp",
+    "file": "melonNew.webp",
+    "data": false,
+    "repeat": true,
+    "source": "buffet/melon-striped-wrap.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "id": "papayaYellowNew",
+    "path": "textures/tiki-v78/papayaYellowNew.webp",
+    "file": "papayaYellowNew.webp",
+    "data": false,
+    "repeat": true,
+    "source": "buffet/papaya-yellow-basecolor.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "papayaGreenNew",
+    "path": "textures/tiki-v78/papayaGreenNew.webp",
+    "file": "papayaGreenNew.webp",
+    "data": false,
+    "repeat": true,
+    "source": "buffet/papaya-green-basecolor.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "dollFaceWhite",
+    "path": "textures/tiki-v78/dollFaceWhite.webp",
+    "file": "dollFaceWhite.webp",
+    "data": false,
+    "repeat": false,
+    "source": "buffet/menehune-white-face.png",
+    "size": [
+      342,
+      285
+    ]
+  },
+  {
+    "id": "dollFacePink",
+    "path": "textures/tiki-v78/dollFacePink.webp",
+    "file": "dollFacePink.webp",
+    "data": false,
+    "repeat": false,
+    "source": "buffet/menehune-pink-face.png",
+    "size": [
+      342,
+      285
+    ]
+  },
+  {
+    "id": "dollTorsoWhite",
+    "path": "textures/tiki-v78/dollTorsoWhite.webp",
+    "file": "dollTorsoWhite.webp",
+    "data": false,
+    "repeat": false,
+    "source": "buffet/menehune-white-torso-front.png",
+    "size": [
+      627,
+      627
+    ]
+  },
+  {
+    "id": "dollTorsoPink",
+    "path": "textures/tiki-v78/dollTorsoPink.webp",
+    "file": "dollTorsoPink.webp",
+    "data": false,
+    "repeat": false,
+    "source": "buffet/menehune-pink-torso-front.png",
+    "size": [
+      627,
+      627
+    ]
+  },
+  {
+    "id": "trayFar",
+    "path": "textures/tiki-v78/trayFar.webp",
+    "file": "trayFar.webp",
+    "data": false,
+    "repeat": false,
+    "source": "buffet/tray-contents-far.png",
+    "size": [
+      724,
+      724
+    ]
+  },
+  {
+    "id": "trayMiddle",
+    "path": "textures/tiki-v78/trayMiddle.webp",
+    "file": "trayMiddle.webp",
+    "data": false,
+    "repeat": false,
+    "source": "buffet/tray-contents-middle.png",
+    "size": [
+      724,
+      724
+    ]
+  },
+  {
+    "id": "trayNear",
+    "path": "textures/tiki-v78/trayNear.webp",
+    "file": "trayNear.webp",
+    "data": false,
+    "repeat": false,
+    "source": "buffet/tray-contents-near.png",
+    "size": [
+      724,
+      724
+    ]
+  },
+  {
+    "id": "barAccents",
+    "path": "textures/tiki-v78/barAccents.webp",
+    "file": "barAccents.webp",
+    "data": false,
+    "repeat": false,
+    "source": "reference/souvenir-baraccents-atlas.png",
+    "size": [
+      1254,
+      1254
+    ]
+  }
+]

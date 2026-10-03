@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: reference-faithful tan wahine-style ceramic cylindrical mug wrap
+reference image: attached bar photo is the actual source; reproduce the tan ceramic figure mug standing just left of the dark brown tall mug at the foreground right, preserve its carved tan tropical surface, small red and green painted details, female figure motif and dark blue bottom trim
+asset type: completely flat rectangular photographic diffuse/base-color UV wrap for an actual low-poly cylindrical mug; usable PS2 game prop texture, not a product photo
+composition: full rectangular canvas filled by the unwrapped ceramic surface; detailed front artwork centered in middle third of width, both outer thirds continuing its tan carved side and back surface; top and bottom edges run straight with no rim ellipse and no cup silhouette; side edges wrap seamlessly
+details: honey beige tan glazed ceramic; top carved fan-like vertical strokes and shallow leafy ridges; tiny green and red tropical marks near upper third; center an oval dark recessed niche with a small sculpted wahine/hula woman, pale face, dark and red hair-flower details, red accents at shoulder, green grass skirt and foliage at lower front; narrow dark blue glazed bottom stripe; preserve this particular motif and proportions from reference instead of a generic tiki face or full scene
+style and quality: real imperfect ceramic glazing, small highlights and dark carved recesses, slightly soft photographic PS2 texture character matching original reference detail, 1536 by 768 artwork
+lighting: even frontal diffuse texture lighting with small local sculptural shadows and no scene illumination
+text: none, no captions or labels
+aspect ratio: 2:1
+Avoid: whole perspective mug, product photograph, background scene, other props, generic new tiki face, extra figures, front-facing human portrait, transparency, grid lines, text, excessive yellow, oversharpening, exaggerated highlights

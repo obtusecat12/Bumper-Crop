@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: fine pond-surface foam breakup texture matching the irregular thin cream-white foam rafts visible in the original tiki pond photograph supplied as reference
+request: create one top-down square RGBA texture with a genuinely transparent background, containing several irregular connected and detached thin rafts of extremely fine small bubbles, ready to overlay on colored pond water
+foam shape: asymmetrical ragged raft edges, shallow scallops and narrow winding channels, irregular holes showing transparent water beneath, lace-like fine edge breakup; broader patches in upper-right and lower-left with a thin broken branching band through the center, diffuse turbulence patch near center; do not depict the statue, stone walls, foliage or water itself
+bubble texture: many tiny varied bubble cells and extremely delicate thin membrane rims; scale and density vary naturally; translucent cream-white and pale gray foam, soft semi-transparent raft interiors with visible microcell variation; sparse isolated fine small bubbles near the broken margins
+alpha: transparent outside foam and in internal holes, semi-transparent thin interiors and feathered irregular edges; no background color, no checkerboard painted into image, no shadow
+lighting: neutral unlit texture without baked yellow or green underwater lighting, without directional specular hotspots
+aspect ratio: 1:1, requested 2048 by 2048 pixels if available
+Avoid: uniformly solid white dots, regular polka dots, uniformly circular disconnected spots, thick soap suds piles, opaque snow banks, one smooth solid white blob, blurred solid white cloud, perfect symmetry, regular tiling grids, colored water background, borders, labels, text

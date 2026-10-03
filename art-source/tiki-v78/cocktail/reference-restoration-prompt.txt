@@ -1,0 +1,12 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Object: the entire supplied photograph of the bamboo Tiki bar, including every vessel, bottle, garnish, lei, sign, lamp, rack, dispenser, surfboard, bamboo part and background detail.
+Input image: supplied image is the exact edit target and sole factual reference.
+Request: reference restoration and upscale; longest image edge 3840 pixels, preserve the original full-frame 3:2 composition and all four image edges.
+Scene: the identical photographed bar and tabletop, at the identical camera position.
+Restoration: improve legibility of existing shapes, reduce compression artifacts gently, recover natural texture only where the source supports it, do not redesign or invent details.
+Lighting: retain the original warm amber lamps, green wall light, dark opening on the left, original shadows, reflections, exposure and photographed color balance.
+Composition: keep every existing object at its exact original image position, scale, pose, outline and occlusion; retain the crop and camera perspective exactly.
+Photo quality and vibe: original non-studio snapshot, real light from the location, imperfect raw phone-photo character, natural focus, no oversharpening.
+Aspect ratio: 3:2.
+Avoid: added objects, removed objects, rearrangement, new readable text, changed faces or vessel designs, fake sharp edges, excessive glare, changed colors, cinematic relighting, changed depth of field.

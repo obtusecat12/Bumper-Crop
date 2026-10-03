@@ -1,0 +1,506 @@
+{
+  "generator": "built-in image_gen.imagegen",
+  "reference": "/workspace/scratch/85111d38430a/upload/5c99c390beeedfbd80bbee053c687267.png",
+  "original_reference_size": [
+    350,
+    320
+  ],
+  "processing": "Lossless copies and rectangular crop extraction only. No recoloring, repainting, alpha synthesis or procedural texture creation.",
+  "pixel_convention": "[left,top,right,bottom], exclusive right/bottom; original pixels; UV top-left origin.",
+  "restoration": {
+    "file": "originals/reference-restoration.png",
+    "prompt": "prompts/01-reference-restoration.txt",
+    "requested_resolution": "4K",
+    "actual_size": [
+      1312,
+      1199
+    ],
+    "geometry_authority": "Original 350x320 photograph. Restoration contains enhanced guesses and is not geometry authority."
+  },
+  "assets": [
+    {
+      "id": "fresh-fruit-albedo",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-3639935a-2900-4d5b-95f8-f187d2dfdf39.png",
+      "original": "originals/fresh-fruit-albedo-original.png",
+      "atlas": "fresh-fruit-albedo-atlas.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "prompt": "prompts/02-fresh-fruit-albedo.txt",
+      "columns": 3,
+      "rows": 2,
+      "tiles": [
+        {
+          "name": "melon-basecolor",
+          "file": "melon-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.5,
+            0.3333333333333333,
+            1.0
+          ]
+        },
+        {
+          "name": "papaya-yellow-basecolor",
+          "file": "papaya-yellow-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.3333333333333333,
+            0.0,
+            0.6666666666666666,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666,
+            1.0
+          ]
+        },
+        {
+          "name": "papaya-green-basecolor",
+          "file": "papaya-green-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.6666666666666666,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.6666666666666666,
+            0.5,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "pineapple-basecolor",
+          "file": "pineapple-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.5,
+            0.3333333333333333,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.5
+          ]
+        },
+        {
+          "name": "crown-leaf-upper-basecolor",
+          "file": "crown-leaf-upper-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.3333333333333333,
+            0.0,
+            0.6666666666666666,
+            0.5
+          ]
+        },
+        {
+          "name": "crown-leaf-lower-basecolor",
+          "file": "crown-leaf-lower-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.6666666666666666,
+            0.5,
+            1.0,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.6666666666666666,
+            0.0,
+            1.0,
+            0.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tiny-ceramic-souvenirs",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-275f0aeb-6077-47cc-90ce-a78863965914.png",
+      "original": "originals/tiny-ceramic-souvenirs-original.png",
+      "atlas": "tiny-ceramic-souvenirs-atlas.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "prompt": "prompts/03-tiny-ceramic-souvenirs.txt",
+      "columns": 2,
+      "rows": 2,
+      "tiles": [
+        {
+          "name": "menehune-white-head-front",
+          "file": "menehune-white-head-front.png",
+          "size": [
+            627,
+            627
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            0,
+            627,
+            627
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.5,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "name": "menehune-pink-head-front",
+          "file": "menehune-pink-head-front.png",
+          "size": [
+            627,
+            627
+          ],
+          "atlas_pixel_bounds": [
+            627,
+            0,
+            1254,
+            627
+          ],
+          "atlas_uv_top_left": [
+            0.5,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.5,
+            0.5,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "menehune-white-torso-front",
+          "file": "menehune-white-torso-front.png",
+          "size": [
+            627,
+            627
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            627,
+            627,
+            1254
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.5,
+            0.5,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "menehune-pink-torso-front",
+          "file": "menehune-pink-torso-front.png",
+          "size": [
+            627,
+            627
+          ],
+          "atlas_pixel_bounds": [
+            627,
+            627,
+            1254,
+            1254
+          ],
+          "atlas_uv_top_left": [
+            0.5,
+            0.5,
+            1.0,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.5,
+            0.0,
+            1.0,
+            0.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recessed-tray-contents",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-30398165-ac6e-4854-af46-ac78dd58a5c5.png",
+      "original": "originals/recessed-tray-contents-original.png",
+      "atlas": "recessed-tray-contents-atlas.png",
+      "size": [
+        2172,
+        724
+      ],
+      "prompt": "prompts/04-recessed-tray-contents.txt",
+      "columns": 3,
+      "rows": 1,
+      "tiles": [
+        {
+          "name": "tray-contents-far",
+          "file": "tray-contents-far.png",
+          "size": [
+            724,
+            724
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            0,
+            724,
+            724
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            1.0
+          ]
+        },
+        {
+          "name": "tray-contents-middle",
+          "file": "tray-contents-middle.png",
+          "size": [
+            724,
+            724
+          ],
+          "atlas_pixel_bounds": [
+            724,
+            0,
+            1448,
+            724
+          ],
+          "atlas_uv_top_left": [
+            0.3333333333333333,
+            0.0,
+            0.6666666666666666,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.3333333333333333,
+            0.0,
+            0.6666666666666666,
+            1.0
+          ]
+        },
+        {
+          "name": "tray-contents-near",
+          "file": "tray-contents-near.png",
+          "size": [
+            724,
+            724
+          ],
+          "atlas_pixel_bounds": [
+            1448,
+            0,
+            2172,
+            724
+          ],
+          "atlas_uv_top_left": [
+            0.6666666666666666,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.6666666666666666,
+            0.0,
+            1.0,
+            1.0
+          ]
+        }
+      ]
+    }
+  ],
+  "extra_crops": [
+    {
+      "file": "menehune-white-face.png",
+      "source": "tiny-ceramic-souvenirs-atlas.png",
+      "atlas_pixel_bounds": [
+        145,
+        258,
+        487,
+        543
+      ],
+      "size": [
+        342,
+        285
+      ],
+      "purpose": "Brown front face interior for model face UV; exterior gray background and headdress excluded. Use separate modeled hair/flower parts.",
+      "atlas_uv_top_left": [
+        0.11562998405103668,
+        0.20574162679425836,
+        0.3883572567783094,
+        0.43301435406698563
+      ],
+      "three_js_uv_bottom_left": [
+        0.11562998405103668,
+        0.5669856459330144,
+        0.3883572567783094,
+        0.7942583732057417
+      ]
+    },
+    {
+      "file": "menehune-pink-face.png",
+      "source": "tiny-ceramic-souvenirs-atlas.png",
+      "atlas_pixel_bounds": [
+        772,
+        258,
+        1114,
+        543
+      ],
+      "size": [
+        342,
+        285
+      ],
+      "purpose": "Brown front face interior for model face UV; exterior gray background and headdress excluded. Use separate modeled hair/flower parts.",
+      "atlas_uv_top_left": [
+        0.6156299840510366,
+        0.20574162679425836,
+        0.8883572567783095,
+        0.43301435406698563
+      ],
+      "three_js_uv_bottom_left": [
+        0.6156299840510366,
+        0.5669856459330144,
+        0.8883572567783095,
+        0.7942583732057417
+      ]
+    }
+  ],
+  "inspection": {
+    "fruit": "Correct distinct albedo material identities; melon cream/sage fine netting, yellow and green papayas smooth with restrained speckles, fresh tan/green pineapple eyes and fibers. Leaf panels are longitudinal fibers for real crown leaf geometry.",
+    "souvenirs": "Toy-like round smiling brown ceramic heads with simple painted eyes, white/pink floral headdresses. Gray background outside photographed model silhouette remains only in complete head and torso tiles; interior face crops omit it. Baked low-strength glaze highlights remain.",
+    "trays": "Exactly 3 extracted top-down contents tiles. Pale straw drink; small purple and white orchids; pale translucent crushed ice. Use below real retained ice geometry, never as raised blocks.",
+    "restoration_guesses": [
+      "New far-end brown doll and richer far-end flowers are not established by original.",
+      "Restoration increases white flower count and petal size, adds whole coconuts near fruit and more decorative canoe carving.",
+      "Do not copy restored canoe width, bow length, face scale or tray positions blindly; original determines geometry."
+    ]
+  },
+  "dedicated_melon_correction": {
+    "file": "melon-striped-wrap.png",
+    "original": "originals/melon-striped-wrap-original.png",
+    "size": [
+      1774,
+      887
+    ],
+    "prompt": "prompts/05-melon-striped-wrap.txt",
+    "source_reference_crop": "originals/melon-reference-crop.png",
+    "source_crop_pixel_bounds": [
+      242,
+      236,
+      308,
+      301
+    ],
+    "atlas_pixel_bounds": [
+      0,
+      0,
+      1774,
+      887
+    ],
+    "atlas_uv_top_left": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "three_js_uv_bottom_left": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "inspection": "Flat 2:1 diffuse equirectangular surface; ten readable longitudinal dark olive stripes/ribs across wrap, pale cream/light green rind and fine secondary netting; no fruit silhouette or directional cast shadow. Original crop inspected before generation. No other generation during this correction."
+  }
+}

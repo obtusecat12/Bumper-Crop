@@ -1,0 +1,14 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Use case: precise-object-edit
+Asset type: reference photograph restoration for accurate three-dimensional reconstruction
+Primary request: restore and upscale the supplied original photograph to 4K clarity, keeping its exact canoe proportions, camera perspective, framing, object positions, visible counts, and scale relationships.
+Input images: Image 1 is the edit target, the original low-resolution buffet canoe photograph. Use this photograph as the sole geometry and layout source.
+Subject: a long deep wooden buffet canoe with exactly three visible rectangular metal trays recessed BELOW the canoe gunwale, crushed translucent white ice, pale drink, purple and white orchids, three visible brown coconut bowl openings with long curved pale wooden handles, the near-end whole tropical fruit pile, and two tiny brown smiling ceramic souvenir dolls with floral headdresses.
+Composition/framing: preserve the original diagonal canoe view from the near-right bow toward the far-left end; preserve exact aspect ratio and crop; preserve the wood wall behind, background rug, tray spacing, long bow, left rail curvature, near fruit-pile position, and partial objects cut off at the image boundary.
+Materials/textures: clean natural medium-brown timber grain; fresh pale netted melon, smooth yellow elongated papaya, round or pear-shaped green papaya, fresh fibrous brown-green pineapple with a long green leaf crown; tiny glazed brown ceramic souvenir faces; clear-to-white ice; pale beverage; white and purple orchid petals.
+Lighting/mood: retain the natural warm indoor lighting and tonal balance of the original photograph; recover readable detail without harsh sharpening or invented dramatic shadows.
+Constraints: exact count three trays; every tray body and contents basin lies visibly below the top rim of the canoe; keep all coconut bowls, curved handles, fruits, flowers, and both small brown dolls in the original positions; do not redesign the canoe or objects; enhancement of missing fine detail must remain modest and plausible.
+Resolution request: 4K restoration, preserving the original proportions without adding borders.
+Aspect ratio: 35:32
+Avoid: raised serving tables, trays above the gunwale, a fourth tray, shorter or wider canoe, missing handles, carved humanoid tiki poles, large dolls, burned or black pineapple, sliced fruits, new decorations, extra text, watermark, oversharpening.

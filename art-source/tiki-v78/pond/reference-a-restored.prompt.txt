@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: the original indoor tiki pond photograph, image 1 is the sole edit target
+request: upscale and restore this photograph separately to 4K, maximum edge 3840 pixels, without redesigning or changing the scene
+geometry and invariants: retain exact original camera angle, crop, perspective, pond wall geometry, one brown Moai fountain, its facial proportions, broad forehead, long nose, water lip and falling water, gray stone wall, hanging plants, red upper wall, frames, bamboo bar, tabletop objects, water lighting, flowers and every existing visible object in its original place; do not add, remove, move or multiply objects
+photo quality and vibe: preserve original photographic light, original flash-like glare and colored light, grain and imperfect photographic character; only recover gentle detail without oversharpening or fabricated geometry
+text: preserve the existing TikTok watermark and handle as already visible, do not add text
+aspect ratio: 1:1, retain the source aspect ratio exactly; requested output approximately 3840 by 3840 pixels
+Avoid: scene reconstruction, stylization, invented details, invented object counts, color relighting, corrected perspective, excessive sharpness

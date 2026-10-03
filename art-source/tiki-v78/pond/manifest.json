@@ -1,0 +1,257 @@
+{
+  "generator": "built-in image_gen.imagegen",
+  "task_directory": "/workspace/scratch/85111d38430a/tiki-v78/pond",
+  "prompt_skill": "/workspace/scratch/85111d38430a/tiki-v78-prompt-skill.md",
+  "prompt_prefix": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - ",
+  "reference_images": [
+    {
+      "id": "a",
+      "path": "/workspace/scratch/85111d38430a/upload/4ae734c080fc269d02fa7b4e8ae35572.png",
+      "size": [
+        1200,
+        1197
+      ],
+      "view": "oblique side view; red wall and right bamboo bar visible"
+    },
+    {
+      "id": "b",
+      "path": "/workspace/scratch/85111d38430a/upload/a78ba32e55e2f8099ce3ade9e69eeb95.png",
+      "size": [
+        1024,
+        768
+      ],
+      "view": "frontal view; fountain proportions and pond foam/underwater light visible"
+    }
+  ],
+  "restorations": [
+    {
+      "id": "a",
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/reference-a-restored.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-8a6da403-a5f7-4625-8b74-52bc14cae9b3.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v78/pond/reference-a-restored.prompt.txt",
+      "requested_max_edge": 3840,
+      "actual_size": [
+        1254,
+        1254
+      ],
+      "status": "4K requested; actual output below 4K; no resolution-only retry",
+      "warning": "generative restoration; reference a near-square source has been returned exactly square, so minor framing drift is possible"
+    },
+    {
+      "id": "b",
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/reference-b-restored.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-ba93fc7e-5779-4fdf-a93b-d84d3acd8add.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v78/pond/reference-b-restored.prompt.txt",
+      "requested_max_edge": 3840,
+      "actual_size": [
+        1448,
+        1086
+      ],
+      "status": "4K requested; actual output below 4K; no resolution-only retry",
+      "warning": "restoration invents/clarifies filter disk recesses beyond original evidence; never use restoration to derive counts"
+    }
+  ],
+  "atlas": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-atlas.png",
+    "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-d89b813d-3dfe-49a1-be83-a2e011f13b5b.png",
+    "prompt_file": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-atlas.prompt.txt",
+    "requested_size": [
+      3072,
+      2048
+    ],
+    "actual_size": [
+      1536,
+      1024
+    ],
+    "grid": [
+      3,
+      2
+    ],
+    "cell_size": [
+      512,
+      512
+    ],
+    "padding": 0,
+    "maps": {
+      "basecolor": {
+        "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-basecolor.png",
+        "size": [
+          512,
+          512
+        ],
+        "crop_box": [
+          0,
+          0,
+          512,
+          512
+        ],
+        "range": [
+          2,
+          245
+        ],
+        "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+        "mean_rgb": [
+          79.44,
+          49.25,
+          36.92
+        ]
+      },
+      "normal": {
+        "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-normal.png",
+        "size": [
+          512,
+          512
+        ],
+        "crop_box": [
+          512,
+          0,
+          1024,
+          512
+        ],
+        "range": [
+          33,
+          255
+        ],
+        "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+        "mean_rgb": [
+          128.19,
+          128.52,
+          246.43
+        ]
+      },
+      "roughness": {
+        "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-roughness.png",
+        "size": [
+          512,
+          512
+        ],
+        "crop_box": [
+          1024,
+          0,
+          1536,
+          512
+        ],
+        "range": [
+          6,
+          194
+        ],
+        "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+        "mean_rgb": [
+          52.56,
+          52.62,
+          52.59
+        ]
+      },
+      "ao": {
+        "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-ao.png",
+        "size": [
+          512,
+          512
+        ],
+        "crop_box": [
+          0,
+          512,
+          512,
+          1024
+        ],
+        "range": [
+          61,
+          255
+        ],
+        "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+        "mean_rgb": [
+          225.95,
+          225.69,
+          225.89
+        ]
+      },
+      "height": {
+        "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-height.png",
+        "size": [
+          512,
+          512
+        ],
+        "crop_box": [
+          512,
+          512,
+          1024,
+          1024
+        ],
+        "range": [
+          47,
+          226
+        ],
+        "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+        "mean_rgb": [
+          126.42,
+          126.13,
+          126.31
+        ]
+      },
+      "metalness": {
+        "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-metalness.png",
+        "size": [
+          512,
+          512
+        ],
+        "crop_box": [
+          1024,
+          512,
+          1536,
+          1024
+        ],
+        "range": [
+          0,
+          28
+        ],
+        "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+        "mean_rgb": [
+          0.14,
+          0.12,
+          0.07
+        ],
+        "rendering_requirement": "Use material metalness scalar 0; generator tile has near-black residual pixel values 0..28. Do not multiply with a positive metallic scalar."
+      }
+    },
+    "normal_convention": "requested tangent-space OpenGL +Y",
+    "channel_color_space": {
+      "basecolor": "sRGB",
+      "normal": "linear non-color",
+      "roughness": "linear non-color",
+      "ao": "linear non-color",
+      "height": "linear non-color; white high",
+      "metalness": "linear non-color; use scalar metalness 0"
+    },
+    "quality_note": "finer, shallower grain than prior v77 moai map; channel registration is requested but generated, not physically measured; do not displace the statue silhouette"
+  },
+  "foam": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/foam-breakup.png",
+    "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-68926351-09c0-43e1-ab26-1baf6167dde8.png",
+    "prompt_file": "/workspace/scratch/85111d38430a/tiki-v78/pond/foam-breakup.prompt.txt",
+    "requested_size": [
+      2048,
+      2048
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "alpha_zero_pct": 44.42256867338711,
+    "alpha_partial_pct": 55.56223275311666,
+    "use": "overlay at low opacity over pond water with RGBA blending; thin planar raft surface, not billboard dots; neutral base tint permits yellow/green underwater illumination"
+  },
+  "reused_material": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/pond-masonry-original.png",
+    "reason": "existing six-channel atlas already provides pale gray weathered rectangular blocks and black nonmetal map; no additional duplicate masonry generated",
+    "caveat": "use geometry for large blocks; map tiling must not create a second contradictory course pattern"
+  },
+  "mechanical_processing": "exact file copies and pixel crops only; no upsampling, derived normal maps, painted alpha, or generated-image retouching",
+  "crops_manifest": "/workspace/scratch/85111d38430a/tiki-v78/pond/crops.json",
+  "reconstruction_inventory": "/workspace/scratch/85111d38430a/tiki-v78/pond/reconstruction.md",
+  "evidence_policy": "Original photographs determine geometry, positions and visible counts. Restorations are detail previews only."
+}

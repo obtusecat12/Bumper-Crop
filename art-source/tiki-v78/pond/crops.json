@@ -1,0 +1,92 @@
+{
+  "a-moai-side-waterlip.png": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/a-moai-side-waterlip.png",
+    "reference": "a",
+    "crop_box": [
+      114,
+      184,
+      555,
+      1197
+    ],
+    "size": [
+      441,
+      1013
+    ],
+    "operation": "exact mechanical original-reference crop"
+  },
+  "a-red-wall-bar-background.png": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/a-red-wall-bar-background.png",
+    "reference": "a",
+    "crop_box": [
+      304,
+      0,
+      1200,
+      755
+    ],
+    "size": [
+      896,
+      755
+    ],
+    "operation": "exact mechanical original-reference crop"
+  },
+  "b-moai-front-geometry.png": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/b-moai-front-geometry.png",
+    "reference": "b",
+    "crop_box": [
+      390,
+      55,
+      644,
+      605
+    ],
+    "size": [
+      254,
+      550
+    ],
+    "operation": "exact mechanical original-reference crop"
+  },
+  "b-foam-emitters-filter.png": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/b-foam-emitters-filter.png",
+    "reference": "b",
+    "crop_box": [
+      73,
+      490,
+      925,
+      719
+    ],
+    "size": [
+      852,
+      229
+    ],
+    "operation": "exact mechanical original-reference crop"
+  },
+  "b-backdrop-partial-wall.png": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/b-backdrop-partial-wall.png",
+    "reference": "b",
+    "crop_box": [
+      75,
+      0,
+      849,
+      500
+    ],
+    "size": [
+      774,
+      500
+    ],
+    "operation": "exact mechanical original-reference crop"
+  },
+  "b-filter-original.png": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/b-filter-original.png",
+    "reference": "b",
+    "crop_box": [
+      625,
+      501,
+      773,
+      570
+    ],
+    "size": [
+      148,
+      69
+    ],
+    "operation": "exact mechanical original-reference crop"
+  }
+}

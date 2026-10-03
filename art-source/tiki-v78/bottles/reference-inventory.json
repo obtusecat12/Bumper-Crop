@@ -1,0 +1,1625 @@
+{
+  "references": {
+    "1": {
+      "path": "/workspace/scratch/85111d38430a/upload/image(20261003-121618).png",
+      "size": [
+        1024,
+        682
+      ]
+    },
+    "2": {
+      "path": "/workspace/scratch/85111d38430a/upload/44a1ab9f4f5921d96b1b48faded3b0f3.png",
+      "size": [
+        736,
+        552
+      ]
+    }
+  },
+  "observation_policy": "These are visual minima from blurry and partly occluded references. Approximate bounds include visible silhouette, not hidden full geometry. All brand/category identifications are uncertain unless explicitly marked. Atlas categories are modeling choices, not transcriptions of every source brand.",
+  "summary": {
+    "reference_1_visible_minimum": 17,
+    "reference_2_visible_minimum": 41,
+    "source_total_visible_minimum": 58,
+    "planned_scene_count": 64,
+    "planned_distribution": "48 main-room bottles + 10 cocktail standing bottles + 6 inverted optic bottles; this is a fuller reconstruction, not an exact source census"
+  },
+  "rows": [
+    {
+      "reference": 2,
+      "row": "top",
+      "visible_minimum": 7,
+      "count_uncertainty": "Top edges are cropped; leftmost shape is especially uncertain.",
+      "bottles": [
+        {
+          "id": "ref2-top-01",
+          "box_px": [
+            230,
+            4,
+            260,
+            82
+          ],
+          "box_normalized": [
+            0.3125,
+            0.00725,
+            0.35326,
+            0.14855
+          ],
+          "center_normalized": [
+            0.33288,
+            0.0779
+          ],
+          "shape": "squat rectangular; shoulder cropped",
+          "glass_or_liquid_color": "pale taupe/amber",
+          "label_appearance": "large cream field, indistinct print",
+          "neck_foil_or_cap": "cropped",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-top-02",
+          "box_px": [
+            261,
+            9,
+            285,
+            80
+          ],
+          "box_normalized": [
+            0.35462,
+            0.0163,
+            0.38723,
+            0.14493
+          ],
+          "center_normalized": [
+            0.37092,
+            0.08062
+          ],
+          "shape": "medium rounded rectangular",
+          "glass_or_liquid_color": "brown",
+          "label_appearance": "vertical cream block with dark header",
+          "neck_foil_or_cap": "dark tan cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-top-03",
+          "box_px": [
+            286,
+            0,
+            316,
+            76
+          ],
+          "box_normalized": [
+            0.38859,
+            0.0,
+            0.42935,
+            0.13768
+          ],
+          "center_normalized": [
+            0.40897,
+            0.06884
+          ],
+          "shape": "tall clear rounded shoulder",
+          "glass_or_liquid_color": "clear/pale amber",
+          "label_appearance": "wide offwhite field with faint red/green central motif",
+          "neck_foil_or_cap": "top cropped",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-top-04",
+          "box_px": [
+            310,
+            25,
+            342,
+            76
+          ],
+          "box_normalized": [
+            0.4212,
+            0.04529,
+            0.46467,
+            0.13768
+          ],
+          "center_normalized": [
+            0.44293,
+            0.09149
+          ],
+          "shape": "squat broad rounded",
+          "glass_or_liquid_color": "amber brown",
+          "label_appearance": "cream square field, dark arch at top",
+          "neck_foil_or_cap": "short tan cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-top-05",
+          "box_px": [
+            338,
+            5,
+            364,
+            72
+          ],
+          "box_normalized": [
+            0.45924,
+            0.00906,
+            0.49457,
+            0.13043
+          ],
+          "center_normalized": [
+            0.4769,
+            0.06975
+          ],
+          "shape": "tall narrow round",
+          "glass_or_liquid_color": "dark amber",
+          "label_appearance": "cream vertical label with dark fine lines",
+          "neck_foil_or_cap": "long red-brown neck/foil",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-top-06",
+          "box_px": [
+            360,
+            0,
+            393,
+            67
+          ],
+          "box_normalized": [
+            0.48913,
+            0.0,
+            0.53397,
+            0.12138
+          ],
+          "center_normalized": [
+            0.51155,
+            0.06069
+          ],
+          "shape": "square whiskey profile",
+          "glass_or_liquid_color": "dark brown",
+          "label_appearance": "large pale cream square",
+          "neck_foil_or_cap": "top cropped",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-top-07",
+          "box_px": [
+            394,
+            0,
+            427,
+            64
+          ],
+          "box_normalized": [
+            0.53533,
+            0.0,
+            0.58016,
+            0.11594
+          ],
+          "center_normalized": [
+            0.55774,
+            0.05797
+          ],
+          "shape": "tall straight-sided",
+          "glass_or_liquid_color": "dark green",
+          "label_appearance": "narrow cream vertical label, dark print",
+          "neck_foil_or_cap": "top cropped",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    },
+    {
+      "reference": 2,
+      "row": "middle-left",
+      "visible_minimum": 7,
+      "count_uncertainty": "Glassware and the cropped decanter merge at the left edge; count is a minimum.",
+      "bottles": [
+        {
+          "id": "ref2-middle-left-01",
+          "box_px": [
+            0,
+            148,
+            30,
+            220
+          ],
+          "box_normalized": [
+            0.0,
+            0.26812,
+            0.04076,
+            0.39855
+          ],
+          "center_normalized": [
+            0.02038,
+            0.33333
+          ],
+          "shape": "squat bulbous decanter, partly outside image",
+          "glass_or_liquid_color": "clear",
+          "label_appearance": "small pale patch; no readable text",
+          "neck_foil_or_cap": "short clear neck",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-left-02",
+          "box_px": [
+            31,
+            146,
+            63,
+            217
+          ],
+          "box_normalized": [
+            0.04212,
+            0.26449,
+            0.0856,
+            0.39312
+          ],
+          "center_normalized": [
+            0.06386,
+            0.3288
+          ],
+          "shape": "broad round cream-liqueur-like profile",
+          "glass_or_liquid_color": "very dark brown",
+          "label_appearance": "cream rectangular band with dark header",
+          "neck_foil_or_cap": "short black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-left-03",
+          "box_px": [
+            63,
+            143,
+            82,
+            219
+          ],
+          "box_normalized": [
+            0.0856,
+            0.25906,
+            0.11141,
+            0.39674
+          ],
+          "center_normalized": [
+            0.09851,
+            0.3279
+          ],
+          "shape": "tall narrow round",
+          "glass_or_liquid_color": "clear, teal cast",
+          "label_appearance": "pale blue-green vertical field",
+          "neck_foil_or_cap": "slender pale neck/cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-left-04",
+          "box_px": [
+            81,
+            140,
+            102,
+            219
+          ],
+          "box_normalized": [
+            0.11005,
+            0.25362,
+            0.13859,
+            0.39674
+          ],
+          "center_normalized": [
+            0.12432,
+            0.32518
+          ],
+          "shape": "tall faceted clear",
+          "glass_or_liquid_color": "clear/amber",
+          "label_appearance": "small cream base field",
+          "neck_foil_or_cap": "tan-orange cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-left-05",
+          "box_px": [
+            104,
+            144,
+            125,
+            222
+          ],
+          "box_normalized": [
+            0.1413,
+            0.26087,
+            0.16984,
+            0.40217
+          ],
+          "center_normalized": [
+            0.15557,
+            0.33152
+          ],
+          "shape": "medium round straight body",
+          "glass_or_liquid_color": "amber",
+          "label_appearance": "cream lower rectangular label, green/red small middle field",
+          "neck_foil_or_cap": "black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-left-06",
+          "box_px": [
+            124,
+            124,
+            147,
+            222
+          ],
+          "box_normalized": [
+            0.16848,
+            0.22464,
+            0.19973,
+            0.40217
+          ],
+          "center_normalized": [
+            0.1841,
+            0.31341
+          ],
+          "shape": "tall dark long neck",
+          "glass_or_liquid_color": "dark brown",
+          "label_appearance": "red middle field and cream lower strip",
+          "neck_foil_or_cap": "white neck foil",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-left-07",
+          "box_px": [
+            147,
+            153,
+            174,
+            222
+          ],
+          "box_normalized": [
+            0.19973,
+            0.27717,
+            0.23641,
+            0.40217
+          ],
+          "center_normalized": [
+            0.21807,
+            0.33967
+          ],
+          "shape": "broad round short shoulder",
+          "glass_or_liquid_color": "black/brown",
+          "label_appearance": "deep red lower field",
+          "neck_foil_or_cap": "black short cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    },
+    {
+      "reference": 2,
+      "row": "middle-right",
+      "visible_minimum": 7,
+      "count_uncertainty": null,
+      "bottles": [
+        {
+          "id": "ref2-middle-right-01",
+          "box_px": [
+            233,
+            158,
+            251,
+            220
+          ],
+          "box_normalized": [
+            0.31658,
+            0.28623,
+            0.34103,
+            0.39855
+          ],
+          "center_normalized": [
+            0.3288,
+            0.34239
+          ],
+          "shape": "short narrow cylindrical",
+          "glass_or_liquid_color": "clear/amber",
+          "label_appearance": "small cream lower patch",
+          "neck_foil_or_cap": "brown cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-right-02",
+          "box_px": [
+            251,
+            136,
+            280,
+            221
+          ],
+          "box_normalized": [
+            0.34103,
+            0.24638,
+            0.38043,
+            0.40036
+          ],
+          "center_normalized": [
+            0.36073,
+            0.32337
+          ],
+          "shape": "round long neck",
+          "glass_or_liquid_color": "dark amber",
+          "label_appearance": "large cream rectangle with fine brown print",
+          "neck_foil_or_cap": "long black/gold foil",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-right-03",
+          "box_px": [
+            280,
+            158,
+            319,
+            222
+          ],
+          "box_normalized": [
+            0.38043,
+            0.28623,
+            0.43342,
+            0.40217
+          ],
+          "center_normalized": [
+            0.40693,
+            0.3442
+          ],
+          "shape": "squat wide rounded whiskey-like",
+          "glass_or_liquid_color": "amber",
+          "label_appearance": "short horizontal cream label",
+          "neck_foil_or_cap": "silver narrow cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-right-04",
+          "box_px": [
+            317,
+            131,
+            345,
+            221
+          ],
+          "box_normalized": [
+            0.43071,
+            0.23732,
+            0.46875,
+            0.40036
+          ],
+          "center_normalized": [
+            0.44973,
+            0.31884
+          ],
+          "shape": "tall rounded liqueur-like",
+          "glass_or_liquid_color": "red-brown",
+          "label_appearance": "amber/gold motif mostly indistinct",
+          "neck_foil_or_cap": "long narrow neck and dark cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-right-05",
+          "box_px": [
+            343,
+            143,
+            369,
+            221
+          ],
+          "box_normalized": [
+            0.46603,
+            0.25906,
+            0.50136,
+            0.40036
+          ],
+          "center_normalized": [
+            0.4837,
+            0.32971
+          ],
+          "shape": "tall rounded body",
+          "glass_or_liquid_color": "clear/amber",
+          "label_appearance": "cream circular medallion and rectangular lower paper",
+          "neck_foil_or_cap": "black neck, cream band",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-right-06",
+          "box_px": [
+            370,
+            155,
+            400,
+            221
+          ],
+          "box_normalized": [
+            0.50272,
+            0.2808,
+            0.54348,
+            0.40036
+          ],
+          "center_normalized": [
+            0.5231,
+            0.34058
+          ],
+          "shape": "round clear bottle",
+          "glass_or_liquid_color": "clear with red liquid",
+          "label_appearance": "very small black/gold central printing",
+          "neck_foil_or_cap": "short blue-gold cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-middle-right-07",
+          "box_px": [
+            400,
+            160,
+            424,
+            221
+          ],
+          "box_normalized": [
+            0.54348,
+            0.28986,
+            0.57609,
+            0.40036
+          ],
+          "center_normalized": [
+            0.55978,
+            0.34511
+          ],
+          "shape": "medium round bottle",
+          "glass_or_liquid_color": "golden amber",
+          "label_appearance": "pale yellow middle label",
+          "neck_foil_or_cap": "red-brown cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    },
+    {
+      "reference": 2,
+      "row": "lower-left",
+      "visible_minimum": 8,
+      "count_uncertainty": null,
+      "bottles": [
+        {
+          "id": "ref2-lower-left-01",
+          "box_px": [
+            0,
+            249,
+            9,
+            327
+          ],
+          "box_normalized": [
+            0.0,
+            0.45109,
+            0.01223,
+            0.59239
+          ],
+          "center_normalized": [
+            0.00611,
+            0.52174
+          ],
+          "shape": "cropped narrow body",
+          "glass_or_liquid_color": "dark blue/black",
+          "label_appearance": "pale cream strip",
+          "neck_foil_or_cap": "outside image",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-left-02",
+          "box_px": [
+            9,
+            252,
+            34,
+            325
+          ],
+          "box_normalized": [
+            0.01223,
+            0.45652,
+            0.0462,
+            0.58877
+          ],
+          "center_normalized": [
+            0.02921,
+            0.52264
+          ],
+          "shape": "medium rounded body",
+          "glass_or_liquid_color": "clear/amber",
+          "label_appearance": "cream rectangular lower label",
+          "neck_foil_or_cap": "tan foil, black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-left-03",
+          "box_px": [
+            35,
+            250,
+            58,
+            325
+          ],
+          "box_normalized": [
+            0.04755,
+            0.4529,
+            0.0788,
+            0.58877
+          ],
+          "center_normalized": [
+            0.06318,
+            0.52083
+          ],
+          "shape": "tall clear cylinder",
+          "glass_or_liquid_color": "clear",
+          "label_appearance": "red fine print, pale body field",
+          "neck_foil_or_cap": "red neck foil",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-left-04",
+          "box_px": [
+            57,
+            245,
+            81,
+            323
+          ],
+          "box_normalized": [
+            0.07745,
+            0.44384,
+            0.11005,
+            0.58514
+          ],
+          "center_normalized": [
+            0.09375,
+            0.51449
+          ],
+          "shape": "medium squared shoulder",
+          "glass_or_liquid_color": "clear amber",
+          "label_appearance": "cream full-width wrap",
+          "neck_foil_or_cap": "silver cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-left-05",
+          "box_px": [
+            80,
+            242,
+            109,
+            317
+          ],
+          "box_normalized": [
+            0.1087,
+            0.43841,
+            0.1481,
+            0.57428
+          ],
+          "center_normalized": [
+            0.1284,
+            0.50634
+          ],
+          "shape": "squat rounded gin-like",
+          "glass_or_liquid_color": "very dark green",
+          "label_appearance": "white oval upper label with red center and cream rectangular foot",
+          "neck_foil_or_cap": "short black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-left-06",
+          "box_px": [
+            109,
+            243,
+            132,
+            317
+          ],
+          "box_normalized": [
+            0.1481,
+            0.44022,
+            0.17935,
+            0.57428
+          ],
+          "center_normalized": [
+            0.16372,
+            0.50725
+          ],
+          "shape": "tall narrow rounded",
+          "glass_or_liquid_color": "dark brown",
+          "label_appearance": "warm orange rectangular paper",
+          "neck_foil_or_cap": "gold neck collar, black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-left-07",
+          "box_px": [
+            130,
+            233,
+            156,
+            316
+          ],
+          "box_normalized": [
+            0.17663,
+            0.4221,
+            0.21196,
+            0.57246
+          ],
+          "center_normalized": [
+            0.19429,
+            0.49728
+          ],
+          "shape": "tall slim tapered clear",
+          "glass_or_liquid_color": "milky clear with purple light cast",
+          "label_appearance": "offwhite cream label with small warm circle",
+          "neck_foil_or_cap": "pale neck foil",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-left-08",
+          "box_px": [
+            151,
+            244,
+            174,
+            315
+          ],
+          "box_normalized": [
+            0.20516,
+            0.44203,
+            0.23641,
+            0.57065
+          ],
+          "center_normalized": [
+            0.22079,
+            0.50634
+          ],
+          "shape": "tall clear straight body",
+          "glass_or_liquid_color": "clear/pink",
+          "label_appearance": "pink-white vertical field",
+          "neck_foil_or_cap": "gold/black cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    },
+    {
+      "reference": 2,
+      "row": "lower-right",
+      "visible_minimum": 8,
+      "count_uncertainty": "Foreground bowl hides the lower half of the last bottles.",
+      "bottles": [
+        {
+          "id": "ref2-lower-right-01",
+          "box_px": [
+            183,
+            251,
+            207,
+            309
+          ],
+          "box_normalized": [
+            0.24864,
+            0.45471,
+            0.28125,
+            0.55978
+          ],
+          "center_normalized": [
+            0.26495,
+            0.50725
+          ],
+          "shape": "tall round green bottle",
+          "glass_or_liquid_color": "dark green/brown",
+          "label_appearance": "cream rectangular band",
+          "neck_foil_or_cap": "dark cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-right-02",
+          "box_px": [
+            215,
+            238,
+            239,
+            309
+          ],
+          "box_normalized": [
+            0.29212,
+            0.43116,
+            0.32473,
+            0.55978
+          ],
+          "center_normalized": [
+            0.30842,
+            0.49547
+          ],
+          "shape": "slender long neck rounded bottle",
+          "glass_or_liquid_color": "brown amber",
+          "label_appearance": "tiny cream field, mostly obscured",
+          "neck_foil_or_cap": "dark narrow cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-right-03",
+          "box_px": [
+            239,
+            245,
+            273,
+            311
+          ],
+          "box_normalized": [
+            0.32473,
+            0.44384,
+            0.37092,
+            0.56341
+          ],
+          "center_normalized": [
+            0.34783,
+            0.50362
+          ],
+          "shape": "square whiskey bottle",
+          "glass_or_liquid_color": "clear blue-gray, amber liquid",
+          "label_appearance": "large cream square",
+          "neck_foil_or_cap": "pale-gold short cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-right-04",
+          "box_px": [
+            270,
+            281,
+            296,
+            311
+          ],
+          "box_normalized": [
+            0.36685,
+            0.50906,
+            0.40217,
+            0.56341
+          ],
+          "center_normalized": [
+            0.38451,
+            0.53623
+          ],
+          "shape": "short squat green bottle",
+          "glass_or_liquid_color": "dark green, orange lower body",
+          "label_appearance": "small rust-orange band",
+          "neck_foil_or_cap": "black cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-right-05",
+          "box_px": [
+            296,
+            253,
+            326,
+            311
+          ],
+          "box_normalized": [
+            0.40217,
+            0.45833,
+            0.44293,
+            0.56341
+          ],
+          "center_normalized": [
+            0.42255,
+            0.51087
+          ],
+          "shape": "medium round shoulder",
+          "glass_or_liquid_color": "clear amber",
+          "label_appearance": "cream rectangular front",
+          "neck_foil_or_cap": "black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-right-06",
+          "box_px": [
+            322,
+            264,
+            353,
+            309
+          ],
+          "box_normalized": [
+            0.4375,
+            0.47826,
+            0.47962,
+            0.55978
+          ],
+          "center_normalized": [
+            0.45856,
+            0.51902
+          ],
+          "shape": "squat very wide whiskey bottle",
+          "glass_or_liquid_color": "amber",
+          "label_appearance": "wide cream horizontal patch",
+          "neck_foil_or_cap": "short black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-right-07",
+          "box_px": [
+            353,
+            252,
+            380,
+            307
+          ],
+          "box_normalized": [
+            0.47962,
+            0.45652,
+            0.5163,
+            0.55616
+          ],
+          "center_normalized": [
+            0.49796,
+            0.50634
+          ],
+          "shape": "dark rounded bottle long neck",
+          "glass_or_liquid_color": "dark brown",
+          "label_appearance": "small ivory lower field hidden by bowl",
+          "neck_foil_or_cap": "dark cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-lower-right-08",
+          "box_px": [
+            378,
+            249,
+            413,
+            304
+          ],
+          "box_normalized": [
+            0.51359,
+            0.45109,
+            0.56114,
+            0.55072
+          ],
+          "center_normalized": [
+            0.53736,
+            0.50091
+          ],
+          "shape": "squat square shoulder whiskey-like",
+          "glass_or_liquid_color": "clear amber",
+          "label_appearance": "wide cream paper wrap",
+          "neck_foil_or_cap": "silver/pale cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    },
+    {
+      "reference": 2,
+      "row": "bottom-occluded",
+      "visible_minimum": 4,
+      "count_uncertainty": "Straws, mugs and lantern obscure bodies; four distinct necks are visible.",
+      "bottles": [
+        {
+          "id": "ref2-bottom-occluded-01",
+          "box_px": [
+            192,
+            346,
+            221,
+            392
+          ],
+          "box_normalized": [
+            0.26087,
+            0.62681,
+            0.30027,
+            0.71014
+          ],
+          "center_normalized": [
+            0.28057,
+            0.66848
+          ],
+          "shape": "wide rounded shoulder, mostly occluded",
+          "glass_or_liquid_color": "clear amber",
+          "label_appearance": "pale indistinct lower field",
+          "neck_foil_or_cap": "short black cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-bottom-occluded-02",
+          "box_px": [
+            221,
+            337,
+            248,
+            391
+          ],
+          "box_normalized": [
+            0.30027,
+            0.61051,
+            0.33696,
+            0.70833
+          ],
+          "center_normalized": [
+            0.31861,
+            0.65942
+          ],
+          "shape": "slender rounded long neck",
+          "glass_or_liquid_color": "amber",
+          "label_appearance": "cream patch hidden by straws",
+          "neck_foil_or_cap": "red-brown cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-bottom-occluded-03",
+          "box_px": [
+            251,
+            340,
+            277,
+            394
+          ],
+          "box_normalized": [
+            0.34103,
+            0.61594,
+            0.37636,
+            0.71377
+          ],
+          "center_normalized": [
+            0.3587,
+            0.66486
+          ],
+          "shape": "tall clear narrow bottle",
+          "glass_or_liquid_color": "clear reddish",
+          "label_appearance": "cream lower patch, obscured",
+          "neck_foil_or_cap": "black/red cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref2-bottom-occluded-04",
+          "box_px": [
+            279,
+            342,
+            308,
+            403
+          ],
+          "box_normalized": [
+            0.37908,
+            0.61957,
+            0.41848,
+            0.73007
+          ],
+          "center_normalized": [
+            0.39878,
+            0.67482
+          ],
+          "shape": "dark long-neck angular bottle",
+          "glass_or_liquid_color": "dark green/brown",
+          "label_appearance": "thin vertical pale field",
+          "neck_foil_or_cap": "black cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    },
+    {
+      "reference": 1,
+      "row": "cocktail-standing",
+      "visible_minimum": 9,
+      "count_uncertainty": null,
+      "bottles": [
+        {
+          "id": "ref1-cocktail-standing-01",
+          "box_px": [
+            686,
+            353,
+            715,
+            422
+          ],
+          "box_normalized": [
+            0.66992,
+            0.5176,
+            0.69824,
+            0.61877
+          ],
+          "center_normalized": [
+            0.68408,
+            0.56818
+          ],
+          "shape": "medium round long neck",
+          "glass_or_liquid_color": "brown amber",
+          "label_appearance": "black/red field, cream narrow middle line",
+          "neck_foil_or_cap": "white neck foil",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-cocktail-standing-02",
+          "box_px": [
+            714,
+            361,
+            732,
+            422
+          ],
+          "box_normalized": [
+            0.69727,
+            0.52933,
+            0.71484,
+            0.61877
+          ],
+          "center_normalized": [
+            0.70605,
+            0.57405
+          ],
+          "shape": "slender clear bitters-like",
+          "glass_or_liquid_color": "clear/amber",
+          "label_appearance": "small turquoise rectangular lower label",
+          "neck_foil_or_cap": "tan-orange small cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-cocktail-standing-03",
+          "box_px": [
+            735,
+            348,
+            762,
+            422
+          ],
+          "box_normalized": [
+            0.71777,
+            0.51026,
+            0.74414,
+            0.61877
+          ],
+          "center_normalized": [
+            0.73096,
+            0.56452
+          ],
+          "shape": "tall dark rum-like round",
+          "glass_or_liquid_color": "very dark brown",
+          "label_appearance": "red round emblem, black body label and cream narrow type",
+          "neck_foil_or_cap": "silver pour spout",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-cocktail-standing-04",
+          "box_px": [
+            761,
+            337,
+            785,
+            422
+          ],
+          "box_normalized": [
+            0.74316,
+            0.49413,
+            0.7666,
+            0.61877
+          ],
+          "center_normalized": [
+            0.75488,
+            0.55645
+          ],
+          "shape": "medium round clear",
+          "glass_or_liquid_color": "clear/yellow liquid",
+          "label_appearance": "yellow cream field with diagonal green/black bands",
+          "neck_foil_or_cap": "black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-cocktail-standing-05",
+          "box_px": [
+            780,
+            340,
+            807,
+            423
+          ],
+          "box_normalized": [
+            0.76172,
+            0.49853,
+            0.78809,
+            0.62023
+          ],
+          "center_normalized": [
+            0.7749,
+            0.55938
+          ],
+          "shape": "squared straight shoulder",
+          "glass_or_liquid_color": "clear amber",
+          "label_appearance": "white label with tall red center stripe",
+          "neck_foil_or_cap": "black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-cocktail-standing-06",
+          "box_px": [
+            802,
+            345,
+            825,
+            424
+          ],
+          "box_normalized": [
+            0.7832,
+            0.50587,
+            0.80566,
+            0.6217
+          ],
+          "center_normalized": [
+            0.79443,
+            0.56378
+          ],
+          "shape": "short broad rounded",
+          "glass_or_liquid_color": "dark green/brown",
+          "label_appearance": "cream upper field, dark lower body label",
+          "neck_foil_or_cap": "black cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-cocktail-standing-07",
+          "box_px": [
+            821,
+            350,
+            852,
+            426
+          ],
+          "box_normalized": [
+            0.80176,
+            0.5132,
+            0.83203,
+            0.62463
+          ],
+          "center_normalized": [
+            0.81689,
+            0.56891
+          ],
+          "shape": "tall broad round dark rum",
+          "glass_or_liquid_color": "dark brown",
+          "label_appearance": "warm orange circular portrait-like seal; diagonal ivory bar and orange lower patch",
+          "neck_foil_or_cap": "silver/black pour spout",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-cocktail-standing-08",
+          "box_px": [
+            877,
+            351,
+            912,
+            425
+          ],
+          "box_normalized": [
+            0.85645,
+            0.51466,
+            0.89062,
+            0.62317
+          ],
+          "center_normalized": [
+            0.87354,
+            0.56891
+          ],
+          "shape": "tall round green gin-like",
+          "glass_or_liquid_color": "dark green",
+          "label_appearance": "dark gray/black front label, bright green lower characters",
+          "neck_foil_or_cap": "short black cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-cocktail-standing-09",
+          "box_px": [
+            922,
+            348,
+            953,
+            425
+          ],
+          "box_normalized": [
+            0.90039,
+            0.51026,
+            0.93066,
+            0.62317
+          ],
+          "center_normalized": [
+            0.91553,
+            0.56672
+          ],
+          "shape": "tall broad dark rum",
+          "glass_or_liquid_color": "dark brown",
+          "label_appearance": "black-red vertical paper with gold rules",
+          "neck_foil_or_cap": "silver/black neck collar",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    },
+    {
+      "reference": 1,
+      "row": "cocktail-lower",
+      "visible_minimum": 1,
+      "count_uncertainty": null,
+      "bottles": [
+        {
+          "id": "ref1-cocktail-lower-01",
+          "box_px": [
+            706,
+            418,
+            737,
+            497
+          ],
+          "box_normalized": [
+            0.68945,
+            0.6129,
+            0.71973,
+            0.72874
+          ],
+          "center_normalized": [
+            0.70459,
+            0.67082
+          ],
+          "shape": "medium clear round rum bottle",
+          "glass_or_liquid_color": "clear",
+          "label_appearance": "large white body label with red triangular bat-like emblem and turquoise base stripe",
+          "neck_foil_or_cap": "clear long neck with short dark pourer",
+          "confidence": "high",
+          "brand": "BACARDI, identifiable emblem/layout; exact fine print unreadable",
+          "spirit_type": "white rum inferred from transparent body and recognizable label"
+        }
+      ]
+    },
+    {
+      "reference": 1,
+      "row": "optic-inverted",
+      "visible_minimum": 5,
+      "count_uncertainty": "Five clear containers are distinguishable; mounts and transparent bottles may merge.",
+      "bottles": [
+        {
+          "id": "ref1-optic-inverted-01",
+          "box_px": [
+            700,
+            200,
+            724,
+            320
+          ],
+          "box_normalized": [
+            0.68359,
+            0.29326,
+            0.70703,
+            0.46921
+          ],
+          "center_normalized": [
+            0.69531,
+            0.38123
+          ],
+          "shape": "inverted tall round bottle",
+          "glass_or_liquid_color": "clear amber",
+          "label_appearance": "yellow/cream center label with red round emblem",
+          "neck_foil_or_cap": "long inverted neck in dispenser",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-optic-inverted-02",
+          "box_px": [
+            731,
+            198,
+            753,
+            303
+          ],
+          "box_normalized": [
+            0.71387,
+            0.29032,
+            0.73535,
+            0.44428
+          ],
+          "center_normalized": [
+            0.72461,
+            0.3673
+          ],
+          "shape": "inverted narrow clear bottle",
+          "glass_or_liquid_color": "clear",
+          "label_appearance": "almost invisible cream field",
+          "neck_foil_or_cap": "long clear neck in dispenser",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-optic-inverted-03",
+          "box_px": [
+            762,
+            198,
+            785,
+            316
+          ],
+          "box_normalized": [
+            0.74414,
+            0.29032,
+            0.7666,
+            0.46334
+          ],
+          "center_normalized": [
+            0.75537,
+            0.37683
+          ],
+          "shape": "inverted dark cylindrical",
+          "glass_or_liquid_color": "black/brown",
+          "label_appearance": "black label with red/gold accents",
+          "neck_foil_or_cap": "silver inverted neck collar",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-optic-inverted-04",
+          "box_px": [
+            822,
+            198,
+            848,
+            320
+          ],
+          "box_normalized": [
+            0.80273,
+            0.29032,
+            0.82812,
+            0.46921
+          ],
+          "center_normalized": [
+            0.81543,
+            0.37977
+          ],
+          "shape": "inverted rounded clear amber",
+          "glass_or_liquid_color": "amber",
+          "label_appearance": "red/cream/gold central patch",
+          "neck_foil_or_cap": "silver inverted neck collar",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        },
+        {
+          "id": "ref1-optic-inverted-05",
+          "box_px": [
+            851,
+            190,
+            877,
+            316
+          ],
+          "box_normalized": [
+            0.83105,
+            0.27859,
+            0.85645,
+            0.46334
+          ],
+          "center_normalized": [
+            0.84375,
+            0.37097
+          ],
+          "shape": "inverted tall clear cylinder",
+          "glass_or_liquid_color": "clear blue cast",
+          "label_appearance": "pale blue-white label",
+          "neck_foil_or_cap": "long clear inverted neck",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    },
+    {
+      "reference": 1,
+      "row": "distant-top",
+      "visible_minimum": 1,
+      "count_uncertainty": null,
+      "bottles": [
+        {
+          "id": "ref1-distant-top-01",
+          "box_px": [
+            714,
+            94,
+            735,
+            129
+          ],
+          "box_normalized": [
+            0.69727,
+            0.13783,
+            0.71777,
+            0.18915
+          ],
+          "center_normalized": [
+            0.70752,
+            0.16349
+          ],
+          "shape": "small distant slender bottle",
+          "glass_or_liquid_color": "brown amber",
+          "label_appearance": "tiny cream vertical strip",
+          "neck_foil_or_cap": "black cap",
+          "confidence": "low",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    },
+    {
+      "reference": 1,
+      "row": "foreground",
+      "visible_minimum": 1,
+      "count_uncertainty": "This foreground bottle may be beer rather than a spirit; do not classify as rum.",
+      "bottles": [
+        {
+          "id": "ref1-foreground-01",
+          "box_px": [
+            468,
+            429,
+            512,
+            577
+          ],
+          "box_normalized": [
+            0.45703,
+            0.62903,
+            0.5,
+            0.84604
+          ],
+          "center_normalized": [
+            0.47852,
+            0.73754
+          ],
+          "shape": "long-neck round beverage bottle",
+          "glass_or_liquid_color": "brown glass",
+          "label_appearance": "white/red tall lower label",
+          "neck_foil_or_cap": "pale foil at neck, metal cap",
+          "confidence": "medium",
+          "brand": null,
+          "spirit_type": "uncertain; category assigned for modeling rather than claimed from the photo"
+        }
+      ]
+    }
+  ],
+  "integration_note": "Final V78 uses 48 main cabinet bottles, 10 rear cocktail bottles, 4 inverted bottles plus 2 EMPTY white rods, and 1 foreground beer bottle: 63 distinct label IDs (0–62). Catalog entry 63 is a spare. Earlier six-inverted draft counts were superseded by rechecking the original and the detailed cocktail inventory."
+}

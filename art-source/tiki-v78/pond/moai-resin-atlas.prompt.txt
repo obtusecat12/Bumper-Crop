@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: wet dark brown and reddish-brown nonmetallic resin or stone Moai fountain surface material, sampled from the single Moai in the two original photographs supplied as material references
+request: create one registered six-channel PBR material atlas with exactly six equal square tiles in a 3-column by 2-row grid, edge-to-edge without borders or labels; do not depict the Moai statue or its geometry
+layout: top-left basecolor; top-middle tangent-space OpenGL +Y normal; top-right roughness; bottom-left ambient occlusion; bottom-middle height; bottom-right pure black metalness zero
+material: fine close dense lightly pitted pebbly resin-stone grain, smooth worn patches and subtle irregular reddish chestnut to dark umber mottling; much finer and shallower grain than volcanic craters; naturally wet finish with a continuous glossy water film controlled by roughness, no water droplets baked into color
+channel consistency: exactly registered identical grain and mottling coordinates in every tile; basecolor unlit flat sRGB without highlights or shadows; normal mainly neutral lavender with shallow small pores, not large bumps; roughness low to medium charcoal-gray wet patches; AO nearly white with subtle small pore darkening; height mid-gray with subtle shallow grain; metalness completely black
+reference lighting: ignore flash specular hotspots and red/green/yellow pool-light reflections when choosing unlit basecolor; the two originals show the same brown Moai at different lighting and camera angles
+texture use: seamless tiling game material, no statue silhouettes, no face features, no directional shading, no masonry blocks, no lettering
+aspect ratio: 3:2, request 3072 by 2048 pixels with six 1024 by 1024 squares if available
+Avoid: holes as large as gravel, coarse volcanic craters, orange lava, metallic bronze, baked specular dots, baked white flash highlights, baked colored light, border lines, labels

@@ -1,0 +1,538 @@
+{
+  "tool": "built-in image_gen",
+  "reference_original": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/reference-original.png",
+  "reference_original_source": "/workspace/scratch/85111d38430a/upload/image(20261003-121618).png",
+  "reference_restoration": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/reference-restored.png",
+    "requested_long_edge": 3840,
+    "actual_size": [
+      1536,
+      1024
+    ],
+    "prompt": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/reference-restoration-prompt.txt",
+    "factual_status": "Interpretive upscale; original controls factual geometry, placement and counts."
+  },
+  "coordinate_convention": "Normalized image UV [left,top,right,bottom], origin top-left. Default Three.js Texture.flipY convention requires the geometry V direction to be handled consistently.",
+  "atlases": [
+    {
+      "stem": "mosaic-tumbler-atlas",
+      "status": "new generated artwork",
+      "size": [
+        1254,
+        1254
+      ],
+      "prompt_files": [
+        "/workspace/scratch/85111d38430a/tiki-v78/cocktail/mosaic-tumbler-atlas-prompt.txt"
+      ],
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-6bddb49a-cf47-4df2-aa0d-32bab1b7b18e.png",
+      "roughness_suggestion": 0.3,
+      "panels": [
+        {
+          "quadrant": "top_left",
+          "purpose": "mosaic_rear_exterior",
+          "for_regions": "V09",
+          "note": "Full exterior pattern; use for tapered mug side; align seam at rear.",
+          "atlas_uv": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "inset_crop_px": [
+            3,
+            3,
+            624,
+            624
+          ],
+          "inset_atlas_uv": [
+            0.002392344,
+            0.002392344,
+            0.497607656,
+            0.497607656
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/mosaic_rear_exterior.png",
+          "panel_texture_size": [
+            621,
+            621
+          ]
+        },
+        {
+          "quadrant": "top_right",
+          "purpose": "mosaic_front_exterior",
+          "for_regions": "V10",
+          "note": "Full exterior pattern; same cream/brown vocabulary.",
+          "atlas_uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "inset_crop_px": [
+            630,
+            3,
+            1251,
+            624
+          ],
+          "inset_atlas_uv": [
+            0.502392344,
+            0.002392344,
+            0.997607656,
+            0.497607656
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/mosaic_front_exterior.png",
+          "panel_texture_size": [
+            621,
+            621
+          ]
+        },
+        {
+          "quadrant": "bottom_left",
+          "purpose": "mosaic_ivory_interior",
+          "for_regions": "V09,V10",
+          "note": "Interior/cup lip glaze.",
+          "atlas_uv": [
+            0,
+            0.5,
+            0.5,
+            1
+          ],
+          "inset_crop_px": [
+            3,
+            630,
+            624,
+            1251
+          ],
+          "inset_atlas_uv": [
+            0.002392344,
+            0.502392344,
+            0.497607656,
+            0.997607656
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/mosaic_ivory_interior.png",
+          "panel_texture_size": [
+            621,
+            621
+          ]
+        },
+        {
+          "quadrant": "bottom_right",
+          "purpose": "mosaic_rim_pattern",
+          "for_regions": "V09,V10",
+          "note": "Optional rim pattern; avoid applying its large lower blank area to complete exterior.",
+          "atlas_uv": [
+            0.5,
+            0.5,
+            1,
+            1
+          ],
+          "inset_crop_px": [
+            630,
+            630,
+            1251,
+            1251
+          ],
+          "inset_atlas_uv": [
+            0.502392344,
+            0.502392344,
+            0.997607656,
+            0.997607656
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/mosaic_rim_pattern.png",
+          "panel_texture_size": [
+            621,
+            621
+          ]
+        }
+      ],
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/mosaic-tumbler-atlas.png"
+    },
+    {
+      "stem": "olive-ashtray-atlas",
+      "status": "new generated artwork, selected targeted correction",
+      "size": [
+        1254,
+        1254
+      ],
+      "prompt_files": [
+        "/workspace/scratch/85111d38430a/tiki-v78/cocktail/olive-ashtray-atlas-prompt.txt",
+        "/workspace/scratch/85111d38430a/tiki-v78/cocktail/olive-ashtray-atlas-correction-prompt.txt"
+      ],
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-c0859d54-aee4-4a02-9bbe-f0da2118a912.png",
+      "roughness_suggestion": 0.68,
+      "panels": [
+        {
+          "quadrant": "top_left",
+          "purpose": "ashtray_figure_front",
+          "for_regions": "A01",
+          "note": "Muted carved olive face/torso artwork. Face is an approximation because original is blurry; position head/arms from original.",
+          "atlas_uv": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "inset_crop_px": [
+            3,
+            3,
+            624,
+            624
+          ],
+          "inset_atlas_uv": [
+            0.002392344,
+            0.002392344,
+            0.497607656,
+            0.497607656
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/ashtray_figure_front.png",
+          "panel_texture_size": [
+            621,
+            621
+          ]
+        },
+        {
+          "quadrant": "top_right",
+          "purpose": "ashtray_side_glaze",
+          "for_regions": "A01,A02",
+          "note": "Flat olive ceramic for sides/back/bowl outside.",
+          "atlas_uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "inset_crop_px": [
+            630,
+            3,
+            1251,
+            624
+          ],
+          "inset_atlas_uv": [
+            0.502392344,
+            0.002392344,
+            0.997607656,
+            0.497607656
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/ashtray_side_glaze.png",
+          "panel_texture_size": [
+            621,
+            621
+          ]
+        },
+        {
+          "quadrant": "bottom_left",
+          "purpose": "ashtray_ash_floor",
+          "for_regions": "A02",
+          "note": "Top-down ash/soot floor. White ash micro-detail is interpretive, not counted from reference.",
+          "atlas_uv": [
+            0,
+            0.5,
+            0.5,
+            1
+          ],
+          "inset_crop_px": [
+            3,
+            630,
+            624,
+            1251
+          ],
+          "inset_atlas_uv": [
+            0.002392344,
+            0.502392344,
+            0.497607656,
+            0.997607656
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/ashtray_ash_floor.png",
+          "panel_texture_size": [
+            621,
+            621
+          ]
+        },
+        {
+          "quadrant": "bottom_right",
+          "purpose": "ashtray_rim_glaze",
+          "for_regions": "A02",
+          "note": "Flat olive glaze for bowl rim/exterior.",
+          "atlas_uv": [
+            0.5,
+            0.5,
+            1,
+            1
+          ],
+          "inset_crop_px": [
+            630,
+            630,
+            1251,
+            1251
+          ],
+          "inset_atlas_uv": [
+            0.502392344,
+            0.502392344,
+            0.997607656,
+            0.997607656
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/ashtray_rim_glaze.png",
+          "panel_texture_size": [
+            621,
+            621
+          ]
+        }
+      ],
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/olive-ashtray-atlas.png"
+    },
+    {
+      "stem": "ceramic-coaster-atlas",
+      "status": "prior artwork copied unchanged after visual inspection",
+      "size": [
+        1024,
+        1024
+      ],
+      "prompt_files": [
+        "/workspace/scratch/85111d38430a/tiki-v78/cocktail/ceramic-coaster-atlas-source-prompt.txt"
+      ],
+      "source": "/workspace/scratch/85111d38430a/level10/art-source/tiki-v77/cocktails/ceramic-coaster-atlas.png",
+      "roughness_suggestion": 0.3,
+      "panels": [
+        {
+          "quadrant": "top_left",
+          "purpose": "aqua_fluted_glaze",
+          "for_regions": "V06",
+          "note": "Aqua ceramic bowl glaze with shallow vertical flute cues; mesh must provide actual flutes.",
+          "atlas_uv": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "inset_crop_px": [
+            3,
+            3,
+            509,
+            509
+          ],
+          "inset_atlas_uv": [
+            0.002929688,
+            0.002929688,
+            0.497070313,
+            0.497070313
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/aqua_fluted_glaze.png",
+          "panel_texture_size": [
+            506,
+            506
+          ]
+        },
+        {
+          "quadrant": "top_right",
+          "purpose": "ivory_glaze",
+          "for_regions": "V08,V14",
+          "note": "Ivory ceramic material; V08 is only an uncertain thin band, V14 needs green floral overlay from another source if available.",
+          "atlas_uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "inset_crop_px": [
+            515,
+            3,
+            1021,
+            509
+          ],
+          "inset_atlas_uv": [
+            0.502929688,
+            0.002929688,
+            0.997070313,
+            0.497070313
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/ivory_glaze.png",
+          "panel_texture_size": [
+            506,
+            506
+          ]
+        },
+        {
+          "quadrant": "bottom_left",
+          "purpose": "lavender_fluted_glaze",
+          "for_regions": "V07",
+          "note": "Pale lavender ceramic, lower bowl.",
+          "atlas_uv": [
+            0,
+            0.5,
+            0.5,
+            1
+          ],
+          "inset_crop_px": [
+            3,
+            515,
+            509,
+            1021
+          ],
+          "inset_atlas_uv": [
+            0.002929688,
+            0.502929688,
+            0.497070313,
+            0.997070313
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/lavender_fluted_glaze.png",
+          "panel_texture_size": [
+            506,
+            506
+          ]
+        },
+        {
+          "quadrant": "bottom_right",
+          "purpose": "woven_tan_mat",
+          "for_regions": "S13,S14",
+          "note": "Woven plant-fiber table mats; roughness around .82.",
+          "atlas_uv": [
+            0.5,
+            0.5,
+            1,
+            1
+          ],
+          "inset_crop_px": [
+            515,
+            515,
+            1021,
+            1021
+          ],
+          "inset_atlas_uv": [
+            0.502929688,
+            0.502929688,
+            0.997070313,
+            0.997070313
+          ],
+          "panel_texture": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/woven_tan_mat.png",
+          "panel_texture_size": [
+            506,
+            506
+          ]
+        }
+      ],
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/ceramic-coaster-atlas.png"
+    }
+  ],
+  "wraps": [
+    {
+      "key": "brown",
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/brown-tiki-wrap.png",
+      "source": "/workspace/scratch/85111d38430a/level10/art-source/tiki-v77/cocktails/brown-tiki-wrap.png",
+      "prompt": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/brown-tiki-wrap-source-prompt.txt",
+      "size": [
+        1024,
+        512
+      ],
+      "uv": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "front_uv": [
+        0.3333333333333333,
+        0,
+        0.6666666666666666,
+        1
+      ],
+      "for_region": "V12",
+      "roughness_suggestion": 0.22,
+      "note": "Preserved unchanged. Center front at U=.5, seam at rear."
+    },
+    {
+      "key": "tan_wahine",
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/tan-wahine-wrap.png",
+      "source": "/workspace/scratch/85111d38430a/level10/art-source/tiki-v77/cocktails/tan-wahine-wrap.png",
+      "prompt": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/tan-wahine-wrap-source-prompt.txt",
+      "size": [
+        1024,
+        512
+      ],
+      "uv": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "front_uv": [
+        0.3333333333333333,
+        0,
+        0.6666666666666666,
+        1
+      ],
+      "for_region": "V11",
+      "roughness_suggestion": 0.3,
+      "note": "Preserved unchanged. Tan hula/wahine relief with red/green paint and navy base stripe."
+    },
+    {
+      "key": "turquoise",
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/blue-tiki-wrap.png",
+      "source": "/workspace/scratch/85111d38430a/level10/art-source/tiki-v77/cocktails/blue-tiki-wrap.png",
+      "prompt": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/blue-tiki-wrap-source-prompt.txt",
+      "size": [
+        1024,
+        512
+      ],
+      "uv": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "front_uv": [
+        0.3333333333333333,
+        0,
+        0.6666666666666666,
+        1
+      ],
+      "for_region": "V01",
+      "roughness_suggestion": 0.3,
+      "note": "Preserved unchanged. Small embossed geometric tiki face; blue surface matches photo under warm light."
+    }
+  ],
+  "support_asset": {
+    "path": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/garnish-sheet.png",
+    "source": "/workspace/scratch/85111d38430a/level10/art-source/tiki-v77/cocktails/garnish-sheet.png",
+    "prompt": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/garnish-sheet-source-prompt.txt",
+    "size": [
+      1024,
+      1024
+    ],
+    "mode": "RGBA",
+    "quadrants": {
+      "mint": [
+        0,
+        0,
+        0.5,
+        0.5
+      ],
+      "lime": [
+        0.5,
+        0,
+        1,
+        0.5
+      ],
+      "pineapple": [
+        0,
+        0.5,
+        0.5,
+        1
+      ],
+      "umbrella": [
+        0.5,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "note": "Copied unchanged; umbrella and pineapple useful. Do not add mint to glasses where original only shows printed leaf shapes."
+  },
+  "inventory": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/reference-inventory.json",
+  "placement_notes": "/workspace/scratch/85111d38430a/tiki-v78/cocktail/placement-notes.md",
+  "limitations": [
+    "Restoration requested 3840 but actual tool output is 1536x1024; no 4K claim.",
+    "Generated square atlases requested 2048 but actual outputs are 1254x1254.",
+    "No normal/height/roughness image maps generated: relief and physical shaping belong to mesh, uniform material roughness is sufficient for current reference.",
+    "Tan, brown, blue and glaze reference artwork copied unchanged. Existing green smiling mug texture deliberately not selected because no such mug is visibly supported in this reference.",
+    "Ashtray micro-detail and hidden wrap-back surfaces are restrained interpretations, not new factual observations."
+  ]
+}

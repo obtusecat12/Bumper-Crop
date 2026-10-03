@@ -1,0 +1,15 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Use case: product-mockup
+Asset type: four-panel front albedo atlas for two tiny modeled brown glazed ceramic souvenir figurines
+Primary request: generate a small-object ceramic texture atlas matching the two tiny smiling brown ceramic souvenirs behind the near-bow fruit pile in the supplied original reference; retain their naïve toy-like molded faces, painted smile, floral headdresses and miniature souvenir character.
+Input images: Image 1 is the original buffet canoe reference, defining the tiny souvenirs; the fruits are larger than the dolls. Do not reproduce the photograph.
+Layout: exactly two columns and two rows, four equal square panels, no labels, no dividers, no margins. The left column is the white-flower souvenir and the right column is the pink-flower souvenir. No complete scene.
+Panel top-left: front-face albedo of a tiny molded brown ceramic souvenir, round broad-cheeked face, short painted black hair, two cheerful simple white-and-black painted eyes, wide small painted smile, simple molded nose, a miniature white orchid floral headdress across the top; face centered frontally and filling the panel, small toy proportions, smooth brown ceramic all around.
+Panel top-right: front-face albedo of the second distinct tiny molded brown ceramic souvenir, round broad-cheeked face, short painted black hair, simple cheerful painted eyes and warm open smile, simple molded nose, a miniature muted pink-and-white floral headdress across the top; face centered frontally and filling the panel, small toy proportions, smooth brown ceramic all around.
+Panel bottom-left: front torso albedo of the first tiny souvenir, smooth brown glazed ceramic, small white floral lei near the top, simple painted brown toy body without realistic anatomy, base surface fills the panel.
+Panel bottom-right: front torso albedo of the second tiny souvenir, smooth brown glazed ceramic, small pink-and-white floral lei near the top, simple opaque modest floral lower garment, simple toy body without realistic anatomy, base surface fills the panel.
+Lighting: evenly lit diffuse color for a UV texture, soft glaze color variation with very restrained highlights, no cast shadows and no dramatic lighting.
+Constraints: these are miniature ceramic collectibles, not people or large tiki statues; keep naïve painted toy faces, no photoreal human skin detail, no elaborate necklaces, no large crowns, no modern cartoon redesign; no lettering or watermarks.
+Aspect ratio: 1:1
+Avoid: realistic human faces, giant dolls, large ornamental idols, teeth detail, dark burned clay, coarse rock texture, exaggerated specular streaks, studio scene, text, watermarks.

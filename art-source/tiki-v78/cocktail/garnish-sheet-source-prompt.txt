@@ -1,0 +1,15 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: cocktail garnish sprite and texture sheet, genuinely transparent
+reference image: attached image is the source; follow the cocktail fruit and green leaf garnishes on the reference drinks and the small pink-white striped paper umbrella over the blue tiki mug on the left of the bar
+asset type: transparent square RGBA texture atlas for PS2 photographic low-poly cocktail props, separate nonoverlapping cutouts
+composition: exact 2 by 2 quadrants with generous transparent padding around each isolated item; top left mint cluster, top right lime slice and small wedge together, bottom left pineapple chunk with small green leaf cluster together, bottom right pink-white paper cocktail umbrella top; every item contained well inside its own quadrant, no overlap with other quadrants
+top left: compact fresh mint sprig cluster of five small serrated green leaves viewed nearly flat, natural veining, short green stem, useful cutout silhouette
+top right: a green lime round slice facing front with translucent pale green juicy segments and thin green rind, plus one small wedge beside it, photographic fruit details and two distinct nonoverlapping silhouettes within this quadrant
+bottom left: bright pale-yellow pineapple chunk with rough little rind edge, attached small group of two or three green pointed leaves, matching reference garnish colors, clean isolated cutout
+bottom right: flat top-down circular cocktail umbrella canopy pattern, alternating broad pastel pink and white radial sectors, delicate paper fold ridges, small center dot and straight edge tips; perfectly circular and flat so it can texture a cone canopy, no stick, no side view
+style and quality: photographic texture detail, gently softened PS2-era photo texture quality, 1024 by 1024 artwork
+background: actual alpha transparency everywhere outside the four cutouts, no white or gray background and no checkerboard painted into the image
+lighting: soft neutral diffuse lighting on the cutouts, no cast shadows outside silhouettes
+text: none, no captions or quadrant labels
+aspect ratio: 1:1
+Avoid: full cocktails, mugs, bar scene, overlapping items, perspective umbrella, umbrella stick, background, checkerboard pixels, hard cast shadows, text, borders, excessive yellow tint, oversharpening, excessive glare

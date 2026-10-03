@@ -1,0 +1,15 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Use case: product-mockup
+Asset type: three separate square top-down contents tiles for recessed serving trays, beneath real retained ice geometry
+Primary request: create a texture atlas containing exactly three equal square tiles side-by-side, each showing a subtle pale drink surface with small clear-white crushed ice chips and sparse purple and white orchid flowers, matching the three recessed tray contents in the supplied original canoe reference.
+Input images: Image 1 is the original canoe photograph as the material and flower-position reference. The final tiles contain only the top-down contents surface, not the canoe, metal trays, coconut bowls or handles.
+Layout: exactly three equal square columns and one row, no gaps, no frames, no margins, no labels; each tile is an orthographic top-down square contents surface filling its entire cell.
+Left tile: far tray pale straw drink with softly visible clear crushed ice texture; one small purple orchid near the left-middle, a small white orchid toward the right-middle; abundant unobtrusive pale drink visible between chips.
+Middle tile: middle tray pale straw drink with clear crushed ice detail; small purple orchid near the upper-left area and small white orchid near the right-middle, sparse and natural.
+Right tile: near tray pale straw drink with clear crushed ice detail; one small purple orchid near upper-left and a small white orchid toward lower-right; preserve open space in the middle for a separate modeled coconut bowl.
+Lighting: diffuse neutral overhead illumination, very soft subtle contact shading only, no hard directional or cast shadow, no strong glare, no baked perspective, no deep ice shadows.
+Materials: translucent chipped crushed ice in pale nearly colorless yellow-white drink, purple-magenta and white orchid petals with small pale yellow centers.
+Constraints: contents only; ice and liquid remain low relief; flowers occupy less than ten percent of each tile; separate modeled ice geometry will sit above these surface tiles; no whole trays, rims, coconut bowls, handles, fruits or dolls.
+Aspect ratio: 3:1
+Avoid: blue solid ice, giant flowers, deep dramatic shadow, black outlines, raised rectangular slabs, perspective views, labels, text, watermark.

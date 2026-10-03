@@ -1,0 +1,170 @@
+{
+  "atlas": {
+    "size": [
+      1536,
+      1024
+    ],
+    "grid": [
+      3,
+      2
+    ],
+    "cell_size": [
+      512,
+      512
+    ]
+  },
+  "maps": {
+    "basecolor": {
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-basecolor.png",
+      "size": [
+        512,
+        512
+      ],
+      "crop_box": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "range": [
+        2,
+        245
+      ],
+      "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+      "mean_rgb": [
+        79.44,
+        49.25,
+        36.92
+      ]
+    },
+    "normal": {
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-normal.png",
+      "size": [
+        512,
+        512
+      ],
+      "crop_box": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "range": [
+        33,
+        255
+      ],
+      "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+      "mean_rgb": [
+        128.19,
+        128.52,
+        246.43
+      ]
+    },
+    "roughness": {
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-roughness.png",
+      "size": [
+        512,
+        512
+      ],
+      "crop_box": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "range": [
+        6,
+        194
+      ],
+      "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+      "mean_rgb": [
+        52.56,
+        52.62,
+        52.59
+      ]
+    },
+    "ao": {
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-ao.png",
+      "size": [
+        512,
+        512
+      ],
+      "crop_box": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "range": [
+        61,
+        255
+      ],
+      "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+      "mean_rgb": [
+        225.95,
+        225.69,
+        225.89
+      ]
+    },
+    "height": {
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-height.png",
+      "size": [
+        512,
+        512
+      ],
+      "crop_box": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "range": [
+        47,
+        226
+      ],
+      "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+      "mean_rgb": [
+        126.42,
+        126.13,
+        126.31
+      ]
+    },
+    "metalness": {
+      "path": "/workspace/scratch/85111d38430a/tiki-v78/pond/moai-resin-metalness.png",
+      "size": [
+        512,
+        512
+      ],
+      "crop_box": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "range": [
+        0,
+        28
+      ],
+      "operation": "exact mechanical crop; no resampling, no derived-channel processing",
+      "mean_rgb": [
+        0.14,
+        0.12,
+        0.07
+      ],
+      "rendering_requirement": "Use material metalness scalar 0; generator tile has near-black residual pixel values 0..28. Do not multiply with a positive metallic scalar."
+    }
+  },
+  "foam": {
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "alpha_zero_pct": 44.42256867338711,
+    "alpha_partial_pct": 55.56223275311666
+  }
+}

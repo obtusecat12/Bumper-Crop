@@ -1,0 +1,2403 @@
+{
+  "reference": {
+    "path": "/workspace/scratch/85111d38430a/upload/image(20261003-121618).png",
+    "width": 1024,
+    "height": 682
+  },
+  "coordinate_convention": "Image-space [left, top, right, bottom], origin top-left. Pixel boxes approximate outer visible extents and do not restore hidden geometry; normalized boxes divide x by 1024 and y by 682.",
+  "restoration_caution": "reference-restored.png is a generated interpretive restoration, requested longest edge 3840 but returned 1536x1024. Do not use generated micro-detail, object counts, copied text, new folds or reconstructed reflections as factual evidence.",
+  "objects": [
+    {
+      "id": "V01",
+      "category": "vessel",
+      "name": "Small turquoise embossed tiki mug",
+      "visible_bbox_px": [
+        239,
+        474,
+        288,
+        557
+      ],
+      "visible_bbox_normalized": [
+        0.2334,
+        0.69501,
+        0.28125,
+        0.81672
+      ],
+      "visible_center_normalized": [
+        0.25732,
+        0.75587
+      ],
+      "confidence": "high",
+      "notes": "Behind the left green glass; blue ceramic face relief, cylindrical body. Pink/white paper umbrella is separate; no handle is visible."
+    },
+    {
+      "id": "V02",
+      "category": "vessel",
+      "name": "Green printed straight cocktail glass",
+      "visible_bbox_px": [
+        193,
+        533,
+        261,
+        642
+      ],
+      "visible_bbox_normalized": [
+        0.18848,
+        0.78152,
+        0.25488,
+        0.94135
+      ],
+      "visible_center_normalized": [
+        0.22168,
+        0.86144
+      ],
+      "confidence": "high",
+      "notes": "Front-left; transparent green straight tumbler, ice/green leaves, large horizontal darker green printed band. Partial text visible as GRIN…; do not invent the hidden letters."
+    },
+    {
+      "id": "V03",
+      "category": "vessel",
+      "name": "Pale pink/clear short-stem goblet",
+      "visible_bbox_px": [
+        286,
+        530,
+        365,
+        654
+      ],
+      "visible_bbox_normalized": [
+        0.2793,
+        0.77713,
+        0.35645,
+        0.95894
+      ],
+      "visible_center_normalized": [
+        0.31787,
+        0.86804
+      ],
+      "confidence": "high",
+      "notes": "Front-left-center, wide round bowl, light beige liquid at lower bowl, short pink-tinted stem and round foot."
+    },
+    {
+      "id": "V04",
+      "category": "vessel",
+      "name": "Large green/amber-rimmed stemmed glass",
+      "visible_bbox_px": [
+        403,
+        450,
+        486,
+        591
+      ],
+      "visible_bbox_normalized": [
+        0.39355,
+        0.65982,
+        0.47461,
+        0.86657
+      ],
+      "visible_center_normalized": [
+        0.43408,
+        0.7632
+      ],
+      "confidence": "high",
+      "notes": "Behind the nested bowls and beside the foreground bottle. Bowl has broad oval lip, bowed sides, diagonal reflected line; thin stem is partially hidden."
+    },
+    {
+      "id": "V05",
+      "category": "vessel",
+      "name": "Tall narrow green botanical highball",
+      "visible_bbox_px": [
+        508,
+        510,
+        558,
+        654
+      ],
+      "visible_bbox_normalized": [
+        0.49609,
+        0.7478,
+        0.54492,
+        0.95894
+      ],
+      "visible_center_normalized": [
+        0.52051,
+        0.85337
+      ],
+      "confidence": "high",
+      "notes": "Near center front. Straight clear-green glass, pale green botanical marks, tiny amber dots; circular heavy base."
+    },
+    {
+      "id": "V06",
+      "category": "vessel",
+      "name": "Nested aqua fluted bowl",
+      "visible_bbox_px": [
+        368,
+        570,
+        475,
+        629
+      ],
+      "visible_bbox_normalized": [
+        0.35938,
+        0.83578,
+        0.46387,
+        0.92229
+      ],
+      "visible_center_normalized": [
+        0.41162,
+        0.87903
+      ],
+      "confidence": "high",
+      "notes": "Top visible open bowl. Light turquoise interior, small outward lip, shallow vertical exterior flutes. Two pink/purple implements rise diagonally right."
+    },
+    {
+      "id": "V07",
+      "category": "vessel",
+      "name": "Nested lavender fluted bowl",
+      "visible_bbox_px": [
+        374,
+        610,
+        476,
+        669
+      ],
+      "visible_bbox_normalized": [
+        0.36523,
+        0.89443,
+        0.46484,
+        0.98094
+      ],
+      "visible_center_normalized": [
+        0.41504,
+        0.93768
+      ],
+      "confidence": "high",
+      "notes": "Lower bowl, pale lavender exterior and rounded bottom, regular shallow vertical flutes."
+    },
+    {
+      "id": "V08",
+      "category": "vessel",
+      "name": "Possible thin ivory intermediate bowl/rim",
+      "visible_bbox_px": [
+        372,
+        608,
+        474,
+        630
+      ],
+      "visible_bbox_normalized": [
+        0.36328,
+        0.8915,
+        0.46289,
+        0.92375
+      ],
+      "visible_center_normalized": [
+        0.41309,
+        0.90762
+      ],
+      "confidence": "medium",
+      "notes": "Thin pale band between aqua and lavender; source supports the band but not an independently visible full third bowl. Keep any white layer shallow and mostly occluded."
+    },
+    {
+      "id": "V09",
+      "category": "vessel",
+      "name": "Rear-left cream/brown mosaic ceramic tumbler",
+      "visible_bbox_px": [
+        563,
+        516,
+        641,
+        594
+      ],
+      "visible_bbox_normalized": [
+        0.5498,
+        0.7566,
+        0.62598,
+        0.87097
+      ],
+      "visible_center_normalized": [
+        0.58789,
+        0.81378
+      ],
+      "confidence": "high",
+      "notes": "Tapered cup with irregular tobacco-brown vertical rectangular patches and thin cream gaps. Top rim is an oval; lower part is occluded by the wood tray/ashtray figure."
+    },
+    {
+      "id": "V10",
+      "category": "vessel",
+      "name": "Front-right cream/brown mosaic ceramic tumbler",
+      "visible_bbox_px": [
+        661,
+        521,
+        740,
+        623
+      ],
+      "visible_bbox_normalized": [
+        0.64551,
+        0.76393,
+        0.72266,
+        0.91349
+      ],
+      "visible_center_normalized": [
+        0.68408,
+        0.83871
+      ],
+      "confidence": "high",
+      "notes": "Second separate tapered tumbler, same irregular cream/brown pattern, open oval rim, narrow base. This one stands in front of the tray and is taller in image than V09."
+    },
+    {
+      "id": "V11",
+      "category": "vessel",
+      "name": "Tan wahine/hula relief mug with green/red details",
+      "visible_bbox_px": [
+        743,
+        484,
+        821,
+        647
+      ],
+      "visible_bbox_normalized": [
+        0.72559,
+        0.70968,
+        0.80176,
+        0.94868
+      ],
+      "visible_center_normalized": [
+        0.76367,
+        0.82918
+      ],
+      "confidence": "high",
+      "notes": "Tan stepped/fan leaf reliefs above an oval figure niche; pale female/hula relief, red hair/shoulder details, green skirt/leaf detail, dark navy lower band. It is not a green tiki-face mug."
+    },
+    {
+      "id": "V12",
+      "category": "vessel",
+      "name": "Dark honey-brown carved tiki face mug",
+      "visible_bbox_px": [
+        837,
+        501,
+        915,
+        661
+      ],
+      "visible_bbox_normalized": [
+        0.81738,
+        0.7346,
+        0.89355,
+        0.96921
+      ],
+      "visible_center_normalized": [
+        0.85547,
+        0.85191
+      ],
+      "confidence": "high",
+      "notes": "Tall slender brown gloss body with carved narrow eyes/long nose/open oval mouth and vertical flank ribs. Red zigzag shape at the top is visible, but its paper/ceramic identity is uncertain."
+    },
+    {
+      "id": "V13",
+      "category": "vessel",
+      "name": "Small bright green bowl behind the two right mugs",
+      "visible_bbox_px": [
+        809,
+        548,
+        849,
+        608
+      ],
+      "visible_bbox_normalized": [
+        0.79004,
+        0.80352,
+        0.8291,
+        0.8915
+      ],
+      "visible_center_normalized": [
+        0.80957,
+        0.84751
+      ],
+      "confidence": "medium",
+      "notes": "Only a triangular green side/inner rim region is visible between V11 and V12. Very occluded; do not enlarge into an exposed mug."
+    },
+    {
+      "id": "V14",
+      "category": "vessel",
+      "name": "Large ivory/green floral pedestal bowl",
+      "visible_bbox_px": [
+        914,
+        543,
+        1024,
+        682
+      ],
+      "visible_bbox_normalized": [
+        0.89258,
+        0.79619,
+        1,
+        1
+      ],
+      "visible_center_normalized": [
+        0.94629,
+        0.89809
+      ],
+      "confidence": "high",
+      "notes": "Clipped by the right/bottom crop; broad oval basin, ivory glaze with green tropical leaves and small pink flowers, short pedestal and broad foot. Silver items stand inside."
+    },
+    {
+      "id": "V15",
+      "category": "vessel",
+      "name": "Small pale cup on rear counter at far right",
+      "visible_bbox_px": [
+        944,
+        393,
+        965,
+        427
+      ],
+      "visible_bbox_normalized": [
+        0.92188,
+        0.57625,
+        0.94238,
+        0.6261
+      ],
+      "visible_center_normalized": [
+        0.93213,
+        0.60117
+      ],
+      "confidence": "medium",
+      "notes": "Behind the far-right brown bottle; narrow light ivory/beige drinking cup, mostly occluded."
+    },
+    {
+      "id": "V16",
+      "category": "vessel",
+      "name": "Small warm yellow/black glass before glowing lamp",
+      "visible_bbox_px": [
+        466,
+        393,
+        498,
+        432
+      ],
+      "visible_bbox_normalized": [
+        0.45508,
+        0.57625,
+        0.48633,
+        0.63343
+      ],
+      "visible_center_normalized": [
+        0.4707,
+        0.60484
+      ],
+      "confidence": "low",
+      "notes": "Squat dark/yellow form visible directly in front of the globe. Could be a separate printed glass or part of the lamp/base; preserve a small shape without inventing drink contents."
+    },
+    {
+      "id": "V17",
+      "category": "vessel",
+      "name": "White printed item behind pineapple",
+      "visible_bbox_px": [
+        683,
+        446,
+        713,
+        488
+      ],
+      "visible_bbox_normalized": [
+        0.66699,
+        0.65396,
+        0.69629,
+        0.71554
+      ],
+      "visible_center_normalized": [
+        0.68164,
+        0.68475
+      ],
+      "confidence": "low",
+      "notes": "Small pale patterned shape, mostly occluded by pineapple and lower-shelf bottle; possibly a mug/container or cloth. No clear handle or rim is established."
+    },
+    {
+      "id": "A01",
+      "category": "ashtray",
+      "name": "Seated pale olive ceramic figure",
+      "visible_bbox_px": [
+        565,
+        548,
+        654,
+        680
+      ],
+      "visible_bbox_normalized": [
+        0.55176,
+        0.80352,
+        0.63867,
+        0.99707
+      ],
+      "visible_center_normalized": [
+        0.59521,
+        0.90029
+      ],
+      "confidence": "high",
+      "notes": "Separate ashtray component. Small upright narrow head, short torso, one arm extending to the bowl; knees/feet sit near table edge. It is not a drinking mug."
+    },
+    {
+      "id": "A02",
+      "category": "ashtray",
+      "name": "Attached olive round ash bowl",
+      "visible_bbox_px": [
+        591,
+        605,
+        692,
+        682
+      ],
+      "visible_bbox_normalized": [
+        0.57715,
+        0.8871,
+        0.67578,
+        1
+      ],
+      "visible_center_normalized": [
+        0.62646,
+        0.94355
+      ],
+      "confidence": "high",
+      "notes": "Shallow round bowl in front/right of A01. Olive sides, gray-black soot inside, irregular white ash fragments; bowl lower edge is at frame bottom."
+    },
+    {
+      "id": "B01",
+      "category": "bottle",
+      "name": "Foreground brown/green bottle with red/cream label",
+      "visible_bbox_px": [
+        468,
+        428,
+        511,
+        586
+      ],
+      "visible_bbox_normalized": [
+        0.45703,
+        0.62757,
+        0.49902,
+        0.85924
+      ],
+      "visible_center_normalized": [
+        0.47803,
+        0.7434
+      ],
+      "confidence": "high",
+      "notes": "Behind V04/V05 and just left of tall green glass. Long narrow dark neck, pale/gold closure, red/cream main label, clear-to-brown body. Label text cannot be safely read."
+    },
+    {
+      "id": "B02",
+      "category": "bottle",
+      "name": "Rear-counter left dark brown bottle with white neck",
+      "visible_bbox_px": [
+        687,
+        348,
+        715,
+        421
+      ],
+      "visible_bbox_normalized": [
+        0.6709,
+        0.51026,
+        0.69824,
+        0.6173
+      ],
+      "visible_center_normalized": [
+        0.68457,
+        0.56378
+      ],
+      "confidence": "high",
+      "notes": "Immediately right of lime-green appliance. White cap/neck band and mostly white small body label."
+    },
+    {
+      "id": "B03",
+      "category": "bottle",
+      "name": "Small clear rear bottle with pale turquoise label",
+      "visible_bbox_px": [
+        715,
+        367,
+        736,
+        422
+      ],
+      "visible_bbox_normalized": [
+        0.69824,
+        0.53812,
+        0.71875,
+        0.61877
+      ],
+      "visible_center_normalized": [
+        0.7085,
+        0.57845
+      ],
+      "confidence": "medium",
+      "notes": "In front of B02/B04. Clear narrow shoulders, pale/turquoise lower label; partly obscured by the lower shelf."
+    },
+    {
+      "id": "B04",
+      "category": "bottle",
+      "name": "Rear dark bottle with long black neck",
+      "visible_bbox_px": [
+        735,
+        339,
+        765,
+        415
+      ],
+      "visible_bbox_normalized": [
+        0.71777,
+        0.49707,
+        0.74707,
+        0.6085
+      ],
+      "visible_center_normalized": [
+        0.73242,
+        0.55279
+      ],
+      "confidence": "high",
+      "notes": "Immediately right of B03; dark body and label with small warm/white center mark."
+    },
+    {
+      "id": "B05",
+      "category": "bottle",
+      "name": "Rear amber bottle, yellow/white label",
+      "visible_bbox_px": [
+        762,
+        359,
+        790,
+        420
+      ],
+      "visible_bbox_normalized": [
+        0.74414,
+        0.52639,
+        0.77148,
+        0.61584
+      ],
+      "visible_center_normalized": [
+        0.75781,
+        0.57111
+      ],
+      "confidence": "medium",
+      "notes": "One of the middle bottle cluster; black closure, yellow/cream/green label. Lower body hidden by lime tray."
+    },
+    {
+      "id": "B06",
+      "category": "bottle",
+      "name": "Rear amber bottle, red/white label",
+      "visible_bbox_px": [
+        786,
+        357,
+        816,
+        420
+      ],
+      "visible_bbox_normalized": [
+        0.76758,
+        0.52346,
+        0.79688,
+        0.61584
+      ],
+      "visible_center_normalized": [
+        0.78223,
+        0.56965
+      ],
+      "confidence": "medium",
+      "notes": "Middle cluster; black neck/cap, pale label with narrow red section. Overlaps neighboring amber bottles."
+    },
+    {
+      "id": "B07",
+      "category": "bottle",
+      "name": "Rear amber/clear bottle, pale greenish label",
+      "visible_bbox_px": [
+        807,
+        357,
+        834,
+        421
+      ],
+      "visible_bbox_normalized": [
+        0.78809,
+        0.52346,
+        0.81445,
+        0.6173
+      ],
+      "visible_center_normalized": [
+        0.80127,
+        0.57038
+      ],
+      "confidence": "medium",
+      "notes": "Middle cluster, visible neck/cap around x=814; lower body partly hidden. Exact label is unclear."
+    },
+    {
+      "id": "B08",
+      "category": "bottle",
+      "name": "Rear dark/amber bottle with round warm label",
+      "visible_bbox_px": [
+        823,
+        344,
+        854,
+        423
+      ],
+      "visible_bbox_normalized": [
+        0.80371,
+        0.5044,
+        0.83398,
+        0.62023
+      ],
+      "visible_center_normalized": [
+        0.81885,
+        0.56232
+      ],
+      "confidence": "high",
+      "notes": "Right side of middle cluster; black closure, long dark neck, warm oval/circular label detail. Slightly larger than adjacent middle bottles."
+    },
+    {
+      "id": "B09",
+      "category": "bottle",
+      "name": "Rear slim clear/green-label bottle",
+      "visible_bbox_px": [
+        881,
+        355,
+        912,
+        429
+      ],
+      "visible_bbox_normalized": [
+        0.86035,
+        0.52053,
+        0.89063,
+        0.62903
+      ],
+      "visible_center_normalized": [
+        0.87549,
+        0.57478
+      ],
+      "confidence": "medium",
+      "notes": "To the right of middle cluster and left of the far-right large bottle; transparent body, green lower label. Lower portion is behind the front bamboo rail."
+    },
+    {
+      "id": "B10",
+      "category": "bottle",
+      "name": "Far-right large dark brown bottle with red neck",
+      "visible_bbox_px": [
+        916,
+        326,
+        952,
+        428
+      ],
+      "visible_bbox_normalized": [
+        0.89453,
+        0.47801,
+        0.92969,
+        0.62757
+      ],
+      "visible_center_normalized": [
+        0.91211,
+        0.55279
+      ],
+      "confidence": "high",
+      "notes": "Tall bottle at right end of rear counter. Red upper-neck band, dark body, broad multicolored rectangular front label."
+    },
+    {
+      "id": "B11",
+      "category": "bottle",
+      "name": "Lower rear-shelf bottle with red triangle label",
+      "visible_bbox_px": [
+        702,
+        406,
+        739,
+        503
+      ],
+      "visible_bbox_normalized": [
+        0.68555,
+        0.59531,
+        0.72168,
+        0.73754
+      ],
+      "visible_center_normalized": [
+        0.70361,
+        0.66642
+      ],
+      "confidence": "high",
+      "notes": "In front of pineapple and below the rear bottle row. Clear long-neck bottle, large white label with a red triangle and narrow teal base band."
+    },
+    {
+      "id": "B12",
+      "category": "bottle",
+      "name": "Small dark upper-shelf bottle",
+      "visible_bbox_px": [
+        713,
+        89,
+        740,
+        132
+      ],
+      "visible_bbox_normalized": [
+        0.69629,
+        0.1305,
+        0.72266,
+        0.19355
+      ],
+      "visible_center_normalized": [
+        0.70947,
+        0.16202
+      ],
+      "confidence": "medium",
+      "notes": "Above the tiny hut-shaped item, visible dark bottle with narrow neck; printed detail too small to identify."
+    },
+    {
+      "id": "B13",
+      "category": "bottle",
+      "name": "Partially visible upper-left bottle/container cluster",
+      "visible_bbox_px": [
+        522,
+        133,
+        561,
+        166
+      ],
+      "visible_bbox_normalized": [
+        0.50977,
+        0.19501,
+        0.54785,
+        0.2434
+      ],
+      "visible_center_normalized": [
+        0.52881,
+        0.21921
+      ],
+      "confidence": "low",
+      "notes": "Several small warm-toned vertical items behind the central surfboard at the left end of the upper rear shelf; count and bottle identities are not reliable."
+    },
+    {
+      "id": "D01",
+      "category": "dispenser_bottle",
+      "name": "Left inverted clear liquor bottle",
+      "visible_bbox_px": [
+        691,
+        195,
+        726,
+        306
+      ],
+      "visible_bbox_normalized": [
+        0.6748,
+        0.28592,
+        0.70898,
+        0.44868
+      ],
+      "visible_center_normalized": [
+        0.69189,
+        0.3673
+      ],
+      "confidence": "high",
+      "notes": "First actual upside-down bottle. Pale/amber contents, circular yellow/red front label, neck downward into black/tan optic fitting."
+    },
+    {
+      "id": "D02",
+      "category": "dispenser_bottle",
+      "name": "Second inverted dark/amber liquor bottle",
+      "visible_bbox_px": [
+        757,
+        205,
+        786,
+        310
+      ],
+      "visible_bbox_normalized": [
+        0.73926,
+        0.30059,
+        0.76758,
+        0.45455
+      ],
+      "visible_center_normalized": [
+        0.75342,
+        0.37757
+      ],
+      "confidence": "high",
+      "notes": "Second actual bottle. Dark label/body, amber liquid in downward shoulder/neck region."
+    },
+    {
+      "id": "D03",
+      "category": "dispenser_bottle",
+      "name": "Third inverted amber liquor bottle",
+      "visible_bbox_px": [
+        821,
+        196,
+        850,
+        310
+      ],
+      "visible_bbox_normalized": [
+        0.80176,
+        0.28739,
+        0.83008,
+        0.45455
+      ],
+      "visible_center_normalized": [
+        0.81592,
+        0.37097
+      ],
+      "confidence": "high",
+      "notes": "Third actual bottle, pale rectangular main label with dark diagonal band, amber contents/neck."
+    },
+    {
+      "id": "D04",
+      "category": "dispenser_bottle",
+      "name": "Right inverted clear/blue liquor bottle",
+      "visible_bbox_px": [
+        850,
+        195,
+        883,
+        312
+      ],
+      "visible_bbox_normalized": [
+        0.83008,
+        0.28592,
+        0.8623,
+        0.45748
+      ],
+      "visible_center_normalized": [
+        0.84619,
+        0.3717
+      ],
+      "confidence": "high",
+      "notes": "Fourth actual bottle, clear glass and blue-tinted liquid/reflective lower bulb, downward neck."
+    },
+    {
+      "id": "R01",
+      "category": "rack",
+      "name": "Long green optic/dispenser mounting backplate",
+      "visible_bbox_px": [
+        675,
+        275,
+        917,
+        321
+      ],
+      "visible_bbox_normalized": [
+        0.65918,
+        0.40323,
+        0.89551,
+        0.47067
+      ],
+      "visible_center_normalized": [
+        0.77734,
+        0.43695
+      ],
+      "confidence": "high",
+      "notes": "Nearly horizontal plate behind six positions, rounded/oval left end and wider right extension; dark speckled green surface."
+    },
+    {
+      "id": "R02",
+      "category": "rack",
+      "name": "Silver/white horizontal optic mounting rails",
+      "visible_bbox_px": [
+        711,
+        285,
+        882,
+        305
+      ],
+      "visible_bbox_normalized": [
+        0.69434,
+        0.41789,
+        0.86133,
+        0.44721
+      ],
+      "visible_center_normalized": [
+        0.77783,
+        0.43255
+      ],
+      "confidence": "high",
+      "notes": "Two thin pale/metal horizontal strips across the green plate; do not make the whole rack opaque white."
+    },
+    {
+      "id": "R03",
+      "category": "rack",
+      "name": "First empty pale optic support rod",
+      "visible_bbox_px": [
+        736,
+        226,
+        749,
+        310
+      ],
+      "visible_bbox_normalized": [
+        0.71875,
+        0.33138,
+        0.73145,
+        0.45455
+      ],
+      "visible_center_normalized": [
+        0.7251,
+        0.39296
+      ],
+      "confidence": "high",
+      "notes": "Between D01 and D02. Slim vertical white rod without a bottle, metal fitting beneath."
+    },
+    {
+      "id": "R04",
+      "category": "rack",
+      "name": "Second empty pale optic support rod",
+      "visible_bbox_px": [
+        795,
+        233,
+        808,
+        312
+      ],
+      "visible_bbox_normalized": [
+        0.77637,
+        0.34164,
+        0.78906,
+        0.45748
+      ],
+      "visible_center_normalized": [
+        0.78271,
+        0.39956
+      ],
+      "confidence": "high",
+      "notes": "Between D02 and D03. Slim white upright without a bottle."
+    },
+    {
+      "id": "R05",
+      "category": "rack",
+      "name": "Left optic nozzle and lever",
+      "visible_bbox_px": [
+        697,
+        299,
+        725,
+        345
+      ],
+      "visible_bbox_normalized": [
+        0.68066,
+        0.43842,
+        0.70801,
+        0.50587
+      ],
+      "visible_center_normalized": [
+        0.69434,
+        0.47214
+      ],
+      "confidence": "high",
+      "notes": "Tan/black fitting below D01, narrow vertical outlet, small dark lever extending left/right."
+    },
+    {
+      "id": "R06",
+      "category": "rack",
+      "name": "Second optic nozzle and lever",
+      "visible_bbox_px": [
+        760,
+        301,
+        788,
+        348
+      ],
+      "visible_bbox_normalized": [
+        0.74219,
+        0.44135,
+        0.76953,
+        0.51026
+      ],
+      "visible_center_normalized": [
+        0.75586,
+        0.47581
+      ],
+      "confidence": "high",
+      "notes": "Below D02, black/tan fitting and narrow outlet; more visible than the empty positions."
+    },
+    {
+      "id": "R07",
+      "category": "rack",
+      "name": "Third optic nozzle and lever",
+      "visible_bbox_px": [
+        824,
+        300,
+        853,
+        346
+      ],
+      "visible_bbox_normalized": [
+        0.80469,
+        0.43988,
+        0.83301,
+        0.50733
+      ],
+      "visible_center_normalized": [
+        0.81885,
+        0.47361
+      ],
+      "confidence": "high",
+      "notes": "Below D03; black/tan optic fitting with small dark side lever."
+    },
+    {
+      "id": "R08",
+      "category": "rack",
+      "name": "Right optic nozzle and lever",
+      "visible_bbox_px": [
+        856,
+        302,
+        885,
+        347
+      ],
+      "visible_bbox_normalized": [
+        0.83594,
+        0.44282,
+        0.86426,
+        0.5088
+      ],
+      "visible_center_normalized": [
+        0.8501,
+        0.47581
+      ],
+      "confidence": "high",
+      "notes": "Below D04, black/tan fitting and narrow outlet."
+    },
+    {
+      "id": "R09",
+      "category": "rack",
+      "name": "Empty-position lower fittings",
+      "visible_bbox_px": [
+        735,
+        300,
+        808,
+        328
+      ],
+      "visible_bbox_normalized": [
+        0.71777,
+        0.43988,
+        0.78906,
+        0.48094
+      ],
+      "visible_center_normalized": [
+        0.75342,
+        0.46041
+      ],
+      "confidence": "medium",
+      "notes": "Two small pale/metal supports below R03/R04; no liquor bodies above them."
+    },
+    {
+      "id": "R10",
+      "category": "rack",
+      "name": "Left tied bamboo/wood rack support",
+      "visible_bbox_px": [
+        722,
+        296,
+        758,
+        405
+      ],
+      "visible_bbox_normalized": [
+        0.70508,
+        0.43402,
+        0.74023,
+        0.59384
+      ],
+      "visible_center_normalized": [
+        0.72266,
+        0.51393
+      ],
+      "confidence": "high",
+      "notes": "Vertical warm support under green plate with carved/tied loop-like tan fibers, partially hidden by optic fittings and rear bottles."
+    },
+    {
+      "id": "R11",
+      "category": "rack",
+      "name": "Right tied bamboo/wood rack support",
+      "visible_bbox_px": [
+        843,
+        299,
+        872,
+        405
+      ],
+      "visible_bbox_normalized": [
+        0.82324,
+        0.43842,
+        0.85156,
+        0.59384
+      ],
+      "visible_center_normalized": [
+        0.8374,
+        0.51613
+      ],
+      "confidence": "high",
+      "notes": "Matching right support with tan loops and dark bands."
+    },
+    {
+      "id": "C01",
+      "category": "container",
+      "name": "Lime-green cylindrical beverage appliance",
+      "visible_bbox_px": [
+        642,
+        316,
+        694,
+        432
+      ],
+      "visible_bbox_normalized": [
+        0.62695,
+        0.46334,
+        0.67773,
+        0.63343
+      ],
+      "visible_center_normalized": [
+        0.65234,
+        0.54839
+      ],
+      "confidence": "high",
+      "notes": "Left of rear bottle row. Lime/olive vertical cylinder, circular open-looking top, large black/brown curved front detail and black projecting lower spout/control. Exact appliance type uncertain."
+    },
+    {
+      "id": "C02",
+      "category": "container",
+      "name": "Clear rear-left straw holder",
+      "visible_bbox_px": [
+        430,
+        347,
+        464,
+        437
+      ],
+      "visible_bbox_normalized": [
+        0.41992,
+        0.5088,
+        0.45313,
+        0.64076
+      ],
+      "visible_center_normalized": [
+        0.43652,
+        0.57478
+      ],
+      "confidence": "medium",
+      "notes": "In front of glowing lamp on left counter; pale clear cylinder holding multiple pink/white thin straws."
+    },
+    {
+      "id": "C03",
+      "category": "container",
+      "name": "Tall red metallic cylindrical can",
+      "visible_bbox_px": [
+        394,
+        349,
+        420,
+        435
+      ],
+      "visible_bbox_normalized": [
+        0.38477,
+        0.51173,
+        0.41016,
+        0.63783
+      ],
+      "visible_center_normalized": [
+        0.39746,
+        0.57478
+      ],
+      "confidence": "high",
+      "notes": "Immediately left of C02, silver/gold closure, straight red body with tiny pale writing not reliably legible."
+    },
+    {
+      "id": "C04",
+      "category": "container",
+      "name": "Shallow dark tray/bowl with limes",
+      "visible_bbox_px": [
+        719,
+        399,
+        842,
+        428
+      ],
+      "visible_bbox_normalized": [
+        0.70215,
+        0.58504,
+        0.82227,
+        0.62757
+      ],
+      "visible_center_normalized": [
+        0.76221,
+        0.6063
+      ],
+      "confidence": "high",
+      "notes": "In front of middle rear bottle cluster, several separate whole green limes arranged on dark shallow plate."
+    },
+    {
+      "id": "C05",
+      "category": "container",
+      "name": "Tan/gray rectangular wooden serving tray",
+      "visible_bbox_px": [
+        474,
+        518,
+        663,
+        627
+      ],
+      "visible_bbox_normalized": [
+        0.46289,
+        0.75953,
+        0.64746,
+        0.91935
+      ],
+      "visible_center_normalized": [
+        0.55518,
+        0.83944
+      ],
+      "confidence": "high",
+      "notes": "Beneath foreground bottle and rear-left mosaic cup. Slatted/frame-like pale worn wood edges, printed paper/newspaper in bottom, partly hidden."
+    },
+    {
+      "id": "C06",
+      "category": "container",
+      "name": "Small hanging orange ceramic cup/bowl",
+      "visible_bbox_px": [
+        911,
+        168,
+        945,
+        213
+      ],
+      "visible_bbox_normalized": [
+        0.88965,
+        0.24633,
+        0.92285,
+        0.31232
+      ],
+      "visible_center_normalized": [
+        0.90625,
+        0.27933
+      ],
+      "confidence": "medium",
+      "notes": "Hangs from upper-right rear rail by small handle/hook, rounded orange-tan body, opening toward camera/right."
+    },
+    {
+      "id": "C07",
+      "category": "container",
+      "name": "Three small red hanging cup/plaque shapes",
+      "visible_bbox_px": [
+        625,
+        192,
+        969,
+        226
+      ],
+      "visible_bbox_normalized": [
+        0.61035,
+        0.28152,
+        0.94629,
+        0.33138
+      ],
+      "visible_center_normalized": [
+        0.77832,
+        0.30645
+      ],
+      "confidence": "low",
+      "notes": "Separate little red shapes near x=636, x=928, x=957 on rear rail/wall. Could be cup-shaped plaques or mini mugs; flattened or heavily occluded, avoid invented handles."
+    },
+    {
+      "id": "G01",
+      "category": "garnish",
+      "name": "Pink/white cocktail paper umbrella",
+      "visible_bbox_px": [
+        232,
+        443,
+        300,
+        487
+      ],
+      "visible_bbox_normalized": [
+        0.22656,
+        0.64956,
+        0.29297,
+        0.71408
+      ],
+      "visible_center_normalized": [
+        0.25977,
+        0.68182
+      ],
+      "confidence": "high",
+      "notes": "Above V01, striped canopy viewed obliquely, slim pink stem leaning up-left."
+    },
+    {
+      "id": "G02",
+      "category": "garnish",
+      "name": "Pineapple wedge on left green tumbler",
+      "visible_bbox_px": [
+        220,
+        523,
+        267,
+        565
+      ],
+      "visible_bbox_normalized": [
+        0.21484,
+        0.76686,
+        0.26074,
+        0.82845
+      ],
+      "visible_center_normalized": [
+        0.23779,
+        0.79765
+      ],
+      "confidence": "high",
+      "notes": "Pale yellow flesh, small dark/green rind/leaf area on upper left, wedge projects above and to right of rim."
+    },
+    {
+      "id": "G03",
+      "category": "garnish",
+      "name": "Tan mug pineapple chunk and tall green leaf",
+      "visible_bbox_px": [
+        741,
+        391,
+        823,
+        526
+      ],
+      "visible_bbox_normalized": [
+        0.72363,
+        0.57331,
+        0.80371,
+        0.77126
+      ],
+      "visible_center_normalized": [
+        0.76367,
+        0.67229
+      ],
+      "confidence": "high",
+      "notes": "Pale yellow pineapple chunks at rim with a tall broad pointed green leaf rising to y≈0.58 of image; leaf leans slightly right."
+    },
+    {
+      "id": "G04",
+      "category": "garnish",
+      "name": "Brown mug pineapple wedge and leaf",
+      "visible_bbox_px": [
+        824,
+        419,
+        894,
+        541
+      ],
+      "visible_bbox_normalized": [
+        0.80469,
+        0.61437,
+        0.87305,
+        0.79326
+      ],
+      "visible_center_normalized": [
+        0.83887,
+        0.70381
+      ],
+      "confidence": "high",
+      "notes": "Large pale yellow wedge at mug left rim, long green leaf leaning left above rim; leaf overlaps rear bottles."
+    },
+    {
+      "id": "G05",
+      "category": "garnish",
+      "name": "Red zigzag decoration on brown mug rim",
+      "visible_bbox_px": [
+        849,
+        498,
+        914,
+        525
+      ],
+      "visible_bbox_normalized": [
+        0.8291,
+        0.73021,
+        0.89258,
+        0.76979
+      ],
+      "visible_center_normalized": [
+        0.86084,
+        0.75
+      ],
+      "confidence": "medium",
+      "notes": "Sharp red zigzag/scalloped band above brown glaze. Exact identity uncertain; preserve silhouette/color rather than assigning a fabricated label or pattern."
+    },
+    {
+      "id": "G06",
+      "category": "garnish",
+      "name": "Two pink/purple bowl spoons/stirrers",
+      "visible_bbox_px": [
+        429,
+        531,
+        502,
+        618
+      ],
+      "visible_bbox_normalized": [
+        0.41895,
+        0.77859,
+        0.49023,
+        0.90616
+      ],
+      "visible_center_normalized": [
+        0.45459,
+        0.84238
+      ],
+      "confidence": "high",
+      "notes": "Two narrow overlapping implements in the aqua bowl, diagonally upward to right, roundish handle ends."
+    },
+    {
+      "id": "G07",
+      "category": "garnish",
+      "name": "Whole pineapple on lower rear shelf",
+      "visible_bbox_px": [
+        649,
+        408,
+        706,
+        491
+      ],
+      "visible_bbox_normalized": [
+        0.63379,
+        0.59824,
+        0.68945,
+        0.71994
+      ],
+      "visible_center_normalized": [
+        0.66162,
+        0.65909
+      ],
+      "confidence": "high",
+      "notes": "Small pineapple body with short green crown/leaf group leaning up-left; partly in front of pale printed item V17."
+    },
+    {
+      "id": "S01",
+      "category": "structure",
+      "name": "Large left vertical bamboo post",
+      "visible_bbox_px": [
+        131,
+        0,
+        231,
+        621
+      ],
+      "visible_bbox_normalized": [
+        0.12793,
+        0,
+        0.22559,
+        0.91056
+      ],
+      "visible_center_normalized": [
+        0.17676,
+        0.45528
+      ],
+      "confidence": "high",
+      "notes": "Warm amber cylindrical post, visible joints and grain, slightly widening perspective toward bottom, thick coarse gray/tan rope wrapping around lower segment."
+    },
+    {
+      "id": "S02",
+      "category": "structure",
+      "name": "Diagonal left bamboo brace",
+      "visible_bbox_px": [
+        0,
+        146,
+        181,
+        612
+      ],
+      "visible_bbox_normalized": [
+        0,
+        0.21408,
+        0.17676,
+        0.89736
+      ],
+      "visible_center_normalized": [
+        0.08838,
+        0.55572
+      ],
+      "confidence": "high",
+      "notes": "Runs from clipped left edge upper-left downward/right into rope-wrapped base next to S01; pale tan color with clear nodes and small drilled dark mark near base."
+    },
+    {
+      "id": "S03",
+      "category": "structure",
+      "name": "Coarse rope wrapping and loose white rope",
+      "visible_bbox_px": [
+        0,
+        473,
+        236,
+        677
+      ],
+      "visible_bbox_normalized": [
+        0,
+        0.69355,
+        0.23047,
+        0.99267
+      ],
+      "visible_center_normalized": [
+        0.11523,
+        0.84311
+      ],
+      "confidence": "high",
+      "notes": "Broad rope-wrapped lower bamboo intersection; loose pale cord enters lower-left and ties at brace; individual fibers not factual at high magnification."
+    },
+    {
+      "id": "S04",
+      "category": "structure",
+      "name": "Middle-left upright bamboo/wood post",
+      "visible_bbox_px": [
+        409,
+        37,
+        466,
+        453
+      ],
+      "visible_bbox_normalized": [
+        0.39941,
+        0.05425,
+        0.45508,
+        0.66422
+      ],
+      "visible_center_normalized": [
+        0.42725,
+        0.35924
+      ],
+      "confidence": "high",
+      "notes": "Supports the left doorway beam and green glowing sign; partly covered by narrow hanging lei and lamps."
+    },
+    {
+      "id": "S05",
+      "category": "structure",
+      "name": "Rightmost thick yellow/amber upright",
+      "visible_bbox_px": [
+        980,
+        139,
+        1024,
+        571
+      ],
+      "visible_bbox_normalized": [
+        0.95703,
+        0.20381,
+        1,
+        0.83724
+      ],
+      "visible_center_normalized": [
+        0.97852,
+        0.52053
+      ],
+      "confidence": "high",
+      "notes": "Clipped by right frame; vertical large post/panel adjacent to right-edge green surfboard."
+    },
+    {
+      "id": "S06",
+      "category": "structure",
+      "name": "Left doorway upper diagonal bamboo rails",
+      "visible_bbox_px": [
+        77,
+        0,
+        493,
+        182
+      ],
+      "visible_bbox_normalized": [
+        0.0752,
+        0,
+        0.48145,
+        0.26686
+      ],
+      "visible_center_normalized": [
+        0.27832,
+        0.13343
+      ],
+      "confidence": "high",
+      "notes": "Three roughly parallel warm bamboo roof/header rails recede diagonally downward/right from top-left toward middle-left post."
+    },
+    {
+      "id": "S07",
+      "category": "structure",
+      "name": "Rear bamboo wall vertical staves",
+      "visible_bbox_px": [
+        491,
+        93,
+        986,
+        553
+      ],
+      "visible_bbox_normalized": [
+        0.47949,
+        0.13636,
+        0.96289,
+        0.81085
+      ],
+      "visible_center_normalized": [
+        0.72119,
+        0.47361
+      ],
+      "confidence": "high",
+      "notes": "Close-packed vertical brown/tan bamboo wall behind rack and rear counter, irregular narrow stripes and joints."
+    },
+    {
+      "id": "S08",
+      "category": "structure",
+      "name": "Rear high horizontal bamboo shelf rail",
+      "visible_bbox_px": [
+        584,
+        119,
+        970,
+        148
+      ],
+      "visible_bbox_normalized": [
+        0.57031,
+        0.17449,
+        0.94727,
+        0.21701
+      ],
+      "visible_center_normalized": [
+        0.75879,
+        0.19575
+      ],
+      "confidence": "high",
+      "notes": "Warm rail under upper shelf ornaments, partially behind central surfboard and top-right sign."
+    },
+    {
+      "id": "S09",
+      "category": "structure",
+      "name": "Rear middle horizontal bamboo display rail",
+      "visible_bbox_px": [
+        583,
+        167,
+        977,
+        193
+      ],
+      "visible_bbox_normalized": [
+        0.56934,
+        0.24487,
+        0.9541,
+        0.28299
+      ],
+      "visible_center_normalized": [
+        0.76172,
+        0.26393
+      ],
+      "confidence": "high",
+      "notes": "Warm horizontal rail behind leis and bottle tops, extends almost the rear-wall width visible right of central board."
+    },
+    {
+      "id": "S10",
+      "category": "structure",
+      "name": "Rear bar front horizontal bamboo pole",
+      "visible_bbox_px": [
+        615,
+        414,
+        967,
+        458
+      ],
+      "visible_bbox_normalized": [
+        0.60059,
+        0.60704,
+        0.94434,
+        0.67155
+      ],
+      "visible_center_normalized": [
+        0.77246,
+        0.6393
+      ],
+      "confidence": "high",
+      "notes": "Large warm rounded pole along rear counter front, with joints and woven lashings; occluded by bottles and front mugs."
+    },
+    {
+      "id": "S11",
+      "category": "structure",
+      "name": "Rear bar bamboo/rattan supports",
+      "visible_bbox_px": [
+        630,
+        432,
+        967,
+        572
+      ],
+      "visible_bbox_normalized": [
+        0.61523,
+        0.63343,
+        0.94434,
+        0.83871
+      ],
+      "visible_center_normalized": [
+        0.77979,
+        0.73607
+      ],
+      "confidence": "medium",
+      "notes": "Visible vertical supports beneath rear bar at x≈636, 764, 938; upper rattan/ribbed joints can resemble goblets but likely belong to furniture. Do not create unsupported glasses from these ribbed joints."
+    },
+    {
+      "id": "S12",
+      "category": "structure",
+      "name": "Main wood tabletop and raised edge",
+      "visible_bbox_px": [
+        0,
+        425,
+        1024,
+        682
+      ],
+      "visible_bbox_normalized": [
+        0,
+        0.62317,
+        1,
+        1
+      ],
+      "visible_center_normalized": [
+        0.5,
+        0.81158
+      ],
+      "confidence": "high",
+      "notes": "Warm orange-brown broad counter in foreground and left receding surface; glossy broad plank/fiber grain, thick rounded front lip and several woven mats."
+    },
+    {
+      "id": "S13",
+      "category": "structure",
+      "name": "Woven tan table mat, left",
+      "visible_bbox_px": [
+        181,
+        584,
+        558,
+        669
+      ],
+      "visible_bbox_normalized": [
+        0.17676,
+        0.8563,
+        0.54492,
+        0.98094
+      ],
+      "visible_center_normalized": [
+        0.36084,
+        0.91862
+      ],
+      "confidence": "high",
+      "notes": "Fine flat tan woven plant-fiber strip under the green glass/goblet/bowls/highball."
+    },
+    {
+      "id": "S14",
+      "category": "structure",
+      "name": "Woven tan table mat, right",
+      "visible_bbox_px": [
+        556,
+        546,
+        985,
+        682
+      ],
+      "visible_bbox_normalized": [
+        0.54297,
+        0.80059,
+        0.96191,
+        1
+      ],
+      "visible_center_normalized": [
+        0.75244,
+        0.90029
+      ],
+      "confidence": "high",
+      "notes": "Larger tan mat beneath right mosaic cup, tiki mugs and ashtray; several overlapping edges."
+    },
+    {
+      "id": "S15",
+      "category": "structure",
+      "name": "Thatch roof and doorway fringe",
+      "visible_bbox_px": [
+        0,
+        0,
+        752,
+        265
+      ],
+      "visible_bbox_normalized": [
+        0,
+        0,
+        0.73438,
+        0.38856
+      ],
+      "visible_center_normalized": [
+        0.36719,
+        0.19428
+      ],
+      "confidence": "high",
+      "notes": "Loose straw thatch, dark/gray-brown left fringe and bright amber roof underside, supported by narrow rafters."
+    },
+    {
+      "id": "S16",
+      "category": "structure",
+      "name": "Amber ceiling rafters and cross beams",
+      "visible_bbox_px": [
+        313,
+        0,
+        758,
+        159
+      ],
+      "visible_bbox_normalized": [
+        0.30566,
+        0,
+        0.74023,
+        0.23314
+      ],
+      "visible_center_normalized": [
+        0.52295,
+        0.11657
+      ],
+      "confidence": "high",
+      "notes": "Multiple narrow parallel bamboo roof members and horizontal cross beams, warm practical bulbs along cables."
+    },
+    {
+      "id": "L01",
+      "category": "lei",
+      "name": "Large front-left pastel flower lei loop",
+      "visible_bbox_px": [
+        139,
+        32,
+        287,
+        266
+      ],
+      "visible_bbox_normalized": [
+        0.13574,
+        0.04692,
+        0.28027,
+        0.39003
+      ],
+      "visible_center_normalized": [
+        0.20801,
+        0.21848
+      ],
+      "confidence": "high",
+      "notes": "Mostly white/pale pink/blue/yellow flowers with large red flower cluster low-left; draped around/next to front post and small dark skull ornament."
+    },
+    {
+      "id": "L02",
+      "category": "lei",
+      "name": "Second broad pastel/orange lei loop",
+      "visible_bbox_px": [
+        272,
+        47,
+        360,
+        257
+      ],
+      "visible_bbox_normalized": [
+        0.26563,
+        0.06891,
+        0.35156,
+        0.37683
+      ],
+      "visible_center_normalized": [
+        0.30859,
+        0.22287
+      ],
+      "confidence": "high",
+      "notes": "Behind L01/right of left post, two descending strands; pink/yellow/blue/white with bright orange/red edge strand."
+    },
+    {
+      "id": "L03",
+      "category": "lei",
+      "name": "Small middle-left pastel lei loop",
+      "visible_bbox_px": [
+        379,
+        117,
+        421,
+        241
+      ],
+      "visible_bbox_normalized": [
+        0.37012,
+        0.17155,
+        0.41113,
+        0.35337
+      ],
+      "visible_center_normalized": [
+        0.39063,
+        0.26246
+      ],
+      "confidence": "high",
+      "notes": "Hangs farther back on left doorway rail; small pink/white/yellow clusters."
+    },
+    {
+      "id": "L04",
+      "category": "lei",
+      "name": "Middle post narrow hanging lei",
+      "visible_bbox_px": [
+        461,
+        142,
+        495,
+        281
+      ],
+      "visible_bbox_normalized": [
+        0.4502,
+        0.20821,
+        0.4834,
+        0.41202
+      ],
+      "visible_center_normalized": [
+        0.4668,
+        0.31012
+      ],
+      "confidence": "high",
+      "notes": "Vertical flower strand along right of middle-left upright, pale yellow/pink/orange."
+    },
+    {
+      "id": "L05",
+      "category": "lei",
+      "name": "Flower-covered hanging lampshade",
+      "visible_bbox_px": [
+        450,
+        0,
+        603,
+        140
+      ],
+      "visible_bbox_normalized": [
+        0.43945,
+        0,
+        0.58887,
+        0.20528
+      ],
+      "visible_center_normalized": [
+        0.51416,
+        0.10264
+      ],
+      "confidence": "high",
+      "notes": "Clipped at top; wide upper cone tapering to narrower pink-rimmed opening, abundant pastel pink/white/yellow/green flowers and purple spots on visible lower shade."
+    },
+    {
+      "id": "L06",
+      "category": "lei",
+      "name": "Rear center red/orange/yellow lei cluster",
+      "visible_bbox_px": [
+        721,
+        134,
+        812,
+        222
+      ],
+      "visible_bbox_normalized": [
+        0.7041,
+        0.19648,
+        0.79297,
+        0.32551
+      ],
+      "visible_center_normalized": [
+        0.74854,
+        0.261
+      ],
+      "confidence": "high",
+      "notes": "Wrapped around middle rear rail and dark tiki-like ornament above second dispenser bottle."
+    },
+    {
+      "id": "L07",
+      "category": "lei",
+      "name": "Rear right orange/red lei loop",
+      "visible_bbox_px": [
+        894,
+        140,
+        968,
+        207
+      ],
+      "visible_bbox_normalized": [
+        0.87305,
+        0.20528,
+        0.94531,
+        0.30352
+      ],
+      "visible_center_normalized": [
+        0.90918,
+        0.2544
+      ],
+      "confidence": "high",
+      "notes": "Two short descending flower strands beside the hanging orange cup and upper-right post."
+    },
+    {
+      "id": "L08",
+      "category": "lei",
+      "name": "Rear center small yellow/green/blue flower patch",
+      "visible_bbox_px": [
+        725,
+        159,
+        758,
+        193
+      ],
+      "visible_bbox_normalized": [
+        0.70801,
+        0.23314,
+        0.74023,
+        0.28299
+      ],
+      "visible_center_normalized": [
+        0.72412,
+        0.25806
+      ],
+      "confidence": "medium",
+      "notes": "Small cluster attached to rail near top of the first two dispenser positions."
+    },
+    {
+      "id": "O01",
+      "category": "ornament",
+      "name": "Dark skull/animal-like left hanging ornament",
+      "visible_bbox_px": [
+        214,
+        97,
+        274,
+        200
+      ],
+      "visible_bbox_normalized": [
+        0.20898,
+        0.14223,
+        0.26758,
+        0.29326
+      ],
+      "visible_center_normalized": [
+        0.23828,
+        0.21774
+      ],
+      "confidence": "medium",
+      "notes": "Gray/brown irregular head-like object inside front lei loop. Exact anatomy cannot be recovered reliably."
+    },
+    {
+      "id": "O02",
+      "category": "ornament",
+      "name": "Rear carved olive/brown tiki wall relief",
+      "visible_bbox_px": [
+        650,
+        164,
+        716,
+        274
+      ],
+      "visible_bbox_normalized": [
+        0.63477,
+        0.24047,
+        0.69922,
+        0.40176
+      ],
+      "visible_center_normalized": [
+        0.66699,
+        0.32111
+      ],
+      "confidence": "high",
+      "notes": "Broad long carved face/chevron relief behind first bottle and optic rail, not a free-standing drinking mug."
+    },
+    {
+      "id": "O03",
+      "category": "ornament",
+      "name": "Dark rear-center head/figure ornament",
+      "visible_bbox_px": [
+        741,
+        151,
+        781,
+        213
+      ],
+      "visible_bbox_normalized": [
+        0.72363,
+        0.22141,
+        0.7627,
+        0.31232
+      ],
+      "visible_center_normalized": [
+        0.74316,
+        0.26686
+      ],
+      "confidence": "medium",
+      "notes": "Dark rounded vertical tiki-like object beneath flowers, partially hidden by second inverted bottle."
+    },
+    {
+      "id": "O04",
+      "category": "ornament",
+      "name": "Small hut-shaped shelf item",
+      "visible_bbox_px": [
+        603,
+        133,
+        666,
+        173
+      ],
+      "visible_bbox_normalized": [
+        0.58887,
+        0.19501,
+        0.65039,
+        0.25367
+      ],
+      "visible_center_normalized": [
+        0.61963,
+        0.22434
+      ],
+      "confidence": "high",
+      "notes": "Rectangular mini display/cabinet with a small thatched roof and several framed/labelled panels; no legible text established."
+    },
+    {
+      "id": "O05",
+      "category": "ornament",
+      "name": "Upper woven brown basket/item",
+      "visible_bbox_px": [
+        622,
+        111,
+        690,
+        146
+      ],
+      "visible_bbox_normalized": [
+        0.60742,
+        0.16276,
+        0.67383,
+        0.21408
+      ],
+      "visible_center_normalized": [
+        0.64063,
+        0.18842
+      ],
+      "confidence": "medium",
+      "notes": "Tan woven object behind/above miniature hut, partly hidden by beam."
+    },
+    {
+      "id": "O06",
+      "category": "ornament",
+      "name": "Large upper-right tiki face sign panel",
+      "visible_bbox_px": [
+        750,
+        0,
+        906,
+        143
+      ],
+      "visible_bbox_normalized": [
+        0.73242,
+        0,
+        0.88477,
+        0.20968
+      ],
+      "visible_center_normalized": [
+        0.80859,
+        0.10484
+      ],
+      "confidence": "high",
+      "notes": "Black/gray/brown face, large red/white eyes and bared cream rectangular teeth; crop cuts top. Flat sign panel."
+    },
+    {
+      "id": "O07",
+      "category": "ornament",
+      "name": "Upper-right TIKI sign panel",
+      "visible_bbox_px": [
+        899,
+        0,
+        1024,
+        144
+      ],
+      "visible_bbox_normalized": [
+        0.87793,
+        0,
+        1,
+        0.21114
+      ],
+      "visible_center_normalized": [
+        0.93896,
+        0.10557
+      ],
+      "confidence": "high",
+      "notes": "Dark brown flat panel with large red TIKI lettering, clipped right/top edges."
+    },
+    {
+      "id": "O08",
+      "category": "ornament",
+      "name": "Cropped red floral upper-left sign",
+      "visible_bbox_px": [
+        142,
+        0,
+        334,
+        70
+      ],
+      "visible_bbox_normalized": [
+        0.13867,
+        0,
+        0.32617,
+        0.10264
+      ],
+      "visible_center_normalized": [
+        0.23242,
+        0.05132
+      ],
+      "confidence": "medium",
+      "notes": "Red/pink board with cream yellow flower design and tiny black writing; upper text is cropped/too small."
+    },
+    {
+      "id": "O09",
+      "category": "ornament",
+      "name": "Small green glowing wall sign",
+      "visible_bbox_px": [
+        427,
+        205,
+        465,
+        280
+      ],
+      "visible_bbox_normalized": [
+        0.41699,
+        0.30059,
+        0.4541,
+        0.41056
+      ],
+      "visible_center_normalized": [
+        0.43555,
+        0.35557
+      ],
+      "confidence": "high",
+      "notes": "Bright green/white rectangular sign attached to middle-left post, actual illumination spills on post; internal text is blown out."
+    },
+    {
+      "id": "O10",
+      "category": "ornament",
+      "name": "Rear red/orange guitar-themed wall panel",
+      "visible_bbox_px": [
+        607,
+        242,
+        677,
+        397
+      ],
+      "visible_bbox_normalized": [
+        0.59277,
+        0.35484,
+        0.66113,
+        0.58211
+      ],
+      "visible_center_normalized": [
+        0.62695,
+        0.46848
+      ],
+      "confidence": "high",
+      "notes": "Red/orange glossy poster/decoration with bright reflective guitar-like linework; partly hidden by board/appliance."
+    },
+    {
+      "id": "O11",
+      "category": "ornament",
+      "name": "Rear small red car card/poster",
+      "visible_bbox_px": [
+        881,
+        295,
+        958,
+        383
+      ],
+      "visible_bbox_normalized": [
+        0.86035,
+        0.43255,
+        0.93555,
+        0.56158
+      ],
+      "visible_center_normalized": [
+        0.89795,
+        0.49707
+      ],
+      "confidence": "medium",
+      "notes": "Angled pale/red card with small red car image and black/red text too small to copy faithfully."
+    },
+    {
+      "id": "O12",
+      "category": "ornament",
+      "name": "Dark blue/green rear right curved object",
+      "visible_bbox_px": [
+        841,
+        233,
+        903,
+        286
+      ],
+      "visible_bbox_normalized": [
+        0.82129,
+        0.34164,
+        0.88184,
+        0.41935
+      ],
+      "visible_center_normalized": [
+        0.85156,
+        0.3805
+      ],
+      "confidence": "medium",
+      "notes": "Hat/curved panel-like form behind right dispenser positions, with green pale diagonal band; largely occluded."
+    },
+    {
+      "id": "O13",
+      "category": "ornament",
+      "name": "Warm globe lamp on left counter",
+      "visible_bbox_px": [
+        450,
+        363,
+        514,
+        434
+      ],
+      "visible_bbox_normalized": [
+        0.43945,
+        0.53226,
+        0.50195,
+        0.63636
+      ],
+      "visible_center_normalized": [
+        0.4707,
+        0.58431
+      ],
+      "confidence": "high",
+      "notes": "Glowing yellow/amber roundish globe with uneven faceted/translucent spots, in front of central board."
+    },
+    {
+      "id": "O14",
+      "category": "ornament",
+      "name": "Left teal/white printed cloth over red seat",
+      "visible_bbox_px": [
+        232,
+        375,
+        354,
+        477
+      ],
+      "visible_bbox_normalized": [
+        0.22656,
+        0.54985,
+        0.3457,
+        0.69941
+      ],
+      "visible_center_normalized": [
+        0.28613,
+        0.62463
+      ],
+      "confidence": "high",
+      "notes": "Tropical black/white/teal printed fabric on red upholstered back, behind blue mug."
+    },
+    {
+      "id": "O15",
+      "category": "ornament",
+      "name": "Black smartphone on left counter",
+      "visible_bbox_px": [
+        287,
+        510,
+        406,
+        550
+      ],
+      "visible_bbox_normalized": [
+        0.28027,
+        0.7478,
+        0.39648,
+        0.80645
+      ],
+      "visible_center_normalized": [
+        0.33838,
+        0.77713
+      ],
+      "confidence": "high",
+      "notes": "Small rectangular black flat device with glossy bright corner/camera-like reflection, perspective angled along tabletop."
+    },
+    {
+      "id": "O16",
+      "category": "ornament",
+      "name": "Thin amber practical light string",
+      "visible_bbox_px": [
+        379,
+        1,
+        751,
+        402
+      ],
+      "visible_bbox_normalized": [
+        0.37012,
+        0.00147,
+        0.7334,
+        0.58944
+      ],
+      "visible_center_normalized": [
+        0.55176,
+        0.29545
+      ],
+      "confidence": "high",
+      "notes": "Several warm bulbs near ceiling and along left rear wall/post; black/dark cable visible. Do not interpret enhanced extra points as new lamps."
+    },
+    {
+      "id": "P01",
+      "category": "board",
+      "name": "Central upright cream/blue/yellow surfboard",
+      "visible_bbox_px": [
+        512,
+        98,
+        624,
+        560
+      ],
+      "visible_bbox_normalized": [
+        0.5,
+        0.1437,
+        0.60938,
+        0.82111
+      ],
+      "visible_center_normalized": [
+        0.55469,
+        0.4824
+      ],
+      "confidence": "high",
+      "notes": "Pointed cream/yellow upper tip, blue lower field, yellow/black logo mark on upper-middle right; leans very slightly."
+    },
+    {
+      "id": "P02",
+      "category": "board",
+      "name": "Right-edge green surfboard fragment",
+      "visible_bbox_px": [
+        982,
+        266,
+        1024,
+        571
+      ],
+      "visible_bbox_normalized": [
+        0.95898,
+        0.39003,
+        1,
+        0.83724
+      ],
+      "visible_center_normalized": [
+        0.97949,
+        0.61364
+      ],
+      "confidence": "high",
+      "notes": "Only right-edge board fragment visible, green field with darker stripe and small gray/black fin/attachment near lower region."
+    },
+    {
+      "id": "O17",
+      "category": "ornament",
+      "name": "Clipped brass/black/rope object at lower left",
+      "visible_bbox_px": [
+        0,
+        575,
+        181,
+        682
+      ],
+      "visible_bbox_normalized": [
+        0,
+        0.84311,
+        0.17676,
+        1
+      ],
+      "visible_center_normalized": [
+        0.08838,
+        0.92155
+      ],
+      "confidence": "medium",
+      "notes": "Several thin dark/brass rods or handled objects, pale cord/bracelet and small rings on counter, clipped by left/bottom edge; unrelated to vessel inventory but visible."
+    }
+  ]
+}
