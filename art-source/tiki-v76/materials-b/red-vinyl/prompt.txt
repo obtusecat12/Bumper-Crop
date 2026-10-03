@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: aligned PBR material texture atlas for a midcentury Tiki restaurant.
+Subject: oxblood red 1950s seat upholstery, subtle leathery grain and contact sheen; no tufting or baked cushion shapes.
+Composition: one flat atlas with exactly six equal square tiles arranged in three columns and two rows. Every tile touches its neighboring tiles, no gutters or margins. Full image aspect ratio 3:2. The same surface pattern, scale and aligned relief in every channel; every square cell is seamless and tileable.
+Top row, left to right: BaseColor; tangent-space Normal in purple and blue; grayscale Roughness.
+Bottom row, left to right: grayscale Ambient Occlusion; grayscale Height with white protruding; solid black Metalness.
+BaseColor: neutral unlit photographic material color. Natural grain, PS2 photographic texture quality with mild softness.
+Technical maps: genuine aligned material channels, not a scene collage. The grain, strips, relief, seams or wear occur at exactly corresponding locations across all six cells. Roughness is grayscale only. AO is grayscale only. Height is grayscale only. Metalness is black.
+Aspect ratio: 3:2.
+Avoid: labels, text, watermarks, gutters, scene objects, perspective, lighting baked into basecolor, pixel art, oversharpening.

@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: Technical PBR surface atlas for a PS2 photographic Tiki bar.
+material: Dry tan palm thatch roof surface, overlapping stems, no perspective.
+layout: One 3:2 atlas containing exactly six equal square tiles in 3 columns × 2 rows. Tiles meet directly with absolutely no gutters, borders, labels, or text. Top row left to right: BaseColor, tangent-space Normal in purple blue, grayscale Roughness. Bottom row left to right: grayscale Ambient Occlusion, grayscale Height where white protrudes, Metalness black.
+alignment: Each tile depicts precisely the SAME surface pattern, knots, cracks, pores, and spatial relief at identical positions. All channels correspond. Each square cell individually tiles seamlessly at its opposite edges. Orthographic flat surface, no perspective.
+style: Neutral unlit base color, photographic PS2 natural grain, no oversharpening, no pixel art.
+aspect ratio: 3:2
+Avoid: Six-scene collage, scenery, objects, text, labels, frames, borders, gutters, perspective, directional lighting baked into base color, excessive sharpness or glare.

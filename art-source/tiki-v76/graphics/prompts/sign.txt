@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: flat front artwork texture for a roadside bar sign.
+Subject: weathered 1950s American Polynesian Pop roadside bar sign.
+Text (verbatim): "LANTERN REEF" prominently in vintage hand lettering, with "TIKI BAR & GRILL" below.
+Color palette: amber cream, red, and turquoise on very dark wood.
+Composition/framing: pure flat front view, the artwork fills the entire rectangular image.
+Constraints: no frame, no perspective, not a whole facade.
+Aspect ratio: 3:1.

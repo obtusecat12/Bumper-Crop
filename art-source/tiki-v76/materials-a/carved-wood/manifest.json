@@ -1,0 +1,106 @@
+{
+  "material": "carved-wood",
+  "generation": "built-in image_gen.imagegen; one direct generation per material",
+  "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-64d90ba7-74d3-4da0-ac01-7e6de3a3233c.png",
+  "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/original.png",
+  "original_sha256": "d331fe7fad8651345ebd5f37dab5c48c79c4810525cdfb4bff4720297d71db4b",
+  "original_size": [
+    1536,
+    1024
+  ],
+  "prompt": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/prompt.txt",
+  "processing": "Exact mechanical 512x512 crop; no resizing, painting, filtering, channel synthesis, or procedural replacements",
+  "maps": [
+    {
+      "channel": "basecolor",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/basecolor.png",
+      "crop_box_xyxy": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "b23b7eb19c0de0cbb498468ac6e1f982f5303fb0e44cf1b4524215196eb0802c"
+    },
+    {
+      "channel": "normal",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/normal.png",
+      "crop_box_xyxy": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "0f29ac216f2381c16fc4727af99787a8f1887d9376620015490b9a981a673756"
+    },
+    {
+      "channel": "roughness",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/roughness.png",
+      "crop_box_xyxy": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "8837d3575f77098ce481b29300137e2232ec22a0b893dba80c2bb6126b339a7a"
+    },
+    {
+      "channel": "ao",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/ao.png",
+      "crop_box_xyxy": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "fc246272b3b5dc52ee15ad7d21a1755cbc7da56bfeb55458571b67b1094c7a8f"
+    },
+    {
+      "channel": "height",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/height.png",
+      "crop_box_xyxy": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "c2d801bf039c3d88578363685171da5823ab8a23c6c4af0e759e7c8e7ebdb8c0"
+    },
+    {
+      "channel": "metalness",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/metalness.png",
+      "crop_box_xyxy": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "be41e8d013b35a6c0eee2c28d5b05acac02b82bf0e8ebaff59f34ddb5add0f4c"
+    }
+  ],
+  "visual_review": "Six tile order correct; no labels or gutters; corresponding broad surface pattern appears aligned across maps. Generated normal, roughness, AO, height and metalness retained verbatim; exact numerical physical correctness and seamless tiling not guaranteed by image synthesis."
+}

@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+scene: a kitschy volcanic-rock entrance patio at an American Tiki bar; rough dark lava-rock walls, chunky carved wooden tiki faces, thatched entrance canopy, tropical plants and an empty weathered footpath. Ordinary daylight, badly centered everyday compact-camera snapshot.
+原始描述: 2000-2010年代照片，展示各种各样的不同的tiki风格酒吧、餐厅、浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+location and period: United States; a surviving 1950s Polynesian Pop / Tiki venue photographed circa 2000–2010.
+photo quality and vibe: ordinary early consumer CCD digital camera snapshot, period-appropriate 2000s low-resolution texture, modest sensor noise, imperfect white balance, slightly soft detail, awkward casual framing, real light from the location, no oversharpening.
+aspect ratio: 4:3 landscape
+Avoid: people, collage, excessive yellow, oversharpening.

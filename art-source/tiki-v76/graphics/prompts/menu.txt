@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: flat menu artwork texture.
+Subject: real 1950s menu that has survived into the 2000s, old laminated menu for LANTERN REEF.
+Style/medium: slightly worn cream and red menu artwork with restrained tiki woodcut ornaments.
+Text (verbatim): venue title "LANTERN REEF"; section "COCKTAILS" with "MAI TAI 8.50", "BLUE LAGOON 7.50", "VIRGIN PUNCH 4.00"; section "FROM THE GRILL" with "ISLAND CHICKEN 12.50", "GRILLED PINEAPPLE 5.00".
+Composition/framing: pure flat front view, square menu artwork filling the image.
+Constraints: English text, clear and legible typography, same venue title exactly as provided.
+Aspect ratio: 1:1.

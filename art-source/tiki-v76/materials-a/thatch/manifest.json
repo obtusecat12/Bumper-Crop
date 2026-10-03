@@ -1,0 +1,106 @@
+{
+  "material": "thatch",
+  "generation": "built-in image_gen.imagegen; one direct generation per material",
+  "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-774d826d-67eb-4615-be03-a003fdb843f1.png",
+  "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/original.png",
+  "original_sha256": "001ee675ecd0ce7dd6a6d62b14757c69c9eb2da74bc045eca6016028d5713d4c",
+  "original_size": [
+    1536,
+    1024
+  ],
+  "prompt": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/prompt.txt",
+  "processing": "Exact mechanical 512x512 crop; no resizing, painting, filtering, channel synthesis, or procedural replacements",
+  "maps": [
+    {
+      "channel": "basecolor",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/basecolor.png",
+      "crop_box_xyxy": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "75a90530b6cf2ff4d20295fc70b837f5700c5843e00e9bf2a3d5ee96ca8691a1"
+    },
+    {
+      "channel": "normal",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/normal.png",
+      "crop_box_xyxy": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "fa8812ab7a594c8882cb33ff1e26de41de7d77f2898ce79cb9f3644917a1ad20"
+    },
+    {
+      "channel": "roughness",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/roughness.png",
+      "crop_box_xyxy": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "2b9266e13bb301dddfa234fd4c8db487b1370ebe70cb35a2a81a31186e2c5cf1"
+    },
+    {
+      "channel": "ao",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/ao.png",
+      "crop_box_xyxy": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "6ddafe127d85e55c705f9d42d13d799100fb723f2cba7c980e9f54aab3ad9f81"
+    },
+    {
+      "channel": "height",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/height.png",
+      "crop_box_xyxy": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "16a67e42198945c1be75632674b607a9bdb902b5a01b67378588f3e6b3237242"
+    },
+    {
+      "channel": "metalness",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/metalness.png",
+      "crop_box_xyxy": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "46ec9e3384d40ea5e261f00ad15fb27c9c7a45babf5df484714e54591258a8f6"
+    }
+  ],
+  "visual_review": "Six tile order correct; no labels or gutters; corresponding broad surface pattern appears aligned across maps. Generated normal, roughness, AO, height and metalness retained verbatim; exact numerical physical correctness and seamless tiling not guaranteed by image synthesis."
+}

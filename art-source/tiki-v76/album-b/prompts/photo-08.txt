@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+primary request: 2000-2010年代照片，展示各种各样的不同的tiki风格酒吧、餐厅、浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+scene: a dark empty 1950s-style tiki restaurant in the United States, photographed circa 2000–2010.
+subject: dining booths and tables divided by bamboo screens, old Polynesian restaurant decor.
+photo quality and vibe: casual CCD compact digital camera snapshot from 2000–2010, ordinary dim interior lighting, uneven exposure, imperfect focus and awkward casual framing.
+aspect ratio: 4:3
+constraints: one independent photograph, no people, no collage.

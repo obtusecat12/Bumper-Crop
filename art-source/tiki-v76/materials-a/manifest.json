@@ -1,0 +1,443 @@
+{
+  "materials": [
+    {
+      "material": "lava-rock",
+      "generation": "built-in image_gen.imagegen; one direct generation per material",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-c3ace1f7-9561-43c8-957a-a010f0bdf8b8.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/original.png",
+      "original_sha256": "08c48097f12e6fe22f11891c921a87189b716b8b74b928718444afb91027fdec",
+      "original_size": [
+        1536,
+        1024
+      ],
+      "prompt": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/prompt.txt",
+      "processing": "Exact mechanical 512x512 crop; no resizing, painting, filtering, channel synthesis, or procedural replacements",
+      "maps": [
+        {
+          "channel": "basecolor",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/basecolor.png",
+          "crop_box_xyxy": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "a124758e1118f29fffc0f63963a0e1792834681eb9fb60e729d5f3f76b22a971"
+        },
+        {
+          "channel": "normal",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/normal.png",
+          "crop_box_xyxy": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "b43cc54d8f4da08c63288a8a832f0d097d49cc465b0a0141f883949a3c051b6d"
+        },
+        {
+          "channel": "roughness",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/roughness.png",
+          "crop_box_xyxy": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "901e7c4fa3765653ff4902eefa999267c1054f4809f653c069460d9baefae132"
+        },
+        {
+          "channel": "ao",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/ao.png",
+          "crop_box_xyxy": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "80b45d56aa99414973314a5f7d684e489897b966f0b173d4c226b652be5b7352"
+        },
+        {
+          "channel": "height",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/height.png",
+          "crop_box_xyxy": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "3442b60f63183e7a6716324372adae3901772cae276cf4597f0ac494bccfcf4d"
+        },
+        {
+          "channel": "metalness",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/metalness.png",
+          "crop_box_xyxy": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "25e5b1af13fe35cd41be8ac23e8bc1081960f863d690cd45f286d92de5a05525"
+        }
+      ],
+      "visual_review": "Six tile order correct; no labels or gutters; corresponding broad surface pattern appears aligned across maps. Generated normal, roughness, AO, height and metalness retained verbatim; exact numerical physical correctness and seamless tiling not guaranteed by image synthesis."
+    },
+    {
+      "material": "carved-wood",
+      "generation": "built-in image_gen.imagegen; one direct generation per material",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-64d90ba7-74d3-4da0-ac01-7e6de3a3233c.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/original.png",
+      "original_sha256": "d331fe7fad8651345ebd5f37dab5c48c79c4810525cdfb4bff4720297d71db4b",
+      "original_size": [
+        1536,
+        1024
+      ],
+      "prompt": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/prompt.txt",
+      "processing": "Exact mechanical 512x512 crop; no resizing, painting, filtering, channel synthesis, or procedural replacements",
+      "maps": [
+        {
+          "channel": "basecolor",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/basecolor.png",
+          "crop_box_xyxy": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "b23b7eb19c0de0cbb498468ac6e1f982f5303fb0e44cf1b4524215196eb0802c"
+        },
+        {
+          "channel": "normal",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/normal.png",
+          "crop_box_xyxy": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "0f29ac216f2381c16fc4727af99787a8f1887d9376620015490b9a981a673756"
+        },
+        {
+          "channel": "roughness",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/roughness.png",
+          "crop_box_xyxy": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "8837d3575f77098ce481b29300137e2232ec22a0b893dba80c2bb6126b339a7a"
+        },
+        {
+          "channel": "ao",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/ao.png",
+          "crop_box_xyxy": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "fc246272b3b5dc52ee15ad7d21a1755cbc7da56bfeb55458571b67b1094c7a8f"
+        },
+        {
+          "channel": "height",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/height.png",
+          "crop_box_xyxy": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "c2d801bf039c3d88578363685171da5823ab8a23c6c4af0e759e7c8e7ebdb8c0"
+        },
+        {
+          "channel": "metalness",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/carved-wood/metalness.png",
+          "crop_box_xyxy": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "be41e8d013b35a6c0eee2c28d5b05acac02b82bf0e8ebaff59f34ddb5add0f4c"
+        }
+      ],
+      "visual_review": "Six tile order correct; no labels or gutters; corresponding broad surface pattern appears aligned across maps. Generated normal, roughness, AO, height and metalness retained verbatim; exact numerical physical correctness and seamless tiling not guaranteed by image synthesis."
+    },
+    {
+      "material": "thatch",
+      "generation": "built-in image_gen.imagegen; one direct generation per material",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-774d826d-67eb-4615-be03-a003fdb843f1.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/original.png",
+      "original_sha256": "001ee675ecd0ce7dd6a6d62b14757c69c9eb2da74bc045eca6016028d5713d4c",
+      "original_size": [
+        1536,
+        1024
+      ],
+      "prompt": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/prompt.txt",
+      "processing": "Exact mechanical 512x512 crop; no resizing, painting, filtering, channel synthesis, or procedural replacements",
+      "maps": [
+        {
+          "channel": "basecolor",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/basecolor.png",
+          "crop_box_xyxy": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "75a90530b6cf2ff4d20295fc70b837f5700c5843e00e9bf2a3d5ee96ca8691a1"
+        },
+        {
+          "channel": "normal",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/normal.png",
+          "crop_box_xyxy": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "fa8812ab7a594c8882cb33ff1e26de41de7d77f2898ce79cb9f3644917a1ad20"
+        },
+        {
+          "channel": "roughness",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/roughness.png",
+          "crop_box_xyxy": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "2b9266e13bb301dddfa234fd4c8db487b1370ebe70cb35a2a81a31186e2c5cf1"
+        },
+        {
+          "channel": "ao",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/ao.png",
+          "crop_box_xyxy": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "6ddafe127d85e55c705f9d42d13d799100fb723f2cba7c980e9f54aab3ad9f81"
+        },
+        {
+          "channel": "height",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/height.png",
+          "crop_box_xyxy": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "16a67e42198945c1be75632674b607a9bdb902b5a01b67378588f3e6b3237242"
+        },
+        {
+          "channel": "metalness",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/thatch/metalness.png",
+          "crop_box_xyxy": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "46ec9e3384d40ea5e261f00ad15fb27c9c7a45babf5df484714e54591258a8f6"
+        }
+      ],
+      "visual_review": "Six tile order correct; no labels or gutters; corresponding broad surface pattern appears aligned across maps. Generated normal, roughness, AO, height and metalness retained verbatim; exact numerical physical correctness and seamless tiling not guaranteed by image synthesis."
+    },
+    {
+      "material": "bamboo",
+      "generation": "built-in image_gen.imagegen; one direct generation per material",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-d8796830-0aef-4eb1-9afa-9e28f85c9e7f.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/original.png",
+      "original_sha256": "7e427cd16765495f92af185e8950e25d3779bc12cc5f99bc8bf443dd613c8176",
+      "original_size": [
+        1536,
+        1024
+      ],
+      "prompt": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/prompt.txt",
+      "processing": "Exact mechanical 512x512 crop; no resizing, painting, filtering, channel synthesis, or procedural replacements",
+      "maps": [
+        {
+          "channel": "basecolor",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/basecolor.png",
+          "crop_box_xyxy": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "661c5775d3528e32d1ca2c1fe479a2ed15778b4b5fb878e0efd140c091c43980"
+        },
+        {
+          "channel": "normal",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/normal.png",
+          "crop_box_xyxy": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "532d4ffc577a2638ec37381bd15d9d2df699582af708d30fa4ac49d4a9eaa324"
+        },
+        {
+          "channel": "roughness",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/roughness.png",
+          "crop_box_xyxy": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "ec9d86596bb01266ec82598824b48b79691591d58c6b21142ae48392d6181bce"
+        },
+        {
+          "channel": "ao",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/ao.png",
+          "crop_box_xyxy": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "067b5d4a920291f8cf6a206d533153e76dccf36ed42546116657a96a13858678"
+        },
+        {
+          "channel": "height",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/height.png",
+          "crop_box_xyxy": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "064eacceda782d813bc7d38d6dfcc29182c9bc28e4068cfeca63c19095226fe4"
+        },
+        {
+          "channel": "metalness",
+          "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/metalness.png",
+          "crop_box_xyxy": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "27d75c106ab4ea3a1ff8e2734338fe73c8764c8831c896dfb4cfa914a60c4de5"
+        }
+      ],
+      "visual_review": "Six tile order correct; no labels or gutters; corresponding broad surface pattern appears aligned across maps. Generated normal, roughness, AO, height and metalness retained verbatim; exact numerical physical correctness and seamless tiling not guaranteed by image synthesis."
+    }
+  ],
+  "image_calls": 4,
+  "runtime_maps": 24,
+  "channel_order": [
+    "basecolor",
+    "normal",
+    "roughness",
+    "ao",
+    "height",
+    "metalness"
+  ],
+  "atlas_layout": "3 columns x 2 rows",
+  "tile_size": [
+    512,
+    512
+  ]
+}

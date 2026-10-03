@@ -17,6 +17,10 @@ async function visualCheck(url){
 createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://terminal.local');
+  if(url.pathname==='/__tiki-v76.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/tiki-v76/preview.html')));return;}
+  if(url.pathname==='/__game-v76.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end((await readFile(resolve(root,'index.html'),'utf8')).replace('./boot.js?v=76','/__boot-v76.js'));return;}
+  if(url.pathname==='/__boot-v76.js'){res.writeHead(200,{'Content-Type':types['.js'],'Cache-Control':'no-store'});res.end((await readFile(resolve(root,'boot.js'),'utf8')).replace('./main.js?v=76','/__main-v76.js'));return;}
+  if(url.pathname==='/__main-v76.js'){res.writeHead(200,{'Content-Type':types['.js'],'Cache-Control':'no-store'});res.end((await readFile(resolve(root,'main.js'),'utf8'))+'\nwindow.v76QA={state,enterCity,enterBath,enterTiki,leaveTiki,teleportCity,teleportFromMap,use,setPlay,resetCameraRig,camera,renderer,exitScene,tikiTransition,get tiki(){return tikiRoom},get tikiActive(){return tikiActive},get bath(){return bathhouse},get loading(){return bathLoading},get ready(){return ready}};');return;}
   if(url.pathname==='/__game-v75.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end((await readFile(resolve(root,'index.html'),'utf8')).replace('./boot.js?v=75','/__boot-v75.js'));return;}
   if(url.pathname==='/__boot-v75.js'){res.writeHead(200,{'Content-Type':types['.js'],'Cache-Control':'no-store'});res.end((await readFile(resolve(root,'boot.js'),'utf8')).replace('./main.js?v=75','/__main-v75.js'));return;}
   if(url.pathname==='/__main-v75.js'){res.writeHead(200,{'Content-Type':types['.js'],'Cache-Control':'no-store'});res.end((await readFile(resolve(root,'main.js'),'utf8'))+'\nwindow.v75QA={state,enterCity,enterBath,enterSpring,leaveSpring,setPlay,camera,renderer,get bath(){return bathhouse},get spring(){return spring},get loading(){return bathLoading},get ready(){return ready}};');return;}

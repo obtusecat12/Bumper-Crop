@@ -52,7 +52,7 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   if(anchor){center=mapPoint(center,(anchor.x-canvas.width/2)*(1/old-1/next),(anchor.z-canvas.height/2)*(1/old-1/next));}
   zoom=next;dirty=true;modal.querySelector('.map-zoom').textContent=Math.round(zoom/1.5*100)+'%';tiles.cancelPending();
  }
- function teleport(p){if(busy)return;if(level===27){setStatus('Level 27 · 沿溪流旁原石踏步返回入口');return;}if(level===11){setStatus('Level 11 入口街区 · F2 返回麦田');return;}setStatus(`正在准备落点 · ${pointText(p)}`);onTeleport({...p,yaw:player?.yaw||0});}
+ function teleport(p){if(busy)return;if(level===27){setStatus('Level 27 · 沿溪流旁原石踏步返回入口');return;}setStatus(`正在准备落点 · ${pointText(p)}`);onTeleport({...p,yaw:player?.yaw||0});}
  miniButton.addEventListener('click',onOpen);modal.querySelector('.map-close').addEventListener('click',onClose);
  modal.querySelector('[data-map-action="out"]').onclick=()=>changeZoom(1/1.35);
  modal.querySelector('[data-map-action="in"]').onclick=()=>changeZoom(1.35);

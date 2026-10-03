@@ -28,8 +28,8 @@ export function* addStreetwallBuildingTask(b,spec){
  if(arcade){b.box(wall,0,(h+ground)/2,0,w,h-ground,d);b.box(wall,0,ground/2,-.85,w,ground,d-1.70);b.solid(0,-.83,w,d-1.66);b.box('sidewalk',0,.075,z-.76,w,.15,1.62);b.walk(0,z-.76,w,1.62,.15);}else{b.box(wall,0,h/2,0,w,h,d);b.solid(0,0,w,d);b.box(trim,0,.13,z,w,.26,.34);}b.box(trim,0,ground-.12,z+.08,w,.24,.26);
  front.reserve('floor-beam',0,ground-.12,w,.24,.02);
  const bays=Math.max(2,Math.round(w/(4+(style%4)*.48))),bay=w/bays;
- for(let i=0;i<bays;i++){const x=-w/2+bay*(i+.5);shopBay(b,x,z+.02-(arcade?1.7:0),bay-.24,seed*31+i*17,style+i,front);b.box(wall,x-bay/2+.1,1.98,z+.07,arcade?.42:.2,3.95,arcade?.55:.38);if(arcade)b.solid(x-bay/2+.1,z+.07,.42,.55);yield;}
- b.box(wall,w/2-.1,1.98,z+.07,.2,3.95,.38);
+ if(!spec.skipStorefront)for(let i=0;i<bays;i++){const x=-w/2+bay*(i+.5);shopBay(b,x,z+.02-(arcade?1.7:0),bay-.24,seed*31+i*17,style+i,front);b.box(wall,x-bay/2+.1,1.98,z+.07,arcade?.42:.2,3.95,arcade?.55:.38);if(arcade)b.solid(x-bay/2+.1,z+.07,.42,.55);yield;}
+ if(!spec.skipStorefront)b.box(wall,w/2-.1,1.98,z+.07,.2,3.95,.38);
  const upperWindows=[];
  if(hero){const ww=Math.min(w-1.7,(h-7)/3),hh=ww*3;wallBanner(b,AD_CATALOG[119],0,5.5+hh/2,z+.08,ww,hh);front.reserve('hero-wallscape',0,5.5+hh/2,ww+.6,hh+.5);}
  else if(parking){for(let f=1;f<n;f++){const y=ground+(f-.5)*fh;b.plane('glass',0,y,z+.03,w-.8,fh-.75);b.box(trim,0,ground+f*fh,z+.25,w,.44,.65);for(let i=0;i<=bays;i++)b.box(trim,-w/2+i*bay,y,z+.24,.32,fh,.57);for(let k=0;k<3;k++)b.box('concrete',0,y-fh*.24+k*.19,z+.28,w,.11,.20);front.reserve('parking-opening',0,y,w,fh-.4);yield;}}

@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: transparent RGBA cutout texture card, horizontal thatch fringe strip.
+Subject: dry layered palm thatch with a long straggly fringe along the bottom.
+Materials/textures: natural dry palm fibers layered densely at the top and hanging loosely below.
+Composition/framing: pure front view, horizontal strip, the top mostly opaque.
+Background: genuinely transparent, including gaps among the long bottom fibers; preserve alpha.
+Constraints: no objects, no background, no support structure, no cast background shadow.
+Aspect ratio: 3:1.

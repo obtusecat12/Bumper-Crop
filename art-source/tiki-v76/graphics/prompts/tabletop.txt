@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: tabletop texture atlas, exactly 2 by 2 equal quadrants with no gutters.
+Composition/framing: flat front photographic texture artwork; square atlas.
+Top-left quadrant: beer bottle paper label with exact text "REEF LAGER" in 1950s typography.
+Top-right quadrant: dark green rum label with exact text "BLACK SAIL RUM".
+Bottom-left quadrant: ceramic green glaze fine wear texture.
+Bottom-right quadrant: cream paper coaster with red geometric sun and no text.
+Style/medium: flat photographic PS2 texture with soft natural grain, no oversharpening.
+Constraints: four equal quadrants, no gutters, no bottle objects, no perspective.
+Aspect ratio: 1:1.

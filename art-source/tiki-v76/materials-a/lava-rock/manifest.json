@@ -1,0 +1,106 @@
+{
+  "material": "lava-rock",
+  "generation": "built-in image_gen.imagegen; one direct generation per material",
+  "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-c3ace1f7-9561-43c8-957a-a010f0bdf8b8.png",
+  "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/original.png",
+  "original_sha256": "08c48097f12e6fe22f11891c921a87189b716b8b74b928718444afb91027fdec",
+  "original_size": [
+    1536,
+    1024
+  ],
+  "prompt": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/prompt.txt",
+  "processing": "Exact mechanical 512x512 crop; no resizing, painting, filtering, channel synthesis, or procedural replacements",
+  "maps": [
+    {
+      "channel": "basecolor",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/basecolor.png",
+      "crop_box_xyxy": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "a124758e1118f29fffc0f63963a0e1792834681eb9fb60e729d5f3f76b22a971"
+    },
+    {
+      "channel": "normal",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/normal.png",
+      "crop_box_xyxy": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "b43cc54d8f4da08c63288a8a832f0d097d49cc465b0a0141f883949a3c051b6d"
+    },
+    {
+      "channel": "roughness",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/roughness.png",
+      "crop_box_xyxy": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "901e7c4fa3765653ff4902eefa999267c1054f4809f653c069460d9baefae132"
+    },
+    {
+      "channel": "ao",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/ao.png",
+      "crop_box_xyxy": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "80b45d56aa99414973314a5f7d684e489897b966f0b173d4c226b652be5b7352"
+    },
+    {
+      "channel": "height",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/height.png",
+      "crop_box_xyxy": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "3442b60f63183e7a6716324372adae3901772cae276cf4597f0ac494bccfcf4d"
+    },
+    {
+      "channel": "metalness",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/lava-rock/metalness.png",
+      "crop_box_xyxy": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "25e5b1af13fe35cd41be8ac23e8bc1081960f863d690cd45f286d92de5a05525"
+    }
+  ],
+  "visual_review": "Six tile order correct; no labels or gutters; corresponding broad surface pattern appears aligned across maps. Generated normal, roughness, AO, height and metalness retained verbatim; exact numerical physical correctness and seamless tiling not guaranteed by image synthesis."
+}

@@ -1,0 +1,152 @@
+{
+  "album": "A",
+  "created_utc": "2026-10-03T09:26:11.463Z",
+  "provenance": "Five separate built-in image_gen calls, one new image per prompt. No web imagery or reference images. Mechanical resizing/format conversion only.",
+  "photos": [
+    {
+      "id": "photo-01",
+      "title": "Steep thatched A-frame exterior on an overcast day",
+      "source": "built-in image_gen independent generation",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-b3845de2-5d07-458d-a8fa-d6444da9de73.png",
+      "original": "photo-01-original.png",
+      "runtime": "photo-01.webp",
+      "prompt_file": "photo-01-prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nscene: a steep thatched A-frame Tiki restaurant exterior on an overcast day; carved wooden tiki posts flank the entrance, broad eaves, tired tropical landscaping and empty asphalt parking foreground. A casually tilted, poorly centered vacation snapshot.\n原始描述: 2000-2010年代照片，展示各种各样的不同的tiki风格酒吧、餐厅、浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nlocation and period: United States; a surviving 1950s Polynesian Pop / Tiki venue photographed circa 2000–2010.\nphoto quality and vibe: ordinary early consumer CCD digital camera snapshot, period-appropriate 2000s low-resolution texture, modest sensor noise, imperfect white balance, slightly soft detail, awkward casual framing, real light from the location, no oversharpening.\naspect ratio: 4:3 landscape\nAvoid: people, collage, excessive yellow, oversharpening.",
+      "requested_aspect_ratio": "4:3",
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_quality": 82,
+      "inspection": {
+        "independently_inspected": true,
+        "people_present": false,
+        "collage": false,
+        "style": "circa 2000–2010 casual consumer CCD snapshot",
+        "accepted": true
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "3084e4a48dcbc8d06631fbcb40774e2dc12e99e0b5603e329f37342ba038fde0",
+      "runtime_sha256": "99f83e8528a46a6ac2869743969a5eb30158591ae62c70fb7c8ec005e375a695"
+    },
+    {
+      "id": "photo-02",
+      "title": "Dark empty bamboo bar with colored fishing floats",
+      "source": "built-in image_gen independent generation",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-b56263fc-0aea-4b15-9505-3b358dd30746.png",
+      "original": "photo-02-original.png",
+      "runtime": "photo-02.webp",
+      "prompt_file": "photo-02-prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nscene: an empty dark bamboo Tiki bar interior; colored glass fishing floats hang from a woven mat ceiling, carved tiki figures behind the vacant bar, bamboo stools, cluttered authentic old Polynesian Pop decor. Available dim bar light and an imperfect early compact-camera snapshot.\n原始描述: 2000-2010年代照片，展示各种各样的不同的tiki风格酒吧、餐厅、浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nlocation and period: United States; a surviving 1950s Polynesian Pop / Tiki venue photographed circa 2000–2010.\nphoto quality and vibe: ordinary early consumer CCD digital camera snapshot, period-appropriate 2000s low-resolution texture, modest sensor noise, imperfect white balance, slightly soft detail, awkward casual framing, real light from the location, no oversharpening.\naspect ratio: 4:3 landscape\nAvoid: people, collage, excessive yellow, oversharpening.",
+      "requested_aspect_ratio": "4:3",
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_quality": 82,
+      "inspection": {
+        "independently_inspected": true,
+        "people_present": false,
+        "collage": false,
+        "style": "circa 2000–2010 casual consumer CCD snapshot",
+        "accepted": true
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "a09676c2cf86e065586248ef2f14cf9d906344f977cfdbb3da410198cb6ecfab",
+      "runtime_sha256": "8a60419ca8553ac67cc6c8bfb28a3023f0d5004586155303c1a1ccad65e7505d"
+    },
+    {
+      "id": "photo-03",
+      "title": "Empty red-booth Tiki dining room",
+      "source": "built-in image_gen independent generation",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-25792b04-e22d-4924-8f14-066025362a11.png",
+      "original": "photo-03-original.png",
+      "runtime": "photo-03.webp",
+      "prompt_file": "photo-03-prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nscene: an empty Tiki restaurant dining room with red vinyl booths; woven wall mats, bamboo dividers, vintage Polynesian Pop carvings, small lamps, vacant tables with folded menus. A mundane off-center snapshot from the aisle.\n原始描述: 2000-2010年代照片，展示各种各样的不同的tiki风格酒吧、餐厅、浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nlocation and period: United States; a surviving 1950s Polynesian Pop / Tiki venue photographed circa 2000–2010.\nphoto quality and vibe: ordinary early consumer CCD digital camera snapshot, period-appropriate 2000s low-resolution texture, modest sensor noise, imperfect white balance, slightly soft detail, awkward casual framing, real light from the location, no oversharpening.\naspect ratio: 4:3 landscape\nAvoid: people, collage, excessive yellow, oversharpening.",
+      "requested_aspect_ratio": "4:3",
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_quality": 82,
+      "inspection": {
+        "independently_inspected": true,
+        "people_present": false,
+        "collage": false,
+        "style": "circa 2000–2010 casual consumer CCD snapshot",
+        "accepted": true
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "34182e7cc2c6a861f1d575170cacc8034ba5cc0eb70f934e9776f58ee1d72748",
+      "runtime_sha256": "23fcac70075787164c4c6412efaf46dbe33f8799c6fdda6d0e0e3617c5028f94"
+    },
+    {
+      "id": "photo-04",
+      "title": "Empty motel Tiki pool under fading daylight",
+      "source": "built-in image_gen independent generation",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-a631e1aa-62ef-4cf2-81fb-03b28537f76e.png",
+      "original": "photo-04-original.png",
+      "runtime": "photo-04.webp",
+      "prompt_file": "photo-04-prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nscene: an empty old American motel Tiki swimming pool under fading daylight; turquoise water, low concrete motel wings, palms, tiki torches and weathered carved figures, simple empty pool chairs. Early 2000s vacation-camera image, awkwardly including too much deck foreground.\n原始描述: 2000-2010年代照片，展示各种各样的不同的tiki风格酒吧、餐厅、浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nlocation and period: United States; a surviving 1950s Polynesian Pop / Tiki venue photographed circa 2000–2010.\nphoto quality and vibe: ordinary early consumer CCD digital camera snapshot, period-appropriate 2000s low-resolution texture, modest sensor noise, imperfect white balance, slightly soft detail, awkward casual framing, real light from the location, no oversharpening.\naspect ratio: 4:3 landscape\nAvoid: people, collage, excessive yellow, oversharpening.",
+      "requested_aspect_ratio": "4:3",
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_quality": 82,
+      "inspection": {
+        "independently_inspected": true,
+        "people_present": false,
+        "collage": false,
+        "style": "circa 2000–2010 casual consumer CCD snapshot",
+        "accepted": true
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "c620a79da31e423a05833c45ebac391dfa62646d173faa10a20eeca0d7ab0661",
+      "runtime_sha256": "3f27cfd5beb2d814cf4c47c996bb54e29b9ea34052d53ee455fbbeafff6e7783"
+    },
+    {
+      "id": "photo-05",
+      "title": "Kitschy volcanic-rock entrance patio",
+      "source": "built-in image_gen independent generation",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-280c9e2a-bd43-4662-b871-da040000c342.png",
+      "original": "photo-05-original.png",
+      "runtime": "photo-05.webp",
+      "prompt_file": "photo-05-prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nscene: a kitschy volcanic-rock entrance patio at an American Tiki bar; rough dark lava-rock walls, chunky carved wooden tiki faces, thatched entrance canopy, tropical plants and an empty weathered footpath. Ordinary daylight, badly centered everyday compact-camera snapshot.\n原始描述: 2000-2010年代照片，展示各种各样的不同的tiki风格酒吧、餐厅、浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nlocation and period: United States; a surviving 1950s Polynesian Pop / Tiki venue photographed circa 2000–2010.\nphoto quality and vibe: ordinary early consumer CCD digital camera snapshot, period-appropriate 2000s low-resolution texture, modest sensor noise, imperfect white balance, slightly soft detail, awkward casual framing, real light from the location, no oversharpening.\naspect ratio: 4:3 landscape\nAvoid: people, collage, excessive yellow, oversharpening.",
+      "requested_aspect_ratio": "4:3",
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_quality": 82,
+      "inspection": {
+        "independently_inspected": true,
+        "people_present": false,
+        "collage": false,
+        "style": "circa 2000–2010 casual consumer CCD snapshot",
+        "accepted": true
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "08195b7f1cceb1b6f649770338e9a72d74f5685b37ad394f363a9267a8848046",
+      "runtime_sha256": "f227d8b7c3c09037da55ea7aa7fe6201c73c2c8447f8077c369535f85ec18e85"
+    }
+  ]
+}

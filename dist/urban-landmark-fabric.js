@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
 import {UrbanBatch} from './urban-batch.js?v=60';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {addStreetwallBuilding} from './urban-streetwall.js?v=60';
+import {addStreetwallBuilding} from './urban-streetwall.js?v=76';
 import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=60';
 import {CITY_ORIGIN,CITY_ANGLE,cityToWorld} from './urban-layout.js?v=60';
 import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=60';
@@ -52,7 +52,7 @@ export function createLandmarkFabric(mats){
   const ext={x0,x1,z0,z1};if(front==='north'){ext.z0-=back;ext.z1+=3.5;}if(front==='south'){ext.z0-=3.5;ext.z1+=back;}if(front==='east'){ext.x0-=back;ext.x1+=3.5;}if(front==='west'){ext.x0-=3.5;ext.x1+=back;}
   slab(frame,key,ext.x0,ext.x1,ext.z0,ext.z1);const footprint=worldPolygon(frame,x0,x1,z0,z1).map(p=>[p[0],p[2]]);parcels.push({...parcel,footprint,buildings:n});
   withFrame(frame,()=>{b.push((x0+x1)/2,.15,(z0+z1)/2,ry);
-   for(let i=0;i<n;i++){const u=-w/2+(i+.5)*step,type=['two_story_shops','corner_market','photo_studio','bank_branch','brick_walkup','laundromat'][(seed+i)%6],heroWall=frame==='clinic'&&seed===54421&&i===1,storeys=heroWall?14:floors+Number(i%3===1);b.push(u,0,0);addStreetwallBuilding(b,{type:heroWall?'brutalist_slab':type,w:step-.018,d,floors:storeys,seed:seed+137*i,lod:1,retailBack,heroWall});const p=b.point(0,0,0);records.push({type,x:p.x,z:p.z,w:step-.018,d,ry:b.frame.ry,floors:storeys,frame,parcel:parcels.length-1,retailBack});b.pop();}
+   for(let i=0;i<n;i++){const u=-w/2+(i+.5)*step,type=['two_story_shops','corner_market','photo_studio','bank_branch','brick_walkup','laundromat'][(seed+i)%6],heroWall=frame==='clinic'&&seed===54421&&i===1,storeys=heroWall?14:floors+Number(i%3===1);b.push(u,0,0);addStreetwallBuilding(b,{type:heroWall?'brutalist_slab':type,w:step-.018,d,floors:storeys,seed:seed+137*i,lod:1,retailBack,heroWall,skipStorefront:seed===54401});const p=b.point(0,0,0);records.push({type,x:p.x,z:p.z,w:step-.018,d,ry:b.frame.ry,floors:storeys,frame,parcel:parcels.length-1,retailBack});b.pop();}
    // Two-storey frontage can still have generous footways: trunks and poles use the curb strip.
    for(let u=-w/2+6.5;u<w/2-3;u+=13)place(b,u,0,d/2+2.65,0,P.addStreetTree,{seed:seed+Math.round(u*3),scale:.62});
    place(b,-w/2+2.2,0,d/2+2.7,0,P.addHydrant);place(b,w/2-2.0,0,d/2+2.6,PI/2,P.addStreetLight,{height:7.6,arm:1.8});if(seed%3===0)place(b,w/2-4.1,0,d/2+2.5,0,P.addTrashBin);

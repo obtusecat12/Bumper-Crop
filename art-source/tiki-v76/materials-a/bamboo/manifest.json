@@ -1,0 +1,106 @@
+{
+  "material": "bamboo",
+  "generation": "built-in image_gen.imagegen; one direct generation per material",
+  "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-d8796830-0aef-4eb1-9afa-9e28f85c9e7f.png",
+  "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/original.png",
+  "original_sha256": "7e427cd16765495f92af185e8950e25d3779bc12cc5f99bc8bf443dd613c8176",
+  "original_size": [
+    1536,
+    1024
+  ],
+  "prompt": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/prompt.txt",
+  "processing": "Exact mechanical 512x512 crop; no resizing, painting, filtering, channel synthesis, or procedural replacements",
+  "maps": [
+    {
+      "channel": "basecolor",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/basecolor.png",
+      "crop_box_xyxy": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "661c5775d3528e32d1ca2c1fe479a2ed15778b4b5fb878e0efd140c091c43980"
+    },
+    {
+      "channel": "normal",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/normal.png",
+      "crop_box_xyxy": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "532d4ffc577a2638ec37381bd15d9d2df699582af708d30fa4ac49d4a9eaa324"
+    },
+    {
+      "channel": "roughness",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/roughness.png",
+      "crop_box_xyxy": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "ec9d86596bb01266ec82598824b48b79691591d58c6b21142ae48392d6181bce"
+    },
+    {
+      "channel": "ao",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/ao.png",
+      "crop_box_xyxy": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "067b5d4a920291f8cf6a206d533153e76dccf36ed42546116657a96a13858678"
+    },
+    {
+      "channel": "height",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/height.png",
+      "crop_box_xyxy": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "064eacceda782d813bc7d38d6dfcc29182c9bc28e4068cfeca63c19095226fe4"
+    },
+    {
+      "channel": "metalness",
+      "file": "/workspace/scratch/85111d38430a/tiki-v76/materials-a/bamboo/metalness.png",
+      "crop_box_xyxy": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "27d75c106ab4ea3a1ff8e2734338fe73c8764c8831c896dfb4cfa914a60c4de5"
+    }
+  ],
+  "visual_review": "Six tile order correct; no labels or gutters; corresponding broad surface pattern appears aligned across maps. Generated normal, roughness, AO, height and metalness retained verbatim; exact numerical physical correctness and seamless tiling not guaranteed by image synthesis."
+}

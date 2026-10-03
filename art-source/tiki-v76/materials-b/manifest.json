@@ -1,0 +1,79 @@
+{
+  "generator": "built-in image_gen",
+  "image_calls": 4,
+  "atlas_layout": {
+    "columns": 3,
+    "rows": 2,
+    "order": [
+      "basecolor",
+      "normal",
+      "roughness",
+      "ao",
+      "height",
+      "metalness"
+    ]
+  },
+  "processing": "Mechanical crop only; square tiles copied from original atlas to 512x512 PNG. No painted or procedural map replacement.",
+  "materials": [
+    {
+      "name": "woven-mat",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-a1c04429-8845-42f4-aa32-d674b87b5eef.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/woven-mat/original.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/woven-mat/prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: aligned PBR material texture atlas for a midcentury Tiki restaurant.\nSubject: brown and tan fine lauhala palm mat, diagonal woven palm strips, natural fine fibers.\nComposition: one flat atlas with exactly six equal square tiles arranged in three columns and two rows. Every tile touches its neighboring tiles, no gutters or margins. Full image aspect ratio 3:2. The same surface pattern, scale and aligned relief in every channel; every square cell is seamless and tileable.\nTop row, left to right: BaseColor; tangent-space Normal in purple and blue; grayscale Roughness.\nBottom row, left to right: grayscale Ambient Occlusion; grayscale Height with white protruding; solid black Metalness.\nBaseColor: neutral unlit photographic material color. Natural grain, PS2 photographic texture quality with mild softness.\nTechnical maps: genuine aligned material channels, not a scene collage. The grain, strips, relief, seams or wear occur at exactly corresponding locations across all six cells. Roughness is grayscale only. AO is grayscale only. Height is grayscale only. Metalness is black.\nAspect ratio: 3:2.\nAvoid: labels, text, watermarks, gutters, scene objects, perspective, lighting baked into basecolor, pixel art, oversharpening.",
+      "maps": {
+        "basecolor": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/woven-mat/basecolor.png",
+        "normal": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/woven-mat/normal.png",
+        "roughness": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/woven-mat/roughness.png",
+        "ao": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/woven-mat/ao.png",
+        "height": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/woven-mat/height.png",
+        "metalness": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/woven-mat/metalness.png"
+      }
+    },
+    {
+      "name": "floor-slate",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-9f085c66-7a19-40c0-ac41-64713de0b03f.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/floor-slate/original.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/floor-slate/prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: aligned PBR material texture atlas for a midcentury Tiki restaurant.\nSubject: irregular reddish brown and charcoal slate paving with narrow dark grouted seams, aged wear.\nComposition: one flat atlas with exactly six equal square tiles arranged in three columns and two rows. Every tile touches its neighboring tiles, no gutters or margins. Full image aspect ratio 3:2. The same surface pattern, scale and aligned relief in every channel; every square cell is seamless and tileable.\nTop row, left to right: BaseColor; tangent-space Normal in purple and blue; grayscale Roughness.\nBottom row, left to right: grayscale Ambient Occlusion; grayscale Height with white protruding; solid black Metalness.\nBaseColor: neutral unlit photographic material color. Natural grain, PS2 photographic texture quality with mild softness.\nTechnical maps: genuine aligned material channels, not a scene collage. The grain, strips, relief, seams or wear occur at exactly corresponding locations across all six cells. Roughness is grayscale only. AO is grayscale only. Height is grayscale only. Metalness is black.\nAspect ratio: 3:2.\nAvoid: labels, text, watermarks, gutters, scene objects, perspective, lighting baked into basecolor, pixel art, oversharpening.",
+      "maps": {
+        "basecolor": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/floor-slate/basecolor.png",
+        "normal": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/floor-slate/normal.png",
+        "roughness": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/floor-slate/roughness.png",
+        "ao": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/floor-slate/ao.png",
+        "height": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/floor-slate/height.png",
+        "metalness": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/floor-slate/metalness.png"
+      }
+    },
+    {
+      "name": "red-vinyl",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-5553591f-eb36-4800-b2c5-ede276f87aa0.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/red-vinyl/original.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/red-vinyl/prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: aligned PBR material texture atlas for a midcentury Tiki restaurant.\nSubject: oxblood red 1950s seat upholstery, subtle leathery grain and contact sheen; no tufting or baked cushion shapes.\nComposition: one flat atlas with exactly six equal square tiles arranged in three columns and two rows. Every tile touches its neighboring tiles, no gutters or margins. Full image aspect ratio 3:2. The same surface pattern, scale and aligned relief in every channel; every square cell is seamless and tileable.\nTop row, left to right: BaseColor; tangent-space Normal in purple and blue; grayscale Roughness.\nBottom row, left to right: grayscale Ambient Occlusion; grayscale Height with white protruding; solid black Metalness.\nBaseColor: neutral unlit photographic material color. Natural grain, PS2 photographic texture quality with mild softness.\nTechnical maps: genuine aligned material channels, not a scene collage. The grain, strips, relief, seams or wear occur at exactly corresponding locations across all six cells. Roughness is grayscale only. AO is grayscale only. Height is grayscale only. Metalness is black.\nAspect ratio: 3:2.\nAvoid: labels, text, watermarks, gutters, scene objects, perspective, lighting baked into basecolor, pixel art, oversharpening.",
+      "maps": {
+        "basecolor": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/red-vinyl/basecolor.png",
+        "normal": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/red-vinyl/normal.png",
+        "roughness": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/red-vinyl/roughness.png",
+        "ao": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/red-vinyl/ao.png",
+        "height": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/red-vinyl/height.png",
+        "metalness": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/red-vinyl/metalness.png"
+      }
+    },
+    {
+      "name": "counter-wood",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-123be0d8-4af2-4999-a75c-47416528129a.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/counter-wood/original.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/counter-wood/prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: aligned PBR material texture atlas for a midcentury Tiki restaurant.\nSubject: deep walnut aged varnished bar counter, longitudinal tropical wood grain with mild water rings.\nComposition: one flat atlas with exactly six equal square tiles arranged in three columns and two rows. Every tile touches its neighboring tiles, no gutters or margins. Full image aspect ratio 3:2. The same surface pattern, scale and aligned relief in every channel; every square cell is seamless and tileable.\nTop row, left to right: BaseColor; tangent-space Normal in purple and blue; grayscale Roughness.\nBottom row, left to right: grayscale Ambient Occlusion; grayscale Height with white protruding; solid black Metalness.\nBaseColor: neutral unlit photographic material color. Natural grain, PS2 photographic texture quality with mild softness.\nTechnical maps: genuine aligned material channels, not a scene collage. The grain, strips, relief, seams or wear occur at exactly corresponding locations across all six cells. Roughness is grayscale only. AO is grayscale only. Height is grayscale only. Metalness is black.\nAspect ratio: 3:2.\nAvoid: labels, text, watermarks, gutters, scene objects, perspective, lighting baked into basecolor, pixel art, oversharpening.",
+      "maps": {
+        "basecolor": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/counter-wood/basecolor.png",
+        "normal": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/counter-wood/normal.png",
+        "roughness": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/counter-wood/roughness.png",
+        "ao": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/counter-wood/ao.png",
+        "height": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/counter-wood/height.png",
+        "metalness": "/workspace/scratch/85111d38430a/tiki-v76/materials-b/counter-wood/metalness.png"
+      }
+    }
+  ]
+}

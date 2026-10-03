@@ -1,0 +1,101 @@
+{
+  "generation_mode": "built-in image_gen",
+  "assets": {
+    "sign": {
+      "source_path": "/workspace/scratch/85111d38430a/generated_images/exec-3d723954-298e-46a2-99c3-2d0ad12db09e.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/originals/sign.png",
+      "original_size": [
+        2172,
+        724
+      ],
+      "original_mode": "RGB",
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/sign.webp",
+      "runtime_size": [
+        1536,
+        512
+      ],
+      "runtime_mode": "RGB",
+      "prompt_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/prompts/sign.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: flat front artwork texture for a roadside bar sign.\nSubject: weathered 1950s American Polynesian Pop roadside bar sign.\nText (verbatim): \"LANTERN REEF\" prominently in vintage hand lettering, with \"TIKI BAR & GRILL\" below.\nColor palette: amber cream, red, and turquoise on very dark wood.\nComposition/framing: pure flat front view, the artwork fills the entire rectangular image.\nConstraints: no frame, no perspective, not a whole facade.\nAspect ratio: 3:1.\n",
+      "sha256": "7927744a759d5b73413428c99646e059f1bb2a54e44072f3be03fc2334f21817",
+      "bytes": 290050
+    },
+    "menu": {
+      "source_path": "/workspace/scratch/85111d38430a/generated_images/exec-5a641bd9-f79e-4825-897a-39bfcdf27639.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/originals/menu.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "original_mode": "RGB",
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/menu.webp",
+      "runtime_size": [
+        768,
+        768
+      ],
+      "runtime_mode": "RGB",
+      "prompt_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/prompts/menu.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: flat menu artwork texture.\nSubject: real 1950s menu that has survived into the 2000s, old laminated menu for LANTERN REEF.\nStyle/medium: slightly worn cream and red menu artwork with restrained tiki woodcut ornaments.\nText (verbatim): venue title \"LANTERN REEF\"; section \"COCKTAILS\" with \"MAI TAI 8.50\", \"BLUE LAGOON 7.50\", \"VIRGIN PUNCH 4.00\"; section \"FROM THE GRILL\" with \"ISLAND CHICKEN 12.50\", \"GRILLED PINEAPPLE 5.00\".\nComposition/framing: pure flat front view, square menu artwork filling the image.\nConstraints: English text, clear and legible typography, same venue title exactly as provided.\nAspect ratio: 1:1.\n",
+      "sha256": "25eb45a204d780d67c0704a75cc19f0c8157f80c653e211f317ebb55d8863246",
+      "bytes": 194380
+    },
+    "fringe": {
+      "source_path": "/workspace/scratch/85111d38430a/generated_images/exec-a68739af-380b-4367-bb28-1c95cb79d166.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/originals/fringe.png",
+      "original_size": [
+        2172,
+        724
+      ],
+      "original_mode": "RGBA",
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/fringe.png",
+      "runtime_size": [
+        1024,
+        342
+      ],
+      "runtime_mode": "RGBA",
+      "prompt_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/prompts/fringe.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: transparent RGBA cutout texture card, horizontal thatch fringe strip.\nSubject: dry layered palm thatch with a long straggly fringe along the bottom.\nMaterials/textures: natural dry palm fibers layered densely at the top and hanging loosely below.\nComposition/framing: pure front view, horizontal strip, the top mostly opaque.\nBackground: genuinely transparent, including gaps among the long bottom fibers; preserve alpha.\nConstraints: no objects, no background, no support structure, no cast background shadow.\nAspect ratio: 3:1.\n",
+      "sha256": "d0cf0b0716ccd3841a6c99dad121853778253c6df3d6c5eb270f47f2ae5e9054",
+      "bytes": 576403,
+      "correction_prompt_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/prompts/fringe-correction.txt",
+      "correction_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: transparent RGBA cutout texture card, horizontal thatch fringe strip.\nSubject: dry layered palm thatch with a long straggly fringe along the bottom.\nMaterials/textures: natural dry palm fibers layered densely at the top and hanging loosely below.\nComposition/framing: pure front view, horizontal strip, the top mostly opaque.\nBackground: genuinely transparent, including gaps among the long bottom fibers; preserve alpha.\nConstraints: no objects, no background, no support structure, no cast background shadow.\nAspect ratio: 3:1.\nCorrection: keep the front-view dry layered palm thatch and the same composition. Remove all red and yellow edge contamination. Make the straw fibers naturally tan and opaque with clean transparent gaps and clean alpha edges. No colored matte, no black matte, no background.\n",
+      "runtime_alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 130760,
+        "mostly_opaque_pixels": 171611
+      }
+    },
+    "tabletop": {
+      "source_path": "/workspace/scratch/85111d38430a/generated_images/exec-32cf7527-4d76-4408-8805-a97318f5642c.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/originals/tabletop.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "original_mode": "RGB",
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/tabletop.webp",
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "runtime_mode": "RGB",
+      "prompt_path": "/workspace/scratch/85111d38430a/tiki-v76/graphics/prompts/tabletop.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: tabletop texture atlas, exactly 2 by 2 equal quadrants with no gutters.\nComposition/framing: flat front photographic texture artwork; square atlas.\nTop-left quadrant: beer bottle paper label with exact text \"REEF LAGER\" in 1950s typography.\nTop-right quadrant: dark green rum label with exact text \"BLACK SAIL RUM\".\nBottom-left quadrant: ceramic green glaze fine wear texture.\nBottom-right quadrant: cream paper coaster with red geometric sun and no text.\nStyle/medium: flat photographic PS2 texture with soft natural grain, no oversharpening.\nConstraints: four equal quadrants, no gutters, no bottle objects, no perspective.\nAspect ratio: 1:1.\n",
+      "sha256": "fbe863b37d47d6727c4127328512e96a442cd7e25219f426b1890c23da8c111f",
+      "bytes": 420990
+    }
+  },
+  "inspection": {
+    "sign": "Exact LANTERN REEF and TIKI BAR & GRILL wording verified.",
+    "menu": "Venue title, both section labels, all five items and prices verified.",
+    "fringe": "RGBA; opaque tan palm fibers with transparent gaps. Very-low-alpha red/yellow RGB values in source do not appear in normal alpha compositing. Alpha preserved by resize.",
+    "tabletop": "Equal 2x2 quadrants; both label texts verified; coaster has no text."
+  },
+  "tabletop_quadrants": {
+    "top_left": "REEF LAGER paper label",
+    "top_right": "BLACK SAIL RUM dark green label",
+    "bottom_left": "green ceramic glaze",
+    "bottom_right": "cream coaster with red sun"
+  }
+}

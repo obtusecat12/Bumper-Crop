@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+primary request: 2000-2010年代照片，展示各种各样的不同的tiki风格酒吧、餐厅、浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+scene: a thatched indoor tiki bar dining counter in the United States, photographed circa 2000–2010, empty during the daytime.
+subject: thatch over the dining counter, bamboo and wood bar surfaces, empty stools.
+photo quality and vibe: casual CCD compact digital camera snapshot from 2000–2010, imperfect focus, awkward casual framing, daytime ambient light with direct camera flash.
+aspect ratio: 4:3
+constraints: one independent photograph, no people, no collage.
