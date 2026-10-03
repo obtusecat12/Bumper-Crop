@@ -1,0 +1,6 @@
+Use case: stylized-concept
+Asset type: square seamless tileable hair diffuse texture for a low polygon PS1 / early PS2 human head scalp mesh, later reduced to 128x128 nearest.
+Primary request: edge-to-edge macro photographic texture of neat SHORT BLACK COILED HUMAN HAIR, short tightly curled afro hair strand clumps for a Black adult male bartender. Very dark espresso black with restrained dark brown diffuse highlights, the compact tight curls have realistic subtle clumped curls and irregular organic flow. Entire image is hair material from edge to edge with no visible scalp skin.
+Style/medium: realistic scanned hair material, photo-baked strands, broad coarse texture clumps remain legible at low resolution, subtle photographic grit like a 1990s game diffuse map. Flat diffuse indoor ambient illumination, no strong directional light.
+Composition/framing: flat material tile, no head silhouette, no portrait, no hairline shape. Seamless repeating square, all opposite edges match.
+Constraints: no skin, eyes, human silhouette, body, background, borders, text, watermark, gloss, cartoon, painted strokes.

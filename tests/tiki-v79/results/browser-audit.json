@@ -1,0 +1,42 @@
+{
+  "renderer": "Chromium WebGL2 via SwiftShader software; not hardware FPS",
+  "runtimeErrors": [],
+  "previewBlinkWarm": {
+    "programsBefore": 40,
+    "programsAfter": 40,
+    "texturesBefore": 194,
+    "texturesAfter": 194
+  },
+  "sevenActorCPUUpdateMs": {
+    "median": 0.1,
+    "p95": 0.3,
+    "samples": 120
+  },
+  "fullGame": {
+    "actorCount": 7,
+    "programsAfterEntry": 107,
+    "postWarmProgramDelta": 0,
+    "reentryMs": 398.4,
+    "cachedSceneReused": true,
+    "cachedActorsReused": true,
+    "originRestored": {
+      "level": 10,
+      "cx": "0",
+      "cz": "0",
+      "x": 0.6,
+      "z": 52
+    }
+  },
+  "longDressWorldBounds": {
+    "min": [
+      2.65968,
+      0.279978,
+      -0.73312
+    ],
+    "max": [
+      3.2829,
+      0.9516,
+      -0.26688
+    ]
+  }
+}

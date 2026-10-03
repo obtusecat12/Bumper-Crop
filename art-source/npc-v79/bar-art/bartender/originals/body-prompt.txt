@@ -1,0 +1,10 @@
+Use case: stylized-concept
+Asset type: square 2x2 clothing-only UV diffuse atlas for a low polygon PS1 / early PS2 bartender character, later reduced to 128x128 nearest.
+Input images: Image 1 is the atlas contract / layout reference ONLY. Image 2 is only a style reference for photo-baked retro realism.
+Primary request: One completely filled square texture atlas with exactly four equal square quadrants, zero gutters and zero borders. Each quadrant is a flat continuous cloth surface extending to all four quadrant edges, with photo-baked folds and seams. Clothing for an adult male tiki bar bartender: cream linen shirt with rolled sleeves, dark teal waistcoat, charcoal trousers.
+TOP LEFT quadrant: front torso cloth. A dark teal waistcoat with a centered row of small aged black buttons and a shallow V top showing a narrow cream shirt placket/collar, cream cloth at the far sides. No neck skin. Rectangular fabric surface, dark teal predominates.
+TOP RIGHT quadrant: back torso cloth, same dark teal waistcoat, upper shoulder seams, subtle back panel seam, broad soft vertical folds. Fully fills its quadrant.
+BOTTOM LEFT quadrant: cream rolled-shirt sleeve surface, broad cream linen with restrained wrinkles, a horizontal rolled cuff cloth seam near the bottom edge. Just cloth, no arm, hand, skin or elbow drawing.
+BOTTOM RIGHT quadrant: charcoal trouser cloth, subtle woven fabric, long shallow vertical creases, seam and worn broad shading. Just cloth, no legs or shoe shapes.
+Style/medium: scanned real garments with photo-baked broad folds, seam shadows, linen weave, restrained worn texture and diffuse shading, late-1990s survival horror texture aesthetic. Natural subdued texture, no flat vector shapes, no illustration. Consistent soft ambient light. Cloth markings are baked texture, not 3D renders of bodies.
+Constraints: absolutely no head, skin, hands, painted limbs, limbs silhouettes, anatomical outlines, isolated garments on background, neck holes with skin, mannequin, empty areas, labels, letters, text, watermark, frame or spaces between tiles. Atlas must use all pixels as the four specified continuous cloth surface maps.

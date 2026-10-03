@@ -1,0 +1,80 @@
+{
+  "generation": "builtin image_gen",
+  "final_resolution": [
+    128,
+    128
+  ],
+  "body_atlas_image_quadrants": {
+    "TL": "front torso",
+    "TR": "back torso",
+    "BL": "sleeves",
+    "BR": "trousers"
+  },
+  "coordinates": "Fractional texture image coordinates, image y starts at top. UV v=1-imageY. noseY is nose base; mouthY is lip seam.",
+  "blink_identity": "Each blink was generated as an identity-preserving edit, resized, then composited only within feathered ocular masks over the original face. All pixels outside ocular masks are identical to open face.",
+  "roles": {
+    "waiter": {
+      "eyeY": 0.357,
+      "noseY": 0.607,
+      "mouthY": 0.788,
+      "chinY": 0.99,
+      "leftEyeX": 0.281,
+      "rightEyeX": 0.714,
+      "safeCheekSkinUV": {
+        "u": 0.1,
+        "v": 0.35
+      },
+      "skinColorApprox": "#ae795a",
+      "files": [
+        "face.png",
+        "face-blink.png",
+        "hair.png",
+        "body.png",
+        "skin.png"
+      ],
+      "clothing": "ivory service jacket, black bowtie, charcoal trousers"
+    },
+    "orderingmale": {
+      "eyeY": 0.34,
+      "noseY": 0.566,
+      "mouthY": 0.739,
+      "chinY": 0.99,
+      "leftEyeX": 0.32,
+      "rightEyeX": 0.698,
+      "safeCheekSkinUV": {
+        "u": 0.1,
+        "v": 0.38
+      },
+      "skinColorApprox": "#a67453",
+      "files": [
+        "face.png",
+        "face-blink.png",
+        "hair.png",
+        "body.png",
+        "skin.png"
+      ],
+      "clothing": "muted rust patterned open-neck shirt, warm gray trousers"
+    },
+    "eldermale": {
+      "eyeY": 0.337,
+      "noseY": 0.598,
+      "mouthY": 0.755,
+      "chinY": 0.99,
+      "leftEyeX": 0.293,
+      "rightEyeX": 0.714,
+      "safeCheekSkinUV": {
+        "u": 0.1,
+        "v": 0.4
+      },
+      "skinColorApprox": "#ac8268",
+      "files": [
+        "face.png",
+        "face-blink.png",
+        "hair.png",
+        "body.png",
+        "beard.png"
+      ],
+      "clothing": "olive shirt under brown knit cardigan, taupe trousers; glasses intentionally absent from face"
+    }
+  }
+}

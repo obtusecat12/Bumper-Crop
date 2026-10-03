@@ -1,0 +1,158 @@
+{
+  "role": "barwoman",
+  "adultAge": 35,
+  "hair": "auburn shoulder-length bob",
+  "clothing": "deep burgundy floral long dress",
+  "generator": "built-in image_gen.imagegen",
+  "runtimeSize": [
+    128,
+    128
+  ],
+  "processing": "Generated full-canvas sources; RGB conversion and BOX downsample only. No painted or procedural textures.",
+  "sourceSize": [
+    1254,
+    1254
+  ],
+  "files": {
+    "body.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v79/women-art/barwoman/body.png",
+      "sha256": "348bd8c3b7f4872ba9eb0357422a77c2c3558bdf1d4e4659b45bf988ebb1c83a"
+    },
+    "dress-fabric.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v79/women-art/barwoman/dress-fabric.png",
+      "sha256": "0c30ee489076438a65895c56c961ceec9fec460ed6bd68f496dcb1604feac6df"
+    },
+    "face-blink.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v79/women-art/barwoman/face-blink.png",
+      "sha256": "d2ad9d29fe29dfcc429527d9fb57c539ba09389977ce0472553d19dc95dc5459"
+    },
+    "face.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v79/women-art/barwoman/face.png",
+      "sha256": "19be72d8e276e68cea8d0486470816792000abe28097fa695406eb0a23027047"
+    },
+    "hair.png": {
+      "path": "/workspace/scratch/85111d38430a/npc-v79/women-art/barwoman/hair.png",
+      "sha256": "cb001b48e2fb78627fe13a9ab93b6aeda5f1823f429ecb389399d3ff2550e448"
+    }
+  },
+  "imageLandmarks": {
+    "leftEyeX": 0.296875,
+    "rightEyeX": 0.703125,
+    "eyeY": 0.359375,
+    "noseY": 0.5859375,
+    "mouthY": 0.78125,
+    "chinY": 0.953125
+  },
+  "landmarkDefinition": "X normalized from image left; Y normalized from image top. Eye centers measured on the displayed runtime face; noseY is tip, mouthY is center of closed mouth, chinY is lower central chin. Values quantized to 128-pixel landmark positions.",
+  "uvLandmarks": {
+    "leftEye": [
+      0.296875,
+      0.640625
+    ],
+    "rightEye": [
+      0.703125,
+      0.640625
+    ],
+    "nose": [
+      0.5,
+      0.4140625
+    ],
+    "mouth": [
+      0.5,
+      0.21875
+    ],
+    "chin": [
+      0.5,
+      0.046875
+    ]
+  },
+  "safeCheekSkinUV": [
+    0.17,
+    0.4
+  ],
+  "safeCheekSkinUVAlternatives": {
+    "left": [
+      0.17,
+      0.4
+    ],
+    "right": [
+      0.83,
+      0.4
+    ]
+  },
+  "safeCheekSkinUVRect": {
+    "left": {
+      "u": [
+        0.1,
+        0.22
+      ],
+      "v": [
+        0.29,
+        0.48
+      ]
+    },
+    "right": {
+      "u": [
+        0.78,
+        0.9
+      ],
+      "v": [
+        0.29,
+        0.48
+      ]
+    }
+  },
+  "bodyAtlasUV": {
+    "frontTorso": {
+      "u": [
+        0,
+        0.5
+      ],
+      "v": [
+        0.5,
+        1
+      ]
+    },
+    "backTorso": {
+      "u": [
+        0.5,
+        1
+      ],
+      "v": [
+        0.5,
+        1
+      ]
+    },
+    "sleeveCloth": {
+      "u": [
+        0,
+        0.5
+      ],
+      "v": [
+        0,
+        0.5
+      ]
+    },
+    "skirtCloth": {
+      "u": [
+        0.5,
+        1
+      ],
+      "v": [
+        0,
+        0.5
+      ]
+    }
+  },
+  "uvConvention": "v = 1 - normalized imageY",
+  "recommendedTextureSampling": "NearestFilter for runtime min/mag; no mipmaps to preserve vintage pixel detail",
+  "blink": "Identity-preserving generated edit with closed eyes; same UV crop and composition.",
+  "originals": "/workspace/scratch/85111d38430a/npc-v79/women-art/barwoman/archive",
+  "prompts": {
+    "barwoman_face": "Use case: photorealistic-natural\nAsset type: square photo-baked face UV texture for a PS1/early-PS2 adult game NPC, to be reduced to 128x128.\nPrimary request: create one full-bleed flat front orthographic facial texture of a distinct adult woman age 35, European ancestry, natural slightly tired everyday features, light warm skin, subtle freckles, brown eyes, auburn hairline confined to the very top edge. She has shoulder-length auburn bob hair in the game, but this is FACE SKIN ONLY.\nComposition/framing: perfectly frontal and symmetrical camera, zero head turn or perspective; crop from forehead hairline at the top border down through the chin at the bottom border, cheek skin reaching the left and right borders. No neck, no shoulders, no background, no portrait framing. Eyes open, neutral relaxed closed mouth. Forehead, both eyebrows, eyes, nose, lips and chin all present. Eye centers near x 0.28 and 0.72, image y 0.35; nose tip near y 0.61; mouth center near y 0.77; chin near y 0.96. Broad cheek skin suitable for wrapping around low-poly geometry.\nStyle/medium: believable photograph baked into a vintage low-resolution game texture. Flat diffuse light, gentle baked eye-socket and nose shading, restrained muted colors, visibly blocky photo detail at the eventual 128 pixel resolution. Natural pores and slight uneven skin tone. No beauty retouching.\nConstraints: no hair locks across forehead or cheeks, no glossy makeup, no eyeliner, no glamor, no anime, no cartoon, no painted illustration, no 3D model render, no ears sticking into the frame, no borders, no labels, no text, no watermark. The entire canvas is usable face skin rather than a person on a backdrop.",
+    "barwoman_blink": "Use case: identity-preserve\nAsset type: blink variant of the supplied face UV texture.\nInput image: the supplied image is the EDIT TARGET, not inspiration.\nPrimary request: close both eyes naturally in a relaxed blink, changing only the eyelid surfaces and lashes. Create closed eyelids for this exact same adult woman.\nConstraints: keep every other pixel region visually unchanged: identical full-canvas UV crop, face width, forehead, auburn hairline, freckles, eyebrows, nose, mouth, chin, skin tone, lighting, image size and straight-on projection. Preserve the exact woman's identity. No eye whites or irises visible. Thin natural closed-lash lines at the existing eye positions. Keep the mouth neutral. No smoothing, glamour, expression change, head shift, zoom, new hair or background.",
+    "barwoman_hair": "Use case: photorealistic-natural\nAsset type: seamless square hair material UV tile for an auburn shoulder-length bob on a low-poly adult female PS1/early PS2 NPC, to become 128x128.\nPrimary request: full-canvas photograph-like baked HAIR STRANDS ONLY, warm dark auburn and chestnut brown with restrained copper strands; straight smooth downward vertical strands and a few gently bending fine strands. An everyday auburn bob, matte and naturally uneven.\nLighting/mood: flat neutral diffuse light with gentle baked dark strand valleys. Low contrast, no shiny specular white streaks.\nConstraints: seamless repeating texture horizontally and vertically; hair fills every pixel to all four edges; no head, face, skin, scalp, silhouette, hairstyle portrait, hair ends, ponytail tie, background, text, watermark, illustration or cartoon. Photo-derived vintage game material, suitable for reducing to 128 pixels, broad strand groups readable at low resolution.",
+    "barwoman_body": "Use case: photorealistic-natural\nAsset type: square 2x2 clothing UV atlas for a low-poly adult woman PS1/early PS2 NPC, to become 128x128 pixels.\nPrimary request: a deep burgundy wine-red modest long dress with short sleeves, small repeating faded cream five-petal flowers, dusty pink flowers and muted olive leaves. Real woven crepe fabric, everyday dress, gentle baked folds, no glamorous costume.\nComposition: exact equal 2x2 quadrants with boundaries at 50 percent x and y. TOP LEFT: front torso dress texture filling the entire quadrant, modest shallow curved neckline at its very top center, subtle bodice seams and vertical folds. TOP RIGHT: back torso dress texture filling quadrant, high back neckline near top center, gentle vertical folds. BOTTOM LEFT: flat close-up sleeve cloth and folds from the exact same burgundy floral fabric, no skin. BOTTOM RIGHT: flat close-up long skirt cloth from the same burgundy floral fabric with long soft vertical folds, no skin and no trousers. Every quadrant fills its entire rectangular area.\nStyle: believable photographed fabric baked into a vintage low-resolution texture, softly mottled and lightly blurred, diffuse neutral lighting, no glossy shine.\nConstraints: square atlas only, no outlines, dividing bars, gaps, unused background, garment silhouettes, mannequins, bodies, faces, hands, accessories, labels, numbers, text, watermark. The four quadrants directly abut. Do not draw the complete dress as an object. This is a full-canvas UV material sheet.",
+    "barwoman_dress_fabric": "Use case: photorealistic-natural\nAsset type: seamless square cloth material UV tile for the long skirt of a PS1/early PS2 woman's dress, to become 128x128.\nPrimary request: deep burgundy wine-red crepe woven fabric with small repeating vintage faded cream five-petal flowers, dusty pink flowers, and muted olive leaves. Scattered small floral sprigs with ample burgundy space between them. Real everyday dress cloth, fine visible weave, matte diffuse light, slight gently baked vertical creasing.\nComposition: full-canvas flat orthographic fabric swatch from edge to edge, flower and leaf scale fairly small, seamless tiling horizontally and vertically.\nConstraints: only fabric, no garment outlines, complete dress, neckline, buttons, human, skin, background, gaps, seams, labels, borders, text or watermark. Photographic texture, no cartoon or painted illustration, neutral illumination without dramatic gradient, appropriate for reducing to 128x128."
+  }
+}

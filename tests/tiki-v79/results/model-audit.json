@@ -1,0 +1,106 @@
+{
+  "roles": [
+    {
+      "role": "bartender",
+      "bodyTriangles": 1032,
+      "totalTriangles": 1400,
+      "maxHandTargetErrorMetres": 0.0027262521772584342,
+      "feetDriftMetres": {
+        "L": 0.0001712044272701748,
+        "R": 0.00017109366095433034
+      },
+      "headMotionRadians": 0.10000011530356105,
+      "chestScaleMotion": 0.003200054168701172,
+      "rigBones": 19,
+      "poseHz": 30
+    },
+    {
+      "role": "sleeper",
+      "bodyTriangles": 1032,
+      "totalTriangles": 1032,
+      "maxHandTargetErrorMetres": 0.0008473579428261565,
+      "feetDriftMetres": {
+        "L": 0,
+        "R": 0
+      },
+      "headMotionRadians": 0,
+      "chestScaleMotion": 0.003200054168701172,
+      "rigBones": 19,
+      "poseHz": 30
+    },
+    {
+      "role": "barwoman",
+      "bodyTriangles": 1032,
+      "totalTriangles": 1152,
+      "maxHandTargetErrorMetres": 0.0016854363731388542,
+      "feetDriftMetres": {
+        "L": 7.633533779309689e-8,
+        "R": 1.1287490214430064e-7
+      },
+      "headMotionRadians": 0.03300085386534671,
+      "chestScaleMotion": 0.003200054168701172,
+      "rigBones": 19,
+      "poseHz": 30
+    },
+    {
+      "role": "waiter",
+      "bodyTriangles": 1032,
+      "totalTriangles": 1064,
+      "maxHandTargetErrorMetres": 0.0010952845007146707,
+      "feetDriftMetres": {
+        "L": 0.0001368987902097712,
+        "R": 0.0002594980481129506
+      },
+      "headMotionRadians": 0.025004028473216287,
+      "chestScaleMotion": 0.003200054168701172,
+      "rigBones": 19,
+      "poseHz": 30
+    },
+    {
+      "role": "orderer",
+      "bodyTriangles": 1032,
+      "totalTriangles": 1032,
+      "maxHandTargetErrorMetres": 0.001521389175320942,
+      "feetDriftMetres": {
+        "L": 1.1017514884717189e-7,
+        "R": 1.1017514884717189e-7
+      },
+      "headMotionRadians": 0.02500514193450022,
+      "chestScaleMotion": 0.003200054168701172,
+      "rigBones": 19,
+      "poseHz": 30
+    },
+    {
+      "role": "elder",
+      "bodyTriangles": 1236,
+      "totalTriangles": 1348,
+      "maxHandTargetErrorMetres": 0.0011042280837860246,
+      "feetDriftMetres": {
+        "L": 1.085237934362885e-7,
+        "R": 1.085237934362885e-7
+      },
+      "headMotionRadians": 0.09229147324966236,
+      "chestScaleMotion": 0.003200054168701172,
+      "rigBones": 19,
+      "poseHz": 30
+    },
+    {
+      "role": "asianwoman",
+      "bodyTriangles": 1068,
+      "totalTriangles": 1068,
+      "maxHandTargetErrorMetres": 0.001288284834402759,
+      "feetDriftMetres": {
+        "L": 1.1050644706242736e-7,
+        "R": 1.1050644706242736e-7
+      },
+      "headMotionRadians": 0.045002097351653454,
+      "chestScaleMotion": 0.003200054168701172,
+      "rigBones": 19,
+      "poseHz": 30
+    }
+  ],
+  "pourFrames": 84,
+  "maxPourXZ": 0.000652139915187866,
+  "uniqueFaces": 7,
+  "uniqueClothes": 7
+}

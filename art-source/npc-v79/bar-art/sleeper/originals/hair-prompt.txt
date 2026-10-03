@@ -1,0 +1,6 @@
+Use case: stylized-concept
+Asset type: square seamless tileable hair diffuse texture for a low polygon PS1 / early PS2 aging human head scalp mesh, later reduced to 128x128 nearest.
+Primary request: edge-to-edge macro photographic texture of SHORT MEDIUM DARK BROWN HUMAN HAIR with a few subtle gray strands, fine slightly wavy dry hair combed loosely into soft organic strand clumps for a balding adult man aged 50. Warm chestnut-brown lowlights with restrained brown diffuse highlights, realistic short hair clumps and irregular brushed flow. Entire image is hair material from edge to edge with no visible scalp skin. Baldness will be represented by geometry / a separate skin material, not painted into this material map.
+Style/medium: realistic scanned hair material, photo-baked strands, broad coarse strand clumps legible at low resolution, subtle photographic grit like a 1990s game diffuse texture. Flat diffuse indoor ambient illumination, no strong directional light, no glossy highlights.
+Composition/framing: flat material tile, no head silhouette, no portrait, no hairline shape. Seamless repeating square with opposite edges matching, hair direction slightly irregular enough that repeated texture looks organic.
+Constraints: no skin, eyes, human silhouette, body, background, borders, text, watermark, fur curls, cartoon, painted strokes.

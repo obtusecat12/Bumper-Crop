@@ -1,0 +1,26 @@
+{
+  "generation_mode": "built-in image_gen",
+  "source": "chrome_diffuse_original.png",
+  "source_size": [
+    1254,
+    1254
+  ],
+  "runtime": "chrome_diffuse_128.png",
+  "runtime_size": [
+    128,
+    128
+  ],
+  "resampling": "Lanczos",
+  "source_box": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "uv_orientation": {
+    "u": "horizontal, circumference",
+    "v": "vertical, height"
+  },
+  "purpose": "baked reflective stainless steel diffuse for Lambert materials",
+  "prompt": "chrome_prompt.txt"
+}

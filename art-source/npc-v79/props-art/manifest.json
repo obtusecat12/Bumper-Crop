@@ -1,0 +1,105 @@
+{
+  "generation_mode": "built-in image_gen",
+  "source_size": [
+    1254,
+    1254
+  ],
+  "source": "props_atlas_original.png",
+  "normalized_source": "props_atlas_1024.png",
+  "runtime_size": [
+    128,
+    128
+  ],
+  "resampling": "Lanczos",
+  "crop_coordinates": "left, upper, right-exclusive, lower-exclusive",
+  "textures": [
+    {
+      "runtime": "menu_diffuse_128.png",
+      "original": "menu_diffuse_original.png",
+      "native_box": [
+        0,
+        0,
+        627,
+        627
+      ],
+      "atlas_1024_box": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "uv_box_top_left_origin": [
+        0.0,
+        0.0,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "runtime": "order_pad_diffuse_128.png",
+      "original": "order_pad_diffuse_original.png",
+      "native_box": [
+        627,
+        0,
+        1254,
+        627
+      ],
+      "atlas_1024_box": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "uv_box_top_left_origin": [
+        0.5,
+        0.0,
+        1.0,
+        0.5
+      ]
+    },
+    {
+      "runtime": "steak_diffuse_128.png",
+      "original": "steak_diffuse_original.png",
+      "native_box": [
+        0,
+        627,
+        627,
+        1254
+      ],
+      "atlas_1024_box": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "uv_box_top_left_origin": [
+        0.0,
+        0.5,
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "runtime": "rum_label_diffuse_128.png",
+      "original": "rum_label_diffuse_original.png",
+      "native_box": [
+        627,
+        627,
+        1254,
+        1254
+      ],
+      "atlas_1024_box": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "uv_box_top_left_origin": [
+        0.5,
+        0.5,
+        1.0,
+        1.0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "role": "bartender",
+  "identity": "Adult Black male, age 40, short coiled black hair, neat short beard, cream rolled-sleeve shirt and dark teal waistcoat",
+  "generationMode": "built-in imagegen",
+  "runtime": {
+    "width": 128,
+    "height": 128,
+    "filter": "nearest",
+    "colorMode": "RGB"
+  },
+  "files": {
+    "face": "face.png",
+    "blink": "face-blink.png",
+    "hair": "hair.png",
+    "body": "body.png"
+  },
+  "landmarkConvention": "fractions of image width/height, image origin at top-left; eye X are image-left and image-right, not character anatomical left/right",
+  "faceLandmarks": {
+    "eyeY": 0.36328125,
+    "noseY": 0.5625,
+    "mouthY": 0.7421875,
+    "chinY": 0.984375,
+    "leftEyeX": 0.30859375,
+    "rightEyeX": 0.69140625
+  },
+  "faceLandmarkPixels128": {
+    "leftEye": [
+      39.5,
+      46.5
+    ],
+    "rightEye": [
+      88.5,
+      46.5
+    ],
+    "nose": [
+      64,
+      72
+    ],
+    "mouth": [
+      64,
+      95
+    ],
+    "chin": [
+      64,
+      126
+    ]
+  },
+  "skinPatch": {
+    "imageXY": [
+      0.19921875,
+      0.46484375
+    ],
+    "safeUV": [
+      0.19921875,
+      0.53515625
+    ],
+    "pixel128": [
+      25,
+      59
+    ],
+    "rgb": [
+      168,
+      95,
+      54
+    ],
+    "description": "left cheek below outer eye; clear skin without beard, eye or nose"
+  },
+  "bodyAtlas": {
+    "imageRectFractions": {
+      "front": [
+        0,
+        0,
+        0.5,
+        0.5
+      ],
+      "back": [
+        0.5,
+        0,
+        1,
+        0.5
+      ],
+      "sleeves": [
+        0,
+        0.5,
+        0.5,
+        1
+      ],
+      "trousers": [
+        0.5,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "uvRectFractions": {
+      "front": [
+        0,
+        0.5,
+        0.5,
+        1
+      ],
+      "back": [
+        0.5,
+        0.5,
+        1,
+        1
+      ],
+      "sleeves": [
+        0,
+        0,
+        0.5,
+        0.5
+      ],
+      "trousers": [
+        0.5,
+        0,
+        1,
+        0.5
+      ]
+    }
+  },
+  "originals": {
+    "resolution": [
+      1254,
+      1254
+    ],
+    "location": "originals",
+    "crop": "full square images, no crop needed",
+    "resize": "nearest neighbor to 128x128"
+  },
+  "notes": [
+    "Face and blink produced from one identity-preserving eye edit.",
+    "Hair generated as seamless material; runtime cap must restrict bald/skin surfaces to skin patch if any.",
+    "All artwork is photo-baked surface detail; body atlas contains no skin or painted limbs."
+  ]
+}

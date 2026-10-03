@@ -1,0 +1,30 @@
+Use case: stylized-concept
+Asset type: retro PS1/PS2 game diffuse texture atlas for Tiki bar NPC hand props.
+Primary request: A precisely square 1024 by 1024 image containing four flat square diffuse textures arranged in a strict 2 by 2 atlas. Every quadrant is exactly 512 by 512, edge-to-edge, no gutters, no gaps, no captions outside the assets. The vertical split is at x=512 and horizontal split at y=512. No perspective; every asset is a front-on orthographic flat surface for UV mapping. Natural photobaked detail, 1980s worn Tiki restaurant objects; restrained dirty cream, burgundy, brown and faded amber. The image must remain readable and useful when each quadrant is downsampled to 128 by 128. Broad bold shapes and large text, slightly grainy realistic surface details, no cartoons, no pixel-art outlines, no modern design.
+
+TOP LEFT QUADRANT: A folded cream paper Tiki dinner menu with a subtle central vertical fold, worn edges and a few tea-colored stains; front flat face covers the full square. Burgundy classic serif printing. Compact restrained palm/frond ornament only in corners. Exactly these English text lines, each clear and spelled correctly, large enough to survive reduction:
+"LANTERN REEF"
+"DINNER"
+"GRILLED STEAK 18"
+"ISLAND FISH 16"
+"ROAST CHICKEN 14"
+"GREEN LAGOON 8"
+Make the restaurant heading broad and legible at top, DINNER below; four meal-and-price lines below with generous vertical spacing. No other text, no extra glyphs.
+
+TOP RIGHT QUADRANT: A waiter's ruled cream order pad, flat front sheet covering the entire square, lightly soiled paper with faded blue horizontal ruling and red left margin. A few dark graphite pencil handwritten meal orders in large plain readable handwritten letters. Exactly:
+"2 STEAK"
+"1 FISH"
+"1 CHICKEN"
+"2 GREEN LAGOON"
+One short pencil tick beside each line. No other text, no people, no attached pencil, no hand, no gibberish.
+
+BOTTOM LEFT QUADRANT: Realistic cooked beef steak seen precisely overhead, seared dark brown surface with several clear diagonal near-black grill marks and browned fatty edges. An irregular steak covers nearly the whole square, broadly squared-off silhouette; one small sliced piece along right edge reveals muted pink cooked interior. Only a narrow beige ceramic plate sliver at corners. Food diffuse texture for an irregular steak mesh; beef surface fills 85 percent of the square. Warm muted brown photobaked light, diffuse and shallow; no strong directional shadows. No vegetables, no garnish, no utensils, no table, no text.
+
+BOTTOM RIGHT QUADRANT: An aged rectangular dark-rum bottle paper label, flat front surface covering the square. Muted amber, cream and dark brown, stained slightly cracked stock, period-appropriate thin ornamental double border, simple palm medallion small and subtle. Large classic English serif printing with the exact text:
+"REEF RESERVE"
+"DARK RUM"
+"1986"
+"40% ALC/VOL"
+No other text or gibberish. The first two lines dominate the label, lower lines clear and spaced. No bottle body, no reflection, no cap.
+
+Constraints: exactly four quadrants, no overlap, no image title, no watermark. Flat photo-derived game textures, not product photos in a room. All essential shapes and text have generous internal padding to avoid cropping. Preserve exact English spelling.

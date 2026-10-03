@@ -1,0 +1,14 @@
+{
+  "project": "npc-v79 women texture assets",
+  "root": "/workspace/scratch/85111d38430a/npc-v79/women-art",
+  "roles": {
+    "barwoman": "/workspace/scratch/85111d38430a/npc-v79/women-art/barwoman/manifest.json",
+    "young-asian": "/workspace/scratch/85111d38430a/npc-v79/women-art/young-asian/manifest.json"
+  },
+  "prompts": "/workspace/scratch/85111d38430a/npc-v79/women-art/prompts.json",
+  "contactSheet": "/workspace/scratch/85111d38430a/npc-v79/women-art/runtime-contact.png",
+  "allRuntimeTextureSize": [
+    128,
+    128
+  ]
+}

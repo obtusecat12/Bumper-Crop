@@ -1,0 +1,7 @@
+Use case: identity-preserve
+Asset type: production video game front face UV map, a closed-eyes blink variant of the exact supplied face texture.
+Input image: the provided image is the EDIT TARGET. Preserve its exact identity, pixel layout, texture boundaries, head pose, skin coloring, hairstyle, eyebrows, nose, nostrils, mouth, beard, chin, cheeks, forehead, lighting and facial proportions.
+Primary request: Change ONLY both eyes to naturally fully CLOSED neutral blink lids. Replace exposed eyeballs with natural brown eyelid skin inside each existing eye region. Eyebrows and surrounding eye creases stay exactly unchanged. Closed lids with a thin realistic dark lash line, with no squint or smile, no expression change.
+Composition/framing: preserve the entire square flat front face UV map unchanged, from hairline top to chin bottom, cheeks running to both borders. The closed lid horizontal centers sit exactly at the previous pupils. No rescaling, no recropping, no expansion, no rotation.
+Style/medium: identical photo-baked facial realism to input, no cartoon, no painterly transformation.
+Constraints: the ONLY visible difference from input is that the two eyes are closed; no new features, no text, no frame, no background.
