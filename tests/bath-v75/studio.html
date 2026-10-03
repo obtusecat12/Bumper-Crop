@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:#383b3c}canvas{display:block}#title{position:fixed;left:15px;top:12px;color:#ddd;font:16px Arial}</style></head><body><div id="title">NPC V75 · geometry inspection</div><script type="module">
+import * as T from '/vendor/three.module.min.js';
+import {createRetroActor75,RETRO_ROLES75} from '/retro-cast-v75.js';
+const renderer=new T.WebGLRenderer({antialias:false,preserveDrawingBuffer:true});renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;document.body.append(renderer.domElement);
+const scene=new T.Scene();scene.background=new T.Color(0x42484a);scene.add(new T.HemisphereLight(0xf2eada,0x7c8c88,2));const key=new T.DirectionalLight(0xffe8cc,2.1);key.position.set(-2,4,5);scene.add(key);
+const camera=new T.PerspectiveCamera(42,innerWidth/innerHeight,.03,30),assets={},loader=new T.TextureLoader();let actor,role='poolman';
+await Promise.all(RETRO_ROLES75.map(async r=>{assets[r]={};await Promise.all(['face','body','hair',...(r==='homeless'?[]:['face-blink'])].map(async k=>assets[r][k==='face-blink'?'faceBlink':k]=await loader.loadAsync('/textures/npc-v75/'+r+'/'+k+'.png')));}));
+const newspaper=await loader.loadAsync('/textures/npc-v75/reader-newspaper-128.png');
+function render(){renderer.render(scene,camera);}
+function select(r){role=r;actor?.dispose();actor=createRetroActor75(T,r,{...assets[r],newspaper},{phase:0,seatHeight:r==='plaid'?.42347:.557});scene.add(actor.group);actor.samplePose(0);view('front');document.querySelector('#title').textContent=r+' · '+actor.diagnostics.triangles+' triangles';return actor.diagnostics;}
+function view(name){const seated=['reader','plaid','homeless'].includes(role),cy=seated?.80:1.0,head=role==='homeless'?.91:role==='reader'?1.40:role==='plaid'?1.28:1.69;
+ const views={front:{p:[0,cy+.12,3.4],q:[0,cy,0]},three:{p:[2,cy+.25,3],q:[0,cy,0]},side:{p:[3,cy+.1,0],q:[0,cy,0]},head:{p:[.32,head+.03,.73],q:[0,head,.015]}};const v=views[name];camera.position.set(...v.p);camera.lookAt(...v.q);camera.updateMatrixWorld();render();}
+window.studio={select,view,render,get actor(){return actor;},renderer,scene,camera};select(role);document.body.dataset.ready='true';
+</script></body></html>

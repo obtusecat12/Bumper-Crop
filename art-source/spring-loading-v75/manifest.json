@@ -1,0 +1,362 @@
+{
+  "album": "岩体泉加载幻灯",
+  "created_at": "2026-10-03",
+  "image_count": 10,
+  "required_prompt": "2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好",
+  "aspect_ratio": "4:3 landscape",
+  "processing": "Original PNG files preserved unchanged. Runtime WebP files mechanically resized to long edge 1024. No recoloring, compositing, content changes or copied variants.",
+  "entries": [
+    {
+      "id": 1,
+      "scene": "沙漠旅馆粗岩温泉日光",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n沙漠旅馆粗岩温泉日光。",
+      "prompt_file": "prompts/spring-01.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-cb8148a2-84c2-4c95-ae59-9ce7e05fa735.png",
+      "original": "originals/spring-01.png",
+      "runtime": "spring-01.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；旧低层旅馆、粗岩池与阳光过曝，普通CCD色差和随手取景。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 126100,
+      "original_bytes": 2543326,
+      "original_sha256": "aa63999963b86c71ae2e340e6846adc855ac387b45f0a852f207cf15975ad0d3",
+      "runtime_sha256": "510ee711770a77db6c14f3387aa6ea576a9b33dd133a3e7ca8093c5f735b45e7",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    },
+    {
+      "id": 2,
+      "scene": "昏暗人造洞穴浴池",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n昏暗人造洞穴浴池。",
+      "prompt_file": "prompts/spring-02.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-c43c540f-78ac-4155-858e-f189af6e626e.png",
+      "original": "originals/spring-02.png",
+      "runtime": "spring-02.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；岩洞多池、暗部噪点与局部灯光，年代感可信。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 52336,
+      "original_bytes": 2034835,
+      "original_sha256": "d21be81d3827002c203d4ca007100f9d4178bc5698d58a2a6310388990ee01b2",
+      "runtime_sha256": "f2176600432c30380088617dfbfc6a841c168b0cb5e5fbe90e3a7b0ab86e02d8",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    },
+    {
+      "id": 3,
+      "scene": "森林天然石岸热泉",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n森林天然石岸热泉。",
+      "prompt_file": "prompts/spring-03.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-7e222752-e249-4eed-a263-60d4fad85cee.png",
+      "original": "originals/spring-03.png",
+      "runtime": "spring-03.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；森林河岸天然石池，灰淡色彩与不完整取景。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 133194,
+      "original_bytes": 2687161,
+      "original_sha256": "612b77144ebbed2231b9c7b29171ea667fef8ef375458680610e8ca23d47c105",
+      "runtime_sha256": "9b00b06bf56b522e1262e9ce76041eca6040f12d25027a00836dc27c61bc6316",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    },
+    {
+      "id": 4,
+      "scene": "公路小镇旧室内石造泡池",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n公路小镇旧室内石造泡池。",
+      "prompt_file": "prompts/spring-04.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-76cc6913-6d62-40c9-958a-1f1133d40f34.png",
+      "original": "originals/spring-04.png",
+      "runtime": "spring-04.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；旧石墙、简易水管和普通窗框，随手拍摄曝光。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 87828,
+      "original_bytes": 2283509,
+      "original_sha256": "bd54b3197f4628a86e22ecf5d37ce66f998c90733e4b7025853d27a483ba9d01",
+      "runtime_sha256": "4f08f48935f24b6e1a5b07469d54045fbbcb1d3b15b1424d40e8511ffa38e60f",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    },
+    {
+      "id": 5,
+      "scene": "夜间褐色岩洞玉绿色池",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n夜间褐色岩洞玉绿色池。",
+      "prompt_file": "prompts/spring-05.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-e1d3b354-2eed-4c16-a5c4-1a417c975300.png",
+      "original": "originals/spring-05.png",
+      "runtime": "spring-05.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；褐色岩洞与玉绿池水，黄灯高光溢出、暗部柔软。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 56684,
+      "original_bytes": 2046436,
+      "original_sha256": "1e98f9ed89210d798c88fb9bbe87dd76d0c260fc50c79c1119f6796f186e7692",
+      "runtime_sha256": "3c324ca551203f3f8cf1b733e936814ddb9cb8b39245d1d3b28dd7191d297a49",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    },
+    {
+      "id": 6,
+      "scene": "雨天旧度假村岩间小池",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n雨天旧度假村岩间小池。",
+      "prompt_file": "prompts/spring-06.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-5e7b3cf7-20e2-4fa3-a0df-a381c89136db.png",
+      "original": "originals/spring-06.png",
+      "runtime": "spring-06.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；旧木建筑和石池雨景，蒸汽、灰天与偏斜取景。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 85888,
+      "original_bytes": 2384322,
+      "original_sha256": "0b5a387c119f6491b141e305ebfe51dc66397c7e6f8e04e1d5ad134d27beec47",
+      "runtime_sha256": "16db29cd2ce57181731eaac103c87a5bf3cc9aea459a92eee53b2e8103f89c64",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    },
+    {
+      "id": 7,
+      "scene": "黄灯地下岩石浴场",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n黄灯地下岩石浴场。",
+      "prompt_file": "prompts/spring-07.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-8bb87515-ff2c-4d71-9bd5-248d68c2da39.png",
+      "original": "originals/spring-07.png",
+      "runtime": "spring-07.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；地下岩石浴场黄灯色偏明显，旧式扶手与粗石池沿。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 78528,
+      "original_bytes": 2182759,
+      "original_sha256": "33834dfcc5d4a4fee00fbf0b79768c12623cdcf3c2e064a1070dd0c556a3053d",
+      "runtime_sha256": "a418fd078351f43455f7d4849241c9d3019948c3ad2c5b171f9fd9ba3a9ee1df",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    },
+    {
+      "id": 8,
+      "scene": "加州山坡露天石池",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n加州山坡露天石池。",
+      "prompt_file": "prompts/spring-08.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-b9a4be78-8021-47a9-8863-e48d6efe635b.png",
+      "original": "originals/spring-08.png",
+      "runtime": "spring-08.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；山坡天然石池和远山，天空过曝、水平线偏斜。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 88236,
+      "original_bytes": 2332840,
+      "original_sha256": "4ef879fb762b07a03c1498a5682e837803be7e7e1dac0bdacd8047f0ca079ccd",
+      "runtime_sha256": "dea5934acb68a7f5c726e9c28a246e507aac5eb29798750d1d7b542fb59f7b69",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    },
+    {
+      "id": 9,
+      "scene": "低天花拱顶矿泉老浴场",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n低天花拱顶矿泉老浴场。",
+      "prompt_file": "prompts/spring-09.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-517cf9e5-9fdd-4ace-a4b9-2c54ba5b594b.png",
+      "original": "originals/spring-09.png",
+      "runtime": "spring-09.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；低拱顶、老石墙与矿泉池，直闪前景和暖灯背景。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 103262,
+      "original_bytes": 2454460,
+      "original_sha256": "733c84bb3663fc80568480b5891f8e799828464dc38395595d31ff5c7c896c36",
+      "runtime_sha256": "5c4a99b9cd72b27f390e6d64e3463de6ef09bde3e9d3e686f41afb8757fba72f",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    },
+    {
+      "id": 10,
+      "scene": "冬季树林中的蒸汽岩泉",
+      "prompt": "生成一张独立照片，4:3横幅普通CCD数码相机照片，平常不完美。不要拼图，不要现代网红豪华，不要无人机，不要艺术构图，不要强HDR，不要过度清晰。\n2000-2010年代照片，展示各种各样的不同的岩间温泉或者浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\n冬季树林中的蒸汽岩泉。",
+      "prompt_file": "prompts/spring-10.txt",
+      "generation_tool": "image_gen.imagegen",
+      "generation_mode": "independent single image; no reference image",
+      "source_generated_path": "/workspace/scratch/85111d38430a/generated_images/exec-6b002819-1010-484a-96a2-d66e7683c6cc.png",
+      "original": "originals/spring-10.png",
+      "runtime": "spring-10.webp",
+      "qa": {
+        "visually_reviewed": true,
+        "people_visible": false,
+        "era_style": "2000-2010 ordinary CCD snapshot",
+        "notes": "无人；雪林、蒸汽与岩池，雾气模糊与冷灰CCD色调。"
+      },
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime_dimensions": [
+        1024,
+        768
+      ],
+      "runtime_bytes": 77568,
+      "original_bytes": 2307378,
+      "original_sha256": "608331a2b92e470b11166c127b87bf60b7b33fbc435e8408c481493a15cf02fb",
+      "runtime_sha256": "6e8bdf4df7fe06a1d1845963f375ee312c69013250b583e6e429aec5273e80d7",
+      "runtime_encoding": {
+        "format": "WebP",
+        "quality": 82,
+        "method": 6,
+        "resize": "Lanczos, long edge 1024, aspect ratio preserved"
+      }
+    }
+  ],
+  "runtime_total_bytes": 889624,
+  "original_total_bytes": 23257026
+}

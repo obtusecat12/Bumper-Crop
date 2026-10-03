@@ -1,0 +1,6 @@
+Use case: stylized-concept
+Asset type: ONE square tileable matte short-hair diffuse color texture for a low polygon early PS2 realistic male NPC; a flat surface material only.
+Primary request: close-up top-down scan of short sandy blond hair, muted ochre-brown roots and lighter dull beige-blond fine hair, unified gently swept-back strand direction and a subtle off-center scalp whorl. It should suit a 42 year old blond man with a receding hairline, but the image itself has no head outline or bald skin.
+Composition: densely filled edge-to-edge square of actual hair surface, uniform density. No face, scalp bald patch, skin, ears, neck, head silhouette, hairstyle portrait, clothing, background, objects, border, lettering.
+Style: believable photographic diffuse hair material for a realistic 2001–2004 PS2 game, restrained coarse color and fine directional locks that will read at 128x128. Low contrast. Short cut hair, not fur or long wispy hair.
+Lighting: neutral soft diffuse illumination, entirely matte, no bright white specular strands, no golden metallic sheen, no directional cast shadows. One texture image only, no atlas or collage.

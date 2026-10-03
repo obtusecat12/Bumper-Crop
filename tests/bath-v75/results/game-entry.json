@@ -1,0 +1,41 @@
+{
+  "renderer": "Chrome ANGLE SwiftShader software WebGL2; not hardware FPS",
+  "entry": {
+    "springWarm": true,
+    "backToBath": true,
+    "level": 11,
+    "poseRestored": true,
+    "maxSamplers": 16,
+    "programs": 170
+  },
+  "actorUpdates": [
+    {
+      "role": "reader",
+      "triangles": 1112,
+      "poseHz": 24,
+      "eyeChanges": 8,
+      "updates": 196
+    },
+    {
+      "role": "plaid",
+      "triangles": 1032,
+      "poseHz": 30,
+      "eyeChanges": 4,
+      "updates": 232
+    },
+    {
+      "role": "receptionist",
+      "triangles": 1188,
+      "poseHz": 24,
+      "eyeChanges": 6,
+      "updates": 196
+    },
+    {
+      "role": "poolman",
+      "triangles": 1260,
+      "poseHz": 24,
+      "eyeChanges": 4,
+      "updates": 196
+    }
+  ]
+}

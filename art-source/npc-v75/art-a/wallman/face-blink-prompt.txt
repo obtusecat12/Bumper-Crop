@@ -1,0 +1,6 @@
+Use case: identity-preserve
+Asset type: closed-eye blink variant of the provided exact square diffuse face UV texture.
+Image 1 is the EDIT TARGET, preserve its exact dimensions and pixel layout.
+Change ONLY the two eyelids: close BOTH eyes naturally in a peaceful normal blink, replacing the visible eyeballs with relaxed skin eyelids and thin natural closure creases. The eyelids are at approximately y=42% and left x=33%, right x=67%.
+Keep absolutely everything else identical: facial identity, forehead, eyebrows and their position, nose, cheeks, lower eye bags, ears absence, hair and hairline, mouth, chin, face width, all skin tones, pore texture, shadows, original framing, and pixel alignment. No image crop, no resizing, no head movement, no lighting changes, no beautification.
+The image must remain the same front-facing realistic PS2 photographed diffuse face texture. Do not redraw the face. No dark black eyeliner. No eye opening. Exactly one image.

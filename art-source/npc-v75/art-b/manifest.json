@@ -1,0 +1,126 @@
+{
+  "generator": "built-in image_gen",
+  "texture_resolution": [
+    128,
+    128
+  ],
+  "color_space": "sRGB",
+  "resampling": "Lanczos",
+  "roles": {
+    "reader": {
+      "files": {
+        "face": "/workspace/scratch/85111d38430a/npc-v75/art-b/reader/face.png",
+        "blink": "/workspace/scratch/85111d38430a/npc-v75/art-b/reader/face-blink.png",
+        "hair": "/workspace/scratch/85111d38430a/npc-v75/art-b/reader/hair.png",
+        "face_source": "/workspace/scratch/85111d38430a/npc-v75/art-b/reader/face-source.png",
+        "blink_source": "/workspace/scratch/85111d38430a/npc-v75/art-b/reader/face-blink-generated.png",
+        "hair_source": "/workspace/scratch/85111d38430a/npc-v75/art-b/reader/hair-source.png",
+        "blink_mask": "/workspace/scratch/85111d38430a/npc-v75/art-b/reader/blink-mask.png"
+      },
+      "source_resolution": [
+        1254,
+        1254
+      ],
+      "landmarks_uv_top_origin": {
+        "eye_centers": [
+          [
+            0.307,
+            0.365
+          ],
+          [
+            0.701,
+            0.365
+          ]
+        ],
+        "nose_bottom": [
+          0.5,
+          0.605
+        ],
+        "mouth_center": [
+          0.5,
+          0.746
+        ],
+        "chin": [
+          0.5,
+          0.95
+        ]
+      },
+      "blink_regions_xyxy_px": [
+        [
+          24,
+          40,
+          55,
+          57
+        ],
+        [
+          73,
+          40,
+          104,
+          57
+        ]
+      ],
+      "blink_changed_pixel_count": 1051,
+      "blink_changes_outside_eye_regions": 0
+    },
+    "plaid": {
+      "files": {
+        "face": "/workspace/scratch/85111d38430a/npc-v75/art-b/plaid/face.png",
+        "blink": "/workspace/scratch/85111d38430a/npc-v75/art-b/plaid/face-blink.png",
+        "hair": "/workspace/scratch/85111d38430a/npc-v75/art-b/plaid/hair.png",
+        "face_source": "/workspace/scratch/85111d38430a/npc-v75/art-b/plaid/face-source.png",
+        "blink_source": "/workspace/scratch/85111d38430a/npc-v75/art-b/plaid/face-blink-generated.png",
+        "hair_source": "/workspace/scratch/85111d38430a/npc-v75/art-b/plaid/hair-source.png",
+        "blink_mask": "/workspace/scratch/85111d38430a/npc-v75/art-b/plaid/blink-mask.png"
+      },
+      "source_resolution": [
+        1254,
+        1254
+      ],
+      "landmarks_uv_top_origin": {
+        "eye_centers": [
+          [
+            0.331,
+            0.375
+          ],
+          [
+            0.668,
+            0.375
+          ]
+        ],
+        "nose_bottom": [
+          0.5,
+          0.606
+        ],
+        "mouth_center": [
+          0.5,
+          0.718
+        ],
+        "chin": [
+          0.5,
+          0.956
+        ]
+      },
+      "blink_regions_xyxy_px": [
+        [
+          27,
+          42,
+          57,
+          57
+        ],
+        [
+          70,
+          42,
+          100,
+          57
+        ]
+      ],
+      "blink_changed_pixel_count": 889,
+      "blink_changes_outside_eye_regions": 0
+    }
+  },
+  "prompt_files": [
+    "/workspace/scratch/85111d38430a/npc-v75/art-b/prompts.json",
+    "/workspace/scratch/85111d38430a/npc-v75/art-b/blink-prompt.txt"
+  ],
+  "notes": "Measured landmarks are approximate visual positions normalized from top-left. Generations did not meet requested landmark heights exactly; use measured landmarks for UV placement. Blink is a mechanical eye-region composite; all other final pixels equal face.png."
+}

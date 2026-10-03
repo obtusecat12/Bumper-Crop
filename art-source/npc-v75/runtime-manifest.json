@@ -1,0 +1,221 @@
+{
+  "runtimeTextures": [
+    {
+      "path": "dist/textures/npc-v75/homeless/body.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "3c84df07f5911399093f0315d30444d7e3655cfd8e24cfebc695382c1adbbb0e"
+    },
+    {
+      "path": "dist/textures/npc-v75/homeless/face.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "156658a5db6306f43e668a8c2708dcc4e23f87f12c285786dbe3ad5ef8387da5"
+    },
+    {
+      "path": "dist/textures/npc-v75/homeless/hair.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "d676aaab24b85a3fbcd27ac55d72af2dcf380ec3d7acdf9ccfba4e8d3cd1164e"
+    },
+    {
+      "path": "dist/textures/npc-v75/ochre-water-streaks-128.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "c846017230926e7835cddfa0dc298dde31101316d240224cccc6b534225a3296"
+    },
+    {
+      "path": "dist/textures/npc-v75/old-pier-label-128.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "5216e321dffec1bf85009aefd39b806fa75f12abaafbd93bcfad0f01b95e8033"
+    },
+    {
+      "path": "dist/textures/npc-v75/plaid/body.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "dfeadd6321d2e46898df669b5c3d4a558b556bc52cbfd7c06275485277f87c6d"
+    },
+    {
+      "path": "dist/textures/npc-v75/plaid/face-blink.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "f2119a1a545b2d4f69d46ac0ef26a9e4d361191c361a1dc98d70c10ee69752d7"
+    },
+    {
+      "path": "dist/textures/npc-v75/plaid/face.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "fc11bb35acad6c0fe0fb4f49fb1d3ac169681faa0008c2b5e41c3f532ff6d1b0"
+    },
+    {
+      "path": "dist/textures/npc-v75/plaid/hair.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "b75854a8897f65e9fca2834c6206d7713d29a493021dd869b00b1d2f3550e14f"
+    },
+    {
+      "path": "dist/textures/npc-v75/poolman/body.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "8e3059ca3f88e20793740ba2326660409932f06f22808bcd42173aea4a4d14b8"
+    },
+    {
+      "path": "dist/textures/npc-v75/poolman/face-blink.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "281f5ec250dd4dbbe1544a9d186169846f025f1841b90a08008ba1d6c2c2b5fd"
+    },
+    {
+      "path": "dist/textures/npc-v75/poolman/face.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "c807c66710df2611be92c665dfb2336516f86a3390f7eb745f628af82b976521"
+    },
+    {
+      "path": "dist/textures/npc-v75/poolman/hair.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "4b481d34a6be4cfce37b6a756fe082b35c3bcf59caed50aadc79ac58a7e35e3d"
+    },
+    {
+      "path": "dist/textures/npc-v75/reader/body.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "807b699abe46ec89b98aef1efbf61de1049d187af0c27bedc1af70da126ce0f4"
+    },
+    {
+      "path": "dist/textures/npc-v75/reader/face-blink.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "e3943bf053608c741a6d16cd8b80743277980f587e1a425647580d7031ff6b70"
+    },
+    {
+      "path": "dist/textures/npc-v75/reader/face.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "1bd645260a0d54ca7cb42d3198707e8f9c6af85d837d25a3d20f1703ce636710"
+    },
+    {
+      "path": "dist/textures/npc-v75/reader/hair.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "508df4be0312c672c17536bdcae76ee9f5d4e7092cadd9b3a96b95b97e8ed2ef"
+    },
+    {
+      "path": "dist/textures/npc-v75/reader-newspaper-128.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "f7063f1be7de9b96876b226213926a61d2b1d3be8010e42422e50713513e2678"
+    },
+    {
+      "path": "dist/textures/npc-v75/receptionist/body.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "30e21258cfda9d345f14fe45437df9b4752ad2d412c6da90c6452cfd67cc7f87"
+    },
+    {
+      "path": "dist/textures/npc-v75/receptionist/face-blink.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "5890453b7713834301b5a60b48c5de83b4fb28b0bbd9a175aaffcb9b9d2ef29d"
+    },
+    {
+      "path": "dist/textures/npc-v75/receptionist/face.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "45198a3bbf17f526069f37f2be41f5c5cf9248fcdb8b8e637c3f8e24da85a132"
+    },
+    {
+      "path": "dist/textures/npc-v75/receptionist/hair.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "e0a1f238ce4d7161d57090db0b3cb4b6c654e3e297d999b422eb03b090a2b06e"
+    },
+    {
+      "path": "dist/textures/npc-v75/rubber-mat-128.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "7a7e4eafaf6ba6c4bf6a88953d7b6ffcb0899975626fa076c23fc229c93cde99"
+    },
+    {
+      "path": "dist/textures/npc-v75/wallman/body.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "0927f1b0584ef88ff4996568277bc459f5ed4f0d0cbe3dfa9d8e9c0a9fae5245"
+    },
+    {
+      "path": "dist/textures/npc-v75/wallman/face-blink.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "ace0521c1e7c44cb919b5abb87cac3a641836d01777be244e88810dd3b631c5e"
+    },
+    {
+      "path": "dist/textures/npc-v75/wallman/face.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "1897f3432a52b02da99e43fcad8506e46688695fad6fdf6239cba57756af2b42"
+    },
+    {
+      "path": "dist/textures/npc-v75/wallman/hair.png",
+      "pixels": [
+        128,
+        128
+      ],
+      "sha256": "4743658b542edfa09b6fd08339960ca58d6aeea733f321e04463bd60e5bbafe3"
+    }
+  ],
+  "provenance": "Independent ImageGen original images and prompts in art-a, art-b, art-c, clothes. Mechanical downsample and eye-region crop only. Three repeated prop textures originate in art-source/npc-v74."
+}

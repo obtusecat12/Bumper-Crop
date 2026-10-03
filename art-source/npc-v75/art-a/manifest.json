@@ -1,0 +1,92 @@
+{
+  "generator": "built-in image_gen; five independent one-image calls",
+  "postprocess": "Full-image LANCZOS resize to 128x128. wallman blink: mechanically copied generated eyelid rectangles onto original; no painting or procedural texture generation.",
+  "runtimeSize": [
+    128,
+    128
+  ],
+  "roles": {
+    "homeless": {
+      "runtime": [
+        "homeless/face.png",
+        "homeless/hair.png"
+      ],
+      "source": [
+        "homeless/face-source.png",
+        "homeless/hair-source.png"
+      ],
+      "eyes": "closed",
+      "landmarksApproxTopOrigin": {
+        "eyeY": 0.44,
+        "noseBaseY": 0.65,
+        "mouthY": 0.758,
+        "chinY": 0.97,
+        "eyeX": [
+          0.328,
+          0.666
+        ]
+      },
+      "description": "55-year-old weathered man, dark brown tousled short hair, grey-brown beard; eyes naturally closed"
+    },
+    "wallman": {
+      "runtime": [
+        "wallman/face.png",
+        "wallman/face-blink.png",
+        "wallman/hair.png"
+      ],
+      "source": [
+        "wallman/face-source.png",
+        "wallman/face-blink-generated-source.png",
+        "wallman/face-blink-source.png",
+        "wallman/hair-source.png"
+      ],
+      "eyes": "calm relaxed open; paired closed-eyelid variant",
+      "landmarksApproxTopOrigin": {
+        "eyeY": 0.414,
+        "noseBaseY": 0.636,
+        "mouthY": 0.742,
+        "chinY": 0.967,
+        "eyeX": [
+          0.333,
+          0.666
+        ]
+      },
+      "description": "42-year-old sturdy fair-skinned blond man, broad nose and jaw, clean-shaven with natural follicle detail",
+      "blinkCopiedPixelBoxes128": [
+        [
+          26,
+          49,
+          56,
+          61
+        ],
+        [
+          72,
+          49,
+          102,
+          61
+        ]
+      ],
+      "blinkCopiedPixelBoxesSource": [
+        [
+          251,
+          477,
+          552,
+          594
+        ],
+        [
+          702,
+          477,
+          1003,
+          594
+        ]
+      ]
+    }
+  },
+  "prompts": [
+    "homeless/face-prompt.txt",
+    "homeless/hair-prompt.txt",
+    "wallman/face-prompt.txt",
+    "wallman/face-blink-prompt.txt",
+    "wallman/hair-prompt.txt"
+  ]
+}

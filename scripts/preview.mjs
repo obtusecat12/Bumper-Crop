@@ -17,6 +17,12 @@ async function visualCheck(url){
 createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://terminal.local');
+  if(url.pathname==='/__game-v75.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end((await readFile(resolve(root,'index.html'),'utf8')).replace('./boot.js?v=75','/__boot-v75.js'));return;}
+  if(url.pathname==='/__boot-v75.js'){res.writeHead(200,{'Content-Type':types['.js'],'Cache-Control':'no-store'});res.end((await readFile(resolve(root,'boot.js'),'utf8')).replace('./main.js?v=75','/__main-v75.js'));return;}
+  if(url.pathname==='/__main-v75.js'){res.writeHead(200,{'Content-Type':types['.js'],'Cache-Control':'no-store'});res.end((await readFile(resolve(root,'main.js'),'utf8'))+'\nwindow.v75QA={state,enterCity,enterBath,enterSpring,leaveSpring,setPlay,camera,renderer,get bath(){return bathhouse},get spring(){return spring},get loading(){return bathLoading},get ready(){return ready}};');return;}
+  if(url.pathname==='/__alley-v75.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/bath-v75/alley.html')));return;}
+  if(url.pathname==='/__bath-v75.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/bath-v75/preview.html')));return;}
+  if(url.pathname==='/__npc-v75.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/bath-v75/studio.html')));return;}
   if(url.pathname==='/__alley-v74.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/bath-v74/alley.html')));return;}
   if(url.pathname==='/__bath-v74.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/bath-v74/preview.html')));return;}
   if(url.pathname==='/__bath-v73.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/bath-v73/preview.html')));return;}

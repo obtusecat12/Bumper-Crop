@@ -1,4 +1,4 @@
-import {createIndoorOccupants74,initializeRetroTextures74} from './retro-occupants-v74.js';
+import {createIndoorOccupants75,initializeRetroTextures75} from './retro-occupants-v75.js';
 import {createReceptionAtmosphere73} from './reception-furniture-v73.js';
 import {buildChangingRoom72,CHANGING_POINT_LIGHTS} from './changing-room-v72.js?v=73';
 import {createChangingEffects} from './changing-effects-v72.js';
@@ -9,7 +9,7 @@ import {SPA} from './spa-layout-v66.js';
 import {createSpa,SPA_LIGHTS} from './spa-scene-v66.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {bathTextures} from './bath-textures.js?v=62';
-import {BATH_POOL,SHOWER_HEADS} from './bathhouse-layout.js?v=66';
+import {BATH_POOL,SHOWER_HEADS} from './bathhouse-layout.js?v=75';
 import {buildBathRefit} from './bath-v61-interior.js?v=73';
 import {showerMaterials} from './bath-v62-materials.js?v=62';
 import {bathRefitMaterials} from './bath-v61-materials.js?v=61';
@@ -77,7 +77,7 @@ export function* buildBathhouseSteps(){
  const spa=createSpa(scene),showers=scene.userData.showerWater;scene.traverse(o=>{if(o.isLight||o===changing.fan||o.parent===changing.fan)o.layers.enable(5);});yield{progress:.94,label:'准备水疗池'};
  scene.userData.showerWater={get active(){return showers.active||spa.stats.visible;},prepare(renderer){showers.prepare(renderer);},bind(color,depth,w,h,camera){showers.bind(color,depth,w,h,camera);if(spa.stats.visible)spa.water.bind(color,depth,w,h,camera);}};
  scene.userData.springVolume={compose(renderer,color,depth,camera,w,h){const picture=spa.compose(renderer,color,depth,camera,w,h);return changingFX.compose(renderer,picture,depth,camera,w,h);}};
- const occupants=createIndoorOccupants74(scene);
+ const occupants=createIndoorOccupants75(scene);
  let active=false;
  function update(t,player){occupants.update(t,player);refit.update(t);spa.update(t,player);changing.update(t);receptionAtmosphere.update(t,player);changingFX.setTime(t);lights[2].intensity=BATH_LIGHTS[2].power;}
  async function prepareEnvironment(renderer,report=()=>{}){await refit.prepareEnvironment(renderer,p=>report(p*.5));await spa.prepareEnvironment(renderer,p=>report(.5+p*.5));}
@@ -89,5 +89,5 @@ export function* buildBathhouseSteps(){
 }
 
 export function createBathhouse(){const builder=buildBathhouseSteps();let step;while(!(step=builder.next()).done){}return step.value;}
-export async function prepareBathhouse(report=()=>{}){await initializeRetroTextures74();const builder=buildBathhouseSteps();let step;while(!(step=builder.next()).done){report(step.value.progress,step.value.label);await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));}return step.value;}
+export async function prepareBathhouse(report=()=>{}){await initializeRetroTextures75();const builder=buildBathhouseSteps();let step;while(!(step=builder.next()).done){report(step.value.progress,step.value.label);await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));}return step.value;}
 export const ALL_BATH_LIGHTS=[...BATH_LIGHTS,...SPA_LIGHTS,...CHANGING_POINT_LIGHTS];

@@ -1,0 +1,7 @@
+Use case: stylized-concept
+Asset type: a single square diffuse albedo HAIR SURFACE texture for the hair mesh of a photo-textured early PS2 videogame human.
+Primary request: gray-white natural mature woman's hair, soft short waves, fine silver-gray and warm white strands flowing in one coherent direction from top toward bottom, with a gentle sideways sweep compatible with a side-parted short wavy bob hairstyle. This is a close-up material swatch of the surface of hair, NOT a hairstyle photo or a head.
+Composition: the whole image edge-to-edge is densely filled with a contiguous hair surface. No isolated clump outlines, no hair silhouette, no head, no face, no scalp, no skin, no ears, no background, no empty space. Shallow softly irregular bands of gray and white strands with subtle natural waviness. The same consistent root-to-tip strand flow runs through the full sheet. 
+Style: photography-derived, humble early-2000s low-resolution character texture meant for 128x128 downscaling, diffuse color with restrained baked depth, nonmetallic hair, naturally imperfect. Medium gray recesses, predominantly pale gray-white strands, no jet-black grooves.
+Lighting: soft flat diffuse indoor illumination, mild local baked strand shadows only, no dramatic spotlight, no polished highlights.
+Avoid: portrait, wig, scalp patch, complete haircut, head-shaped object, background, cartoon, vector lines, modern CGI gloss, extreme high contrast, flowing long hair, text, watermark.

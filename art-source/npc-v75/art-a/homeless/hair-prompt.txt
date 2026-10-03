@@ -1,0 +1,6 @@
+Use case: stylized-concept
+Asset type: ONE square tileable matte hair diffuse color texture for a low polygon early PS2 realistic human NPC, full square surface texture only.
+Primary request: a close, flat top-down scan of short messy dark-brown hair with a few grey-brown strands, natural uniform strand flow with one very subtle scalp whorl. A believable hair color surface for a 55 year old man's small low-poly hair cap.
+Composition: every pixel is hair surface; absolutely no head outline, no face, no ears, no skin, no body, no objects, no background, no scalp bald spot, no lettering. Neutral flat texture viewpoint, even density across entire square, not a hairstyle portrait. Small directional locks, restrained random messiness.
+Style: photographed baked diffuse texture used in an early 2000s PS2 game, coarse natural detail suitable for direct downsampling to 128 by 128 pixels. Deep brown and muted grey-brown colors; avoid pure black mass or bright silver threads.
+Lighting: fully matte, softly and evenly lit, no painted gloss streaks, no harsh highlights, no specular lighting or dramatic shadow. Produce one image only, no collage.

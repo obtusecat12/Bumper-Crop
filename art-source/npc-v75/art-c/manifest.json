@@ -1,0 +1,172 @@
+{
+  "root": "/workspace/scratch/85111d38430a/npc-v75/art-c",
+  "method": "Built-in image_gen, one image per call; Pillow used only for eye-area pixel compositing and Lanczos reduction. No model, material, skeleton, or scene code changed.",
+  "coordinates": "UV landmark values measured approximately from natural face source; origin at upper-left. Adapt mesh UVs to these values.",
+  "target_size": [
+    128,
+    128
+  ],
+  "roles": {
+    "receptionist": {
+      "eyeY": 0.337,
+      "noseY": 0.636,
+      "mouthY": 0.779,
+      "chinY": 0.936,
+      "eyeX": [
+        0.282,
+        0.731
+      ],
+      "source_size": [
+        1254,
+        1254
+      ],
+      "landmarks_are_estimates": true,
+      "assets": {
+        "face": {
+          "path": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/face.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "45198a3bbf17f526069f37f2be41f5c5cf9248fcdb8b8e637c3f8e24da85a132"
+        },
+        "face-blink": {
+          "path": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/face-blink.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "5890453b7713834301b5a60b48c5de83b4fb28b0bbd9a175aaffcb9b9d2ef29d"
+        },
+        "hair": {
+          "path": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/hair.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "e0a1f238ce4d7161d57090db0b3cb4b6c654e3e297d999b422eb03b090a2b06e"
+        }
+      },
+      "face_source": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/source/face-source.png",
+      "blink_generated_source": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/source/face-blink-generated.png",
+      "blink_eye_composite_source": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/source/face-blink-source.png",
+      "hair_source": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/source/hair-source.png",
+      "blink_changed_pixel_bbox_128": [
+        18,
+        35,
+        111,
+        54
+      ],
+      "changed_pixels_outside_eye_mask": 0,
+      "closed_eyes_verified": true,
+      "notes": "No background, neck or clothing. Hairline fibers may occur only at upper corners and can be occluded by hair mesh. Natural facial proportions retained by parent instruction.",
+      "prompts": {
+        "face": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/source/face-prompt.txt",
+        "blink": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/source/blink-prompt.txt",
+        "hair": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/source/hair-prompt.txt"
+      },
+      "generation_outputs": {
+        "face": "/workspace/scratch/85111d38430a/generated_images/exec-71bee92d-feae-4daf-9478-9775b376b8a1.png",
+        "blink": "/workspace/scratch/85111d38430a/generated_images/exec-08efd060-682b-4830-a255-2ea5f20fb334.png",
+        "hair": "/workspace/scratch/85111d38430a/generated_images/exec-0275aa68-e195-4505-8209-8fb3df9c3eb1.png"
+      },
+      "blink_eye_mask": "/workspace/scratch/85111d38430a/npc-v75/art-c/receptionist/source/blink-eye-mask.png",
+      "downsample_filter": "Lanczos; no material filter or runtime code changed",
+      "validation": {
+        "all_final_images_128_by_128": true,
+        "all_final_images_rgb": true,
+        "full_resolution_sources_preserved": true,
+        "eyelids_closed_in_blink": true,
+        "neutral_closed_mouth": true,
+        "no_glasses": true,
+        "no_background_neck_or_clothing": true,
+        "outside_eye_mask_identical": true
+      }
+    },
+    "poolman": {
+      "eyeY": 0.353,
+      "noseY": 0.634,
+      "mouthY": 0.75,
+      "chinY": 0.935,
+      "eyeX": [
+        0.313,
+        0.683
+      ],
+      "source_size": [
+        1254,
+        1254
+      ],
+      "landmarks_are_estimates": true,
+      "assets": {
+        "face": {
+          "path": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/face.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "c807c66710df2611be92c665dfb2336516f86a3390f7eb745f628af82b976521"
+        },
+        "face-blink": {
+          "path": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/face-blink.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "281f5ec250dd4dbbe1544a9d186169846f025f1841b90a08008ba1d6c2c2b5fd"
+        },
+        "hair": {
+          "path": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/hair.png",
+          "size": [
+            128,
+            128
+          ],
+          "mode": "RGB",
+          "sha256": "4b481d34a6be4cfce37b6a756fe082b35c3bcf59caed50aadc79ac58a7e35e3d"
+        }
+      },
+      "face_source": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/source/face-source.png",
+      "blink_generated_source": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/source/face-blink-generated.png",
+      "blink_eye_composite_source": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/source/face-blink-source.png",
+      "hair_source": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/source/hair-source.png",
+      "blink_changed_pixel_bbox_128": [
+        21,
+        38,
+        107,
+        55
+      ],
+      "changed_pixels_outside_eye_mask": 0,
+      "closed_eyes_verified": true,
+      "notes": "No background, neck or clothing. Hairline fibers may occur only at upper corners and can be occluded by hair mesh. Natural facial proportions retained by parent instruction.",
+      "prompts": {
+        "face": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/source/face-prompt.txt",
+        "blink": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/source/blink-prompt.txt",
+        "hair": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/source/hair-prompt.txt"
+      },
+      "generation_outputs": {
+        "face": "/workspace/scratch/85111d38430a/generated_images/exec-66c202ae-ac6a-48e5-9e8f-e6aeeddf4fb9.png",
+        "blink": "/workspace/scratch/85111d38430a/generated_images/exec-5395696b-8dd8-4038-9b68-89e9b9664577.png",
+        "hair": "/workspace/scratch/85111d38430a/generated_images/exec-737a4982-a92b-4f6e-b93e-72992d7b5996.png"
+      },
+      "blink_eye_mask": "/workspace/scratch/85111d38430a/npc-v75/art-c/poolman/source/blink-eye-mask.png",
+      "downsample_filter": "Lanczos; no material filter or runtime code changed",
+      "validation": {
+        "all_final_images_128_by_128": true,
+        "all_final_images_rgb": true,
+        "full_resolution_sources_preserved": true,
+        "eyelids_closed_in_blink": true,
+        "neutral_closed_mouth": true,
+        "no_glasses": true,
+        "no_background_neck_or_clothing": true,
+        "outside_eye_mask_identical": true
+      }
+    }
+  },
+  "preview": "/workspace/scratch/85111d38430a/npc-v75/art-c/texture-contact-sheet.png",
+  "source_reference": "/workspace/scratch/85111d38430a/upload/image(20261003-065521).png",
+  "six_independent_imagegen_calls": true
+}

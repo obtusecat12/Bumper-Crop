@@ -1,0 +1,7 @@
+Use case: stylized-concept
+Asset type: single square diffuse albedo HAIR SURFACE texture for short black slightly messy adult East Asian male hair on an early-2000s PS2 character mesh.
+Primary request: photographic close-up black human short hair surface, ordinary natural strands, several subtly overlapping short coarse locks, one coherent strand flow sweeping from upper-left toward lower-right with a small shallow whorl near the upper third. Slightly messy and naturally uneven but continuous.
+Composition: dense contiguous hair texture fills the entire square edge-to-edge. This is a material swatch or unwrapped surface, NOT a head or portrait. No scalp visible, no skin, no face, no ears, no complete haircut outline, no background and no gaps. All strand detail is shallow and laid against a surface.
+Style: photo-derived modest early PS2 baked diffuse texture intended for 128x128 downscaling. Warm charcoal and almost-black natural hair with restrained gray-brown strand variation, matte to low sheen, low contrast. Visible broad grain suitable for a small texture, not glossy detailed modern CGI.
+Lighting: soft diffuse ambient illumination, gentle shallow strand shadowing only. No bright specular bands, no wet oily shine, no dramatic light, no metallic blue or silver.
+Avoid: hairstyle photo, head silhouette, wig object, long flowing strands, cartoon, vector line pattern, isolated clumps, white backdrop, skin backdrop, bald spot, typography, watermark or borders.

@@ -1,0 +1,119 @@
+{
+  "version": "npc-v75-clothes",
+  "generator": "built-in image_gen",
+  "processing": "Original image copied unchanged, then RGB Lanczos downsampling to 128x128. No painted replacements or procedural texture synthesis.",
+  "assets": [
+    {
+      "role": "1homeless",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-d007203f-5150-4b3b-9593-3bc51ac8f9a8.png",
+      "original": "/workspace/scratch/85111d38430a/npc-v75/clothes/1homeless/original.png",
+      "texture": "/workspace/scratch/85111d38430a/npc-v75/clothes/1homeless/body.png",
+      "prompt": "/workspace/scratch/85111d38430a/npc-v75/clothes/1homeless/prompt.txt",
+      "size": [
+        128,
+        128
+      ],
+      "layout": "upper-left front; upper-right back; lower-left sleeve/arm; lower-right pants/swim shorts",
+      "original_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "role": "2wallman",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-c982a6c3-58d9-4564-a4dd-c3c1bd71f375.png",
+      "original": "/workspace/scratch/85111d38430a/npc-v75/clothes/2wallman/original.png",
+      "texture": "/workspace/scratch/85111d38430a/npc-v75/clothes/2wallman/body.png",
+      "prompt": "/workspace/scratch/85111d38430a/npc-v75/clothes/2wallman/prompt.txt",
+      "size": [
+        128,
+        128
+      ],
+      "layout": "upper-left front; upper-right back; lower-left sleeve/arm; lower-right pants/swim shorts",
+      "original_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "role": "3reader",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-fafe3bb9-e0c5-4c3f-b025-e704e0c10452.png",
+      "original": "/workspace/scratch/85111d38430a/npc-v75/clothes/3reader/original.png",
+      "texture": "/workspace/scratch/85111d38430a/npc-v75/clothes/3reader/body.png",
+      "prompt": "/workspace/scratch/85111d38430a/npc-v75/clothes/3reader/prompt.txt",
+      "size": [
+        128,
+        128
+      ],
+      "layout": "upper-left front; upper-right back; lower-left sleeve/arm; lower-right pants/swim shorts",
+      "original_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "role": "4plaid",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-9796f94d-d04e-446c-9fa9-b708a14ce12f.png",
+      "original": "/workspace/scratch/85111d38430a/npc-v75/clothes/4plaid/original.png",
+      "texture": "/workspace/scratch/85111d38430a/npc-v75/clothes/4plaid/body.png",
+      "prompt": "/workspace/scratch/85111d38430a/npc-v75/clothes/4plaid/prompt.txt",
+      "size": [
+        128,
+        128
+      ],
+      "layout": "upper-left front; upper-right back; lower-left sleeve/arm; lower-right pants/swim shorts",
+      "original_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "role": "5receptionist",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-9a035d0f-feee-4365-b28f-0e1eb3b4789e.png",
+      "original": "/workspace/scratch/85111d38430a/npc-v75/clothes/5receptionist/original.png",
+      "texture": "/workspace/scratch/85111d38430a/npc-v75/clothes/5receptionist/body.png",
+      "prompt": "/workspace/scratch/85111d38430a/npc-v75/clothes/5receptionist/prompt.txt",
+      "size": [
+        128,
+        128
+      ],
+      "layout": "upper-left front; upper-right back; lower-left sleeve/arm; lower-right pants/swim shorts",
+      "original_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "role": "6poolman",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-ec99771a-dc2e-4f87-bad0-d59fc864f5ed.png",
+      "original": "/workspace/scratch/85111d38430a/npc-v75/clothes/6poolman/original.png",
+      "texture": "/workspace/scratch/85111d38430a/npc-v75/clothes/6poolman/body.png",
+      "prompt": "/workspace/scratch/85111d38430a/npc-v75/clothes/6poolman/prompt.txt",
+      "size": [
+        128,
+        128
+      ],
+      "layout": "upper-left front; upper-right back; lower-left sleeve/arm; lower-right pants/swim shorts",
+      "original_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "role": "newspaper",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-c8da0e08-8881-42d4-bc56-bd256aa1879f.png",
+      "original": "/workspace/scratch/85111d38430a/npc-v75/clothes/newspaper/original.png",
+      "texture": "/workspace/scratch/85111d38430a/npc-v75/clothes/newspaper/newspaper.png",
+      "prompt": "/workspace/scratch/85111d38430a/npc-v75/clothes/newspaper/prompt.txt",
+      "size": [
+        128,
+        128
+      ],
+      "layout": "left half front, right half back",
+      "original_size": [
+        1254,
+        1254
+      ]
+    }
+  ]
+}

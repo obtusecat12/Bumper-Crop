@@ -1,0 +1,96 @@
+{
+  "npcTextureCount": 27,
+  "npcAll128": true,
+  "springSlides": [
+    {
+      "path": "dist/textures/spring-loading-v75/spring-01.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 126100,
+      "sha256": "510ee711770a77db6c14f3387aa6ea576a9b33dd133a3e7ca8093c5f735b45e7"
+    },
+    {
+      "path": "dist/textures/spring-loading-v75/spring-02.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 52336,
+      "sha256": "f2176600432c30380088617dfbfc6a841c168b0cb5e5fbe90e3a7b0ab86e02d8"
+    },
+    {
+      "path": "dist/textures/spring-loading-v75/spring-03.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 133194,
+      "sha256": "9b00b06bf56b522e1262e9ce76041eca6040f12d25027a00836dc27c61bc6316"
+    },
+    {
+      "path": "dist/textures/spring-loading-v75/spring-04.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 87828,
+      "sha256": "4f08f48935f24b6e1a5b07469d54045fbbcb1d3b15b1424d40e8511ffa38e60f"
+    },
+    {
+      "path": "dist/textures/spring-loading-v75/spring-05.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 56684,
+      "sha256": "3c324ca551203f3f8cf1b733e936814ddb9cb8b39245d1d3b28dd7191d297a49"
+    },
+    {
+      "path": "dist/textures/spring-loading-v75/spring-06.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 85888,
+      "sha256": "16db29cd2ce57181731eaac103c87a5bf3cc9aea459a92eee53b2e8103f89c64"
+    },
+    {
+      "path": "dist/textures/spring-loading-v75/spring-07.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 78528,
+      "sha256": "a418fd078351f43455f7d4849241c9d3019948c3ad2c5b171f9fd9ba3a9ee1df"
+    },
+    {
+      "path": "dist/textures/spring-loading-v75/spring-08.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 88236,
+      "sha256": "dea5934acb68a7f5c726e9c28a246e507aac5eb29798750d1d7b542fb59f7b69"
+    },
+    {
+      "path": "dist/textures/spring-loading-v75/spring-09.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 103262,
+      "sha256": "5c4a99b9cd72b27f390e6d64e3463de6ef09bde3e9d3e686f41afb8757fba72f"
+    },
+    {
+      "path": "dist/textures/spring-loading-v75/spring-10.webp",
+      "pixels": [
+        1024,
+        768
+      ],
+      "bytes": 77568,
+      "sha256": "6e8bdf4df7fe06a1d1845963f375ee312c69013250b583e6e429aec5273e80d7"
+    }
+  ]
+}

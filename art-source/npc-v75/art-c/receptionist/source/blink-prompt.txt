@@ -1,0 +1,5 @@
+Use case: identity-preserve
+Asset type: alternate blink frame of this exact PS2 human face diffuse texture.
+Edit target: the supplied frontal facial skin texture of the older white woman.
+Primary request: change ONLY the eyelids of BOTH eyes so that both eyes are gently and fully closed in a natural blink. Draw relaxed closed upper eyelids covering the pupils with a thin natural curved meeting line. Do not squeeze the eyes tightly. 
+Strict invariants: keep the canvas size, ALL landmark positions, brows, forehead, nose, nostrils, cheeks, wrinkles, eye bags, mouth, chin, skin coloration, texture details, lighting, camera, crop and identity EXACTLY unchanged. No moving or resizing facial features. Keep the source pixels outside the two eyelid regions identical wherever possible. Neutral closed mouth remains identical. No new background, hair, glasses, neck, clothing, text, labels, borders or other elements. Output one square texture matching the source.
