@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "overlay paints before construction",
+    "duplicate entry ignored",
+    "progress phases monotonic",
+    "first frame precedes unmask",
+    "cached re-entry",
+    "exact BigInt street-pose return",
+    "original shadow mode restored",
+    "texture and shader failures return safely"
+  ],
+  "renderer": "stubbed; browser images verify real WebGL separately"
+}

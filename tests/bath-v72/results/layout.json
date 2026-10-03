@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "routeSamples": 1136,
+  "rooms": {
+    "reception": {
+      "width": 9.6,
+      "length": 7.199999999999999
+    },
+    "changing": {
+      "width": 8.2,
+      "length": 6.24
+    }
+  },
+  "lockers": 26,
+  "poolDoor": {
+    "x": 2.25,
+    "z": 0.08,
+    "width": 1.65,
+    "height": 2.32
+  },
+  "poolVertices": 63
+}

@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 2000-2010年代照片，展示各种各样的不同的浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: the indoor spa of an aging American resort, with dated Roman-style arches around a small mosaic-tile bathing pool. The place feels like an ordinary older resort still in use during 2000–2010, with an unremarkable, slightly tired interior, photographed as one independent image.
+Photo quality and vibe: a casual amateur compact CCD digital-camera snapshot from the 2000s, real available interior light with uneven mixed white balance, a tiny accidental tilt, soft JPEG detail and imperfect exposure. No studio lighting; modest everyday photographic quality.
+Composition: imperfect off-center composition with one arch partly cut off and the small mosaic pool awkwardly placed in the frame, landscape 4:3, a single photograph, no collage.
+Constraints: completely empty room, no humans, no human silhouettes, no reflections of people; no giant text, no watermark, no baked-in loading screen or UI.
+Avoid: modern luxury-spa styling, modern HDR, cinematic lighting, professional architectural photography, polished AI beauty, excessive yellow, oversharpening, artificial glare.

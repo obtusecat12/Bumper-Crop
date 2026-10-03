@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "generatedMaps": 43,
+  "buildYields": 90,
+  "totalBuildMilliseconds": 811.8357489999995,
+  "longestBuildChunkMilliseconds": 432.521976,
+  "draws": 136,
+  "triangles": 566348,
+  "mirrorIndependent": true,
+  "rectAreaLights": 4,
+  "notes": "Node build timings only, not measured gameplay FPS."
+}

@@ -17,6 +17,7 @@ async function visualCheck(url){
 createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://terminal.local');
+  if(url.pathname==='/__bath-v72.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/bath-v72/preview.html')));return;}
   if(url.pathname==='/__visual-check.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await visualCheck(url));return;}
   if(url.pathname==='/__rural-v37.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/rural-v37/map-preview.html')));return;}
   if(url.pathname==='/__compounds-v36.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/compounds-v36/map-preview.html')));return;}

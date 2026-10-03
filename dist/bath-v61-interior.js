@@ -1,3 +1,4 @@
+import {buildReception72} from './bath-reception-v72.js';
 import * as T from './vendor/three.module.min.js';
 import {createStallKit} from './bath-v62-stall-kit.js?v=62';
 import {showerMaterials} from './bath-v62-materials.js?v=62';
@@ -12,37 +13,7 @@ export function buildBathRefit(scene,root,oldWood){
  const box=(mat,x,y,z,w,h,d,n='',r=.018)=>addBox(root,mat,x,y,z,w,h,d,n,r),plane=(mat,x,y,z,w,h,ry=0,rx=0,n='')=>addPlane(root,mat,x,y,z,w,h,ry,rx,n);
  const pipe=(pts,r=.022,mat=m.metal,n='Attached plumbing')=>addTube(root,mat,pts,r,n);
  const put=(model,x,y,z,ry=0,scale=1)=>{model.position.set(x,y,z);model.rotation.y=ry;model.scale.setScalar(scale);root.add(model);return model;};
- const lobbyFloor=wetFloorMaterial(m.floor,{baseWet:.18}),showerFloor=wetFloorMaterial(m.floor,{heads:SHOWER_HEADS,baseWet:.48});
- box(lobbyFloor,0,-.095,2.1,5.2,.18,4.2,'Reception terrazzo tile floor');
- for(const x of[-2.60,2.60]){
-  box(m.plaster,x,1.48,2.185,.18,2.96,4.03,'Mineral-stained lobby plaster',.02);
-  box(m.jade,x-Math.sign(x)*.11,.56,2.185,.036,1.12,3.97,'Glazed green dado',.004);
-  const p=plane(m.border,x-Math.sign(x)*.132,1.17,2.185,3.97,.18,x<0?Math.PI/2:-Math.PI/2);p.geometry.attributes.uv.array.forEach((v,i,a)=>{if(i%2===0)a[i]*=3.1;});
-  box(m.stone,x-Math.sign(x)*.12,.055,2.175,.07,.11,4.00,'Coved stone skirting');
- }
- box(m.plaster,0,2.97,2.1,5.35,.14,4.4,'Closed reception ceiling');
- for(const x of[-1.70,1.70])box(m.plaster,x,1.48,4.23,1.72,2.96,.18,'Entrance return wall');box(m.plaster,0,2.66,4.23,1.68,.60,.18);
- for(const x of[-.82,.82])box(m.plastic,x,1.21,4.13,.085,2.42,.14,'Thick entrance door jamb');box(m.plastic,0,2.43,4.13,1.73,.085,.14,'Header');
- box(m.dark,0,.042,4.13,1.66,.07,.25,'Door threshold');
- const door=new T.Group();root.add(door);door.position.set(.76,0,4.13);door.rotation.y=-.13;
- for(const x of[-1.49,0])addBox(door,m.plastic,x,1.18,0,.085,2.32,.075,'Glazed leaf stile');for(const y of[.07,.56,2.30])addBox(door,m.plastic,-.745,y,0,1.49,.10,.075,'Door rail');
- addPlane(door,m.glass,-.745,1.43,-.004,1.4,1.62,0,0,'Diamond embossed door glass');addBox(door,m.jade,-.745,.31,0,1.4,.39,.072,'Lower kick panel');
- addTube(door,m.metal,[[-1.25,.9,-.07],[-1.25,.92,-.12],[-1.25,1.32,-.12],[-1.25,1.34,-.07]],.015,'Door pull handle');
- // Reception counter: cabinet, inset wood panels, continuous supporting plinth.
- box(oldWood,1.20,.51,1.18,2.10,1.02,.77,'Oak reception cabinet',.034);box(m.dark,1.20,.052,1.18,2.05,.105,.72,'Counter plinth');
- for(const x of[.29,.88,1.48,2.08])box(oldWood,x,.56,1.576,.04,.80,.035,'Raised cabinet stile',.009);
- box(m.stone,1.20,1.055,1.18,2.20,.08,.88,'Worn mineral-flecked counter slab',.025);
- put(makeDispenser(T,m),1.84,1.095,1.315,0,.91);
- put(makeTelephone(T,m),.99,1.095,1.16,-.16,.91);
- for(let i=0;i<3;i++){const cover=m.towel.clone();cover.color.set([0x78674b,0x3d6058,0x92765b][i]);box(cover,.39,1.12+i*.045,1.27,.27,.043,.34,'Worn ledger book');box(m.plaster,.39,1.12+i*.045,1.30,.25,.031,.29,'Book pages',.002);}
- put(makePlasticChair(T,m),-2.02,0,.86,Math.PI/2,.90);
- put(makeRockPlanter(T,m),-2.0,0,2.85,0,.83);
- const sign=plane(m.sign,2.495,2.02,1.27,1.48,.493,-Math.PI/2,0,'Generated reception signage');
- box(oldWood,2.46,1.66,2.74,.10,.80,.86,'Recessed key cabinet');
- for(let i=0;i<12;i++){const z=2.42+(i%4)*.20,y=1.92-Math.floor(i/4)*.23;pipe([[2.38,y,z],[2.34,y-.035,z],[2.34,y-.07,z]],.009,m.metal,'Brass key hook');const key=new T.Mesh(new T.TorusGeometry(.024,.005,5,10),m.metal);key.position.set(2.34,y-.09,z);key.rotation.y=Math.PI/2;root.add(key);box(m.plastic,2.34,y-.15,z,.013,.065,.045,'Numbered key tag',.004);}
- box(m.plaster,0,2.84,.235,5.1,.29,.16,'Lobby soffit closing above the unchanged pool partition');
- // Diffuser is physically enclosed, with aged lamp cover and seated endcaps.
- box(m.plastic,0,2.868,2.15,1.39,.13,.34,'Fluorescent casing');box(m.lamp,0,2.790,2.15,1.22,.035,.24,'Opal ceiling diffuser');
+ const reception=buildReception72(root,m),lobbyFloor=reception.floor,showerFloor=wetFloorMaterial(m.floor,{heads:SHOWER_HEADS,baseWet:.48});
  // All new rock remains on shower side of the original pool-room opening.
  const archShape=new T.Shape();archShape.moveTo(-1.0,0);archShape.lineTo(-1.03,1.5);
  for(let i=0;i<=18;i++){const a=Math.PI-Math.PI*i/18;archShape.lineTo(Math.cos(a)*(1.02+.035*Math.sin(i*2.7)),1.5+Math.sin(a)*(1.15+.028*Math.cos(i*3.4)));}

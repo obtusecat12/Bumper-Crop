@@ -1,16 +1,19 @@
+import {buildChangingRoom72,CHANGING_POINT_LIGHTS} from './changing-room-v72.js';
+import {createChangingEffects,createChangingMirror} from './changing-effects-v72.js';
+import {POOL_DOOR} from './bathhouse-plan-v72.js';
 import * as T from './vendor/three.module.min.js';
 import {SPA} from './spa-layout-v66.js';
 import {createSpa,SPA_LIGHTS} from './spa-scene-v66.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {bathTextures} from './bath-textures.js?v=62';
 import {BATH_POOL,SHOWER_HEADS} from './bathhouse-layout.js?v=66';
-import {buildBathRefit} from './bath-v61-interior.js?v=66';
+import {buildBathRefit} from './bath-v61-interior.js?v=72';
 import {showerMaterials} from './bath-v62-materials.js?v=62';
 import {bathRefitMaterials} from './bath-v61-materials.js?v=61';
 import {foldedTowel,propMesh,propRod} from './bathing-props.js?v=60';
-export const BATH_LIGHTS=[{p:[0,2.50,-3.90],color:0xf1f3ec,power:19,range:10},{p:[0,2.65,2],color:0xffedce,power:8,range:6},{p:[-6.4,2.67,-3.6],color:0xe3efe9,power:11,range:8},{p:[-3.0,2.55,-1.2],color:0xe8e6dc,power:3.5,range:5}];
+export const BATH_LIGHTS=[{p:[0,2.50,-3.90],color:0xf1f3ec,power:19,range:10},{p:[0,2.73,8.3],color:0xf4e4bb,power:6.5,range:10},{p:[-6.4,2.67,-3.6],color:0xe3efe9,power:11,range:8},{p:[-3.0,2.55,-1.2],color:0xe8e6dc,power:3.5,range:5}];
 export function bathLabel(text,sub=''){const c=document.createElement('canvas');c.width=768;c.height=256;const g=c.getContext('2d');g.fillStyle='#d9dbcd';g.fillRect(0,0,c.width,c.height);g.fillStyle='#294a47';g.textAlign='center';g.font='bold 62px sans-serif';g.fillText(text,384,108,728);g.font='25px sans-serif';g.fillText(sub,384,178,710);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return new T.MeshStandardMaterial({name:text,map:t,roughness:.8});}
-export function createBathhouse(){
+export function* buildBathhouseSteps(){
  const scene=new T.Scene();scene.name='Level 11 / Baños interior';scene.background=new T.Color(0x080b0a);scene.userData.noAtmosphere=true;
  const root=new T.Group();root.name='Bathhouse architecture and furniture';scene.add(root);const tex=bathTextures(),white=new T.MeshStandardMaterial({name:'Ivory cast columns',color:0xe4e4d8,map:tex['granite-basin'],roughness:.88}),tile=showerMaterials(bathRefitMaterials()).pool,blue=tile.clone();blue.name='Normal mapped pale blue empty pool tiles';blue.color.set(0xa3d5d9);blue.roughness=.54;
  const floor=tile.clone();floor.name='Normal mapped pool circulation tile';floor.color.set(0xaaa899);floor.roughness=.67;const wood=new T.MeshStandardMaterial({name:'Reception counter oak',map:tex.wood,color:0x988068,roughness:.75}),metal=new T.MeshStandardMaterial({name:'Chrome shower pipe',color:0xaab7b7,metalness:.58,roughness:.32,emissive:0x293b41,emissiveIntensity:.14}),dark=new T.MeshStandardMaterial({name:'Recesses and drains',color:0x303c3b,roughness:.85}),glass=new T.MeshStandardMaterial({name:'Glazed entrance door',color:0xc0e1d7,roughness:.16,metalness:.27,transparent:true,opacity:.24,side:T.DoubleSide}),lamp=new T.MeshBasicMaterial({color:0xfffbed}),mural=new T.MeshStandardMaterial({name:'Handpainted ocean mural',map:tex['ocean-wall'],roughness:1,color:0xe0e5df,emissiveMap:tex['ocean-wall'],emissive:0xffffff,emissiveIntensity:.045}),palm=mural.clone(),cloud=mural.clone();palm.map=palm.emissiveMap=tex['palm-wall'];cloud.map=cloud.emissiveMap=tex['cloud-ceiling'];cloud.color.set(0xe3e6de);
@@ -33,8 +36,8 @@ export function createBathhouse(){
  // Back / right walls and divided front; left passage remains genuinely open.
  box(white,0,1.53,-7.08,8.4,3.06,.16);box(white,4.18,1.53,-4.85,.16,3.06,4.50);box(white,4.18,1.53,-.30,.16,3.06,.80);box(white,4.18,2.825,-1.65,.16,.47,1.90);
  box(white,-4.18,1.53,-4.66,.16,3.06,4.80);box(white,-4.18,1.53,-.31,.16,3.06,.62);box(white,-4.18,2.83,-1.30,.16,.47,1.94);
- for(const x of[-2.50,2.50])box(white,x,1.53,.08,3.36,3.06,.16);
- box(white,0,2.78,.08,1.68,.57,.16);
+ for(const[a,b]of[[-4.18,POOL_DOOR.x-POOL_DOOR.width/2],[POOL_DOOR.x+POOL_DOOR.width/2,4.18]])box(white,(a+b)/2,1.53,.08,b-a,3.06,.16);
+ box(white,POOL_DOOR.x,2.78,.08,POOL_DOOR.width,.57,.16);
  plane(mural,0,1.64,-6.985,8.14,2.74);for(const [za,zb]of[[-6.99,-2.60],[-.70,-.01]]){const o=plane(mural,4.09,1.64,(za+zb)/2,zb-za,2.74,-Math.PI/2);const uv=o.geometry.attributes.uv;for(let i=0;i<uv.count;i++)uv.setX(i,(za+uv.getX(i)*(zb-za)+6.99)/6.98);}const lintelMural=plane(mural,4.09,2.759,-1.65,1.9,.502,-Math.PI/2);for(let i=0;i<lintelMural.geometry.attributes.uv.count;i++){const uv=lintelMural.geometry.attributes.uv;uv.setXY(i,(-2.60+uv.getX(i)*1.9+6.99)/6.98,(2.508+uv.getY(i)*.502-.27)/2.74);}plane(palm,-4.09,1.64,-4.7,4.61,2.74,Math.PI/2);
  plane(cloud,0,3.07,-3.53,8.28,7.12,0,Math.PI/2).name='Painted cloud ceiling / not outdoor sky';
  // Continuous cornices are genuine trim in front of the painted walls.
@@ -52,19 +55,34 @@ export function createBathhouse(){
  const ceilingLamp=mesh(new T.CircleGeometry(.98,64),lamp,0,3.052,-3.9,'Large oval diffused ceiling light');ceilingLamp.rotation.x=Math.PI/2;// Circular diffuser foreshortens naturally from the camera.
  // Low ceiling and squat classical proportions from the two source views.
  for(const o of root.children){if(!o.isMesh)continue;o.updateMatrix();o.geometry.applyMatrix4(o.matrix);const pp=o.geometry.attributes.position;for(let i=0;i<pp.count;i++)if(pp.getY(i)>0)pp.setY(i,pp.getY(i)*.88);o.geometry.computeVertexNormals();o.position.set(0,0,0);o.rotation.set(0,0,0);o.scale.set(1,1,1);}
- const refit=buildBathRefit(scene,root,wood);const {clock,presets,streams}=refit;
- const lights=[];for(const l of BATH_LIGHTS){const o=new T.PointLight(l.color,l.power,l.range,2);o.position.fromArray(l.p);o.castShadow=true;o.shadow.mapSize.set(512,512);o.shadow.bias=-.0007;o.shadow.normalBias=.022;o.shadow.camera.near=.08;o.shadow.camera.far=l.range;scene.add(o);lights.push(o);}scene.add(new T.AmbientLight(0xc1ced0,.28));
+ yield{progress:.10,label:'铺设空池与回廊'};
+ const refit=buildBathRefit(scene,root,wood);const {clock,presets,streams}=refit;yield{progress:.25,label:'准备前厅与淋浴间'};
+ const lockerBuilder=buildChangingRoom72(scene,root);let built;while(!(built=lockerBuilder.next()).done)yield{progress:.30+(built.value.count||13)*.018,label:'准备更衣室'};const changing=built.value,changingFX=createChangingEffects();
+ const changingMirror=createChangingMirror(scene,changing.mirror);yield{progress:.60,label:'准备灯光与镜面'};
+ const lights=[];for(const l of BATH_LIGHTS){const o=new T.PointLight(l.color,l.power,l.range,2);o.position.fromArray(l.p);o.castShadow=true;o.shadow.mapSize.set(512,512);o.shadow.bias=-.0007;o.shadow.normalBias=.022;o.shadow.camera.near=.08;o.shadow.camera.far=l.range;scene.add(o);lights.push(o);}scene.add(new T.AmbientLight(0xc1ced0,.18));
  // Static material batching keeps the column flutes and balusters affordable.
- root.updateMatrixWorld(true);const groups=new Map();root.traverse(o=>{if(!o.isMesh)return;if(!groups.has(o.material))groups.set(o.material,[]);const count=o.isInstancedMesh?o.count:1;for(let i=0;i<count;i++){const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone(),matrix=o.matrixWorld.clone();if(o.isInstancedMesh){const instance=new T.Matrix4();o.getMatrixAt(i,instance);matrix.multiply(instance);}g.applyMatrix4(matrix);groups.get(o.material).push(g);}o.geometry.dispose();});root.clear();for(const [m,parts]of groups){mesh(mergeGeometries(parts),m,0,0,0,m.name);parts.forEach(g=>g.dispose());}
- const spa=createSpa(scene),showers=scene.userData.showerWater;
+ root.updateMatrixWorld(true);const groups=new Map(),partsToBatch=[];root.traverse(o=>{if(o.isMesh)partsToBatch.push(o);});
+ const sharedMaterials=new Map();
+ for(const o of partsToBatch){const m=o.material;if(!m.isMeshStandardMaterial||m.onBeforeCompile!==T.Material.prototype.onBeforeCompile||m.userData.dynamic)continue;
+  const key=JSON.stringify([m.type,m.color.toArray(),m.emissive.toArray(),m.emissiveIntensity,m.roughness,m.metalness,m.opacity,m.transparent,m.depthWrite,m.side,m.alphaTest,m.displacementScale,m.displacementBias,m.normalScale?.toArray(),...['map','normalMap','roughnessMap','metalnessMap','aoMap','displacementMap','emissiveMap'].map(k=>m[k]?.uuid)]);
+  if(sharedMaterials.has(key))o.material=sharedMaterials.get(key);else sharedMaterials.set(key,m);
+ }let partCount=0;
+ for(const o of partsToBatch){if(!groups.has(o.material))groups.set(o.material,[]);const count=o.isInstancedMesh?o.count:1;for(let i=0;i<count;i++){const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone(),matrix=o.matrixWorld.clone();if(o.isInstancedMesh){const instance=new T.Matrix4();o.getMatrixAt(i,instance);matrix.multiply(instance);}g.applyMatrix4(matrix);if(!g.attributes.uv1&&g.attributes.uv)g.setAttribute('uv1',g.attributes.uv.clone());groups.get(o.material).push(g);}if(++partCount%40===0)yield{progress:.61+.10*partCount/partsToBatch.length,label:'整理室内模型'};}
+ // Shared source geometries are released once after all instances are copied.
+ new Set(partsToBatch.map(o=>o.geometry)).forEach(g=>g.dispose());root.clear();let batchCount=0;
+ for(const [m,parts]of groups){mesh(mergeGeometries(parts),m,0,0,0,m.name);parts.forEach(g=>g.dispose());if(++batchCount%5===0)yield{progress:.72+.08*batchCount/groups.size,label:'整理室内材质'};}
+ const spa=createSpa(scene),showers=scene.userData.showerWater;yield{progress:.94,label:'准备水疗池'};
  scene.userData.showerWater={get active(){return showers.active||spa.stats.visible;},prepare(renderer){showers.prepare(renderer);},bind(color,depth,w,h,camera){showers.bind(color,depth,w,h,camera);if(spa.stats.visible)spa.water.bind(color,depth,w,h,camera);}};
- scene.userData.springVolume={compose:spa.compose};
+ scene.userData.springVolume={compose(renderer,color,depth,camera,w,h){const picture=spa.compose(renderer,color,depth,camera,w,h);return changingFX.compose(renderer,picture,depth,camera,w,h);}};
  let active=false;
- function update(t,player){refit.update(t);spa.update(t,player);lights[2].intensity=BATH_LIGHTS[2].power;}
- function beforeRender(renderer,camera){spa.prepare(renderer,camera);refit.beforeRender(renderer,camera);}
- function focusDistance(camera,max){const d=new T.Vector3();camera.getWorldDirection(d);for(let t=.25;t<max;t+=.18){const x=camera.position.x+d.x*t,y=camera.position.y+d.y*t,z=camera.position.z+d.z*t;if(y<-.99||y>(x>4.1?3.2:2.85)||z<(x>4.1?SPA.z0:-7)||x>SPA.x1||x< -8.35||z>(x>4.1?SPA.z1:4.23))return t;}return max;}
- function dispose(){spa.dispose();refit.dispose();const materials=new Set();scene.traverse(o=>{o.geometry?.dispose();if(o.material)materials.add(o.material);});materials.forEach(m=>m.dispose());}
- return{scene,presets,streams,spa,update,beforeRender,focusDistance,dispose,get active(){return active;},set active(v){active=v;}};
+ function update(t,player){refit.update(t);spa.update(t,player);changing.update(t);changingFX.setTime(t);lights[2].intensity=BATH_LIGHTS[2].power;}
+ function beforeRender(renderer,camera){spa.prepare(renderer,camera);refit.beforeRender(renderer,camera);changingMirror.prepare(renderer,camera,clock.value);}
+ function focusDistance(camera,max){const d=new T.Vector3();camera.getWorldDirection(d);for(let t=.25;t<max;t+=.18){const x=camera.position.x+d.x*t,y=camera.position.y+d.y*t,z=camera.position.z+d.z*t,spaZone=x>4.1&&z<5,ceiling=spaZone?3.2:z>6.4?3.05:2.88;if(y<-.99||y>ceiling||z<(spaZone?SPA.z0:-7)||x>(z>6.4?4.9:SPA.x1)||x< -8.35||z>13.77)return t;}return max;}
+
+ function dispose(){spa.dispose();refit.dispose();changing.dispose();changingFX.dispose();changingMirror.dispose();const materials=new Set();scene.traverse(o=>{o.geometry?.dispose();if(o.material)materials.add(o.material);});materials.forEach(m=>m.dispose());}
+ return{scene,presets,streams,spa,changing,update,beforeRender,focusDistance,dispose,get active(){return active;},set active(v){active=v;}};
 }
 
-export const ALL_BATH_LIGHTS=[...BATH_LIGHTS,...SPA_LIGHTS];
+export function createBathhouse(){const builder=buildBathhouseSteps();let step;while(!(step=builder.next()).done){}return step.value;}
+export async function prepareBathhouse(report=()=>{}){const builder=buildBathhouseSteps();let step;while(!(step=builder.next()).done){report(step.value.progress,step.value.label);await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));}return step.value;}
+export const ALL_BATH_LIGHTS=[...BATH_LIGHTS,...SPA_LIGHTS,...CHANGING_POINT_LIGHTS];

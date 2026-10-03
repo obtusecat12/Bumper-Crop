@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 2000-2010年代照片，展示各种各样的不同的浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: An empty early-2000s desert motel covered spa in the United States, with pale peach walls and a turquoise square pool at dusk. One independently photographed bath, as seen in a casual photograph taken during 2000–2010.
+Style and photo quality: Ordinary amateur compact CCD digital camera snapshot from the 2000s. Real non-studio dusk and motel lighting at the location, mixed white balance, modest softness and grain, imperfect exposure, no oversharpening. An ordinary casual photograph.
+Composition: A single landscape photograph, imperfect casual crop and a slight accidental tilt, not a carefully arranged architectural photograph.
+Aspect ratio: 4:3.
+Constraints: Empty spa, no people and no reflected humans. No collage, no baked loading interface, no watermarks, no giant text.
+Avoid: Modern HDR, cinematic polish, professional real-estate photography, excessive sharpness.

@@ -1,0 +1,634 @@
+{
+  "version": "v72",
+  "generator": "Built-in image_gen.imagegen",
+  "total_generation_calls": 8,
+  "atlas_layout": [
+    [
+      "basecolor",
+      "normal",
+      "roughness"
+    ],
+    [
+      "metallic",
+      "ao",
+      "height"
+    ]
+  ],
+  "texture_postprocessing": "Only exact 512 by 512 pixel panel cropping and lossless WebP encoding with Pillow. No procedural maps, map derivation, painting, resampling or content synthesis. Original generated PNGs retained. Newspaper converted losslessly without resizing.",
+  "normal_convention_requested": "OpenGL tangent-space",
+  "requested_tileability": "Seamless repeated material panels; mirror intended for one repeat over the object. Visual inspection performed; exact mathematical periodicity is not asserted.",
+  "required_prompt_guidance_url": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "required_prompt_guidance_process": "Fresh remote download and full read immediately before each of 8 built-in generation calls. Exact mandated prompt prefix used for every call. Each downloaded copy retained.",
+  "materials": [
+    {
+      "id": "locker",
+      "notes": "Aged teal-grey enamel, matching orange peel, scratches, blisters and corrosion strongest along the bottom.",
+      "call_index": 1,
+      "tool": "built-in image_gen.imagegen",
+      "atlas": "locker-atlas.png",
+      "atlas_size": [
+        1536,
+        1024
+      ],
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-89fee0da-98e2-4d4c-80a1-6d592b04c78d.png",
+      "prompt_file": "locker-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset: One independently generated, exactly aligned six-map PBR texture atlas for aged teal-grey painted metal locker enamel in a retro 1980s/1990s US bathhouse locker room.\nAspect ratio and size: 3:2 landscape, 1536 x 1024 or higher; exact 3-column by 2-row grid of six equal square panels, each at least 512 x 512, edge to edge without gutters, dividers, borders, labels or text.\nPanel order: Top left BaseColor, top middle OpenGL tangent-space normal, top right roughness. Bottom left metallic, bottom middle ambient occlusion, bottom right height.\nSurface: Teal-grey aged locker enamel, orange-peel speckling, small scratches and paint blisters, low subtle corrosion concentrated toward the bottom, photographic PS2-era texture character. The scan is solely the continuous flat enamel surface, not a locker object; no handles, doors, vents, numbers, frames or perspective.\nMap registration: ALL SIX PANELS depict exactly the same square material sample at exactly the same scale and orientation. Every scratch, blister and rust fleck occupies corresponding pixel locations across all six maps. All panels tile seamlessly left to right and top to bottom. Generate every map as an image in this call.\nMap conventions: BaseColor is flat albedo with no baked directional lighting, shadows, highlights or reflections. Normal is conventional blue/lavender OpenGL tangent-space normal with subtle orange-peel and scratch relief. Roughness is neutral grayscale, white rough and black smooth, with worn enamel varying medium-dark gray to gray and rust lighter. Metallic is neutral grayscale, enamel black and exposed metal pale. AO is grayscale mostly white with only real recessed cracks dark. Height is neutral grayscale centered around middle gray for subtle relief. No color information in scalar maps.\nPalette and style: Coherent muted teal-green enamel, minute old brown corrosion. Clean orthographic PBR scan with tactile worn low-resolution photographic game-material character.\nAvoid: Any rendered sphere or object, atmospheric light, directional shadows, perspective, typography, labels, panel margins, unrelated material, checkerboard, watermark.\n",
+      "required_prompt_guidance_download": "gpt_image_2_prompt_skill-call01.md",
+      "maps": {
+        "basecolor": {
+          "file": "locker-basecolor.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/locker-basecolor.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "sRGB",
+          "channel": "RGB",
+          "sha256": "971d04c01bb19a198758e57b7de3dafce74902ad26fee914a74f4a7fe44e838e"
+        },
+        "normal": {
+          "file": "locker-normal.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/locker-normal.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "RGB",
+          "sha256": "16cda672fd675dfdb8d06b5d96b0a3de471e70fd77b6e414cfdf9e655aca5a90"
+        },
+        "roughness": {
+          "file": "locker-roughness.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/locker-roughness.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "83a2fe1ae569a740d70360c4a192a6d65fe1038318084bc0dd4d15c0c7884ffd"
+        },
+        "metallic": {
+          "file": "locker-metallic.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/locker-metallic.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "431ba42040e3ecd1bdfaada8c27a94015d9411c9afcf627fa3d3ab2e00a7d722"
+        },
+        "ao": {
+          "file": "locker-ao.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/locker-ao.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "ee05fa160c00d133d7f00b61e063dc11fdb0e368e63a6b17692230bb48e9f610"
+        },
+        "height": {
+          "file": "locker-height.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/locker-height.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "6fdddff8836ca72e502a683090a7e96af80f31e39d00879ab88e525e1fa58dae"
+        }
+      }
+    },
+    {
+      "id": "tile",
+      "notes": "One repeat represents a 4 by 4 array of 10 cm tiles, or a 40 by 40 cm area.",
+      "call_index": 2,
+      "tool": "built-in image_gen.imagegen",
+      "atlas": "tile-atlas.png",
+      "atlas_size": [
+        1536,
+        1024
+      ],
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-b0cf1ef7-44a5-4970-8956-34d7aaed8924.png",
+      "prompt_file": "tile-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset: One independently generated exactly aligned six-map PBR texture atlas for wet warm ivory small square ceramic tiles with aged greenish grout in a retro 1980s/1990s US bathhouse locker room.\nAspect ratio and size: 3:2 landscape, 1536 x 1024 or higher. Exact 3-column by 2-row grid of six equal square panels at least 512 x 512 each, edge to edge without gutters, dividers, borders, labels or text.\nPanel order: Top left BaseColor; top middle OpenGL tangent-space normal; top right roughness. Bottom left metallic; bottom middle ambient occlusion; bottom right height.\nSurface: One square orthographic scan of a regular 4 by 4 grid of small 10 cm ceramic tiles, warm ivory subtly varied glaze with greenish recessed chipped grout, tiny abrasions and scattered dampness. Tile boundaries evenly spaced, a grout seam at every outer edge for seamless tiling. Identical tile grid size in every panel. Ceramic and grout only, no larger room or objects.\nMap registration: ALL SIX PANELS are the exact same square sample, at the exact same scale and orientation. Every tile corner, chip, grout recess, scratch and wet patch occupies the same corresponding pixel location. Each panel seamlessly tiles horizontally and vertically. Generate every map in this image.\nMap conventions: BaseColor is flat albedo, no baked directional lighting, shadows, highlights or reflections. OpenGL normal is conventional blue/lavender tangent-space normal, showing slightly rounded tile edges, ceramic micro bumps and deep chipped grout. Roughness is neutral grayscale, white rough/black smooth, darker damp ceramic areas and lighter rough grout. Metallic completely black because ceramic and grout are nonmetallic. AO neutral grayscale white on flat tiles, dark recessed grout and cavities. Height neutral grayscale raised light tiles and darker recessed grout; matching tiny chips. No color in scalar maps.\nStyle and palette: Photographic PS2 game texture character, muted warm ivory and greenish old grout, coherent bathhouse material family. Clean orthographic PBR scan.\nAvoid: Perspective, lights, bathroom view, rendered objects, spheres, atmospheric shadows, typography, labels, gutters, borders, watermark.\n",
+      "required_prompt_guidance_download": "gpt_image_2_prompt_skill-call02.md",
+      "maps": {
+        "basecolor": {
+          "file": "tile-basecolor.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/tile-basecolor.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "sRGB",
+          "channel": "RGB",
+          "sha256": "637503c73f5f2eee3ec56914767660c7b98a1ffe088248815fba80c436bd8cd9"
+        },
+        "normal": {
+          "file": "tile-normal.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/tile-normal.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "RGB",
+          "sha256": "9ac90eee47bdbab00cfcb203a02f507ca98c2246bb2ce19b55c11241a544b30c"
+        },
+        "roughness": {
+          "file": "tile-roughness.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/tile-roughness.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "3942e053e77ce5a27816fcb5f68f488fb9ded552a474fc6d674a1263afb0a9d2"
+        },
+        "metallic": {
+          "file": "tile-metallic.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/tile-metallic.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "9764c6485f26d8b2ac4494e17078000c26170513a08ad5bd19ec18d3451bde5c"
+        },
+        "ao": {
+          "file": "tile-ao.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/tile-ao.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "7a5dd1069a4c94d6ab0963f8c93d518a52151b5a46be3bc3e83c709cb0e9c5f8"
+        },
+        "height": {
+          "file": "tile-height.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/tile-height.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "6007561e073009da757a78e99ad6b6e72bf0145be430d1db770f1c49cbacfc38"
+        }
+      }
+    },
+    {
+      "id": "wood",
+      "notes": "Grain runs left to right (U direction). Dark wet patches, matching checks and knots.",
+      "call_index": 3,
+      "tool": "built-in image_gen.imagegen",
+      "atlas": "wood-atlas.png",
+      "atlas_size": [
+        1536,
+        1024
+      ],
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-ceead730-142a-4c7a-92e7-0ed6fb46c833.png",
+      "prompt_file": "wood-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset: One independently generated exactly aligned six-map PBR texture atlas of aged wet longitudinal wooden bench surface for a retro 1980s/1990s US bathhouse locker room.\nAspect ratio and size: 3:2 landscape, 1536 x 1024 or higher. Exact 3-column by 2-row grid of six equal square panels at least 512 x 512 each, edge to edge with no gutters, labels, borders or dividing lines.\nPanel order: Top left BaseColor, top middle OpenGL tangent-space normal, top right roughness; bottom left metallic, bottom middle ambient occlusion, bottom right height.\nSurface: Honey-dark old wooden bench grain, longitudinal grain and checks flowing horizontally left to right, fine dark cracks, rubbed worn fibers, occasional narrow knots, uneven patches of wet darkening. Continuous close flat wood scan, no plank joints, no nails, no object silhouette. Aged wet warm old wood with subdued color, appropriate for an institutional bathhouse.\nMap registration: Each of the SIX PANELS depicts exactly the same square wood sample, at exactly the same scale and orientation. Every wood grain line, check, knot and damp patch is registered in exactly the same corresponding position across all six maps. Horizontally and vertically seamless each panel. Every map is independently generated visually in this atlas call.\nMap conventions: BaseColor flat albedo with no shadows, directional light, reflections or highlights. OpenGL normal conventional blue/lavender tangent-space normal with shallow relief along fibers and deeper checks. Roughness grayscale white rough/black smooth, dark smoother wet patches and lighter worn fibers, varied but coherent. Metallic completely black, wood is a dielectric. AO grayscale nearly white with only grain checks and crevices darkened. Height grayscale centered on middle gray for wood fibers and dark recessed checks. Scalar maps remain neutral grayscale.\nStyle and palette: Photographic PS2 game texture character; warm honey-brown to dark old walnut, complementing muted green and ivory bathhouse materials. Clean orthographic PBR scan.\nAvoid: Bench objects, spheres, perspective, room scene, plank seams, dramatic lighting, baked gloss, labels, text, watermark, panel margins.\n",
+      "required_prompt_guidance_download": "gpt_image_2_prompt_skill-call03.md",
+      "maps": {
+        "basecolor": {
+          "file": "wood-basecolor.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/wood-basecolor.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "sRGB",
+          "channel": "RGB",
+          "sha256": "02c6c10c183ba6edd2d8427ec26af3a3e8c035a8be2b4edaeec768d60475fee1"
+        },
+        "normal": {
+          "file": "wood-normal.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/wood-normal.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "RGB",
+          "sha256": "976dc5d27a5d3afeadab0be680aa618975c7fc9819bf164fd8f0a3daff8e13c0"
+        },
+        "roughness": {
+          "file": "wood-roughness.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/wood-roughness.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "033d10c29db434879095ddfcb56ab59521a3c872b48959df821328fe2e6ab9f0"
+        },
+        "metallic": {
+          "file": "wood-metallic.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/wood-metallic.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "efd080c479e85dd705bd83a33037b82a4f20bd56e83ea96ac2b32b05a166c99a"
+        },
+        "ao": {
+          "file": "wood-ao.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/wood-ao.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "2c674f2be587f57a1dad276804c15b09acf681abc5e76d1637043d5e235a9402"
+        },
+        "height": {
+          "file": "wood-height.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/wood-height.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "e4c22462cb734729fb71bb5ed3c6574d8115829228784588db84deed814b38e8"
+        }
+      }
+    },
+    {
+      "id": "rubber",
+      "notes": "6 by 6 coin studs per repeat, dark olive-charcoal rubber.",
+      "call_index": 4,
+      "tool": "built-in image_gen.imagegen",
+      "atlas": "rubber-atlas.png",
+      "atlas_size": [
+        1536,
+        1024
+      ],
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-d001d07c-b739-433f-a837-de99539ee546.png",
+      "prompt_file": "rubber-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset: One independently generated exactly aligned six-map PBR texture atlas of charcoal dark olive rubber coin-stud safety mat for a retro 1980s/1990s US bathhouse locker room.\nAspect ratio and size: 3:2 landscape, 1536 x 1024 or higher. Exact 3-column by 2-row grid of six equal square panels at least 512 x 512 each, edge to edge with no gutters, labels, borders or dividing lines.\nPanel order: Top left BaseColor; top middle OpenGL tangent-space normal; top right roughness. Bottom left metallic; bottom middle ambient occlusion; bottom right height.\nSurface: Very dark charcoal with an olive undertone, aged institutional rubber safety mat, a regular orthogonal 6 by 6 array of raised circular coin studs, smoothly worn stud tops, faint scuffs and mineral residue in some recesses, patchy wetness, granular rubber texture. Each complete coin fits evenly in the repeating grid with equal spacing; the square sample extends seamlessly. Flat close orthographic material scan with no mat outer border and no objects.\nMap registration: ALL SIX PANELS are exactly the same square sample, scale and orientation. Every coin stud, scuff and wet patch occupies precisely the same corresponding location in all six maps. Each panel seamlessly repeats horizontally and vertically. All maps are generated together as images, not code-derived.\nMap conventions: BaseColor flat albedo, dark olive-charcoal rubber with no directional light, shadows, specular highlights or reflections. Normal conventional blue/lavender OpenGL tangent-space normal with strong raised coin edges and subtle worn rubber grain. Roughness neutral grayscale, wet worn coin tops darker, dry granular recesses lighter. Metallic entirely black, rubber nonmetallic. AO grayscale nearly white at stud tops and dark around recessed coin bases. Height grayscale high pale raised coin circles on mid-dark recessed backing. Scalar maps are neutral grayscale.\nStyle and palette: Photographic PS2 game texture character, tactile old damp rubber, muted bathhouse palette. Clean orthographic PBR scan.\nAvoid: Room scene, perspective, objects, rendered spheres, mat perimeter, baked light, labels, text, borders, watermark.\n",
+      "required_prompt_guidance_download": "gpt_image_2_prompt_skill-call04.md",
+      "maps": {
+        "basecolor": {
+          "file": "rubber-basecolor.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/rubber-basecolor.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "sRGB",
+          "channel": "RGB",
+          "sha256": "01c2216c22d91c5c7180b916a6ab82314b5905db19b40a900f94c3eb6319ddc6"
+        },
+        "normal": {
+          "file": "rubber-normal.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/rubber-normal.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "RGB",
+          "sha256": "685d8750319af02541a2aafa22448a159e121e685a32bf8e97573315a7336880"
+        },
+        "roughness": {
+          "file": "rubber-roughness.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/rubber-roughness.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "3448d13a08e30db57dd3c079f5fe6a54c529d54d6ae5102ffe80e7345f1eb8a0"
+        },
+        "metallic": {
+          "file": "rubber-metallic.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/rubber-metallic.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "c2e30fc9efad0c7e6bc2ace81344d1e2b89d673a6c4d8f7a11589fec11666564"
+        },
+        "ao": {
+          "file": "rubber-ao.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/rubber-ao.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "b2660956132bac5bede98c8bd44cc73bd151cf8467ba3428f60c1d2cdb204f92"
+        },
+        "height": {
+          "file": "rubber-height.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/rubber-height.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "43376e5e46fea11b02992dd23e0e965004be09296d45ab2f3eaf64faf781958b"
+        }
+      }
+    },
+    {
+      "id": "towel",
+      "notes": "Oatmeal terry loops, flattened worn sections and marginal damp patches.",
+      "call_index": 5,
+      "tool": "built-in image_gen.imagegen",
+      "atlas": "towel-atlas.png",
+      "atlas_size": [
+        1536,
+        1024
+      ],
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-cd361e7c-259f-404e-9861-69b95bb9090f.png",
+      "prompt_file": "towel-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset: One independently generated exactly aligned six-map PBR texture atlas for an oatmeal terry bath towel, worn and damp, for a retro 1980s/1990s US bathhouse locker room.\nAspect ratio and size: 3:2 landscape, 1536 x 1024 or higher. Exactly 3 columns by 2 rows of six equal square panels each at least 512 x 512. Edge to edge panels with no gutters, lines, borders, text or labels.\nPanel order: Top left BaseColor; top middle OpenGL tangent-space normal; top right roughness. Bottom left metallic; bottom middle ambient occlusion; bottom right height.\nSurface: Close flat orthographic scan of worn oatmeal terrycloth towel surface, dense small curled cotton loops, occasional worn flattened thread areas, minute pilling, irregular slightly darker damp patch edge toward the lower part, naturally uneven worn fibers. No folds or object silhouette; continuous cloth fills the entire sample. The wet darker irregular region can wrap across opposite edges for tileability.\nMap registration: All six panels depict precisely the same square textile sample with identical loop pattern, wet patch and worn areas at the exact same scale, orientation and corresponding positions. Each panel repeats seamlessly left-right and top-bottom. Every map must be visually generated as part of this atlas.\nMap conventions: BaseColor flat oatmeal albedo with darker damp areas, no baked directional lighting, shadows or highlights. OpenGL normal blue/lavender tangent-space with fine cotton loop relief, flattened worn portions and irregular thread detail. Roughness neutral grayscale mostly pale rough cotton, a little darker on compressed damp regions. Metallic completely black. AO grayscale white fibers and dark tiny recesses between loops. Height neutral grayscale centered on midgray with raised pale loops and darker tiny gaps. No color in scalar maps.\nStyle and palette: Photographic PS2 game texture character, muted cream-oatmeal and slightly grey wet fibers. Clean orthographic material scan, tactility suited to an old institutional bathhouse.\nAvoid: Towels as whole objects, drapery folds, rendered spheres, perspective, room scene, lighting gradients, dramatic light, decorative stripes, logos, letters, labels, watermark, panel margins.\n",
+      "required_prompt_guidance_download": "gpt_image_2_prompt_skill-call05.md",
+      "maps": {
+        "basecolor": {
+          "file": "towel-basecolor.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/towel-basecolor.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "sRGB",
+          "channel": "RGB",
+          "sha256": "3fd18443e44865ae9c871e2b4d2cbdd6bb7ba1ba839fdd3cecd0bfc338da3811"
+        },
+        "normal": {
+          "file": "towel-normal.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/towel-normal.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "RGB",
+          "sha256": "ac6890aeee178e5de59d6c4488c6036d8ab40b6e683d143abfecc9d6acbb5e96"
+        },
+        "roughness": {
+          "file": "towel-roughness.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/towel-roughness.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "332455c3a761fff8510b7cfa68fffea2b4af6ba7d6f02db1ea3732c5e5327023"
+        },
+        "metallic": {
+          "file": "towel-metallic.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/towel-metallic.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "b584d05b02742b93c41887da35096a910929b99bac16e186261fc0c1ad2477d3"
+        },
+        "ao": {
+          "file": "towel-ao.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/towel-ao.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "79c0cd7d1c25cd055a52308b819c42e556046266fe4d0aa148ac97e2fe2617a7"
+        },
+        "height": {
+          "file": "towel-height.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/towel-height.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "bd2e33206950282003aa12333a2776063815849cee18d681ff4ad069e78e5733"
+        }
+      }
+    },
+    {
+      "id": "mirror",
+      "notes": "Use a single repeat over the mirror. Broad imperfect hand-wiped oval encoded in roughness and normal; foggy perimeter.",
+      "call_index": 6,
+      "tool": "built-in image_gen.imagegen",
+      "atlas": "mirror-atlas.png",
+      "atlas_size": [
+        1536,
+        1024
+      ],
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-1e11ba4e-5938-4da4-a014-66ea35afc33f.png",
+      "prompt_file": "mirror-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset: One independently generated exactly aligned six-map PBR texture atlas for a frosted foggy tarnished mirror with a broad imperfect hand-wiped oval clearing in the center, in a retro 1980s/1990s US bathhouse locker room.\nAspect ratio and size: 3:2 landscape, 1536 x 1024 or higher. Exactly 3 columns by 2 rows of six equal square panels at least 512 x 512 each, touching edge to edge without gutters, lines, borders, titles or labels.\nPanel order: Top left BaseColor; top middle OpenGL tangent-space normal; top right roughness. Bottom left metallic; bottom middle ambient occlusion; bottom right height.\nSurface: Flat square mirror material scan, pale green glass with slightly dark desilvered outer perimeter and fine tarnish. Across the middle, a broad vertical imperfect oval has been hand wiped through the condensation. The clearing occupies about 60 percent of width and 75 percent of height, irregular soft wipe edges, faint curved smear streaks and remaining droplets. Fog and micro droplets remain outside the oval. No room reflection, no reflected objects or people, no frame, no glass shape or perspective; continuous square texture only.\nMap registration: All six panels are the exact same sample and all wipe edges, smears, droplets and desilvered patches align in corresponding pixel locations at identical scale and orientation. Matching outermost edges for seamless repetition. Every map generated visually in this atlas.\nMap conventions: BaseColor a nearly flat pale green-grey glass albedo with subtly dark desilvered perimeter, no baked reflection or directional lighting. The wiped oval in BaseColor may be only subtly visible. NORMAL: conventional lavender/blue OpenGL tangent-space, nearly flat smooth normal in the oval, fine droplet relief and a clearly matching irregular wipe boundary outside, no fake color reflection. ROUGHNESS: VERY clearly visible broad dark almost-black imperfect hand-wiped oval center with curved soft smear marks, surrounded by substantially lighter gray-white rough frosted condensation; irregular natural transition. METALLIC: white mirror metallic value 1 throughout mirror, minute dark desilvering at perimeter. AO: nearly white, subtle tiny tarnish cavities only. HEIGHT: neutral gray very slight droplet relief and wipe boundary, smooth inside oval. Scalar maps strictly grayscale.\nStyle and palette: Clean orthographic PBR scan with low-resolution photographic PS2 character, pale muted green glass in an old bathhouse.\nAvoid: Reflected scene, room photograph, portrait, bright reflections, strong directional light, decorative frame, spheres, perspective, text, panel labels, watermark.\n",
+      "required_prompt_guidance_download": "gpt_image_2_prompt_skill-call06.md",
+      "maps": {
+        "basecolor": {
+          "file": "mirror-basecolor.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/mirror-basecolor.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "sRGB",
+          "channel": "RGB",
+          "sha256": "45147a8137ae7a1b8d5be76b7d18b371e76a1576176d3d84e7d22637a3dbc1dc"
+        },
+        "normal": {
+          "file": "mirror-normal.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/mirror-normal.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "RGB",
+          "sha256": "a3225735592a7f324f89654917dcb19cff16605b85aff16d30e9ddb85b068c86"
+        },
+        "roughness": {
+          "file": "mirror-roughness.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/mirror-roughness.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "3b843534b67b4c493e255e0a3fda3e5458408fdc4b2a2802f036913ebfdcc9ec"
+        },
+        "metallic": {
+          "file": "mirror-metallic.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/mirror-metallic.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "d73c1254b9e7889649a3dc67f6216a5862524d74892e7e406b9c3aa437923724"
+        },
+        "ao": {
+          "file": "mirror-ao.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/mirror-ao.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "2cf0cc0fb0f14451167b1a4c092cf82bb8fe819743f40c262e565a169074c101"
+        },
+        "height": {
+          "file": "mirror-height.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/mirror-height.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "8258da24bbf83ff31039fa208b083f9cc63b00708405387adbd44791cd421478"
+        }
+      }
+    },
+    {
+      "id": "steel",
+      "notes": "Galvanized spangle, scratches and sparse rust for light troughs and vent hardware.",
+      "call_index": 7,
+      "tool": "built-in image_gen.imagegen",
+      "atlas": "steel-atlas.png",
+      "atlas_size": [
+        1536,
+        1024
+      ],
+      "generated_original": "/workspace/scratch/85111d38430a/generated_images/exec-3867a290-bb62-4460-ab6c-564e27a1ac92.png",
+      "prompt_file": "steel-prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset: One independently generated exactly aligned six-map PBR texture atlas for rust-flecked galvanized sheet steel used on fluorescent light troughs and ventilation fittings of a retro 1980s/1990s US bathhouse locker room.\nAspect ratio and size: 3:2 landscape, 1536 x 1024 or higher. Exactly 3 columns by 2 rows of six equal square panels at least 512 x 512 each, edge to edge with no gutters, labels, borders or panel lines.\nPanel order: Top left BaseColor; top middle OpenGL tangent-space normal; top right roughness. Bottom left metallic; bottom middle ambient occlusion; bottom right height.\nSurface: Flat continuous old galvanized steel, subdued grey zinc spangle crystalline mottling, sparse rust flecks and small oxidized pits, fine horizontal scratches, slight aged grime. Metal from an old fluorescent trough or vent housing, material only: no holes, slots, screws, light bulbs, fixtures or object silhouette. Sparse small patches of reddish-brown corrosion over mainly dull zinc steel.\nMap registration: Every panel is exactly the same square sample at identical scale and orientation. All zinc spangles, scratches, pits and rust flecks occupy matching corresponding pixel positions across all six panels. Each panel seamlessly repeats horizontally and vertically. All six maps generated visually as part of this atlas.\nMap conventions: BaseColor flat diffuse albedo without baked directional light, shadows, highlights or reflections; soft neutral grey zinc mottling and rust flecks. OpenGL normal blue/lavender tangent-space with tiny pit relief and minute scratch channels, mostly smooth metal. Roughness neutral grayscale with moderately rough zinc and lighter highly rough rusty patches. Metallic neutral grayscale, galvanized steel mostly near white, rusty oxide and grime patches black/dark. AO mostly white, actual deep pits slightly darker. Height centered on neutral midgray with shallow pitting and raised oxidation, matching features. All scalar maps grayscale.\nStyle and palette: Clean orthographic PBR scan; PS2 photographic game-texture character. Muted greys with minimal rusty brown, complementary to teal-grey lockers and warm ivory tiles.\nAvoid: Fixtures, vent slot patterns, structural panels, rivets, perspective, rendered spheres, room scenes, dramatic lighting, text, labels, gutters, watermark.\n",
+      "required_prompt_guidance_download": "gpt_image_2_prompt_skill-call07.md",
+      "maps": {
+        "basecolor": {
+          "file": "steel-basecolor.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/steel-basecolor.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "sRGB",
+          "channel": "RGB",
+          "sha256": "48b1e8033947d6d6a45b74190d9970058d7c917514dc31872c2e82a84c86a26c"
+        },
+        "normal": {
+          "file": "steel-normal.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/steel-normal.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "RGB",
+          "sha256": "bd277161e04d3aa2cd63655ae210afa4e5ad5c984b6be563663543bf2e05cd64"
+        },
+        "roughness": {
+          "file": "steel-roughness.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/steel-roughness.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "ee7005f93f54b07e1e4741c77c94cc07564a6f2db6dd73dc67794f4779ecbceb"
+        },
+        "metallic": {
+          "file": "steel-metallic.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/steel-metallic.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "c6825816daa04635a4411d052dec66992709ad48669f0e213ce99725400480d7"
+        },
+        "ao": {
+          "file": "steel-ao.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/steel-ao.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "cbcc5b36176c984c57432a902608cee3ce05d44638c25feec8c57bb323cafc97"
+        },
+        "height": {
+          "file": "steel-height.webp",
+          "absolute_path": "/workspace/scratch/85111d38430a/v72-assets/materials/steel-height.webp",
+          "size": [
+            512,
+            512
+          ],
+          "color_space": "linear/no-color-space",
+          "channel": "grayscale RGB",
+          "sha256": "dd8a06bfd06ae7fea56cbdafdb64a0c8df00cb71ccad23191a75df1b7fcf10a3"
+        }
+      }
+    }
+  ],
+  "newspaper": {
+    "file": "newspaper.webp",
+    "original": "newspaper.png",
+    "size": [
+      1086,
+      1448
+    ],
+    "source": "/workspace/scratch/85111d38430a/generated_images/exec-36c572b5-600d-4cf6-9386-47e6f71e788f.png",
+    "prompt_file": "newspaper-prompt.txt",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset: One independent English-language local newspaper front-page texture, a 2006 issue of THE MORNING LEDGER, for a newspaper prop in an old US bathhouse locker room. A single newspaper page, not a PBR atlas.\nAspect ratio and size: 3:4 portrait, preferably 1536 x 2048, high enough resolution to read the headline clearly.\nComposition: Straight orthographic flat front page scan, full page occupies entire image, no surrounding tabletop, no perspective. Traditional 2006 local American daily broadsheet layout with a large serif masthead across the top, thin ruled lines, issue date and price, a bold headline below, narrow fine English news columns, and one small monochrome halftone photograph of an empty municipal indoor swimming pool. Photo has no people. Modest smaller civic news stories below with fine columns.\nExact text: Masthead must read exactly \"THE MORNING LEDGER\". Main headline must read exactly \"CITY POOLS EXTEND EVENING HOURS\". Clear uppercase bold serif headline, preserve the complete spelling and wording. Issue year prominently \"2006\"; date line \"TUESDAY, OCTOBER 3, 2006\". All other text is plausible ordinary local newspaper English about community facilities and local civic updates.\nMaterial and style: Aged lightly yellowed newsprint, grey-black printing with slightly soft ink and visible tiny paper fibers, faint horizontal fold crease, uneven worn paper coloration but still legible. Understated PS2 photograph texture character. Preserve authentic newspaper hierarchy and density. Flat neutral illumination with no dramatic shadows or sheen.\nAvoid: PBR panels, multiple pages, atlas grids, outside background, hands, objects on paper, perspective, torn-away text, modern web design, smartphone UI, color photos, watermarks, invented main headline, excessive yellow.\n",
+    "call_index": 8,
+    "required_prompt_guidance_download": "gpt_image_2_prompt_skill-call08.md",
+    "masthead": "THE MORNING LEDGER",
+    "headline": "CITY POOLS EXTEND EVENING HOURS",
+    "date": "TUESDAY, OCTOBER 3, 2006",
+    "visually_verified_text": true
+  },
+  "validation": {
+    "all_seven_atlases_size": [
+      1536,
+      1024
+    ],
+    "all_42_maps_size": [
+      512,
+      512
+    ],
+    "lossless_crops_pixel_exact": true,
+    "visual_inspection": "All seven atlases and newspaper viewed at generation completion. Correct layout and matching dominant surface landmarks in all map sets; newspaper masthead, headline and 2006 date legible and correct."
+  }
+}

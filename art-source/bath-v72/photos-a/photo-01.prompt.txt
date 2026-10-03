@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 2000-2010年代照片，展示各种各样的不同的浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: one small roadside motel indoor pool in the United States, blue tile pool surround, daytime. Show the ordinary dated pool room and water as a single independent photograph.
+Photo quality and vibe: an amateur snapshot taken on a 2000–2010 compact CCD digital camera, available light from this actual location, imperfect framing, a tiny accidental tilt, mixed white balance, gentle JPEG softness. The image should feel casually taken and unremarkable, with non-studio lighting and ordinary materials.
+Composition: awkward off-center crop, landscape 4:3 frame, a single photograph, no collage.
+Constraints: completely empty room, no humans, no human silhouettes, no reflections of people; no giant text, no watermark, no baked-in loading screen or UI.
+Avoid: modern HDR, cinematic lighting, professional architectural photography, polished AI beauty, excessive yellow, oversharpening, artificial glare.

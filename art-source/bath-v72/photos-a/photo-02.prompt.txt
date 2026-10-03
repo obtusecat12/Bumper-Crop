@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 2000-2010年代照片，展示各种各样的不同的浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: a basement municipal whirlpool room in the United States, a square public whirlpool with cream square ceramic tiles and plain fluorescent fixtures. A distinctly utilitarian below-ground bath room, photographed as an ordinary single independent picture.
+Photo quality and vibe: an amateur snapshot taken on a 2000–2010 compact CCD digital camera, actual fluorescent location lighting, imperfect framing, a tiny accidental tilt, uneven mixed white balance, slight softness and early digital JPEG texture. Unremarkable everyday amateur photography with no studio lighting.
+Composition: awkward crop with the square whirlpool off-center, landscape 4:3 frame, a single photograph, no collage.
+Constraints: completely empty room, no humans, no human silhouettes, no reflections of people; no giant text, no watermark, no baked-in loading screen or UI.
+Avoid: modern HDR, cinematic lighting, professional architectural photography, polished AI beauty, excessive yellow, oversharpening, artificial glare.

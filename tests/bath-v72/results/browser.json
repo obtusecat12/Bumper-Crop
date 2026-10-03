@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "renderer": "Chrome 154 / ANGLE SwiftShader software WebGL2",
+  "viewport": [
+    960,
+    720
+  ],
+  "screenshots": [
+    "lobby.png",
+    "waiting.png",
+    "lockers.png",
+    "vanity.png",
+    "locker-detail.png",
+    "empty-pool.png",
+    "loading.png"
+  ],
+  "consoleErrors": [],
+  "warnings": [
+    "KHR_parallel_shader_compile extension not supported; normal fallback exercised"
+  ],
+  "observations": [
+    "Both replacement doorway joins meet ceiling/floor",
+    "Mirror wiped center reflects the room",
+    "Twenty-six locker doors have actual slots and hardware",
+    "Original empty pool geometry remains dry and visible",
+    "Loading photo advanced automatically while progress remained fixed at the test value"
+  ],
+  "limits": [
+    "Preview harness uses production bath scene and post effects without game HUD/display filter",
+    "Loading screenshot holds production overlay at 42% for inspection",
+    "No hardware gameplay frame rate measured"
+  ]
+}

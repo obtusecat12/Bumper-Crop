@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 2000-2010年代照片，展示各种各样的不同的浴池，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: an empty warm-water therapy pool inside a suburban YMCA in the United States, seen awkwardly through an open doorway from the corridor. Ordinary dated community-fitness-center interior in the 2000–2010 period. The door frame partly obstructs the view into the pool room. One independent single photograph.
+Photo quality and vibe: an unplanned amateur snapshot on an inexpensive 2000s compact CCD digital camera, actual pool-room and corridor lighting with uneven mixed white balance, slightly soft JPEG detail, imperfect exposure and a tiny accidental tilt. Ordinary non-studio lighting and mundane real materials.
+Composition: awkward doorway framing with too much door jamb visible and part of the therapy pool cropped, landscape 4:3 frame, a single photograph, no collage.
+Constraints: completely empty corridor and pool room, no humans, no human silhouettes, no reflections of people; no giant text, no watermark, no baked-in loading screen or UI.
+Avoid: modern HDR, cinematic lighting, professional architectural photography, polished AI beauty, excessive yellow, oversharpening, artificial glare.
