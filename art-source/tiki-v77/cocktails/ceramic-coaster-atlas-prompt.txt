@@ -1,0 +1,14 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: blue glaze, white glaze, lavender glaze and woven tan coaster materials
+reference image: attached bar photograph supplies the blue glazed small mug at left, pale blue and lavender nested ceramic bowls at foreground center-left, white ceramic glaze details and woven tan mats under the bar props; preserve their observed surface colors and photographic material character
+asset type: flat square photographic materials UV atlas for PS2 game props, no objects
+composition: exact 2 by 2 atlas of four equal flat square material surfaces, edges meet at halfway points, no gutters or grid lines, each panel completely filled with its material and each individually tileable
+top left: light turquoise blue glazed ceramic matching reference bowl/mug, subtle shallow vertical fluted grooves and delicate glaze speckle
+top right: warm ivory-white glazed ceramic, tiny gray flecks and subtle hairline craquelure, even soft white tone
+bottom left: very pale muted lavender glazed ceramic matching lower nesting bowl, shallow vertical fluted grooves and tiny glaze imperfections
+bottom right: tan woven coaster surface matching bar mat, orthogonal woven plant fibers in a close tight weave, visible coarse natural straw texture, little irregularity and darker intersections, entirely flat top-down fiber surface
+style and quality: realistic photographed material surface detail with gently soft PS2 photographic texture look, 1024 by 1024 artwork
+lighting: diffuse neutral lighting, small material shadows only, no directional scene shading or reflective glare
+text: none, no labels or captions
+aspect ratio: 1:1
+Avoid: product shot, objects, bowls, mugs, perspective, borders, empty background, grid lines, text, excessive yellow, oversharpening, too many highlights

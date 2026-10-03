@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: front-face diffuse UV artwork for a tall carved Tiki idol.
+reference image: /workspace/scratch/85111d38430a/upload/image(20261003-104910).png. Use only the large Tiki sculpture in the right half of this image as the appearance reference.
+subject: reproduce the reference Tiki's full frontal face and its exact face proportions, including the giant painted white hibiscus with pink petal outlines on the forehead, fierce angular triangular eyes with white insets and maroon rims, the central long angular warmwood nose, the enormous grimacing mouth with two rows of large square ivory teeth, maroon mouth border, warm honey-brown carved wood, green and red engraved borders, and the lower green chevron beneath the mouth.
+composition: front orthographic view flattened into one rectangular continuous face UV texture. The complete forehead flower at the top, angry eyes in the upper middle, giant teeth mouth in the lower middle, and carved lower border at the bottom. The wood surface fills the entire image edge to edge. Preserve the reference's proportions and faithful painted surface pixels. Include the full face with no sculpture cutout, perspective view, side face, room, stand, bottles, lantern, signs or background.
+materials and image quality: photographic worn painted wood with subdued stained ivory, softly resolved PS2 surface detail, restrained diffuse illumination, no baked room lighting or specular glare.
+aspect ratio: 1:3.
+output: 512 by 1536 pixels.
+avoid: cartoon illustration, redesigning the face, smiling expression, small teeth, symmetrical modern mask design, glossy plastic, sharp highlights, excessive yellow, text, labels, watermarks.

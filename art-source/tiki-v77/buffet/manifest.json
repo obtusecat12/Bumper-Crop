@@ -1,0 +1,422 @@
+{
+  "formatVersion": 1,
+  "assetRoot": "/workspace/scratch/85111d38430a/tiki-v77/buffet",
+  "processing": "Only lossless original copying, rectangular crop extraction, and Lanczos resizing; no scripted texture synthesis, repainting, channel recoloring, or alpha replacement.",
+  "cropRectangleConvention": "[x, y, width, height] in original source pixels, origin top-left. Runtime outputs are mechanically resized to 512\u00d7512; UV atlas originals have the requested panel proportions.",
+  "records": [
+    {
+      "id": "canoe-timber",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-1fc33765-256c-44ad-baf7-a8424304e770.png",
+      "original": "originals/canoe-timber-original.png",
+      "promptFile": "prompts/canoe-timber.txt",
+      "referenceImage": "/workspace/scratch/85111d38430a/upload/image(20261003-104821).png",
+      "generator": "built-in image_gen.imagegen",
+      "transparentBackgroundRequested": false,
+      "atlas": "canoe-atlas.png",
+      "atlasSize": [
+        1536,
+        1024
+      ],
+      "outputs": [
+        [
+          "canoe-basecolor.png",
+          [
+            0,
+            0,
+            512,
+            512
+          ],
+          "Unlit timber base color, sRGB"
+        ],
+        [
+          "canoe-normal.png",
+          [
+            512,
+            0,
+            512,
+            512
+          ],
+          "Generated tangent-space timber normal, linear"
+        ],
+        [
+          "canoe-roughness.png",
+          [
+            1024,
+            0,
+            512,
+            512
+          ],
+          "Timber roughness grayscale, linear"
+        ],
+        [
+          "canoe-ao.png",
+          [
+            0,
+            512,
+            512,
+            512
+          ],
+          "Timber ambient occlusion grayscale, linear"
+        ],
+        [
+          "canoe-height.png",
+          [
+            512,
+            512,
+            512,
+            512
+          ],
+          "Timber height grayscale, linear"
+        ],
+        [
+          "canoe-metallic.png",
+          [
+            1024,
+            512,
+            512,
+            512
+          ],
+          "Black nonmetallic wood map, linear"
+        ]
+      ],
+      "runtimeOutputSize": [
+        512,
+        512
+      ],
+      "originalSize": [
+        1536,
+        1024
+      ],
+      "originalMode": "RGB"
+    },
+    {
+      "id": "buffet-rug",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-00a7da1d-aff8-4378-bab5-20274d1f26cc.png",
+      "original": "originals/buffet-rug-original.png",
+      "promptFile": "prompts/buffet-rug.txt",
+      "referenceImage": "/workspace/scratch/85111d38430a/upload/image(20261003-104821).png",
+      "generator": "built-in image_gen.imagegen",
+      "transparentBackgroundRequested": false,
+      "atlas": "rug-atlas.png",
+      "atlasSize": [
+        1536,
+        1024
+      ],
+      "outputs": [
+        [
+          "rug-basecolor.png",
+          [
+            0,
+            0,
+            512,
+            512
+          ],
+          "Burgundy low-pile rug with small muted gold motifs, sRGB"
+        ],
+        [
+          "rug-normal.png",
+          [
+            512,
+            0,
+            512,
+            512
+          ],
+          "Generated tangent-space textile normal, linear"
+        ],
+        [
+          "rug-roughness.png",
+          [
+            1024,
+            0,
+            512,
+            512
+          ],
+          "Matte textile roughness grayscale, linear"
+        ],
+        [
+          "rug-ao.png",
+          [
+            0,
+            512,
+            512,
+            512
+          ],
+          "Textile ambient occlusion grayscale, linear"
+        ],
+        [
+          "rug-height.png",
+          [
+            512,
+            512,
+            512,
+            512
+          ],
+          "Fine textile height grayscale, linear"
+        ],
+        [
+          "rug-metallic.png",
+          [
+            1024,
+            512,
+            512,
+            512
+          ],
+          "Black nonmetallic textile map, linear"
+        ]
+      ],
+      "runtimeOutputSize": [
+        512,
+        512
+      ],
+      "originalSize": [
+        1536,
+        1024
+      ],
+      "originalMode": "RGB"
+    },
+    {
+      "id": "coconut-ladle-ceramic",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-7ffd3e5a-7d61-4719-90a9-dfc77b310576.png",
+      "original": "originals/coconut-ladle-ceramic-original.png",
+      "promptFile": "prompts/coconut-ladle-ceramic.txt",
+      "referenceImage": "/workspace/scratch/85111d38430a/upload/image(20261003-104821).png",
+      "generator": "built-in image_gen.imagegen",
+      "transparentBackgroundRequested": false,
+      "atlas": "coconut-ladle-ceramic-atlas.png",
+      "atlasSize": [
+        1024,
+        1024
+      ],
+      "outputs": [
+        [
+          "coconut-exterior.png",
+          [
+            0,
+            0,
+            627,
+            627
+          ],
+          "Hairy brown coconut exterior, sRGB"
+        ],
+        [
+          "coconut-interior.png",
+          [
+            627,
+            0,
+            627,
+            627
+          ],
+          "Smooth dark inner coconut shell, sRGB"
+        ],
+        [
+          "ladle-handle.png",
+          [
+            0,
+            627,
+            627,
+            627
+          ],
+          "Worn longitudinal handle wood, sRGB; grain runs vertically"
+        ],
+        [
+          "ceramic-crazing.png",
+          [
+            627,
+            627,
+            627,
+            627
+          ],
+          "Pale ivory ceramic crazing, sRGB"
+        ]
+      ],
+      "runtimeOutputSize": [
+        512,
+        512
+      ],
+      "originalSize": [
+        1254,
+        1254
+      ],
+      "originalMode": "RGB"
+    },
+    {
+      "id": "menehune-white",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-09801950-bf8e-4f41-9e65-8499d75538aa.png",
+      "original": "originals/menehune-white-original.png",
+      "promptFile": "prompts/menehune-white.txt",
+      "referenceImage": "/workspace/scratch/85111d38430a/upload/image(20261003-104821).png",
+      "generator": "built-in image_gen.imagegen",
+      "transparentBackgroundRequested": false,
+      "atlas": "menehune-white-atlas.png",
+      "atlasSize": [
+        1024,
+        1024
+      ],
+      "outputs": [
+        [
+          "menehune-white-face.png",
+          [
+            0,
+            0,
+            627,
+            1254
+          ],
+          "First smiling brown glazed clay figurine front face and white floral headdress, sRGB"
+        ],
+        [
+          "menehune-white-torso.png",
+          [
+            627,
+            0,
+            627,
+            1254
+          ],
+          "First brown glazed clay figurine front torso with white floral lei, sRGB"
+        ]
+      ],
+      "runtimeOutputSize": [
+        512,
+        512
+      ],
+      "originalSize": [
+        1254,
+        1254
+      ],
+      "originalMode": "RGB"
+    },
+    {
+      "id": "menehune-pink",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-e30a8b5d-1a89-4e49-8372-1eb2de1be3e1.png",
+      "original": "originals/menehune-pink-original.png",
+      "promptFile": "prompts/menehune-pink.txt",
+      "referenceImage": "/workspace/scratch/85111d38430a/upload/image(20261003-104821).png",
+      "generator": "built-in image_gen.imagegen",
+      "transparentBackgroundRequested": false,
+      "atlas": "menehune-pink-atlas.png",
+      "atlasSize": [
+        1024,
+        1024
+      ],
+      "outputs": [
+        [
+          "menehune-pink-face.png",
+          [
+            0,
+            0,
+            627,
+            1254
+          ],
+          "Second distinct smiling brown glazed clay figurine face and pink floral headdress, sRGB"
+        ],
+        [
+          "menehune-pink-torso.png",
+          [
+            627,
+            0,
+            627,
+            1254
+          ],
+          "Second brown glazed ceramic figurine torso with dense pink lei and floral garment, sRGB"
+        ]
+      ],
+      "runtimeOutputSize": [
+        512,
+        512
+      ],
+      "originalSize": [
+        1254,
+        1254
+      ],
+      "originalMode": "RGB"
+    },
+    {
+      "id": "ice-orchids",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-87aa2a9e-eed7-4c59-8587-ad3d1cee4532.png",
+      "original": "originals/ice-orchids-original.png",
+      "promptFile": "prompts/ice-orchids.txt",
+      "referenceImage": "/workspace/scratch/85111d38430a/upload/image(20261003-104821).png",
+      "generator": "built-in image_gen.imagegen",
+      "transparentBackgroundRequested": true,
+      "atlas": "ice-orchids-atlas.png",
+      "atlasSize": [
+        1024,
+        1024
+      ],
+      "outputs": [
+        [
+          "ice-surface.png",
+          [
+            0,
+            0,
+            627,
+            627
+          ],
+          "Clear chipped ice surface detail; use with physical transmissive ice material, sRGB"
+        ],
+        [
+          "ice-water.png",
+          [
+            627,
+            0,
+            627,
+            627
+          ],
+          "Ice-water bubbles surface detail; use with physical liquid material, sRGB"
+        ],
+        [
+          "orchid-white.png",
+          [
+            0,
+            627,
+            627,
+            627
+          ],
+          "White orchid foliage card detail; generated alpha preserved, sRGB"
+        ],
+        [
+          "orchid-purple.png",
+          [
+            627,
+            627,
+            627,
+            627
+          ],
+          "Purple-magenta orchid foliage card detail; generated alpha preserved, sRGB"
+        ]
+      ],
+      "runtimeOutputSize": [
+        512,
+        512
+      ],
+      "originalSize": [
+        1254,
+        1254
+      ],
+      "originalMode": "RGBA",
+      "generatedAlpha": {
+        "min": 0,
+        "max": 255,
+        "fullyTransparentPixels": 277963,
+        "fullyOpaquePixels": 71
+      }
+    }
+  ],
+  "failedAttempts": [
+    {
+      "id": "menehune-pink",
+      "promptFile": "prompts/menehune-pink-first-attempt.txt",
+      "error": "Built-in generation output was blocked automatically with safety category sexual. Retried as decorative clay figurine with an explicitly opaque floral garment and lei."
+    }
+  ],
+  "inspection": {
+    "all": "All six selected images viewed individually. Correct map/quadrant order, no labels or watermarks, clay figurines visually distinct.",
+    "limitations": [
+      "Generated map channels are visual PBR approximations, not calibrated scan measurements.",
+      "Coconut interior includes concentric bowl-like grain intended for the shell interior.",
+      "Both doll panels contain photographic glaze highlights; physical material lighting should be kept restrained.",
+      "Ice/water quadrants are material details, not geometry. Runtime should provide real ice and liquid geometry.",
+      "Orchid generated alpha is preserved exactly except normal resampling; use alpha test on foliage cards to reduce tiny generated edge artifacts.",
+      "Pink figurine retry includes a floral garment in the torso texture because the initial bare clay torso output was automatically blocked."
+    ]
+  }
+}

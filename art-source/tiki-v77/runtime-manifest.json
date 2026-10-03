@@ -1,0 +1,802 @@
+[
+  {
+    "path": "textures/tiki-v77/idols/moai-stone-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 147578,
+    "source": "textures/tiki-v77/idols/moai-stone-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/idols/moai-stone-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 520481,
+    "source": "textures/tiki-v77/idols/moai-stone-normal.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/moai-stone-roughness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 607949,
+    "source": "textures/tiki-v77/idols/moai-stone-roughness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/moai-stone-ao.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 610118,
+    "source": "textures/tiki-v77/idols/moai-stone-ao.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/moai-stone-height.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 489129,
+    "source": "textures/tiki-v77/idols/moai-stone-height.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/moai-stone-metalness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 29887,
+    "source": "textures/tiki-v77/idols/moai-stone-metalness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/pond-masonry-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 110728,
+    "source": "textures/tiki-v77/idols/pond-masonry-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/idols/pond-masonry-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 467415,
+    "source": "textures/tiki-v77/idols/pond-masonry-normal.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/pond-masonry-roughness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 528131,
+    "source": "textures/tiki-v77/idols/pond-masonry-roughness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/pond-masonry-ao.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 466409,
+    "source": "textures/tiki-v77/idols/pond-masonry-ao.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/pond-masonry-height.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 382487,
+    "source": "textures/tiki-v77/idols/pond-masonry-height.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/pond-masonry-metalness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 50100,
+    "source": "textures/tiki-v77/idols/pond-masonry-metalness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/lantern-brass-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 125428,
+    "source": "textures/tiki-v77/idols/lantern-brass-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/idols/lantern-brass-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 486257,
+    "source": "textures/tiki-v77/idols/lantern-brass-normal.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/lantern-brass-roughness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 536881,
+    "source": "textures/tiki-v77/idols/lantern-brass-roughness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/lantern-brass-ao.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 537916,
+    "source": "textures/tiki-v77/idols/lantern-brass-ao.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/lantern-brass-height.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 506336,
+    "source": "textures/tiki-v77/idols/lantern-brass-height.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/lantern-brass-metalness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 561587,
+    "source": "textures/tiki-v77/idols/lantern-brass-metalness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/cone-lamp-steel-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 89430,
+    "source": "textures/tiki-v77/idols/cone-lamp-steel-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/idols/cone-lamp-steel-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 437716,
+    "source": "textures/tiki-v77/idols/cone-lamp-steel-normal.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/cone-lamp-steel-roughness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 505882,
+    "source": "textures/tiki-v77/idols/cone-lamp-steel-roughness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/cone-lamp-steel-ao.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 494815,
+    "source": "textures/tiki-v77/idols/cone-lamp-steel-ao.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/cone-lamp-steel-height.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 426686,
+    "source": "textures/tiki-v77/idols/cone-lamp-steel-height.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/idols/cone-lamp-steel-metalness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 308552,
+    "source": "textures/tiki-v77/idols/cone-lamp-steel-metalness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/canoe-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 127800,
+    "source": "textures/tiki-v77/buffet/canoe-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/canoe-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 476746,
+    "source": "textures/tiki-v77/buffet/canoe-normal.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/canoe-roughness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 496309,
+    "source": "textures/tiki-v77/buffet/canoe-roughness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/canoe-ao.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 446840,
+    "source": "textures/tiki-v77/buffet/canoe-ao.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/canoe-height.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 460027,
+    "source": "textures/tiki-v77/buffet/canoe-height.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/canoe-metallic.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 54434,
+    "source": "textures/tiki-v77/buffet/canoe-metallic.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/rug-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 94796,
+    "source": "textures/tiki-v77/buffet/rug-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/rug-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 528191,
+    "source": "textures/tiki-v77/buffet/rug-normal.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/rug-roughness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 507320,
+    "source": "textures/tiki-v77/buffet/rug-roughness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/rug-ao.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 486675,
+    "source": "textures/tiki-v77/buffet/rug-ao.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/rug-height.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 578027,
+    "source": "textures/tiki-v77/buffet/rug-height.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/rug-metallic.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 42640,
+    "source": "textures/tiki-v77/buffet/rug-metallic.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/pineapple-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 117512,
+    "source": "textures/tiki-v77/fruit/pineapple-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/pineapple-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 472656,
+    "source": "textures/tiki-v77/fruit/pineapple-normal.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/pineapple-roughness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 535137,
+    "source": "textures/tiki-v77/fruit/pineapple-roughness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/pineapple-ao.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 491904,
+    "source": "textures/tiki-v77/fruit/pineapple-ao.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/pineapple-height.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 359119,
+    "source": "textures/tiki-v77/fruit/pineapple-height.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/pineapple-metallic.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 40233,
+    "source": "textures/tiki-v77/fruit/pineapple-metallic.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/cantaloupe-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 111062,
+    "source": "textures/tiki-v77/fruit/cantaloupe-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/cantaloupe-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 467905,
+    "source": "textures/tiki-v77/fruit/cantaloupe-normal.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/cantaloupe-roughness.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 564965,
+    "source": "textures/tiki-v77/fruit/cantaloupe-roughness.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/cantaloupe-ao.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 490524,
+    "source": "textures/tiki-v77/fruit/cantaloupe-ao.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/cantaloupe-height.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 457617,
+    "source": "textures/tiki-v77/fruit/cantaloupe-height.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/cantaloupe-metallic.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 40745,
+    "source": "textures/tiki-v77/fruit/cantaloupe-metallic.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/ceramic-crazing.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 47442,
+    "source": "textures/tiki-v77/buffet/ceramic-crazing.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/idols/tiki-front-basecolor.webp",
+    "size": [
+      341,
+      1024
+    ],
+    "bytes": 139474,
+    "source": "textures/tiki-v77/idols/tiki-front-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/idols/tiki-wood-basecolor.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 333978,
+    "source": "textures/tiki-v77/idols/tiki-wood-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/cocktails/blue-tiki-wrap.webp",
+    "size": [
+      1024,
+      512
+    ],
+    "bytes": 129264,
+    "source": "textures/tiki-v77/cocktails/blue-tiki-wrap.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/cocktails/brown-tiki-wrap.webp",
+    "size": [
+      1024,
+      512
+    ],
+    "bytes": 136696,
+    "source": "textures/tiki-v77/cocktails/brown-tiki-wrap.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/cocktails/tan-wahine-wrap.webp",
+    "size": [
+      1024,
+      512
+    ],
+    "bytes": 160600,
+    "source": "textures/tiki-v77/cocktails/tan-wahine-wrap.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/cocktails/green-mug-ashtray-atlas.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 487964,
+    "source": "textures/tiki-v77/cocktails/green-mug-ashtray-atlas.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/cocktails/ceramic-coaster-atlas.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 303752,
+    "source": "textures/tiki-v77/cocktails/ceramic-coaster-atlas.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/cocktails/garnish-sheet.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 264904,
+    "source": "textures/tiki-v77/cocktails/garnish-sheet.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/botanical/boston-fern.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 646442,
+    "source": "textures/tiki-v77/botanical/boston-fern.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/botanical/areca-palm.webp",
+    "size": [
+      683,
+      1024
+    ],
+    "bytes": 413186,
+    "source": "textures/tiki-v77/botanical/areca-palm.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/botanical/bird-of-paradise.webp",
+    "size": [
+      683,
+      1024
+    ],
+    "bytes": 224546,
+    "source": "textures/tiki-v77/botanical/bird-of-paradise.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/botanical/hanging-fern-vine.webp",
+    "size": [
+      341,
+      1024
+    ],
+    "bytes": 220572,
+    "source": "textures/tiki-v77/botanical/hanging-fern-vine.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/botanical/hawaiian-lei.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 176842,
+    "source": "textures/tiki-v77/botanical/hawaiian-lei.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/botanical/lily-orchid-atlas.webp",
+    "size": [
+      1024,
+      512
+    ],
+    "bytes": 133890,
+    "source": "textures/tiki-v77/botanical/lily-orchid-atlas.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/bottles/labels-atlas-01.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 587566,
+    "source": "textures/tiki-v77/bottles/labels-atlas-01.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/bottles/labels-atlas-02.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 572358,
+    "source": "textures/tiki-v77/bottles/labels-atlas-02.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/bottles/labels-atlas-03.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 556286,
+    "source": "textures/tiki-v77/bottles/labels-atlas-03.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/bottles/cold-beer-sign.webp",
+    "size": [
+      1024,
+      683
+    ],
+    "bytes": 301888,
+    "source": "textures/tiki-v77/bottles/cold-beer-sign.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/bottles/vw-t1-atlas.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 188612,
+    "source": "textures/tiki-v77/bottles/vw-t1-atlas.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/bottles/detail-atlas.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 546306,
+    "source": "textures/tiki-v77/bottles/detail-atlas.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/coconut-ladle-ceramic-atlas.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 464634,
+    "source": "textures/tiki-v77/buffet/coconut-ladle-ceramic-atlas.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/menehune-white-atlas.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 300128,
+    "source": "textures/tiki-v77/buffet/menehune-white-atlas.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/menehune-pink-atlas.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 368238,
+    "source": "textures/tiki-v77/buffet/menehune-pink-atlas.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/buffet/ice-orchids-atlas.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 504734,
+    "source": "textures/tiki-v77/buffet/ice-orchids-atlas.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/papaya-green-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 88196,
+    "source": "textures/tiki-v77/fruit/papaya-green-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/papaya-yellow-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 71322,
+    "source": "textures/tiki-v77/fruit/papaya-yellow-basecolor.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/pineapple-crown.webp",
+    "size": [
+      1024,
+      1024
+    ],
+    "bytes": 325336,
+    "source": "textures/tiki-v77/fruit/pineapple-crown.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/surfboard-front.webp",
+    "size": [
+      341,
+      1024
+    ],
+    "bytes": 87456,
+    "source": "textures/tiki-v77/fruit/surfboard-front.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/cocktail-umbrella-canopy.webp",
+    "size": [
+      1024,
+      988
+    ],
+    "bytes": 314640,
+    "source": "textures/tiki-v77/fruit/cocktail-umbrella-canopy.png",
+    "processing": "mechanical format compression"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/papaya-green-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 447646,
+    "source": "textures/tiki-v77/fruit/papaya-green-normal.png",
+    "processing": "generated channel crop"
+  },
+  {
+    "path": "textures/tiki-v77/fruit/papaya-yellow-normal.png",
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 444643,
+    "source": "textures/tiki-v77/fruit/papaya-yellow-normal.png",
+    "processing": "generated channel crop"
+  }
+]

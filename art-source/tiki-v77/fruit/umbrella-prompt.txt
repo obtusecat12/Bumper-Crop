@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: genuine-alpha cocktail umbrella canopy cutout for a PS2-era tabletop prop
+input images: image 2 is the pink-white cocktail umbrella reference at the left side of the countertop; image 1 supports the photographic tiki tabletop style
+subject: small pink-and-white striped paper cocktail umbrella, primarily the circular canopy flattened and viewed directly top-down
+composition: dominant full circular canopy occupying the upper and central area of a square image; below it, a narrow row of separate small rectangular photographic surface patches for clear, white, and green cocktail stirrers if space permits; all parts fully visible and separated by transparent gaps
+canopy: alternating pale pink and off-white radial triangular sectors, dark fine radial spoke creases meeting at the small central hub, old paper texture with worn folds and slightly irregular rim, restrained color faithful to image 2
+materials: authentic finite-resolution early-2000s PS2 photographic prop texture, flat overhead illumination without large baked shadows
+background: genuinely transparent alpha outside canopy and stirrer patches
+constraints: top-down flat circular canopy, no side view, no handle blocking canopy, no scene, no container, no words or labels, no checkerboard drawn into image, no white matte
+aspect ratio: 1:1

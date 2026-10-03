@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset type: seamless material texture atlas for the dark red low-pile rug beneath a 3D buffet canoe
+reference image: attached photograph is the color, motif scale and wear reference; match the dark burgundy-red rug under the canoe, with its very small subdued gold motifs.
+subject: dark red patterned low-pile woven rug, fine fibers and understated very small gold motifs, subtle aged wear. Motifs remain tiny and subdued relative to the red field.
+composition: exact 3-column by 2-row atlas, 1536 by 1024 pixels, six equal 512 by 512 square tiles, edge-to-edge tiles with no gaps or borders. All maps show exactly the same seamless rug pattern in identical registration. Top left unlit base color. Top middle tangent-space normal map with lavender-blue background and fine low-pile fiber relief. Top right grayscale roughness, mostly pale gray matte fibers. Bottom left grayscale ambient occlusion, white with gentle fiber recesses. Bottom middle grayscale height, mostly mid-gray with fine fiber height and extremely shallow pattern relief. Bottom right solid black metallic map for nonmetallic textile.
+style: realistic physically based flat material scans, no perspective or scene lighting.
+aspect ratio: 3:2
+constraints: no broad ornate medallions, no large gold shapes, no bright gold glitter, no text, no labels, no border, no watermark; all maps must tile seamlessly.

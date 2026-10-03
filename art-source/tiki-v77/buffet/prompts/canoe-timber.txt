@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset type: material texture atlas for a physical 3D buffet canoe
+reference image: attached photograph is the material and aging reference; use the hand-carved aged golden-brown timber canoe in the photograph, not the surrounding scene.
+subject: rough hand-carved aged golden-brown timber, irregular long wood grain, small tool marks and worn dark crevices, subtle oil-polished high spots.
+composition: exact 3-column by 2-row atlas, 1536 by 1024 pixels, six equal 512 by 512 square tiles, edge-to-edge tiles with no gaps or borders. All six tiles show exactly the same seamless wood surface in identical registration. Top left is unlit base color. Top middle is tangent-space normal map, lavender-blue background with fine carved grain ridges. Top right is grayscale roughness, mostly medium-light gray with slightly smoother worn crests. Bottom left is grayscale ambient occlusion, white surface and restrained dark grain recesses. Bottom middle is grayscale height, mid-gray surface with subtle higher crests and lower grain crevices. Bottom right is solid black metallic map for nonmetallic wood.
+style: realistic physically based material maps, orthographic flat surface scans, no perspective and no scene lighting in base color.
+aspect ratio: 3:2
+constraints: no canoe silhouette, no objects, no text, no labels, no watermark; each map must tile seamlessly, include enough close wood detail for use at 512 pixels.

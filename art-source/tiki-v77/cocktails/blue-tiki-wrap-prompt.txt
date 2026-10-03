@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: reference-faithful blue cylindrical tiki-mug wrap texture
+reference image: attached image is the actual source; inspect the small turquoise blue tiki mug on the left of the bar below the pink-white umbrella, preserve its blue glaze and embossed geometric tiki face instead of redesigning it
+asset type: flat rectangular photographic diffuse/base-color UV wrap for a PS2-style 3D game prop, not a product photograph
+composition: straight front-view artwork laid completely flat across the full rectangular canvas; the mug face occupies the central third of the width; left and right thirds continue the same blue ceramic surface as side and back wrap; left and right edges meet seamlessly; no visible mug silhouette, no top rim ellipse, no perspective, no surrounding bar
+details: turquoise blue glazed ceramic, raised-looking shallow carved tiki eyebrow and eye shapes, long central nose, lower mouth details and subtle vertical sculptural lines faithful to the small reference mug; represent these actual details photographically in the generated texture
+style and quality: PS2 photographic texture quality, gently low-resolution-looking and slightly soft like the reference; real imperfect glaze with small speckle and subtle groove shading, 1536 by 768 base artwork
+lighting: even frontal diffuse texture lighting with subtle relief shadows only, no dramatic scene lighting or large glare
+text: none, no labels or captions
+aspect ratio: 2:1
+Avoid: finished scene, product shot, generic new tiki design, extra objects, perspective object, transparent background, text, grid lines, exaggerated highlights, excessive yellow, oversharpening

@@ -1,0 +1,263 @@
+{
+  "coordinate_convention": "Normalized image-space UV rectangles [left, top, right, bottom], origin at top-left; Three.js geometry V must be flipped for default Texture.flipY.",
+  "tool": "built-in image_gen",
+  "reference_original_unchanged": "/workspace/scratch/85111d38430a/upload/image(20261003-104640).png",
+  "relief_note": "Base-color textures only; mesh relief and material roughness should be authored in integration. No procedural paint or derived pseudo-normal maps were used.",
+  "assets": [
+    {
+      "id": "blue",
+      "purpose": "Turquoise blue cylindrical tiki mug",
+      "texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/blue-tiki-wrap.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/blue-tiki-wrap-original.png",
+      "low_resolution_texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/blue-tiki-wrap-512.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/blue-tiki-wrap-prompt.txt",
+      "original_size": [
+        1774,
+        887
+      ],
+      "runtime_size": [
+        1024,
+        512
+      ],
+      "mode": "RGB",
+      "sha256_original": "91d1775a48344d676d1db0ccd6a0b477fbbd5bbca0af2f7a82faedeaba49396b",
+      "uv_rectangles": {
+        "complete_cylinder_wrap": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "front_face_region": [
+          0.3333333333333333,
+          0,
+          0.6666666666666666,
+          1
+        ]
+      }
+    },
+    {
+      "id": "brown",
+      "purpose": "Dark brown tall carved tiki mug",
+      "texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/brown-tiki-wrap.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/brown-tiki-wrap-original.png",
+      "low_resolution_texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/brown-tiki-wrap-512.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/brown-tiki-wrap-prompt.txt",
+      "original_size": [
+        1774,
+        887
+      ],
+      "runtime_size": [
+        1024,
+        512
+      ],
+      "mode": "RGB",
+      "sha256_original": "3c0305eedce80029b2a6a9d2011cd251d88e10df4f9bc754e8d24e65605ded90",
+      "uv_rectangles": {
+        "complete_cylinder_wrap": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "front_face_region": [
+          0.3333333333333333,
+          0,
+          0.6666666666666666,
+          1
+        ]
+      }
+    },
+    {
+      "id": "green",
+      "purpose": "Separate green smiling mug and seated tiki ashtray surfaces",
+      "texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/green-mug-ashtray-atlas.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/green-mug-ashtray-atlas-original.png",
+      "low_resolution_texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/green-mug-ashtray-atlas-512.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/green-mug-ashtray-atlas-prompt.txt",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256_original": "d4183e1cc3496196e53625f9b86680eca04c29fc2386a7c5d453967d04181e12",
+      "uv_rectangles": {
+        "mug_front": [
+          0,
+          0,
+          0.5,
+          0.5
+        ],
+        "mug_back": [
+          0.5,
+          0,
+          1,
+          0.5
+        ],
+        "ashtray_figure_front": [
+          0,
+          0.5,
+          0.5,
+          1
+        ],
+        "ashtray_ash_soot_floor": [
+          0.5,
+          0.5,
+          1,
+          1
+        ]
+      },
+      "panel_crops": {
+        "mug_front": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/mug_front.png",
+        "mug_back": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/mug_back.png",
+        "ashtray_figure_front": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/ashtray_figure_front.png",
+        "ashtray_ash_soot_floor": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/ashtray_ash_soot_floor.png"
+      }
+    },
+    {
+      "id": "materials",
+      "purpose": "Blue, white, lavender glazes and tan woven coaster",
+      "texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/ceramic-coaster-atlas.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/ceramic-coaster-atlas-original.png",
+      "low_resolution_texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/ceramic-coaster-atlas-512.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/ceramic-coaster-atlas-prompt.txt",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256_original": "edfe563753558013e27268d523ed6df5f5d4b47ea9935e097895724baebfd859",
+      "uv_rectangles": {
+        "blue_glaze": [
+          0,
+          0,
+          0.5,
+          0.5
+        ],
+        "white_glaze": [
+          0.5,
+          0,
+          1,
+          0.5
+        ],
+        "lavender_glaze": [
+          0,
+          0.5,
+          0.5,
+          1
+        ],
+        "woven_tan_coaster": [
+          0.5,
+          0.5,
+          1,
+          1
+        ]
+      },
+      "panel_crops": {
+        "blue_glaze": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/blue_glaze.png",
+        "white_glaze": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/white_glaze.png",
+        "lavender_glaze": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/lavender_glaze.png",
+        "woven_tan_coaster": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/woven_tan_coaster.png"
+      }
+    },
+    {
+      "id": "garnish",
+      "purpose": "Transparent mint, citrus, pineapple and umbrella canopy",
+      "texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/garnish-sheet.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/garnish-sheet-original.png",
+      "low_resolution_texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/garnish-sheet-512.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/garnish-sheet-prompt.txt",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "sha256_original": "cff2d3504080973224d9fd7872ad9bfe9beb9cbeafd5618b1ac63273219f254c",
+      "uv_rectangles": {
+        "mint": [
+          0,
+          0,
+          0.5,
+          0.5
+        ],
+        "lime_slice_and_wedge": [
+          0.5,
+          0,
+          1,
+          0.5
+        ],
+        "pineapple_with_leaves": [
+          0,
+          0.5,
+          0.5,
+          1
+        ],
+        "pink_white_umbrella_top": [
+          0.5,
+          0.5,
+          1,
+          1
+        ]
+      },
+      "alpha_validation": {
+        "has_alpha": true,
+        "extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 895588,
+        "total_pixels": 1572516
+      },
+      "panel_crops": {
+        "mint": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/mint.png",
+        "lime_slice_and_wedge": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/lime_slice_and_wedge.png",
+        "pineapple_with_leaves": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/pineapple_with_leaves.png",
+        "pink_white_umbrella_top": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/pink_white_umbrella_top.png"
+      }
+    },
+    {
+      "id": "wahine",
+      "purpose": "Reference tan wahine figure ceramic mug",
+      "texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/tan-wahine-wrap.png",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/tan-wahine-wrap-original.png",
+      "low_resolution_texture": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/tan-wahine-wrap-512.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/cocktails/tan-wahine-wrap-prompt.txt",
+      "original_size": [
+        1774,
+        887
+      ],
+      "runtime_size": [
+        1024,
+        512
+      ],
+      "mode": "RGB",
+      "sha256_original": "b8a8cc6301b193fc137290b1fa612f72bfcf1db4ea06631ed175fead56162d72",
+      "uv_rectangles": {
+        "complete_cylinder_wrap": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "front_face_region": [
+          0.3333333333333333,
+          0,
+          0.6666666666666666,
+          1
+        ]
+      }
+    }
+  ]
+}

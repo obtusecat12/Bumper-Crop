@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: six-map PBR material atlas for corroded brass nautical lantern metal.
+reference image: /workspace/scratch/85111d38430a/upload/image(20261003-104910).png. Match the weathered brown brass casing of the nautical lantern in the lower center-left foreground.
+subject: old warm brown brass, subdued bronze-gold rubbed patches, dark corrosion and faint green oxidation tucked into wear pits, worn tarnished uneven metal surface. Texture only; no lantern geometry or glow.
+atlas layout: exact 3-column by 2-row grid at 1536 by 1024 pixels; each square cell exactly 512 by 512 pixels; no gutters, borders, labels, padding or text. The exact same seamless corroded brass patch repeated with all scratches and patina at identical positions across six maps. Top row left to right: unlit basecolor, tangent-space OpenGL normal with +Y and subtle wear relief, grayscale roughness. Bottom row left to right: grayscale ambient occlusion, grayscale linear height with white high black low, metalness map with white exposed brass and reduced gray or black heavily oxidized patina.
+composition: flat material sample filling every square cell edge to edge, no object silhouette, engraving, text, glass, lamp, light, room or background.
+materials and image quality: photographic PS2 surfaces softly resolved, subtle dark corroded brass color matched to reference, no fake highlights or baked illumination.
+aspect ratio: 3:2.
+output: 1536 by 1024 pixels.
+avoid: smooth polished gold, gleaming yellow, excessive yellow, directional glare, glowing color, cartoon, oversharpening, borders, labels, text or watermarks.

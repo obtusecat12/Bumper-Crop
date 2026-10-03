@@ -1,0 +1,189 @@
+{
+  "base": {
+    "draws": 74,
+    "triangles": 217294,
+    "spotLights": 11,
+    "pointLights": 8,
+    "areaBounces": 4,
+    "shadowMaps": 3,
+    "generatedMaterials": 79,
+    "effects": {
+      "ssaoSamples": 12,
+      "volumeSteps": 12,
+      "effectScale": 0.5,
+      "bloom": "official Three.js r180 UnrealBloomPass",
+      "bloomStartScale": 0.25
+    },
+    "render": {
+      "frame": 354,
+      "calls": 53,
+      "triangles": 136607,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 84,
+      "textures": 133
+    },
+    "programs": 27,
+    "lastRenderMS": 3.2999999970197678,
+    "frames": 8
+  },
+  "views": {
+    "room": {
+      "draws": 74,
+      "triangles": 217294,
+      "spotLights": 11,
+      "pointLights": 8,
+      "areaBounces": 4,
+      "shadowMaps": 3,
+      "generatedMaterials": 79,
+      "effects": {
+        "ssaoSamples": 12,
+        "volumeSteps": 12,
+        "effectScale": 0.5,
+        "bloom": "official Three.js r180 UnrealBloomPass",
+        "bloomStartScale": 0.25
+      },
+      "render": {
+        "frame": 354,
+        "calls": 53,
+        "triangles": 136607,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 84,
+        "textures": 133
+      },
+      "programs": 27,
+      "lastRenderMS": 4.100000001490116,
+      "frames": 9
+    },
+    "cocktail": {
+      "draws": 74,
+      "triangles": 217294,
+      "spotLights": 11,
+      "pointLights": 8,
+      "areaBounces": 4,
+      "shadowMaps": 3,
+      "generatedMaterials": 79,
+      "effects": {
+        "ssaoSamples": 12,
+        "volumeSteps": 12,
+        "effectScale": 0.5,
+        "bloom": "official Three.js r180 UnrealBloomPass",
+        "bloomStartScale": 0.25
+      },
+      "render": {
+        "frame": 354,
+        "calls": 53,
+        "triangles": 136607,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 84,
+        "textures": 133
+      },
+      "programs": 27,
+      "lastRenderMS": 3.899999998509884,
+      "frames": 10
+    },
+    "pond": {
+      "draws": 74,
+      "triangles": 217294,
+      "spotLights": 11,
+      "pointLights": 8,
+      "areaBounces": 4,
+      "shadowMaps": 3,
+      "generatedMaterials": 79,
+      "effects": {
+        "ssaoSamples": 12,
+        "volumeSteps": 12,
+        "effectScale": 0.5,
+        "bloom": "official Three.js r180 UnrealBloomPass",
+        "bloomStartScale": 0.25
+      },
+      "render": {
+        "frame": 354,
+        "calls": 53,
+        "triangles": 136607,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 84,
+        "textures": 133
+      },
+      "programs": 27,
+      "lastRenderMS": 2.899999998509884,
+      "frames": 11
+    },
+    "canoe": {
+      "draws": 74,
+      "triangles": 217294,
+      "spotLights": 11,
+      "pointLights": 8,
+      "areaBounces": 4,
+      "shadowMaps": 3,
+      "generatedMaterials": 79,
+      "effects": {
+        "ssaoSamples": 12,
+        "volumeSteps": 12,
+        "effectScale": 0.5,
+        "bloom": "official Three.js r180 UnrealBloomPass",
+        "bloomStartScale": 0.25
+      },
+      "render": {
+        "frame": 354,
+        "calls": 53,
+        "triangles": 136607,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 84,
+        "textures": 133
+      },
+      "programs": 27,
+      "lastRenderMS": 4.399999998509884,
+      "frames": 12
+    },
+    "corner": {
+      "draws": 74,
+      "triangles": 217294,
+      "spotLights": 11,
+      "pointLights": 8,
+      "areaBounces": 4,
+      "shadowMaps": 3,
+      "generatedMaterials": 79,
+      "effects": {
+        "ssaoSamples": 12,
+        "volumeSteps": 12,
+        "effectScale": 0.5,
+        "bloom": "official Three.js r180 UnrealBloomPass",
+        "bloomStartScale": 0.25
+      },
+      "render": {
+        "frame": 354,
+        "calls": 53,
+        "triangles": 136607,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 84,
+        "textures": 133
+      },
+      "programs": 27,
+      "lastRenderMS": 1.8999999985098839,
+      "frames": 13
+    }
+  },
+  "maxSamplers": 11,
+  "errors": [],
+  "resourceFailures": [],
+  "renderer": "WebKit WebGL",
+  "note": "Real Chrome browser, SwiftShader software WebGL2. Submission times are not hardware FPS."
+}

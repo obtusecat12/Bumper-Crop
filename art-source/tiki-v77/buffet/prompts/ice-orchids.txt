@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset type: four-quadrant material and foliage-card detail atlas for a physical 3D ice buffet
+reference image: attached photograph supplies the ice, ice-water surface, white orchids and purple orchids in the canoe troughs; use those material and flower details, not the entire buffet scene.
+composition: exact 2-column by 2-row atlas, 1024 by 1024 pixels, four equal 512 by 512 square quadrants without borders. Top left: close flat surface of clear chipped wet ice with fine internal fractures, softly transparent clear areas and irregular faceted chips, no lighting gradients that suggest a scene. Top right: close flat ice-water surface material with clear water, subtle tiny bubbles and restrained pale refractive bubble rings, physically useful on liquid geometry. Bottom left: detailed front-facing white orchid petals with pale yellow center, delicately veined translucent white petals, isolated on genuinely transparent background confined to this quadrant. Bottom right: detailed front-facing purple-magenta orchid petals with pale center and fine petal veins, isolated on genuinely transparent background confined to this quadrant. Keep material content inside its intended quadrant; the top two material quadrants should remain usable surface details.
+style: realistic flat material and botanical detail scans, neutral even illumination, straight-on orthographic details.
+aspect ratio: 1:1
+constraints: flat surface textures and petal cards only, no table, no buffet scene, no trough silhouettes, no text, no labels, no border, no watermark; transparent background around orchid petals where possible.

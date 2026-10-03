@@ -1,0 +1,12 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Use case: precise-object-edit
+Asset type: transparent flower garland texture for hanging around bamboo
+Input images: Image 1 is the isolated lei edit target; Image 2 is the tiki-bar appearance reference.
+Subject: the same one loose U-shaped Hawaiian lei garland, using ONLY red, yellow and white flowers; replace every pink blossom with a red, yellow or white blossom, keep the individual blossom groups attached by the thin connecting strand.
+Composition/framing: preserve the complete loose U shape, both visible upper ends, generous transparent open center and transparent spaces around the blossoms; entire garland remains fully visible.
+Style/medium: preserve the soft photographic 2000s PS2 realism and slightly low fidelity petal texture.
+Scene/backdrop: genuinely transparent alpha background, including the entire inside of the U and gaps between blossoms.
+Constraints: change only the flower colors to red, yellow and white; keep the garland composition and photographic style; clean alpha at petal edges; one isolated lei only; no bamboo, no background, no baked floor, no scene shadow, no text.
+aspect ratio: 1:1
+Avoid: pink blossoms, blue blossoms, purple blossoms, cartoon, pixel art, overly sharp texture, opaque filled U interior, mannequin, backdrop, vignette, ground shadow, white or colored edge fringe.

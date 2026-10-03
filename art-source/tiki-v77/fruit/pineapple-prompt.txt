@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: photographic PS2-era pineapple skin material atlas for a low-poly fruit mesh
+input images: image 1 is the fruit/material reference; image 2 is the same 2000s tiki-bar photographic style reference
+subject: only the flattened pineapple rind skin seen in the first photograph, natural small diamond eyes, dry olive-green ridges and ochre-yellow centers, slight uneven dirt and wear
+composition: exact 1536 by 1024 pixel image, 3 columns by 2 rows of exactly equal square panels, edge to edge with no gaps or padding; every panel covers the identical flat seamless tiling skin region, no whole fruit shape
+panel layout: top-left base color; top-middle tangent-space normal map with blue-violet background and matching eye-scale relief; top-right grayscale roughness; bottom-left grayscale ambient occlusion; bottom-middle grayscale height; bottom-right perfectly solid black metallic
+materials: naturally photographed imperfect pineapple rind, 2000s PS2 photographic texture aesthetic, high fidelity to the reference rind; neutral albedo without baked directional shadows
+constraints: map features align exactly across the five matching maps; the surface fills every panel; black metallic panel remains solid black; no lettering, no labels, no borders, no fruit silhouettes, no leaves, no scene
+aspect ratio: 3:2

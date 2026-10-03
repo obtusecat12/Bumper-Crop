@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: two separate photographic PS2-era papaya skin materials in a four-panel atlas
+input images: image 1 is the fruit/material reference; image 2 is the same 2000s tiki-bar photographic style reference
+subject: the green papaya and yellow papaya in the first photograph, their flattened peel surfaces only
+composition: 1024 by 1024 pixel square, exactly 2 columns by 2 rows of equal edge-to-edge square panels without gaps or padding
+panel layout: top-left green papaya base color; top-right ripe yellow papaya base color; bottom-left green papaya tangent-space normal map; bottom-right ripe yellow papaya tangent-space normal map
+green peel: smooth medium olive-green skin with the subtle freckles, rubbed areas and natural imperfections shown in image 1
+yellow peel: mottled mustard-yellow and pale yellow-green papaya peel, occasional brown blemishes and natural subtle freckles as shown in image 1
+materials: high fidelity real photographic peel texture suitable for wrapping low-poly fruit meshes, early-2000s PS2 photographic texture aesthetic; flattened continuous tiling surface fields with no fruit silhouettes; neutral albedo without directional shadows
+constraints: each bottom normal map matches its corresponding top color map exactly, normal maps use tangent-space blue-violet convention; surface fills the panels; no whole fruit pictures, no silhouettes, no leaves, no words, no labels, no borders, no scene
+aspect ratio: 1:1

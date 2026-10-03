@@ -1,0 +1,546 @@
+{
+  "generator": "builtin image_gen.imagegen",
+  "reference_images": [
+    "/workspace/scratch/85111d38430a/upload/image(20261003-104910).png",
+    "/workspace/scratch/85111d38430a/upload/image(20261003-104716).png"
+  ],
+  "image_pixel_axes": {
+    "origin": "top-left",
+    "x": "right",
+    "y": "down"
+  },
+  "uv_axes": {
+    "u": "left to right",
+    "v": "bottom to top",
+    "raster_y_from_v": "y = (1-v) * image_height"
+  },
+  "normal_convention": "tangent-space OpenGL +Y; RGB encodes tangent X,Y,Z",
+  "channel_color_space": {
+    "basecolor": "sRGB",
+    "normal": "linear/non-color",
+    "roughness": "linear/non-color",
+    "ao": "linear/non-color",
+    "height": "linear/non-color; white high, black low",
+    "metalness": "linear/non-color; white metal, black nonmetal"
+  },
+  "atlas_layout": {
+    "size": [
+      1536,
+      1024
+    ],
+    "grid": [
+      3,
+      2
+    ],
+    "cell_size": [
+      512,
+      512
+    ],
+    "padding": 0,
+    "crop_coordinate_semantics": "Pillow left,upper,right,lower; right/lower exclusive"
+  },
+  "assets": [
+    {
+      "name": "tiki-front",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/idols/tiki-front-original.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-2b8c0fa3-777f-4924-86b9-50dc2dbd5b5c.png",
+      "original_dimensions": [
+        724,
+        2172
+      ],
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/idols/tiki-front.prompt.txt",
+      "maps": {
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/tiki-front-basecolor.png",
+          "size": [
+            724,
+            2172
+          ],
+          "crop_box": [
+            0,
+            0,
+            724,
+            2172
+          ],
+          "operation": "exact original copy"
+        }
+      }
+    },
+    {
+      "name": "tiki-wood",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/idols/tiki-wood-original.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-aa7f2802-383f-4eea-aa2e-3c93780c1a62.png",
+      "original_dimensions": [
+        1254,
+        1254
+      ],
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/idols/tiki-wood.prompt.txt",
+      "maps": {
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/tiki-wood-basecolor.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "operation": "exact original copy"
+        }
+      }
+    },
+    {
+      "name": "moai-stone",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/idols/moai-stone-original.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-304ade62-99d5-424c-a373-afb60721c257.png",
+      "original_dimensions": [
+        1536,
+        1024
+      ],
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/idols/moai-stone.prompt.txt",
+      "maps": {
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/moai-stone-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/moai-stone-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/moai-stone-roughness.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "ao": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/moai-stone-ao.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "height": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/moai-stone-height.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "metalness": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/moai-stone-metalness.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        }
+      }
+    },
+    {
+      "name": "pond-masonry",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/idols/pond-masonry-original.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-cd443bc8-1d9d-4203-8084-f6db52f4faef.png",
+      "original_dimensions": [
+        1536,
+        1024
+      ],
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/idols/pond-masonry.prompt.txt",
+      "maps": {
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/pond-masonry-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/pond-masonry-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/pond-masonry-roughness.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "ao": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/pond-masonry-ao.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "height": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/pond-masonry-height.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "metalness": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/pond-masonry-metalness.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        }
+      }
+    },
+    {
+      "name": "lantern-brass",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/idols/lantern-brass-original.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-460b0f88-4736-4bcb-afdf-67b33a6e42cb.png",
+      "original_dimensions": [
+        1536,
+        1024
+      ],
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/idols/lantern-brass.prompt.txt",
+      "maps": {
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/lantern-brass-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/lantern-brass-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/lantern-brass-roughness.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "ao": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/lantern-brass-ao.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "height": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/lantern-brass-height.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "metalness": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/lantern-brass-metalness.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        }
+      }
+    },
+    {
+      "name": "cone-lamp-steel",
+      "original": "/workspace/scratch/85111d38430a/tiki-v77/idols/cone-lamp-steel-original.png",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-99ff0b8e-512d-446d-8ec8-c002e74fe65d.png",
+      "original_dimensions": [
+        1536,
+        1024
+      ],
+      "prompt_file": "/workspace/scratch/85111d38430a/tiki-v77/idols/cone-lamp-steel.prompt.txt",
+      "maps": {
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/cone-lamp-steel-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/cone-lamp-steel-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/cone-lamp-steel-roughness.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "ao": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/cone-lamp-steel-ao.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "height": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/cone-lamp-steel-height.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        },
+        "metalness": {
+          "path": "/workspace/scratch/85111d38430a/tiki-v77/idols/cone-lamp-steel-metalness.png",
+          "size": [
+            512,
+            512
+          ],
+          "crop_box": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "operation": "exact mechanical pixel crop; no resampling or derived-channel processing"
+        }
+      }
+    }
+  ],
+  "face_uv_guidance": {
+    "asset": "tiki-front-basecolor.png",
+    "projection": "single continuous frontal rectangular texture; no island atlas",
+    "approximate_landmark_y_from_top": {
+      "hibiscus": [
+        0.0,
+        0.3
+      ],
+      "eye_brows_and_eyes": [
+        0.29,
+        0.5
+      ],
+      "nose": [
+        0.38,
+        0.57
+      ],
+      "mouth_and_two_tooth_rows": [
+        0.54,
+        0.82
+      ],
+      "green_red_lower_border": [
+        0.85,
+        0.98
+      ]
+    },
+    "notes": "Match relief to the source texture feature positions. Full reference painting regenerated as one rectangular surface; retain original pixels rather than extracting/decorating separate facial stickers."
+  },
+  "inspection": {
+    "all_six_assets": "visually inspected through builtin generated image display",
+    "atlas_layout": "all four atlases are exactly 1536x1024 with clean 3x2 cells",
+    "material_channel_registration": "major patch features visibly correspond across channels; generated PBR maps are artistic approximations, not measured or algorithmically derived exact maps",
+    "front_style": "faithful central angular angry face, two square ivory tooth rows, giant pink-white forehead flower, green/red lower chevron; flatter symmetrical white eye insets than photographed reflection detail",
+    "metalness_nonmetal": "Moai and pond masonry maps are visually black with faint generated near-black pixel noise; exact crops retained without replacement.",
+    "modifications": "Only original file copies and exact 512x512 atlas crops. No material pixel editing, no mesh or repository changes.",
+    "nonmetal_metalness_RGB_extrema": {
+      "moai-stone": [
+        [
+          0,
+          21
+        ],
+        [
+          0,
+          22
+        ],
+        [
+          0,
+          26
+        ]
+      ],
+      "pond-masonry": [
+        [
+          0,
+          26
+        ],
+        [
+          0,
+          25
+        ],
+        [
+          0,
+          29
+        ]
+      ]
+    }
+  },
+  "verification": "Verified every delivered map dimensions and PNG format; all original and prompt files exist."
+}

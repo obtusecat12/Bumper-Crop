@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: reference-faithful dark brown cylindrical smiling tiki-mug wrap
+reference image: attached image is the actual source; use the tall dark brown tiki mug at the far right of the foreground bar, preserve its elongated carved face and brown glazed surface rather than redesigning the object
+asset type: flat rectangular photographic base-color UV wrap for an actual cylindrical 3D mug, PS2 photographic game texture
+composition: completely flat unwrapped rectangle filling the whole canvas; carved face centered in the middle third of the width; both side thirds extend the brown carved side and back surface, horizontally seamless edges; no object silhouette, no perspective view, no background
+details: deep chocolate reddish-brown glazed ceramic; long vertical brow and cheek strips, small deep eye recesses high up, very long narrow nose, rounded open smiling mouth and chin relief near the lower third, molded vertical carving bands, subtle warm glaze highlights and darker grooves as visible on the reference mug
+style and quality: faithfully mimic the original small reference details with photographic low-resolution PS2 texture character, subtle softness and imperfect glaze, 1536 by 768 artwork
+lighting: diffuse frontal texture lighting, slight groove shading to convey relief without dramatic glare
+text: none, no labels or captions
+aspect ratio: 2:1
+Avoid: new generic tiki face, finished scene, product shot, perspective objects, mug rim ellipse, props or garnish, labels, text, grid lines, excessive yellow, oversharpening, too many highlights

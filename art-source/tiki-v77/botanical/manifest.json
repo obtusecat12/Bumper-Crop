@@ -1,0 +1,476 @@
+{
+  "coordinateSystem": "pixels and normalized image coordinates use top-left origin, x right, y down. UV rectangles listed separately use bottom-left v.",
+  "generationMode": "built-in image_gen, one distinct call per asset",
+  "runtimeMaximumEdge": 1024,
+  "runtimeProcessing": "Mechanical proportional resizing only, using premultiplied alpha Lanczos; no artwork or alpha painting. Original generated RGBA files retained.",
+  "assets": [
+    {
+      "id": "boston-fern",
+      "file": "/workspace/scratch/85111d38430a/tiki-v77/botanical/boston-fern.png",
+      "originalFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/boston-fern-original.png",
+      "originalGeneratedPath": "/workspace/scratch/85111d38430a/generated_images/exec-b85302aa-9310-41f9-9528-1089da4f5830.png",
+      "originalDimensions": [
+        1254,
+        1254
+      ],
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "aspectRatio": "1:1",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "transparentPixelFraction": 0.3543,
+      "alphaBoundsPx": [
+        0,
+        7,
+        1016,
+        1024
+      ],
+      "usableBoundsPxAtAlpha64": [
+        21,
+        27,
+        1007,
+        1010
+      ],
+      "usableBoundsNormalizedAtAlpha64": [
+        0.020508,
+        0.026367,
+        0.983398,
+        0.986328
+      ],
+      "darkInspectionFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/boston-fern-dark.jpg",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nUse case: background-extraction\nAsset type: transparent botanical cutout texture for cross-card rendering\nInput images: Image 1 is the pond reference; use its lush drooping fern foliage as the appearance reference.\nSubject: one lush Boston fern arranged as an entire plant, many long feathered green fronds drooping outward and down; root stems visible at the bottom center, no pot, no soil.\nComposition/framing: front view, entire plant fully visible with generous transparent margins; clear root attachment at the bottom center, natural gaps between fronds.\nStyle/medium: soft photographic 2000s PS2 realism, slightly low fidelity organic texture, green leaf shading matching the pond reference.\nScene/backdrop: genuinely transparent alpha background, including the gaps between individual leaves and fronds.\nConstraints: isolated plant only; preserve clean alpha at fine leaf edges; no background, no baked floor, no scene shadow, no text.\naspect ratio: 1:1\nAvoid: cartoon, pixel art, overly sharp texture, opaque green fill in foliage gaps, pot, soil, backdrop, vignette, ground shadow, white or colored edge fringe.",
+      "referencePath": "/workspace/scratch/85111d38430a/upload/image(20261003-104716).png",
+      "attachmentPointsPx": {
+        "recommended": [
+          560,
+          925
+        ],
+        "rootTip": [
+          560,
+          925
+        ],
+        "rootCrown": [
+          530,
+          708
+        ]
+      },
+      "attachmentPointsNormalized": {
+        "recommended": [
+          0.546875,
+          0.90332
+        ],
+        "rootTip": [
+          0.546875,
+          0.90332
+        ],
+        "rootCrown": [
+          0.517578,
+          0.691406
+        ]
+      },
+      "placementNote": "Visible brown roots end above the longest drooping green frond tips; use rootTip to seat the plant or rootCrown to suspend it."
+    },
+    {
+      "id": "areca-palm",
+      "file": "/workspace/scratch/85111d38430a/tiki-v77/botanical/areca-palm.png",
+      "originalFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/areca-palm-original.png",
+      "originalGeneratedPath": "/workspace/scratch/85111d38430a/generated_images/exec-6263d0e8-d880-407e-8d8e-9067fe618a8a.png",
+      "originalDimensions": [
+        1024,
+        1536
+      ],
+      "dimensions": [
+        683,
+        1024
+      ],
+      "aspectRatio": "2:3",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "transparentPixelFraction": 0.435777,
+      "alphaBoundsPx": [
+        0,
+        0,
+        683,
+        1016
+      ],
+      "usableBoundsPxAtAlpha64": [
+        9,
+        6,
+        676,
+        1013
+      ],
+      "usableBoundsNormalizedAtAlpha64": [
+        0.013177,
+        0.005859,
+        0.989751,
+        0.989258
+      ],
+      "darkInspectionFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/areca-palm-dark.jpg",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nUse case: background-extraction\nAsset type: transparent botanical cutout texture for cross-card rendering\nInput images: Image 1 is the pond reference; use its tropical palm foliage as the appearance reference.\nSubject: one natural areca palm frond cluster, slender segmented palm leaves, several sweeping long fronds, visibly distinct from a Boston fern; clustered slender stems visible at bottom center, no pot, no soil.\nComposition/framing: front view, entire cluster fully visible in a tall frame with generous transparent margins; stems converge to a clear bottom-center root position, natural open gaps between leaflets.\nStyle/medium: soft photographic 2000s PS2 realism, slightly low fidelity organic texture, tropical green foliage matching the pond reference.\nScene/backdrop: genuinely transparent alpha background, including all gaps between palm leaflets.\nConstraints: isolated palm only; clean alpha at fine leaf edges; no background, no baked floor, no scene shadow, no text.\naspect ratio: 2:3\nAvoid: Boston fern foliage, cartoon, pixel art, overly sharp texture, opaque green fill between leaflets, pot, soil, backdrop, vignette, ground shadow, white or colored edge fringe.",
+      "referencePath": "/workspace/scratch/85111d38430a/upload/image(20261003-104716).png",
+      "attachmentPointsPx": {
+        "recommended": [
+          324,
+          1010
+        ],
+        "rootStemBase": [
+          324,
+          1010
+        ]
+      },
+      "attachmentPointsNormalized": {
+        "recommended": [
+          0.474378,
+          0.986328
+        ],
+        "rootStemBase": [
+          0.474378,
+          0.986328
+        ]
+      }
+    },
+    {
+      "id": "bird-of-paradise",
+      "file": "/workspace/scratch/85111d38430a/tiki-v77/botanical/bird-of-paradise.png",
+      "originalFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/bird-of-paradise-original.png",
+      "originalGeneratedPath": "/workspace/scratch/85111d38430a/generated_images/exec-b5378b39-93ec-4a62-a1f2-a984932b5b7d.png",
+      "originalDimensions": [
+        1024,
+        1536
+      ],
+      "dimensions": [
+        683,
+        1024
+      ],
+      "aspectRatio": "2:3",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "transparentPixelFraction": 0.523934,
+      "alphaBoundsPx": [
+        0,
+        10,
+        683,
+        1013
+      ],
+      "usableBoundsPxAtAlpha64": [
+        4,
+        13,
+        681,
+        1009
+      ],
+      "usableBoundsNormalizedAtAlpha64": [
+        0.005857,
+        0.012695,
+        0.997072,
+        0.985352
+      ],
+      "darkInspectionFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/bird-of-paradise-dark.jpg",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nUse case: background-extraction\nAsset type: transparent tropical flower and foliage cutout texture for cross-card rendering\nInput images: Image 1 is the pond reference; regenerate a separate bird-of-paradise plant matching the long green leaves and orange flower seen at the right side of the pond.\nSubject: one bird-of-paradise plant with several broad long dark-green leaves on visible stems, one distinctive orange and blue bird-of-paradise flower, stems converging at the bottom center; no pot, no soil.\nComposition/framing: front view, entire leaves, flower and stem roots fully visible with transparent margins; clear attachment/root position at bottom center.\nStyle/medium: soft photographic 2000s PS2 realism, slightly low fidelity organic texture, colors and foliage consistent with the pond reference.\nScene/backdrop: genuinely transparent alpha background, with open transparent spaces between leaves, stems and petals.\nConstraints: isolated plant only; clean alpha at leaf and flower edges; no background, no baked floor, no scene shadow, no text.\naspect ratio: 2:3\nAvoid: cartoon, pixel art, overly sharp texture, pot, soil, backdrop, vignette, ground shadow, white or colored edge fringe.",
+      "referencePath": "/workspace/scratch/85111d38430a/upload/image(20261003-104716).png",
+      "attachmentPointsPx": {
+        "recommended": [
+          345,
+          1002
+        ],
+        "rootStemBase": [
+          345,
+          1002
+        ]
+      },
+      "attachmentPointsNormalized": {
+        "recommended": [
+          0.505124,
+          0.978516
+        ],
+        "rootStemBase": [
+          0.505124,
+          0.978516
+        ]
+      }
+    },
+    {
+      "id": "hanging-fern-vine",
+      "file": "/workspace/scratch/85111d38430a/tiki-v77/botanical/hanging-fern-vine.png",
+      "originalFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/hanging-fern-vine-original.png",
+      "originalGeneratedPath": "/workspace/scratch/85111d38430a/generated_images/exec-2a798d92-05f4-4c83-b14f-1240798adbf0.png",
+      "originalDimensions": [
+        724,
+        2172
+      ],
+      "dimensions": [
+        341,
+        1024
+      ],
+      "aspectRatio": "1:3",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "transparentPixelFraction": 0.4667,
+      "alphaBoundsPx": [
+        23,
+        6,
+        336,
+        1018
+      ],
+      "usableBoundsPxAtAlpha64": [
+        26,
+        9,
+        333,
+        1013
+      ],
+      "usableBoundsNormalizedAtAlpha64": [
+        0.076246,
+        0.008789,
+        0.97654,
+        0.989258
+      ],
+      "darkInspectionFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/hanging-fern-vine-dark.jpg",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nUse case: background-extraction\nAsset type: transparent hanging botanical cutout texture\nInput images: Image 1 is the pond reference; use the hanging green foliage against the stone wall as the appearance reference.\nSubject: one long natural hanging fern and vine spray, dangling downward from a small clearly visible attachment of gathered stems at the top center; delicate long narrow fern fronds and trailing stems with green leaves, no pot.\nComposition/framing: tall narrow front view, entire spray fully visible with transparent margins; top attachment is the pivot, foliage trails to long tapered lower tips; generous natural transparent gaps between fronds.\nStyle/medium: soft photographic 2000s PS2 realism, slightly low fidelity organic texture matching the hanging foliage in the pond reference.\nScene/backdrop: genuinely transparent alpha background, including every natural gap between leaves and stems.\nConstraints: isolated foliage only; clean alpha at fine leaf edges; no pot, no background, no baked floor, no scene shadow, no text.\naspect ratio: 1:3\nAvoid: cartoon, pixel art, overly sharp texture, opaque green silhouette, backdrop, vignette, ground shadow, white or colored edge fringe.",
+      "referencePath": "/workspace/scratch/85111d38430a/upload/image(20261003-104716).png",
+      "attachmentPointsPx": {
+        "recommended": [
+          176,
+          12
+        ],
+        "topAttachment": [
+          176,
+          12
+        ]
+      },
+      "attachmentPointsNormalized": {
+        "recommended": [
+          0.516129,
+          0.011719
+        ],
+        "topAttachment": [
+          0.516129,
+          0.011719
+        ]
+      }
+    },
+    {
+      "id": "hawaiian-lei",
+      "file": "/workspace/scratch/85111d38430a/tiki-v77/botanical/hawaiian-lei.png",
+      "originalFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/hawaiian-lei-revised-original.png",
+      "originalGeneratedPath": "/workspace/scratch/85111d38430a/generated_images/exec-b4e207a6-0158-4d51-aa87-6685d46cfe3e.png",
+      "originalDimensions": [
+        1254,
+        1254
+      ],
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "aspectRatio": "1:1",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "transparentPixelFraction": 0.733243,
+      "alphaBoundsPx": [
+        74,
+        8,
+        954,
+        1003
+      ],
+      "usableBoundsPxAtAlpha64": [
+        90,
+        11,
+        938,
+        981
+      ],
+      "usableBoundsNormalizedAtAlpha64": [
+        0.087891,
+        0.010742,
+        0.916016,
+        0.958008
+      ],
+      "darkInspectionFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/hawaiian-lei-dark.jpg",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nUse case: precise-object-edit\nAsset type: transparent flower garland texture for hanging around bamboo\nInput images: Image 1 is the isolated lei edit target; Image 2 is the tiki-bar appearance reference.\nSubject: the same one loose U-shaped Hawaiian lei garland, using ONLY red, yellow and white flowers; replace every pink blossom with a red, yellow or white blossom, keep the individual blossom groups attached by the thin connecting strand.\nComposition/framing: preserve the complete loose U shape, both visible upper ends, generous transparent open center and transparent spaces around the blossoms; entire garland remains fully visible.\nStyle/medium: preserve the soft photographic 2000s PS2 realism and slightly low fidelity petal texture.\nScene/backdrop: genuinely transparent alpha background, including the entire inside of the U and gaps between blossoms.\nConstraints: change only the flower colors to red, yellow and white; keep the garland composition and photographic style; clean alpha at petal edges; one isolated lei only; no bamboo, no background, no baked floor, no scene shadow, no text.\naspect ratio: 1:1\nAvoid: pink blossoms, blue blossoms, purple blossoms, cartoon, pixel art, overly sharp texture, opaque filled U interior, mannequin, backdrop, vignette, ground shadow, white or colored edge fringe.",
+      "referencePath": "/workspace/scratch/85111d38430a/upload/image(20261003-104640).png",
+      "initialOriginalFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/hawaiian-lei-original.png",
+      "initialPrompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nUse case: background-extraction\nAsset type: transparent flower garland texture for hanging around bamboo\nInput images: Image 1 is the tiki-bar reference; use the loose Hawaiian flower leis hanging from the bamboo as the appearance reference.\nSubject: one loose U-shaped Hawaiian lei garland of red, yellow and white flowers, with visible separation between the individual blossom groups along a thin connecting strand.\nComposition/framing: front view, one complete U shape fully visible with generous transparent margin; both upper ends are visible, center hangs lower; generous genuinely transparent open center and gaps around and between blossoms, airy loose arrangement for hanging around bamboo.\nStyle/medium: soft photographic 2000s PS2 realism, slightly low fidelity petal texture matching the lei flowers in the tiki-bar reference.\nScene/backdrop: genuinely transparent alpha background, including the entire large inside of the U and gaps between blossoms.\nConstraints: one isolated lei only; clean alpha at petal edges; no bamboo, no background, no baked floor, no scene shadow, no text.\naspect ratio: 1:1\nAvoid: cartoon, pixel art, overly sharp texture, opaque filled U interior, solid dense wreath, mannequin, backdrop, vignette, ground shadow, white or colored edge fringe.",
+      "initialGeneratedPath": "/workspace/scratch/85111d38430a/generated_images/exec-95fba977-28ef-4894-82ff-63c450e93293.png",
+      "inputPaths": [
+        "/workspace/scratch/85111d38430a/tiki-v77/botanical/hawaiian-lei-original.png",
+        "/workspace/scratch/85111d38430a/upload/image(20261003-104640).png"
+      ],
+      "selectedIteration": 2,
+      "attachmentPointsPx": {
+        "recommended": [
+          512,
+          30
+        ],
+        "leftAttachment": [
+          160,
+          47
+        ],
+        "rightAttachment": [
+          806,
+          30
+        ],
+        "lowerArc": [
+          542,
+          962
+        ]
+      },
+      "attachmentPointsNormalized": {
+        "recommended": [
+          0.5,
+          0.029297
+        ],
+        "leftAttachment": [
+          0.15625,
+          0.045898
+        ],
+        "rightAttachment": [
+          0.787109,
+          0.029297
+        ],
+        "lowerArc": [
+          0.529297,
+          0.939453
+        ]
+      }
+    },
+    {
+      "id": "lily-orchid-atlas",
+      "file": "/workspace/scratch/85111d38430a/tiki-v77/botanical/lily-orchid-atlas.png",
+      "originalFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/lily-orchid-atlas-original.png",
+      "originalGeneratedPath": "/workspace/scratch/85111d38430a/generated_images/exec-1966d236-6ae3-46d1-a724-484c74beabca.png",
+      "originalDimensions": [
+        1774,
+        887
+      ],
+      "dimensions": [
+        1024,
+        512
+      ],
+      "aspectRatio": "2:1",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "transparentPixelFraction": 0.540936,
+      "alphaBoundsPx": [
+        0,
+        11,
+        1004,
+        512
+      ],
+      "usableBoundsPxAtAlpha64": [
+        49,
+        49,
+        1001,
+        464
+      ],
+      "usableBoundsNormalizedAtAlpha64": [
+        0.047852,
+        0.095703,
+        0.977539,
+        0.90625
+      ],
+      "darkInspectionFile": "/workspace/scratch/85111d38430a/tiki-v77/botanical/lily-orchid-atlas-dark.jpg",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nUse case: background-extraction\nAsset type: exact two-cell transparent botanical texture atlas for water and tray decor\nInput images: Image 1 is the pond reference; use its small white water-lily at the right side of the pond as the lily appearance reference.\nSubject: two separate botanical assets: in the LEFT HALF one small white water-lily flower with pale yellow center resting on one green lily pad, viewed directly from above; in the RIGHT HALF one separate small purple and white orchid petal cluster, viewed directly from above.\nComposition/framing: landscape atlas split into exactly two equal side-by-side square halves with the split at exactly 50 percent width; lily and pad centered entirely in the left half, orchid cluster centered entirely in the right half; generous actual transparent margin surrounding each asset, nothing touches or crosses the center split; no divider or grid rendered.\nStyle/medium: soft photographic 2000s PS2 realism, slightly low fidelity natural petal and pad texture matching the pond reference.\nScene/backdrop: genuinely transparent alpha background, including space between the two assets and all petal gaps.\nConstraints: only the two botanical assets; clean alpha at petal and leaf edges; no water, no tray, no background, no baked floor, no scene shadow, no text.\naspect ratio: 2:1\nAvoid: cartoon, pixel art, overly sharp texture, rendered divider or atlas grid, cross-cell overlap, backdrop, vignette, ground shadow, white or colored edge fringe.",
+      "referencePath": "/workspace/scratch/85111d38430a/upload/image(20261003-104716).png",
+      "attachmentPointsPx": {
+        "recommended": [
+          256,
+          256
+        ],
+        "leftLilyPadCenter": [
+          266,
+          263
+        ],
+        "rightOrchidCenter": [
+          783,
+          262
+        ]
+      },
+      "attachmentPointsNormalized": {
+        "recommended": [
+          0.25,
+          0.5
+        ],
+        "leftLilyPadCenter": [
+          0.259766,
+          0.513672
+        ],
+        "rightOrchidCenter": [
+          0.764648,
+          0.511719
+        ]
+      },
+      "cells": [
+        {
+          "id": "water-lily",
+          "cellBoundsPx": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "uvRectBottomLeftV": [
+            0.0,
+            0,
+            0.5,
+            1
+          ],
+          "usableBoundsPxAtAlpha64": [
+            49,
+            66,
+            480,
+            464
+          ],
+          "pivotInAtlasPx": [
+            266,
+            263
+          ],
+          "pivotInCellNormalized": [
+            0.51953125,
+            0.513671875
+          ]
+        },
+        {
+          "id": "orchid",
+          "cellBoundsPx": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "uvRectBottomLeftV": [
+            0.5,
+            0,
+            1.0,
+            1
+          ],
+          "usableBoundsPxAtAlpha64": [
+            557,
+            49,
+            1001,
+            457
+          ],
+          "pivotInAtlasPx": [
+            783,
+            262
+          ],
+          "pivotInCellNormalized": [
+            0.529296875,
+            0.51171875
+          ]
+        }
+      ],
+      "centerSeamAlphaMax": 1
+    }
+  ]
+}

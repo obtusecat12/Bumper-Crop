@@ -1,0 +1,14 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: olive green smiling ceramic tiki mug surfaces and olive green seated tiki ashtray surfaces, each kept as its own separate prop
+reference image: attached bar photograph is the source for olive green glaze, carved tiki vocabulary and the peculiar seated green tiki ashtray visible at the front center; the ashtray must remain a seated figure ashtray, never convert this seated figure into a mug; complete a separate green smiling mug with the same reference olive glaze and carved ceramic vocabulary
+asset type: square photographic diffuse/base-color UV atlas for PS2-style 3D game props, all flat surface artworks and no finished objects
+composition: exact 2 by 2 layout, four equal square panels touching at halfway boundaries, no gutters and no drawn grid; top left is green ceramic mug front artwork; top right is green ceramic mug back artwork; bottom left is seated tiki ashtray figure front surface artwork; bottom right is the ashtray bowl floor soot and ash surface
+top left: olive green glazed ceramic filling the complete square, shallow long tiki eye-brow and nose relief, wide curved smiling mouth with pale worn glaze in recessed smile, patterned carved cheek strips and subtle imperfections; flat front-facing mug face artwork without silhouette or rim ellipse
+top right: same olive green glazed ceramic filling complete square, back surface with shallow vertical carved bamboo-like bands and worn glaze, no face
+bottom left: weathered pale olive green ceramic filling complete square, faithfully reproduce the reference ashtray seated tiki figure facial surface, grimacing small carved face at upper center and carved torso/arms lower down as flattened surface relief artwork; this is the ashtray figure texture, no mug rim, no object silhouette or perspective
+bottom right: weathered olive glazed bowl floor surface filling complete square, gray-black soot, scattered chalky white ash, two tiny spent cigarette ember fragments, irregular ash mottling and burnt grime; completely flat top-down surface without bowl silhouette
+style and quality: realistic photographically sourced-looking ceramic surface detail, slightly soft low-resolution PS2 game texture character, 1024 by 1024 artwork
+lighting: diffuse flat texture lighting, slight groove shadows, no strong reflections
+text: none, no captions or quadrant labels
+aspect ratio: 1:1
+Avoid: perspective props, product photographs, surrounding bar, object silhouettes, checkerboard, white empty background, generic redesign, converting ashtray into a mug, text, visible dividing lines, excessive yellow, oversharpening, excessive highlights

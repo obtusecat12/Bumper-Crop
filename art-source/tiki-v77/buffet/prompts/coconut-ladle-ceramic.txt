@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset type: four-material UV texture atlas for 3D coconut ladles, coconut shells and pale ceramic
+reference image: attached photograph is the exact buffet aesthetic reference; match the coconut shell ladles, long warm worn wooden handles, and pale ceramic around the serving troughs.
+composition: exact 2-column by 2-row atlas, 1024 by 1024 pixels, four equal 512 by 512 square tiles, all flat edge-to-edge surface scans with no borders. Top left: brown coconut shell exterior with dense short hairy fibers, irregular fine dark grooves and warm medium brown husk. Top right: smooth dark brown coconut shell inner surface with subtle concentric organic grain and lightly polished worn patches. Bottom left: worn longitudinal ladle handle wood, warm pale golden tan timber grain running vertically, fine cracks, round-wood wear material without object silhouette. Bottom right: pale ivory ceramic glaze with restrained aged crazing, very fine faint gray hairline crack network and slight stains.
+style: physically plausible unlit base-color material scans, realistic reference colors, no perspective.
+aspect ratio: 1:1
+constraints: flat materials only, no bowls or spoon silhouettes, no table scene, no text, no labels, no borders, no watermark. Every quadrant should be usable as a seamless repeating texture.

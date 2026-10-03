@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: photographic PS2-era netted cantaloupe rind material atlas for a low-poly oval melon mesh
+input images: image 1 is the melon/material reference; image 2 is the same 2000s tiki-bar photographic style reference
+subject: only the flattened skin of the pale green-beige melon at the lower right of image 1, subtle dry beige reticulated netting and distinct greenish longitudinal recessed grooves; preserve that reference coloration
+composition: exact 1536 by 1024 pixel image, 3 columns by 2 rows of exactly equal square panels, edge to edge with no gaps or padding; every panel covers identical flattened skin region suitable for tiling around a melon, no whole fruit shape
+panel layout: top-left base color; top-middle tangent-space normal map with blue-violet background and matching netted rind and recessed longitudinal grooves; top-right grayscale roughness; bottom-left grayscale ambient occlusion; bottom-middle grayscale height; bottom-right perfectly solid black metallic
+materials: real slightly uneven pale green-beige netted melon skin, photographic 2000s PS2 texture, soft finite-resolution details without modern polished stylization; neutral albedo without baked directional shadows
+constraints: align all skin features across corresponding maps; long grooves run vertically straight throughout the flat panels; no lettering, no labels, no borders, no melon silhouettes, no stems, no scene
+aspect ratio: 3:2

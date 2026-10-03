@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset type: front face and torso UV portrait texture atlas for the second small clay souvenir figurine beside the buffet canoe
+reference image: attached photograph supplies the figurine aesthetic and material; closely follow the second small smiling brown glazed Menehune clay souvenir doll beside the fruit, creating the requested distinct doll with a pink floral headdress and different facial appearance.
+subject: a respectful handmade smiling brown glazed ceramic souvenir figurine, exact clay figurine appearance, not a living person. Different face from the first doll: slightly narrower ceramic cheeks, distinct painted eye shapes, small molded nose and warm cheerful molded smile. Dark brown glossy clay with visible craft irregularities. Pink floral headdress and flower lei.
+composition: 1024 by 1024 texture atlas split into two equal vertical halves without borders. Left half: straight-on centered front face texture with the pink floral headdress across the top, cheeks and warm smile, chin toward bottom, smoothly brown-filled surrounding area suitable for a head UV map. Right half: straight-on front upper-body decoration texture of the ceramic souvenir doll, entirely covered by an opaque, densely overlapping pink-and-white floral lei over a simple painted floral garment; no exposed body details, no arms or background objects. Both halves are flush flat UV-ready portraits with no perspective, no cast shadows and even neutral illumination.
+style: realistic small handmade glazed clay collectible texture, matching the reference craft material while keeping this doll distinct.
+aspect ratio: 1:1
+constraints: two distinct atlas panels, a single figurine identity, no whole statue render, no background scene, no living-person caricature, no text, no labels, no watermark.

@@ -1,0 +1,43 @@
+{
+  "exactReturn": true,
+  "origin": {
+    "level": 11,
+    "cx": "9",
+    "cz": "5",
+    "x": 1.2680293852829436,
+    "z": 44.27502495008804,
+    "yaw": 0.03341407267452734,
+    "pitch": 0.05
+  },
+  "returned": {
+    "level": 11,
+    "cx": "9",
+    "cz": "5",
+    "x": 1.2680293852829436,
+    "z": 44.27502495008804,
+    "yaw": 0.03341407267452734,
+    "pitch": 0.05
+  },
+  "cachedRoom": true,
+  "reentryProgramDelta": 0,
+  "active": true,
+  "warmed": true,
+  "overlayHidden": true,
+  "stats": {
+    "draws": 75,
+    "triangles": 219370,
+    "spotLights": 11,
+    "pointLights": 8,
+    "areaBounces": 4,
+    "shadowMaps": 3,
+    "generatedMaterials": 80,
+    "effects": {
+      "ssaoSamples": 12,
+      "volumeSteps": 12,
+      "effectScale": 0.5,
+      "bloom": "official Three.js r180 UnrealBloomPass",
+      "bloomStartScale": 0.25
+    }
+  },
+  "failedResources": []
+}

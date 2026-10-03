@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: six-map PBR material atlas for gray pond-wall stone masonry.
+reference image: /workspace/scratch/85111d38430a/upload/image(20261003-104716).png. Match the pale gray weathered irregular square and rectangular stone blocks surrounding the Moai pond.
+subject: irregular gray square and rectangular coarse-cut masonry blocks, subtle warm gray mineral mottling and darker gray worn mortar seams, softened corners, weathered rough surfaces. Dense repeatable stonewall patch.
+atlas layout: exact 3-column by 2-row grid at 1536 by 1024 pixels; each square cell exactly 512 by 512 pixels; no gutters, borders, labels, padding or text. Repeat the same stone block layout and mortar lines in identical positions in all six maps. Top row left to right: diffuse basecolor, tangent-space OpenGL normal with +Y, grayscale roughness. Bottom row left to right: grayscale ambient occlusion, grayscale linear height white high black low, entirely black metalness for nonmetallic stone.
+composition: flat front orthographic material texture only, square seamless stone arrangement filling each tile edge to edge, no pond water, statue, plants, objects, room or background.
+materials and image quality: photographic PS2 surface detail softly resolved, rough pale warm gray stone matching the reference. Avoid baked illumination; material information only.
+aspect ratio: 3:2.
+output: 1536 by 1024 pixels.
+avoid: brick-red masonry, uniform tiny bricks, oversized cracks, perspective, strong lighting, cartoon illustration, extreme sharpening, borders, labels, text or watermarks.

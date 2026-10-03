@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: six-map PBR material atlas for worn black painted cone-lamp steel.
+subject: dark graphite black painted steel, aged matte black paint with a few subtle abrasion flecks and lightly oxidized dark gray rubbed edges, faint fine metal grain. Texture only, photographic softly resolved PS2 surface.
+atlas layout: exact 3-column by 2-row grid at 1536 by 1024 pixels; each square cell exactly 512 by 512 pixels; no gutters, borders, labels, padding or text. The identical seamless worn steel patch with every scratch and abrasion at identical positions in all six maps. Top row left to right: unlit basecolor, tangent-space OpenGL normal with +Y and fine understated surface relief, grayscale roughness. Bottom row left to right: grayscale ambient occlusion, grayscale linear height with white high black low, metalness map with black painted coating and white or pale gray exposed steel abrasion flecks.
+composition: flat material sample filling all square cells edge to edge, no lamp silhouette, cone shape, light bulb, light, glow, objects or background.
+materials and image quality: photographic aged black painted cone-lamp steel texture, low contrast worn graphite and faint oxidation, softly resolved PS2 detail without baked highlights or fake light.
+aspect ratio: 3:2.
+output: 1536 by 1024 pixels.
+avoid: silver polished metal, bright rust-orange, glowing texture, directional illumination, cartoon, excessive contrast, large scratches, oversharpening, borders, labels, text or watermarks.

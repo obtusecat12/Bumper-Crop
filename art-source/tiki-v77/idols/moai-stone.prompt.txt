@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: six-map PBR material atlas for dark damp volcanic stone on a Moai fountain.
+reference image: /workspace/scratch/85111d38430a/upload/image(20261003-104716).png. Match only the material of the central tall dark brown Moai fountain.
+subject: dark reddish brown charcoal volcanic stone, weathered porous small pits and dull mineral grain, damp subtly polished patches, restrained dark brown variation. No face; face geometry will be modeled separately.
+atlas layout: exact 3-column by 2-row grid at 1536 by 1024 pixels; each square cell exactly 512 by 512 pixels; no gutters, borders, labels, padding or text. The same seamless flat stone patch with exact matching pits and features in every cell. Top row left to right: diffuse basecolor, tangent-space OpenGL normal map with +Y and mostly neutral blue-purple, grayscale roughness. Bottom row left to right: grayscale ambient occlusion, grayscale linear height with white high black low, entirely black metalness for nonmetallic stone.
+composition: material texture only, surface fills every tile edge to edge, no object silhouette, statue geometry, eyes, mouth, water, plants, background, or directional lighting.
+materials and image quality: photographic PS2 surface detail softly resolved, damp dark brown volcanic stone matching the reference, natural broad grain and fine porous texture without extreme sharpness.
+aspect ratio: 3:2.
+output: 1536 by 1024 pixels.
+avoid: face shapes, sculpted facial grooves, diagonal perspective, baked highlights, cartoon, glossy plastic, strong seams, borders, labels, text or watermarks.

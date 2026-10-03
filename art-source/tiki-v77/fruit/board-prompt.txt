@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: genuine-alpha vintage surfboard front texture cutout for a PS2-era low-poly board mesh
+input images: image 2 is the precise surfboard graphic and proportion reference; image 1 supports the same photographic material style
+subject: the tall upright surfboard leaning behind the countertop left of the bar taps in image 2
+composition: exact full front graphic, flat orthographic, centered vertical board-shaped cutout, pointed pale-yellow nose at the top and weathered bright-blue lower panel; entire board visible from nose to tail; narrow proportions, 1:3 aspect ratio
+graphic: pale-yellow nose takes approximately the top third of the face; weathered bright blue lower field with subtle scratches and faded paint; a simple thin black center line running vertically through the middle, faithful to the reference
+materials: aged photographic painted fiberglass, uneven worn color and old lacquer, high fidelity early-2000s PS2 photographic texture aesthetic; flat even texture lighting
+background: genuinely transparent alpha beyond the board silhouette
+constraints: no perspective, no 3D thickness, no scenery, no leaning shadow, no separate fins, no new words, no new logos, no extra patterns, no checkerboard drawn into image, no white matte
+aspect ratio: 1:3

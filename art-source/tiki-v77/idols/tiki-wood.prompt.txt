@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset type: seamless plain rear and side basecolor UV texture for the same tall wooden Tiki idol.
+reference image: /workspace/scratch/85111d38430a/upload/image(20261003-104910).png. Match the warm carved wood of the large Tiki sculpture at right.
+subject: warm honey brown carved tropical wood surface, faint broad vertical grain, old tiny cracks and worn staining, subtle irregular carving marks, continuous flat surface.
+composition: square seamless tile, surface fills image edge to edge, texture only with no object silhouette, perfectly matching opposite edges.
+materials and image quality: photographic painted-varnished worn wood softly resolved for a PS2 game, low-contrast diffuse basecolor, restrained warm brown that matches the face artwork.
+aspect ratio: 1:1.
+output: 1024 by 1024 pixels.
+avoid: face, eyes, mouth, flower, decorative borders, knots that read as faces, room objects, directional illumination, cast shadows, specular glare, plastic, cartoon, oversharpening, excessive yellow, labels or text.

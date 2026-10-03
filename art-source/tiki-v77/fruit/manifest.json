@@ -1,0 +1,691 @@
+{
+  "generator": "built-in image_gen",
+  "prompt_skill": "../prompt-skill.md",
+  "reference_images": [
+    "/workspace/scratch/85111d38430a/upload/image(20261003-104821).png",
+    "/workspace/scratch/85111d38430a/upload/image(20261003-104640).png"
+  ],
+  "processing": "Generated atlases mechanically cropped; papaya atlas mechanically rescaled from 1254 square to 1024 square before quadrant cropping; alpha preserved unchanged. No procedural replacement textures.",
+  "uv_convention": "Every pixel box is [left,top,right,bottom], exclusive right/bottom. atlas_uv_top_left is [u0,v0,u1,v1]. three_js_uv_bottom_left reverses the v coordinate for bottom-left UV convention. Directly cropped material files use full [0,0,1,1] UVs.",
+  "assets": {
+    "pineapple": {
+      "atlas": "pineapple-atlas.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "source_original": "originals/pineapple-generated.png",
+      "layout": "3 columns x 2 rows; pixel origin top-left",
+      "maps": {
+        "basecolor": {
+          "file": "pineapple-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.5,
+            0.3333333333333333,
+            1.0
+          ]
+        },
+        "normal": {
+          "file": "pineapple-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.3333333333333333,
+            0.0,
+            0.6666666666666666,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666,
+            1.0
+          ]
+        },
+        "roughness": {
+          "file": "pineapple-roughness.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.6666666666666666,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.6666666666666666,
+            0.5,
+            1.0,
+            1.0
+          ]
+        },
+        "ao": {
+          "file": "pineapple-ao.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.5,
+            0.3333333333333333,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.5
+          ]
+        },
+        "height": {
+          "file": "pineapple-height.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.3333333333333333,
+            0.0,
+            0.6666666666666666,
+            0.5
+          ]
+        },
+        "metallic": {
+          "file": "pineapple-metallic.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.6666666666666666,
+            0.5,
+            1.0,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.6666666666666666,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "generated_channel_extrema": [
+            [
+              0,
+              9
+            ],
+            [
+              0,
+              11
+            ],
+            [
+              0,
+              10
+            ]
+          ],
+          "material_note": "Generated near-black metallic panel includes minor pixel noise. Set material metalness to 0 for this nonmetal fruit."
+        }
+      }
+    },
+    "cantaloupe": {
+      "atlas": "cantaloupe-atlas.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "source_original": "originals/melon-generated.png",
+      "layout": "3 columns x 2 rows; pixel origin top-left",
+      "maps": {
+        "basecolor": {
+          "file": "cantaloupe-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.5,
+            0.3333333333333333,
+            1.0
+          ]
+        },
+        "normal": {
+          "file": "cantaloupe-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.3333333333333333,
+            0.0,
+            0.6666666666666666,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666,
+            1.0
+          ]
+        },
+        "roughness": {
+          "file": "cantaloupe-roughness.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.6666666666666666,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.6666666666666666,
+            0.5,
+            1.0,
+            1.0
+          ]
+        },
+        "ao": {
+          "file": "cantaloupe-ao.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.5,
+            0.3333333333333333,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            0.5
+          ]
+        },
+        "height": {
+          "file": "cantaloupe-height.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.3333333333333333,
+            0.0,
+            0.6666666666666666,
+            0.5
+          ]
+        },
+        "metallic": {
+          "file": "cantaloupe-metallic.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.6666666666666666,
+            0.5,
+            1.0,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.6666666666666666,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "generated_channel_extrema": [
+            [
+              0,
+              19
+            ],
+            [
+              0,
+              20
+            ],
+            [
+              0,
+              30
+            ]
+          ],
+          "material_note": "Generated near-black metallic panel includes minor pixel noise. Set material metalness to 0 for this nonmetal fruit."
+        }
+      }
+    },
+    "papaya": {
+      "atlas": "papaya-atlas.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "source_original": "originals/papaya-generated.png",
+      "maps": {
+        "green_basecolor": {
+          "file": "papaya-green-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.5,
+            0.5,
+            1.0
+          ]
+        },
+        "green_normal": {
+          "file": "papaya-green-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.0,
+            0.5,
+            0.5,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        "yellow_basecolor": {
+          "file": "papaya-yellow-basecolor.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "atlas_uv_top_left": [
+            0.5,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "three_js_uv_bottom_left": [
+            0.5,
+            0.5,
+            1.0,
+            1.0
+          ]
+        },
+        "yellow_normal": {
+          "file": "papaya-yellow-normal.png",
+          "size": [
+            512,
+            512
+          ],
+          "atlas_pixel_bounds": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "atlas_uv_top_left": [
+            0.5,
+            0.5,
+            1.0,
+            1.0
+          ],
+          "three_js_uv_bottom_left": [
+            0.5,
+            0.0,
+            1.0,
+            0.5
+          ]
+        }
+      }
+    },
+    "pineapple_crown": {
+      "file": "pineapple-crown.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "source_original": "originals/crown-generated.png",
+      "genuine_alpha": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_nonzero_bounds": [
+        0,
+        0,
+        1230,
+        1254
+      ],
+      "alpha_128_bounds": [
+        53,
+        9,
+        1224,
+        1244
+      ],
+      "content_uv_top_left": [
+        0.04226475279106858,
+        0.007177033492822967,
+        0.9760765550239234,
+        0.9920255183413078
+      ],
+      "content_three_js_uv_bottom_left": [
+        0.04226475279106858,
+        0.00797448165869219,
+        0.9760765550239234,
+        0.992822966507177
+      ],
+      "suggested_alpha_test": 0.5
+    },
+    "surfboard_front": {
+      "file": "surfboard-front.png",
+      "size": [
+        724,
+        2172
+      ],
+      "source_original": "originals/board-generated.png",
+      "genuine_alpha": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_nonzero_bounds": [
+        57,
+        14,
+        723,
+        2172
+      ],
+      "alpha_128_bounds": [
+        156,
+        17,
+        568,
+        2162
+      ],
+      "content_uv_top_left": [
+        0.2154696132596685,
+        0.007826887661141806,
+        0.7845303867403315,
+        0.9953959484346224
+      ],
+      "content_three_js_uv_bottom_left": [
+        0.2154696132596685,
+        0.004604051565377576,
+        0.7845303867403315,
+        0.9921731123388582
+      ],
+      "suggested_alpha_test": 0.5
+    },
+    "cocktail_umbrella": {
+      "file": "cocktail-umbrella-atlas.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "source_original": "originals/umbrella-generated.png",
+      "genuine_alpha": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_nonzero_bounds": [
+        63,
+        0,
+        1177,
+        1254
+      ],
+      "alpha_128_bounds": [
+        80,
+        3,
+        1173,
+        1246
+      ],
+      "content_uv_top_left": [
+        0.06379585326953748,
+        0.0023923444976076554,
+        0.9354066985645934,
+        0.9936204146730463
+      ],
+      "content_three_js_uv_bottom_left": [
+        0.06379585326953748,
+        0.006379585326953707,
+        0.9354066985645934,
+        0.9976076555023924
+      ],
+      "suggested_alpha_test": 0.5,
+      "parts": {
+        "canopy": {
+          "file": "cocktail-umbrella-canopy.png",
+          "atlas_pixel_bounds": [
+            80,
+            3,
+            1173,
+            1058
+          ],
+          "atlas_uv_top_left": [
+            0.06379585326953748,
+            0.0023923444976076554,
+            0.9354066985645934,
+            0.8437001594896332
+          ],
+          "three_js_uv_bottom_left": [
+            0.06379585326953748,
+            0.15629984051036683,
+            0.9354066985645934,
+            0.9976076555023924
+          ],
+          "size": [
+            1093,
+            1055
+          ],
+          "geometry_note": "Use radial/circular canopy UV geometry; a few pixels of the separate clear stirrer head lie in the lower-left corner of this rectangular crop, outside the canopy silhouette."
+        },
+        "stirrer_clear": {
+          "file": "stirrer-clear.png",
+          "atlas_pixel_bounds": [
+            156,
+            1052,
+            1096,
+            1115
+          ],
+          "atlas_uv_top_left": [
+            0.12440191387559808,
+            0.8389154704944178,
+            0.8740031897926634,
+            0.8891547049441786
+          ],
+          "three_js_uv_bottom_left": [
+            0.12440191387559808,
+            0.11084529505582141,
+            0.8740031897926634,
+            0.16108452950558216
+          ],
+          "size": [
+            940,
+            63
+          ]
+        },
+        "stirrer_white": {
+          "file": "stirrer-white.png",
+          "atlas_pixel_bounds": [
+            157,
+            1117,
+            1097,
+            1178
+          ],
+          "atlas_uv_top_left": [
+            0.1251993620414673,
+            0.8907496012759171,
+            0.8748006379585327,
+            0.9393939393939394
+          ],
+          "three_js_uv_bottom_left": [
+            0.1251993620414673,
+            0.06060606060606055,
+            0.8748006379585327,
+            0.10925039872408293
+          ],
+          "size": [
+            940,
+            61
+          ]
+        },
+        "stirrer_green": {
+          "file": "stirrer-green.png",
+          "atlas_pixel_bounds": [
+            157,
+            1180,
+            1096,
+            1246
+          ],
+          "atlas_uv_top_left": [
+            0.1251993620414673,
+            0.9409888357256778,
+            0.8740031897926634,
+            0.9936204146730463
+          ],
+          "three_js_uv_bottom_left": [
+            0.1251993620414673,
+            0.006379585326953707,
+            0.8740031897926634,
+            0.05901116427432218
+          ],
+          "size": [
+            939,
+            66
+          ]
+        }
+      }
+    }
+  }
+}

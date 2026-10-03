@@ -1,0 +1,9 @@
+{
+  "originalGeneratedPath": "/workspace/scratch/85111d38430a/generated_images/exec-b4e207a6-0158-4d51-aa87-6685d46cfe3e.png",
+  "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nUse case: precise-object-edit\nAsset type: transparent flower garland texture for hanging around bamboo\nInput images: Image 1 is the isolated lei edit target; Image 2 is the tiki-bar appearance reference.\nSubject: the same one loose U-shaped Hawaiian lei garland, using ONLY red, yellow and white flowers; replace every pink blossom with a red, yellow or white blossom, keep the individual blossom groups attached by the thin connecting strand.\nComposition/framing: preserve the complete loose U shape, both visible upper ends, generous transparent open center and transparent spaces around the blossoms; entire garland remains fully visible.\nStyle/medium: preserve the soft photographic 2000s PS2 realism and slightly low fidelity petal texture.\nScene/backdrop: genuinely transparent alpha background, including the entire inside of the U and gaps between blossoms.\nConstraints: change only the flower colors to red, yellow and white; keep the garland composition and photographic style; clean alpha at petal edges; one isolated lei only; no bamboo, no background, no baked floor, no scene shadow, no text.\naspect ratio: 1:1\nAvoid: pink blossoms, blue blossoms, purple blossoms, cartoon, pixel art, overly sharp texture, opaque filled U interior, mannequin, backdrop, vignette, ground shadow, white or colored edge fringe.",
+  "inputPaths": [
+    "/workspace/scratch/85111d38430a/tiki-v77/botanical/hawaiian-lei-original.png",
+    "/workspace/scratch/85111d38430a/upload/image(20261003-104640).png"
+  ],
+  "transparent_background": true
+}

@@ -1,0 +1,566 @@
+{
+  "generation_mode": "built-in image_gen",
+  "references": [
+    "/workspace/scratch/85111d38430a/upload/image(20261003-104640).png",
+    "/workspace/scratch/85111d38430a/upload/image(20261003-104910).png"
+  ],
+  "prompts_file": "prompts.json",
+  "toy_revision_prompt_file": "toy-revision-prompt.txt",
+  "coordinates": "pixel boxes are [left,top,right,bottom], right/bottom exclusive; uv boxes [u_min,v_min,u_max,v_max] use bottom-left origin",
+  "assets": [
+    {
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/labels-atlas-01.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/originals/labels-atlas-01-original.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "prompt_index": 0,
+      "visual_checks": "viewed original; checked expected subject, text, palette and flat surface composition",
+      "quadrants": [
+        {
+          "name": "top_left",
+          "pixel_box": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "uv_box": [
+            0,
+            0.5,
+            0.5,
+            1
+          ],
+          "text": [
+            "MARINER'S STAR",
+            "ISLAND RUM",
+            "EST. 1896"
+          ],
+          "style": "cream/red triangle",
+          "label_number": 1
+        },
+        {
+          "name": "top_right",
+          "pixel_box": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "uv_box": [
+            0.5,
+            0.5,
+            1,
+            1
+          ],
+          "text": [
+            "WINDWARD",
+            "DRY GIN",
+            "DISTILLED & BOTTLED"
+          ],
+          "style": "ivory/navy ribbon",
+          "label_number": 2
+        },
+        {
+          "name": "bottom_left",
+          "pixel_box": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "uv_box": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "text": [
+            "CROWN ANCHOR",
+            "OLD RUM",
+            "AGED 12 YEARS"
+          ],
+          "style": "black/gold crest",
+          "label_number": 3
+        },
+        {
+          "name": "bottom_right",
+          "pixel_box": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "uv_box": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "text": [
+            "GREEN HARBOR",
+            "LONDON DRY GIN",
+            "PREMIUM DISTILLED"
+          ],
+          "style": "olive green/cream",
+          "label_number": 4
+        }
+      ]
+    },
+    {
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/labels-atlas-02.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/originals/labels-atlas-02-original.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "prompt_index": 1,
+      "visual_checks": "viewed original; checked expected subject, text, palette and flat surface composition",
+      "quadrants": [
+        {
+          "name": "top_left",
+          "pixel_box": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "uv_box": [
+            0,
+            0.5,
+            0.5,
+            1
+          ],
+          "text": [
+            "CORAL REEF",
+            "WHITE RUM",
+            "CARIBBEAN SPIRIT"
+          ],
+          "style": "white/red seal",
+          "label_number": 5
+        },
+        {
+          "name": "top_right",
+          "pixel_box": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "uv_box": [
+            0.5,
+            0.5,
+            1,
+            1
+          ],
+          "text": [
+            "OLD TIDE",
+            "DARK RUM",
+            "RESERVE"
+          ],
+          "style": "dark burgundy/gold",
+          "label_number": 6
+        },
+        {
+          "name": "bottom_left",
+          "pixel_box": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "uv_box": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "text": [
+            "SUN GROVE",
+            "ORANGE LIQUEUR",
+            "TRIPLE SEC"
+          ],
+          "style": "orange fruit/cream",
+          "label_number": 7
+        },
+        {
+          "name": "bottom_right",
+          "pixel_box": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "uv_box": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "text": [
+            "AMBER QUAY",
+            "BLENDED WHISKY",
+            "FINE OLD SCOTCH"
+          ],
+          "style": "amber scroll/brown",
+          "label_number": 8
+        }
+      ]
+    },
+    {
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/labels-atlas-03.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/originals/labels-atlas-03-original.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "prompt_index": 2,
+      "visual_checks": "viewed original; checked expected subject, text, palette and flat surface composition",
+      "quadrants": [
+        {
+          "name": "top_left",
+          "pixel_box": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "uv_box": [
+            0,
+            0.5,
+            0.5,
+            1
+          ],
+          "text": [
+            "BLUE LANTERN",
+            "AGED RUM",
+            "PRIVATE RESERVE"
+          ],
+          "style": "navy/cream lighthouse",
+          "label_number": 9
+        },
+        {
+          "name": "top_right",
+          "pixel_box": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "uv_box": [
+            0.5,
+            0.5,
+            1,
+            1
+          ],
+          "text": [
+            "JUNIPER ISLE",
+            "DRY GIN",
+            "SMALL BATCH"
+          ],
+          "style": "cream/green juniper",
+          "label_number": 10
+        },
+        {
+          "name": "bottom_left",
+          "pixel_box": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "uv_box": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "text": [
+            "RED COMPASS",
+            "SPICED RUM",
+            "EST. 1912"
+          ],
+          "style": "gold/red compass ribbon",
+          "label_number": 11
+        },
+        {
+          "name": "bottom_right",
+          "pixel_box": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "uv_box": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "text": [
+            "PORT BARREL",
+            "MALT WHISKY",
+            "AGED 8 YEARS"
+          ],
+          "style": "ivory/russet barrel crest",
+          "label_number": 12
+        }
+      ]
+    },
+    {
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/cold-beer-sign.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/originals/cold-beer-sign-original.png",
+      "original_size": [
+        1536,
+        1024
+      ],
+      "runtime_size": [
+        1024,
+        683
+      ],
+      "prompt_index": 3,
+      "visual_checks": "COLD BEER exact spelling; large dark two-line block lettering; foamy amber mug above; aged yellow enamel; straight front-facing image",
+      "text": [
+        "COLD",
+        "BEER"
+      ],
+      "uv_box": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "geometry_aspect": 1.5
+    },
+    {
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/vw-t1-atlas.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/originals/vw-t1-atlas-original.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "prompt_index": 4,
+      "visual_checks": "blue lower body, white upper body/roof, split windshield and VW roundel, opposite side directions, rear vents and taillights; all views occupy exact assigned quadrants after mechanical retiling",
+      "mechanical_retiling": "Each generated view was mechanically square-cropped and resized into its own exact 512x512 quadrant; no painted or synthetic representational content was added.",
+      "quadrants": [
+        {
+          "name": "top_left",
+          "pixel_box": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "uv_box": [
+            0,
+            0.5,
+            0.5,
+            1
+          ],
+          "surface": "front",
+          "source_crop_box": [
+            0,
+            0,
+            597,
+            597
+          ]
+        },
+        {
+          "name": "top_right",
+          "pixel_box": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "uv_box": [
+            0.5,
+            0.5,
+            1,
+            1
+          ],
+          "surface": "left_side (nose left)",
+          "source_crop_box": [
+            597,
+            0,
+            1254,
+            657
+          ]
+        },
+        {
+          "name": "bottom_left",
+          "pixel_box": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "uv_box": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "surface": "right_side (nose right)",
+          "source_crop_box": [
+            0,
+            604,
+            650,
+            1254
+          ]
+        },
+        {
+          "name": "bottom_right",
+          "pixel_box": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "uv_box": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "surface": "back",
+          "source_crop_box": [
+            627,
+            627,
+            1254,
+            1254
+          ]
+        }
+      ],
+      "geometry_proportions": {
+        "length_to_height": 2.1,
+        "width_to_height": 0.85,
+        "notes": "Approximate T1 toy proportions from the reference; views are texture surfaces, not dimensioned engineering elevations. The side tiles preserve horizontal vehicle proportions within navy padding."
+      }
+    },
+    {
+      "runtime_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/detail-atlas.png",
+      "original_path": "/workspace/scratch/85111d38430a/tiki-v77/bottles/originals/detail-atlas-original.png",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "prompt_index": 5,
+      "visual_checks": "viewed original; checked expected subject, text, palette and flat surface composition",
+      "quadrants": [
+        {
+          "name": "top_left",
+          "pixel_box": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "uv_box": [
+            0,
+            0.5,
+            0.5,
+            1
+          ],
+          "surface": "navy nautical poster",
+          "text": [
+            "SOUTH SEAS",
+            "TRADING CO.",
+            "EST. 1938"
+          ]
+        },
+        {
+          "name": "top_right",
+          "pixel_box": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "uv_box": [
+            0.5,
+            0.5,
+            1,
+            1
+          ],
+          "surface": "red bamboo-framed tiki sign",
+          "text": [
+            "TIKI",
+            "BAR"
+          ]
+        },
+        {
+          "name": "bottom_left",
+          "pixel_box": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "uv_box": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "surface": "cream handwritten drinks card",
+          "text": [
+            "House Drinks",
+            "Mai Tai",
+            "Rum Punch",
+            "Blue Lagoon"
+          ]
+        },
+        {
+          "name": "bottom_right",
+          "pixel_box": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "uv_box": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "surface": "oxidized pour-spout metal and black rubber rings",
+          "text": []
+        }
+      ]
+    }
+  ],
+  "bottle_geometry_notes": {
+    "reference_observation": "Rear shelves contain a mix of tall narrow dark rum/gin bottles, clear short-shoulder bottles, and squat amber liqueur bottles. The foreground white/red rum label is a rectangular paper patch centered on the body. Several bottles have long silver pour spouts and black rubber stoppers.",
+    "recommended_height_to_diameter": {
+      "tall_rum_gin": 4.4,
+      "short_liqueur": 3.2,
+      "medium_whisky": 3.7
+    },
+    "neck_length_fraction_of_total_height": 0.22,
+    "neck_diameter_fraction_of_body_diameter": 0.33,
+    "labels": "A square atlas quadrant can be cropped or mapped onto an approximately 1.0 width / 1.2 height paper patch; keep brand text front-facing on each bottle. Ratios are modeling guidance from references, not exact measured dimensions."
+  }
+}

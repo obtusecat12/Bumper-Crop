@@ -1,0 +1,1 @@
+PASS: city map precision, rotated/circular collision safe landing, no-safe rollback predicate, Tiki circulation, scoped facade replacement, 10 independent runtime photographs.

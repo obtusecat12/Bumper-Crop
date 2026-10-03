@@ -1,0 +1,2 @@
+PASS: all five cameras walkable; four continuous routes; pond/canoe/bar collision; finite batched geometry; 80 complete generated maps; local-only QA; existing transition retained.
+{ draws: 61, triangles: 163672 }
