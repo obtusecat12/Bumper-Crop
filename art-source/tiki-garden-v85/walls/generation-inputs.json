@@ -1,0 +1,32 @@
+[
+  {
+    "name": "lava",
+    "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-e1003829-e7e8-4392-a72e-3e3cc21f257a.png",
+    "prompt_path": "prompts/lava-rock.txt",
+    "tool": "image_gen.imagegen"
+  },
+  {
+    "name": "rainforest-01",
+    "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-e8a5368c-00fc-4892-ada2-bf7ba2f5f4a9.png",
+    "prompt_path": "prompts/rainforest-01.txt",
+    "tool": "image_gen.imagegen"
+  },
+  {
+    "name": "rainforest-02",
+    "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-67d77067-e408-473e-9a7a-f8dfc47a6ab8.png",
+    "prompt_path": "prompts/rainforest-02.txt",
+    "tool": "image_gen.imagegen"
+  },
+  {
+    "name": "rainforest-03",
+    "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-f57d18b0-0690-49b5-ab53-6f6656717a14.png",
+    "prompt_path": "prompts/rainforest-03.txt",
+    "tool": "image_gen.imagegen"
+  },
+  {
+    "name": "rainforest-04",
+    "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-8b0c3bf6-3814-4daf-aa20-e8a607f1850a.png",
+    "prompt_path": "prompts/rainforest-04.txt",
+    "tool": "image_gen.imagegen"
+  }
+]

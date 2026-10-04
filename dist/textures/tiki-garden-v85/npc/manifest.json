@@ -1,0 +1,690 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-04T11:42:03.821272+00:00",
+  "tool": "built-in image_gen.imagegen",
+  "runtime_resolution": [
+    128,
+    128
+  ],
+  "native_resolution": [
+    1254,
+    1254
+  ],
+  "resampling": "Pillow Image.Resampling.NEAREST",
+  "prompt_file": "prompts.json",
+  "coordinate_system": "Pixel rectangles [x0,y0,x1,y1) use top-left origin; normalized image [u,v] uses top-left origin. Three.js UV has v=1-image_v. Eye names refer to image left/right, therefore character right/left.",
+  "reference_images": [
+    {
+      "path": "/workspace/scratch/85111d38430a/upload/ba7f0823a38f9e2d98afb957ac8fb325.png",
+      "role": "observed style only; identity and clothing not copied"
+    },
+    {
+      "path": "/workspace/scratch/85111d38430a/level10-tiki-garden/dist/textures/npc-v79/waiter/face.png",
+      "role": "observed UV layout reference"
+    },
+    {
+      "path": "/workspace/scratch/85111d38430a/level10-tiki-garden/dist/textures/npc-v79/waiter/body.png",
+      "role": "observed UV layout reference"
+    }
+  ],
+  "characters": {
+    "footbath": {
+      "files": {
+        "face": {
+          "runtime": "footbath/face.png",
+          "native": "footbath/native/face.png",
+          "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-39189144-6f49-40d7-8a36-8a2df0944918.png",
+          "prompt_key": "footbathFace",
+          "operation": "generate",
+          "edit_target": null,
+          "runtime_sha256": "413355685dd442dfd0c0c35f13b52d6c84283cf7ea13bbe121c4362b90d6bcab",
+          "native_sha256": "f8463e7739d93cc3f28b034a15957591f52b45872b50faa51de008fe5e77c153"
+        },
+        "face-closed": {
+          "runtime": "footbath/face-closed.png",
+          "native": "footbath/native/face-closed.png",
+          "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-8f04bbe9-fc91-4550-8ad5-2e6f740d3161.png",
+          "prompt_key": "footbathBlink",
+          "operation": "edit",
+          "edit_target": "/workspace/scratch/85111d38430a/assets-garden-v85/npc/footbath/native/face.png",
+          "runtime_sha256": "7557da575143da75191cf1af26b1b237d1680a3420e2940b93cbfbc91a7957d2",
+          "native_sha256": "c99efd662eb1824d19e4d2ea13aecc325c5ef0ff6003b448790e671cc7b1b413"
+        },
+        "body": {
+          "runtime": "footbath/body.png",
+          "native": "footbath/native/body.png",
+          "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-5e8746e7-7046-47e4-ad0a-1b3c5de46586.png",
+          "prompt_key": "footbathBody",
+          "operation": "generate",
+          "edit_target": null,
+          "runtime_sha256": "fed7569c87256d5d23b851e9a14bf8c5a45ac9cb21f09134ba369eba1750143d",
+          "native_sha256": "7ddbbc2ba332898ad54e14663964265ad15494bddd1db25380cb7203cd3e7d0b"
+        },
+        "hair": {
+          "runtime": "footbath/hair.png",
+          "native": "footbath/native/hair.png",
+          "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-1192e56a-acea-43e3-b839-66258f460fc2.png",
+          "prompt_key": "footbathHair",
+          "operation": "generate",
+          "edit_target": null,
+          "runtime_sha256": "a6968da11e98bb5aec212069175444e88617ca6fa4ee4d4b49dca4eaf69f811e",
+          "native_sha256": "19fec7025e115914dd8bd57a31302657ebac57b3030580cba6d8f68ff166f686"
+        }
+      },
+      "body_atlas": {
+        "shirt_front": {
+          "rect_px": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "image_uv": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ],
+          "threejs_uv": [
+            0.0,
+            0.5,
+            0.5,
+            1.0
+          ]
+        },
+        "shirt_back": {
+          "rect_px": [
+            64,
+            0,
+            128,
+            64
+          ],
+          "image_uv": [
+            0.5,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "threejs_uv": [
+            0.5,
+            0.5,
+            1.0,
+            1.0
+          ]
+        },
+        "trousers": {
+          "rect_px": [
+            0,
+            64,
+            64,
+            128
+          ],
+          "image_uv": [
+            0.0,
+            0.5,
+            0.5,
+            1.0
+          ],
+          "threejs_uv": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        "skin": {
+          "rect_px": [
+            64,
+            64,
+            128,
+            95
+          ],
+          "image_uv": [
+            0.5,
+            0.5,
+            1.0,
+            0.7421875
+          ],
+          "threejs_uv": [
+            0.5,
+            0.2578125,
+            1.0,
+            0.5
+          ]
+        },
+        "shoe": {
+          "rect_px": [
+            64,
+            95,
+            128,
+            128
+          ],
+          "image_uv": [
+            0.5,
+            0.7421875,
+            1.0,
+            1.0
+          ],
+          "threejs_uv": [
+            0.5,
+            0.0,
+            1.0,
+            0.2578125
+          ]
+        },
+        "safe_skin_sample_image_uv": [
+          0.75,
+          0.625
+        ],
+        "safe_shoe_sample_image_uv": [
+          0.75,
+          0.875
+        ]
+      },
+      "face_landmarks": {
+        "image_left_eye": {
+          "pixel_center": [
+            42.27,
+            54.04
+          ],
+          "image_uv": [
+            0.330234375,
+            0.4221875
+          ],
+          "threejs_uv": [
+            0.330234375,
+            0.5778125000000001
+          ]
+        },
+        "image_right_eye": {
+          "pixel_center": [
+            85.81,
+            54.12
+          ],
+          "image_uv": [
+            0.670390625,
+            0.4228125
+          ],
+          "threejs_uv": [
+            0.670390625,
+            0.5771875
+          ]
+        },
+        "nose_tip": {
+          "pixel_center": [
+            64,
+            77.5
+          ],
+          "image_uv": [
+            0.5,
+            0.60546875
+          ],
+          "threejs_uv": [
+            0.5,
+            0.39453125
+          ]
+        },
+        "nose_base": {
+          "pixel_center": [
+            63.85,
+            81.09
+          ],
+          "image_uv": [
+            0.498828125,
+            0.633515625
+          ],
+          "threejs_uv": [
+            0.498828125,
+            0.366484375
+          ]
+        },
+        "mouth_center": {
+          "pixel_center": [
+            64,
+            97.64
+          ],
+          "image_uv": [
+            0.5,
+            0.7628125
+          ],
+          "threejs_uv": [
+            0.5,
+            0.2371875
+          ]
+        },
+        "forehead_center": {
+          "pixel_center": [
+            64,
+            29.5
+          ],
+          "image_uv": [
+            0.5,
+            0.23046875
+          ],
+          "threejs_uv": [
+            0.5,
+            0.76953125
+          ]
+        },
+        "hairline_center": {
+          "pixel_center": [
+            64,
+            18.5
+          ],
+          "image_uv": [
+            0.5,
+            0.14453125
+          ],
+          "threejs_uv": [
+            0.5,
+            0.85546875
+          ]
+        },
+        "chin_center": {
+          "pixel_center": [
+            64,
+            115.5
+          ],
+          "image_uv": [
+            0.5,
+            0.90234375
+          ],
+          "threejs_uv": [
+            0.5,
+            0.09765625
+          ]
+        },
+        "lower_chin": {
+          "pixel_center": [
+            64,
+            124.5
+          ],
+          "image_uv": [
+            0.5,
+            0.97265625
+          ],
+          "threejs_uv": [
+            0.5,
+            0.02734375
+          ]
+        }
+      },
+      "blink": {
+        "method": "Built-in edit generated closed eyelids. For exact runtime invariants, only these generated eye rectangles were packed onto the open face runtime texture; native imagegen outputs remain untouched.",
+        "patch_rectangles_px": [
+          [
+            30,
+            49,
+            56,
+            62
+          ],
+          [
+            72,
+            49,
+            99,
+            62
+          ]
+        ],
+        "patch_rectangles_image_uv": [
+          [
+            0.234375,
+            0.3828125,
+            0.4375,
+            0.484375
+          ],
+          [
+            0.5625,
+            0.3828125,
+            0.7734375,
+            0.484375
+          ]
+        ],
+        "patch_rectangles_threejs_uv": [
+          [
+            0.234375,
+            0.515625,
+            0.4375,
+            0.6171875
+          ],
+          [
+            0.5625,
+            0.515625,
+            0.7734375,
+            0.6171875
+          ]
+        ],
+        "outside_patch_pixels_exactly_identical": true
+      },
+      "landmark_measurement": "Eye pupil centroids and nostril/mouth dark-line vertical centroids measured on runtime texture; nose tip, hairline, forehead, chin anchors visually placed on the discrete runtime pixel grid."
+    },
+    "botanist": {
+      "files": {
+        "face": {
+          "runtime": "botanist/face.png",
+          "native": "botanist/native/face.png",
+          "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-5aa9b7a4-20f1-4335-b551-e4e284e44dbb.png",
+          "prompt_key": "botanistFace",
+          "operation": "generate",
+          "edit_target": null,
+          "runtime_sha256": "9aade2840d61cc63090f78c1ccf3384ce2fa70b0c9a30b67b972d6de5da7c8fe",
+          "native_sha256": "bcc8744c4de92af52f2acf2fc75497929063f06506c0d09b56b2d6cd064ba3b9"
+        },
+        "face-closed": {
+          "runtime": "botanist/face-closed.png",
+          "native": "botanist/native/face-closed.png",
+          "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-4d02513d-35da-484d-94b2-e9866752cac5.png",
+          "prompt_key": "botanistBlink",
+          "operation": "edit",
+          "edit_target": "/workspace/scratch/85111d38430a/assets-garden-v85/npc/botanist/native/face.png",
+          "runtime_sha256": "7c0b643ba9a8dc843d773c1ecf01fe33014380b9cbeb81651dd7a173fe22ef70",
+          "native_sha256": "353d0167893a56e69c192193d9bf25bd57f563c3c46f555105c6418ba1de87f5"
+        },
+        "body": {
+          "runtime": "botanist/body.png",
+          "native": "botanist/native/body.png",
+          "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-c3e8f492-bddd-4a97-9b68-5c060f2af081.png",
+          "prompt_key": "botanistBody",
+          "operation": "generate",
+          "edit_target": null,
+          "runtime_sha256": "9e5e2d634466fd74976b454e1789cb400b713f13933f0ad823468d8e922952b0",
+          "native_sha256": "9284591de3f7cb5fb41025565456382766c4cb1e5d5b88c4ad8f3a09aa708514"
+        },
+        "hair": {
+          "runtime": "botanist/hair.png",
+          "native": "botanist/native/hair.png",
+          "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-0166c5f6-9ae0-456f-b4f6-c4ce3546e4db.png",
+          "prompt_key": "botanistHair",
+          "operation": "generate",
+          "edit_target": null,
+          "runtime_sha256": "82e3c382b5b5a381e57bb83efec683997f982ea2ae7f35bddfba6b53dc040fcd",
+          "native_sha256": "a262b7aa0cfd1016132c3a51cf74625a84c8acfd14fa9691e9e8ab274ad07028"
+        }
+      },
+      "body_atlas": {
+        "shirt_front": {
+          "rect_px": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "image_uv": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ],
+          "threejs_uv": [
+            0.0,
+            0.5,
+            0.5,
+            1.0
+          ]
+        },
+        "shirt_back": {
+          "rect_px": [
+            64,
+            0,
+            128,
+            64
+          ],
+          "image_uv": [
+            0.5,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "threejs_uv": [
+            0.5,
+            0.5,
+            1.0,
+            1.0
+          ]
+        },
+        "trousers": {
+          "rect_px": [
+            0,
+            64,
+            64,
+            128
+          ],
+          "image_uv": [
+            0.0,
+            0.5,
+            0.5,
+            1.0
+          ],
+          "threejs_uv": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        "skin": {
+          "rect_px": [
+            64,
+            64,
+            128,
+            96
+          ],
+          "image_uv": [
+            0.5,
+            0.5,
+            1.0,
+            0.75
+          ],
+          "threejs_uv": [
+            0.5,
+            0.25,
+            1.0,
+            0.5
+          ]
+        },
+        "shoe": {
+          "rect_px": [
+            64,
+            96,
+            128,
+            128
+          ],
+          "image_uv": [
+            0.5,
+            0.75,
+            1.0,
+            1.0
+          ],
+          "threejs_uv": [
+            0.5,
+            0.0,
+            1.0,
+            0.25
+          ]
+        },
+        "safe_skin_sample_image_uv": [
+          0.75,
+          0.625
+        ],
+        "safe_shoe_sample_image_uv": [
+          0.75,
+          0.875
+        ]
+      },
+      "face_landmarks": {
+        "image_left_eye": {
+          "pixel_center": [
+            45.42,
+            53.33
+          ],
+          "image_uv": [
+            0.35484375,
+            0.416640625
+          ],
+          "threejs_uv": [
+            0.35484375,
+            0.583359375
+          ]
+        },
+        "image_right_eye": {
+          "pixel_center": [
+            82.19,
+            53.27
+          ],
+          "image_uv": [
+            0.642109375,
+            0.416171875
+          ],
+          "threejs_uv": [
+            0.642109375,
+            0.5838281249999999
+          ]
+        },
+        "nose_tip": {
+          "pixel_center": [
+            64,
+            76.5
+          ],
+          "image_uv": [
+            0.5,
+            0.59765625
+          ],
+          "threejs_uv": [
+            0.5,
+            0.40234375
+          ]
+        },
+        "nose_base": {
+          "pixel_center": [
+            64.21,
+            79.44
+          ],
+          "image_uv": [
+            0.501640625,
+            0.620625
+          ],
+          "threejs_uv": [
+            0.501640625,
+            0.379375
+          ]
+        },
+        "mouth_center": {
+          "pixel_center": [
+            64,
+            96.01
+          ],
+          "image_uv": [
+            0.5,
+            0.750078125
+          ],
+          "threejs_uv": [
+            0.5,
+            0.24992187499999996
+          ]
+        },
+        "forehead_center": {
+          "pixel_center": [
+            64,
+            26.5
+          ],
+          "image_uv": [
+            0.5,
+            0.20703125
+          ],
+          "threejs_uv": [
+            0.5,
+            0.79296875
+          ]
+        },
+        "hairline_center": {
+          "pixel_center": [
+            64,
+            12.5
+          ],
+          "image_uv": [
+            0.5,
+            0.09765625
+          ],
+          "threejs_uv": [
+            0.5,
+            0.90234375
+          ]
+        },
+        "chin_center": {
+          "pixel_center": [
+            64,
+            115.5
+          ],
+          "image_uv": [
+            0.5,
+            0.90234375
+          ],
+          "threejs_uv": [
+            0.5,
+            0.09765625
+          ]
+        },
+        "lower_chin": {
+          "pixel_center": [
+            64,
+            124.5
+          ],
+          "image_uv": [
+            0.5,
+            0.97265625
+          ],
+          "threejs_uv": [
+            0.5,
+            0.02734375
+          ]
+        }
+      },
+      "blink": {
+        "method": "Built-in edit generated closed eyelids. For exact runtime invariants, only these generated eye rectangles were packed onto the open face runtime texture; native imagegen outputs remain untouched.",
+        "patch_rectangles_px": [
+          [
+            33,
+            48,
+            58,
+            61
+          ],
+          [
+            71,
+            48,
+            96,
+            61
+          ]
+        ],
+        "patch_rectangles_image_uv": [
+          [
+            0.2578125,
+            0.375,
+            0.453125,
+            0.4765625
+          ],
+          [
+            0.5546875,
+            0.375,
+            0.75,
+            0.4765625
+          ]
+        ],
+        "patch_rectangles_threejs_uv": [
+          [
+            0.2578125,
+            0.5234375,
+            0.453125,
+            0.625
+          ],
+          [
+            0.5546875,
+            0.5234375,
+            0.75,
+            0.625
+          ]
+        ],
+        "outside_patch_pixels_exactly_identical": true
+      },
+      "landmark_measurement": "Eye pupil centroids and nostril/mouth dark-line vertical centroids measured on runtime texture; nose tip, hairline, forehead, chin anchors visually placed on the discrete runtime pixel grid."
+    }
+  }
+}

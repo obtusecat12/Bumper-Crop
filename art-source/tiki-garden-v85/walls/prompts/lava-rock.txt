@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: rough gray and brown lava rock masonry wall texture
+scene: a straight-on square 2 metre field of real irregular volcanic stone blocks fitted together with narrow recessed dark mortar, stones of naturally varied size and shape rather than uniform bricks, like the rustic lava stone wall around the doorway in the user's reference
+surface: very matte porous coarse stone, dry mineral texture, charcoal gray and muted warm brown variation, no oil gloss
+photo quality and vibe: photographic PS2 texture diffuse, flat normal-neutral lighting, evenly lit surface, no baked directional shadows, no perspective distortion, no oversharpening
+composition: full frame edge-to-edge stone masonry, seamless tile on all four edges, no distinctive focal object
+aspect ratio: 1:1
+
+Avoid: glossy or wet stones, polished stone, regular uniform brick courses, deep harsh cast shadows, buildings, people, plants, text, frames, excessive yellow, glare.

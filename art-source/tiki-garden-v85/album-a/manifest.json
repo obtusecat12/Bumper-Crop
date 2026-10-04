@@ -1,0 +1,99 @@
+{
+  "description": "Five independently generated 4:3 Tiki water-garden loading slideshow photos",
+  "generator": "built-in image_gen",
+  "generation_calls": 5,
+  "runtime_format": "WebP",
+  "runtime_quality": 85,
+  "entries": [
+    {
+      "id": "photo-01",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-cf17bb4f-f575-49f0-a596-93b87a948cdd.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/originals/photo-01.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/photo-01.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "runtime_bytes": 115882,
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/prompts/photo-01.txt",
+      "sha256": "02784e297923bab1dadd6d06a064f3a13c3ae1efabdf49da16e356b73c70dd69",
+      "inspection": "No people, distinct indoor American Tiki water feature, period consumer-camera framing and ordinary lighting."
+    },
+    {
+      "id": "photo-02",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-2e9d8ed2-3b55-4fc8-b538-014e9d184be8.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/originals/photo-02.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/photo-02.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "runtime_bytes": 94904,
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/prompts/photo-02.txt",
+      "sha256": "a86d0160a99c9d9f33ab584252514fe9086194f667ec4ff27ce022f3b81f83e6",
+      "inspection": "No people, distinct indoor American Tiki water feature, period consumer-camera framing and ordinary lighting."
+    },
+    {
+      "id": "photo-03",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-a9a5c824-6e82-4680-bada-08a2f55b4b69.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/originals/photo-03.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/photo-03.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "runtime_bytes": 120584,
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/prompts/photo-03.txt",
+      "sha256": "c9a463a9eb6235b15902446d2f71f76321ec58780fe780cbb4c6d8957f8c9fd4",
+      "inspection": "No people, distinct indoor American Tiki water feature, period consumer-camera framing and ordinary lighting."
+    },
+    {
+      "id": "photo-04",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-cc1d2f75-71e6-4d39-95be-d7a5be8df6b6.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/originals/photo-04.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/photo-04.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "runtime_bytes": 132066,
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/prompts/photo-04.txt",
+      "sha256": "7a0a992ae9db2a57801ef2355908fd91aed5fc58b0b6f3d38fdcffe22484e9c1",
+      "inspection": "No people, distinct indoor American Tiki water feature, period consumer-camera framing and ordinary lighting."
+    },
+    {
+      "id": "photo-05",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-c11bd937-9681-4941-b577-9c852d404696.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/originals/photo-05.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/photo-05.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "runtime_bytes": 96384,
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/album-a/prompts/photo-05.txt",
+      "sha256": "37f3457cf66f181a57f4e9af2779f15cb2e3c183b536806b04b71b0e30469c08",
+      "inspection": "No people, distinct indoor American Tiki water feature, period consumer-camera framing and ordinary lighting."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: one complete tropical rainforest scenic mural
+composition: an independent wide tropical palm grove composition with tall irregular palm trunks in the middle distance, fine arching palm fronds spanning the upper field, dense lush rainforest receding into a lighter hazy opening toward the left, broad jungle shrubs and fern vegetation along the entire lower edge
+
+scene: a tropical rainforest scenic backdrop panel for an artificial 1980s to 2000s indoor leisure centre
+style: subtle painted/photo mural appearance, moderately bright subdued natural diffuse light, muted natural foliage greens, distant hazy greenery
+view: straight-on whole panoramic panel, edge-to-edge scenic image, canopy fills the whole frame and ground vegetation runs along the bottom, designed as a fake scenic backdrop behind foreground real plants
+aspect ratio: 3:1
+
+Avoid: buildings, people, text, logos, panel borders, surrounding interior, dramatic spotlights, repeating tile, collage, multiple panels, excessive yellow, oversharpening, glare.

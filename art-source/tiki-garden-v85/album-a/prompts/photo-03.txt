@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+user idea: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+scene: An American indoor Tiki restaurant waiting area around 2001, empty. A modest tiered fountain made from stacked black volcanic-looking rocks splashes into a narrow decorative pond, bamboo wall panels, a thatch awning over a closed service counter, old green artificial foliage, carved wooden Tiki heads beside the water, worn terracotta floor and a brown vinyl bench. One independent photograph, a different interior.
+composition: casually shot on an early compact CCD digital camera, slightly crooked perspective, fountain partly cropped on the left, empty bench occupies too much of the foreground, imperfect amateur framing.
+photo quality and vibe: 2000-2010 everyday digital snapshot, dim ordinary interior fixtures and weak direct flash, real location lighting, mild noise, slight blur, muted color and limited highlight detail, no people.
+aspect ratio: 4:3
+Avoid: cinematic or dramatic lighting, excessive yellow, too sharp, pristine modern interiors, people, collage, watermarks.

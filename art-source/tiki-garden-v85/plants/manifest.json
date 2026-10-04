@@ -1,0 +1,200 @@
+{
+  "generation": "built-in image_gen.imagegen",
+  "tool_parameters": {
+    "transparent_background": true
+  },
+  "runtime_conversion": "long edge 1024 pixels, RGBA, Lanczos resampling if needed, lossless WebP, preserves generated alpha, no keying",
+  "assets": [
+    {
+      "id": "banana-leaf-clump",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/originals/banana-leaf-clump.png",
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/prompts/banana-leaf-clump.txt",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/runtime/banana-leaf-clump-1024.webp",
+      "native_size": [
+        1024,
+        1536
+      ],
+      "runtime_size": [
+        683,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "fully_transparent_native_pixels": 793980,
+      "visible_native_bbox_alpha_gt_16": [
+        38,
+        32,
+        1000,
+        1510
+      ],
+      "runtime_alpha_extrema": [
+        0,
+        255
+      ],
+      "runtime_bytes": 573780,
+      "runtime_sha256": "8bd25de311c630bdd6c520e46a5944bf8a170de9f48ed122ab8ff5bd49681607"
+    },
+    {
+      "id": "split-leaf-philodendron",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/originals/split-leaf-philodendron-v2.png",
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/prompts/split-leaf-philodendron-v2.txt",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/runtime/split-leaf-philodendron-v2-1024.webp",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "fully_transparent_native_pixels": 865556,
+      "visible_native_bbox_alpha_gt_16": [
+        20,
+        79,
+        1247,
+        1162
+      ],
+      "runtime_alpha_extrema": [
+        0,
+        255
+      ],
+      "runtime_bytes": 883812,
+      "runtime_sha256": "485509900c7a3dde6048a80700cbb2b3d12e4ce518741dbfb655db18086325fa",
+      "selected_version": 2
+    },
+    {
+      "id": "multicolored-croton",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/originals/multicolored-croton.png",
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/prompts/multicolored-croton.txt",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/runtime/multicolored-croton-1024.webp",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "fully_transparent_native_pixels": 845478,
+      "visible_native_bbox_alpha_gt_16": [
+        89,
+        19,
+        1185,
+        1238
+      ],
+      "runtime_alpha_extrema": [
+        0,
+        255
+      ],
+      "runtime_bytes": 980212,
+      "runtime_sha256": "2f0e31a4d7d4e0843967a568478ba15cbb71ae25f55adbacbbf1df30ae1d7efe"
+    },
+    {
+      "id": "red-cordyline",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/originals/red-cordyline.png",
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/prompts/red-cordyline.txt",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/runtime/red-cordyline-1024.webp",
+      "native_size": [
+        1024,
+        1536
+      ],
+      "runtime_size": [
+        683,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "fully_transparent_native_pixels": 968594,
+      "visible_native_bbox_alpha_gt_16": [
+        15,
+        11,
+        1009,
+        1508
+      ],
+      "runtime_alpha_extrema": [
+        0,
+        255
+      ],
+      "runtime_bytes": 477398,
+      "runtime_sha256": "8452d3f8d3fc78097c4549d6d2715c1f843cd6a003d5dccb5ea259d90a98fe68"
+    },
+    {
+      "id": "pineapple-growing-plant",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/originals/pineapple-growing-plant.png",
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/prompts/pineapple-growing-plant.txt",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/runtime/pineapple-growing-plant-1024.webp",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "fully_transparent_native_pixels": 1000737,
+      "visible_native_bbox_alpha_gt_16": [
+        21,
+        59,
+        1237,
+        1203
+      ],
+      "runtime_alpha_extrema": [
+        0,
+        255
+      ],
+      "runtime_bytes": 698734,
+      "runtime_sha256": "7f495566e89b6f6f16082243e99e56a7c1eb0bd36607e8e12d84acfeb87fc09a"
+    }
+  ],
+  "archived_candidates": [
+    {
+      "id": "split-leaf-philodendron",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/originals/split-leaf-philodendron.png",
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/prompts/split-leaf-philodendron.txt",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/plants/runtime/split-leaf-philodendron-1024.webp",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "fully_transparent_native_pixels": 769642,
+      "visible_native_bbox_alpha_gt_16": [
+        36,
+        107,
+        1232,
+        1140
+      ],
+      "runtime_alpha_extrema": [
+        0,
+        255
+      ],
+      "runtime_bytes": 876950,
+      "runtime_sha256": "80f6017cae664bd8efa5dee71f658220ba2525c3257939c254f57474ba1cef5e",
+      "reason": "First candidate used Monstera-style enclosed holes; selected version 2 has the deeply lobed foliage in the reference."
+    }
+  ],
+  "verification": "All selected runtime files reopen as RGBA with alpha ranging from 0 to 255. Full stems and leaf tips inspected over light and dark neutral backgrounds; no pots, ground planes or cast shadows."
+}

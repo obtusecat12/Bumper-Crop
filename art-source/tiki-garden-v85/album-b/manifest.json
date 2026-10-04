@@ -1,0 +1,133 @@
+{
+  "title": "Tiki indoor water garden loading slideshow — album B",
+  "created_date": "2026-10-04",
+  "required_user_text": "是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好",
+  "prompt_skill_file": "/workspace/scratch/85111d38430a/assets-garden-v85/gpt_image_2_prompt_skill.md",
+  "items": [
+    {
+      "id": "photo-06",
+      "scene": "Tiled thermal bath below an office ceiling",
+      "generator": "built-in image_gen.imagegen",
+      "generation": "independent single-image call; no referenced input",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-75939065-9d5f-442e-b469-e226cb5b1309.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/originals/photo-06.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "04621c2acbeea9f9ce195621f4c99e4dba70d4a13e2d14104285d60f639a9b25",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/photo-06.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "format": "WebP",
+      "quality": 85,
+      "runtime_bytes": 75764,
+      "runtime_sha256": "848f4ad1b703b64f5f472ad8981d253b627071b18a370b08815365dd225e5f84",
+      "prompt_file": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/prompts/photo-06.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nPrimary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nScene: A small American indoor leisure-center Tiki thermal bath around 2003. A round shallow spa pool edged with mottled tan tiles, a squat carved wooden Tiki statue beside the water, cheap plastic tropical plants in oversized brown pots, imitation bamboo paneling along one wall. An ordinary beige suspended office ceiling with rectangular fluorescent panels and visible air vents.\nComposition: One single landscape photograph, accidentally off-center with too much beige ceiling and a cut-off pool edge in the foreground. No collage.\nPhoto quality and vibe: Ordinary compact CCD digital camera snapshot from 2000–2010, non-studio lighting, actual fluorescent light from this room, modest resolution, slightly soft focus, imperfect exposure, commonplace leisure-center kitsch, unglamorous.\nAspect ratio: 4:3 landscape.\nConstraints: No people, no fish, no animals, no printed caption or watermark.\nAvoid: Cinematic lighting, professional composition, luxury resort styling, modern smartphone-photo appearance, excessive yellow cast, oversharpening.\n",
+      "inspection": "Visually inspected generated output: single 4:3 photograph; no people or fish; ordinary early digital-camera style and indoor Tiki setting."
+    },
+    {
+      "id": "photo-07",
+      "scene": "Stone-edged fishless atrium pond",
+      "generator": "built-in image_gen.imagegen",
+      "generation": "independent single-image call; no referenced input",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-6a57337c-537d-430f-b5bf-d6e5fd780f37.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/originals/photo-07.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "b14bf054fd41f072c8499e409c3d59c18a7f4a405e2ca313c9e7face1e2ae4c8",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/photo-07.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "format": "WebP",
+      "quality": 85,
+      "runtime_bytes": 136292,
+      "runtime_sha256": "0ce2ede945bf7fbc78da8f1aacbce1ae45bd7140368fbd7a4dc1354ee7bf47ef",
+      "prompt_file": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/prompts/photo-07.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nPrimary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nScene: A fishless ornamental pond inside an American Tiki-themed roadside hotel's old leisure atrium around 2006. An irregular dark green shallow pond with a low rim of small rounded river stones and a very small bubbling fountain. One squat Tiki carving partly hidden by inexpensive plastic palm fronds. Red-brown floor tiles, a plain metal handrail, imitation thatch trim and faded tropical decor, a high ordinary roof with wood beams and frosted skylights.\nComposition: One single landscape photograph, taken hastily while standing beside the pond; the nearest stone rim is too large in the foreground, a palm frond obscures one corner, the frame is a little tilted, the far Tiki carving is not centered. No collage.\nPhoto quality and vibe: Ordinary 2000–2010 compact CCD digital camera snapshot, real unremarkable mixed atrium daylight and old indoor lighting, non-studio lighting, slightly soft focus, modest sensor noise in shaded areas, imperfect exposure, kitschy inexpensive leisure-center atmosphere.\nAspect ratio: 4:3 landscape.\nConstraints: No people, completely fishless water, no animals, no caption, no watermark.\nAvoid: Cinematic lighting, professional composition, luxury resort styling, modern smartphone-photo appearance, excessive yellow cast, oversharpening.\n",
+      "inspection": "Visually inspected generated output: single 4:3 photograph; no people or fish; ordinary early digital-camera style and indoor Tiki setting."
+    },
+    {
+      "id": "photo-08",
+      "scene": "Faux-volcanic-rock lobby cascade",
+      "generator": "built-in image_gen.imagegen",
+      "generation": "independent single-image call; no referenced input",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-a53f3a9d-b738-4e7f-9481-091018241304.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/originals/photo-08.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "21621baa1872a2b11a459744fbe290a561c279ce0694f2dbb6711b3425af928d",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/photo-08.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "format": "WebP",
+      "quality": 85,
+      "runtime_bytes": 127446,
+      "runtime_sha256": "7f93e875f12026d6071e2a7ab470cd5af728314ee77cc3c32528f7d469c24d5b",
+      "prompt_file": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/prompts/photo-08.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nPrimary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nScene: An indoor artificial fountain in a small American Tiki spa lobby around 2001. A roughly molded gray faux-volcanic-rock cascade with three uneven ledges trickling into a shallow rectangular tiled basin, framed by cheap plastic philodendron and palm plants. Two faded narrow wooden Tiki carvings on either side, a plain glass-block partition behind, beige drop-ceiling tiles and fluorescent lights overhead, scuffed brown linoleum at the basin edge. Ordinary old leisure-center kitsch.\nComposition: One single landscape photograph. Hasty snapshot from an awkward corner: fountain is partly cut off at the right side, too much empty floor at the lower left, slight perspective lean. No collage.\nPhoto quality and vibe: Ordinary 2000–2010 compact CCD camera photograph, real fluorescent room lighting, non-studio lighting, slight softness and mild digital noise, bland colors and imperfect flash exposure, unglamorous everyday camera quality.\nAspect ratio: 4:3 landscape.\nConstraints: No people, no fish, no animals, no text caption, no watermark.\nAvoid: Cinematic lighting, professional balanced composition, luxury styling, modern smartphone-photo appearance, excessive yellow cast, oversharpening.\n",
+      "inspection": "Visually inspected generated output: single 4:3 photograph; no people or fish; ordinary early digital-camera style and indoor Tiki setting."
+    },
+    {
+      "id": "photo-09",
+      "scene": "Octagonal turquoise spa with island mural",
+      "generator": "built-in image_gen.imagegen",
+      "generation": "independent single-image call; no referenced input",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-6e155b9c-622e-4805-b3f4-d19da7ad6741.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/originals/photo-09.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "56ce9a9af2532c0b600576afdf2b825e34de4080d0e9c76febd961231c69157e",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/photo-09.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "format": "WebP",
+      "quality": 85,
+      "runtime_bytes": 73548,
+      "runtime_sha256": "112f1f7f2785648dd7d7e891e357a937218e1f3d4734b5c8c5a5f5e2f4c9c784",
+      "prompt_file": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/prompts/photo-09.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nPrimary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nScene: A small octagonal indoor thermal bath inside an inexpensive American health club around 2008. Light turquoise mosaic tiles on the bathing basin, gently bubbling pale water and a plain chrome stair handrail, worn terracotta-colored floor tiles. A faded tropical island wall mural, low imitation bamboo dividers, a short dark Tiki statue beside the far pool corner, plastic banana leaves and artificial flowering vines. The room has a low brown timber-plank ceiling with ordinary recessed lights and an unremarkable white utility door.\nComposition: One single landscape photograph, casually shot from the doorway with an awkwardly cropped near handrail and the small octagonal pool pushed toward one side. Slightly tilted framing and an uninteresting stretch of floor. No collage.\nPhoto quality and vibe: Ordinary 2000–2010 CCD compact digital-camera snapshot, non-studio lighting, real dull indoor overhead light, slightly soft detail, imperfect white balance and exposure, cheap old leisure-center decor, unglamorous.\nAspect ratio: 4:3 landscape.\nConstraints: No people, no fish or animals, no text caption, no watermark.\nAvoid: Cinematic lighting, premium resort styling, professional composition, modern smartphone-photo appearance, excessive yellow cast, oversharpening.\n",
+      "inspection": "Visually inspected generated output: single 4:3 photograph; no people or fish; ordinary early digital-camera style and indoor Tiki setting."
+    },
+    {
+      "id": "photo-10",
+      "scene": "Brick-edged fishless bamboo fountain pool",
+      "generator": "built-in image_gen.imagegen",
+      "generation": "independent single-image call; no referenced input",
+      "generated_source": "/workspace/scratch/85111d38430a/generated_images/exec-13bfe7c0-ebaf-450e-8320-8fff8df1cab4.png",
+      "original": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/originals/photo-10.png",
+      "original_dimensions": [
+        1448,
+        1086
+      ],
+      "original_sha256": "42823e08c3338f138c75c3829a92230b539c9cd344bc9d6a3ad0430c181b7e71",
+      "runtime": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/photo-10.webp",
+      "runtime_dimensions": [
+        960,
+        720
+      ],
+      "format": "WebP",
+      "quality": 85,
+      "runtime_bytes": 63168,
+      "runtime_sha256": "8b977820469c4d94a2019ba673b2ca8e1ef52e09f095f43c6149d072175a08d1",
+      "prompt_file": "/workspace/scratch/85111d38430a/assets-garden-v85/album-b/prompts/photo-10.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nPrimary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好\nScene: A fishless indoor landscape pool and artificial bamboo fountain in an inexpensive American strip-mall Tiki day-spa around 2004. A long narrow shallow decorative pool edged with dated dark red bricks; three different-height bamboo tubes pour small streams into still greenish water. A large cheap molded Tiki head at the far end, stiff plastic fern plants and plastic palms, patches of white gravel, bamboo mat wall covering. Plain beige suspended office ceiling, ordinary fluorescent light panels, a gray metal air vent and pale painted walls.\nComposition: One single landscape photograph. Casually taken too close to the near end of the rectangular pool, which runs diagonally through the frame; one bamboo spout partly cut off, a patch of plain wall dominates the upper right. Slightly awkward framing, no collage.\nPhoto quality and vibe: Ordinary 2000–2010 compact CCD digital-camera snapshot, actual fluorescent room light, non-studio lighting, imperfect exposure, slightly blurry detail, mild digital noise, flat unglamorous colors, old kitschy leisure-center atmosphere.\nAspect ratio: 4:3 landscape.\nConstraints: No people, completely fishless water, no animals, no caption or watermark.\nAvoid: Cinematic lighting, premium resort styling, professional balanced composition, modern smartphone-photo appearance, excessive yellow cast, oversharpening.\n",
+      "inspection": "Visually inspected generated output: single 4:3 photograph; no people or fish; ordinary early digital-camera style and indoor Tiki setting."
+    }
+  ]
+}

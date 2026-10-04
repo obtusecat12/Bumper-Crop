@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: A small American indoor leisure-center Tiki thermal bath around 2003. A round shallow spa pool edged with mottled tan tiles, a squat carved wooden Tiki statue beside the water, cheap plastic tropical plants in oversized brown pots, imitation bamboo paneling along one wall. An ordinary beige suspended office ceiling with rectangular fluorescent panels and visible air vents.
+Composition: One single landscape photograph, accidentally off-center with too much beige ceiling and a cut-off pool edge in the foreground. No collage.
+Photo quality and vibe: Ordinary compact CCD digital camera snapshot from 2000–2010, non-studio lighting, actual fluorescent light from this room, modest resolution, slightly soft focus, imperfect exposure, commonplace leisure-center kitsch, unglamorous.
+Aspect ratio: 4:3 landscape.
+Constraints: No people, no fish, no animals, no printed caption or watermark.
+Avoid: Cinematic lighting, professional composition, luxury resort styling, modern smartphone-photo appearance, excessive yellow cast, oversharpening.

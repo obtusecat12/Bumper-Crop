@@ -1,0 +1,12 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: one mid-height split-leaf philodendron selloum plant, a lush natural cluster of medium dark green broad leaves deeply divided into long slender finger-like lobes that split from the outside edge nearly to the central rib; the lobes are irregular and slightly rippled; broad arching leaf stalks meet at a short central crown; all lower stalk ends visible; a compact wide plant with several overlapping leaves
+leaf shape: mature selloum leaves with many narrow long lobes around the central rib; the silhouette of each leaf is deeply feathered; no oval perforations or enclosed holes inside the leaves
+asset: single photographic plant cutout card for a Three.js PS2-style tropical indoor doorway garden
+composition: full plant silhouette visible from the highest leaf tip through all bottom stems; straight-on eye-level view; centered; 8% transparent margin around every outer leaf and bottom stem; natural asymmetry
+background: actual fully transparent RGBA background, with transparent gaps between leaves; no background scene
+photo quality and vibe: mild low-fi real photograph, subtle PS2-era photographic texture, softly focused natural leaf detail, imperfect raw photo quality, no oversharpening, no pixel art, no vector art
+lighting: inherited soft shaded daylight from a tropical indoor doorway, subdued natural greens and gentle ambient shadows inside the leaves
+aspect ratio: 1:1
+constraints: plant only; preserve full silhouette including bottom stems; no planter, pot, pedestal, soil, ground, base, cast shadow, black background, text, border or watermark
+Avoid: Monstera-shaped leaves, enclosed leaf holes, oversharpening, excessive glare, overly saturated neon greens, artificial studio highlights, cartoon leaves, collage, sprite sheet, multiple separate assets

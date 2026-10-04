@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: one complete tropical rainforest scenic mural
+composition: an independent wide tropical jungle canopy composition with a large low sweeping fan of palm fronds from the upper right, a group of banana leaves rising from the far left, scattered distant palms behind the central lush layered greenery, soft misty green depth near the middle, mixed low tropical foliage along the entire lower edge
+
+scene: a tropical rainforest scenic backdrop panel for an artificial 1980s to 2000s indoor leisure centre
+style: subtle painted/photo mural appearance, moderately bright subdued natural diffuse light, muted natural foliage greens, distant hazy greenery
+view: straight-on whole panoramic panel, edge-to-edge scenic image, canopy fills the whole frame and ground vegetation runs along the bottom, designed as a fake scenic backdrop behind foreground real plants
+aspect ratio: 3:1
+
+Avoid: buildings, people, text, logos, panel borders, surrounding interior, dramatic spotlights, repeating tile, collage, multiple panels, excessive yellow, oversharpening, glare.

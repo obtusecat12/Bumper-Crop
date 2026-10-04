@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: A fishless indoor landscape pool and artificial bamboo fountain in an inexpensive American strip-mall Tiki day-spa around 2004. A long narrow shallow decorative pool edged with dated dark red bricks; three different-height bamboo tubes pour small streams into still greenish water. A large cheap molded Tiki head at the far end, stiff plastic fern plants and plastic palms, patches of white gravel, bamboo mat wall covering. Plain beige suspended office ceiling, ordinary fluorescent light panels, a gray metal air vent and pale painted walls.
+Composition: One single landscape photograph. Casually taken too close to the near end of the rectangular pool, which runs diagonally through the frame; one bamboo spout partly cut off, a patch of plain wall dominates the upper right. Slightly awkward framing, no collage.
+Photo quality and vibe: Ordinary 2000–2010 compact CCD digital-camera snapshot, actual fluorescent room light, non-studio lighting, imperfect exposure, slightly blurry detail, mild digital noise, flat unglamorous colors, old kitschy leisure-center atmosphere.
+Aspect ratio: 4:3 landscape.
+Constraints: No people, completely fishless water, no animals, no caption or watermark.
+Avoid: Cinematic lighting, premium resort styling, professional balanced composition, modern smartphone-photo appearance, excessive yellow cast, oversharpening.

@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: An indoor artificial fountain in a small American Tiki spa lobby around 2001. A roughly molded gray faux-volcanic-rock cascade with three uneven ledges trickling into a shallow rectangular tiled basin, framed by cheap plastic philodendron and palm plants. Two faded narrow wooden Tiki carvings on either side, a plain glass-block partition behind, beige drop-ceiling tiles and fluorescent lights overhead, scuffed brown linoleum at the basin edge. Ordinary old leisure-center kitsch.
+Composition: One single landscape photograph. Hasty snapshot from an awkward corner: fountain is partly cut off at the right side, too much empty floor at the lower left, slight perspective lean. No collage.
+Photo quality and vibe: Ordinary 2000–2010 compact CCD camera photograph, real fluorescent room lighting, non-studio lighting, slight softness and mild digital noise, bland colors and imperfect flash exposure, unglamorous everyday camera quality.
+Aspect ratio: 4:3 landscape.
+Constraints: No people, no fish, no animals, no text caption, no watermark.
+Avoid: Cinematic lighting, professional balanced composition, luxury styling, modern smartphone-photo appearance, excessive yellow cast, oversharpening.

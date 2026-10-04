@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+object: one mid-height split-leaf philodendron plant, a lush natural cluster of medium dark green broad leaves deeply split into finger-like lobes, broad arching leaf stems meeting at a short central crown, all lower stalk ends visible; a compact wide plant with several overlapping leaves
+asset: single photographic plant cutout card for a Three.js PS2-style tropical indoor doorway garden
+composition: full plant silhouette visible from the highest leaf tip through all bottom stems; straight-on eye-level view; centered; 8% transparent margin around every outer leaf and bottom stem; natural asymmetry
+background: actual fully transparent RGBA background, with transparent gaps between leaves; no background scene
+photo quality and vibe: mild low-fi real photograph, subtle PS2-era photographic texture, softly focused natural leaf detail, imperfect raw photo quality, no oversharpening, no pixel art, no vector art
+lighting: inherited soft shaded daylight from a tropical indoor doorway, subdued natural colors and gentle ambient shadows inside the leaves
+constraints: plant only; preserve full silhouette including bottom stems; no planter, pot, pedestal, soil, ground, base, cast shadow, black background, text, border or watermark
+Avoid: oversharpening, excessive glare, overly saturated neon colors, artificial studio highlights, cartoon leaves, collage, sprite sheet, multiple separate assets
+aspect ratio: 1:1

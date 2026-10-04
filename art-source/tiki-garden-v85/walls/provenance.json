@@ -1,0 +1,185 @@
+{
+  "generator": "built-in image_gen.imagegen",
+  "generation_date": "2026-10-04",
+  "calls": "five independent calls: one lava rock tile plus four distinct complete rainforest panels; no collage crops",
+  "user_prompt_skill": "../gpt_image_2_prompt_skill.md",
+  "reference_inspected": "/workspace/scratch/85111d38430a/upload/QQ20261004-175736.png",
+  "diffuse_processing": "Only Lanczos resizing and WebP encoding; no procedural diffuse synthesis or editing",
+  "pbr_note": "Normal, height, roughness and AO are approximate derived maps; use modest normal scale (0.2 to 0.45) and no displacement unless geometry supports it.",
+  "normal_convention": "OpenGL +Y; linear color space",
+  "mural_processing": "Each full native generated image resampled to 1536x512; no panel slicing or cross-panel crop.",
+  "source_generations": [
+    {
+      "name": "lava",
+      "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-e1003829-e7e8-4392-a72e-3e3cc21f257a.png",
+      "prompt_path": "prompts/lava-rock.txt",
+      "tool": "image_gen.imagegen"
+    },
+    {
+      "name": "rainforest-01",
+      "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-e8a5368c-00fc-4892-ada2-bf7ba2f5f4a9.png",
+      "prompt_path": "prompts/rainforest-01.txt",
+      "tool": "image_gen.imagegen"
+    },
+    {
+      "name": "rainforest-02",
+      "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-67d77067-e408-473e-9a7a-f8dfc47a6ab8.png",
+      "prompt_path": "prompts/rainforest-02.txt",
+      "tool": "image_gen.imagegen"
+    },
+    {
+      "name": "rainforest-03",
+      "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-f57d18b0-0690-49b5-ab53-6f6656717a14.png",
+      "prompt_path": "prompts/rainforest-03.txt",
+      "tool": "image_gen.imagegen"
+    },
+    {
+      "name": "rainforest-04",
+      "generated_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-8b0c3bf6-3814-4daf-aa20-e8a607f1850a.png",
+      "prompt_path": "prompts/rainforest-04.txt",
+      "tool": "image_gen.imagegen"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "originals/lava-rock.png",
+      "role": "unmodified imagegen native original",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-e1003829-e7e8-4392-a72e-3e3cc21f257a.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "7474871032e482193e5e4d2a6c705f2d9aa4e2a43aa3f7144b4f9a254b1c1bcc"
+    },
+    {
+      "file": "lava-rock-basecolor.webp",
+      "role": "sRGB basecolor, resize and encoding only",
+      "source": "originals/lava-rock.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "sha256": "0da6ae44cb4460983a9aa8948f4768af3b1921b0bcecbaf4ab093ef7b7726741"
+    },
+    {
+      "file": "originals/rainforest-01.png",
+      "role": "unmodified imagegen native original",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-e8a5368c-00fc-4892-ada2-bf7ba2f5f4a9.png",
+      "size": [
+        2164,
+        727
+      ],
+      "sha256": "b43461bf6fc47fe4dc55b4adebda8b1916dd0b4d4f01cbdaa41f9970b31bc269"
+    },
+    {
+      "file": "rainforest-01.webp",
+      "role": "sRGB scenic mural, entire native composition resampled with no cropping",
+      "source": "originals/rainforest-01.png",
+      "size": [
+        1536,
+        512
+      ],
+      "sha256": "cba5c6f0783da141e6303f561c6d568065476be86d1cf5dedcc0d6145e39cbd6"
+    },
+    {
+      "file": "originals/rainforest-02.png",
+      "role": "unmodified imagegen native original",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-67d77067-e408-473e-9a7a-f8dfc47a6ab8.png",
+      "size": [
+        2172,
+        724
+      ],
+      "sha256": "ff85ac7a952e334a8150738976bc61fae8b45323366ce1682ce203e8b814c15e"
+    },
+    {
+      "file": "rainforest-02.webp",
+      "role": "sRGB scenic mural, entire native composition resampled with no cropping",
+      "source": "originals/rainforest-02.png",
+      "size": [
+        1536,
+        512
+      ],
+      "sha256": "e32f19f61b61385661fe599e91b254693a4a96cdb316529d405690c83fc5eabb"
+    },
+    {
+      "file": "originals/rainforest-03.png",
+      "role": "unmodified imagegen native original",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-f57d18b0-0690-49b5-ab53-6f6656717a14.png",
+      "size": [
+        2172,
+        724
+      ],
+      "sha256": "fb0423b9d68ad6935ac30126eae7f5cd153dcec8ec96aace965f1b357c8b4899"
+    },
+    {
+      "file": "rainforest-03.webp",
+      "role": "sRGB scenic mural, entire native composition resampled with no cropping",
+      "source": "originals/rainforest-03.png",
+      "size": [
+        1536,
+        512
+      ],
+      "sha256": "daca5100a8109bcc96b91a8ef6c458ed71cc2e62cf31686a2c40845eadccda21"
+    },
+    {
+      "file": "originals/rainforest-04.png",
+      "role": "unmodified imagegen native original",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-8b0c3bf6-3814-4daf-aa20-e8a607f1850a.png",
+      "size": [
+        2172,
+        724
+      ],
+      "sha256": "ecc81838fb03726a070a091e2f891537a41088c74e9ee77e21d28764b877bc4f"
+    },
+    {
+      "file": "rainforest-04.webp",
+      "role": "sRGB scenic mural, entire native composition resampled with no cropping",
+      "source": "originals/rainforest-04.png",
+      "size": [
+        1536,
+        512
+      ],
+      "sha256": "b522c8ac64cc7657a4768646d051fe006f056e3dfc2a547214d04171f4b2fa9b"
+    },
+    {
+      "file": "lava-rock-height.webp",
+      "role": "linear luminance-derived approximate height",
+      "source": "originals/lava-rock.png",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "8b416a0fd883ba21399051b53d40d2bd0a05df4ba65898596213e3f20616bbb3"
+    },
+    {
+      "file": "lava-rock-normal.webp",
+      "role": "linear OpenGL +Y tangent normal from approximate height",
+      "source": "originals/lava-rock.png",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "c8cb9f3b6c6c41f2a3a171385ed44ed3dcdc63bfa0592e987d1d172b2048a432"
+    },
+    {
+      "file": "lava-rock-roughness.webp",
+      "role": "linear matte high roughness with modest luminance-derived variation",
+      "source": "originals/lava-rock.png",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "1c57042af464e3c80ed5afbf9c99d10573c097a980e8d74b15ef4ee16cb328d6"
+    },
+    {
+      "file": "lava-rock-ao.webp",
+      "role": "linear approximate ambient occlusion from luminance-derived recesses",
+      "source": "originals/lava-rock.png",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "e2e9e60e483cf2b926f084df0e2421400332523c0cd3e6e0e6169ea934894782"
+    }
+  ]
+}

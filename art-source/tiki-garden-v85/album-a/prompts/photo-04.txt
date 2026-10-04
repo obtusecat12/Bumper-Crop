@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+user idea: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+scene: A modest American indoor Tiki garden pool in a recreation-center conservatory around 2009. A rectangular shallow koi-style landscape pond with a rough fieldstone rim, one bamboo water spout, a wooden Tiki statue near a patch of ferns, ordinary potted palms, pale concrete walkway, metal-framed skylight and beige walls. A few orange fish visible under the greenish water. One independent photograph of a different location.
+composition: poor amateur compact CCD digital camera framing, taken from too close to a foreground palm pot, pond cut off at the bottom, statue too small and pushed to the far right, slightly tilted.
+photo quality and vibe: plausible 2000-2010 digital snapshot, cloudy daylight through skylight mixed with ordinary overhead lights, washed highlights, slight noise and soft focus, unpolished tourist photo, no people.
+aspect ratio: 4:3
+Avoid: cinematic sunlight, perfect symmetry, excessive yellow, oversharpening, modern luxury spa styling, people, collage, watermarks.

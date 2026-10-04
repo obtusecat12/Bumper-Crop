@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: A small octagonal indoor thermal bath inside an inexpensive American health club around 2008. Light turquoise mosaic tiles on the bathing basin, gently bubbling pale water and a plain chrome stair handrail, worn terracotta-colored floor tiles. A faded tropical island wall mural, low imitation bamboo dividers, a short dark Tiki statue beside the far pool corner, plastic banana leaves and artificial flowering vines. The room has a low brown timber-plank ceiling with ordinary recessed lights and an unremarkable white utility door.
+Composition: One single landscape photograph, casually shot from the doorway with an awkwardly cropped near handrail and the small octagonal pool pushed toward one side. Slightly tilted framing and an uninteresting stretch of floor. No collage.
+Photo quality and vibe: Ordinary 2000–2010 CCD compact digital-camera snapshot, non-studio lighting, real dull indoor overhead light, slightly soft detail, imperfect white balance and exposure, cheap old leisure-center decor, unglamorous.
+Aspect ratio: 4:3 landscape.
+Constraints: No people, no fish or animals, no text caption, no watermark.
+Avoid: Cinematic lighting, premium resort styling, professional composition, modern smartphone-photo appearance, excessive yellow cast, oversharpening.

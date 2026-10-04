@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+user idea: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+scene: A small American family resort indoor Tiki mineral spa around 2005. An oval pale green hot-water pool with chunky fake-rock border, a three-step miniature waterfall in the back, one simple carved wooden Tiki figure, bamboo balustrade, weathered tropical painted wall, dense artificial vines, ordinary brown ceramic floor tiles and white ceiling beams. Empty scene. One independent photograph of a different place.
+composition: awkward tourist CCD compact-camera shot from a side corner, waterfall near the upper edge, pool pushed far left, excess plain floor on the right, a little hand-held blur.
+photo quality and vibe: period 2000-2010 consumer digital camera photo, mundane overhead fixtures and weak flash, imperfect white balance, limited dynamic range, small amounts of digital noise, soft detail, ordinary amateur documentation, no people.
+aspect ratio: 4:3
+Avoid: cinematic AI lighting, excessive yellow, oversharpening, curated luxury aesthetic, people, collage, watermarks.

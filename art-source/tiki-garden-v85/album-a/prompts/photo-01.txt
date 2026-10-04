@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+user idea: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+scene: A small American roadside hotel indoor Tiki garden around 2003. A shallow turquoise irregular landscape pond in a modest atrium, dark lava-rock edge, one short carved wooden Tiki idol with water running from a pipe into the pond, plastic tropical plants mixed with real palms, bamboo trim, pebble floor and wood-paneled wall, low white acoustic-tile ceiling. This is one independent photograph.
+composition: amateur tourist CCD digital camera snapshot, 4:3 landscape, awkward off-center pond, too much foreground tile and a cropped palm leaf intruding at top left, camera slightly tilted.
+photo quality and vibe: believable 2000-2010 consumer digital camera photo, ordinary indoor fluorescent and tungsten fixtures, imperfect white balance, slight digital noise and softness, limited dynamic range, unpolished everyday snapshot, no people.
+aspect ratio: 4:3
+Avoid: modern luxury spa design, cinematic lighting, excessive yellow, excessive sharpness, polished architectural photography, people, collage, watermarks.

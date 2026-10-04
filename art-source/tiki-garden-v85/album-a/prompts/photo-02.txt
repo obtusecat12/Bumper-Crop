@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+user idea: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+scene: An American suburban indoor Tiki hot spring room around 2007. A rounded stone bathing pool filled with pale blue water, low bamboo fence, a pair of simple carved Tiki poles, a small water spillway from rough artificial rock, faded tropical mural, wicker chair in the far corner, reddish floor tiles, exposed dark wooden rafters. One independent photograph of a different place.
+composition: amateur compact CCD camera snapshot taken from an awkward doorway, near doorframe partially blocks the right edge, tub low in frame, uneven horizon and cramped framing.
+photo quality and vibe: plausible consumer digital camera photo from 2000-2010, mixed available indoor light, small direct camera flash brightening foreground stone, slight softness and sensor noise, no atmospheric cinematic glow, no people.
+aspect ratio: 4:3
+Avoid: modern hotel decor, cinematic lighting, excessive yellow, oversharpening, immaculate staging, people, collage, watermarks.

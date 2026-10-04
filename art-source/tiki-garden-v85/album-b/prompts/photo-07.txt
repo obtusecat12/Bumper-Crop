@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Primary request: 是2000-2010年代照片，展示各种各样的不同的tiki风格室内温泉，景观池，喷泉，没有人，如同随手拍摄的数码相机画面，美国，构图不太好
+Scene: A fishless ornamental pond inside an American Tiki-themed roadside hotel's old leisure atrium around 2006. An irregular dark green shallow pond with a low rim of small rounded river stones and a very small bubbling fountain. One squat Tiki carving partly hidden by inexpensive plastic palm fronds. Red-brown floor tiles, a plain metal handrail, imitation thatch trim and faded tropical decor, a high ordinary roof with wood beams and frosted skylights.
+Composition: One single landscape photograph, taken hastily while standing beside the pond; the nearest stone rim is too large in the foreground, a palm frond obscures one corner, the frame is a little tilted, the far Tiki carving is not centered. No collage.
+Photo quality and vibe: Ordinary 2000–2010 compact CCD digital camera snapshot, real unremarkable mixed atrium daylight and old indoor lighting, non-studio lighting, slightly soft focus, modest sensor noise in shaded areas, imperfect exposure, kitschy inexpensive leisure-center atmosphere.
+Aspect ratio: 4:3 landscape.
+Constraints: No people, completely fishless water, no animals, no caption, no watermark.
+Avoid: Cinematic lighting, professional composition, luxury resort styling, modern smartphone-photo appearance, excessive yellow cast, oversharpening.
