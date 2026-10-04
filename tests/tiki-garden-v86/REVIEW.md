@@ -28,3 +28,5 @@ Root authored all model, UV, layout, collision, shader, timing and integration c
 Static architecture was reduced from the initial draft's 489,994 to 287,731 triangles by removing redundant bamboo, shutter and hidden-floor subdivisions. Final room uses 54 static material batches. New practical lights are bounded; two shadows are frozen. Existing water reflection/capture work is reused, not duplicated for new props. No hardware performance claim is made.
 
 Changes are scoped to new garden modules/assets and two main.js import switches. Publication fetches and merges concurrent Level 10 work before a normal push; it never force-pushes.
+
+The first save was rejected because the merged static bundle was 272,855,889 bytes, above the 256 MiB expanded archive limit. Superseded V85 garden images and historical V67/V68 spring GLBs were moved byte-for-byte to art-source/retired-runtime-v86. Current V86 garden and V69 spring loader paths were checked before archival. No active scene image was recompressed and the latest Level 10 outpost is preserved.
