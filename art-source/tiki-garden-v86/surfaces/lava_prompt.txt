@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: seamless square diffuse material texture for large relief boulders in a PS2 photographic scene.
+Subject: one continuous individual coarse dark charcoal volcanic lava rock surface, deeply pitted, granulated, with irregular cavities.
+Composition/framing: flat orthographic surface close-up filling the entire square; seamless and tileable across all four edges; no perspective or outside background.
+Materials/textures: large connected volcanic rock surface; irregular deep pores and granular fractured stone; natural charcoal gray tonal variation.
+Lighting: neutral even diffuse lighting, matte surface with no glossy oil.
+Photo quality and vibe: mild period camera softness, photographic material detail, no pixel art, no oversharpening.
+Aspect ratio: 1:1.
+Avoid: tiny pebble masonry, assembled rocks, mortar, regular stone grid, glossy oil, large directional shadows, borders, text, watermarks, excessive yellow, oversharpening.

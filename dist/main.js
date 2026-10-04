@@ -8,7 +8,7 @@ import {initializeTikiExterior80} from './tiki-additions-materials-v80.js';
 import {availableTikiSeat80} from './tiki-plan-v80.js';
 import {initializeTikiTextures} from './tiki-materials-v76.js';
 import {prepareTikiRoom,warmTikiRoom} from './tiki-room-garden-v81.js';
-import {GARDEN81,nearGardenDoor81,atGardenReturn81,resolveGarden81} from './tiki-garden-plan-v85.js';
+import {GARDEN81,nearGardenDoor81,atGardenReturn81,resolveGarden81} from './tiki-garden-plan-v86.js';
 import {nearTikiDoor,TIKI_ARRIVAL,atTikiExit,resolveTiki} from './tiki-plan-v80.js';
 import {cityMapWorld,findCityLanding,cityLocalPose,createCityTransit} from './city-teleport-v76.js';
 import {createSpringLoading75,warmSpring75} from './spring-loading-v75.js';
@@ -300,7 +300,7 @@ async function enterTikiGarden81(){
  const saved={x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch};
  try{
   await gardenTransition.show();
-  const {prepareGarden81,warmGarden81}=await import('./tiki-garden-v85.js');
+  const {prepareGarden81,warmGarden81}=await import('./tiki-garden-v86.js');
   if(!gardenRoom)gardenRoom=await prepareGarden81((p,text)=>gardenTransition.progress(4+p*53,text));
   gardenOrigin=saved;gardenActive=true;tikiSeat=null;Object.assign(state,GARDEN81.entry);state.velocity.set(0,0,0);state.jump=state.vy=0;keys.clear();interaction=null;
   camera.far=36;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);gardenRoom.update(tikiTime);

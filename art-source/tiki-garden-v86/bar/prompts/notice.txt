@@ -1,0 +1,23 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: single rectangular yellowed vintage paper notice and menu inspired by the left wall notice in the closed tiki bar reference
+reference image: use Image 1 only as a reference for the notice's faded paper and period character; generate a new isolated paper notice
+surface: subtly yellowed old paper, lightly aged fibers and small faded marks, subtle faded black and red period typography in English
+composition: a single flat frontal rectangular sheet filling the image edge to edge, portrait, no physical frame, no wall or surrounding objects, no perspective
+text: render only this exact English text with clear correct letters:
+WELCOME
+TIKI BAR
+
+HOURS
+OPEN DAILY
+4 PM - 10 PM
+
+PLEASE ORDER AT THE BAR
+CASH ONLY
+NO OUTSIDE FOOD OR DRINK
+
+THANK YOU
+typography: simple vintage printed serif headings and understated small notice text; sparse period red accents with faded black text
+lighting: even diffuse paper surface color, no baked glossy hotspot or directional scene shadows
+style: photographic surface with PS2-era softness, subtle faded print, no oversharpening
+aspect ratio: 1:2
+Avoid: random pseudoletters, misspelled words, extra text, ornate physical frame, collage, curled perspective, glossy hotspot, watermarks

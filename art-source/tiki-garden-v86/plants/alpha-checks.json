@@ -1,0 +1,106 @@
+[
+  {
+    "id": "bromeliad-native",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_bbox_16": [
+      15,
+      167,
+      1240,
+      1090
+    ],
+    "alpha_bbox_128": [
+      16,
+      168,
+      1239,
+      1089
+    ],
+    "edges_ge16": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "transparent_pixels": 912467
+  },
+  {
+    "id": "monstera-native",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_bbox_16": [
+      25,
+      42,
+      1247,
+      1194
+    ],
+    "alpha_bbox_128": [
+      26,
+      43,
+      1246,
+      1193
+    ],
+    "edges_ge16": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "transparent_pixels": 665549
+  },
+  {
+    "id": "boston-fern-native",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_bbox_16": [
+      52,
+      37,
+      1199,
+      1225
+    ],
+    "alpha_bbox_128": [
+      53,
+      38,
+      1198,
+      1224
+    ],
+    "edges_ge16": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "transparent_pixels": 809823
+  },
+  {
+    "id": "banana-native",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_bbox_16": [
+      31,
+      24,
+      1232,
+      1229
+    ],
+    "alpha_bbox_128": [
+      32,
+      25,
+      1232,
+      1228
+    ],
+    "edges_ge16": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "transparent_pixels": 785084
+  }
+]

@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+
+Use case: stylized-concept
+Asset type: seamless repeating square diffuse material texture for carved wooden tiki meshes.
+Subject: close flat surface of old weathered brown carved natural wood with vertical grain, irregular hand-cut channels and small aged cracks; pale worn ridges and dark recessed grooves.
+Composition/framing: square 1:1 surface texture tile, full image covered by material, orthographic view perpendicular to surface. Seamless repeating texture across all four edges.
+Materials/textures: warm dark medium-brown natural wood, visibly brown rather than black; pale brown weathered raised edges, grain varying in fine and coarse widths, dry old surface with tiny pores and restrained PS2-era photographic softness, no polish. Irregular shallow carved grooves rather than smooth lumber planks.
+Lighting/mood: uniform diffuse albedo lighting, soft and neutral, dark brown groove recesses, no large directional shadows or specular glare.
+Constraints: no objects, no figure or face, no setting, no text or watermark, no obvious repetitive horizontal barrel bands, no plank borders, no black featureless areas.
+Avoid: polished lacquer, synthetic plastic, metal, orange oversaturation, excessive yellow, excessive sharpening, glare, visible tile borders.
+Aspect ratio: 1:1.

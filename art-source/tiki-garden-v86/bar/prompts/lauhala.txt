@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: tan yellow-brown lauhala woven dried palm mat surface from the lower closed tiki bar facade
+reference image: use Image 1 only as the material reference for the tan woven lower bar panels; generate a new isolated material texture
+surface: small diagonal basketweave of dried palm strips, subtle aged fibers, subdued natural tan and yellow-brown variation, fine weave scale
+composition: flat frontal orthographic diffuse material surface filling the entire square, no bamboo border, no scene objects, no perspective
+lighting: even diffuse surface color, no baked glossy hotspot or directional scene shadows
+style: photographic material surface with PS2-era softness, no oversharpening
+tiling: seamless repeat in both horizontal and vertical directions
+aspect ratio: 1:1
+Avoid: giant weave strips, thick bamboo poles, frames, folds, strong shadows, glossy highlights, plants, lettering, collage, watermarks

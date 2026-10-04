@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: dark near-black aged metal roll-down shutter surface from the closed tiki bar reference
+reference image: use Image 1 only as the material reference for the dark closed shutter in the center; generate a new isolated material texture
+surface: dense HORIZONTAL corrugated metal louvres, straight parallel slats with visible moderate tonal variation and slat edges; mildly worn aged metal, not a rusty ruin
+composition: flat frontal orthographic surface texture filling the entire square, no frame, no objects, no perspective
+lighting: even diffuse surface color, no baked glossy hotspot or directional scene shadows
+style: photographic material surface with PS2-era softness, no oversharpening
+tiling: seamless repeat in both horizontal and vertical directions
+aspect ratio: 1:1
+Avoid: vertical slats, diagonal slats, wide boards, reddish heavy rust, ruins, frame, plants, lettering, collage, perspective, glossy hotspots, watermarks

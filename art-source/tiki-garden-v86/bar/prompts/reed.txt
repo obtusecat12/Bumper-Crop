@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: dense vertical narrow aged yellow honey bamboo and reed panel surface from the closed tiki bar reference
+reference image: use Image 1 only as the material reference for the narrow yellow-honey reeds on the walls; generate a new isolated material texture
+surface: many slender tightly packed vertical stalks, natural small nodes, gently aged yellow-honey color and subtle brown variations, thin reed scale rather than thick bamboo trunks
+composition: flat frontal orthographic diffuse material surface filling the entire square, no frame, no scene objects, no perspective
+lighting: even diffuse surface color, no baked glossy hotspot or directional scene shadows
+style: photographic material surface with PS2-era softness, no oversharpening
+tiling: seamless repeat in both horizontal and vertical directions
+aspect ratio: 1:1
+Avoid: thick trunks, horizontal poles, bamboo forest, large gaps, frames, plants, lettering, collage, glossy hotspots, watermarks

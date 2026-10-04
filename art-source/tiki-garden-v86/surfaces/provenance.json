@@ -1,0 +1,93 @@
+{
+  "created_at": "2026-10-04T13:20:58.381175+00:00",
+  "generator": "built-in image_gen.imagegen",
+  "prompt_prefix": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - ",
+  "references_inspected": [
+    "/workspace/scratch/85111d38430a/upload/QQ20261004-210225.png",
+    "/workspace/scratch/85111d38430a/upload/QQ20261004-210209.png"
+  ],
+  "reference_usage": "References visually inspected; independent new material generations with no edit targets.",
+  "map_method": "Estimated numerical derivatives of diffuse luminance. These are artistic relief estimates, not independently captured physical measurements. All filters and central differences use periodic wrap.",
+  "runtime": {
+    "diffuse": "1024x1024 RGB PNG, sRGB",
+    "auxiliary": "512x512 PNG, linear/non-color data",
+    "normal_convention": "Tangent space OpenGL +Y; green channel is positive image-row derivative."
+  },
+  "materials": {
+    "lava": {
+      "native_original": "lava_native_original.png",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-1d0c5df8-1ffb-492a-8a23-1a08ae6a153d.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "sha256_native": "c7d75a58a57989ccf39f81b4b5b50083c31a76a82516e2460f642a142c1a8d7d",
+      "prompt_file": "lava_prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: seamless square diffuse material texture for large relief boulders in a PS2 photographic scene.\nSubject: one continuous individual coarse dark charcoal volcanic lava rock surface, deeply pitted, granulated, with irregular cavities.\nComposition/framing: flat orthographic surface close-up filling the entire square; seamless and tileable across all four edges; no perspective or outside background.\nMaterials/textures: large connected volcanic rock surface; irregular deep pores and granular fractured stone; natural charcoal gray tonal variation.\nLighting: neutral even diffuse lighting, matte surface with no glossy oil.\nPhoto quality and vibe: mild period camera softness, photographic material detail, no pixel art, no oversharpening.\nAspect ratio: 1:1.\nAvoid: tiny pebble masonry, assembled rocks, mortar, regular stone grid, glossy oil, large directional shadows, borders, text, watermarks, excessive yellow, oversharpening.\n",
+      "parameters": {
+        "height_range": 0.8,
+        "normal_strength": 4.0,
+        "roughness": 0.9,
+        "ao_strength": 0.34
+      },
+      "maps": {
+        "base": "lava_base_1024.png",
+        "normal": "lava_normal_512.png",
+        "roughness": "lava_roughness_512.png",
+        "height": "lava_height_512.png",
+        "ao": "lava_ao_512.png"
+      },
+      "tiling_verification": "lava_tiling_preview.jpg"
+    },
+    "flagstone": {
+      "native_original": "flagstone_native_original.png",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-0c5c181b-e735-4566-aa04-fc9aba307a0c.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "sha256_native": "1fac89243ed32dd30bdb51f5bf9220abbe9026f815853ac65321e1799e554547",
+      "prompt_file": "flagstone_prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: seamless square diffuse material texture for a PS2 photographic garden floor.\nSubject: dark irregular rough welcoming flagstone slabs, broad angular gray-brown slate, with natural chipped joints.\nComposition/framing: straight down orthographic view, surface filling the entire square; seamless and tileable across all four edges; broad irregular slabs rather than a uniform grid.\nMaterials/textures: rough slate slab faces, natural chipped edges and joints; matte slightly damp surface; dark gray-brown tonal variation.\nLighting: neutral even diffuse light, no dramatic cast shadows or glare.\nPhoto quality and vibe: PS2 photographic material, mild period camera softness, no pixel art, no oversharpening.\nAspect ratio: 1:1.\nAvoid: uniform brick grid, tiny pebbles, polished stone, glossy oil, artificial grout grid, borders, text, watermarks, excessive yellow, oversharpening.\n",
+      "parameters": {
+        "height_range": 0.48,
+        "normal_strength": 3.2,
+        "roughness": 0.88,
+        "ao_strength": 0.25
+      },
+      "maps": {
+        "base": "flagstone_base_1024.png",
+        "normal": "flagstone_normal_512.png",
+        "roughness": "flagstone_roughness_512.png",
+        "height": "flagstone_height_512.png",
+        "ao": "flagstone_ao_512.png"
+      },
+      "tiling_verification": "flagstone_tiling_preview.jpg"
+    },
+    "ceiling": {
+      "native_original": "ceiling_native_original.png",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-3d5bab5b-015e-4ac3-aa15-7d2d58d45c56.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "sha256_native": "af01871ff4a0b1de913ab66b90bb74120a33a55a05f7faa30a526466e49ea877",
+      "prompt_file": "ceiling_prompt.txt",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nAsset type: seamless square diffuse material texture for a warm light cream acoustic ceiling panel; the physical ceiling grid is authored separately.\nSubject: warm light cream and off-white acoustic ceiling panel surface matching the inspected ceiling reference: extremely fine subtle fibers and sparse pinhole acoustic dots.\nComposition/framing: flat orthographic macro surface view filling the entire square; seamless and tileable across all four edges; panel surface only.\nMaterials/textures: soft warm off-white mineral-fiber acoustic board, extremely subtle fine fibers, very sparse small irregular pinholes.\nLighting: neutral even diffuse light with no directional shadows.\nPhoto quality and vibe: mild period camera softness, restrained photographic material, no pixel art, no oversharpening.\nAspect ratio: 1:1.\nAvoid: regular black dot grid, regular holes, visible ceiling grid, panel borders, light fixtures, room, heavy stains, strong yellow cast, dark vignettes, text, watermarks, oversharpening.\n",
+      "parameters": {
+        "height_range": 0.08,
+        "normal_strength": 0.42,
+        "roughness": 0.97,
+        "ao_strength": 0.05
+      },
+      "maps": {
+        "base": "ceiling_base_1024.png",
+        "normal": "ceiling_normal_512.png",
+        "roughness": "ceiling_roughness_512.png",
+        "height": "ceiling_height_512.png",
+        "ao": "ceiling_ao_512.png"
+      },
+      "tiling_verification": "ceiling_tiling_preview.jpg"
+    }
+  }
+}

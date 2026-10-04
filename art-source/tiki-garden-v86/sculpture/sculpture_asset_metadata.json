@@ -1,0 +1,262 @@
+{
+  "tiki_bar": {
+    "native_file": "tiki_bar_front-native.png",
+    "native_size": [
+      1024,
+      1536
+    ],
+    "body_bbox_native_pixels_xyxy": [
+      319,
+      8,
+      704,
+      1525
+    ],
+    "body_bbox_native_normalized_xyxy": [
+      0.3115234375,
+      0.005208333333333333,
+      0.6875,
+      0.9928385416666666
+    ],
+    "bbox_alpha_threshold": 16,
+    "crop_padding_pixels_xy": [
+      8,
+      30
+    ],
+    "padded_crop_size": [
+      401,
+      1577
+    ],
+    "runtime_file": "tiki_bar_front1024.png",
+    "runtime_size": [
+      260,
+      1024
+    ],
+    "body_bbox_runtime_normalized_xyxy": [
+      0.0199501246882793,
+      0.019023462270133164,
+      0.9800498753117207,
+      0.9809765377298668
+    ],
+    "body_aspect_width_over_height": 0.25379037574159524,
+    "landmark_y_native_pixels": {
+      "brow": 263,
+      "eyes": 388,
+      "nose_tip": 507,
+      "mouth_center": 680,
+      "hands_center": 1040
+    },
+    "landmark_y_native_normalized": {
+      "brow": 0.17122395833333334,
+      "eyes": 0.2526041666666667,
+      "nose_tip": 0.330078125,
+      "mouth_center": 0.4427083333333333,
+      "hands_center": 0.6770833333333334
+    },
+    "landmark_y_body_normalized": {
+      "brow": 0.16809492419248517,
+      "eyes": 0.2504943968358603,
+      "nose_tip": 0.3289386947923533,
+      "mouth_center": 0.44297956493078444,
+      "hands_center": 0.6802900461437047
+    },
+    "landmark_y_runtime_normalized": {
+      "brow": 0.18072289156626506,
+      "eyes": 0.25998731769181993,
+      "nose_tip": 0.3354470513633481,
+      "mouth_center": 0.44514901712111604,
+      "hands_center": 0.673430564362714
+    },
+    "regions_y_runtime_normalized": {
+      "crown": [
+        0.019657577679137603,
+        0.13443246670894102
+      ],
+      "brows": [
+        0.13126188966391883,
+        0.21813570069752694
+      ],
+      "eyes": [
+        0.21686746987951808,
+        0.31705770450221943
+      ],
+      "nose": [
+        0.22320862396956245,
+        0.3639822447685479
+      ],
+      "mouth": [
+        0.3563728598604946,
+        0.527584020291693
+      ],
+      "hands": [
+        0.6195307545973368,
+        0.7241597970830691
+      ],
+      "feet": [
+        0.8097653772986684,
+        0.8826886493341788
+      ],
+      "base": [
+        0.8763474952441345,
+        0.9809765377298668
+      ]
+    },
+    "coordinates": "Image y increases downward. Mesh y normalized upward is 1 minus these values. Landmarks estimated visually from native generated front.",
+    "derived_maps": {
+      "size": [
+        512,
+        512
+      ],
+      "height_method": "Diffuse luminance percentile-normalized 3\u201397%, Gaussian smoothed; dark carved depressions low, pale worn ridges high. Estimated detail only; no claim of measured geometry.",
+      "normal_convention": "OpenGL tangent space (+Y green), derived from smoothed estimated height.",
+      "roughness_range": [
+        0.82,
+        0.95
+      ],
+      "alpha_preserved": true
+    }
+  },
+  "tiki_mural": {
+    "native_file": "tiki_mural_front-native.png",
+    "native_size": [
+      1024,
+      1536
+    ],
+    "body_bbox_native_pixels_xyxy": [
+      373,
+      12,
+      652,
+      1515
+    ],
+    "body_bbox_native_normalized_xyxy": [
+      0.3642578125,
+      0.0078125,
+      0.63671875,
+      0.986328125
+    ],
+    "bbox_alpha_threshold": 16,
+    "crop_padding_pixels_xy": [
+      6,
+      30
+    ],
+    "padded_crop_size": [
+      291,
+      1563
+    ],
+    "runtime_file": "tiki_mural_front1024.png",
+    "runtime_size": [
+      191,
+      1024
+    ],
+    "body_bbox_runtime_normalized_xyxy": [
+      0.020618556701030927,
+      0.019193857965451054,
+      0.979381443298969,
+      0.980806142034549
+    ],
+    "body_aspect_width_over_height": 0.18562874251497005,
+    "landmark_y_native_pixels": {
+      "brow": 242,
+      "eyes": 299,
+      "nose_tip": 369,
+      "mouth_center": 505,
+      "hands_center": 1140
+    },
+    "landmark_y_native_normalized": {
+      "brow": 0.15755208333333334,
+      "eyes": 0.19466145833333334,
+      "nose_tip": 0.240234375,
+      "mouth_center": 0.3287760416666667,
+      "hands_center": 0.7421875
+    },
+    "landmark_y_body_normalized": {
+      "brow": 0.15302727877578176,
+      "eyes": 0.19095143047238855,
+      "nose_tip": 0.2375249500998004,
+      "mouth_center": 0.32801064537591484,
+      "hands_center": 0.7504990019960079
+    },
+    "landmark_y_runtime_normalized": {
+      "brow": 0.16634676903390916,
+      "eyes": 0.20281509916826615,
+      "nose_tip": 0.2476007677543186,
+      "mouth_center": 0.3346129238643634,
+      "hands_center": 0.7408829174664108
+    },
+    "regions_y_runtime_normalized": {
+      "crown": [
+        0.01983365323096609,
+        0.14587332053742802
+      ],
+      "brows": [
+        0.13755598208573255,
+        0.19193857965451055
+      ],
+      "eyes": [
+        0.1785028790786948,
+        0.22456813819577734
+      ],
+      "nose": [
+        0.18042226487523993,
+        0.27191298784388995
+      ],
+      "mouth": [
+        0.26999360204734485,
+        0.4094689699296225
+      ],
+      "hands": [
+        0.6960972488803583,
+        0.780550223928343
+      ],
+      "feet": [
+        0.8841970569417786,
+        0.9302623160588611
+      ],
+      "base": [
+        0.9289827255278311,
+        0.9801663467690339
+      ]
+    },
+    "coordinates": "Image y increases downward. Mesh y normalized upward is 1 minus these values. Landmarks estimated visually from native generated front.",
+    "derived_maps": {
+      "size": [
+        512,
+        512
+      ],
+      "height_method": "Diffuse luminance percentile-normalized 3\u201397%, Gaussian smoothed; dark carved depressions low, pale worn ridges high. Estimated detail only; no claim of measured geometry.",
+      "normal_convention": "OpenGL tangent space (+Y green), derived from smoothed estimated height.",
+      "roughness_range": [
+        0.82,
+        0.95
+      ],
+      "alpha_preserved": true
+    }
+  },
+  "carved_weathered_wood": {
+    "native_size": [
+      1254,
+      1254
+    ],
+    "runtime_size": [
+      1024,
+      1024
+    ],
+    "runtime_file": "carved_weathered_wood1024.png",
+    "derived_maps": {
+      "size": [
+        512,
+        512
+      ],
+      "height_method": "Diffuse luminance percentile-normalized 3\u201397%, Gaussian smoothed; dark carved depressions low, pale worn ridges high. Estimated detail only; no claim of measured geometry.",
+      "normal_convention": "OpenGL tangent space (+Y green), derived from smoothed estimated height.",
+      "roughness_range": [
+        0.82,
+        0.95
+      ],
+      "alpha_preserved": true
+    },
+    "edge_mean_rgb_difference": {
+      "left_right": 13.546783447265625,
+      "top_bottom": 13.702817916870117
+    }
+  }
+}
