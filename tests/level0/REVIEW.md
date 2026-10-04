@@ -13,3 +13,5 @@ Root authored the Level 0 code and tests. Generated assets and provenance are in
 ## Limits
 
 These are actual local software WebGL browser renders, not a live-site screenshot or hardware frame-rate measurement. The 95% target concerns reduction against one mesh per architectural element; no unsupported FPS improvement is claimed. The streaming world is procedurally extended within JavaScript numeric precision, with 5 × 5 chunks resident. Unseen layout changes exclude arch rooms. The existing project has no Level 1 implementation, so the wiki's Level 1 exit remains unconnected and is disclosed in the in-game journal. F2 and map travel are deliberate game navigation aids beyond the source lore.
+
+The complete game-flow check was rerun successfully after merging remote d03b274 (garden V86 and retired asset relocation). Both V86 imports remain in main.js; the origin restoration and 7-sampler bound still pass.
