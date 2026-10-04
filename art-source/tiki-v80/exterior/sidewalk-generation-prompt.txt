@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: seamless square weathered city concrete sidewalk material texture for a 3D tiki storefront
+subject: realistic 1 meter scale sidewalk slabs, composed as a 2x2 array of square slabs with dirty expansion joints
+materials and surface details: fine aggregate, tiny edge chipping at expansion joints, dark mottling, irregular damp patches, worn weathered city concrete
+composition: flat top down orthographic material texture, edge to edge surface; seamless repeat along both axes; joints tile continuously at edges
+lighting: diffuse flat neutral illumination, no directional shadows, no perspective
+color palette: realistic muted gray concrete with dark gray dirt
+aspect ratio: 1:1
+Avoid: props, plants, objects, curb, road, text, watermarks, large cracks, dramatic lighting, directional shadows, excessive yellow, oversharpening.

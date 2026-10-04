@@ -1,0 +1,1 @@
+All 46 final PNG/WebP files fully decoded with Pillow Image.load. Full derivation completed within a single uninterrupted tool call. No temporary partial image files remain.

@@ -1,0 +1,12 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: two elongated carved tiki mask front textures for 3D carved wood masks
+reference: use the two tall dark wooden masks hanging beside the painting in the provided reference image
+layout: portrait atlas with two exact equal vertical columns placed side by side, each column is an elongated mask front with aspect ratio 1:3; the complete sheet aspect ratio is 2:3; fronts fill their rectangular columns edge to edge without extra margins
+left front: long black brown worn wood tiki mask, tall tapered crown with vertical carved marks, rounded forehead and eye bulges, deep narrow eye sockets, prominent long projecting nose, compact lips above a long chin, stacked carved ridges and grooves like the darker slimmer mask in the reference
+right front: long dark brown worn wood tiki mask, broad forehead, rounded eye bulges and inset eyes, strong prominent nose, broad carved lips, layered horizontal mouth and chin grooves, like the wider mask in the reference
+view: both mask fronts square-on orthographic front view, rectangular usable surface texture with full carved features aligned vertically; subtle local cavity darkness and wood grain show plausible carved depth for matching physical geometry
+materials: antique very dark brown and black brown worn tropical wood with fine vertical grain, rubbed raised edges, muted warm brown wear, deeply carved grooves
+aspect ratio: 2:3
+constraints: texture fronts only, no scene or environment, no mounting hardware, no wall, no perspective, no cast shadow outside features, no text, no watermark
+Avoid: colorful paint, modern polished wood, cartoon faces, cropped noses, object display photography, background margins

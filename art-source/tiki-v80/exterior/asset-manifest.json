@@ -1,0 +1,70 @@
+{
+  "generation": "built-in image_gen for all color images; crops/resizing and luminance-derived material maps only",
+  "foliage": {
+    "atlas": "foliage-atlas-1024.png",
+    "original": "foliage-atlas-original.png",
+    "layout": "2x2: top-left areca, top-right monstera, bottom-left fern, bottom-right bird-of-paradise",
+    "plants": [
+      {
+        "name": "areca",
+        "albedo": "areca-albedo-512.png",
+        "atlasCell": [
+          0,
+          0
+        ],
+        "alphaTestSuggested": 0.42
+      },
+      {
+        "name": "monstera",
+        "albedo": "monstera-albedo-512.png",
+        "atlasCell": [
+          1,
+          0
+        ],
+        "alphaTestSuggested": 0.42
+      },
+      {
+        "name": "fern",
+        "albedo": "fern-albedo-512.png",
+        "atlasCell": [
+          0,
+          1
+        ],
+        "alphaTestSuggested": 0.42
+      },
+      {
+        "name": "bird-of-paradise",
+        "albedo": "bird-of-paradise-albedo-512.png",
+        "atlasCell": [
+          1,
+          1
+        ],
+        "alphaTestSuggested": 0.42
+      }
+    ],
+    "material": "RGBA alpha preserved; DoubleSide recommended, alphaTest 0.42, transparent false, roughness around 0.88"
+  },
+  "sidewalk": {
+    "original": "sidewalk-original.png",
+    "albedo": "sidewalk-albedo-1024.png",
+    "normal": "sidewalk-normal-512.png",
+    "roughness": "sidewalk-roughness-512.png",
+    "height": "sidewalk-height-512.png",
+    "tileWorldSizeMeters": [
+      2,
+      2
+    ],
+    "slabSizeMeters": [
+      1,
+      1
+    ],
+    "normalConvention": "OpenGL tangent +Y",
+    "recommendedNormalScale": [
+      0.3,
+      0.3
+    ],
+    "displacementScaleMeters": 0.008,
+    "metalness": 0,
+    "notes": "Color generated as seamless 2x2 concrete slab array. Supporting maps mathematically derived from color, not measured scans."
+  }
+}

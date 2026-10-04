@@ -1,0 +1,36 @@
+TITLE CARDS ATLAS
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: a square 4 by 4 texture atlas of sixteen different vintage jukebox song-title strips for a realistic 3D jukebox model
+subject: sixteen small white and ivory printed paper title cards, classic mechanical jukebox title strips; dark tiny typesetting, fine colored edge details, modest paper aging
+layout: exactly four columns and four rows of equal square cells, no gaps between cells. Each cell contains one centered horizontal title card with a 4:1 width-to-height ratio, extending across the cell width; the card occupies the middle quarter of its cell vertically. The unused space above and below each card is plain ivory paper. Every card has different period-appropriate tiny two-line song-and-artist typesetting, fine dark rules, a small red or blue catalog number, and a few subtle red, blue, or green edge marks. All cards are face-on and horizontal, aligned precisely.
+style: believable photographed mid-century paper surfaces, flat orthographic scan, fine paper fibers, slight age spots, delicate slightly uneven old letterpress printing
+palette: warm white and ivory paper, black and dark brown printing, very restrained red, blue, and green small accents
+lighting: even diffuse lighting, no perspective, no cast shadows, no specular reflections
+constraints: no whole jukebox cabinet, no frames or hardware, no large modern headings, no watermark, no atlas labels or numbered cell labels; crisp enough for texture use, 2K quality
+aspect ratio: 1:1
+
+DECORATIVE BAND
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: a narrow retro jukebox decorative lower titleboard texture, photographed flat surface
+layout: a wide image with one slender horizontal printed strip centered vertically, extending across the full image width. The strip has a 7.5:1 width-to-height ratio. The plain unused area above and below is the same aged pale ivory-green color. No surrounding cabinet, frame, or hardware.
+subject: a washed pale chartreuse and ivory printed decorative paper band from a mid-century mechanical jukebox; a small sparse row of vintage stylized musical dancing figures, tiny instruments, and ornamental rhythm marks in faded ochre, muted brick red, and muted green. The tiny decorative artwork is delicate, old-fashioned, and slightly faded, with generous pale background.
+style: believable photographed aged printed paper surface, flat orthographic scan, subtle fine paper fibers and very light wear, high quality detail
+lighting: even diffuse lighting, no perspective or cast shadows
+constraints: no readable slogan, no modern graphics, no large letters, no logos or watermark; the decoration should stay entirely inside the central slender strip; no thick border or black outline
+aspect ratio: 3:1
+
+MATERIAL ATLAS
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: square material texture atlas for a realistic retro jukebox model
+layout: exactly two columns and two rows of equal square cells, four surfaces filling their cells edge-to-edge, with the four boundaries at precisely the horizontal and vertical image midpoints. No gaps, gutters, frames, labels, lettering, or objects.
+top-left material: deep wine-red worn vinyl upholstery surface, fine pebble grain, understated age wear and soft faded variations, realistic small texture scale
+top-right material: bronze and muted golden-brown fine diamond woven speaker grille mesh, narrow interwoven diagonal strands crossing into tiny uniform diamonds, dark gaps between fine woven fibers, realistic period jukebox grille cloth; dense intricate fine weave, not a large chain-link fence
+bottom-left material: brushed chromed metal, pale silver gray base color, very fine straight vertical brushing and hairline age scratches, believable neutral metal surface without a scene reflected in it
+bottom-right material: dark walnut cabinet veneer, fine straight vertical grain with subtle brown tonal variation, aged sealed wood, understated natural wood fibers
+style: believable photographed material surfaces for physically based 3D textures, flat orthographic surface scans, high detail, 2K quality
+lighting: neutral even diffuse illumination, no perspective, no cast shadows, no baked hard highlights, no vignette
+constraints: surface textures should be repeatable within each cell; no whole jukebox, no seams within cells, no hardware, no watermarks, no material names or cell labels
+aspect ratio: 1:1

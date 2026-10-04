@@ -1,0 +1,423 @@
+{
+  "generator": "built-in image_gen.imagegen",
+  "reference": "/workspace/scratch/85111d38430a/upload/image(20261004-072510).png",
+  "originals": {
+    "title-atlas-original.png": "/workspace/scratch/85111d38430a/generated_images/exec-ce3d1e93-c0e0-4c88-bc2f-cba300a53937.png",
+    "material-atlas-original.png": "/workspace/scratch/85111d38430a/generated_images/exec-081c70df-0cc2-404c-9ce4-994a4f41825f.png",
+    "decorative-band-original.png": "/workspace/scratch/85111d38430a/generated_images/exec-74068b76-94e7-4ca4-963b-698428703e42.png"
+  },
+  "crops": {
+    "red-vinyl-albedo.png": {
+      "source": "material-atlas-original.png",
+      "box_xyxy": [
+        0,
+        0,
+        627,
+        627
+      ],
+      "size": [
+        627,
+        627
+      ],
+      "normalized_xyxy": [
+        0.0,
+        0.0,
+        0.5,
+        0.5
+      ]
+    },
+    "bronze-grille-albedo.png": {
+      "source": "material-atlas-original.png",
+      "box_xyxy": [
+        627,
+        0,
+        1254,
+        627
+      ],
+      "size": [
+        627,
+        627
+      ],
+      "normalized_xyxy": [
+        0.5,
+        0.0,
+        1.0,
+        0.5
+      ]
+    },
+    "brushed-chrome-albedo.png": {
+      "source": "material-atlas-original.png",
+      "box_xyxy": [
+        0,
+        627,
+        627,
+        1254
+      ],
+      "size": [
+        627,
+        627
+      ],
+      "normalized_xyxy": [
+        0.0,
+        0.5,
+        0.5,
+        1.0
+      ]
+    },
+    "walnut-albedo.png": {
+      "source": "material-atlas-original.png",
+      "box_xyxy": [
+        627,
+        627,
+        1254,
+        1254
+      ],
+      "size": [
+        627,
+        627
+      ],
+      "normalized_xyxy": [
+        0.5,
+        0.5,
+        1.0,
+        1.0
+      ]
+    },
+    "title-card-01.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        3,
+        119,
+        310,
+        213
+      ],
+      "size": [
+        307,
+        94
+      ],
+      "normalized_xyxy": [
+        0.0023923444976076554,
+        0.094896331738437,
+        0.24720893141945774,
+        0.16985645933014354
+      ]
+    },
+    "title-card-02.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        316,
+        119,
+        624,
+        213
+      ],
+      "size": [
+        308,
+        94
+      ],
+      "normalized_xyxy": [
+        0.25199362041467305,
+        0.094896331738437,
+        0.49760765550239233,
+        0.16985645933014354
+      ]
+    },
+    "title-card-03.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        630,
+        119,
+        938,
+        213
+      ],
+      "size": [
+        308,
+        94
+      ],
+      "normalized_xyxy": [
+        0.5023923444976076,
+        0.094896331738437,
+        0.748006379585327,
+        0.16985645933014354
+      ]
+    },
+    "title-card-04.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        944,
+        119,
+        1251,
+        213
+      ],
+      "size": [
+        307,
+        94
+      ],
+      "normalized_xyxy": [
+        0.7527910685805422,
+        0.094896331738437,
+        0.9976076555023924,
+        0.16985645933014354
+      ]
+    },
+    "title-card-05.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        3,
+        433,
+        310,
+        527
+      ],
+      "size": [
+        307,
+        94
+      ],
+      "normalized_xyxy": [
+        0.0023923444976076554,
+        0.3452950558213716,
+        0.24720893141945774,
+        0.42025518341307816
+      ]
+    },
+    "title-card-06.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        316,
+        433,
+        624,
+        527
+      ],
+      "size": [
+        308,
+        94
+      ],
+      "normalized_xyxy": [
+        0.25199362041467305,
+        0.3452950558213716,
+        0.49760765550239233,
+        0.42025518341307816
+      ]
+    },
+    "title-card-07.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        630,
+        433,
+        938,
+        527
+      ],
+      "size": [
+        308,
+        94
+      ],
+      "normalized_xyxy": [
+        0.5023923444976076,
+        0.3452950558213716,
+        0.748006379585327,
+        0.42025518341307816
+      ]
+    },
+    "title-card-08.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        944,
+        433,
+        1251,
+        527
+      ],
+      "size": [
+        307,
+        94
+      ],
+      "normalized_xyxy": [
+        0.7527910685805422,
+        0.3452950558213716,
+        0.9976076555023924,
+        0.42025518341307816
+      ]
+    },
+    "title-card-09.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        3,
+        746,
+        310,
+        840
+      ],
+      "size": [
+        307,
+        94
+      ],
+      "normalized_xyxy": [
+        0.0023923444976076554,
+        0.594896331738437,
+        0.24720893141945774,
+        0.6698564593301436
+      ]
+    },
+    "title-card-10.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        316,
+        746,
+        624,
+        840
+      ],
+      "size": [
+        308,
+        94
+      ],
+      "normalized_xyxy": [
+        0.25199362041467305,
+        0.594896331738437,
+        0.49760765550239233,
+        0.6698564593301436
+      ]
+    },
+    "title-card-11.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        630,
+        746,
+        938,
+        840
+      ],
+      "size": [
+        308,
+        94
+      ],
+      "normalized_xyxy": [
+        0.5023923444976076,
+        0.594896331738437,
+        0.748006379585327,
+        0.6698564593301436
+      ]
+    },
+    "title-card-12.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        944,
+        746,
+        1251,
+        840
+      ],
+      "size": [
+        307,
+        94
+      ],
+      "normalized_xyxy": [
+        0.7527910685805422,
+        0.594896331738437,
+        0.9976076555023924,
+        0.6698564593301436
+      ]
+    },
+    "title-card-13.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        3,
+        1060,
+        310,
+        1154
+      ],
+      "size": [
+        307,
+        94
+      ],
+      "normalized_xyxy": [
+        0.0023923444976076554,
+        0.8452950558213717,
+        0.24720893141945774,
+        0.9202551834130781
+      ]
+    },
+    "title-card-14.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        316,
+        1060,
+        624,
+        1154
+      ],
+      "size": [
+        308,
+        94
+      ],
+      "normalized_xyxy": [
+        0.25199362041467305,
+        0.8452950558213717,
+        0.49760765550239233,
+        0.9202551834130781
+      ]
+    },
+    "title-card-15.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        630,
+        1060,
+        938,
+        1154
+      ],
+      "size": [
+        308,
+        94
+      ],
+      "normalized_xyxy": [
+        0.5023923444976076,
+        0.8452950558213717,
+        0.748006379585327,
+        0.9202551834130781
+      ]
+    },
+    "title-card-16.png": {
+      "source": "title-atlas-original.png",
+      "box_xyxy": [
+        944,
+        1060,
+        1251,
+        1154
+      ],
+      "size": [
+        307,
+        94
+      ],
+      "normalized_xyxy": [
+        0.7527910685805422,
+        0.8452950558213717,
+        0.9976076555023924,
+        0.9202551834130781
+      ]
+    },
+    "title-cards-packed.png": {
+      "source": "individual title-card crops",
+      "layout": "4 columns x 4 rows, 308 x 96 pixels per card",
+      "size": [
+        1232,
+        384
+      ]
+    },
+    "decorative-band.png": {
+      "source": "decorative-band-original.png",
+      "box_xyxy": [
+        0,
+        260,
+        2172,
+        463
+      ],
+      "size": [
+        2172,
+        203
+      ],
+      "normalized_xyxy": [
+        0,
+        0.35911602209944754,
+        1,
+        0.6395027624309392
+      ]
+    }
+  },
+  "notes": [
+    "All generated originals preserved. Derived files use image processing only.",
+    "Normals are low-strength luminance-derived detail maps; use a modest normalScale.",
+    "Normal maps use the OpenGL tangent-space green-channel convention for Three.js."
+  ]
+}

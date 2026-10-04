@@ -1,6 +1,8 @@
+import {initializeTikiExterior80} from './tiki-additions-materials-v80.js';
+import {availableTikiSeat80} from './tiki-plan-v80.js';
 import {initializeTikiTextures} from './tiki-materials-v76.js';
-import {prepareTikiRoom,warmTikiRoom} from './tiki-room-v79.js';
-import {nearTikiDoor,TIKI_ARRIVAL,atTikiExit,resolveTiki} from './tiki-plan-v79.js';
+import {prepareTikiRoom,warmTikiRoom} from './tiki-room-v80.js';
+import {nearTikiDoor,TIKI_ARRIVAL,atTikiExit,resolveTiki} from './tiki-plan-v80.js';
 import {cityMapWorld,findCityLanding,cityLocalPose,createCityTransit} from './city-teleport-v76.js';
 import {createSpringLoading75,warmSpring75} from './spring-loading-v75.js';
 import {initializeRetroTextures75} from './retro-occupants-v75.js';
@@ -33,7 +35,7 @@ import {initializeExitTextures} from './exit-textures.js?v=60';
 import {initializeReferenceTextures} from './reference-materials.js?v=60';
 import {initializeUrbanAssets} from './urban-assets.js?v=60';
 import {referenceEnvironment} from './reference-scenes.js?v=60';
-import {createExitScene} from './exit-scene.js?v=76';
+import {createExitScene} from './exit-scene.js?v=80';
 import {ExitAudio} from './exit-audio.js?v=60';
 import {initializeAlmondTextures,hydrateAlmondPickups,releaseAlmondBottle,almondVariant} from './almond-water-assets.js?v=60';
 import {createRuralPowerNetwork} from './rural-power-render.js?v=60';
@@ -123,7 +125,7 @@ if(!['high','balanced','low'].includes(settings.quality))settings.quality='balan
 let renderer;
 try{renderer=new T.WebGLRenderer({antialias:false,powerPreference:'high-performance',alpha:false});renderer.setPixelRatio(1);renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','Level 10 三维麦田');game.prepend(renderer.domElement)}catch(e){e.userTitle='无法启动 3D 画面';e.userMessage='当前浏览器无法创建 3D 画面。请确认已启用硬件加速，并使用支持 WebGL 2 的浏览器。';throw e}
 $('#loading').firstChild.textContent='正在载入地面与植被材质 ';
-try{await Promise.all([initializeTikiTextures(),initializeRetroTextures75(),initializeCornerTextures(),initializeVendingTextures(),initializeCanTextures(),initializeSpringTextures(),initializeSpringNPCs(),initializeBathTextures(),initializeSpaTextures(),initializeAlmondTextures(),initializeExitTextures(),initializeReferenceTextures(),initializeDistrictTextures(),initializeUrbanAssets(),initializeAdvertising(),initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
+try{await Promise.all([initializeTikiExterior80(),initializeTikiTextures(),initializeRetroTextures75(),initializeCornerTextures(),initializeVendingTextures(),initializeCanTextures(),initializeSpringTextures(),initializeSpringNPCs(),initializeBathTextures(),initializeSpaTextures(),initializeAlmondTextures(),initializeExitTextures(),initializeReferenceTextures(),initializeDistrictTextures(),initializeUrbanAssets(),initializeAdvertising(),initializePowerTextures(),initializeRuralTextures(),initializeLandmarkTextures(),initializeWeatherTextures(),initializeCerealTextures(),initializeVergeTextures()])}catch(error){error.userTitle='地面与植被材质未能加载';error.userMessage='请检查网络连接后重新加载，游戏不会以缺失材质的画面启动。';throw error}
 $('#loading').firstChild.textContent='LOADING ';
 const performanceMeter=createPerformanceMeter(renderer);
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.23;
@@ -169,6 +171,7 @@ const wetInput={},rigInput={},moveNext={x:0,z:0},moveLocal={x:0,z:0},impactLight
 let barnDoorAngle=0,barnDoorGoal=0,wetLastYaw=0,wetLastVx=0,wetLastVz=0;
 const uiRaster=createUIRaster(game,{survival:survivalDisplay,navigation:navigationMap});displayFilter.setCompositor(uiRaster);
 const exitScene=createExitScene({onAdd:root=>{atmosphere.attachFog(root);materialFinish.attach(root);naturalShadows.attach(root);naturalShadows.invalidate();},onRemove:root=>naturalShadows.detach(root)}),exitAudio=new ExitAudio();scene.add(exitScene.object);scene.userData.springVolume=exitScene.tiki;atmosphere.attachFog(exitScene.object);materialFinish.attach(exitScene.object);naturalShadows.attach(exitScene.object);extraBudgetRoots.push(exitScene.object);navigationMap.setUrbanReferenceShapes([...exitScene.references.colliders,...exitScene.district.colliders,...exitScene.fabric.colliders,...exitScene.bath.colliders,...exitScene.backcourt.colliders,...exitScene.residue.colliders]);
+let tikiSeat=null;
 let tikiRoom=null,tikiActive=false,tikiOrigin=null,tikiTime=0,tikiShadowType=T.PCFShadowMap,cityTravel=false;
 const tikiTransition=createBathLoading(document.body,{slides:Array.from({length:10},(_,i)=>new URL('./textures/tiki-v76/album/photo-'+String(i+1).padStart(2,'0')+'.webp',import.meta.url).href),title:'LANTERN REEF / TIKI BAR & GRILL',opening:'正在打开竹木门',alt:'无人 Tiki 酒吧、餐厅与浴池的旧数码照片',returnText:'返回街道'}),cityTransit=createCityTransit();
 let bathhouse={active:false,presets:[0,0,0,0],dispose(){}},bathLoading=false;const bathTransition=createBathLoading();let bathOrigin=null,bathTime=0,bathWetAge=0,bathStepTravel=0,bathShadowType=T.PCFShadowMap;
@@ -283,19 +286,19 @@ async function enterTiki(){
  if(bathLoading||tikiActive)return;bathLoading=true;keys.clear();joy.x=joy.z=0;lookInput.reset(performance.now());
  try{
   await tikiTransition.show();if(!tikiRoom)tikiRoom=await prepareTikiRoom((p,text)=>tikiTransition.progress(4+p*54,text));
-  tikiOrigin={level:state.level,cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch};tikiActive=true;tikiShadowType=renderer.shadowMap.type;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false;
+  tikiSeat=null;tikiOrigin={level:state.level,cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch};tikiActive=true;tikiShadowType=renderer.shadowMap.type;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false;
   state.cx=state.cz=0n;Object.assign(state,TIKI_ARRIVAL);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=0;eyelids.style.opacity='0';lensWater.reset();waterState.reset();bodyWater.reset();rainEffects.clear();weatherFlare.reset();exitAudio.update(0,false,time);waterPipeline.focus.setSceneQuery(null);waterPipeline.focus.setZoom(1);waterPipeline.focus.setMist(0);waterPipeline.setBathSteam(0);camera.far=30;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);
   const render=()=>{waterPipeline.update(0,camera,state,false,false,tikiRoom.scene.background,new T.Vector3(0,1,0),0,-10);renderer.toneMappingExposure=1.05;displayFilter.render(tikiRoom.scene,camera,performance.now());};
   await warmTikiRoom(tikiRoom,renderer,camera,(p,text)=>tikiTransition.progress(60+p*38,text),render);render();await nextPaint();renderer.domElement.setAttribute('aria-label','Lantern Reef · Tiki 酒吧与餐厅');$('#map-mini').hidden=true;await tikiTransition.finish();bathLoading=false;keys.clear();lookInput.reset(performance.now(),{locked:document.pointerLockElement===renderer.domElement});lastFrame=performance.now();toast('Lantern Reef。竹木门处按 E 返回街道。');
  }catch(error){console.error('Tiki entry failed',error);if(tikiActive)leaveTiki(false);tikiTransition.fail(()=>{bathLoading=false;keys.clear();lookInput.reset(performance.now());lastFrame=performance.now();});}
 }
-function leaveTiki(announce=true){if(!tikiActive||!tikiOrigin)return;Object.assign(state,tikiOrigin);tikiOrigin=null;tikiActive=false;renderer.shadowMap.type=tikiShadowType;renderer.shadowMap.autoUpdate=true;renderer.shadowMap.needsUpdate=true;state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;keys.clear();joy.x=joy.z=0;interaction=null;lensWater.reset();waterPipeline.setBathSteam(0);waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);lookInput.reset(performance.now());renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('竹木门在你身后合上。');}
+function leaveTiki(announce=true){if(!tikiActive||!tikiOrigin)return;tikiSeat=null;Object.assign(state,tikiOrigin);tikiOrigin=null;tikiActive=false;renderer.shadowMap.type=tikiShadowType;renderer.shadowMap.autoUpdate=true;renderer.shadowMap.needsUpdate=true;state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;keys.clear();joy.x=joy.z=0;interaction=null;lensWater.reset();waterPipeline.setBathSteam(0);waterPipeline.focus.setSceneQuery(null);camera.far=480;camera.updateProjectionMatrix();exitScene.update(state);naturalShadows.invalidate();resetCameraRig();waterPipeline.reset(camera);lookInput.reset(performance.now());renderer.domElement.setAttribute('aria-label','Level 11 无垠城市');if(announce)toast('竹木门在你身后合上。');}
 function animateTiki(now,dt,rawDt){
- let moved=0,dx=0,dz=0;if(playing){tikiTime+=dt;state.elapsed+=dt;let sx=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+joy.x,sz=Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp'))+joy.z,l=Math.hypot(sx,sz);if(l>1){sx/=l;sz/=l;}if(waterInspection.active)sx=sz=0;const vx=(Math.cos(state.yaw)*sx+Math.sin(state.yaw)*sz)*1.72,vz=(-Math.sin(state.yaw)*sx+Math.cos(state.yaw)*sz)*1.72;state.velocity.x=T.MathUtils.lerp(state.velocity.x,vx,1-Math.exp(-dt*10));state.velocity.z=T.MathUtils.lerp(state.velocity.z,vz,1-Math.exp(-dt*10));const p=resolveTiki(state,{x:state.x+state.velocity.x*dt,z:state.z+state.velocity.z*dt});dx=p.x-state.x;dz=p.z-state.z;moved=Math.hypot(dx,dz);state.x=p.x;state.z=p.z;state.distance+=moved;}
- const crouch=keys.has('KeyC'),rig=cameraRig.update(dt,{x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,eyeY:crouch?1.06:1.77,jump:0,moved,dx,dz,grounded:true,running:false,crouch,stamina:state.stamina,landingSpeed:0,enabled:settings.bob&&!reduceCameraMotion.matches,locked:false});state.y=rig.eyeHeight;step=rig.phase;tikiRoom.update(tikiTime);
+ let moved=0,dx=0,dz=0;if(playing){tikiTime+=dt;state.elapsed+=dt;let sx=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+joy.x,sz=Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp'))+joy.z,l=Math.hypot(sx,sz);if(l>1){sx/=l;sz/=l;}if(waterInspection.active||tikiSeat)sx=sz=0;const vx=(Math.cos(state.yaw)*sx+Math.sin(state.yaw)*sz)*1.72,vz=(-Math.sin(state.yaw)*sx+Math.cos(state.yaw)*sz)*1.72;state.velocity.x=T.MathUtils.lerp(state.velocity.x,vx,1-Math.exp(-dt*10));state.velocity.z=T.MathUtils.lerp(state.velocity.z,vz,1-Math.exp(-dt*10));const p=tikiSeat?{x:tikiSeat.x,z:tikiSeat.z}:resolveTiki(state,{x:state.x+state.velocity.x*dt,z:state.z+state.velocity.z*dt});dx=p.x-state.x;dz=p.z-state.z;moved=Math.hypot(dx,dz);state.x=p.x;state.z=p.z;state.distance+=moved;}
+ const crouch=!tikiSeat&&keys.has('KeyC'),rig=cameraRig.update(dt,{x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,eyeY:tikiSeat?tikiSeat.eyeY:(crouch?1.06:1.77),jump:0,moved,dx,dz,grounded:true,running:false,crouch,stamina:state.stamina,landingSpeed:0,enabled:settings.bob&&!reduceCameraMotion.matches,locked:false});state.y=rig.eyeHeight;step=rig.phase;tikiRoom.update(tikiTime);
  if(playing)survivalDisplay.animate(dt,state,step);if(audio.ctx){audio.motion.gain.setTargetAtTime(.012,audio.ctx.currentTime,.4);audio.rain.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);}exitAudio.update(0,false,time);
  waterPipeline.focus.setZoom(playing&&(keys.has('KeyZ')||zoomHeld)?Math.max(3,zoomSetting):zoomSetting);waterPipeline.setBathSteam(0);waterPipeline.focus.setMist(0);waterPipeline.update(playing?dt:0,camera,state,playing,false,tikiRoom.scene.background,new T.Vector3(0,1,0),0,-10);renderer.toneMappingExposure=1.05;
- uiTick+=dt;if(uiTick>.15){uiTick=0;updateHUD();$('#weather-label').textContent='LANTERN REEF · TIKI BAR & GRILL';$('#map-mini').hidden=true;const p=$('#interact');p.classList.remove('inspection');p.hidden=!playing;p.textContent=atTikiExit(state.x,state.z)?'E 推门返回街道':'LANTERN REEF · 左侧餐厅 / 右侧酒吧';$('.crosshair').hidden=false;}
+ uiTick+=dt;if(uiTick>.15){uiTick=0;updateHUD();$('#weather-label').textContent='LANTERN REEF · TIKI BAR & GRILL';$('#map-mini').hidden=true;const p=$('#interact');p.classList.remove('inspection');p.hidden=!playing;const seat=availableTikiSeat80(state.x,state.z,state.yaw);p.textContent=tikiSeat?'E 起身 · 移动鼠标环顾':atTikiExit(state.x,state.z)?'E 推门返回街道':seat?'E 坐下 · '+seat.label:'LANTERN REEF · 左侧餐厅 / 右侧酒吧';$('.crosshair').hidden=false;}
  performanceMeter.markSimulation();displayFilter.render(tikiRoom.scene,camera,now,()=>performanceMeter.beforeRender());performanceMeter.end();frameCount++;frameTime+=rawDt;if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;}
 }
 
@@ -526,7 +529,12 @@ function use(){
  if(waterInspection.active){waterInspection.stow();return;}
  if(state.level===27){if(inPool(state.x,state.z)){springSession.sitting=!springSession.sitting;toast(springSession.sitting?'坐入温暖的泉水。E 起身 · Q 饮泉水':'沿瀑布旁的楼梯可以返回入口。');}return;}
  if(bathhouse.active){const i=bathShowerAt(state.x,state.z,.91);if(atBathExit(state.x,state.z)){leaveBath();return;}if(i<0||springSession.closing)return;let preset=bathhouse.presets[i];if(preset<2){preset++;bathhouse.presets[i]=preset;springSession.preset=preset;toast(preset===1?'淋浴已开启。E 调到最热预设。':'最高水温。站到花洒正下方，按 E 闭眼。');}else if(bathUnderShower(state.x,state.z)){springSession.preset=2;springSession.beginClose(true);toast('你闭上眼睛，热水从镜头上流下。');}else{bathhouse.presets[i]=0;springSession.preset=0;toast('已关闭这只花洒。');}return;}
- if(tikiActive){if(atTikiExit(state.x,state.z))leaveTiki();return;}
+ if(tikiActive){
+  if(tikiSeat){Object.assign(state,tikiSeat.stand);tikiSeat=null;toast('已起身。');}
+  else if(atTikiExit(state.x,state.z)){leaveTiki();return;}
+  else {const seat=availableTikiSeat80(state.x,state.z,state.yaw);if(!seat)return;tikiSeat=seat;Object.assign(state,{x:seat.x,z:seat.z,yaw:seat.yaw,pitch:-.06});toast('已坐下。E 起身。');}
+  state.velocity.set(0,0,0);state.jump=state.vy=0;keys.clear();joy.x=joy.z=0;interaction=null;lookInput.reset(performance.now());cameraRig.resume();return;
+ }
  if(interaction?.kind==='tiki-door'){void enterTiki();return;}
  if(interaction?.kind==='bath-door'){enterBath();return;}
 

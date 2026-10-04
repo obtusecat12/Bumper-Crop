@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: photographic tropical foliage atlas for crossed planes in a 3D tiki storefront
+layout: 2x2 equal square cells on a square atlas, invisible cell boundaries, four individually isolated plants with generous transparent margins; all foliage entirely contained within its own cell; every basal stem anchored at the bottom center of its cell
+subjects: top left areca palm fan cluster; top right big split monstera leaf cluster; bottom left draping fern fronds; bottom right bird of paradise long leaves cluster
+style: translucent photographic leaves, real natural leaf veins and irregular edges, natural diffuse detail
+color palette: restrained olive and medium green, no neon colors
+background: actual alpha transparency around and between leaves
+lighting: diffuse and even, leaf translucency without any baked shadow
+aspect ratio: 1:1
+Avoid: ground, pot, visible cell border, text, watermark, baked cast shadows, foliage crossing into another cell, neon green, excessive yellow, oversharpening, glare.

@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: unlit flat base color surface texture for the golden worn rattan pole furniture in the provided reference image
+surface: continuous warm brown gold rattan skin, very fine longitudinal natural fibers and subtle lengthwise brown streaks; length and grain run vertically; restrained tiny worn scratches and spots
+view: a flat unwrapped close surface sample, every pixel belongs to the same continuous surface, uniform diffuse base color, suitable for wrapping around physical rattan tubes modeled in 3D
+color palette: aged warm muted golden tan and brown matching the reference furniture, understated variation
+aspect ratio: 1:1
+constraints: texture only, full bleed, no edges of any object, no cylindrical poles or rows of strips, no seams, no horizontal bamboo nodes, no shadows, no directional lighting, no highlight bands, no text, no watermark
+Avoid: room, furniture, lattice, wicker weave, corrugation, separate bamboo stalks, repeated poles, object boundaries, excessive contrast, excessive yellow

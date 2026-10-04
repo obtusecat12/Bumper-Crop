@@ -1,4 +1,5 @@
-import {createTikiFacade} from './tiki-facade-v76.js';
+import {attachTikiPaving80} from './tiki-paving-v80.js';
+import {createTikiFacade} from './tiki-facade-v80.js';
 import {createSpringEntrance} from './level27-entry.js?v=75';
 import {createBackcourt} from './backcourt-scene-v70.js';
 import {createCornerResidue} from './backcourt-residue-v71.js';
@@ -102,7 +103,7 @@ function* buildBlock(mats,plan,lod){
 }
 export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
  const mats=addApproachGroundMaterial(addDistrictMaterials(addReferenceMaterials(createUrbanMaterials()))),district=createClinicDistrict(mats),approach=makeApproach(mats),references=createReferenceScenes(mats),joinedGround=referenceGround(mats),fabric=createLandmarkFabric(mats),fabricGround=createLandmarkGround(mats),bath=createSpringEntrance(mats),tiki=createTikiFacade(),backcourt=createBackcourt(),root=new T.Group(),blocks=new Map();root.name='Level 10 to Level 11 / urban fabric';root.add(tiki.object,bath.object,approach.object,approach.early,references.object,joinedGround.object,district.object,fabric.object,fabricGround.object,backcourt.object);root.visible=false;
- const residue=createCornerResidue(),cornerGround=attachCornerGround(mats.photoCobble);root.add(residue.object);
+ const tikiPaving=attachTikiPaving80(mats.photoGranite);const residue=createCornerResidue(),cornerGround=attachCornerGround(mats.photoCobble);root.add(residue.object);
  const groundGeometry=new T.PlaneGeometry(B*16,B*16);groundGeometry.rotateX(-Math.PI/2);groundGeometry.setAttribute('color',new T.Float32BufferAttribute(new Float32Array(groundGeometry.attributes.position.count*3).fill(1),3));const groundUV=groundGeometry.attributes.uv;for(let i=0;i<groundUV.count;i++)groundUV.setXY(i,groundUV.getX(i)*B*16/3.8,groundUV.getY(i)*B*16/3.8);const cityGround=new T.Mesh(groundGeometry,mats.asphalt);cityGround.name='Continuous city ground / no exposed sky beneath reserved parcels';cityGround.position.set(CITY_ORIGIN.x,Y-.065,CITY_ORIGIN.z);cityGround.receiveShadow=true;cityGround.castShadow=false;cityGround.visible=false;root.add(cityGround);
  const stats={mode:'10',blocks:0,buildings:approach.records.length+district.buildings+fabric.buildings,typologies:BUILDING_TYPES.length,triangles:0,draws:0,pending:0,district:'transition'};
  let city=false,origin='',wantedKey='',queue=[],job=null,disposed=false;
@@ -120,7 +121,7 @@ export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
  function update(state){
   fountainClock.value=performance.now()*.001;tiki.update(fountainClock.value);
   const near=state.cx>=4n&&state.cx<=13n&&state.cz>=-1n&&state.cz<=17n;root.visible=city||near;if(!root.visible||disposed)return;
-  const key=`${state.cx},${state.cz}`;if(key!==origin){origin=key;root.position.set(-Number(state.cx)*64,0,-Number(state.cz)*64);cornerGround.rebase(state.cx,state.cz);root.updateMatrix();root.updateMatrixWorld(true);}
+  const key=`${state.cx},${state.cz}`;if(key!==origin){origin=key;root.position.set(-Number(state.cx)*64,0,-Number(state.cz)*64);cornerGround.rebase(state.cx,state.cz);tikiPaving.rebase(state.cx,state.cz);root.updateMatrix();root.updateMatrixWorld(true);}
   const wx=Number(state.cx)*64+(state.x||0),wz=Number(state.cz)*64+(state.z||0);const cp=worldToCity(wx,wz),fx=((cp.x%B)+B)%B,fz=((cp.z%B)+B)%B;stats.coverage=2*B+Math.min(fx,fz,B-fx,B-fz)-12;if(city||exitSample(wx,wz,{}).s>190){requestAround(wx,wz);advance();}for(const v of blocks.values())v.object.visible=city||v.plan.iz>=0;
  }
  async function prepareAt(wx,wz,report=()=>{}){requestAround(wx,wz,true);const total=Math.max(1,queue.length+Number(!!job));while(queue.length||job){if(disposed)throw Error("City disposed");advance();report(1-(queue.length+Number(!!job))/total);await new Promise(done=>setTimeout(done,0));}report(1);}

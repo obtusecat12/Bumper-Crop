@@ -1,0 +1,19 @@
+{
+  "reference_files": [
+    "image(20261004-072455).png",
+    "image(20261004-072510).png",
+    "image(20261004-072803).png",
+    "image(20261004-072854).png"
+  ],
+  "generator": "built-in image_gen",
+  "asset_folders": [
+    "jukebox",
+    "lounge",
+    "exterior"
+  ],
+  "runtime": "dist/textures/tiki-v80",
+  "shader_maps": "Derived approximations from generated imagery; geometric relief supplies larger forms.",
+  "prompt_structure_source": "https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md",
+  "runtime_formats": "WebP; 1024px maximum edge, 512px foliage maps; linear normals/roughness/alpha, sRGB albedo.",
+  "originals_retained": true
+}

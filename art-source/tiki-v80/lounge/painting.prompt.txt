@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: rectangular painting surface texture for a 3D lounge painting, artwork only
+reference: use the tropical painting visible on the bamboo wall of the provided reference image for composition, palette and vintage style
+subject: tropical vintage oil painting of graceful dark palms beside a water shore; tall palms gather on the right, smaller dark foliage and palms on the left, quiet water across the center, low shoreline vegetation and softly painted distant coast
+composition: faithful to the reference painting; full artwork fills the entire rectangular canvas edge to edge; pale cloudy teal and blue green sky in the upper half, dark green tropical foliage and water below; no frame or mat
+medium: old tropical oil painting with visible soft brushwork and lightly aged canvas texture
+color palette: muted teal and green sky, dusty blue green water, deep dusky greens, restrained warm brown accents
+aspect ratio: 3:4
+constraints: texture only, square-on flat artwork, no perspective, no environment, no glass reflection, no lighting baked from the lounge, no writing, no watermark
+Avoid: frame, mat, border, mockup, wall, photographic room, bright saturation, extra objects

@@ -1,0 +1,13 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: flat photorealistic vintage material texture atlas for a detailed 3D tropical lounge
+reference: use the upholstery, rattan, timber and bamboo materials in the provided reference image
+layout: one square atlas divided into an exact 2 by 2 grid of four exactly equal square cells; each material completely fills its own quarter edge to edge; no gaps, no separators, no labels, no border
+top left cell: dark worn tropical botanical floral upholstery fabric matching the reference chairs; dusky green and gray leaves with muted brown flowers; dense organic botanical pattern, visible fine woven cloth, dark subdued palette
+top right cell: golden worn rattan pole surface; close flat continuous linear rattan fiber texture with the length and grain running vertically; warm brown gold worn cane, subtle age and fine scratches
+bottom left cell: deep dark walnut panel timber surface; close flat continuous dark brown wood texture with the grain running vertically; worn vintage walnut and restrained subtle streaks
+bottom right cell: warm bamboo stalk surface; close flat continuous golden brown bamboo skin with the length running vertically and subtle horizontal node rings
+style: flat surface photorealistic unlit base color texture, uniform diffuse appearance suitable for texture mapping
+aspect ratio: 1:1
+constraints: every quarter is an exact equal square; all four surfaces viewed orthographically straight on; no furniture, no cylinders, no perspective, no shadows or highlights from scene lighting, no environment, no text, no watermark
+Avoid: borders, margins, object render, room render, labels, strong lighting, bright saturation, excessive gloss

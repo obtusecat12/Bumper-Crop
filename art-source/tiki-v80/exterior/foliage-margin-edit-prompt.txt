@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+edit target: the attached photographic tropical foliage atlas
+primary request: keep the same four plant types and photographic olive medium-green leaf appearance, but recompose each complete plant entirely within its own equal square cell with generous transparent margins
+layout: square 2x2 atlas; top left areca palm fan cluster, top right split monstera cluster, bottom left draping fern fronds, bottom right bird of paradise long leaves; invisible cell boundaries
+composition: every plant reduced to fit in the inner 82 percent of its cell; no tip or frond clipped by canvas edges or cell edges; complete canopies visible; basal stems anchored at bottom center of each cell, 6 percent above its cell bottom
+background: real alpha transparency, clean natural leaf edges
+lighting: retain soft diffuse light and leaf translucency, no baked shadow
+aspect ratio: 1:1
+Avoid: any ground, pots, visible grid, text, watermark, neon green fringe, neon colors, clipped leaf tips, excessive yellow, oversharpening, glare.
