@@ -1,0 +1,112 @@
+[
+  {
+    "previous_runtime_path": "textures/roadside-cutouts-v39.png",
+    "bytes": 1423026,
+    "sha256": "26da7125614289ca385cbd42ab8518c89c3c92d54f3895c08036a4904c866c75"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/ochre-water-streaks-128.png",
+    "bytes": 22512,
+    "sha256": "c846017230926e7835cddfa0dc298dde31101316d240224cccc6b534225a3296"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/reader-newspaper-128.png",
+    "bytes": 34137,
+    "sha256": "ae69af7a067e05270a30b80de0c8be46ad4969da385ab490f9c31263f76fd35e"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/rubber-mat-128.png",
+    "bytes": 29165,
+    "sha256": "7a7e4eafaf6ba6c4bf6a88953d7b6ffcb0899975626fa076c23fc229c93cde99"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/old-pier-label-128.png",
+    "bytes": 36269,
+    "sha256": "5216e321dffec1bf85009aefd39b806fa75f12abaafbd93bcfad0f01b95e8033"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/homeless/body.png",
+    "bytes": 29190,
+    "sha256": "abf93c789fce30a283c8a6972a4b60e86f548718d9c2c973f63de6a84062de1b"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/homeless/face.png",
+    "bytes": 31743,
+    "sha256": "9677e34c3cef65ad4ef5bbe5fde6940eb232c06e1cc2f12d9a60b45c2bc372fd"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/poolman/body.png",
+    "bytes": 21098,
+    "sha256": "dd7a0c8b5d4bc3d4d2900abb4a9e410c9c54b1db73f27253375b19f8fccacee6"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/poolman/face-blink.png",
+    "bytes": 26505,
+    "sha256": "74f24f94283e7fe8400270cfe3543e5ab4d8b83edc9291a539f09a18113e0470"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/poolman/face.png",
+    "bytes": 26931,
+    "sha256": "ac6f4098317691ed7cb455d75666e9c918885952d24a61917243e84e119a19b2"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/plaid/body.png",
+    "bytes": 29156,
+    "sha256": "0510cead0722ebc0bca472c3969e248e7ac1efbab243ac0ef9669f62d21cb4b9"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/plaid/face-blink.png",
+    "bytes": 29015,
+    "sha256": "ac1900b5491f52d16c41c1dc20341b41b0bd5c13b46d4644fd179b729de92e8e"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/plaid/face.png",
+    "bytes": 29200,
+    "sha256": "dc0b7a71ea40c6aeb094ab1d408063e4eb80eb8fc585694bdffaa951fac51fed"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/wallman/body.png",
+    "bytes": 29277,
+    "sha256": "2a3e86512b79d6845aa86904989392c5a9ad5d35b2a1343f41c36a482864bbe7"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/wallman/face-blink.png",
+    "bytes": 27629,
+    "sha256": "f80951b7da77d13d6c93180f825e1e739fd449c2d519ff4d9e93c3021d70892b"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/wallman/face.png",
+    "bytes": 27926,
+    "sha256": "42efc107da16467ab2485169cd043e2bcc4c76988a4ef54586a7ed3a48adcfea"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/receptionist/body.png",
+    "bytes": 34145,
+    "sha256": "fc8f2006415fdafa746eb9c97b774c294259a8ec3d9e61980a78d2b829a1b9bf"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/receptionist/face-blink.png",
+    "bytes": 28292,
+    "sha256": "010d90262bfc07a2e45827fb72c5c0e7e5da9afb4e9c5799fb413d390df261a4"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/receptionist/face.png",
+    "bytes": 28714,
+    "sha256": "e6895784ba1b956891521053e114945c7e4f0ecc747279e98599a27d0683dc6d"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/reader/body.png",
+    "bytes": 22343,
+    "sha256": "3fa5554d345c6a8835074ee62be74c72f0e92a3182130bc84ff0bcc4b606c44d"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/reader/face-blink.png",
+    "bytes": 26823,
+    "sha256": "780ff2d2c19c8d4201770157b8157cdc24791e3e27e04d592aebbf2fb6ee09f1"
+  },
+  {
+    "previous_runtime_path": "textures/npc-v74/reader/face.png",
+    "bytes": 27153,
+    "sha256": "af2aab6d1151a3bd06eac8ea779ab84b8ee98777d5dc5014555014d4a0186026"
+  }
+]
