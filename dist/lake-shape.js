@@ -13,16 +13,34 @@ function worley(x,z,s){const ix=Math.floor(x),iz=Math.floor(z);let a=100,b=100;f
 function union(a,b,k){const h=sat(.5+.5*(b-a)/k);return mix(b,a,h)-k*h*(1-h)}
 function capsule(x,z,ax,az,bx,bz,r){const dx=bx-ax,dz=bz-az,t=sat(((x-ax)*dx+(z-az)*dz)/(dx*dx+dz*dz));return Math.hypot(x-ax-dx*t,z-az-dz*t)-r}
 const lakeKeys=new WeakMap();
-function key(f){let k=lakeKeys.get(f);if(k===undefined){k=`${f.lakeSeed??f.seed}:${f.rx}:${f.rz}:${f.angle}`;lakeKeys.set(f,k);}return k;}
+function key(f){let k=lakeKeys.get(f);if(k===undefined){k=`${f.lakeSeed??f.seed}:${f.rx}:${f.rz}:${f.angle}${f.lakeJoin?':'+f.lakeJoin.id:''}`;lakeKeys.set(f,k);}return k;}
 function config(f){const k=key(f);let c=configs.get(k);if(c)return c;
  const seed=(f.lakeSeed??f.seed)>>>0,r=random(seed^0x62a194),perm=new Uint16Array(512),v=Array.from({length:256},(_,i)=>i);for(let i=255;i>0;i--){const j=Math.floor(r()*(i+1));[v[i],v[j]]=[v[j],v[i]]}for(let i=0;i<512;i++)perm[i]=v[i&255];
  c={seed,perm,phase:r()*TAU,turn:r()*TAU,arm:.72+r()*.24,rockPhase:r()*31,ca:Math.cos(f.angle||0),sa:Math.sin(f.angle||0),rx:f.rx,rz:f.rz};
  const bx=f.rx*1.48+23,bz=f.rz*1.48+23;
  c.bx=Math.ceil(Math.abs(c.ca)*bx+Math.abs(c.sa)*bz);c.bz=Math.ceil(Math.abs(c.sa)*bx+Math.abs(c.ca)*bz);
+ if(f.lakeJoin){
+  c.parts=f.lakeJoin.parts.map(part=>({x:part.x,z:part.z,c:config(part.basin)}));
+  c.join=f.lakeJoin.discs;
+  const boxes=f.lakeJoin.parts.map(part=>{const b=pondBounds(part.basin);return[b[0]+part.x,b[1]+part.x,b[2]+part.z,b[3]+part.z]});
+  for(const p of c.join)boxes.push([p.x-p.r-40,p.x+p.r+40,p.z-p.r-40,p.z+p.r+40]);
+  c.bounds=[Math.floor(Math.min(...boxes.map(b=>b[0]))),Math.ceil(Math.max(...boxes.map(b=>b[1]))),Math.floor(Math.min(...boxes.map(b=>b[2]))),Math.ceil(Math.max(...boxes.map(b=>b[3])))];
+ }
  configs.set(k,c);if(configs.size>128)configs.delete(configs.keys().next().value);return c;
 }
 export function pondBounds(f){const c=config(f);if(c.bounds)return c.bounds;let minX=1e4,maxX=-1e4,minZ=1e4,maxZ=-1e4;const t={};for(let z=-c.bz;z<=c.bz;z+=4)for(let x=-c.bx;x<=c.bx;x+=4){raw(x,z,c,t);if(t.d<t.width+2){minX=Math.min(minX,x);maxX=Math.max(maxX,x);minZ=Math.min(minZ,z);maxZ=Math.max(maxZ,z)}}return c.bounds=[minX-6,maxX+6,minZ-6,maxZ+6]}
-function raw(x,z,c,out){const p=c.perm,ux=(c.ca*x-c.sa*z)/c.rx,uz=(c.sa*x+c.ca*z)/c.rz;
+function raw(x,z,c,out){
+ if(c.parts){
+  // Retain both original seeded basins. Only the marked land between them is
+  // excavated; its banks use the same fracture, rock, shelf and sediment model.
+  const p=c.perm,qx=x+7*simplex(x*.018,z*.018,p),qz=z+7*simplex(x*.018+5.2,z*.018+1.3,p);
+  const wx=qx+2.5*simplex(qx*.061+1.7,qz*.061+9.2,p),wz=qz+2.5*simplex(qx*.061+8.3,qz*.061+2.8,p);
+  let d=1e4;for(const disc of c.join)d=union(d,Math.hypot(wx-disc.x,wz-disc.z)-disc.r,9);
+  finishField(x,z,d,c,out);
+  const sample={};for(const part of c.parts){raw(x-part.x,z-part.z,part.c,sample);if(sample.d<out.d)Object.assign(out,sample);}
+  return out;
+ }
+ const p=c.perm,ux=(c.ca*x-c.sa*z)/c.rx,uz=(c.sa*x+c.ca*z)/c.rz;
  // Two cascaded vector warps: the second samples q, not the original p.
  const qx=ux+.22*simplex(ux*1.65,uz*1.65,p),qz=uz+.22*simplex(ux*1.65+5.2,uz*1.65+1.3,p);
  const rx=qx+.095*simplex(qx*4.1+1.7,qz*4.1+9.2,p),rz=qz+.095*simplex(qx*4.1+8.3,qz*4.1+2.8,p);
@@ -37,6 +55,9 @@ function raw(x,z,c,out){const p=c.perm,ux=(c.ca*x-c.sa*z)/c.rx,uz=(c.sa*x+c.ca*z
  const along=rx*Math.cos(c.turn)+rz*Math.sin(c.turn),across=-rx*Math.sin(c.turn)+rz*Math.cos(c.turn);
  const stream=(Math.abs(across-.035*Math.sin(along*11+c.phase))-(.035+.035*(1-sat(along))))*Math.min(c.rx,c.rz);
  if(along>.35&&along<1.22)d=union(d,Math.max(stream,(along-1.16)*35),1.5);
+ return finishField(x,z,d,c,out);
+}
+function finishField(x,z,d,c,out){const p=c.perm;
  const near=1-smooth(8,24,Math.abs(d)),f=fbm(x*.046+3,z*.046-7,p);
  const w=near>0?worley(x*.22,z*.22,c.seed):.3;
  const fracture=.6*f+.4*(sat(w*2)-.45);d+=fracture*3.3*near;
