@@ -1,3 +1,4 @@
+import {infillPlan} from './urban-infill-return.js';
 import {exitPoint} from './exit-route.js?v=60';
 import {urbanHash,urbanRandom} from './urban-batch.js?v=60';
 export const CITY_BLOCK=112,CITY_ROAD_HALF=7.5,CITY_SIDEWALK=4.5;
@@ -8,7 +9,7 @@ export function worldToCity(x,z,out={}){const dx=x-CITY_ORIGIN.x,dz=z-CITY_ORIGI
 export function cityDistrict(x,z){if(z<155&&Math.abs(x)<240)return 'commercial';const noise=urbanHash(Math.floor(x/336),Math.floor(z/336),119)/4294967296;return z<350?'mixed':noise<.12?'civic':noise<.23?'warehouse':'core';}
 export function cityBlockPlan(ix,iz,types){
  const seed=urbanHash(ix,iz,0x115200),r=urbanRandom(seed),x=ix*CITY_BLOCK,z=iz*CITY_BLOCK,district=cityDistrict(x+56,z+56),result={ix,iz,seed,x,z,district,buildings:[],reserved:false,streetwall:true};
- if((ix===-1||ix===0)&&iz>=-3&&iz<4){result.reserved=true;result.authored=iz>=0;return result;}
+ if((ix===-1||ix===0)&&iz>=-3&&iz<4){result.reserved=true;result.authored=iz>=0;result.buildings=infillPlan(ix,iz);return result;}
  const low=['strip_mall','two_story_shops','clinic','bakery','travel_agency','photo_studio','corner_market','laundromat','bank_branch','auto_shop','steel_prefab','research_lab'],high=['brutalist_slab','precast_tower','international_tower','international_slab','black_glass_setback','postmodern_crown','terraced_office','parking_garage','office_podium','stepped_hotel','art_deco_tower','brick_walkup'];
  let ordinal=0;function add(a,c,front,side,depth){const width=c-a,m=(a+c)/2,k=ordinal++,id=urbanHash(ix*17+k,iz,912),u=urbanRandom(id),isLow=district==='commercial'||district==='warehouse'||district==='mixed'&&u()<.52,walkup=!isLow&&u()<.23,type=walkup?'brick_walkup':(isLow?low:high)[id%(isLow?low.length:high.length)],floors=walkup?4+id%3:isLow?1+Number(id%3===0):8+id%23;let px,pz,ry;if(side===0){px=m;pz=front+depth/2;ry=Math.PI;}if(side===1){px=m;pz=front-depth/2;ry=0;}if(side===2){px=front+depth/2;pz=m;ry=-Math.PI/2;}if(side===3){px=front-depth/2;pz=m;ry=Math.PI/2;}result.buildings.push({type,x:x+px,z:z+pz,ry,w:width-.035,d:depth,floors,seed:id,lot:district,streetwall:true});}
  // Front/back rows have a real six-metre service-alley portal, otherwise party walls touch.
