@@ -21,7 +21,7 @@ const packer=createPacker({T,isSharedResource:models.isSharedModelResource,wind:
 self.onmessage=async event=>{
  const {id,cx,cz,seed,level,quality,collected,knownLakes}=event.data;let chunk;
  try{
-  const begin=performance.now(),cacheKey=`${seed}:${cx},${cz}:${level}:${quality}`,cached=await readChunkCache(cacheKey),f=cached?.field||field(cx,cz,seed);
+  const begin=performance.now(),cacheKey=`${seed}:${cx},${cz}:${level}:${quality}${cx>=-6n&&cx<=-3n&&cz>=-6n&&cz<=-3n?':outpost-1':''}`,cached=await readChunkCache(cacheKey),f=cached?.field||field(cx,cz,seed);
   if(cached?.ground)restoreGround(f,cached.ground);
   chunk=models.makeChunk(f,level,quality,new Set(collected));
   // Commit CPU arrays before the packet transfers their backing buffers.

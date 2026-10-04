@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><title>湖岸前哨站 · 实际模型</title><style>body{margin:0;background:#a9b0a6}canvas{display:block}</style></head><body><script type="module">
+import * as T from '/vendor/three.module.min.js';
+import {initializeOutpostTextures} from '/lake-outpost-materials.js';import {createLakeOutpost} from '/lake-outpost.js';import {OUTPOST} from '/lake-outpost-layout.js';
+import {initializeRuralTextures} from '/rural-textures.js?v=60';import {makeGround} from '/ground.js?v=60';import {field} from '/world.js?v=60';
+await Promise.all([initializeOutpostTextures(),initializeRuralTextures()]);
+const renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setSize(1280,800);renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.13;renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;document.body.append(renderer.domElement);
+const scene=new T.Scene();scene.background=new T.Color('#b4bcb5');scene.fog=new T.Fog('#b4bcb5',100,250);scene.add(new T.HemisphereLight('#cad3d2','#65533e',2.1));const sun=new T.DirectionalLight('#e0deca',1.2);sun.position.set(-310,50,-300);sun.target.position.set(OUTPOST.x,0,OUTPOST.z);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-45,right:45,top:45,bottom:-45,near:.1,far:130});sun.shadow.bias=-.0003;sun.shadow.normalBias=.045;scene.add(sun,sun.target);
+for(let z=-6;z<=-3;z++)for(let x=-6;x<=-3;x++){const f=field(BigInt(x),BigInt(z),4244718517,false),g=makeGround(f,1);g.position.set(x*64,0,z*64);scene.add(g);}
+const camp=createLakeOutpost(renderer);scene.add(camp.object);const camera=new T.PerspectiveCamera(62,1280/800,.05,400);let clock=6;const views={overview:[[49,37,58],[0,0,-3]],gate:[[-4,1.77,33],[-4,1.8,-13]],water:[[19,2.1,19],[22,1.25,13]],office:[[-17,1.7,-7],[-17,1.2,-14]],kitchen:[[14,1.7,-5],[14,1,-13]],dorm:[[-10.8,1.65,6],[-14,1,6]],rest:[[-19.5,1.65,13],[-24,1,9]],generator:[[20,1.8,-18],[24,1,-23]],lake:[[44,3,42],[13,2,7]]};
+function frame(name='overview',t=6){clock=t;const v=views[name];camera.position.set(OUTPOST.x+v[0][0],OUTPOST.y+v[0][1],OUTPOST.z+v[0][2]);camera.lookAt(OUTPOST.x+v[1][0],OUTPOST.y+v[1][1],OUTPOST.z+v[1][2]);camera.updateMatrixWorld(true);camp.update(t,.05,{cx:0n,cz:0n,x:camera.position.x,z:camera.position.z,level:10});for(let k=0;k<5;k++)camp.effects.update(t+k*.05,.05);renderer.render(scene,camera);}
+window.qa={ready:true,camp,scene,camera,renderer,frame,views};frame();
+</script></body></html>
