@@ -1,4 +1,4 @@
-import {OUTPOST} from './lake-outpost-layout.js';
+import {OUTPOST,CAMP_PLACEMENT as CAMP} from './lake-outpost-layout.js';
 import * as T from './vendor/three.module.min.js';
 import * as L from './level27-layout.js?v=64';
 import {createCreekAuthority} from './level27-creek.js?v=65';
@@ -103,7 +103,7 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   context.fillStyle=uiPalette.mapBackground;context.fillRect(0,0,w,h);context.imageSmoothingEnabled=false;const list=visibleTiles(c,w,h,scale);let missing=0;
   for(const tile of list){const image=tiles.request(tile.cx,tile.cz,tile.d);if(image){context.drawImage(image,tile.x,tile.z,64*scale+.5,64*scale+.5);}else{missing++;context.strokeStyle=uiPalette.mapGrid;context.strokeRect(tile.x,tile.z,64*scale,64*scale);}}
   const px=w/2+(OUTPOST.x-Number(c.cx)*64-c.x)*scale,pz=h/2+(OUTPOST.z-Number(c.cz)*64-c.z)*scale;
-  if(px>-40&&pz>-40&&px<w+40&&pz<h+40){context.save();context.translate(px,pz);context.fillStyle='#68694c';context.strokeStyle='#d2b65a';context.lineWidth=1;context.fillRect(-30*scale,-27*scale,60*scale,54*scale);context.strokeRect(-30*scale,-27*scale,60*scale,54*scale);context.fillStyle='#c5aa4f';for(const [x,z]of[[-17,-13],[14,-11]])context.fillRect((x-4)*scale,(z-5)*scale,8*scale,10*scale);context.fillStyle='#445443';for(const [x,z]of[[-14,6],[-14,18],[6,7],[6,19]])context.fillRect((x-2.4)*scale,(z-1.9)*scale,4.8*scale,3.8*scale);if(scale>.65){context.fillStyle='#eee1ac';context.font='bold 10px sans-serif';context.fillText('M.E.G.',-14,4);}context.restore();}
+  if(px>-40&&pz>-40&&px<w+40&&pz<h+40){context.save();context.translate(px,pz);context.fillStyle='#68694c';context.strokeStyle='#d2b65a';context.lineWidth=1;context.fillRect(-OUTPOST.hx*scale,-OUTPOST.hz*scale,OUTPOST.hx*2*scale,OUTPOST.hz*2*scale);context.strokeRect(-OUTPOST.hx*scale,-OUTPOST.hz*scale,OUTPOST.hx*2*scale,OUTPOST.hz*2*scale);const draw=(p,width,depth,color)=>{context.save();context.translate(p[0]*scale,p[1]*scale);context.rotate(-p[2]);context.fillStyle=color;context.fillRect(-width/2*scale,-depth/2*scale,width*scale,depth*scale);context.restore();};for(const p of [CAMP.office,CAMP.kitchen])draw(p,8,10,'#c5aa4f');for(const p of CAMP.dorms)draw(p,3.8,4.8,'#445443');draw(CAMP.container,7,3.2,'#777d6b');if(scale>.65){context.fillStyle='#eee1ac';context.font='bold 10px sans-serif';context.fillText('M.E.G.',-14,4);}context.restore();}
   return missing;
  }
  function drawPlayer(context,c,w,h,scale){const p=mapOffset(player,c);if(!p)return;const x=w/2+p.x*scale,z=h/2+p.z*scale;if(x< -20||z< -20||x>w+20||z>h+20)return;

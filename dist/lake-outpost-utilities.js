@@ -78,7 +78,7 @@ export function createCampUtilities(THREE, mats) {
     for(const [ax,az] of [[-.13,0],[.13,0],[0,-.13],[0,.13]])sphere(handle,.029,brass,ax,0,az);
     handle.userData.tapIndex=i;handle.userData.interactable='tap';
     handle.traverse(o=>{if(o.isMesh){o.userData.tapIndex=i;o.userData.interactable='tap';}});
-    const stream=cyl(water,.014,.031,.835,streamMat,x,1.33,.61,7);stream.castShadow=false;stream.visible=i===0||i===2;
+    const stream=cyl(water,.014,.031,.835,streamMat,x,1.33,.61,7);stream.castShadow=false;stream.visible=false;
     const splash=ring(water,.12,.012,streamMat,x,.905,.61);splash.visible=stream.visible;splash.castShadow=false;
     streams.push({stream,splash});taps.push({handle,on:stream.visible});dynamicRoots.push(handle,stream,splash);
   }

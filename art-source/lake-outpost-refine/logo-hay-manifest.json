@@ -1,0 +1,27 @@
+{
+  "generation_mode": "built-in imagegen; one separate call per asset",
+  "assets": [
+    {
+      "file": "meg-emblem-black.png",
+      "source": "/workspace/scratch/2fbc51b27fe0/generated_images/exec-4be0c907-9321-41de-8e53-2a7266225cc9.png",
+      "dimensions": [1774, 887],
+      "bytes": 292341,
+      "alpha": true,
+      "recommended_runtime_dimensions": [768, 384],
+      "suggested_world_dimensions_metres": [2.15, 1.075],
+      "notes": "Black eagle/cube emblem edited directly from supplied reference; transparent negative spaces. Browser inspection on tan background passed."
+    },
+    {
+      "file": "wheat-stack.png",
+      "source": "/workspace/scratch/2fbc51b27fe0/generated_images/exec-a9bd7d45-2df8-4131-a37d-1c38b2680a3b.png",
+      "dimensions": [1254, 1254],
+      "bytes": 2100923,
+      "alpha": true,
+      "recommended_runtime_dimensions": [768, 768],
+      "suggested_world_dimensions_metres": [1.7, 1.8],
+      "notes": "Use two or three crossed upright cards, DoubleSide alphaTest around 0.4 with depthWrite true. No opaque model core; image carries all detail. Browser inspection confirms no opaque background or coloured fringe."
+    }
+  ],
+  "inspection": "inspection.png is a local browser screenshot for alpha/colour inspection only; exclude from runtime bundle.",
+  "prompts": "prompts.json contains both exact structured prompts."
+}

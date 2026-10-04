@@ -183,10 +183,11 @@ export function createCampStructures(THREE, mats = {}) {
     for(const z of frameZ){
       for(const side of [-1,1]) rod(root,[0,peak+0.019,z],[side*hw,eave+0.017,z],0.013,M.stitch,4);
     }
-    const halfDoor=doorW/2;
+    const halfDoor=doorW/2, rearDoor=large?variant===0:variant%2===0;
     for(const end of [-1,1]){
       const z=end*(hd+0.006);
-      // Lower central notch forms a genuinely walkable opening on both ends.
+      // Only the office and two sleeping tents keep their second entrance.
+      if(end===1||rearDoor){
       patch(root,[[-hw,0],[-halfDoor,0],[-halfDoor,doorH],[halfDoor,doorH],[halfDoor,0],[hw,0],[hw,eave],[0,peak],[-hw,eave]],z,mat,uvScale);
       for(const side of [-1,1]){
         rod(root,[side*(halfDoor+0.03),0.06,z-end*0.055],[side*(halfDoor+0.03),doorH+0.03,z-end*0.055],poleRadius*.85,M.metal);
@@ -200,6 +201,7 @@ export function createCampStructures(THREE, mats = {}) {
         rod(root,[side*(halfDoor+0.04),doorH*.44,z+end*.13],[side*(halfDoor+.34),doorH*.44,z+end*.13],.016,M.rope,5);
       }
       rod(root,[-halfDoor-.03,doorH+.03,z-end*.055],[halfDoor+.03,doorH+.03,z-end*.055],poleRadius*.85,M.metal);
+      }else{patch(root,[[-hw,0],[hw,0],[hw,eave],[0,peak],[-hw,eave]],z,mat,uvScale);}
       // Gable stitching and rain hood track the triangular construction.
       for(const side of [-1,1]) rod(root,[0,peak+.01,z+end*.013],[side*hw,eave+.01,z+end*.013],.012,M.stitch,4);
       const peakAnchor=[hw*.72*(variant%2?-1:1),0.05,end*(hd+1.15)];
@@ -209,12 +211,12 @@ export function createCampStructures(THREE, mats = {}) {
     for(const side of [-1,1]) for(const z of guyZ) addGuy(root,[side*hw,eave-.025,z],[side*(hw+(large?1.05:.75)),.06,z+(z>0?.2:-.2)],mat);
     if(large && mats.insignia){
       const insigniaMat=mats.insignia.clone(); insigniaMat.side=THREE.DoubleSide;
-      const sign=new THREE.Mesh(new THREE.PlaneGeometry(1.05,0.8),insigniaMat);
+      const sign=new THREE.Mesh(new THREE.PlaneGeometry(1.65,.83),insigniaMat);
       sign.position.set(-2.42,1.57,hd+.047); sign.name='generated-MEG-field-unit-insignia'; root.add(sign);
     }
     // Individual duckboards form practical threshold crossings.
-    for(const z of [-hd,hd]) for(let q=0;q<4;q++) box(root,doorW+.28,.045,.15,0,.034,z+(q-1.5)*.18,M.wood);
-    root.userData={width:w,depth:d,height:peak,doorWidth:doorW,doorHeight:doorH,footprintWithRopes:[w+(large?2.2:1.6),d+2.5],entryDirection:'+z',interiorBounds:{min:[-hw+.12,0,-hd+.15],max:[hw-.12,eave-.12,hd-.15]}};
+    for(const z of (rearDoor?[-hd,hd]:[hd])) for(let q=0;q<4;q++) box(root,doorW+.28,.045,.15,0,.034,z+(q-1.5)*.18,M.wood);
+    root.userData={rearDoor,width:w,depth:d,height:peak,doorWidth:doorW,doorHeight:doorH,footprintWithRopes:[w+(large?2.2:1.6),d+2.5],entryDirection:'+z',interiorBounds:{min:[-hw+.12,0,-hd+.15],max:[hw-.12,eave-.12,hd-.15]}};
     return root;
   }
   function makeContainer(){

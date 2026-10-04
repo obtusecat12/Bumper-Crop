@@ -19,6 +19,9 @@ export function createCampInteriors(THREE, mats = {}) {
   const tanCanvas = tint('canvas', 0xc5b69a, .98);
   const ash = tint('mud', 0xb3b1a2);
   const paperMat = tint('paper', 0xffffe5);
+  const mahogany = mats.mahogany || tint('wood', 0x9c5540, .47);
+  const mahoganyTrim = mahogany.clone(); mahoganyTrim.color.multiplyScalar(.81); mahoganyTrim.roughness = .45;
+  const deskBrass = M.brass.clone(); deskBrass.roughness = .43;
   const G = name => { const g = new THREE.Group(); g.name = name; return g; };
   function mesh(parent, geometry, material, x = 0, y = 0, z = 0, shadow = true) {
     const o = new THREE.Mesh(geometry, material); o.position.set(x, y, z); o.castShadow = shadow; o.receiveShadow = true; parent.add(o); return o;
@@ -211,21 +214,57 @@ export function createCampInteriors(THREE, mats = {}) {
     return g;
   }
   function desk() {
-    const g = G('field office desk'); plankTop(g, 1.75, .77, .79, 0, 0, M.wood, 4);
-    for (const x of [-.75, .75]) for (const z of [-.29, .29]) box(g, .065, .75, .065, woodDark, x, .39, z);
-    box(g, 1.58, .17, .028, woodDark, 0, .655, -.31);
-    box(g, .46, .56, .61, woodDark, .50, .465, 0);
-    for (let i = 0; i < 3; i++) {
-      box(g, .43, .15, .025, M.wood, .5, .30 + i * .17, .32);
-      beam(g, [.425, .30 + i * .17, .357], [.575, .30 + i * .17, .357], .01, blackIron);
-      for (const x of [.425, .575]) beam(g, [x, .30 + i * .17, .336], [x, .30 + i * .17, .357], .007, blackIron);
+    const g = G('salvaged double-pedestal mahogany office desk');
+    // Solid, softly rounded slab. The desk's working side faces -Z; the panelled
+    // public side faces the tent entrance, +Z. Its clear knee bay is 1.1 m wide.
+    const outline = new THREE.Shape(), w = 2.226, d = .976, corner = .035;
+    outline.moveTo(-w / 2 + corner, -d / 2); outline.lineTo(w / 2 - corner, -d / 2);
+    outline.quadraticCurveTo(w / 2, -d / 2, w / 2, -d / 2 + corner); outline.lineTo(w / 2, d / 2 - corner);
+    outline.quadraticCurveTo(w / 2, d / 2, w / 2 - corner, d / 2); outline.lineTo(-w / 2 + corner, d / 2);
+    outline.quadraticCurveTo(-w / 2, d / 2, -w / 2, d / 2 - corner); outline.lineTo(-w / 2, -d / 2 + corner);
+    outline.quadraticCurveTo(-w / 2, -d / 2, -w / 2 + corner, -d / 2);
+    const slab = new THREE.ExtrudeGeometry(outline, { depth: .052, bevelEnabled: true, bevelThickness: .01, bevelSize: .012, bevelSegments: 1, steps: 1, curveSegments: 3 });
+    slab.translate(0, 0, -.026);
+    const slabUV = slab.getAttribute('uv');
+    for (let i = 0; i < slabUV.count; i++) slabUV.setXY(i, slabUV.getX(i) / 2.25 + .5, slabUV.getY(i) + .5);
+    mesh(g, slab, mahogany, 0, .758, 0).rotation.x = -Math.PI / 2;
+    box(g, 2.12, .035, .88, mahoganyTrim, 0, .706, 0);
+    for (const x of [-.81, .81]) {
+      box(g, .49, .60, .84, mahogany, x, .395, 0);
+      box(g, .525, .07, .872, mahoganyTrim, x, .063, 0);
+      // Slightly inset drawer fronts, with rails left between the drawers.
+      for (const [yy, hh] of [[.245, .242], [.452, .145], [.625, .145]]) {
+        box(g, .436, hh, .031, mahoganyTrim, x, yy, -.429);
+        box(g, .395, hh - .038, .018, mahogany, x, yy, -.453);
+        const py = yy + (hh > .20 ? .04 : 0);
+        for (const dx of [-.07, .07]) {
+          const rose = cyl(g, .017, .017, .008, deskBrass, x + dx, py, -.468, 8); rose.rotation.x = Math.PI / 2;
+          beam(g, [x + dx, py, -.472], [x + dx, py - .014, -.496], .006, deskBrass, 6);
+        }
+        beam(g, [x - .07, py - .014, -.496], [x + .07, py - .014, -.496], .008, deskBrass, 6);
+      }
+      const lock = cyl(g, .012, .012, .008, deskBrass, x, .675, -.469, 8); lock.rotation.x = Math.PI / 2;
+      box(g, .003, .009, .002, blackIron, x, .675, -.475);
+      // The entrance side has framed panels rather than exposed drawer backs.
+      box(g, .418, .507, .018, mahoganyTrim, x, .402, .431);
+      box(g, .354, .443, .013, mahogany, x, .402, .445);
+      for (const side of [-1, 1]) box(g, .025, .52, .027, mahogany, x + side * .215, .402, .442);
     }
-    for (let i = 0; i < 5; i++) box(g, .29, .0016, .22, paperMat, -.19 + Math.sin(i * 3) * .014, .819 + i * .002, .10, -.08 + i * .019);
-    box(g, .37, .024, .26, oliveDark, .19, .822, -.07, .15);
-    box(g, .32, .026, .019, M.canvas, .35, .824, -.09, .15);
-    beam(g, [-.16, .835, .05], [-.03, .835, .105], .004, blackIron, 5);
-    cup(g, -.54, .816, .23);
-    const radio = G('portable shortwave field radio'); g.add(radio); radio.position.set(-.55, .82, -.20);
+    box(g, 1.145, .475, .037, mahoganyTrim, 0, .440, .365);
+    box(g, 1.065, .383, .015, mahogany, 0, .440, .390);
+    for (const x of [-.55, .55]) box(g, .026, .447, .023, mahogany, x, .440, .401);
+    for (const y of [.221, .659]) box(g, 1.124, .024, .023, mahogany, 0, y, .401);
+    box(g, 1.09, .06, .48, mahogany, 0, .670, -.17);
+    box(g, 1.022, .046, .026, mahoganyTrim, 0, .670, -.424);
+    beam(g, [-.07, .668, -.456], [.07, .668, -.456], .006, deskBrass, 6);
+    for (const x of [-.07, .07]) beam(g, [x, .668, -.439], [x, .668, -.456], .005, deskBrass, 5);
+    // The map, folder and radio are arranged for the chair behind the desk.
+    for (let i = 0; i < 5; i++) box(g, .42, .0016, .31, paperMat, .03 + Math.sin(i * 3) * .014, .798 + i * .002, -.13, -.05 + i * .019);
+    box(g, .39, .024, .28, oliveDark, .60, .804, .17, -.09);
+    box(g, .34, .026, .019, M.canvas, .76, .806, .16, -.09);
+    beam(g, [-.10, .814, -.20], [.04, .814, -.15], .004, blackIron, 5);
+    cup(g, -.66, .798, -.23);
+    const radio = G('portable shortwave field radio'); g.add(radio); radio.position.set(-.68, .798, .18); radio.rotation.y = Math.PI;
     rounded(radio, .38, .23, .135, oliveDark, 0, .115, 0, .022);
     rounded(radio, .20, .17, .006, blackIron, -.063, .118, .072, .018);
     for (let i = 0; i < 8; i++) box(radio, .166, .006, .007, M.metal, -.063, .056 + i * .017, .076);
@@ -247,8 +286,8 @@ export function createCampInteriors(THREE, mats = {}) {
     box(g, .056, .065, d * .76, woodDark, 0, .40, 0); return g;
   }
   const office = G('MEG office and living tent contents');
-  const offDesk = desk(); offDesk.position.set(-2.0, 0, -3.5); office.add(offDesk);
-  const offChair = woodChair(); offChair.position.set(-2.23, 0, -2.5); offChair.rotation.y = Math.PI + .11; office.add(offChair);
+  const offDesk = desk(); offDesk.position.set(-1.7, 0, -2.35); office.add(offDesk);
+  const offChair = woodChair(); offChair.position.set(-1.70, 0, -3.29); offChair.rotation.y = .015; office.add(offChair);
   const st = stove(); st.position.set(.58, 0, -.26); office.add(st);
   firewood(office, 1.37, -.46, 15);
   const ashPail = cyl(office, .16, .12, .28, M.metal, 1.40, .15, .29, 12, true); torus(office, .16, .01, blackIron, 1.4, .29, .29, Math.PI / 2, Math.PI * 2, 12);
@@ -268,19 +307,42 @@ export function createCampInteriors(THREE, mats = {}) {
     for (const x of [-.4, .4]) for (const z of [-.26, .26]) cyl(g, .025, .03, .13, blackIron, x, .065, z, 6);
     box(g, 1.06, .04, .74, stainless, 0, .89, 0);
     box(g, 1.03, .23, .047, stoveEnamel, 0, 1.005, -.338);
-    for (const x of [-.25, .25]) for (const z of [-.18, .17]) {
+    if (mats.cookerTop) {
+      // A separately cropped, orthographic hob texture carries the grease,
+      // scratched enamel and coils; pans remain volumetric above the plate.
+      // Preserve the generated 1254:583 aspect ratio so the coils stay round.
+      const hob = mesh(g, new THREE.PlaneGeometry(1.02, 1.02 * 583 / 1254), mats.cookerTop, 0, .913, 0);
+      hob.rotation.x = -Math.PI / 2; hob.name = 'generated stained electric hob surface';
+    } else for (const x of [-.25, .25]) for (const z of [-.18, .17]) {
       cyl(g, .17, .17, .008, soot, x, .918, z, 12);
       for (const r of [.038, .077, .112, .142]) torus(g, r, .009, blackIron, x, .93, z, Math.PI / 2, Math.PI * 2, 14);
     }
-    rounded(g, .78, .43, .026, blackIron, 0, .48, .356, .04);
-    rounded(g, .64, .31, .017, soot, 0, .48, .372, .025);
-    beam(g, [-.36, .705, .40], [.36, .705, .40], .019, stainless);
-    for (const x of [-.36, .36]) beam(g, [x, .705, .349], [x, .705, .40], .015, blackIron);
-    for (const x of [-.35, -.12, .12, .35]) { const knob = cyl(g, .034, .034, .024, blackIron, x, 1.02, -.303, 10); knob.rotation.x = Math.PI / 2; box(g, .006, .018, .007, M.paper, x, 1.032, -.288); }
-    const pan = cyl(g, .145, .12, .052, blackIron, -.25, .965, .17, 14, true); beam(g, [-.35, .98, .21], [-.65, .99, .31], .019, blackIron);
-    cyl(g, .145, .145, .011, soot, -.25, .945, .17, 14);
-    const pot = cyl(g, .155, .148, .25, stainless, .25, 1.04, -.18, 14, true); cyl(g, .16, .17, .022, stainless, .25, 1.175, -.18, 14); cyl(g, .026, .026, .023, blackIron, .25, 1.198, -.18, 8);
-    for (const x of [.045, .455]) { const handle = torus(g, .054, .012, blackIron, x, 1.103, -.18, 0, Math.PI * 2, 10); handle.scale.x = .7; }
+    if (mats.cookerFront) {
+      const front = mesh(g, new THREE.PlaneGeometry(.987, .744), mats.cookerFront, 0, .48, .342);
+      front.name = 'generated enamel oven fascia and door';
+    } else {
+      rounded(g, .78, .43, .026, blackIron, 0, .48, .356, .04);
+      rounded(g, .64, .31, .017, soot, 0, .48, .372, .025);
+    }
+    // Front image is cropped from y590..1254. Put the projecting grip directly
+    // over its printed handle (source y894), and the two knobs over their art.
+    const handleY = mats.cookerFront ? .48 + .744 * (.5 - (894 - 590) / 664) : .705;
+    const handleHalf = mats.cookerFront ? .423 : .36;
+    beam(g, [-handleHalf, handleY, .39], [handleHalf, handleY, .39], .019, stainless);
+    for (const x of [-handleHalf, handleHalf]) beam(g, [x, handleY, .349], [x, handleY, .39], .015, blackIron);
+    if (mats.cookerFront) {
+      for (const x of [-.212, .212]) {
+        const knob = cyl(g, .047, .047, .025, blackIron, x, .729, .361, 12);
+        knob.rotation.x = Math.PI / 2; knob.scale.z = 1.32;
+        rounded(g, .021, .088, .012, darkRubber, x, .729, .381, .008);
+        box(g, .004, .013, .002, M.paper, x, .764, .388);
+      }
+    } else for (const x of [-.35, -.12, .12, .35]) { const knob = cyl(g, .034, .034, .024, blackIron, x, 1.02, -.303, 10); knob.rotation.x = Math.PI / 2; box(g, .006, .018, .007, M.paper, x, 1.032, -.288); }
+    const panBase = mats.cookerTop ? .913 : .939;
+    const pan = cyl(g, .145, .12, .052, blackIron, -.25, panBase + .026, 0, 14, true); beam(g, [-.35, panBase + .041, .04], [-.65, panBase + .051, .14], .019, blackIron);
+    cyl(g, .145, .145, .011, soot, -.25, panBase + .006, 0, 14);
+    const pot = cyl(g, .155, .148, .25, stainless, .25, 1.04, 0, 14, true); cyl(g, .16, .17, .022, stainless, .25, 1.175, 0, 14); cyl(g, .026, .026, .023, blackIron, .25, 1.198, 0, 8);
+    for (const x of [.045, .455]) { const handle = torus(g, .054, .012, blackIron, x, 1.103, 0, 0, Math.PI * 2, 10); handle.scale.x = .7; }
     const cable = tube(g, [[.38, .12, -.35], [.44, .04, -.51], [.70, .025, -.59], [.75, .027, -.90]], .014, darkRubber, 7, 6); cable.name = 'electric range power lead';
     g.userData.powerSocketLocal = [.75, .027, -.90]; return g;
   }
@@ -344,6 +406,19 @@ export function createCampInteriors(THREE, mats = {}) {
     for (const xx of [-.10, .10]) { const toe = softBlock(bootPair, .14, .30, .12, darkRubber, xx, .01, .05, j); rounded(bootPair, .13, .21, .17, darkRubber, xx, .16, -.035, .026); box(bootPair, .147, .027, .31, blackIron, xx, .012, .05); }
   }
 
+  const containerBeds = G('container back-wall sleeping berths');
+  for (const [x, seed] of [[-1.7, 2], [.5, 5]]) {
+    const berth = cot(containerBeds, x, -.5, seed);
+    berth.rotation.y = Math.PI / 2;
+    berth.name = 'container narrow folding bed with rumpled bedding';
+  }
+  // Two 1.98 x .88 m beds run along the back wall; the right-hand doorway
+  // at x=2.2 and the full front aisle stay unobstructed.
+  containerBeds.userData.collisionBoxes = [
+    { x: -1.7, z: -.5, hx: 1.00, hz: .46 },
+    { x: .5, z: -.5, hx: 1.00, hz: .46 }
+  ];
+
   const restProps = G('sheltered fire barrel and improvised seats');
   const drum = G('open rusted burn barrel'); restProps.add(drum);
   const barrelMat = M.rust.clone(); barrelMat.side = THREE.DoubleSide;
@@ -357,12 +432,12 @@ export function createCampInteriors(THREE, mats = {}) {
   for (let i = 0; i < 5; i++) { const a = i * Math.PI * 2 / 5 + .18; const b = bench(.63 + (i % 3) * .13, i); b.position.set(Math.sin(a) * (1.4 + (i % 2) * .2), 0, Math.cos(a) * (1.4 + (i % 2) * .2)); b.rotation.y = a + .08 * Math.sin(i * 8); restProps.add(b); }
   firewood(restProps, 1.82, -1.31, 9);
   const teaCrate = crate(.47, .36, .43); teaCrate.position.set(-1.78, 0, .15); restProps.add(teaCrate); cup(teaCrate, .07, .40, -.03); can(teaCrate, -.10, .40, .07, .047, .1, 1);
-  const all = [office, kitchen, ...dorms, restProps];
+  const all = [office, kitchen, ...dorms, containerBeds, restProps];
   for (const root of all) root.userData.campInterior = true;
   office.userData.steamPoints = steamPoints;
   kitchen.userData.electricalAppliances = [cooker];
   return {
-    office, kitchen, dorms, restProps, steamPoints, dynamicRoots, warmLights: warmLights.map(x => x.light),
+    office, kitchen, dorms, containerBeds, restProps, steamPoints, dynamicRoots, warmLights: warmLights.map(x => x.light),
     update(time, dt = 0) {
       for (const a of animated) {
         const flicker = Math.sin(time * 7.7 + a.phase) * .12 + Math.sin(time * 13.1 + a.phase * 2) * .07;

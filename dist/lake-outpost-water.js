@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-export function createOutpostPuddles(){
+export function createOutpostPuddles(waterPose){
  const uniforms={picture:{value:null},depthMap:{value:null},viewport:{value:new T.Vector2(1,1)},inverseProjection:{value:new T.Matrix4()},projection:{value:new T.Matrix4()},clock:{value:0},nearFar:{value:new T.Vector2(.08,480)}};
  const material=new T.ShaderMaterial({name:'Wash station overflow / selective screen-space reflection',uniforms,transparent:true,depthWrite:false,side:T.DoubleSide,
  vertexShader:`varying vec3 vView;varying vec2 vP;void main(){vP=uv;vec4 v=modelViewMatrix*vec4(position,1.);vView=v.xyz;gl_Position=projectionMatrix*v;}`,
@@ -10,7 +10,7 @@ export function createOutpostPuddles(){
  float fresnel=.025+.975*pow(1.-max(dot(-V,N),0.),5.);float edge=smoothstep(0.,.09,min(min(vP.x,1.-vP.x),min(vP.y,1.-vP.y)));gl_FragColor=vec4(mix(vec3(.042,.052,.033),reflected,.27+.64*fresnel),edge*(.56+.34*fresnel));}
  `});
  const group=new T.Group();group.name='Real shallow overflow water';
- const shapes=[[18,14,5.5,3.3],[20,17,3.7,2.4],[14.8,13.3,2.2,1.7],[17.5,10.7,2.9,1.45]];
+ const [wx,wz]=waterPose;const shapes=[[wx-3,wz+.9,2.1,.85],[wx-1.9,wz+1.7,.9,.6],[wx-4.7,wz+.7,.8,.45]];
  for(const [x,z,rx,rz]of shapes){const p=[0,0,0],uv=[.5,.5],idx=[];for(let i=0;i<=48;i++){const a=i/48*Math.PI*2,r=1+.07*Math.sin(a*7)+.06*Math.cos(a*11);p.push(Math.cos(a)*rx*r,0,Math.sin(a)*rz*r);uv.push(.5+Math.cos(a)*.5,.5+Math.sin(a)*.5);if(i<48)idx.push(0,i+2,i+1);}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();const mesh=new T.Mesh(g,material);mesh.layers.set(6);mesh.position.set(x,.029,z);group.add(mesh);}
  return {group,material,active:false,update(t){uniforms.clock.value=t;},bind(color,depth,w,h,camera){uniforms.picture.value=color;uniforms.depthMap.value=depth;uniforms.viewport.value.set(w,h);uniforms.inverseProjection.value.copy(camera.projectionMatrixInverse);uniforms.projection.value.copy(camera.projectionMatrix);uniforms.nearFar.value.set(camera.near,camera.far);}};
 }
