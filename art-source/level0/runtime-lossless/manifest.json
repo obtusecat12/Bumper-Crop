@@ -1,0 +1,386 @@
+[
+  {
+    "png": "bamboo/ao.png",
+    "webp": "bamboo/ao.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 125256,
+    "pixel_sha256": "eacde72e3c84e075b739942a5cb5780b9e0de62ff00520c414f97f093b19376d"
+  },
+  {
+    "png": "bamboo/basecolor.png",
+    "webp": "bamboo/basecolor.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 106835,
+    "pixel_sha256": "c31744a0731ada9e7e30ca9ad627420baf54fd4a7692c399d9617b33c3e8d2c0"
+  },
+  {
+    "png": "bamboo/height.png",
+    "webp": "bamboo/height.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 103986,
+    "pixel_sha256": "0bd420b5bf6e0dd8fd0321107a9977421b1891f68ba893885f847dd7a7fecc72"
+  },
+  {
+    "png": "bamboo/metalness.png",
+    "webp": "bamboo/metalness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 22590,
+    "pixel_sha256": "674228c0b6bd6313b41c8df3a2caafaf633ddcfbe6e9780acf9e59daa529328a"
+  },
+  {
+    "png": "bamboo/normal.png",
+    "webp": "bamboo/normal.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 75586,
+    "pixel_sha256": "b4c68163692d95a9a39080d1ce731696220ac45aab7fcc39b186847bbce90de3"
+  },
+  {
+    "png": "bamboo/roughness.png",
+    "webp": "bamboo/roughness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 129031,
+    "pixel_sha256": "e201d252e0e9c5adcb646f4f8495294924b2b984a918504a379ff889d0506f25"
+  },
+  {
+    "png": "carved-wood/ao.png",
+    "webp": "carved-wood/ao.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 155198,
+    "pixel_sha256": "2732417e759f2d3c6e82f09a5f642e056f85a07ae1297fc975e2bf4e2ee37708"
+  },
+  {
+    "png": "carved-wood/basecolor.png",
+    "webp": "carved-wood/basecolor.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 125623,
+    "pixel_sha256": "a8adec81e7ac66472cf6dc05364c514520974bdd02b86b878231c7b070959a7a"
+  },
+  {
+    "png": "carved-wood/height.png",
+    "webp": "carved-wood/height.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 150247,
+    "pixel_sha256": "e57abed8b3bf2df17bef26519ab1be578437e16ee1e7d07119074aeb2dd69579"
+  },
+  {
+    "png": "carved-wood/metalness.png",
+    "webp": "carved-wood/metalness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 76082,
+    "pixel_sha256": "126f5d40ab6243be857afbe156a589c46d2d24423269387b9a84ccc4c86b2494"
+  },
+  {
+    "png": "carved-wood/normal.png",
+    "webp": "carved-wood/normal.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 85754,
+    "pixel_sha256": "1249e55c17d5f06279953974736b37aa1a5c369cf19711456a387d7df00ca342"
+  },
+  {
+    "png": "carved-wood/roughness.png",
+    "webp": "carved-wood/roughness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 144443,
+    "pixel_sha256": "6caf167edbf5f5b1ef06249169ae6cf66d070b21a08d9eafd20bf4aeb658e24a"
+  },
+  {
+    "png": "counter-wood/ao.png",
+    "webp": "counter-wood/ao.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 144463,
+    "pixel_sha256": "e08bc2f16bacb9f906664c59ff19c870911c297f66c9dd8d2eb82a999c3c7930"
+  },
+  {
+    "png": "counter-wood/basecolor.png",
+    "webp": "counter-wood/basecolor.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 109257,
+    "pixel_sha256": "f7b66dee92645f4c5f9155c43e55a84338df61e93e1bdcadf147adb9de25b48f"
+  },
+  {
+    "png": "counter-wood/height.png",
+    "webp": "counter-wood/height.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 137465,
+    "pixel_sha256": "c60ea0d5c1b27907b684550f98779202ee942cd61cf4a38518fb900c18ae7d32"
+  },
+  {
+    "png": "counter-wood/metalness.png",
+    "webp": "counter-wood/metalness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 26084,
+    "pixel_sha256": "b5a2de92596b6fc7a1438cf6766d36c8f6ac5e0fa54948e13d28e162571facc1"
+  },
+  {
+    "png": "counter-wood/normal.png",
+    "webp": "counter-wood/normal.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 56205,
+    "pixel_sha256": "a2019f304db29ec52baceea6a7313670e1702a1590f54d4e034b28bea6f20307"
+  },
+  {
+    "png": "counter-wood/roughness.png",
+    "webp": "counter-wood/roughness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 137705,
+    "pixel_sha256": "eedf23e137b98982732908ec0b0fc396fb74f5a8193045e2186db1b92c38b344"
+  },
+  {
+    "png": "floor-slate/ao.png",
+    "webp": "floor-slate/ao.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 178926,
+    "pixel_sha256": "4d0a50819210efb09bed170be34e38a0c8b52a450517a9a5161afb2564560abc"
+  },
+  {
+    "png": "floor-slate/basecolor.png",
+    "webp": "floor-slate/basecolor.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 146977,
+    "pixel_sha256": "0c2e2c33fab086b34ca2ee66998c475c565c2db34cf3c24d4324522d6b1a30d0"
+  },
+  {
+    "png": "floor-slate/height.png",
+    "webp": "floor-slate/height.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 161996,
+    "pixel_sha256": "734d0894020d8c72fd01d1f8a2dcfb6e94124b794a1310d76c0c41dd742c119d"
+  },
+  {
+    "png": "floor-slate/metalness.png",
+    "webp": "floor-slate/metalness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 24034,
+    "pixel_sha256": "454650e7e469c97e5e3e78bbacf05116709d413753d9d79d3ac051fc19535a8b"
+  },
+  {
+    "png": "floor-slate/normal.png",
+    "webp": "floor-slate/normal.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 99961,
+    "pixel_sha256": "11abe74261eabf52dbd7ac1dfbf40eaeae0ed7e230ae019233e86638d9ff398c"
+  },
+  {
+    "png": "floor-slate/roughness.png",
+    "webp": "floor-slate/roughness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 183931,
+    "pixel_sha256": "1bcaf21c951349726e566f21d1eb3f3cdf2de298dbad75a418dcf5cf49404633"
+  },
+  {
+    "png": "lava-rock/ao.png",
+    "webp": "lava-rock/ao.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 188328,
+    "pixel_sha256": "136c296862c0717bb80a1971e2c70377aa173f0f33e1940d3be002cbbef41f9a"
+  },
+  {
+    "png": "lava-rock/basecolor.png",
+    "webp": "lava-rock/basecolor.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 145611,
+    "pixel_sha256": "1752c373fa244fa1535f88d65e5bfb28a14aeb24360eeae9f491e84346d973ed"
+  },
+  {
+    "png": "lava-rock/height.png",
+    "webp": "lava-rock/height.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 162476,
+    "pixel_sha256": "a2721bd2c3b3e2f56451c51481b4d0fa903c5dbe0a29ae95bde5fe6457ec787b"
+  },
+  {
+    "png": "lava-rock/metalness.png",
+    "webp": "lava-rock/metalness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 54314,
+    "pixel_sha256": "67603e0de2a7f9ddf83581664d13979eaf9fe8f7a6c8fe7044f9eb78aa21ee8a"
+  },
+  {
+    "png": "lava-rock/normal.png",
+    "webp": "lava-rock/normal.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 84825,
+    "pixel_sha256": "dfdaf070e2df8246528c4d78abeadca4c0233a77b4c94d23e77f2ece1a29baac"
+  },
+  {
+    "png": "lava-rock/roughness.png",
+    "webp": "lava-rock/roughness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 158064,
+    "pixel_sha256": "8d940f03b79e4e4b8721174017b31eda5cbbb9c49f9b11ff22a25149cb552bee"
+  },
+  {
+    "png": "red-vinyl/ao.png",
+    "webp": "red-vinyl/ao.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 180175,
+    "pixel_sha256": "eb22d5fa558d282b233794d90b614236a508e1c0f2262fd4721d6a3b14b7b5c4"
+  },
+  {
+    "png": "red-vinyl/basecolor.png",
+    "webp": "red-vinyl/basecolor.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 133386,
+    "pixel_sha256": "1d5f85194c4058e511f1be13bd4fb7402cb0fdedd335136ae29dbadd2ea8deec"
+  },
+  {
+    "png": "red-vinyl/height.png",
+    "webp": "red-vinyl/height.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 185564,
+    "pixel_sha256": "d7743efdc31826b284bd050929aee847e3979123b0c442f988da3a9df693f40c"
+  },
+  {
+    "png": "red-vinyl/metalness.png",
+    "webp": "red-vinyl/metalness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 18659,
+    "pixel_sha256": "362050913b21a8e2b6f4db18c826702e1d79201abcf329085c8a09c235c8447f"
+  },
+  {
+    "png": "red-vinyl/normal.png",
+    "webp": "red-vinyl/normal.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 87059,
+    "pixel_sha256": "63d671f6e653006d12a7905e4c51903a7967c68bc9d53186cb1f47dee4ca3e28"
+  },
+  {
+    "png": "red-vinyl/roughness.png",
+    "webp": "red-vinyl/roughness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 158581,
+    "pixel_sha256": "939c4e58d262ee8095633a3c9c97859572e88150415fff1a39fcca880da862cd"
+  },
+  {
+    "png": "thatch/ao.png",
+    "webp": "thatch/ao.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 100927,
+    "pixel_sha256": "3c864f3e6a1a9cf43eb8c2e8779639a0a3b6f474b2eaf7eeb9ab5110d2143eb8"
+  },
+  {
+    "png": "thatch/basecolor.png",
+    "webp": "thatch/basecolor.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 148083,
+    "pixel_sha256": "7006f2e904da3a9eb0d749b87e6cef1a4ded0775a00756181852847fc5b63058"
+  },
+  {
+    "png": "thatch/height.png",
+    "webp": "thatch/height.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 132300,
+    "pixel_sha256": "1958561007ccfb6c04e3bc097443b08fc6ab47a790a53c5f1dd9c1f0a27fdcc0"
+  },
+  {
+    "png": "thatch/metalness.png",
+    "webp": "thatch/metalness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 44137,
+    "pixel_sha256": "26bb67a745620f4509ecd4310200586a7170aedffd03fdae498f051cc49acef3"
+  },
+  {
+    "png": "thatch/normal.png",
+    "webp": "thatch/normal.webp",
+    "width": 512,
+    "height": 512,
+    "saved": -139228,
+    "pixel_sha256": "fc77fd7203775236723a50c57cf622d8410f668b5bbf023504fc0bd46ed47a1a"
+  },
+  {
+    "png": "thatch/roughness.png",
+    "webp": "thatch/roughness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 114244,
+    "pixel_sha256": "b132f4ed24948afb32c08283030ebdaa4a5abef58db6e82d879922a99deafbcf"
+  },
+  {
+    "png": "woven-mat/ao.png",
+    "webp": "woven-mat/ao.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 319666,
+    "pixel_sha256": "810586cce030b37eeab22d019e1e699e80eb85105d32188c21ed012b8de433ee"
+  },
+  {
+    "png": "woven-mat/basecolor.png",
+    "webp": "woven-mat/basecolor.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 277563,
+    "pixel_sha256": "71009fdaf556155da3aa90ee3e609f73210010df743ac5797a0833f8002bb313"
+  },
+  {
+    "png": "woven-mat/height.png",
+    "webp": "woven-mat/height.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 193221,
+    "pixel_sha256": "03a22f2950028aa4e8ef5b31f18fa3f6010e9f95f0fae3e4fe6bb7c350599c7e"
+  },
+  {
+    "png": "woven-mat/metalness.png",
+    "webp": "woven-mat/metalness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 14534,
+    "pixel_sha256": "96e0d57d97e065b39fd5e5d8c17a9c8baa3a13b0da83cc50ac2252944e0fb9c8"
+  },
+  {
+    "png": "woven-mat/normal.png",
+    "webp": "woven-mat/normal.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 180307,
+    "pixel_sha256": "e2da8d5a4cd4d9d5522c0f4e3005cd7de1e3a987031304b75d15c0fd5d81222a"
+  },
+  {
+    "png": "woven-mat/roughness.png",
+    "webp": "woven-mat/roughness.webp",
+    "width": 512,
+    "height": 512,
+    "saved": 190532,
+    "pixel_sha256": "1db533603568799f6ae015f105a243b33548c29703c805178e9592af2293bce3"
+  }
+]
