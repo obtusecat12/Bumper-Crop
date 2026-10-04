@@ -1,3 +1,5 @@
+import {outpostClearing} from './lake-outpost-layout.js';
+import {attachOutpostGround} from './lake-outpost-materials.js';
 import {AUTHORED_GROUND_GLSL} from './urban-ground-ownership.js?v=60';
 import {exitForField,EXIT_GLSL,transitionProgress} from './exit-route.js?v=60';
 import {exitTextures} from './exit-textures.js?v=60';
@@ -328,7 +330,7 @@ export function terrainGeometry(f,level){
 export function makeGround(f,level){
  const geo=terrainGeometry(f,level);
  const mesh=new T.Mesh(geo,groundMaterial(f,level));
- mesh.name='sculpted-ground-and-wheel-ruts';mesh.receiveShadow=true;
+ mesh.name='sculpted-ground-and-wheel-ruts';mesh.receiveShadow=true;attachOutpostGround(mesh,f);
  return mesh;
 }
 
@@ -412,6 +414,7 @@ const plantMat=new T.MeshStandardMaterial({color:0xffffff,vertexColors:true,roug
 const stoneGeo=new T.IcosahedronGeometry(1,0),stoneMat=new T.MeshStandardMaterial({color:'#77705e',roughness:1});
 shared.add(plantMat);shared.add(stoneGeo);shared.add(stoneMat);
 function addInstances(group,geo,mat,points,f,name){
+ points=points.filter(p=>!outpostClearing(p.x,p.z,f));
  if(!points.length)return;
  const mesh=new T.InstancedMesh(geo,mat,points.length),tint=new T.Color();
  points.forEach((p,i)=>{
@@ -426,6 +429,7 @@ function addInstances(group,geo,mat,points,f,name){
 }
 // Dense turf uses packed numeric streams rather than thousands of point objects.
 function addTurfInstances(group,geo,points,f,name,material=plantMat){
+ const kept=[];for(let j=0;j<points.length;j+=6)if(!outpostClearing(points[j],points[j+1],f))kept.push(...points.slice(j,j+6));points=kept;
  const count=points.length/6;if(!count)return;
  const mesh=new T.InstancedMesh(geo,material,count),tint=new T.Color();
  for(let i=0,j=0;i<count;i++,j+=6){

@@ -1,3 +1,4 @@
+import {OUTPOST} from './lake-outpost-layout.js';
 import * as T from './vendor/three.module.min.js';
 import * as L from './level27-layout.js?v=64';
 import {createCreekAuthority} from './level27-creek.js?v=65';
@@ -101,6 +102,8 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   if(level===11)return cityPaint(context,c,w,h,scale);
   context.fillStyle=uiPalette.mapBackground;context.fillRect(0,0,w,h);context.imageSmoothingEnabled=false;const list=visibleTiles(c,w,h,scale);let missing=0;
   for(const tile of list){const image=tiles.request(tile.cx,tile.cz,tile.d);if(image){context.drawImage(image,tile.x,tile.z,64*scale+.5,64*scale+.5);}else{missing++;context.strokeStyle=uiPalette.mapGrid;context.strokeRect(tile.x,tile.z,64*scale,64*scale);}}
+  const px=w/2+(OUTPOST.x-Number(c.cx)*64-c.x)*scale,pz=h/2+(OUTPOST.z-Number(c.cz)*64-c.z)*scale;
+  if(px>-40&&pz>-40&&px<w+40&&pz<h+40){context.save();context.translate(px,pz);context.fillStyle='#68694c';context.strokeStyle='#d2b65a';context.lineWidth=1;context.fillRect(-30*scale,-27*scale,60*scale,54*scale);context.strokeRect(-30*scale,-27*scale,60*scale,54*scale);context.fillStyle='#c5aa4f';for(const [x,z]of[[-17,-13],[14,-11]])context.fillRect((x-4)*scale,(z-5)*scale,8*scale,10*scale);context.fillStyle='#445443';for(const [x,z]of[[-14,6],[-14,18],[6,7],[6,19]])context.fillRect((x-2.4)*scale,(z-1.9)*scale,4.8*scale,3.8*scale);if(scale>.65){context.fillStyle='#eee1ac';context.font='bold 10px sans-serif';context.fillText('M.E.G.',-14,4);}context.restore();}
   return missing;
  }
  function drawPlayer(context,c,w,h,scale){const p=mapOffset(player,c);if(!p)return;const x=w/2+p.x*scale,z=h/2+p.z*scale;if(x< -20||z< -20||x>w+20||z>h+20)return;
