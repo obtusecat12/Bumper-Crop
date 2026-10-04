@@ -1,0 +1,232 @@
+{
+  "errors": [],
+  "origin": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "restored": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "pickup": {
+    "inventory": 1,
+    "inspection": true
+  },
+  "maxSamplers": 7,
+  "shader": [
+    {
+      "name": "CubemapToCubeUV",
+      "count": 1
+    },
+    {
+      "name": "SphericalGaussianBlur",
+      "count": 1
+    },
+    {
+      "name": "Merged almond-water opaque PBR",
+      "count": 6
+    },
+    {
+      "name": "Thick glass / optical transmission 0.97 / clear almond water",
+      "count": 3
+    },
+    {
+      "name": "Thin molded PET plastic — no physical transmission",
+      "count": 3
+    },
+    {
+      "name": "Light amber almond water — single contained body",
+      "count": 1
+    },
+    {
+      "name": "2010 Almond Water PET wrap artwork",
+      "count": 4
+    },
+    {
+      "name": "Injection molded blue PET screw closure",
+      "count": 3
+    },
+    {
+      "name": "PET mould line",
+      "count": 2
+    },
+    {
+      "name": "2010 printed Almond Water aluminum can",
+      "count": 4
+    },
+    {
+      "name": "Embossed lid score and indentation",
+      "count": 2
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "Bayer water crown and Worthington jet",
+      "count": 0
+    },
+    {
+      "name": "Bayer ballistic world droplets",
+      "count": 0
+    },
+    {
+      "name": "Bayer spray mist",
+      "count": 0
+    },
+    {
+      "name": "ray-projected-cellular-overcast-v43",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 1
+    },
+    {
+      "name": "",
+      "count": 1
+    },
+    {
+      "name": "",
+      "count": 7
+    },
+    {
+      "name": "",
+      "count": 4
+    },
+    {
+      "name": "",
+      "count": 1
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 1
+    },
+    {
+      "name": "",
+      "count": 0
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 4
+    },
+    {
+      "name": "",
+      "count": 0
+    },
+    {
+      "name": "",
+      "count": 1
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 0
+    },
+    {
+      "name": "",
+      "count": 0
+    },
+    {
+      "name": "",
+      "count": 2
+    },
+    {
+      "name": "Merged almond-water opaque PBR",
+      "count": 6
+    },
+    {
+      "name": "",
+      "count": 1
+    },
+    {
+      "name": "Merged almond-water opaque PBR",
+      "count": 6
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 4
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 1
+    },
+    {
+      "name": "",
+      "count": 2
+    },
+    {
+      "name": "",
+      "count": 3
+    },
+    {
+      "name": "",
+      "count": 0
+    },
+    {
+      "name": "",
+      "count": 0
+    },
+    {
+      "name": "",
+      "count": 1
+    },
+    {
+      "name": "",
+      "count": 2
+    },
+    {
+      "name": "Merged almond-water opaque PBR",
+      "count": 6
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "errors": [],
+  "stats": {
+    "puddle": {
+      "chunks": 25,
+      "batches": 40,
+      "instances": 23538,
+      "rebuildCount": 1,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 4,
+      "calls": 38,
+      "triangles": 461150,
+      "programs": 15
+    }
+  }
+}
