@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: red and pink tropical flower and green foliage clump, anthurium, ginger and hibiscus inspired
+asset use: photographic transparent texture card for a PS2-style retro 3D indoor artificial tropical rock pool
+composition: front three-quarter view, a compact basal clump of lush green tropical leaves with several red and pink flowers at varying heights, complete foliage and stem silhouette rooted at one bottom-center attachment point, all leaf and petal tips inside the frame with narrow clear padding
+photo quality and vibe: high-fidelity photographic flower and leaf detail with soft subtle grain, natural imperfect photo quality, softened focus, no oversharpening, not pixel art
+lighting and materials: diffuse neutral indoor ambient light, deep green leaves, muted rich red and pink petals suitable for a dim artificial indoor tropical garden, no baked colored lighting
+background: genuinely transparent alpha, isolated flower and foliage clump only
+aspect ratio: 1:1
+Avoid: pot, soil, ground, rocks, vase, text, watermarks, checkerboard background, cast shadows outside the silhouette, cropped petals or leaf tips, excessive yellow, too sharp or overly sharpened.

@@ -1,0 +1,58 @@
+{
+  "thatch": {
+    "source": "/workspace/scratch/85111d38430a/generated_images/exec-901ec51c-9d2d-45cd-9149-7d3c7447f712.png",
+    "original": "/workspace/scratch/85111d38430a/assets-garden-v81/props/originals/thatch-original.png",
+    "size": [
+      1774,
+      887
+    ],
+    "mode": "RGBA",
+    "transparent_pixels": 267410,
+    "partial_alpha_pixels": 1305985,
+    "opaque_pixels": 143,
+    "alpha_min": 0,
+    "alpha_max": 255
+  },
+  "palm-trunk": {
+    "source": "/workspace/scratch/85111d38430a/generated_images/exec-49d4bae1-a322-4495-908b-0d45b2945135.png",
+    "original": "/workspace/scratch/85111d38430a/assets-garden-v81/props/originals/palm-trunk-original.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "transparent_pixels": 0,
+    "partial_alpha_pixels": 0,
+    "opaque_pixels": 1572516,
+    "alpha_min": 255,
+    "alpha_max": 255
+  },
+  "sandal-footbed": {
+    "source": "/workspace/scratch/85111d38430a/generated_images/exec-3883cdb0-8b31-4841-bc05-eb615cf3220d.png",
+    "original": "/workspace/scratch/85111d38430a/assets-garden-v81/props/originals/sandal-footbed-original.png",
+    "size": [
+      887,
+      1774
+    ],
+    "mode": "RGBA",
+    "transparent_pixels": 838985,
+    "partial_alpha_pixels": 733820,
+    "opaque_pixels": 733,
+    "alpha_min": 0,
+    "alpha_max": 255
+  },
+  "sandal-strap": {
+    "source": "/workspace/scratch/85111d38430a/generated_images/exec-5fcf3fe0-c337-4a91-897e-2ff7e8d92ba3.png",
+    "original": "/workspace/scratch/85111d38430a/assets-garden-v81/props/originals/sandal-strap-original.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "transparent_pixels": 0,
+    "partial_alpha_pixels": 0,
+    "opaque_pixels": 1572516,
+    "alpha_min": 255,
+    "alpha_max": 255
+  }
+}

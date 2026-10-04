@@ -1,0 +1,11 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: a photographic roiling water spray cluster sprite for small instanced billboards embedded within an animated 3D indoor fountain
+object: one roughly circular compact cluster of hundreds of tiny clear liquid lobes, irregular frothy turbulence, small water beads and isolated droplets around its edges
+materials: real clear liquid water with cyan and white refraction and highlights, granular roiling liquid breakup like the blue-lit indoor fountain in the supplied reference; translucent thin water edges and denser frothy center
+composition: close photographic view of the spray cluster only, centered, occupying most of a square image with a small clear transparent margin; many tiny rounded irregular liquid lobes rather than large smooth sheets
+lighting: cool cyan illumination passing through clear water with neutral white highlights
+background: genuinely transparent background, true alpha and naturally feathered irregular edge; individual droplets separated by transparent gaps; no pool or environment
+purpose: one local spray particle cluster for overlapping small 3D billboard instances, not a whole fountain or a full scene replacement
+aspect ratio: 1:1
+Avoid: flame, fire, icicles, crystals, giant sharp shards, smoke, mist cloud, opaque background, printed checkerboard, pool, ground, full fountain silhouette, environment, text, logos, watermarks

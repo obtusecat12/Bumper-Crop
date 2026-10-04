@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: standalone seamless square photographic diffuse basecolor texture for an office wall in a PS2 photographic dreamcore indoor tropical rock-pool game
+subject: aged light neutral warm-gray painted office wall
+surface: quiet pale warm-gray matte paint with subtle fine grit, faint small age marks and restrained paint variation, ordinary slightly aged interior wall; no heavy grunge
+composition: full-frame flat orthographic close view of painted wall surface only, seamless repeating on all four edges, uniform scale, no architectural boundaries
+lighting: true neutral diffuse illumination, evenly exposed, no directional lighting, no cast shadows, no room light tint
+photo quality and vibe: photographic ordinary office material detail suitable for PS2 photo textures, raw material scan appearance, slightly soft without oversharpening, native large output 2k
+aspect ratio: 1:1
+Avoid: scene, corners, baseboard, furniture, strong cracks, graffiti, peeling paint, heavy dirt, mold, text, watermark, yellow cast, vignette, lighting gradient, glare

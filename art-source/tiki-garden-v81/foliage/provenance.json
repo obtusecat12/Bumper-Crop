@@ -1,0 +1,312 @@
+{
+  "version": "garden-v81",
+  "generated_with": "built-in image_gen.imagegen",
+  "transparent_background": true,
+  "source_prompt_skill": "/workspace/scratch/85111d38430a/gpt_image_2_prompt_skill.md",
+  "prompt_skill_url": "https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md",
+  "reference_images_inspected": [
+    "/workspace/scratch/85111d38430a/upload/image(20261004-084104).png",
+    "/workspace/scratch/85111d38430a/upload/image(20261004-084254).png"
+  ],
+  "references_usage": "Visual subject/style inspection; no reference-image input supplied to generation.",
+  "assets": [
+    {
+      "name": "fern",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-593e3f9d-857e-4d6f-a203-61dc533a9b92.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: natural-looking dense arching fern clump, broad layered fronds, complete ground-rooted silhouette\nasset use: photographic transparent texture card for a PS2-style retro 3D indoor artificial tropical rock pool\ncomposition: front three-quarter view, many full fronds spreading and arching outward from one basal center, entire clump including stems and leaf tips inside the frame, narrow clear padding on every edge, the basal attachment point at bottom center\nphoto quality and vibe: high-fidelity photographic leaf detail with soft subtle grain, natural imperfect photo quality, softened focus, no oversharpening, not pixel art\nlighting and materials: diffuse neutral indoor ambient light, green fern leaves, gentle tonal variation, dim indoor garden compatible without baked colored lighting\nbackground: genuinely transparent alpha, isolated plant only\naspect ratio: 1:1\nAvoid: pots, soil, ground, trunks, rocks, flowers, text, watermarks, checkerboard background, shadows outside the plant silhouette, cropped leaf tips, harsh glare, excessive yellow, too sharp or overly sharpened.",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "crop": {
+        "operation": "none",
+        "source_rectangle": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "resize": "LANCZOS aspect-preserving max-edge 1024; full original canvas"
+      },
+      "alpha": {
+        "source_mode": "RGBA",
+        "source_alpha_preserved_in_original": true,
+        "runtime_alpha_resampling": "LANCZOS; no thresholding, keying or matte reconstruction",
+        "decoded_mode": "RGBA",
+        "decoded_extrema": [
+          0,
+          255
+        ],
+        "decoded_zero_fraction": 0.4271669387817383,
+        "decoded_main_silhouette_bbox_alpha128": [
+          16,
+          15,
+          1013,
+          1007
+        ]
+      },
+      "derived_maps": {
+        "normal": "Derived from softly blurred basecolor luminance; surface gradients scaled 0.55 and clamped to ±0.045; neutral transparent pixels; same alpha.",
+        "roughness": "Derived grayscale RGB, center 0.74, luminance variation ±0.035 maximum; same alpha."
+      },
+      "files": {
+        "original": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/originals/fern-original.png",
+          "bytes": 2333542,
+          "sha256": "72faf5f8587a53e4aa4438936c1e583aec3191eb3573a0f3df137ed07dbfd3ac"
+        },
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/fern-basecolor.webp",
+          "bytes": 538964,
+          "sha256": "674d84a77bfaaae4a95512d12d8b70bbe6737f881e0f9bb73c62c5ffbceb14ff"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/fern-normal.webp",
+          "bytes": 264022,
+          "sha256": "8a6edd67e98cd71c6920452fc787a76c657d3024e3d53184beef856f6166d25b"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/fern-roughness.webp",
+          "bytes": 243550,
+          "sha256": "73ec966d0487455af3f4a24652d4e3e4e8c54956ecd4283a2b4e8f306b1a7e17"
+        }
+      },
+      "validation": {
+        "normal_decode": true,
+        "normal_alpha_matches_basecolor": true,
+        "roughness_decode": true,
+        "roughness_alpha_matches_basecolor": true,
+        "original_exact_byte_copy": true,
+        "basecolor_decode": true
+      }
+    },
+    {
+      "name": "palm-crown",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-2c8db4f5-4221-4564-a618-20d9613b22be.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: artificial plastic palm full crown only, no trunk, downward arching pinnate leaves with a visible branch attachment center\nasset use: photographic transparent texture card for a PS2-style retro 3D indoor artificial tropical rock pool beneath a low office grid ceiling\ncomposition: front three-quarter view of the entire dense crown, layered pinnate palm leaves radiating from one compact center and drooping down, all tips inside the frame with narrow clear padding, central attachment suitable for placement on a separate 3D trunk\nphoto quality and vibe: high-fidelity photographic plastic leaf detail with soft subtle grain, natural imperfect photo quality, softened focus, no oversharpening, not pixel art\nlighting and materials: diffuse neutral indoor ambient light, dark green artificial plastic leaves with restrained mild surface sheen and slight color variation, no baked colored lighting\nbackground: genuinely transparent alpha, isolated crown only\naspect ratio: 1:1\nAvoid: trunk, pot, soil, ground, text, watermarks, checkerboard background, cast shadows outside the leaves, cropped leaf tips, overly glossy highlights, excessive yellow, too sharp or overly sharpened.",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "crop": {
+        "operation": "none",
+        "source_rectangle": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "resize": "LANCZOS aspect-preserving max-edge 1024; full original canvas"
+      },
+      "alpha": {
+        "source_mode": "RGBA",
+        "source_alpha_preserved_in_original": true,
+        "runtime_alpha_resampling": "LANCZOS; no thresholding, keying or matte reconstruction",
+        "decoded_mode": "RGBA",
+        "decoded_extrema": [
+          0,
+          255
+        ],
+        "decoded_zero_fraction": 0.38855648040771484,
+        "decoded_main_silhouette_bbox_alpha128": [
+          26,
+          28,
+          1000,
+          1006
+        ]
+      },
+      "derived_maps": {
+        "normal": "Derived from softly blurred basecolor luminance; surface gradients scaled 0.55 and clamped to ±0.045; neutral transparent pixels; same alpha.",
+        "roughness": "Derived grayscale RGB, center 0.63, luminance variation ±0.035 maximum; same alpha."
+      },
+      "files": {
+        "original": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/originals/palm-crown-original.png",
+          "bytes": 2347840,
+          "sha256": "6cab00917b77c4160309bd9472fd6898e7fb4495690f5fca3df77aa73685aef4"
+        },
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/palm-crown-basecolor.webp",
+          "bytes": 481332,
+          "sha256": "6c59d72c73b425e3818b685d244265f8101304ad3e4df7fa14b8ed7c71e531c1"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/palm-crown-normal.webp",
+          "bytes": 239974,
+          "sha256": "f469e06a62a70bacd44cd8f7ef69cf71463dd7bbe95413a12cf9dec13d6b4aed"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/palm-crown-roughness.webp",
+          "bytes": 225922,
+          "sha256": "376a1e1694c9540602bbaaeb2bcb118e0cead3b0e0216cc6459352b3b46449c9"
+        }
+      },
+      "validation": {
+        "normal_decode": true,
+        "normal_alpha_matches_basecolor": true,
+        "roughness_decode": true,
+        "roughness_alpha_matches_basecolor": true,
+        "original_exact_byte_copy": true,
+        "basecolor_decode": true
+      }
+    },
+    {
+      "name": "flowers",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-abd78f54-ee1f-4df6-b11f-bb65af1add7e.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: red and pink tropical flower and green foliage clump, anthurium, ginger and hibiscus inspired\nasset use: photographic transparent texture card for a PS2-style retro 3D indoor artificial tropical rock pool\ncomposition: front three-quarter view, a compact basal clump of lush green tropical leaves with several red and pink flowers at varying heights, complete foliage and stem silhouette rooted at one bottom-center attachment point, all leaf and petal tips inside the frame with narrow clear padding\nphoto quality and vibe: high-fidelity photographic flower and leaf detail with soft subtle grain, natural imperfect photo quality, softened focus, no oversharpening, not pixel art\nlighting and materials: diffuse neutral indoor ambient light, deep green leaves, muted rich red and pink petals suitable for a dim artificial indoor tropical garden, no baked colored lighting\nbackground: genuinely transparent alpha, isolated flower and foliage clump only\naspect ratio: 1:1\nAvoid: pot, soil, ground, rocks, vase, text, watermarks, checkerboard background, cast shadows outside the silhouette, cropped petals or leaf tips, excessive yellow, too sharp or overly sharpened.",
+      "original_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1024,
+        1024
+      ],
+      "crop": {
+        "operation": "none",
+        "source_rectangle": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "resize": "LANCZOS aspect-preserving max-edge 1024; full original canvas"
+      },
+      "alpha": {
+        "source_mode": "RGBA",
+        "source_alpha_preserved_in_original": true,
+        "runtime_alpha_resampling": "LANCZOS; no thresholding, keying or matte reconstruction",
+        "decoded_mode": "RGBA",
+        "decoded_extrema": [
+          0,
+          255
+        ],
+        "decoded_zero_fraction": 0.4578361511230469,
+        "decoded_main_silhouette_bbox_alpha128": [
+          29,
+          19,
+          1008,
+          1004
+        ]
+      },
+      "derived_maps": {
+        "normal": "Derived from softly blurred basecolor luminance; surface gradients scaled 0.55 and clamped to ±0.045; neutral transparent pixels; same alpha.",
+        "roughness": "Derived grayscale RGB, center 0.62, luminance variation ±0.035 maximum; same alpha."
+      },
+      "files": {
+        "original": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/originals/flowers-original.png",
+          "bytes": 1996139,
+          "sha256": "db5349b5cdaf789b946ff9c6c158f93722a18ef9c071a6aa986ac6d286bbcc81"
+        },
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/flowers-basecolor.webp",
+          "bytes": 337306,
+          "sha256": "5958ec1556e0ab2af5fa98343f854fc38d295d00c6e9a2e3aa84df64d476ad2c"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/flowers-normal.webp",
+          "bytes": 137592,
+          "sha256": "a0ce14ab8cf6e18a749650ea1e49577e9825dbf439a343a1c2f7ee1ec230acb0"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/flowers-roughness.webp",
+          "bytes": 123266,
+          "sha256": "2b5964586747044b34c9c3d1aba41f5f9dfdbfb14350715c9b7b975ce3a894fd"
+        }
+      },
+      "validation": {
+        "normal_decode": true,
+        "normal_alpha_matches_basecolor": true,
+        "roughness_decode": true,
+        "roughness_alpha_matches_basecolor": true,
+        "original_exact_byte_copy": true,
+        "basecolor_decode": true
+      }
+    },
+    {
+      "name": "palm-frond",
+      "source_generated_file": "/workspace/scratch/85111d38430a/generated_images/exec-966afa5d-a13c-443f-b6a4-4bf7d80b9a66.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nobject: one single long slender drooping pinnate palm frond\nasset use: photographic transparent texture card suitable for bending along a mesh in a PS2-style retro 3D indoor artificial tropical rock pool\ncomposition: one continuous long central rachis starting at upper center, gently curving toward the right and drooping downward, narrow paired elongated leaflets along the rachis, complete base and tapered tip inside the frame, no other fronds, full isolated silhouette with narrow clear padding\nphoto quality and vibe: high-fidelity photographic palm leaf detail with soft subtle grain, natural imperfect photo quality, softened focus, no oversharpening, not pixel art\nlighting and materials: diffuse neutral indoor ambient light, dark green slightly artificial plastic palm leaf surface with restrained mild sheen, no baked colored lighting\nbackground: genuinely transparent alpha, isolated single frond only\naspect ratio: 1:3\nAvoid: additional fronds, crown, trunk, pot, soil, ground, text, watermarks, checkerboard background, cast shadows outside the silhouette, cropped leaf tips, harsh highlights, excessive yellow, too sharp or overly sharpened.",
+      "original_size": [
+        725,
+        2170
+      ],
+      "runtime_size": [
+        342,
+        1024
+      ],
+      "crop": {
+        "operation": "none",
+        "source_rectangle": [
+          0,
+          0,
+          725,
+          2170
+        ],
+        "resize": "LANCZOS aspect-preserving max-edge 1024; full original canvas"
+      },
+      "alpha": {
+        "source_mode": "RGBA",
+        "source_alpha_preserved_in_original": true,
+        "runtime_alpha_resampling": "LANCZOS; no thresholding, keying or matte reconstruction",
+        "decoded_mode": "RGBA",
+        "decoded_extrema": [
+          0,
+          255
+        ],
+        "decoded_zero_fraction": 0.6108626873172515,
+        "decoded_main_silhouette_bbox_alpha128": [
+          11,
+          10,
+          334,
+          1012
+        ]
+      },
+      "derived_maps": {
+        "normal": "Derived from softly blurred basecolor luminance; surface gradients scaled 0.55 and clamped to ±0.045; neutral transparent pixels; same alpha.",
+        "roughness": "Derived grayscale RGB, center 0.63, luminance variation ±0.035 maximum; same alpha."
+      },
+      "files": {
+        "original": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/originals/palm-frond-original.png",
+          "bytes": 1417581,
+          "sha256": "c32fdddba9e7a44c4fa2b9d4af9ee5b3501d10fd115c473d674ae7cd1c3dd61e"
+        },
+        "basecolor": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/palm-frond-basecolor.webp",
+          "bytes": 142848,
+          "sha256": "4d6072e4bfabc9214a0dd5c4696425377fc9e603d5d12e2605c7c1aa3dc3a044"
+        },
+        "normal": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/palm-frond-normal.webp",
+          "bytes": 77552,
+          "sha256": "7b7620b7bcd52224f34a321f1f8cca72aec58d9bb751b79fe3ed9c6eda9478c0"
+        },
+        "roughness": {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/palm-frond-roughness.webp",
+          "bytes": 75290,
+          "sha256": "a3f07bab45962b03c370b04b244c1f05afec22b1cf43ba40585fb8bd2caf6399"
+        }
+      },
+      "validation": {
+        "normal_decode": true,
+        "normal_alpha_matches_basecolor": true,
+        "roughness_decode": true,
+        "roughness_alpha_matches_basecolor": true,
+        "original_exact_byte_copy": true,
+        "basecolor_decode": true
+      }
+    }
+  ],
+  "alpha_contact_sheet": "/workspace/scratch/85111d38430a/assets-garden-v81/foliage/alpha-contact-sheet.png",
+  "validation_note": "Viewed generated images, then runtime foliage against opaque neutral background. Full silhouettes and natural edges; genuine generated alpha retained. Low-alpha hidden RGB can look green if a viewer ignores alpha."
+}

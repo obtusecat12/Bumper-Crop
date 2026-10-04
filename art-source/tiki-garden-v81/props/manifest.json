@@ -1,0 +1,334 @@
+{
+  "generator": "built-in image_gen",
+  "prompts": "/workspace/scratch/85111d38430a/assets-garden-v81/props/prompts.json",
+  "prompt_skill": "/workspace/scratch/85111d38430a/assets-garden-v81/props/prompt-skill-source.md",
+  "original_sources": "/workspace/scratch/85111d38430a/assets-garden-v81/props/original-sources.json",
+  "references_inspected": [
+    "/workspace/scratch/85111d38430a/upload/image(20261004-084104).png",
+    "/workspace/scratch/85111d38430a/upload/image(20261004-084254).png"
+  ],
+  "derived_maps": "Approximate tangent-space OpenGL +Y normal maps and grayscale roughness, computed from high-pass albedo luminance; not measured or physically scanned maps. No original generation pixels were replaced.",
+  "assets": {
+    "thatch": {
+      "original": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/originals/thatch-original.png",
+        "bytes": 2819482,
+        "sha256": "bf268598bc8e3e889ca4265defc7bfa64aa3875493c777111099693e44e63797",
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 267410,
+        "alpha_bbox": [
+          0,
+          0,
+          1774,
+          857
+        ]
+      },
+      "basecolor": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/runtime/thatch-basecolor.webp",
+        "bytes": 320800,
+        "sha256": "b7436bcf4c7641ce8bd42ad410d50b9ebf5b950489bf6a430ef1b0749836e15c",
+        "width": 1024,
+        "height": 512,
+        "mode": "RGBA",
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 90567,
+        "alpha_bbox": [
+          0,
+          0,
+          1024,
+          495
+        ]
+      },
+      "normal": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/maps/thatch-normal.webp",
+        "bytes": 234560,
+        "sha256": "6442a37581ab8a435e82b4d0de9cb9122e1298afce94b44d548898fe76301550",
+        "width": 512,
+        "height": 256,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          512,
+          256
+        ]
+      },
+      "roughness": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/maps/thatch-roughness.webp",
+        "bytes": 59470,
+        "sha256": "b7be927dd37ab247ed35b73cd01a6b866d173a75e31a82f00fc959f9c80bda7c",
+        "width": 512,
+        "height": 256,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          512,
+          256
+        ]
+      },
+      "tile": "horizontal only",
+      "roughness_baseline": 0.94,
+      "color_spaces": {
+        "basecolor": "sRGB",
+        "normal": "linear / no color space",
+        "roughness": "linear / no color space"
+      },
+      "suggested_alpha_test": 0.42,
+      "notes": "Straw fibers run vertically; U repeats around parasol circumference; V is clamped and bottom of image is the hanging fringe."
+    },
+    "palm-trunk": {
+      "original": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/originals/palm-trunk-original.png",
+        "bytes": 3316167,
+        "sha256": "c8d5f8416c7aab3f8bbb242e3d4b4ba86e1d3a3ff84cb66c5981d399d4c212eb",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      },
+      "basecolor": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/runtime/palm-trunk-basecolor.webp",
+        "bytes": 525712,
+        "sha256": "83657104c7741e5c2f3e5e8087d18a2e63a558ad4d69a935234607742afcfa2d",
+        "width": 1024,
+        "height": 1024,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          1024,
+          1024
+        ]
+      },
+      "normal": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/maps/palm-trunk-normal.webp",
+        "bytes": 572790,
+        "sha256": "fce0b73e21c54316ba05817c64942315b8b66b47c4c72c2cf3a6985767e948c0",
+        "width": 512,
+        "height": 512,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          512,
+          512
+        ]
+      },
+      "roughness": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/maps/palm-trunk-roughness.webp",
+        "bytes": 111704,
+        "sha256": "86de2aae50916f59da2e5a928b29e99738b644f6d780596ffa6c06d4e5d81e0b",
+        "width": 512,
+        "height": 512,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          512,
+          512
+        ]
+      },
+      "tile": "both axes",
+      "roughness_baseline": 0.89,
+      "color_spaces": {
+        "basecolor": "sRGB",
+        "normal": "linear / no color space",
+        "roughness": "linear / no color space"
+      },
+      "suggested_alpha_test": null,
+      "notes": "Photographic tiling material; inspect repeated use at final scene scale."
+    },
+    "sandal-footbed": {
+      "original": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/originals/sandal-footbed-original.png",
+        "bytes": 1967791,
+        "sha256": "ce0f0b92df36a8e1cb51a0b9a17beb14d3fb2e1d95c4c4d795f2ff7774c0140a",
+        "width": 887,
+        "height": 1774,
+        "mode": "RGBA",
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 838985,
+        "alpha_bbox": [
+          73,
+          52,
+          867,
+          1732
+        ]
+      },
+      "basecolor": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/runtime/sandal-footbed-basecolor.webp",
+        "bytes": 181606,
+        "sha256": "5cadfacaa2bbbc1880d29220a47273724d200aa03eb31405694abd8688035063",
+        "width": 512,
+        "height": 1024,
+        "mode": "RGBA",
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 279183,
+        "alpha_bbox": [
+          42,
+          31,
+          499,
+          997
+        ]
+      },
+      "normal": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/maps/sandal-footbed-normal.webp",
+        "bytes": 115850,
+        "sha256": "54b7e81a05ed1099da12c33c9391405b5d4bee639639f2a497f9d1fb7caca0ad",
+        "width": 256,
+        "height": 512,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          256,
+          512
+        ]
+      },
+      "roughness": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/maps/sandal-footbed-roughness.webp",
+        "bytes": 28402,
+        "sha256": "c4999ee05c519e7d9cb85972ed4aa482b3c93d2ef1110118656774c4cc0cfa82",
+        "width": 256,
+        "height": 512,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          256,
+          512
+        ]
+      },
+      "tile": "neither axis",
+      "roughness_baseline": 0.95,
+      "color_spaces": {
+        "basecolor": "sRGB",
+        "normal": "linear / no color space",
+        "roughness": "linear / no color space"
+      },
+      "suggested_alpha_test": 0.42,
+      "notes": "Exact top view, toe at top and heel at bottom; no straps; alpha outside the footbed. Map full image into footbed UV bounds."
+    },
+    "sandal-strap": {
+      "original": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/originals/sandal-strap-original.png",
+        "bytes": 3182123,
+        "sha256": "3819d5fedb708367cae4b612a743ba39cf7392af5e7b52cc807ccf1d63ef4308",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      },
+      "basecolor": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/runtime/sandal-strap-basecolor.webp",
+        "bytes": 529872,
+        "sha256": "b5e054ad7186261a224d469d825478918a89bf5a1ed98b6e5c51c125074d4d5e",
+        "width": 1024,
+        "height": 1024,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          1024,
+          1024
+        ]
+      },
+      "normal": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/maps/sandal-strap-normal.webp",
+        "bytes": 555180,
+        "sha256": "5fc821aabcaa6d9e6c2801632240442549f62c92c30ae1e515579489b99c4d3d",
+        "width": 512,
+        "height": 512,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          512,
+          512
+        ]
+      },
+      "roughness": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/maps/sandal-strap-roughness.webp",
+        "bytes": 125392,
+        "sha256": "bd58864b8d55181f7c01e19dfc085417f9fb8b133d15a3976ecf3523f9a1d7cd",
+        "width": 512,
+        "height": 512,
+        "mode": "RGB",
+        "alpha_min": 255,
+        "alpha_max": 255,
+        "zero_alpha_pixels": 0,
+        "alpha_bbox": [
+          0,
+          0,
+          512,
+          512
+        ]
+      },
+      "tile": "both axes",
+      "roughness_baseline": 0.94,
+      "color_spaces": {
+        "basecolor": "sRGB",
+        "normal": "linear / no color space",
+        "roughness": "linear / no color space"
+      },
+      "suggested_alpha_test": null,
+      "notes": "Photographic tiling material; inspect repeated use at final scene scale."
+    }
+  },
+  "validation": {
+    "all_files_decoded": true,
+    "original_sha256_recorded": true,
+    "runtime_alpha_checked_on_neutral_composite": true
+  }
+}

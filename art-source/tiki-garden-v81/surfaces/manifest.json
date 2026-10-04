@@ -1,0 +1,487 @@
+{
+  "schema": 1,
+  "created_utc": "2026-10-04",
+  "generator": "built-in image_gen.imagegen",
+  "prompt_guide_url": "https://github.com/UzenUPozitiv4ik/gpt-image-2-skill/blob/main/gpt_image_2_prompt_skill.md",
+  "prompt_guide_read": "Current local copy supplied by root agent; exact required prefix, grouped fields, 1:1 aspect ratio used.",
+  "native_resolution_note": "Requested native 2k in prompt; built-in tool delivered native 1254\u00d71254 PNG. No upscaling applied. Gravel/boulder basecolor 1024; ceiling/wall basecolor 512; all approximate data maps 512.",
+  "reference_images": [
+    "/workspace/scratch/85111d38430a/upload/image(20261004-084104).png",
+    "/workspace/scratch/85111d38430a/upload/image(20261004-084254).png"
+  ],
+  "derivation": {
+    "albedo": "Actual generated RGB surface image, preserved original; runtime conversion is LANCZOS resize and WebP quality 90. No procedural albedo replacement, seam cleanup, palette repaint, or synthetic detail.",
+    "height": "sRGB decoded to linear RGB, Rec.709 luminance; wrapped Gaussian smoothing at sigma 0.8 px, 20% broad luminance subtraction at sigma 16 px, robust 3\u201397 percentile normalization, then material-specific restrained height range.",
+    "normal": "Central differences of approximate height with periodic wrap; normalized tangent vectors encoded RGB, OpenGL +Y green convention. Image rows grow downward, so the encoded tangent Y uses positive image-row derivative.",
+    "roughness": "Material-specific scalar baseline with restrained luminance-driven variation; darker areas receive slightly lower roughness. Heuristic, not physically measured.",
+    "ao": "Wrapped local height depression relative to sigma 7 px smoothing, material-specific restrained darkening. Approximation, not baked mesh AO.",
+    "displacement": "Approximate height encoded 8-bit grayscale, not metric geometry. Suggested scales are artistic starting points in meters.",
+    "data_encoding": "Data maps are lossless 8-bit WebP; grayscale files may decode to RGB in WebP. Treat normal, roughness, displacement and AO as linear/NoColorSpace. Treat basecolor as sRGB.",
+    "limitations": "Luminance mixes material pigmentation and residual shading, so PBR data cannot recover true physical shape or roughness. No measured, authored, or scan-derived PBR claim is made."
+  },
+  "materials": {
+    "gravel": {
+      "original": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/originals/gravel-generated.png",
+        "file": "originals/gravel-generated.png",
+        "semantic": "original_generated_albedo",
+        "source": "image_gen.imagegen",
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "decoded_mode": "RGB",
+        "bytes": 3664049,
+        "sha256": "3b34fa5d5d0734ed82cc329c64b0e790d7d18490c0ea5a1015fb55780f59e654"
+      },
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/prompts/gravel.txt",
+      "source_generation_file": "/workspace/scratch/85111d38430a/generated_images/exec-1c848124-0833-4c75-8c23-36f53bb06f31.png",
+      "runtime_maps": [
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/gravel-basecolor.webp",
+          "file": "runtime/gravel-basecolor.webp",
+          "semantic": "basecolor",
+          "source": "originals/gravel-generated.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 478238,
+          "sha256": "b4c63a1a67ef24d824826732ca9647950a6fbf72177a1ee8340ec9728e64fc33"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/gravel-normal.webp",
+          "file": "runtime/gravel-normal.webp",
+          "semantic": "normal",
+          "source": "originals/gravel-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 612046,
+          "sha256": "30d848e1aea14791086d8e301c8179075b28f4992069bce236faff8f67a5a483"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/gravel-roughness.webp",
+          "file": "runtime/gravel-roughness.webp",
+          "semantic": "roughness",
+          "source": "originals/gravel-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 88736,
+          "sha256": "73251ce239b66994e86992b21a57ac72c698b998da23f121ee35a770d4e5bafc"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/gravel-displacement.webp",
+          "file": "runtime/gravel-displacement.webp",
+          "semantic": "displacement",
+          "source": "originals/gravel-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 190690,
+          "sha256": "331575d9ec23af5d3ac70b33f211ba580d0386fc8c4ecefbf7dd092491ea33cb"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/gravel-ao.webp",
+          "file": "runtime/gravel-ao.webp",
+          "semantic": "ao",
+          "source": "originals/gravel-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 141112,
+          "sha256": "131f2053ae07bc714cb213d4604f964edcb23dd19ab4bc590baf5d99d0dabadb"
+        }
+      ],
+      "seam_metrics_before_webp": {
+        "horizontal_edge_mean_abs_rgb_255": 25.77,
+        "vertical_edge_mean_abs_rgb_255": 25.026,
+        "interior_horizontal_neighbor_mean_abs_rgb_255": 17.021,
+        "interior_vertical_neighbor_mean_abs_rgb_255": 16.793,
+        "comment": "Generator requested seamless; edge values are not guaranteed to match exactly. Albedo is only resized and encoded, never patched or procedurally replaced."
+      },
+      "parameters": {
+        "size": 1024,
+        "height_range": [
+          0.1,
+          0.9
+        ],
+        "normal_strength": 12,
+        "roughness": 0.94,
+        "roughness_variation": 0.04,
+        "ao_strength": 1.25,
+        "ao_min": 0.65,
+        "normal_scale": 0.3,
+        "displacement_scale_m": 0.018
+      },
+      "suggested_three_settings": {
+        "basecolor_colorSpace": "SRGBColorSpace",
+        "data_colorSpace": "NoColorSpace",
+        "normalScale": 0.3,
+        "roughness_multiplier": 1.0,
+        "aoMapIntensity": 0.7,
+        "displacementScale_m": 0.018,
+        "displacementBias_m": -0.009,
+        "repeat": "Use RepeatWrapping; physical coverage of a gravel tile is approximately 0.5\u20130.75 m."
+      }
+    },
+    "boulder": {
+      "original": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/originals/boulder-generated.png",
+        "file": "originals/boulder-generated.png",
+        "semantic": "original_generated_albedo",
+        "source": "image_gen.imagegen",
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "decoded_mode": "RGB",
+        "bytes": 3654583,
+        "sha256": "6d80e49cbe4ab83a975b30e27e4d7bf0d68dd88be91675b6fc5bf72efb096b94"
+      },
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/prompts/boulder.txt",
+      "source_generation_file": "/workspace/scratch/85111d38430a/generated_images/exec-286747c9-784c-4ee8-8c81-059c08bbd8ed.png",
+      "runtime_maps": [
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/boulder-basecolor.webp",
+          "file": "runtime/boulder-basecolor.webp",
+          "semantic": "basecolor",
+          "source": "originals/boulder-generated.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 488522,
+          "sha256": "3828fc46e7bd932ffc754d191ebb4f840286e010de09bc2bbf13293693eb17e2"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/boulder-normal.webp",
+          "file": "runtime/boulder-normal.webp",
+          "semantic": "normal",
+          "source": "originals/boulder-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 621340,
+          "sha256": "98fa11163cb74c1972e0018773bc9ddb63164fca10f0649cddcbb0fba7798ff7"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/boulder-roughness.webp",
+          "file": "runtime/boulder-roughness.webp",
+          "semantic": "roughness",
+          "source": "originals/boulder-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 123744,
+          "sha256": "a490947422acf99cf4797d86f3e2e59fdfbdb421985f545bf7a9fd41636da12c"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/boulder-displacement.webp",
+          "file": "runtime/boulder-displacement.webp",
+          "semantic": "displacement",
+          "source": "originals/boulder-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 179118,
+          "sha256": "5f72314032dc719820a2c910bf0ee57642e544e0f3ad71bd9acc1a69414f5a33"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/boulder-ao.webp",
+          "file": "runtime/boulder-ao.webp",
+          "semantic": "ao",
+          "source": "originals/boulder-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 138572,
+          "sha256": "f697404b583bc1b2f28c062e651970fdd4aa22784091d7443ddfe89e2e67c575"
+        }
+      ],
+      "seam_metrics_before_webp": {
+        "horizontal_edge_mean_abs_rgb_255": 21.423,
+        "vertical_edge_mean_abs_rgb_255": 20.778,
+        "interior_horizontal_neighbor_mean_abs_rgb_255": 16.163,
+        "interior_vertical_neighbor_mean_abs_rgb_255": 17.195,
+        "comment": "Generator requested seamless; edge values are not guaranteed to match exactly. Albedo is only resized and encoded, never patched or procedurally replaced."
+      },
+      "parameters": {
+        "size": 1024,
+        "height_range": [
+          0.2,
+          0.8
+        ],
+        "normal_strength": 16,
+        "roughness": 0.87,
+        "roughness_variation": 0.09,
+        "ao_strength": 1.1,
+        "ao_min": 0.72,
+        "normal_scale": 0.45,
+        "displacement_scale_m": 0.04
+      },
+      "suggested_three_settings": {
+        "basecolor_colorSpace": "SRGBColorSpace",
+        "data_colorSpace": "NoColorSpace",
+        "normalScale": 0.45,
+        "roughness_multiplier": 1.0,
+        "aoMapIntensity": 0.7,
+        "displacementScale_m": 0.04,
+        "displacementBias_m": -0.02,
+        "repeat": "Use RepeatWrapping; physical coverage of a gravel tile is approximately 0.5\u20130.75 m."
+      }
+    },
+    "ceiling": {
+      "original": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/originals/ceiling-generated.png",
+        "file": "originals/ceiling-generated.png",
+        "semantic": "original_generated_albedo",
+        "source": "image_gen.imagegen",
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "decoded_mode": "RGB",
+        "bytes": 3287442,
+        "sha256": "5600896a610b6c4dec4382e3866b826a96f50dafbaea36f313e67e327b79301e"
+      },
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/prompts/ceiling.txt",
+      "source_generation_file": "/workspace/scratch/85111d38430a/generated_images/exec-781fb2b7-d6c4-4af4-a677-316586df2e08.png",
+      "runtime_maps": [
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/ceiling-basecolor.webp",
+          "file": "runtime/ceiling-basecolor.webp",
+          "semantic": "basecolor",
+          "source": "originals/ceiling-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 107240,
+          "sha256": "c4b9c65482aa763ef17b60a7e379c0a1bf14c762010f38254fb271e07401c80d"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/ceiling-normal.webp",
+          "file": "runtime/ceiling-normal.webp",
+          "semantic": "normal",
+          "source": "originals/ceiling-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 607734,
+          "sha256": "2e59abf6ccc032133274f17d7fb1a209cae235cc5b6fd866fdce757c82ff132b"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/ceiling-roughness.webp",
+          "file": "runtime/ceiling-roughness.webp",
+          "semantic": "roughness",
+          "source": "originals/ceiling-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 92504,
+          "sha256": "dba07db7d59376c642ef5b929da80fce8f3eb158c485553b75125b5bfd8b484f"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/ceiling-displacement.webp",
+          "file": "runtime/ceiling-displacement.webp",
+          "semantic": "displacement",
+          "source": "originals/ceiling-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 161930,
+          "sha256": "07383fc6ee8d1837a8d66add95f01e0685a5c7dc8fcfcedd9f8f56743f44f371"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/ceiling-ao.webp",
+          "file": "runtime/ceiling-ao.webp",
+          "semantic": "ao",
+          "source": "originals/ceiling-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 66830,
+          "sha256": "429e09acc7e0e4be5e075575b8284a2f8cd6a197fb8e87b7574aed9bdbca2e30"
+        }
+      ],
+      "seam_metrics_before_webp": {
+        "horizontal_edge_mean_abs_rgb_255": 17.496,
+        "vertical_edge_mean_abs_rgb_255": 17.567,
+        "interior_horizontal_neighbor_mean_abs_rgb_255": 12.001,
+        "interior_vertical_neighbor_mean_abs_rgb_255": 12.573,
+        "comment": "Generator requested seamless; edge values are not guaranteed to match exactly. Albedo is only resized and encoded, never patched or procedurally replaced."
+      },
+      "parameters": {
+        "size": 512,
+        "height_range": [
+          0.37,
+          0.63
+        ],
+        "normal_strength": 8,
+        "roughness": 0.96,
+        "roughness_variation": 0.02,
+        "ao_strength": 0.3,
+        "ao_min": 0.93,
+        "normal_scale": 0.12,
+        "displacement_scale_m": 0.001
+      },
+      "suggested_three_settings": {
+        "basecolor_colorSpace": "SRGBColorSpace",
+        "data_colorSpace": "NoColorSpace",
+        "normalScale": 0.12,
+        "roughness_multiplier": 1.0,
+        "aoMapIntensity": 0.7,
+        "displacementScale_m": 0.001,
+        "displacementBias_m": -0.0005,
+        "repeat": "Use RepeatWrapping; physical coverage of a gravel tile is approximately 0.5\u20130.75 m."
+      }
+    },
+    "wall": {
+      "original": {
+        "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/originals/wall-generated.png",
+        "file": "originals/wall-generated.png",
+        "semantic": "original_generated_albedo",
+        "source": "image_gen.imagegen",
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "decoded_mode": "RGB",
+        "bytes": 2841647,
+        "sha256": "5cf8656d53235bfb2b06d95e5d2cd259fe5883c065c3fda463b38b3ee42984a7"
+      },
+      "prompt": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/prompts/wall.txt",
+      "source_generation_file": "/workspace/scratch/85111d38430a/generated_images/exec-047e11d0-e1f6-4ce0-b906-1a8b946271d7.png",
+      "runtime_maps": [
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/wall-basecolor.webp",
+          "file": "runtime/wall-basecolor.webp",
+          "semantic": "basecolor",
+          "source": "originals/wall-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 59288,
+          "sha256": "ec5946772e1be22e7e5f52fb8f39afad0904c0a6e375ae5ee086d6a40156d5d8"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/wall-normal.webp",
+          "file": "runtime/wall-normal.webp",
+          "semantic": "normal",
+          "source": "originals/wall-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 493168,
+          "sha256": "e7f7001c465b39bbd0c7c881fb316c27a6cf4538843cb06c27dbd94a017c658d"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/wall-roughness.webp",
+          "file": "runtime/wall-roughness.webp",
+          "semantic": "roughness",
+          "source": "originals/wall-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 107978,
+          "sha256": "131b2d15a0786927f9db1b53b4f2af4070e974f7ed4dbadd6e87dfb7a5d5554d"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/wall-displacement.webp",
+          "file": "runtime/wall-displacement.webp",
+          "semantic": "displacement",
+          "source": "originals/wall-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 136836,
+          "sha256": "f2af0ddd6db81cc325cbc0d6e6b0785551900c20b2d307d86313aeafa221a642"
+        },
+        {
+          "path": "/workspace/scratch/85111d38430a/assets-garden-v81/surfaces/runtime/wall-ao.webp",
+          "file": "runtime/wall-ao.webp",
+          "semantic": "ao",
+          "source": "originals/wall-generated.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "decoded_mode": "RGB",
+          "bytes": 46832,
+          "sha256": "5348b5a38f76c37d678e45f892167f92b856a3933e4694c65a944240898fca59"
+        }
+      ],
+      "seam_metrics_before_webp": {
+        "horizontal_edge_mean_abs_rgb_255": 5.481,
+        "vertical_edge_mean_abs_rgb_255": 6.534,
+        "interior_horizontal_neighbor_mean_abs_rgb_255": 4.909,
+        "interior_vertical_neighbor_mean_abs_rgb_255": 5.861,
+        "comment": "Generator requested seamless; edge values are not guaranteed to match exactly. Albedo is only resized and encoded, never patched or procedurally replaced."
+      },
+      "parameters": {
+        "size": 512,
+        "height_range": [
+          0.43,
+          0.57
+        ],
+        "normal_strength": 8,
+        "roughness": 0.9,
+        "roughness_variation": 0.025,
+        "ao_strength": 0.2,
+        "ao_min": 0.97,
+        "normal_scale": 0.06,
+        "displacement_scale_m": 0.0003
+      },
+      "suggested_three_settings": {
+        "basecolor_colorSpace": "SRGBColorSpace",
+        "data_colorSpace": "NoColorSpace",
+        "normalScale": 0.06,
+        "roughness_multiplier": 1.0,
+        "aoMapIntensity": 0.7,
+        "displacementScale_m": 0.0003,
+        "displacementBias_m": -0.00015,
+        "repeat": "Use RepeatWrapping; physical coverage of a gravel tile is approximately 0.5\u20130.75 m."
+      }
+    }
+  },
+  "decode_validation": {
+    "all_outputs_loaded": true
+  }
+}

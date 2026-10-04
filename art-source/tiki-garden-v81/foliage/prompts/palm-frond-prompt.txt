@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: one single long slender drooping pinnate palm frond
+asset use: photographic transparent texture card suitable for bending along a mesh in a PS2-style retro 3D indoor artificial tropical rock pool
+composition: one continuous long central rachis starting at upper center, gently curving toward the right and drooping downward, narrow paired elongated leaflets along the rachis, complete base and tapered tip inside the frame, no other fronds, full isolated silhouette with narrow clear padding
+photo quality and vibe: high-fidelity photographic palm leaf detail with soft subtle grain, natural imperfect photo quality, softened focus, no oversharpening, not pixel art
+lighting and materials: diffuse neutral indoor ambient light, dark green slightly artificial plastic palm leaf surface with restrained mild sheen, no baked colored lighting
+background: genuinely transparent alpha, isolated single frond only
+aspect ratio: 1:3
+Avoid: additional fronds, crown, trunk, pot, soil, ground, text, watermarks, checkerboard background, cast shadows outside the silhouette, cropped leaf tips, harsh highlights, excessive yellow, too sharp or overly sharpened.

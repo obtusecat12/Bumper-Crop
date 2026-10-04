@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: artificial plastic palm full crown only, no trunk, downward arching pinnate leaves with a visible branch attachment center
+asset use: photographic transparent texture card for a PS2-style retro 3D indoor artificial tropical rock pool beneath a low office grid ceiling
+composition: front three-quarter view of the entire dense crown, layered pinnate palm leaves radiating from one compact center and drooping down, all tips inside the frame with narrow clear padding, central attachment suitable for placement on a separate 3D trunk
+photo quality and vibe: high-fidelity photographic plastic leaf detail with soft subtle grain, natural imperfect photo quality, softened focus, no oversharpening, not pixel art
+lighting and materials: diffuse neutral indoor ambient light, dark green artificial plastic leaves with restrained mild surface sheen and slight color variation, no baked colored lighting
+background: genuinely transparent alpha, isolated crown only
+aspect ratio: 1:1
+Avoid: trunk, pot, soil, ground, text, watermarks, checkerboard background, cast shadows outside the leaves, cropped leaf tips, overly glossy highlights, excessive yellow, too sharp or overly sharpened.

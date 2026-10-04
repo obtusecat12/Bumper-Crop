@@ -134,7 +134,19 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
   }else if(!texture){renderer.setRenderTarget(null);renderer.clear();}
   renderer.setRenderTarget(null);if(texture)present(texture,0);
  }
+ async function settleScene(renderFrame){
+  // Interior loading may finish before the asynchronous NTSC frame. Invalidate
+  // only that old frame generation; retain workers and the chosen filter.
+  if(mode!=='vhs'||failed){renderFrame();return;}
+  const token=++epoch;readback.cancel();if(readJob){readJob.slot.busy=false;readJob=null;}
+  texture?.dispose();texture=null;lastCapture=-Infinity;displayed=-1;compositor?.invalidate();
+  const deadline=performance.now()+20000;
+  while(!disposed&&token===epoch){renderFrame();if(texture||failed||mode!=='vhs')return;
+   if(performance.now()>deadline){fail(new Error('VHS scene handoff timed out'));renderFrame();return;}
+   await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
+  }
+ }
  function contextLost(){scenePipeline?.contextLost();lensEffect?.contextLost();epoch++;readback.cancel(true);if(readJob){readJob.slot.busy=false;readJob=null;}width=height=outputWidth=outputHeight=0;compositor?.invalidate();}
  function dispose(){scenePipeline?.dispose();lensEffect?.dispose();disposed=true;epoch++;readback.cancel(renderer.getContext().isContextLost());stopWorkers();source?.dispose();texture?.dispose();internal?.dispose();uiTexture?.dispose();geometry.dispose();material.dispose();uiMaterial.dispose();compositor?.dispose();}
- return{configure,render,contextLost,dispose,setCompositor,setLensEffect,setScenePipeline,values};
+ return{configure,render,settleScene,contextLost,dispose,setCompositor,setLensEffect,setScenePipeline,values};
 }

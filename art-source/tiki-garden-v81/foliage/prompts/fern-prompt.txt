@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+object: natural-looking dense arching fern clump, broad layered fronds, complete ground-rooted silhouette
+asset use: photographic transparent texture card for a PS2-style retro 3D indoor artificial tropical rock pool
+composition: front three-quarter view, many full fronds spreading and arching outward from one basal center, entire clump including stems and leaf tips inside the frame, narrow clear padding on every edge, the basal attachment point at bottom center
+photo quality and vibe: high-fidelity photographic leaf detail with soft subtle grain, natural imperfect photo quality, softened focus, no oversharpening, not pixel art
+lighting and materials: diffuse neutral indoor ambient light, green fern leaves, gentle tonal variation, dim indoor garden compatible without baked colored lighting
+background: genuinely transparent alpha, isolated plant only
+aspect ratio: 1:1
+Avoid: pots, soil, ground, trunks, rocks, flowers, text, watermarks, checkerboard background, shadows outside the plant silhouette, cropped leaf tips, harsh glare, excessive yellow, too sharp or overly sharpened.

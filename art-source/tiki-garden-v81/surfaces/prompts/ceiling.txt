@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: standalone seamless square photographic diffuse basecolor texture for a low office drop-ceiling tile in a PS2 photographic dreamcore indoor tropical rock-pool game
+subject: off-white mineral-fiber acoustic ceiling-tile surface
+surface: fine irregular gray speckles, small scattered mineral-fiber fissures and pinholes, subtle porous compressed fiber texture, faint neutral gray age staining; ordinary aged office acoustic tile material
+composition: full-frame flat orthographic close view of only the continuous tile surface, seamless repeating on all four edges, no tile edges or ceiling grid
+lighting: true neutral diffuse illumination, evenly exposed, no directional lighting, no cast shadows, no room light tint
+photo quality and vibe: photographic ordinary office material detail suitable for PS2 photo textures, raw material scan appearance, slightly soft without oversharpening, native large output 2k
+aspect ratio: 1:1
+Avoid: scene, ceiling grid, lamps, vents, tile borders, perspective, yellowing, dramatic stains, large holes, text, watermark, vignette, lighting gradient, glare

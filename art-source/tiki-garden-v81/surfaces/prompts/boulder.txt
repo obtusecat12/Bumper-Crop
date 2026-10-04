@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: standalone seamless square photographic diffuse basecolor texture for weathered boulder UV surfaces in a PS2 photographic indoor tropical rock-pool game
+subject: naturally weathered gray-brown boulder stone surface
+surface: irregular rough mineral grain, worn angular fracture planes, crevices and shallow natural cracks; subtle dark damp crevice patches and sparse muted moss streaks recalling a wet rock base; gray-brown and charcoal stone with restrained olive staining
+composition: full-frame close orthographic view of continuous rock surface only, seamless repeating on all four edges, suitable for wrapping a boulder from every angle, no isolated whole rock silhouette, no globally defined top or bottom
+lighting: true neutral diffuse illumination, evenly exposed, no cast shadows, no directional highlights, no baked colored lighting
+photo quality and vibe: photographic rock surface detail suitable for PS2 photo textures, raw material scan appearance, no oversharpening, no oversaturation, native large output 2k
+aspect ratio: 1:1
+Avoid: scene, whole boulder, silhouette, horizon, perspective, background, large black holes, heavy green moss carpet, text, watermark, vignetting, light gradient, excessive yellow

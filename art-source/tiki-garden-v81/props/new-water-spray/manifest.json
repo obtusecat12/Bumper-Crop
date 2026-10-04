@@ -1,0 +1,56 @@
+{
+  "asset": "roiling fountain water-spray cluster sprite",
+  "generator": "built-in image_gen, one generation",
+  "source_generated": "/workspace/scratch/85111d38430a/generated_images/exec-d0ad8a09-4aed-4395-8b1f-d3abf9e001cc.png",
+  "prompt": "/workspace/scratch/85111d38430a/assets-garden-v81/props/new-water-spray/prompt.txt",
+  "reference_inspected": "/workspace/scratch/85111d38430a/upload/image(20261004-084254).png",
+  "original": {
+    "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/new-water-spray/splash-original.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "bytes": 2348029,
+    "sha256": "8609d04c87af32113f9b93ed15e32b07677bd9fb75fb89cecf5a32da2692ea01",
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "transparent_pixels": 696484,
+    "partial_alpha_pixels": 875986,
+    "alpha_bbox": [
+      0,
+      9,
+      1234,
+      1254
+    ]
+  },
+  "runtime": {
+    "path": "/workspace/scratch/85111d38430a/assets-garden-v81/props/new-water-spray/splash-basecolor.webp",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "bytes": 170022,
+    "sha256": "38efb3353f22178e40586371b75ae92f8ce4e4a88a9aeb297c9b7b25b32c24dc",
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "transparent_pixels": 118794,
+    "partial_alpha_pixels": 142621,
+    "alpha_bbox": [
+      0,
+      4,
+      499,
+      509
+    ]
+  },
+  "inspection": "/workspace/scratch/85111d38430a/assets-garden-v81/props/new-water-spray/alpha-inspection.jpg",
+  "derived_maps": "None: photographic billboard sprite, not a material surface. Runtime only resized and WebP encoded; true generated alpha preserved.",
+  "usage": "Small overlapping fountain billboards; sRGB basecolor; transparent true; normal alpha blending; depthWrite false; alphaTest 0.025 if needed to suppress nearly invisible perimeter; avoid rendering the sprite as a full fountain.",
+  "validation": {
+    "original_decoded": true,
+    "runtime_decoded": true,
+    "true_alpha": true,
+    "alpha_edges_visually_inspected": true
+  }
+}
