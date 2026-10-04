@@ -1,0 +1,12 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+
+Use case: precise-object-edit
+Asset type: portrait 2:3 orthographic front diffuse texture for UV projection onto a matching sculpted 3D wooden tiki mesh.
+Edit target: the provided isolated tall slender wooden tiki.
+Primary request: correct ONLY the viewing angle to exactly straight front orthographic. The totem and each carved feature face the viewer directly with the nose exactly on the centerline, equal-sized eyes at the same height, equal exposure of both cheeks, symmetrical broad teeth mouth, equal shoulders and body sides. Show no left or right side plane of the log. It must be a pure centered front elevation.
+Preserve: tall squared angular crown; exaggerated broad brows; recessed carved eyes; long large carved nose; wide grinning rectangular wooden teeth; slender elongated torso; long arms close to both sides; hands low on the belly; carved feet and narrow base. Preserve the warm medium-dark brown weathered natural wood, pale worn ridges, deep dark brown carvings, fine grain and old cracks.
+Composition/framing: exact straight front orthographic view, full crown to base, entire silhouette present, filling image height with tiny margins, one totem only.
+Scene/backdrop: genuine transparent alpha outside the silhouette, no halo, no background or setting.
+Lighting: evenly lit diffuse surface, modest recess darkness, no dramatic directional light or bright glare.
+Constraints: truly front-facing, suitable for real volumetric sculpted mesh projection. No oblique or three-quarter angle, no flat billboard, no black featureless wood, no white teeth, no text or watermark.
+Aspect ratio: 2:3.

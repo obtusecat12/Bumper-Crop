@@ -1,0 +1,14 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+
+Use case: stylized-concept
+Asset type: orthographic front diffuse texture for UV projection onto a matching sculpted 3D wooden tiki mesh.
+Input image: reference image of two tall carved tiki posts beside a tropical mural. Use the tall squared wooden tiki on the left as the shape and vintage material reference, with the wide carved teeth mouth and slender elongated body.
+Subject: one distinct tall squared vintage wooden tiki totem, facing exactly forward. High squared crown and angular forehead ridges, broad exaggerated brows, recessed carved eyes, long large nose, a very wide grinning rectangular teeth mouth, slender elongated torso, arms carved close along both sides, sculpted hands at the lower belly, carved feet and narrow base. The long body is prominent below the face.
+Composition/framing: portrait 2:3; camera exactly perpendicular to the front, orthographic, no perspective tilt; full side silhouette visible, entire totem from crown to feet/base; totem fills the whole image height with only a tiny clean margin. One totem only.
+Scene/backdrop: isolated with genuinely transparent alpha outside the totem, no setting or cast shadow outside its silhouette.
+Materials/textures: warm dark medium-brown natural vintage wood, visibly brown rather than black. Detailed deep hand carving, dark brown recessed grooves, pale brown worn raised edges, fine weathered vertical wood grain, small old cracks, low gloss. Teeth are carved wood with pale worn edges, never white human teeth.
+Lighting/mood: evenly lit diffuse material reference with modest local carved recess darkness, no dramatic directional light or bright specular highlights.
+Style/medium: photographic natural wood detail with restrained PS2-era photo softness. The carvings need strong readable sculptural landmarks suitable for a real volumetric mesh.
+Constraints: pure front view, sculpted dimensional subject, no flat painted face or flat billboard, no surrounding objects, no text or watermark.
+Avoid: black featureless wood, polished lacquer, metal, stone, cartoon, glowing eyes, excessive yellow, oversharpening, glare, oblique camera, cropped forehead or cropped base.
+Aspect ratio: 2:3.

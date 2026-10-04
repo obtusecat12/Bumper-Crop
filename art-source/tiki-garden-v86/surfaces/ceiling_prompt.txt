@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: seamless square diffuse material texture for a warm light cream acoustic ceiling panel; the physical ceiling grid is authored separately.
+Subject: warm light cream and off-white acoustic ceiling panel surface matching the inspected ceiling reference: extremely fine subtle fibers and sparse pinhole acoustic dots.
+Composition/framing: flat orthographic macro surface view filling the entire square; seamless and tileable across all four edges; panel surface only.
+Materials/textures: soft warm off-white mineral-fiber acoustic board, extremely subtle fine fibers, very sparse small irregular pinholes.
+Lighting: neutral even diffuse light with no directional shadows.
+Photo quality and vibe: mild period camera softness, restrained photographic material, no pixel art, no oversharpening.
+Aspect ratio: 1:1.
+Avoid: regular black dot grid, regular holes, visible ceiling grid, panel borders, light fixtures, room, heavy stains, strong yellow cast, dark vignettes, text, watermarks, oversharpening.

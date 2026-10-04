@@ -1,0 +1,12 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) -
+
+Use case: stylized-concept
+Asset type: seamless repeating square diffuse material texture for carved wooden tiki meshes.
+Primary request: old weathered brown carved wood grain, pale worn ridges, dark recessed grooves, restrained PS2 photographic softness, not polished.
+Subject: the exposed carved interior wood of an old brown tiki log. No bark at all. Fine mostly vertical heartwood grain, small old cracks, irregular slender shallow chisel channels, pale worn edges on the subtle carved grain ridges and dark brown grooves. The continuous wood surface is solid with no large peeling sheets or flakes.
+Composition/framing: square 1:1 material tile, full image covered by material, orthographic camera perpendicular to surface. Seamless across all four edges.
+Materials/textures: warm dark medium-brown natural wood, visibly brown rather than black; dry old surface with tiny pores, mild abrasion, low gloss, modest varied grain scale. The material must match a worn carved brown vintage tiki statue.
+Lighting/mood: uniform diffuse albedo lighting, soft neutral color, dark recessed grain only, no large directional shadows or specular glare.
+Constraints: no bark, no tree trunk outer bark, no large raised leaf-shaped splinters, no peeling layers, no obvious repetitive horizontal barrel bands, no plank borders. No objects, no figure or face, no setting, no text or watermark, no featureless black areas.
+Avoid: polished lacquer, plastic, metal, orange oversaturation, excessive yellow, sharpening, glare, visible tile borders.
+Aspect ratio: 1:1.

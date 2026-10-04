@@ -1,0 +1,44 @@
+{
+  "generator": "builtin image_gen.imagegen",
+  "transparent_background": true,
+  "reference_roles": [
+    {
+      "path": "upload/QQ20261004-202218(1).png",
+      "role": "inspected style and dark fern reference"
+    },
+    {
+      "path": "upload/QQ20261004-210209.png",
+      "role": "inspected tropical artificial resort landscape foliage reference"
+    },
+    {
+      "path": "upload/image(20261004-130655).png",
+      "role": "inspected existing porch palette reference"
+    }
+  ],
+  "assets": [
+    {
+      "id": "bromeliad",
+      "subject": "A broad low bromeliad rosette cluster; waxy broad pointed leaves arranged in a low radial cup. Red-brown and muted green gradient foliage, brown burgundy toward the center blending into dark olive green at the wider outer leaves. A compact joined rooted crown at the bottom. This is a broad low bromeliad rosette, not a tall cordyline.",
+      "avoid": "Avoid: cordyline, tall woody trunk, thin grasslike foliage, bright red bloom, orange flower, pale lime green, excessive yellow, oversharpening, shiny glare, rim light, clipped leaves.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nSubject: A broad low bromeliad rosette cluster; waxy broad pointed leaves arranged in a low radial cup. Red-brown and muted green gradient foliage, brown burgundy toward the center blending into dark olive green at the wider outer leaves. A compact joined rooted crown at the bottom. This is a broad low bromeliad rosette, not a tall cordyline.\nAsset type: independent photographic plant-cluster cutout for period resort landscaping in a 2000s PS2 game\nScene/backdrop: genuinely transparent alpha background, no scenery\nStyle/medium: photograph of period artificial resort landscaping; 2000s PS2 diffuse texture character, soft restrained details\nComposition/framing: complete uncut full plant silhouette, centered, rooted base visible at bottom, comfortable transparent margin around every leaf tip; one independent plant cluster only\nLighting/mood: neutral soft diffuse ambient lighting, no strong baked directional shadows\nConstraints: true transparent alpha around the full silhouette and through every gap; no pot, no dirt square, no floor, no cast shadow, no text, no watermark\nAspect ratio: 1:1\nAvoid: cordyline, tall woody trunk, thin grasslike foliage, bright red bloom, orange flower, pale lime green, excessive yellow, oversharpening, shiny glare, rim light, clipped leaves."
+    },
+    {
+      "id": "monstera",
+      "subject": "A tropical Monstera deliciosa plant cluster. Several overlapping large broad heart-shaped leaves with botanically real edge splits and enclosed holes; rich muted deep green waxy foliage and visible stems joining into a compact rooted base at the bottom. Real broad monstera leaves, not palm or fern leaves.",
+      "avoid": "Avoid: palm leaves, fern leaves, unsplit generic leaves, punched geometric holes, skinny leaves, pale lime green, excessive yellow, oversharpening, shiny glare, rim light, clipped leaves.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nSubject: A tropical Monstera deliciosa plant cluster. Several overlapping large broad heart-shaped leaves with botanically real edge splits and enclosed holes; rich muted deep green waxy foliage and visible stems joining into a compact rooted base at the bottom. Real broad monstera leaves, not palm or fern leaves.\nAsset type: independent photographic plant-cluster cutout for period resort landscaping in a 2000s PS2 game\nScene/backdrop: genuinely transparent alpha background, no scenery\nStyle/medium: photograph of period artificial resort landscaping; 2000s PS2 diffuse texture character, soft restrained details\nComposition/framing: complete uncut full plant silhouette, centered, rooted base visible at bottom, comfortable transparent margin around every leaf tip; one independent plant cluster only\nLighting/mood: neutral soft diffuse ambient lighting, no strong baked directional shadows\nConstraints: true transparent alpha around the full silhouette and through every gap; no pot, no dirt square, no floor, no cast shadow, no text, no watermark\nAspect ratio: 1:1\nAvoid: palm leaves, fern leaves, unsplit generic leaves, punched geometric holes, skinny leaves, pale lime green, excessive yellow, oversharpening, shiny glare, rim light, clipped leaves."
+    },
+    {
+      "id": "boston-fern",
+      "subject": "A muted deep olive and dark green artificial Boston fern cluster, like the draping plastic resort foliage beside the closed dark shutter in the supplied tiki bar reference. Numerous gracefully arching and drooping long fronds with small paired leaflets, a dense cascade, full silhouette, compact rooted crown visible at the lower center. Restrained period artificial foliage with naturally uneven frond lengths.",
+      "avoid": "Avoid: bright pale lime foliage, neon green, yellow fronds, highly glossy modern ornamental plant look, pot, hanging basket, suspension cords, excessive yellow, oversharpening, shiny glare, rim light, clipped fronds.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nSubject: A muted deep olive and dark green artificial Boston fern cluster, like the draping plastic resort foliage beside the closed dark shutter in the supplied tiki bar reference. Numerous gracefully arching and drooping long fronds with small paired leaflets, a dense cascade, full silhouette, compact rooted crown visible at the lower center. Restrained period artificial foliage with naturally uneven frond lengths.\nAsset type: independent photographic plant-cluster cutout for period resort landscaping in a 2000s PS2 game\nScene/backdrop: genuinely transparent alpha background, no scenery\nStyle/medium: photograph of period artificial resort landscaping; 2000s PS2 diffuse texture character, soft restrained details\nComposition/framing: complete uncut full plant silhouette, centered, rooted base visible at bottom, comfortable transparent margin around every leaf tip; one independent plant cluster only\nLighting/mood: neutral soft diffuse ambient lighting, no strong baked directional shadows\nConstraints: true transparent alpha around the full silhouette and through every gap; no pot, no dirt square, no floor, no cast shadow, no text, no watermark\nAspect ratio: 1:1\nAvoid: bright pale lime foliage, neon green, yellow fronds, highly glossy modern ornamental plant look, pot, hanging basket, suspension cords, excessive yellow, oversharpening, shiny glare, rim light, clipped fronds."
+    },
+    {
+      "id": "banana",
+      "subject": "A broad banana leaf clump with five to eight large leaves in rich dark waxy green. Broad long oval banana leaves with strong central ribs and restrained lateral veins, some tiny natural edge splits, several short overlapping green leaf stalks joining into the visible rooted base at bottom. Low tropical foliage clump, no tree.",
+      "avoid": "Avoid: banana tree, woody trunk, palm fronds, thin narrow leaves, bunch of bananas, pale lime green, excessive yellow, oversharpening, shiny glare, rim light, clipped leaves.",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nSubject: A broad banana leaf clump with five to eight large leaves in rich dark waxy green. Broad long oval banana leaves with strong central ribs and restrained lateral veins, some tiny natural edge splits, several short overlapping green leaf stalks joining into the visible rooted base at bottom. Low tropical foliage clump, no tree.\nAsset type: independent photographic plant-cluster cutout for period resort landscaping in a 2000s PS2 game\nScene/backdrop: genuinely transparent alpha background, no scenery\nStyle/medium: photograph of period artificial resort landscaping; 2000s PS2 diffuse texture character, soft restrained details\nComposition/framing: complete uncut full plant silhouette, centered, rooted base visible at bottom, comfortable transparent margin around every leaf tip; one independent plant cluster only\nLighting/mood: neutral soft diffuse ambient lighting, no strong baked directional shadows\nConstraints: true transparent alpha around the full silhouette and through every gap; no pot, no dirt square, no floor, no cast shadow, no text, no watermark\nAspect ratio: 1:1\nAvoid: banana tree, woody trunk, palm fronds, thin narrow leaves, bunch of bananas, pale lime green, excessive yellow, oversharpening, shiny glare, rim light, clipped leaves."
+    }
+  ]
+}

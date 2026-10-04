@@ -1,0 +1,115 @@
+{
+  "generator": "builtin image_gen.imagegen",
+  "transparent_background": true,
+  "artwork_edits": "none",
+  "assets": [
+    {
+      "id": "bromeliad",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-51dacfa5-de5c-4b13-be66-2a7ea71cff26.png",
+      "native_path": "/workspace/scratch/85111d38430a/assets-garden-v86/plants/bromeliad-native.png",
+      "webp_path": "/workspace/scratch/85111d38430a/assets-garden-v86/plants/bromeliad-1024.webp",
+      "native_dimensions": [
+        1254,
+        1254
+      ],
+      "webp_dimensions": [
+        1024,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        13,
+        21,
+        1243,
+        1254
+      ],
+      "native_sha256": "c230d84849e65dae2842b0713ab378abded1b0d406b1204d120c858a75126fd3",
+      "webp_sha256": "350517c4b66da218188fb0e3d6ae3007f3f89ef203fd3680297671863c549fee",
+      "transformation": "Native image copied unchanged. 1024x1024 LANCZOS resize only, lossless RGBA WebP; generated alpha preserved."
+    },
+    {
+      "id": "monstera",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-66ce7916-9785-4dd6-a47a-78f653e4bc0a.png",
+      "native_path": "/workspace/scratch/85111d38430a/assets-garden-v86/plants/monstera-native.png",
+      "webp_path": "/workspace/scratch/85111d38430a/assets-garden-v86/plants/monstera-1024.webp",
+      "native_dimensions": [
+        1254,
+        1254
+      ],
+      "webp_dimensions": [
+        1024,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        9,
+        1254,
+        1238
+      ],
+      "native_sha256": "10e44a541dc2a8ce52e6e760acfea4a97b120dd5b510b651901092ec42a8d41b",
+      "webp_sha256": "0d5993c23fd3fdffd7b5ee54dddb9b99f15bf8f789b3fe579149086f361ed983",
+      "transformation": "Native image copied unchanged. 1024x1024 LANCZOS resize only, lossless RGBA WebP; generated alpha preserved."
+    },
+    {
+      "id": "boston-fern",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-211f3da7-1802-4ba7-a236-de52a2a38ac7.png",
+      "native_path": "/workspace/scratch/85111d38430a/assets-garden-v86/plants/boston-fern-native.png",
+      "webp_path": "/workspace/scratch/85111d38430a/assets-garden-v86/plants/boston-fern-1024.webp",
+      "native_dimensions": [
+        1254,
+        1254
+      ],
+      "webp_dimensions": [
+        1024,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        29,
+        1232,
+        1254
+      ],
+      "native_sha256": "81e798d66316c7ffee80cedfb61a56fc2983b47bceea16f1881184668f4ee981",
+      "webp_sha256": "6db1747b9902983ca611ae508cb08a98c93abfb55e18ce7f8dcef68edbcc1279",
+      "transformation": "Native image copied unchanged. 1024x1024 LANCZOS resize only, lossless RGBA WebP; generated alpha preserved."
+    },
+    {
+      "id": "banana",
+      "source": "/workspace/scratch/85111d38430a/generated_images/exec-7c3a1a23-9ea4-4e51-9ccb-abb42a0156f4.png",
+      "native_path": "/workspace/scratch/85111d38430a/assets-garden-v86/plants/banana-native.png",
+      "webp_path": "/workspace/scratch/85111d38430a/assets-garden-v86/plants/banana-1024.webp",
+      "native_dimensions": [
+        1254,
+        1254
+      ],
+      "webp_dimensions": [
+        1024,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        1240,
+        1238
+      ],
+      "native_sha256": "4c1b33793c6dda69cda6420ad04c5949f8e326c5a64454e8df0a9a63207e8074",
+      "webp_sha256": "f137e297f88bf8deb5aa962fb2a13d1542f3b97373e5743b49d13de11353a680",
+      "transformation": "Native image copied unchanged. 1024x1024 LANCZOS resize only, lossless RGBA WebP; generated alpha preserved."
+    }
+  ]
+}

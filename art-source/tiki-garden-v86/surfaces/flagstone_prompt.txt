@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+Asset type: seamless square diffuse material texture for a PS2 photographic garden floor.
+Subject: dark irregular rough welcoming flagstone slabs, broad angular gray-brown slate, with natural chipped joints.
+Composition/framing: straight down orthographic view, surface filling the entire square; seamless and tileable across all four edges; broad irregular slabs rather than a uniform grid.
+Materials/textures: rough slate slab faces, natural chipped edges and joints; matte slightly damp surface; dark gray-brown tonal variation.
+Lighting: neutral even diffuse light, no dramatic cast shadows or glare.
+Photo quality and vibe: PS2 photographic material, mild period camera softness, no pixel art, no oversharpening.
+Aspect ratio: 1:1.
+Avoid: uniform brick grid, tiny pebbles, polished stone, glossy oil, artificial grout grid, borders, text, watermarks, excessive yellow, oversharpening.

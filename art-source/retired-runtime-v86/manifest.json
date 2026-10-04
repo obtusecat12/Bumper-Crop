@@ -1,0 +1,67 @@
+[
+  {
+    "previous_runtime_path": "textures/tiki-garden-v85/walls/rainforest-01.webp",
+    "bytes": 329110,
+    "sha256": "cba5c6f0783da141e6303f561c6d568065476be86d1cf5dedcc0d6145e39cbd6"
+  },
+  {
+    "previous_runtime_path": "textures/tiki-garden-v85/walls/rainforest-02.webp",
+    "bytes": 361570,
+    "sha256": "e32f19f61b61385661fe599e91b254693a4a96cdb316529d405690c83fc5eabb"
+  },
+  {
+    "previous_runtime_path": "textures/tiki-garden-v85/walls/rainforest-03.webp",
+    "bytes": 387314,
+    "sha256": "daca5100a8109bcc96b91a8ef6c458ed71cc2e62cf31686a2c40845eadccda21"
+  },
+  {
+    "previous_runtime_path": "textures/tiki-garden-v85/walls/rainforest-04.webp",
+    "bytes": 323738,
+    "sha256": "b522c8ac64cc7657a4768646d051fe006f056e3dfc2a547214d04171f4b2fa9b"
+  },
+  {
+    "previous_runtime_path": "textures/tiki-garden-v85/walls/lava-rock-height.webp",
+    "bytes": 182724,
+    "sha256": "8b416a0fd883ba21399051b53d40d2bd0a05df4ba65898596213e3f20616bbb3"
+  },
+  {
+    "previous_runtime_path": "textures/tiki-garden-v85/plants/runtime/banana-leaf-clump-1024.webp",
+    "bytes": 573780,
+    "sha256": "8bd25de311c630bdd6c520e46a5944bf8a170de9f48ed122ab8ff5bd49681607"
+  },
+  {
+    "previous_runtime_path": "textures/tiki-garden-v85/plants/runtime/red-cordyline-1024.webp",
+    "bytes": 477398,
+    "sha256": "8452d3f8d3fc78097c4549d6d2715c1f843cd6a003d5dccb5ea259d90a98fe68"
+  },
+  {
+    "previous_runtime_path": "textures/tiki-garden-v85/plants/runtime/split-leaf-philodendron-1024.webp",
+    "bytes": 876950,
+    "sha256": "80f6017cae664bd8efa5dee71f658220ba2525c3257939c254f57474ba1cef5e"
+  },
+  {
+    "previous_runtime_path": "textures/tiki-garden-v85/plants/runtime/split-leaf-philodendron-v2-1024.webp",
+    "bytes": 883812,
+    "sha256": "485509900c7a3dde6048a80700cbb2b3d12e4ce518741dbfb655db18086325fa"
+  },
+  {
+    "previous_runtime_path": "models/spring-v67/spa-man-a.glb",
+    "bytes": 775844,
+    "sha256": "60c85827cf4be9431cabbcd843288f77bb379b89ca1c22ce4fb21ffb1aaafe70"
+  },
+  {
+    "previous_runtime_path": "models/spring-v67/spa-man-b.glb",
+    "bytes": 787196,
+    "sha256": "d8578ab8ecabebb376ee5a27b9b950904e3bcbc2c1230093f580f5e0173713cb"
+  },
+  {
+    "previous_runtime_path": "models/spring-v68/spa-man-a.glb",
+    "bytes": 936092,
+    "sha256": "78967b29487057a31963103953bbf71d7611efb5263726c3117306d3393499eb"
+  },
+  {
+    "previous_runtime_path": "models/spring-v68/spa-man-b.glb",
+    "bytes": 887180,
+    "sha256": "b30f9ffb327852a0f078758538741b5e261504ef7de2a1c8f05cb235169dc4d9"
+  }
+]

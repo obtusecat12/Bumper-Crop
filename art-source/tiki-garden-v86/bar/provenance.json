@@ -1,0 +1,116 @@
+{
+  "created_utc": "2026-10-04",
+  "generation_mode": "builtin image_gen.imagegen; four separate reference-guided calls",
+  "reference_path": "/workspace/scratch/85111d38430a/upload/QQ20261004-202218(1).png",
+  "reference_sha256": "2344620268a05c002b7bc0385068c3a630328dff24e75d0a1b3fc3ece1e60e37",
+  "notes": [
+    "Every prompt starts with the exact prefix required by the supplied prompt skill.",
+    "Generated native images are preserved. Runtime basecolor only resizes them.",
+    "All 3 surface prompts requested seamless repeat in both axes; no generated guarantee of mathematical edge equality.",
+    "Normal, roughness and AO are estimates derived from diffuse appearance, not physical material scans.",
+    "Normals are tangent-space OpenGL/+Y, 512x512 RGB; roughness and AO are 512x512 linear grayscale.",
+    "Notice is 1:2, 256x512 (512-pixel long edge), no frame. Print is kept in basecolor only.",
+    "Basecolor uses sRGB source values; all derived maps should be sampled with linear/no-color-space settings."
+  ],
+  "assets": {
+    "shutter": {
+      "native_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/native/shutter-native.png",
+      "native_pixels": [
+        1254,
+        1254
+      ],
+      "native_sha256": "f2a0494897f68db16eef1a00e0b10054ab47c22d6cb50e09c5da02ea0b35f2c8",
+      "builtin_source_path": "/workspace/scratch/85111d38430a/generated_images/exec-e925c26c-1280-47be-9472-c4dce052dfff.png",
+      "prompt_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/prompts/shutter.txt",
+      "prompt_sha256": "2d854d52c0c456c36314c9d6a0d92700e1885c0d329fa98288be00bb61a43f5b",
+      "basecolor_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/shutter-basecolor-1024.png",
+      "basecolor_pixels": [
+        1024,
+        1024
+      ],
+      "maps": [
+        "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/shutter-normal-plus-y-512.png",
+        "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/shutter-roughness-512.png",
+        "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/shutter-ao-512.png"
+      ]
+    },
+    "lauhala": {
+      "native_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/native/lauhala-native.png",
+      "native_pixels": [
+        1254,
+        1254
+      ],
+      "native_sha256": "72d4de038a4ae149a728d15bd2f2759203b4153a420a548a634a0f918025071a",
+      "builtin_source_path": "/workspace/scratch/85111d38430a/generated_images/exec-dc552002-1822-43c5-913f-a1e40834f119.png",
+      "prompt_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/prompts/lauhala.txt",
+      "prompt_sha256": "9e9d5705fb6712027846ec40541cb695d5a5dad183fd744d39a3619c95c4ad09",
+      "basecolor_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/lauhala-basecolor-1024.png",
+      "basecolor_pixels": [
+        1024,
+        1024
+      ],
+      "maps": [
+        "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/lauhala-normal-plus-y-512.png",
+        "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/lauhala-roughness-512.png",
+        "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/lauhala-ao-512.png"
+      ]
+    },
+    "reed": {
+      "native_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/native/reed-native.png",
+      "native_pixels": [
+        1254,
+        1254
+      ],
+      "native_sha256": "160ff9b6fcd01c227c4094f46ee68ee0bb7fc7ca6a8c0ceb42c2b3d9b60f49fe",
+      "builtin_source_path": "/workspace/scratch/85111d38430a/generated_images/exec-aeba7a31-0aa8-4ade-a6b1-7eabb70f4ea7.png",
+      "prompt_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/prompts/reed.txt",
+      "prompt_sha256": "63949c6a1aae6dd93a60134bd77d0c2ce90cce5af0ef974204fc9e643a6be771",
+      "basecolor_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/reed-basecolor-1024.png",
+      "basecolor_pixels": [
+        1024,
+        1024
+      ],
+      "maps": [
+        "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/reed-normal-plus-y-512.png",
+        "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/reed-roughness-512.png",
+        "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/reed-ao-512.png"
+      ]
+    },
+    "notice": {
+      "native_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/native/notice-native.png",
+      "native_pixels": [
+        887,
+        1774
+      ],
+      "native_sha256": "426f975755eabe6c87cffa583b170697ed6eb132022a33b9154cb0bb3ad9eeca",
+      "builtin_source_path": "/workspace/scratch/85111d38430a/generated_images/exec-e1c2fd5f-8a8b-435c-ab0d-9407eaeefda9.png",
+      "prompt_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/prompts/notice.txt",
+      "prompt_sha256": "5512bc5e8e0841c099df9eb1c77b29ed203b726092a050298d4e04a8a918bfa2",
+      "basecolor_path": "/workspace/scratch/85111d38430a/assets-garden-v86/bar/runtime/notice-basecolor-512.png",
+      "basecolor_pixels": [
+        256,
+        512
+      ],
+      "maps": []
+    }
+  },
+  "validation": {
+    "runtime_png_decode": "all 13 files decoded successfully",
+    "notice_text": "Exact requested English lines visually verified",
+    "normal_convention": "OpenGL +Y",
+    "seam_boundary_rgb_mean_difference": {
+      "shutter": [
+        0.016,
+        0.0127
+      ],
+      "lauhala": [
+        0.0626,
+        0.0552
+      ],
+      "reed": [
+        0.1409,
+        0.0387
+      ]
+    }
+  }
+}
