@@ -8,7 +8,7 @@ export function setInfillObstacles(solids,frame){const c=Math.cos(frame.angle),s
  // These three unchanged photo masses formerly had no collision record.
  for(const q of[[-27.5,175,27,31],[-27,219,29,35],[26,250,25,49]])obstacles.push({x:q[0],z:q[1],w:q[2],d:q[3],ry:0});
  // Milling service mouth: 4.5m carriageway plus its two authored buildings.
- obstacles.push({x:87,z:194,w:34,d:20,ry:0});cache.clear();revision++;}
+ obstacles.push({x:79,z:198,w:52,d:30,ry:0});cache.clear();revision++;}
 export function infillPlan(ix,iz){const id=ix+','+iz+':'+revision;if(cache.has(id))return cache.get(id);const plans=[];if(![-1,0].includes(ix)||iz<0||iz>3)return plans;
  const side=ix<0?-1:1,z0=iz*B;
  function propose(x,z,w,d,ry,seed,floors){const q={x,z,w,d,ry};if(obstacles.some(o=>overlap(q,o,o.small?1.1:1.35))||plans.some(o=>overlap(q,o,.025)))return false;plans.push({...q,seed,floors,type:['brick_walkup','two_story_shops','photo_studio','bank_branch','terraced_office','corner_market'][seed%6],streetwall:true,infill:true,lot:'mixed'});return true;}

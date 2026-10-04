@@ -1,0 +1,165 @@
+{
+  "method": "20 independently image-generated original photographs; resized and WebP encoded only. Full prompts retained in art-source/return-v84.",
+  "images": [
+    {
+      "file": "city-01.webp",
+      "source": "art-source/return-v84/city-a/01-fountain-plaza.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "city-02.webp",
+      "source": "art-source/return-v84/city-a/02-office-canyon.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "city-03.webp",
+      "source": "art-source/return-v84/city-a/03-strip-mall.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "city-04.webp",
+      "source": "art-source/return-v84/city-a/04-office-park.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "city-05.webp",
+      "source": "art-source/return-v84/city-a/05-intersection.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "city-06.webp",
+      "source": "art-source/return-v84/city-b/city-06.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "city-07.webp",
+      "source": "art-source/return-v84/city-b/city-07.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "city-08.webp",
+      "source": "art-source/return-v84/city-b/city-08.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "city-09.webp",
+      "source": "art-source/return-v84/city-b/city-09.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "city-10.webp",
+      "source": "art-source/return-v84/city-b/city-10.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-01.webp",
+      "source": "art-source/return-v84/rural-a/01-wheatfield-shoulder.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-02.webp",
+      "source": "art-source/return-v84/rural-a/02-red-barn-farmyard.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-03.webp",
+      "source": "art-source/return-v84/rural-a/03-field-pond.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-04.webp",
+      "source": "art-source/return-v84/rural-a/04-inland-lake.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-05.webp",
+      "source": "art-source/return-v84/rural-a/05-grain-elevator-track.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-06.webp",
+      "source": "art-source/return-v84/rural-b/06-chainlink-wheat.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-07.webp",
+      "source": "art-source/return-v84/rural-b/07-irrigation-pond.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-08.webp",
+      "source": "art-source/return-v84/rural-b/08-stubble-bales-silos.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-09.webp",
+      "source": "art-source/return-v84/rural-b/09-cropped-jetty.png",
+      "size": [
+        1440,
+        1080
+      ]
+    },
+    {
+      "file": "rural-10.webp",
+      "source": "art-source/return-v84/rural-b/10-farmgate-house.png",
+      "size": [
+        1440,
+        1080
+      ]
+    }
+  ]
+}
