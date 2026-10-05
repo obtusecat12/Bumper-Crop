@@ -1,0 +1,22 @@
+{
+  "mode": "built-in image_gen",
+  "nativeImagesUnmodified": true,
+  "assets": [
+    {
+      "file": "cabinet-oak-native.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset: seamless square photorealistic albedo material scan for a 3D environment; honey-oak 1980s laminate veneer.\nmaterial: fine straight vertical pore grain, subtle varnish wear, pale medium warm brown; the square covers approximately 0.5 m of real material.\ncomposition: flat orthographic close-up, material fills the entire image edge to edge. Seamless tiling in both directions.\nlighting: neutral even illumination, no baked directional shadows or strong highlights.\nquality: high quality detailed scan, restrained natural variation, no oversharpening.\naspect ratio: 1:1.\navoid: cabinet outlines, handles, borders, objects, text, logos, watermarks, knots, perspective."
+    },
+    {
+      "file": "speaker-cloth-native.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset: seamless square photorealistic albedo material scan for a 3D environment; charcoal black PA speaker grille woven cloth.\nmaterial: crisp close fine cross weave, very restrained dust; square covers approximately 0.2 m of real material. Charcoal threads remain visible instead of becoming pure flat black.\ncomposition: flat orthographic close-up, material fills the entire image edge to edge. Seamless tiling in both directions.\nlighting: neutral even illumination, no baked directional shadows or strong highlights.\nquality: high quality detailed scan, no oversharpening.\naspect ratio: 1:1.\navoid: speaker object, speaker cone, circular holes, labels, borders, perspective, text, logos, watermarks."
+    },
+    {
+      "file": "chair-plastic-native.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset: seamless square photorealistic albedo material scan for a 3D environment; muted cobalt or royal blue injection-molded polypropylene school-chair plastic.\nmaterial: middle blue, subtly gray and faded, fine orange-peel molded microtexture, tiny light wear scuffs; the square covers approximately 0.5 m of real material.\ncomposition: flat orthographic close-up, material fills the entire image edge to edge; seamless tiling in both directions.\nlighting: neutral even illumination, no baked shadows or strong highlights.\nquality: high quality detailed material scan, no oversharpening.\naspect ratio: 1:1.\navoid: cyan, neon, chair silhouette, chair parts, upholstery fibers, large scratches, gradients, borders, perspective, text, logos, watermarks."
+    },
+    {
+      "file": "beige-corduroy-native.png",
+      "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nasset: seamless square photorealistic albedo material scan for a 3D environment; beige and taupe 1980s corduroy upholstery.\nmaterial: narrow vertical parallel ribs, subtly uneven faded fibers, muted medium beige taupe; the square covers approximately 0.5 m of real material.\ncomposition: flat orthographic close-up, material fills the entire image edge to edge; seamless tiling in both directions.\nlighting: neutral even illumination, no baked directional shadows or strong highlights.\nquality: high quality detailed scan, soft fibrous detail, no oversharpening.\naspect ratio: 1:1.\navoid: cushion shapes, sofa silhouette, piping, borders, seams, large dirt stains, directional shadows, perspective, text, logos, watermarks."
+    }
+  ]
+}

@@ -2,14 +2,14 @@
   "errors": [],
   "stats": {
     "doorway": {
-      "calls": 140,
-      "triangles": 1272426,
+      "calls": 138,
+      "triangles": 1308308,
       "maxSamplers": 10
     },
     "interior": {
-      "calls": 133,
-      "triangles": 1304254,
-      "maxSamplers": 10
+      "calls": 151,
+      "triangles": 1597628,
+      "maxSamplers": 11
     },
     "breaker": {
       "calls": 155,

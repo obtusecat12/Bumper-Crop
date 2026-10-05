@@ -1,0 +1,12 @@
+Generation mode: built-in image_gen; one call per asset. External prompt guidance freshly fetched and read before each call.
+Native originals preserved byte-for-byte; no creative post-processing and no resizing.
+
+chair-wood-native.png
+1254 x 1254 RGB; 2,638,710 bytes.
+Inspection: warm medium brown continuous fine longitudinal wood grain, no cane or woven material, no black cushion, no object silhouette. Restrained pore detail and satin handwear. Intended as wood seat albedo; model should supply seat contour and thickness.
+
+field-notes-native.png
+1055 x 1491 RGB; 2,264,023 bytes.
+Inspection: full A4-like ivory sheet, modest gray typewriter title and four short notes, lower pencil room-and-door diagram, two light fold creases. No logo, seal, colored block or surrounding desk. Slight visible weathering at edge, thin ordinary paper appearance. Intended physical page dimensions approximately 0.21 x 0.297 metres, near-zero thickness.
+
+Exact prompts are in prompts.json.

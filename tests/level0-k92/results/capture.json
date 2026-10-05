@@ -1,0 +1,31 @@
+{
+  "errors": [],
+  "stats": {
+    "pile": {
+      "calls": 188,
+      "triangles": 1653324,
+      "maxSamplers": 7
+    },
+    "speakers": {
+      "calls": 176,
+      "triangles": 1558076,
+      "maxSamplers": 7
+    },
+    "cabinets": {
+      "calls": 93,
+      "triangles": 1460190,
+      "maxSamplers": 7
+    },
+    "anomaly": {
+      "calls": 86,
+      "triangles": 1430074,
+      "maxSamplers": 7
+    },
+    "embedded": {
+      "calls": 190,
+      "triangles": 1742660,
+      "maxSamplers": 7
+    }
+  },
+  "renderer": "Chrome / SwiftShader software WebGL2"
+}

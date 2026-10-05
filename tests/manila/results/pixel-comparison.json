@@ -3,11 +3,11 @@
   "results": [
     {
       "view": "doorway",
-      "meanAbsoluteRGBDifference": 24.11324978298611
+      "meanAbsoluteRGBDifference": 25.965411241319444
     },
     {
       "view": "interior",
-      "meanAbsoluteRGBDifference": 20.59688259548611
+      "meanAbsoluteRGBDifference": 20.541988932291666
     }
   ]
 }
