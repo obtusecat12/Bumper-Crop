@@ -1,0 +1,58 @@
+{
+  "errors": [],
+  "origin": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "restored": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "passage": {
+    "spawnClear": true,
+    "rimIsSolid": true,
+    "centreIsPit": true,
+    "landmarks": 26,
+    "eyeY": 1.77
+  },
+  "jumpStart": {
+    "vy": 4.8,
+    "grounded": false
+  },
+  "firstLanding": {
+    "x": 301.6,
+    "z": 61.02402230139874,
+    "feet": -3.2,
+    "eyeY": -1.4299999827850154,
+    "grounded": true,
+    "health": 100
+  },
+  "stableWalk": {
+    "feet": -3.2,
+    "grounded": true,
+    "x": 300.5750007743298,
+    "z": 61.02402256488245
+  },
+  "secondLanding": {
+    "feet": -6.720000000000001,
+    "grounded": true,
+    "health": 100,
+    "topWallGhost": false
+  },
+  "jumpCeiling": {
+    "maxHead": -0.5468602271043574,
+    "feet": -3.2,
+    "grounded": true
+  },
+  "mapReset": {
+    "feet": 0,
+    "vy": 0,
+    "grounded": true
+  }
+}

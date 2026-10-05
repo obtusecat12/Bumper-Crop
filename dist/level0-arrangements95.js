@@ -8,8 +8,8 @@ export function place95(kind,x,z,{y=0,rotation=0,pitch=0,roll=0,scale=[1,1,1],ma
 export function blockage95(r,seed,hash,floor=()=>0){
  const out=[],width=Math.min(10,r.x1-r.x0-.44),depth=Math.min(29,r.z1-r.z0-1.0),x=(r.x0+r.x1)/2,z0=r.z0+.85,cols=Math.max(2,Math.floor(width/2.13)),rows=Math.max(3,Math.floor(depth/1.74)),bay=width/cols;
  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
-  let xj=x+(i-(cols-1)/2)*bay+(hash(seed,j*cols+i,9528)-.5)*.1,z=z0+j*1.74+(hash(seed,i+j,9529)-.5)*.16,roll=hash(seed+i,j,9530),kind=j===rows-1?(i===0?'f95StripeSofa':i===1?'f95StripeSofa':'f95StripeArmchair'):j<2?(roll<.5?'f95GlassCabinet':'f95FiveDrawer'):j===rows-2&&i===cols-1?'f95GlassCabinet':roll<.15?'f95StripeArmchair':roll<.35?'f94VelvetSofa':roll<.49?'sofa':roll<.61?'f94LinenSofa':'f95StripeSofa',rotation=j===rows-1?(i===1?Math.PI/2:0):j===rows-2?(i===cols-1?Math.PI:.12):roll<.32?Math.PI/2:j%2===0?0:Math.PI;if(j===rows-1&&i===1)z-=.38;if(j===rows-2&&i===0){kind='f95FiveDrawer';rotation=Math.PI*.5;}
-  out.push(place95(kind,xj,z,{rotation:rotation+(roll-.5)*.19,y:floor(xj,z),scale:kind==='f95StripeSofa'?[Math.min(1.10,(bay-.07)/1.92),1,1]:[1,1,1]}));
+  let xj=x+(i-(cols-1)/2)*bay+(hash(seed,j*cols+i,9528)-.5)*.42,z=z0+j*1.74+(hash(seed,i+j,9529)-.5)*.39,roll=hash(seed+i,j,9530),kind=j===rows-1?(i===0?'f95StripeSofa':i===1?'f95StripeSofa':'f95StripeArmchair'):j<2?(roll<.5?'f95GlassCabinet':'f95FiveDrawer'):j===rows-2&&i===cols-1?'f95GlassCabinet':roll<.15?'f95StripeArmchair':roll<.35?'f94VelvetSofa':roll<.49?'sofa':roll<.61?'f94LinenSofa':'f95StripeSofa',rotation=j===rows-1?(i===1?Math.PI/2:0):j===rows-2?(i===cols-1?Math.PI:.12):roll<.32?Math.PI/2:j%2===0?0:Math.PI;if(j===rows-1&&i===1)z-=.38;if(j===rows-2&&i===0){kind='f95FiveDrawer';rotation=Math.PI*.5;}
+  out.push(place95(kind,xj,z,{rotation:rotation+(hash(seed+i,j,9733)-.5)*1.75+(hash(seed,j*cols+i,9734)<.17?Math.PI*.55:0),y:floor(xj,z),scale:kind==='f95StripeSofa'?[Math.min(1.10,(bay-.07)/1.92),1,1]:[1,1,1]}));
   if(j<2&&kind==='f95FiveDrawer'&&roll>.45)out.push(place95('f95CRT',xj,z,{rotation:.35,y:floor(xj,z)+1.299}));
  }
  return out;

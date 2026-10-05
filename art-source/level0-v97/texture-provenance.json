@@ -1,0 +1,45 @@
+{
+  "assets": [
+    {
+      "name": "fiberglass-porous",
+      "file": "/workspace/scratch/85111d38430a/art97-output/textures/fiberglass-porous.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 3259234,
+      "sha256": "1973095bc2638473abad8c8b48a674accb41c33b17e272844c5a4f448616ee03",
+      "source": "Built-in image_gen.imagegen; independently generated",
+      "intendedUse": "Base color source; compress to 512px or 1024px for runtime. Normals/roughness derived from this art are estimated, not measured scans."
+    },
+    {
+      "name": "mattress-ticking",
+      "file": "/workspace/scratch/85111d38430a/art97-output/textures/mattress-ticking.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 3471056,
+      "sha256": "670ba2fd5e8f42b4e1b9ceb7f8ef0604037a17ba7ed95065578d3dedde218a69",
+      "source": "Built-in image_gen.imagegen; independently generated",
+      "intendedUse": "Base color source; compress to 512px or 1024px for runtime. Normals/roughness derived from this art are estimated, not measured scans."
+    },
+    {
+      "name": "red-gingham-plastic",
+      "file": "/workspace/scratch/85111d38430a/art97-output/textures/red-gingham-plastic.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 3975172,
+      "sha256": "ce949c21062a7cace8f35dd0ade40eb7f31b175cfdde2198868e788858601e56",
+      "source": "Built-in image_gen.imagegen; independently generated",
+      "intendedUse": "Base color source; compress to 512px or 1024px for runtime. Normals/roughness derived from this art are estimated, not measured scans."
+    },
+    {
+      "name": "timber-cut-grain",
+      "file": "/workspace/scratch/85111d38430a/art97-output/textures/timber-cut-grain.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 3055374,
+      "sha256": "2cf0ef32ea8b7ccbb1f55f2e2bcf57e2236cd447cc17bf12cdd77116809b70f8",
+      "source": "Built-in image_gen.imagegen; independently generated",
+      "intendedUse": "Base color source; compress to 512px or 1024px for runtime. Normals/roughness derived from this art are estimated, not measured scans."
+    }
+  ],
+  "validation": "All four inspected visually. No logos or text. Matte wood grain and textile fibers read clearly. Fiberglass dark holes and red plastic checks preserved."
+}

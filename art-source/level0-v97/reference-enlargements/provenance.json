@@ -1,0 +1,78 @@
+[
+  {
+    "reference": 4,
+    "source": "/workspace/scratch/85111d38430a/attachments/873c3feb-d023-4e4d-b347-c698779b333b/image.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nTask: Conservatively enlarge this exact supplied small reference crop for visual inspection of existing geometry.\nInput image: The sole edit target; original reference 4, 79 by 129 pixels.\nContent: Preserve the cropped beige architectural section and the dark gray rectangular wall-mounted pipe or duct framework exactly as shown. Retain the sloping foreground edge, beige panels, visible thin vertical and horizontal members, shadows and original object boundaries.\nEdit scope: Increase output resolution and clarify only boundaries already supported by the original pixels. Preserve the same framing, perspective, relative sizes, original color cast and dim lighting.\nAspect ratio: 79:129, no crop, no additional margins.\nConstraints: No redesign, no new architecture, no extra wires or fasteners, no invented holes, no new materials, no added text. Preserve uncertainty in indistinct details; do not hallucinate structural information. This is an interpretive enlargement, not a new scene.",
+    "built_in_tool": true,
+    "interpretive_only": true,
+    "output": "/workspace/scratch/85111d38430a/art97-output/reference-enlargements/ref-4-enlarged.png",
+    "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-baf33d72-b948-4dc6-9366-5c3e9b83e7d8.png",
+    "source_size": [
+      79,
+      129
+    ],
+    "output_size": [
+      981,
+      1603
+    ],
+    "sha256": "5d244d26f7d11a4d8a1862a583685654f01ed2c7afc86463cb59c4af47e1b250",
+    "bytes": 1455784
+  },
+  {
+    "reference": 5,
+    "source": "/workspace/scratch/85111d38430a/attachments/30d693fa-9984-4f91-bc10-b8bb9ea5fafd/image.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nTask: Conservatively enlarge this exact supplied reference crop to inspect a transverse wall and door beside an atrium edge.\nInput image: The sole edit target; original reference 5, 183 by 164 pixels.\nContent: Preserve the brown rectangular door on the pale beige short wall, the gray upper section edge, the pale ledge projecting along the bottom of that wall, the diagonal viewpoint, and the visible yellow exposed material at the upper right. Preserve all crop boundaries and the adjoining dark void.\nEdit scope: Increase output resolution and clarify only boundaries already supported by the source. Keep exact composition, existing geometry, relative positions, original yellow-beige color cast and lighting.\nAspect ratio: 183:164, no crop, no additional margins.\nConstraints: No new handle, trim, pipes, steps, railings, furniture, texture details or architecture; no redesign. Keep indistinct details indistinct. This is an interpretive enlargement for comparison, not a source of additional structural evidence.",
+    "built_in_tool": true,
+    "interpretive_only": true,
+    "output": "/workspace/scratch/85111d38430a/art97-output/reference-enlargements/ref-5-enlarged.png",
+    "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-6c3680c3-e536-4a59-a471-dcd3232e3297.png",
+    "source_size": [
+      183,
+      164
+    ],
+    "output_size": [
+      1325,
+      1187
+    ],
+    "sha256": "2421e093450b70ee51a48237233a1d7436a22c6da7dc885c8d9477e3c14dc70a",
+    "bytes": 1201842
+  },
+  {
+    "reference": 6,
+    "source": "/workspace/scratch/85111d38430a/attachments/fc48dbf1-894f-4a0e-8ecb-b23f68b02af7/image.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nTask: Conservatively enlarge the supplied existing game screenshot crop without improving or redesigning the geometry.\nInput image: The sole edit target; original reference 6, 399 by 985 pixels.\nContent: Preserve exactly this tall descending wall section, the stepped and offset beige floor edges, repeating dark beam marks, sparse existing dangling cables, vertical partition ends, small existing bright point and gradual darkening into the deep bottom. This screenshot shows the existing simplified implementation and must remain exactly that implementation.\nEdit scope: Increase resolution only. Keep every floor height, notch position, section edge, shadow, crop boundary and object count unchanged. Preserve the same camera projection and yellow-gray palette.\nAspect ratio: 399:985, no crop or extension.\nConstraints: Do not add wood framing, porous insulation, piping, rooms, furniture, missing floor details or improved shadows. No new objects or altered layout. No invented fine detail. This is an interpretive enlargement and may not be treated as new structural evidence.",
+    "built_in_tool": true,
+    "interpretive_only": true,
+    "output": "/workspace/scratch/85111d38430a/art97-output/reference-enlargements/ref-6-enlarged.png",
+    "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-496db2e6-e270-462c-9634-68c33b7ea33f.png",
+    "source_size": [
+      399,
+      985
+    ],
+    "output_size": [
+      798,
+      1971
+    ],
+    "sha256": "b388e3b73987f72eb13798a5b474e3e84bd2ceaaac832d8ce2f189f87b2a71e6",
+    "bytes": 1118178
+  },
+  {
+    "reference": 7,
+    "source": "/workspace/scratch/85111d38430a/attachments/68465147-1617-441f-ba31-8038f61cbf05/image.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nTask: Conservatively enlarge this exact source screenshot for visual comparison.\nInput image: The sole edit target; original reference 7, 900 by 786 pixels.\nContent: Preserve the open-sided miniature beige and yellow rooms and every existing item in place: the partial bed-like object in the upper left, upper-right solitary pale chair, the descending sequence of orange upholstered armchairs in the middle room, the red patterned large seat or bed at lower left, the cropped lower gray mattress-like object and lower-right pale chair. Preserve all exposed room boundaries, their perspective and the original saturated low-resolution rendering style.\nOverlay preservation: Retain the source screenshot overlays in their exact existing positions, including the translucent play icon, the center 78% bubble, account avatar, the text The Imitator, the 已关注 button, the bottom Backrooms abyss caption, and the thin right-edge overlay. Do not remove or change them.\nEdit scope: Enlarge resolution while preserving original geometry, item counts, colors and lighting. Clarify only boundaries supported by the source pixels.\nAspect ratio: 150:131, no crop or extension.\nConstraints: No new furniture, no changed chair sizes or locations, no new textures, no new text. Keep ambiguous source details ambiguous. This interpretive enlargement is not additional structural evidence.",
+    "built_in_tool": true,
+    "interpretive_only": true,
+    "output": "/workspace/scratch/85111d38430a/art97-output/reference-enlargements/ref-7-enlarged.png",
+    "generation_source": "/workspace/scratch/85111d38430a/generated_images/exec-89bc2330-f138-4f60-a57f-118b70c68c69.png",
+    "source_size": [
+      900,
+      786
+    ],
+    "output_size": [
+      1342,
+      1172
+    ],
+    "sha256": "e625790183158b5a6b822bafdf7badec227c69766d6bf3467116bf0e9a3ebedc",
+    "bytes": 1953665
+  }
+]

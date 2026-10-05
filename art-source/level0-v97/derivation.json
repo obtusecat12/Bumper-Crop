@@ -1,0 +1,6 @@
+{
+  "nativeTextureImages": 4,
+  "runtimeMaps": 12,
+  "runtimeBytes": 1638216,
+  "note": "Independent generated diffuse sources. Estimated luminance-derived normal and roughness maps, not measured scans. 512px color and normal; 256px roughness; reference enlargements never loaded by game."
+}
