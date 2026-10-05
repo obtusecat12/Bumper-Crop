@@ -1,0 +1,22 @@
+{
+  "errors": [],
+  "origin": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "restored": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "passage": {
+    "clear": true,
+    "ground": -0.42,
+    "samplerLimit": 32
+  }
+}

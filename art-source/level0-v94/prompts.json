@@ -1,0 +1,35 @@
+[
+  {
+    "name": "berber",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - subject: Seamless photographic PBR base-color texture of tightly woven yellow Berber loop-pile carpet for Backrooms Level 0.\nsurface: Dense small wool loops, warm faded straw-yellow and muted ochre fibers, subtle uneven wear, a few brown flecks. No floor seams, no large stains. The overall carpet should read yellow like the supplied room reference.\nview: Square, straight down, perfectly flat material swatch filling the whole image; even diffuse lighting without baked cast shadows or directional gradients.\nstyle: Believable photographic early PS2 / Source-engine material, natural softness, fine textile detail without oversharpening.\nconstraints: Only carpet, no objects, borders, text, or room perspective. Opposite edges visually tile.\naspect ratio: 1:1",
+    "refs": [
+      "/workspace/scratch/85111d38430a/upload/image(20261005-074910).png"
+    ]
+  },
+  {
+    "name": "ceiling",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - subject: Seamless photographic base-color texture of an old pale cream mineral-fiber acoustic ceiling board for the supplied Backrooms interior.\nsurface: Very fine shallow pinholes and scattered tiny fibrous fissures in matte ivory cream, faint age variation. No grid, no seams, no light fixtures, no rust and no dramatic dirt.\nview: Square flat orthographic material swatch with even diffuse exposure, no shadows or directional illumination.\nstyle: Natural slightly soft 2000-era digital texture, detailed at close range but subdued, matching the quiet ceiling material in the reference.\nconstraints: Material surface only; no room perspective, no text, no borders, no oversharpening. Opposite edges visually tile.\naspect ratio: 1:1",
+    "refs": [
+      "/workspace/scratch/85111d38430a/upload/image(20261005-080316).png"
+    ]
+  },
+  {
+    "name": "linen",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - subject: Photographic seamless sand-beige upholstery cloth for the cream rolled-arm armchair in the supplied furniture pile reference.\nsurface: Tight small-scale woven nubby fabric, soft worn nap, ivory-beige warp with muted tan thread flecks, subtle compressed fibers and wear; no giant folds, buttons, seams or shadows baked into the image.\nview: Flat orthographic square swatch, evenly lit; fill the frame with only cloth.\nstyle: Real old furniture material with early PS2 photographic softness, restrained fine grain. Preserve light beige identity of the chair in the reference.\nconstraints: No furniture silhouette, borders, writing, geometric printed motifs, lighting gradients, or oversharpening.\naspect ratio: 1:1",
+    "refs": [
+      "/workspace/scratch/85111d38430a/upload/image(20261005-080316).png"
+    ]
+  },
+  {
+    "name": "maple",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - subject: Seamless photographic honey-brown maple and beech furniture wood base-color texture for vintage dining chairs and cabinet backs in a dense Backrooms furniture pile.\nsurface: Fine longitudinal wood pores, slightly faded amber lacquer, old rubbed satin finish, subtle small scratches. Restrained medium-light honey brown; no orange plastic appearance, no giant knots, no planks or hardware.\nview: Orthographic square material swatch, vertical grain, flat diffuse lighting with no baked shadows or specular glare.\nstyle: Believable photographic PS2/Source-engine old furniture material, mild softness with readable natural grain.\naspect ratio: 1:1"
+  },
+  {
+    "name": "velvet",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - subject: Seamless photographic smoke-gray and muted olive velvet upholstery base-color texture for a large old sofa standing inside a dense furniture pile.\nsurface: Fine dense velour nap, soft brushed grain changing direction, rubbed seat wear, subtle mottling. Gray-olive textile, no folds, seams, buttons, flowers, stitching, or shadows painted into texture.\nview: Flat orthographic square swatch, very even diffuse lighting, edge-to-edge textile only.\nstyle: Worn but intact 1980s sofa fabric with believable photographic PS2 softness, not pixel art.\naspect ratio: 1:1"
+  },
+  {
+    "name": "green-seat",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - subject: Seamless photographic muted deep olive-green vinyl chair-seat upholstery base-color texture for old narrow ladder-back wooden dining chairs.\nsurface: Small soft vinyl grain, faded rubbed patches and minute shallow creases, natural aged satin rather than glossy plastic; no large rips or stains.\nview: Flat orthographic square material swatch under even diffuse light, material only.\nstyle: Real vintage furniture finish, soft PS2 photographic material with fine grain, no oversharpening, no baked lighting or text.\naspect ratio: 1:1"
+  }
+]
