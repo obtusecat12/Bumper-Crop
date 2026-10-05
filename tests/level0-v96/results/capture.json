@@ -1,0 +1,138 @@
+{
+  "errors": [],
+  "stats": {
+    "atrium": {
+      "calls": 174,
+      "triangles": 2156698,
+      "chunks": 49,
+      "batches": 218,
+      "instances": 43790,
+      "rebuildCount": 1,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 5,
+      "offCircuits": 0
+    },
+    "atrReverse": {
+      "calls": 174,
+      "triangles": 1905644,
+      "chunks": 56,
+      "batches": 215,
+      "instances": 43476,
+      "rebuildCount": 2,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 4,
+      "offCircuits": 0
+    },
+    "abyss": {
+      "calls": 166,
+      "triangles": 2153614,
+      "chunks": 56,
+      "batches": 218,
+      "instances": 43790,
+      "rebuildCount": 3,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 5,
+      "offCircuits": 0
+    },
+    "door": {
+      "calls": 167,
+      "triangles": 2138140,
+      "chunks": 56,
+      "batches": 218,
+      "instances": 43790,
+      "rebuildCount": 3,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 5,
+      "offCircuits": 0
+    },
+    "rareManila": {
+      "calls": 138,
+      "triangles": 865430,
+      "chunks": 49,
+      "batches": 145,
+      "instances": 42017,
+      "rebuildCount": 4,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 1,
+      "offCircuits": 0
+    },
+    "windowBlack": {
+      "calls": 161,
+      "triangles": 1339944,
+      "chunks": 49,
+      "batches": 221,
+      "instances": 44375,
+      "rebuildCount": 5,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 4,
+      "offCircuits": 0
+    },
+    "windowWall": {
+      "calls": 153,
+      "triangles": 1262330,
+      "chunks": 56,
+      "batches": 232,
+      "instances": 44943,
+      "rebuildCount": 6,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 4,
+      "offCircuits": 0
+    },
+    "puddle": {
+      "calls": 104,
+      "triangles": 1074696,
+      "chunks": 56,
+      "batches": 174,
+      "instances": 43143,
+      "rebuildCount": 7,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 6,
+      "offCircuits": 0
+    },
+    "lounge": {
+      "calls": 226,
+      "triangles": 1794228,
+      "chunks": 63,
+      "batches": 211,
+      "instances": 43123,
+      "rebuildCount": 4,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 4,
+      "offCircuits": 0
+    },
+    "section": {
+      "calls": 177,
+      "triangles": 2162052,
+      "chunks": 56,
+      "batches": 218,
+      "instances": 43790,
+      "rebuildCount": 3,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 5,
+      "offCircuits": 0
+    },
+    "atrNoAO": {
+      "calls": 174,
+      "triangles": 2156698,
+      "chunks": 49,
+      "batches": 218,
+      "instances": 43790,
+      "rebuildCount": 1,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 5,
+      "offCircuits": 0
+    }
+  },
+  "renderer": "Chrome / SwiftShader software WebGL2"
+}

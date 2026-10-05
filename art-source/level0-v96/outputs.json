@@ -1,0 +1,66 @@
+[
+  {
+    "name": "reference04-upscale",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-b8d872f3-8339-4787-bfa2-e57afaef7e36.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "path": "/workspace/scratch/85111d38430a/art96/reference04-upscale.png"
+  },
+  {
+    "name": "reference05-upscale",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-77d17211-146c-47c0-9453-f4e02a7d576e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "path": "/workspace/scratch/85111d38430a/art96/reference05-upscale.png"
+  },
+  {
+    "name": "reference06-upscale",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-acf15074-03d5-4268-8ea0-bb0ffeb215e9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "path": "/workspace/scratch/85111d38430a/art96/reference06-upscale.png"
+  },
+  {
+    "name": "reference07-upscale",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-a000fd19-6516-486e-8479-38822277fb69.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "path": "/workspace/scratch/85111d38430a/art96/reference07-upscale.png"
+  },
+  {
+    "name": "01-russet-traditional-rug",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-c08dfad6-606f-4179-bddc-3d27d352dcd1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "path": "/workspace/scratch/85111d38430a/art96/01-russet-traditional-rug.png"
+  },
+  {
+    "name": "02-paneled-door-pair",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-79303e72-748a-42d8-9813-8f60d3f45617.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "crops": {
+      "brown": [
+        0,
+        0,
+        0.5,
+        1
+      ],
+      "white": [
+        0.5,
+        0,
+        1,
+        1
+      ]
+    },
+    "path": "/workspace/scratch/85111d38430a/art96/02-paneled-door-pair.png"
+  },
+  {
+    "name": "03-pink-fiberglass",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-867b46d8-806a-4656-9e69-0b89259005a6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "path": "/workspace/scratch/85111d38430a/art96/03-pink-fiberglass.png"
+  },
+  {
+    "name": "04-blue-pool-tiles",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-7130117f-e962-443e-9f90-bb806d53601e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "path": "/workspace/scratch/85111d38430a/art96/04-blue-pool-tiles.png"
+  },
+  {
+    "name": "05-pale-beige-plaster",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-cb6b7dae-b7fd-402f-accf-5cf674724d77.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "path": "/workspace/scratch/85111d38430a/art96/05-pale-beige-plaster.png"
+  },
+  {
+    "name": "06-exposed-joist-wood",
+    "hint": "Generated images are saved to /workspace/scratch/85111d38430a/generated_images as /workspace/scratch/85111d38430a/generated_images/exec-591886fd-4b33-4ed3-9e19-aca177f0b8cb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "path": "/workspace/scratch/85111d38430a/art96/06-exposed-joist-wood.png"
+  }
+]
