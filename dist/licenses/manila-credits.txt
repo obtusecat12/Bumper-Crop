@@ -1,0 +1,11 @@
+Manila Room reference adaptation
+Text: BrMiller and neptunium153; user-supplied rendered room images: PixelPurple.
+Sources: https://backrooms-wiki.wikidot.com/manila-room
+https://backrooms-wiki-cn.wikidot.com/manila-room
+License: Creative Commons Attribution-ShareAlike 3.0
+https://creativecommons.org/licenses/by-sa/3.0/
+Room diagram: BrMiller, based on RobertGoerman, CC BY 3.0.
+https://backrooms-wiki.wikidot.com/art:manila-room-diagram
+The wallpaper macro-pattern samples the unmodified user-supplied interior render.
+The Three.js geometry, UV exposure correction, inferred hidden structure, lighting and generated material microdetail are adaptations. Room-derived artwork is provided under CC BY-SA 3.0.
+Original generated images and exact prompts: art-source/manila.

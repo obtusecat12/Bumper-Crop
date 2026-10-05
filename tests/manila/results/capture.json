@@ -1,0 +1,21 @@
+{
+  "errors": [],
+  "stats": {
+    "doorway": {
+      "calls": 140,
+      "triangles": 1272426,
+      "maxSamplers": 10
+    },
+    "interior": {
+      "calls": 133,
+      "triangles": 1304254,
+      "maxSamplers": 10
+    },
+    "breaker": {
+      "calls": 155,
+      "triangles": 1405234,
+      "maxSamplers": 10
+    }
+  },
+  "renderer": "Chrome / SwiftShader software WebGL2"
+}

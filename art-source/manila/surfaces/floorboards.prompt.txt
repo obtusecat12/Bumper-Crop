@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: seamless square wooden floorboard albedo texture matching the exact Manila Room floor in the supplied references.
+reference images: Image 1 and Image 2 are direct material references; reconstruct only the wooden floor material, not the room.
+subject: the reference's narrow parallel wooden floorboards with staggered plank ends, muted medium warm walnut/oak brown wood, long fine subtle grain, dark narrow understated joints, gentle worn satin finish. Match the color and restrained wood character visible on the open floor of Image 1 and foreground floor of Image 2.
+composition: perfectly top-down orthographic surface swatch filling the whole square, boards running vertically with staggered end joints; several narrow planks across the square; no perspective. Opposite edges repeat seamlessly.
+lighting: flat even neutral albedo lighting, preserve material color but remove scene-specific shadows and specular glare.
+style: photographic game surface texture with PS2/Source-era softness, not pixel art; modest natural wear, no overly sharp grain.
+aspect ratio: 1:1
+Avoid: orange or yellow-heavy wood, gray driftwood, extreme pale/dark variation, wide rustic barn planks, oversized knots, gouges, glossy highlights, harsh glare, shadows, objects, furniture, room view, borders, text, watermark, oversharpening.

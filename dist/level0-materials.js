@@ -2,7 +2,7 @@
 export function createL0Materials(T,renderer){
  const pending=[],loader=new T.TextureLoader(),cache=new Map();
  const uniforms={time:{value:0},brightness:{value:1},cutCount:{value:0},cuts:{value:Array.from({length:12},()=>new T.Vector4(0,0,0,0))}};
- const tex=(file,color=false,old=false)=>{const url='./assets/'+(old?'level0/':'level0-v2/')+file;if(cache.has(url))return cache.get(url);let resolve,reject;pending.push(new Promise((a,b)=>{resolve=a;reject=b;}));const t=loader.load(url,resolve,undefined,reject);t.wrapS=t.wrapT=T.RepeatWrapping;t.colorSpace=color?T.SRGBColorSpace:T.NoColorSpace;t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());cache.set(url,t);return t;};
+ const tex=(file,color=false,old=false)=>{const url='./assets/'+(file.startsWith('manila/')?'':old?'level0/':'level0-v2/')+file;if(cache.has(url))return cache.get(url);let resolve,reject;pending.push(new Promise((a,b)=>{resolve=a;reject=b;}));const t=loader.load(url,resolve,undefined,reject);t.wrapS=t.wrapT=T.RepeatWrapping;t.colorSpace=color?T.SRGBColorSpace:T.NoColorSpace;t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());cache.set(url,t);return t;};
  const plain=(color,roughness=.9)=>new T.MeshStandardMaterial({color,roughness});
  const standard=(name,color=0xffffff,scale=null,roughness=.94)=>{const m=new T.MeshStandardMaterial({map:tex(name+'.webp',true),normalMap:tex(name+'-normal.webp'),normalScale:new T.Vector2(.25,.25),color,roughness});m.userData.worldScale=scale;return m;};
  const wall=[standard('wallpaper-chevron',0xf8f6e9,1.02),standard('wallpaper-dots',0xf7f4e6,1.12),plain(0xd3cfb8)];wall[0].userData.albedoRemap='wall';wall[1].userData.albedoRemap='wall';
@@ -13,6 +13,7 @@ export function createL0Materials(T,renderer){
  mats.pink.color.set(0xffffff);mats.pink.userData.albedoRemap="pink";mats.pale.normalMap=wall[0].normalMap;mats.pale.normalScale=new T.Vector2(.05,.05);mats.metal.metalness=.20;
  mats.panels=Array.from({length:10},(_,i)=>{const m=standard('panel-'+String(i+1).padStart(2,'0'));m.normalScale.set(.36,.36);return m;});
  mats.outlets=Array.from({length:5},(_,i)=>new T.MeshStandardMaterial({map:tex('outlet-'+String(i+1).padStart(2,'0')+'.webp',true),roughness:.83}));
+ mats.enamel=new T.MeshStandardMaterial({map:tex('manila/breaker-enamel.webp',true),normalMap:tex('manila/breaker-enamel-normal.webp'),roughnessMap:tex('manila/breaker-enamel-roughness.webp'),normalScale:new T.Vector2(.08,.08),roughness:1});
  mats.breaker=new T.MeshStandardMaterial({map:tex('breaker-panel.webp',true),roughness:.78});
  mats.mold=new T.MeshStandardMaterial({map:tex('mold-patch.webp',true),transparent:true,alphaTest:.025,depthWrite:false,roughness:1,polygonOffset:true,polygonOffsetFactor:-2});
  for(const [key,file] of [['floral','sofa-floral'],['teal','sofa-teal'],['velour','sofa-velour']])mats[key]=new T.MeshPhysicalMaterial({map:tex(file+'.webp',true),displacementMap:tex(file+'-height.webp'),displacementScale:.006,displacementBias:-.003,roughness:.97,sheen:.48,sheenColor:new T.Color(0xd9ceb6),sheenRoughness:.88});

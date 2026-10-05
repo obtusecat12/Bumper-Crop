@@ -1,0 +1,7 @@
+Generated with the built-in imagegen tool, one call per asset, using both supplied room references. Native output images are preserved unmodified.
+
+Wallpaper: elongated ogee/diamond lattice, pale cream and muted tan, and small floral ornament are represented. This is not a pixel-exact extraction: output ornament is cleaner, broader, and more legible than the very delicate reference pattern, and the base is slightly more yellow/golden than the frontal reference wall. It should not be described as exact motif identity. The output also has a subtle directional paper weave. Seamless repetition was requested, but pixel-perfect edge continuity is not certified.
+
+Floor: narrow parallel planks and staggered end joints are present, with even lighting, fine grain, and no object shadows or glare. Output appears slightly more warm/orange and its joints are darker and more crisply delineated than the room references. It is a reasonable reference-conditioned approximation, not an exact extraction. Seamless repetition was requested, but pixel-perfect edge continuity is not certified.
+
+Prompts are stored beside each native texture. Both use the exact prefix and 1:1 aspect ratio prescribed by the freshly downloaded gpt_image_2_prompt_skill.md.

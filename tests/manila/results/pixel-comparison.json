@@ -1,0 +1,13 @@
+{
+  "method": "Unregistered per-pixel RGB absolute difference; heatmaps multiplied by 3. Not a perceptual similarity score.",
+  "results": [
+    {
+      "view": "doorway",
+      "meanAbsoluteRGBDifference": 24.11324978298611
+    },
+    {
+      "view": "interior",
+      "meanAbsoluteRGBDifference": 20.59688259548611
+    }
+  ]
+}

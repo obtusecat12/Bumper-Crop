@@ -1,0 +1,22 @@
+{
+  "errors": [],
+  "origin": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "restored": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "door": {
+    "target": 1.35,
+    "current": 1.3493886833031028,
+    "passable": true
+  }
+}

@@ -1,0 +1,8 @@
+Four independent native outputs generated with the built-in image tool, one call per texture; no recolors or programmatic generated texture substitutes.
+
+manila-door.png: 887x1774 portrait (1:2). Six recessed wooden panels in three paired rows, tightly framed full door leaf, no hardware or surrounding wall. Fine aged dark brown grain and local molded panel shading. Grain direction follows rails/stiles. Suitable for whole-leaf UV mapping. Raised panel edges are visually shaded in the source; do not add excessively deep normal relief.
+manila-cabinet-panel.png: 1024x1536 portrait (2:3). Single arched inset cabinet face with warm walnut grain and molded edge. No tabletop, hardware or scene. Subtle local molding shading remains and can complement shallow modeled trim.
+manila-chair-seat.png: 1254x1254 square. Full-frame dark woven cane/rattan with small openings, no surrounding chair frame. Weave is regular and dense. Seamless appearance requested; exact edge continuity is not mathematically verified and should be checked at chosen UV repeat.
+breaker-enamel.png: 1254x1254 square. Flat desaturated gray-green aged coating, detailed orange peel and sparse fine scratches, no controls, text or panel silhouette. Seamless appearance requested; exact edge continuity is not mathematically verified.
+
+All native originals remain in generated_images. Exact prompts are in prompts.json. Freshly downloaded prompt guidance is in gpt_image_2_prompt_skill.md.

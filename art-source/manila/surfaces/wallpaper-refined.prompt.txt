@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: exact-reference Manila Room wallpaper, a seamless square game material albedo.
+reference images: Image 1 is the ORIGINAL frontal room photograph 02-IMG_4467.jpeg; its large uninterrupted wall area x220..630 and y35..235 is the PRIMARY pattern reference. Image 2 is the ORIGINAL doorway photograph 01-IMG_4466.jpeg; the foreground wallpaper confirms the same pattern. Extract and reconstruct the photographed wallpaper itself. Do not invent a different wallpaper.
+pattern: near-verbatim reconstruction of the very fine, narrow elongated diamond/ogee lattice visible in Image 1. It is a small delicate diagonal trellis with tiny tendril dots and microloops along hairline links, repeated densely across the wall. Keep the slender diamond proportions and small scale of its ornament. The decoration is minute and subordinate to the fine lattice. Pale open centers, tiny restrained details, no broad leaf forms, no large floral shapes.
+color and material: flat pale cream paper base, very fine muted tan/gray-beige low-contrast printing, a soft subtly linen-like photographic surface. Match the frontal wall's understated cream and tan, not the yellow-green lighting cast in the doorway photograph.
+composition: square fully filled with the repeating material, front-on orthographic with no perspective; multiple small complete repeats across the image, seamlessly matching opposite edges.
+lighting: completely flat neutral albedo light, no photographed room shadows, vignette, highlights or gradients.
+quality: photographic PS2/Source-era softness, restrained detail, no pixel art, no oversharpening.
+aspect ratio: 1:1
+Avoid: generic damask, broad curving baroque scrolls, bold strokes, leafy vines, large medallions, large floral ornaments, redesigned pattern, excessive yellow or gold, high contrast, room objects, doors, furniture, perspective, borders, text, watermark, glare.

@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+asset: seamless square albedo texture for the exact Manila Room wallpaper shown in the supplied references.
+reference images: Image 1 and Image 2 are direct material references; reconstruct only the wallpaper itself from those images, not the room.
+subject: the reference wallpaper's delicate interlocking elongated diamond ogee lattice, with the same fine small floral and baroque flourishes along its slender curved trellis borders and sparse tiny interior ornament. Preserve the actual pattern morphology and spacing visible on the right foreground wall in Image 1 and broad frontal wall in Image 2. This is reference reconstruction, not a new wallpaper design.
+color and material: pale warm cream/beige subtly linen-textured paper base; low-contrast muted tan and gray-gold printed ornament. Preserve the understated aged paper and printing of the references, neutralize scene shadows without changing the actual material color.
+composition: flat front-on orthographic material swatch filling the complete square; a repeating area showing several complete elongated motifs; repeating texture edges match seamlessly on all four sides.
+lighting: even flat neutral albedo lighting; no baked room lighting, shadows, vignetting, hotspots or reflections.
+style: photographic game-surface realism, soft low-resolution PS2/Source-era material character, not pixel art, no oversharpening.
+aspect ratio: 1:1
+Avoid: generic damask substitution, large isolated medallions, redesigning the motif, dark saturated yellow/gold, fancy new ornament, rooms, floors, doors, furniture, objects, perspective, borders, text, watermark, excessive sharpness, glare.

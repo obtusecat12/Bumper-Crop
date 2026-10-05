@@ -1,9 +1,11 @@
+import {MANILA_RECT,MANILA_VIEWS,inManila,subtractManilaFloor} from './manila-plan.js';
 // Spatial authority: storage chunks do not impose room boundaries.
 export const L0_CELL=3.6,L0_N=6,L0_CHUNK=21.6,L0_HEIGHT=2.72;
 const K=L0_CHUNK,M=K*4,H=L0_HEIGHT;
 export function l0Hash(x,z,s=0){let h=Math.imul(x|0,374761393)^Math.imul(z|0,668265263)^Math.imul(s|0,1442695041)^0x5eeda017;h=Math.imul(h^(h>>>13),1274126177);return((h^(h>>>16))>>>0)/4294967296;}
 export const L0_LANDMARKS=[{name:'黄墙旧办公室',x:3,z:10,yaw:0},{name:'拱窗与清洁桶',x:35.5,z:23,yaw:-.64},{name:'无尽柱厅 · 120 × 130 米',x:2,z:83,yaw:0},{name:'深坑群',x:-39.6,z:9,yaw:-.3},{name:'熄灯区',x:8,z:-43,yaw:0},{name:'红室边缘',x:98,z:37,yaw:0},{name:'墙上配电箱',x:15.6,z:5,yaw:-Math.PI/2},{name:'家具遗留区',x:76,z:16,yaw:0}];
-const FIXED=[{id:'arches-fixed',type:'arches',x0:31,x1:47,z0:-5,z1:31},{id:'columns-fixed',type:'columns',x0:-60,x1:60,z0:64.8,z1:194.4},{id:'pits-fixed',type:'pits',x0:-62,x1:-27,z0:-9,z1:29},{id:'blackout-fixed',type:'blackout',x0:-12,x1:28,z0:-63,z1:-30},{id:'red-fixed',type:'red',x0:91,x1:113,z0:23,z1:48}];
+L0_LANDMARKS.push(MANILA_VIEWS.doorway,MANILA_VIEWS.interior);
+const FIXED=[MANILA_RECT,{id:'arches-fixed',type:'arches',x0:31,x1:47,z0:-5,z1:31},{id:'columns-fixed',type:'columns',x0:-60,x1:60,z0:64.8,z1:194.4},{id:'pits-fixed',type:'pits',x0:-62,x1:-27,z0:-9,z1:29},{id:'blackout-fixed',type:'blackout',x0:-12,x1:28,z0:-63,z1:-30},{id:'red-fixed',type:'red',x0:91,x1:113,z0:23,z1:48}];
 const ref={id:'reference',type:'classic',x0:-3,x1:24,z0:-16,z1:20},furnitureRoom={id:'furniture-fixed',type:'classic',x0:66,x1:88,z0:-5,z1:25};
 const inside=(r,x,z,p=0)=>x>r.x0-p&&x<r.x1+p&&z>r.z0-p&&z<r.z1+p;
 function regionsNear(x,z){const out=[...FIXED];for(let gz=Math.floor(z/210)-1;gz<=Math.floor(z/210)+1;gz++)for(let gx=Math.floor(x/210)-1;gx<=Math.floor(x/210)+1;gx++){if(Math.abs(gx)+Math.abs(gz)<2)continue;const h=l0Hash(gx,gz,804);if(h<.40)continue;const type=h<.68?'columns':h<.80?'arches':h<.89?'blackout':h<.96?'pits':'red',cx=gx*210+35+l0Hash(gx,gz,805)*110,cz=gz*210+30+l0Hash(gx,gz,806)*110,w=type==='columns'?95+l0Hash(gx,gz,807)*70:type==='arches'?30+l0Hash(gx,gz,807)*25:22+l0Hash(gx,gz,807)*25,d=type==='columns'?90+l0Hash(gx,gz,808)*70:30+l0Hash(gx,gz,808)*25;out.push({id:`${gx}:${gz}`,type,x0:cx-w/2,x1:cx+w/2,z0:cz-d/2,z1:cz+d/2});}return out;}
@@ -22,7 +24,7 @@ function clippedWall(w,exclusions){const vertical=w.d>w.w;let intervals=[[vertic
 export function createL0Chunk(cx,cz,revision=0){
  const ox=cx*K,oz=cz*K,type=l0Type(cx,cz),walls=[],pillars=[],holes=[],floors=[],arches=[],lights=[],details=[],puddles=[],furniture=[],outlets=[],mold=[],breakers=[],panels=[];
  const owns=(x,z)=>x>=ox-1e-6&&x<ox+K-1e-6&&z>=oz-1e-6&&z<oz+K-1e-6;
- const regions=regionsNear(ox+K/2,oz+K/2),exclusions=[ref,furnitureRoom,...regions.filter(r=>r.type==='columns'||r.type==='arches'||r.type==='pits')];
+ const regions=regionsNear(ox+K/2,oz+K/2),exclusions=[ref,furnitureRoom,...regions.filter(r=>r.type==='columns'||r.type==='arches'||r.type==='pits'||r.type==='manila')];
  const addWall=(x,z,w,d,mat=0,id='fixed')=>{if(owns(x,z))walls.push({x,z,w,d,mat,h:H,y:H/2,id});};
  // Unbalanced metric BSP: unequal rooms and independently offset openings, no chunk perimeter.
  for(let mz=Math.floor((oz-45)/M);mz<=Math.floor((oz+K+45)/M);mz++)for(let mx=Math.floor((ox-45)/M);mx<=Math.floor((ox+K+45)/M);mx++)for(const w of macro(mx,mz).walls)for(const p of clippedWall(w,exclusions))if(owns(p.x,p.z))walls.push(p);
@@ -53,6 +55,6 @@ export function createL0Chunk(cx,cz,revision=0){
  const slot=p=>{p.x=ox+Math.floor((p.x-ox)/1.2)*1.2+.6;p.z=oz+Math.floor((p.z-oz)/.6)*.6+.3;return p;};
  lights.forEach(slot);const occupied=lights.map(p=>({...p,w:1.2,d:.6})),placed=[];
  for(const item of details){const base=slot({...item});for(const [dx,dz]of[[0,0],[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1],[0,2],[0,-2]]){const p={...base,x:base.x+dx*1.2,z:base.z+dz*.6,rotation:item.kind===1?0:item.rotation},w=item.kind===1||item.kind===4?1.2:.64,d=item.kind===1?.22:item.kind===4?.6:.64;if(p.x-w/2<ox-.001||p.x+w/2>ox+K+.001||p.z-d/2<oz-.001||p.z+d/2>oz+K+.001)continue;if(occupied.some(q=>Math.abs(p.x-q.x)<(w+q.w)/2+.01&&Math.abs(p.z-q.z)<(d+q.d)/2+.01))continue;if(walls.some(q=>Math.abs(p.x-q.x)<(w+q.w)/2&&Math.abs(p.z-q.z)<(d+q.d)/2))continue;placed.push(p);occupied.push({...p,w,d});break;}}
- return{cx,cz,ox,oz,type,revision,walls,pillars,holes,floors,arches,lights,details:placed,puddles,furniture,outlets,mold,breakers,panels};
+ return{cx,cz,ox,oz,type,revision,walls,pillars,holes,floors:floors.flatMap(subtractManilaFloor),arches,lights:lights.filter(p=>!inManila(p.x,p.z,.65)),details:placed.filter(p=>!inManila(p.x,p.z,1)),puddles:puddles.filter(p=>!inManila(p.x,p.z,1.5)),furniture,outlets,mold,breakers,panels};
 }
 export function l0SolidAt(chunk,x,z,r=.23){for(const w of [...chunk.walls,...chunk.pillars])if(Math.abs(x-w.x)<w.w/2+r&&Math.abs(z-w.z)<w.d/2+r)return true;for(const a of chunk.arches)if(Math.abs(x-a.x)<.13+r&&Math.abs(z-a.z)<a.w/2+r)return true;for(const f of chunk.furniture){if(f.y>.2)continue;const dx=x-f.x,dz=z-f.z,c=Math.cos(f.rotation||0),s=Math.sin(f.rotation||0);if(Math.abs(c*dx-s*dz)<f.w/2+r&&Math.abs(s*dx+c*dz)<f.d/2+r)return true;}return false;}
