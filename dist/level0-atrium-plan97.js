@@ -75,7 +75,7 @@ export const FURNISHINGS97=[
 for(let i=0;i<7;i++)FURNISHINGS97.push({kind:'f95StripeSofa',n:2,x:-11.24+i*.85,z:-4.8,yaw:Math.PI/2,scale:[1.45*.30**i,1.45*.30**i,1.45*.30**i],w:1.92,d:.96,h:1.04,anomaly:'geometric diminution'});
 const boxOf=p=>{const sx=p.scale?.[0]??1,sy=p.scale?.[1]??1,sz=p.scale?.[2]??1,c=Math.abs(Math.cos(p.yaw||0)),s=Math.abs(Math.sin(p.yaw||0));return{x:p.x,z:p.z,w:p.w*sx*c+p.d*sz*s,d:p.w*sx*s+p.d*sz*c,y:atriumLevelY96(p.n),h:p.h*sy};};
 const props=FURNISHINGS97.filter(p=>(p.scale?.[0]??1)>.12).map(boxOf);
-props.push({x:-5.55,z:-5.92,w:.12,d:.12,y:-9.92,h:9.52},{x:-8.42,z:-2,w:1.3,d:.20,y:lower1.y,h:2.72},{x:-6.3,z:-6,w:1.6,d:.16,y:lower1.y,h:2.72},{x:5.94,z:2.38,w:1.1,d:.17,y:lower1.y,h:2.72},{x:6.74,z:-3.2,w:.52,d:.54,y:0,h:.95},{x:-6.96,z:4.86,w:.045,d:.94,y:0,h:2.12},{x:CROSS_DOOR97.x,z:CROSS_DOOR97.z,w:.94,d:.045,y:lower1.y,h:2.12},
+props.push({x:-5.55,z:-5.92,w:.12,d:.12,y:-9.92,h:9.52},{x:-8.42,z:-2,w:1.3,d:.20,y:lower1.y,h:2.72},{x:-6.3,z:-6,w:1.6,d:.16,y:lower1.y,h:2.72},{x:5.94,z:2.38,w:1.1,d:.17,y:lower1.y,h:2.72},{x:6.74,z:-3.2,w:.52,d:.54,y:0,h:.95},{x:-6.845,z:4.86,w:.045,d:.94,y:0,h:2.12},{x:CROSS_DOOR97.x,z:CROSS_DOOR97.z,w:.94,d:.045,y:lower1.y,h:2.12},
  {x:-.7,z:-9.71,w:.66,d:.66,y:lower1.y,h:.65},{x:.8,z:-9.6,w:.51,d:.53,y:lower1.y,h:1},
  {x:-2.46,z:-10.04,w:.9,d:.53,y:lower1.y,h:2.12},{x:7.22,z:-.54,w:.57,d:.63,y:lower3.y,h:.76},{x:-7.75,z:-7.5,w:.5,d:.9,y:lower3.y,h:1.3});
 props.push({x:-8.33,z:3.5,w:2.30,d:2.04,y:atriumLevelY96(4),h:1.1},{x:.2,z:-13.55,w:1.95,d:.65,y:atriumLevelY96(4),h:2.2},{x:7.8,z:-6.9,w:.49,d:.86,y:atriumLevelY96(5),h:1.27},{x:-8.94,z:-2.9,w:.48,d:.99,y:atriumLevelY96(5),h:1.88},{x:7.7,z:5.5,w:.54,d:.52,y:atriumLevelY96(5),h:1.5},{x:-7.9,z:-5.2,w:.96,d:2.15,y:atriumLevelY96(6),h:1.0},{x:2.6,z:-12.9,w:.64,d:.49,y:atriumLevelY96(6),h:1.49});
@@ -90,6 +90,6 @@ export function atriumBlocked97(x,z,r=.25,feet=0,body=1.7){
  for(const f of allFloors)if(feet<f.y-.045&&feet+body>f.y-.075&&contains(f,xx,zz,r))return true;
  return false;
 }
-export function atriumHeadroom97(x,z,feet,head){let hit=Infinity;x-=A.x;z-=A.z;for(const f of allFloors){const y=f.y-(f.n%2===0?.48:.80);if(y>feet+.12&&y<head&&contains(f,x,z))hit=Math.min(hit,y);}if(feet>=-.1)hit=Math.min(hit,2.72);return hit;}
+export function atriumHeadroom97(x,z,feet,head){let hit=Infinity;x-=A.x;z-=A.z;for(const f of allFloors){const y=f.y-(f.poolDeck||f.poolBottom?.08:f.n%2===0?.48:.80);if(y>feet+.12&&y<head&&contains(f,x,z))hit=Math.min(hit,y);}if(feet>=-.1)hit=Math.min(hit,2.72);return hit;}
 export function atriumTier97(feet=0){return ATRIUM_LEVELS97.reduce((a,l)=>Math.abs(l.y-feet)<Math.abs(a.y-feet)?l:a,ATRIUM_LEVELS97[0]);}
 export function atriumMap97(ctx,scale,feet=0){const l=atriumTier97(feet);ctx.fillStyle='#16150e';ctx.fillRect(-11.4*scale,-14.4*scale,22.8*scale,28.8*scale);ctx.fillStyle='#b1a374';for(const f of l.floors)ctx.fillRect(f.x0*scale,f.z0*scale,(f.x1-f.x0)*scale,(f.z1-f.z0)*scale);ctx.fillStyle='#625c49';for(const w of l.walls.concat(props.filter(p=>Math.abs(p.y-l.y)<.1)))ctx.fillRect((w.x-w.w/2)*scale,(w.z-w.d/2)*scale,Math.max(1,w.w*scale),Math.max(1,w.d*scale));}
