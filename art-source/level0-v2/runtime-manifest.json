@@ -1,0 +1,226 @@
+[
+  {
+    "name": "sofa-floral",
+    "source": "furniture/sofa-floral.png",
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "name": "furniture-walnut",
+    "source": "furniture/furniture-walnut.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "sofa-velour",
+    "source": "furniture/sofa-velour.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "furniture-oak",
+    "source": "furniture/furniture-oak.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "sofa-teal",
+    "source": "furniture/sofa-teal.png",
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "name": "panel-09",
+    "source": "panels-b/panel-09.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "panel-08",
+    "source": "panels-b/panel-08.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "panel-10",
+    "source": "panels-b/panel-10.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "panel-07",
+    "source": "panels-b/panel-07.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "panel-06",
+    "source": "panels-b/panel-06.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "outlet-04",
+    "source": "utility/outlet-04.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "breaker-panel",
+    "source": "utility/breaker-panel.png",
+    "size": [
+      341,
+      512
+    ]
+  },
+  {
+    "name": "outlet-05",
+    "source": "utility/outlet-05.png",
+    "size": [
+      341,
+      512
+    ]
+  },
+  {
+    "name": "mold-patch",
+    "source": "utility/mold-patch.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "outlet-01",
+    "source": "utility/outlet-01.png",
+    "size": [
+      341,
+      512
+    ]
+  },
+  {
+    "name": "outlet-02",
+    "source": "utility/outlet-02.png",
+    "size": [
+      341,
+      512
+    ]
+  },
+  {
+    "name": "outlet-03",
+    "source": "utility/outlet-03.png",
+    "size": [
+      341,
+      512
+    ]
+  },
+  {
+    "name": "duct-galvanized",
+    "source": "hero/duct-galvanized.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "carpet-reference",
+    "source": "hero/carpet-reference.png",
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "name": "bucket-burgundy",
+    "source": "hero/bucket-burgundy.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "wallpaper-dots",
+    "source": "hero/wallpaper-dots.png",
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "name": "wallpaper-chevron",
+    "source": "hero/wallpaper-chevron.png",
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "name": "bucket-pail",
+    "source": "hero/bucket-pail.png",
+    "size": [
+      1024,
+      512
+    ]
+  },
+  {
+    "name": "panel-04",
+    "source": "panels-a/panel-04.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "panel-05",
+    "source": "panels-a/panel-05.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "panel-01",
+    "source": "panels-a/panel-01.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "panel-03",
+    "source": "panels-a/panel-03.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "name": "panel-02",
+    "source": "panels-a/panel-02.png",
+    "size": [
+      512,
+      512
+    ]
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "deterministicChunks": 361,
+  "generatedCache": 540,
+  "wallSegments": 2751,
+  "wallEndpointCollisionSamples": 5502,
+  "independentWallCoordinates": 1475,
+  "panelTypes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "outletTypes": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "furnitureKinds": [
+    "armchair",
+    "bin",
+    "bookcase",
+    "bureau",
+    "crt",
+    "diningChair",
+    "lamp",
+    "ovalChair",
+    "pail",
+    "recliner",
+    "sofa",
+    "spindleTable"
+  ],
+  "ceilingServicesChecked": 1125,
+  "hallMetres": [
+    120,
+    129.60000000000002
+  ],
+  "safeLandmarks": 8
+}

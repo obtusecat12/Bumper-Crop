@@ -1,0 +1,7 @@
+{
+  "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nedit target: supplied transparent irregular mold decal.\nrequired correction: eliminate all saturated red and yellow colored fringes or solid-colored halos from the ragged perimeter and interior holes. These erroneous red and yellow regions must become fully transparent, with only a soft natural fade in the brown stain and green-black mold pixels. No red, bright yellow, neon color or color key background anywhere.\npreserve: the existing natural irregular patch silhouette, detailed dark green-black mold clusters, thin damp brown tide stains, photographed surface quality, exact front view and genuinely transparent background.\nasset purpose: photographic alpha decal on a muted pale ochre wallpaper wall for a worn Backrooms game; no opaque cream paper material beneath the mold, soften that cream pigment into a very subtle translucent brown damp stain so underlying game wallpaper remains visible.\nlighting: flat diffuse albedo, subdued colors, no cast shadow, no oversharpening.\naspect ratio: 1:1",
+  "input": "mold-patch original generation",
+  "selectedOutput": "mold-patch.png",
+  "transparent_background": true,
+  "inspection": "RGBA validated. Highly saturated fringe pixels have alpha values 1–3/255 only; material alphaTest 0.02 discards this negligible fringe and leaves the mold/stain soft alpha. Other generated albedos inspected straight-on and correct category."
+}

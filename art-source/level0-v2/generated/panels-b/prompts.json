@@ -1,0 +1,42 @@
+[
+  {
+    "id": 6,
+    "filename": "panel-06.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nAsset: one independent flat diffuse-color texture for rare 1970–1990 American interior lower-wall wainscoting, panel design 06.\nSubject: warm beige painted board-and-batten wainscot with broad bays, plain vertical battens, simple baseboard at the bottom and continuous chair rail at the top. Muted aged paint, restrained fine photographic surface grain.\nComposition: orthographic frontal view, entire square filled by one repeating wainscot material module from bottom baseboard to top chair rail; straight level horizontal rails; horizontally seamless left and right edges; no surrounding room.\nLighting: neutral diffuse even illumination, subtle surface detail without directional shadows.\nPalette and quality: muted warm beige Backrooms interior palette, aged 1970s–1990s American building material, fine restrained photographic texture, no oversharpening, not a polished modern render.\nAspect ratio: 1:1.\nAvoid: perspective, floor, ceiling, furniture, objects, text, scene, dramatic shadows, bright highlights, excessive yellow, contact sheet, multiple designs.",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-0f566c3c-a86a-44b1-9b93-15ed7019ced0.png",
+    "method": "built-in image_gen",
+    "inspected": true
+  },
+  {
+    "id": 7,
+    "filename": "panel-07.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nAsset: one independent flat diffuse-color texture for rare 1970–1990 American interior lower-wall wainscoting, panel design 7.\nSubject: Old knotty pine tongue-and-groove wainscot with several vertical planks, understated small dark knots and irregular aged pine grain, simple horizontal pine baseboard along bottom and plain chair rail along top. Muted brown honey wood with weathered clear finish, no glossy reflections.\nComposition: orthographic frontal view, entire square filled by one repeating wainscot material module from bottom baseboard to top chair rail; straight level horizontal rails; horizontally seamless left and right edges; no surrounding room.\nLighting: neutral diffuse even illumination, subtle surface detail without directional shadows.\nPalette and quality: muted aged American building material suitable for a Backrooms interior, fine restrained photographic texture, no oversharpening, not a polished modern render.\nAspect ratio: 1:1.\nAvoid: perspective, floor, ceiling, furniture, objects, text, scene, dramatic shadows, bright highlights, excessive yellow, contact sheet, multiple designs.",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-19e918f6-ae3e-42f2-8c91-7545c5a4a903.png",
+    "method": "built-in image_gen",
+    "inspected": true
+  },
+  {
+    "id": 8,
+    "filename": "panel-08.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nAsset: one independent flat diffuse-color texture for rare 1970–1990 American interior lower-wall wainscoting, panel design 8.\nSubject: Dark cherry wood applied picture-frame molding wainscot, two broad rectangular bays with elegant narrow mitered picture-frame molding on a plain flat cherry backing, simple continuous chair rail at top and baseboard at bottom. Muted dark brown reddish cherry wood grain with restrained worn satin finish.\nComposition: orthographic frontal view, entire square filled by one repeating wainscot material module from bottom baseboard to top chair rail; straight level horizontal rails; horizontally seamless left and right edges; no surrounding room.\nLighting: neutral diffuse even illumination, subtle surface detail without directional shadows.\nPalette and quality: muted aged American building material suitable for a Backrooms interior, fine restrained photographic texture, no oversharpening, not a polished modern render.\nAspect ratio: 1:1.\nAvoid: perspective, floor, ceiling, furniture, objects, text, scene, dramatic shadows, bright highlights, excessive yellow, contact sheet, multiple designs.",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-c8382982-ea82-4dd9-acc1-591f8ae9b06a.png",
+    "method": "built-in image_gen",
+    "inspected": true
+  },
+  {
+    "id": 9,
+    "filename": "panel-09.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nAsset: one independent flat diffuse-color texture for rare 1970–1990 American interior lower-wall wainscoting, panel design 9.\nSubject: Faded blue-gray classic painted recessed-panel wainscot with broad rectangular recessed fields and distinctive double vertical stiles separating bays, simple continuous chair rail along top and baseboard along bottom. Muted faded dusty blue-gray old painted wood with fine restrained paint wear.\nComposition: orthographic frontal view, entire square filled by one repeating wainscot material module from bottom baseboard to top chair rail; straight level horizontal rails; horizontally seamless left and right edges; no surrounding room.\nLighting: neutral diffuse even illumination, subtle surface detail without directional shadows.\nPalette and quality: muted aged American building material suitable for a Backrooms interior, fine restrained photographic texture, no oversharpening, not a polished modern render.\nAspect ratio: 1:1.\nAvoid: perspective, floor, ceiling, furniture, objects, text, scene, dramatic shadows, bright highlights, excessive yellow, contact sheet, multiple designs.",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-258a1c5b-5304-4a2f-bcca-f2465f09ce4d.png",
+    "method": "built-in image_gen",
+    "inspected": true
+  },
+  {
+    "id": 10,
+    "filename": "panel-10.png",
+    "prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nAsset: one independent flat diffuse-color texture for rare 1970–1990 American interior lower-wall wainscoting, panel design 10.\nSubject: Aged brown faux-wood 1970s interior wainscot made of thin factory wood-look veneer panels, slender dark vertical grooves, softly varied printed brown wood grain, plain continuous dark brown chair rail along top and simple baseboard along bottom. Faded medium brown laminate without gloss.\nComposition: orthographic frontal view, entire square filled by one repeating wainscot material module from bottom baseboard to top chair rail; straight level horizontal rails; horizontally seamless left and right edges; no surrounding room.\nLighting: neutral diffuse even illumination, subtle surface detail without directional shadows.\nPalette and quality: muted aged American building material suitable for a Backrooms interior, fine restrained photographic texture, no oversharpening, not a polished modern render.\nAspect ratio: 1:1.\nAvoid: perspective, floor, ceiling, furniture, objects, text, scene, dramatic shadows, bright highlights, excessive yellow, contact sheet, multiple designs.",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-6c42eef5-3c79-4f62-988b-341c4b29caf5.png",
+    "method": "built-in image_gen",
+    "inspected": true
+  }
+]

@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import{createL0Chunk,L0_CHUNK as K,L0_LANDMARKS,l0SolidAt,l0TypeAt,l0RegionAt}from'../../dist/level0-layout.js';
+const chunks=new Map(),get=(x,z)=>{const k=x+','+z;if(!chunks.has(k))chunks.set(k,createL0Chunk(x,z));return chunks.get(k);};
+const styles=new Set(),outlets=new Set(),kinds=new Set(),coords=new Set();let ceiling=0,walls=0,collisionSamples=0;
+for(let z=-9;z<=9;z++)for(let x=-9;x<=9;x++){const c=get(x,z);assert.deepEqual(c,createL0Chunk(x,z));for(const p of c.panels)styles.add(p.style);for(const p of c.outlets)outlets.add(p.style);for(const p of c.furniture)kinds.add(p.kind);for(const d of c.details){const w=d.kind===1||d.kind===4?1.2:.64,h=d.kind===1?.22:d.kind===4?.6:.64;assert(!c.lights.some(l=>Math.abs(d.x-l.x)<(w+1.2)/2+.009&&Math.abs(d.z-l.z)<(h+.6)/2+.009),'Ceiling service overlaps a luminaire');ceiling++;}
+ for(const w of c.walls){walls++;coords.add((w.w>w.d?w.z:w.x).toFixed(3));const vertical=w.d>w.w,len=Math.max(w.w,w.d);for(const sign of[-1,1]){const px=w.x+(vertical?0:sign*(len/2-.04)),pz=w.z+(vertical?sign*(len/2-.04):0),cx=Math.floor(px/K),cz=Math.floor(pz/K);assert(Math.abs(cx-x)<=2&&Math.abs(cz-z)<=2,'Long wall exceeds collision lookup');let blocked=false;for(let dz=-2;dz<=2&&!blocked;dz++)for(let dx=-2;dx<=2&&!blocked;dx++)blocked=l0SolidAt(get(cx+dx,cz+dz),px,pz,.23);assert(blocked,'Long wall endpoint lost across chunk boundary');collisionSamples++;}}
+}
+assert.equal(styles.size,10);assert.equal(outlets.size,5);assert(kinds.size>=10);const hall=l0RegionAt(2,83);assert(hall.x1-hall.x0>=120&&hall.z1-hall.z0>=129);
+for(const p of L0_LANDMARKS){let b=false;const cx=Math.floor(p.x/K),cz=Math.floor(p.z/K);for(let z=cz-2;z<=cz+2;z++)for(let x=cx-2;x<=cx+2;x++)b ||= l0SolidAt(get(x,z),p.x,p.z,.32);assert(!b,'Unsafe F2 pose: '+p.name);assert(!get(cx,cz).holes.some(h=>Math.abs(p.x-h.x)<h.w/2&&Math.abs(p.z-h.z)<h.d/2),'F2 inside pit');}
+const c=get(0,0),ep=c.breakers.find(p=>p.id==='entry-circuit');assert(ep);assert.equal(l0TypeAt(0,180),'columns');assert(!c.walls.every(w=>w.x%3.6===0||w.z%3.6===0));
+const report={deterministicChunks:361,generatedCache:chunks.size,wallSegments:walls,wallEndpointCollisionSamples:collisionSamples,independentWallCoordinates:coords.size,panelTypes:[...styles].sort(),outletTypes:[...outlets].sort(),furnitureKinds:[...kinds].sort(),ceilingServicesChecked:ceiling,hallMetres:[hall.x1-hall.x0,hall.z1-hall.z0],safeLandmarks:L0_LANDMARKS.length};
+await fs.writeFile(new URL('./results/layout.json',import.meta.url),JSON.stringify(report,null,2));console.log(report);

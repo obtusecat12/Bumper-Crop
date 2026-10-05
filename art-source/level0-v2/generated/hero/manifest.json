@@ -1,0 +1,74 @@
+[
+  {
+    "id": "wallpaper-chevron",
+    "path": "/workspace/scratch/f0eb35bc89ef/level0-v2-assets/hero/wallpaper-chevron.png",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-7030e369-5d68-4cd9-a872-636b447b47d0.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "tool": "built-in image_gen",
+    "role": "diffuse albedo"
+  },
+  {
+    "id": "wallpaper-dots",
+    "path": "/workspace/scratch/f0eb35bc89ef/level0-v2-assets/hero/wallpaper-dots.png",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-3e96b936-7c04-4c0c-a069-50ae9ff79090.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "tool": "built-in image_gen",
+    "role": "diffuse albedo"
+  },
+  {
+    "id": "carpet-reference",
+    "path": "/workspace/scratch/f0eb35bc89ef/level0-v2-assets/hero/carpet-reference.png",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-03ce1a99-9f43-49d0-bb71-12ee029860ce.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "tool": "built-in image_gen",
+    "role": "diffuse albedo"
+  },
+  {
+    "id": "duct-galvanized",
+    "path": "/workspace/scratch/f0eb35bc89ef/level0-v2-assets/hero/duct-galvanized.png",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-bb0984f7-277d-4782-8989-872e27c484b0.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "tool": "built-in image_gen",
+    "role": "diffuse albedo"
+  },
+  {
+    "id": "bucket-burgundy",
+    "path": "/workspace/scratch/f0eb35bc89ef/level0-v2-assets/hero/bucket-burgundy.png",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-82a2c7c6-a3b8-4d19-9a45-2b59cbda39ed.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "tool": "built-in image_gen",
+    "role": "diffuse albedo"
+  },
+  {
+    "id": "bucket-pail",
+    "path": "/workspace/scratch/f0eb35bc89ef/level0-v2-assets/hero/bucket-pail.png",
+    "source": "/workspace/scratch/f0eb35bc89ef/generated_images/exec-cb41fa41-b7b7-46c5-9af5-e5d75e4cb381.png",
+    "size": [
+      1774,
+      887
+    ],
+    "mode": "RGB",
+    "tool": "built-in image_gen",
+    "role": "diffuse albedo"
+  }
+]

@@ -1,0 +1,84 @@
+{
+  "errors": [],
+  "stats": {
+    "panels": {
+      "chunks": 54,
+      "batches": 93,
+      "instances": 42234,
+      "rebuildCount": 2,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 7,
+      "breakers": 9,
+      "offCircuits": 0,
+      "calls": 76,
+      "triangles": 1327782,
+      "programs": 15
+    },
+    "mold": {
+      "chunks": 58,
+      "batches": 84,
+      "instances": 41805,
+      "rebuildCount": 3,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 7,
+      "breakers": 8,
+      "offCircuits": 0,
+      "calls": 75,
+      "triangles": 1130800,
+      "programs": 15
+    },
+    "chaos": {
+      "chunks": 53,
+      "batches": 98,
+      "instances": 42296,
+      "rebuildCount": 4,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 7,
+      "breakers": 16,
+      "offCircuits": 0,
+      "calls": 80,
+      "triangles": 1253250,
+      "programs": 17
+    },
+    "sofa": {
+      "chunks": 56,
+      "batches": 96,
+      "instances": 42013,
+      "rebuildCount": 5,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 7,
+      "breakers": 10,
+      "offCircuits": 0,
+      "calls": 86,
+      "triangles": 1388128,
+      "programs": 18
+    },
+    "cavity": {
+      "chunks": 56,
+      "batches": 98,
+      "instances": 42025,
+      "rebuildCount": 2,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 7,
+      "breakers": 14,
+      "offCircuits": 0,
+      "calls": 76,
+      "triangles": 1124264,
+      "programs": 18
+    },
+    "columns": {
+      "chunks": 61,
+      "batches": 94,
+      "instances": 41330,
+      "rebuildCount": 7,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 7,
+      "breakers": 11,
+      "offCircuits": 0,
+      "calls": 68,
+      "triangles": 874266,
+      "programs": 18
+    }
+  },
+  "renderer": "Chrome / SwiftShader software WebGL2"
+}
