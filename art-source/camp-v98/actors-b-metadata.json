@@ -1,0 +1,326 @@
+{
+  "sleeper": {
+    "crop": [
+      244,
+      180,
+      1010,
+      1128
+    ],
+    "eyes": [
+      [
+        383,
+        510,
+        585,
+        625
+      ],
+      [
+        683,
+        509,
+        889,
+        624
+      ]
+    ],
+    "skinPatch": [
+      357,
+      655,
+      445,
+      730
+    ],
+    "hairPatch": [
+      310,
+      84,
+      457,
+      182
+    ],
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "coordinateConvention": "image pixel coordinates, origin top left, crop/rect [x0,y0,x1,y1]",
+    "closedOutsideEyeMaskIdentical": true,
+    "eyesMaskBounds": [
+      383,
+      509,
+      890,
+      626
+    ],
+    "targetFaceSize": [
+      128,
+      128
+    ],
+    "targetGarmentSize": [
+      256,
+      256
+    ],
+    "runtimeUse": "Use same crop for open and closed; PS1 NearestFilter. Source closed edit is eye-only composited over original; do not use face-closed-generated.png directly.",
+    "files": {
+      "shirt.png": {
+        "bytes": 2381975,
+        "sha256": "726cfed90b172a1762b23aed5b93c521066bd112b74c0d834f772a96b756f36d"
+      },
+      "face.png": {
+        "bytes": 2065926,
+        "sha256": "8e212c754e70ab14b3a1ad635980d927d730682bf858143ccf9c6241cc6faea7"
+      },
+      "face-closed-128-preview.png": {
+        "bytes": 27993,
+        "sha256": "4cddcdebf04a7a3c51e29950fd9d7b9ed7b49df8fb4ec350904e1fed68869903"
+      },
+      "face-128-preview.png": {
+        "bytes": 28426,
+        "sha256": "708459e145df2c353f04176b73f68e021237e1c6f5c9d2183369cbbaaf9a0b56"
+      },
+      "face-closed-generated.png": {
+        "bytes": 1921315,
+        "sha256": "af8a1e46297e7b20edba650cb6b647d65424edcbd3b424cb5fdca5158c438da7"
+      },
+      "face-closed.png": {
+        "bytes": 2033003,
+        "sha256": "7b589e04075524ebd620117eb641b162de8e255e98b2d51980d62c3c1eca2266"
+      }
+    }
+  },
+  "fireElder": {
+    "crop": [
+      215,
+      145,
+      1068,
+      1161
+    ],
+    "eyes": [
+      [
+        352,
+        481,
+        587,
+        594
+      ],
+      [
+        672,
+        480,
+        911,
+        594
+      ]
+    ],
+    "skinPatch": [
+      337,
+      628,
+      409,
+      716
+    ],
+    "hairPatch": [
+      401,
+      54,
+      532,
+      128
+    ],
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "coordinateConvention": "image pixel coordinates, origin top left, crop/rect [x0,y0,x1,y1]",
+    "closedOutsideEyeMaskIdentical": true,
+    "eyesMaskBounds": [
+      352,
+      480,
+      912,
+      595
+    ],
+    "targetFaceSize": [
+      128,
+      128
+    ],
+    "targetGarmentSize": [
+      256,
+      256
+    ],
+    "runtimeUse": "Use same crop for open and closed; PS1 NearestFilter. Source closed edit is eye-only composited over original; do not use face-closed-generated.png directly.",
+    "files": {
+      "shirt.png": {
+        "bytes": 3257254,
+        "sha256": "a956ff4d33b6de7f3774eadcad72ab5926f647d14d3a25a8a7453d7410f57927"
+      },
+      "face.png": {
+        "bytes": 2162325,
+        "sha256": "bacacaf8a74b8468e5ff2e91425a2f15e2cd73041495393f346557c80c660877"
+      },
+      "face-closed-128-preview.png": {
+        "bytes": 30166,
+        "sha256": "91149b3f6a6ad2596e85d0e1fb262248104957b51f0ea8bf9cf3a0d6ab2ea2fc"
+      },
+      "face-128-preview.png": {
+        "bytes": 30509,
+        "sha256": "f36c8bd8200492e0923f11c13b6627d946ab83711d8b899681c2863431dae83a"
+      },
+      "face-closed-generated.png": {
+        "bytes": 2123045,
+        "sha256": "8e8fb367ea055ae3b73fccbcd2eac9b7d1b6e01b7e255805bff7b678557f5c2d"
+      },
+      "face-closed.png": {
+        "bytes": 2137981,
+        "sha256": "eefa600058123b444807cc7d88f6b2881a5eb452d833ad11d81f84ff0f1f0c7f"
+      }
+    }
+  },
+  "fireYoung": {
+    "crop": [
+      250,
+      345,
+      1020,
+      1141
+    ],
+    "eyes": [
+      [
+        375,
+        533,
+        584,
+        644
+      ],
+      [
+        685,
+        533,
+        887,
+        644
+      ]
+    ],
+    "skinPatch": [
+      344,
+      658,
+      433,
+      744
+    ],
+    "hairPatch": [
+      351,
+      91,
+      489,
+      247
+    ],
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "coordinateConvention": "image pixel coordinates, origin top left, crop/rect [x0,y0,x1,y1]",
+    "closedOutsideEyeMaskIdentical": true,
+    "eyesMaskBounds": [
+      375,
+      533,
+      888,
+      645
+    ],
+    "targetFaceSize": [
+      128,
+      128
+    ],
+    "targetGarmentSize": [
+      256,
+      256
+    ],
+    "runtimeUse": "Use same crop for open and closed; PS1 NearestFilter. Source closed edit is eye-only composited over original; do not use face-closed-generated.png directly.",
+    "files": {
+      "shirt.png": {
+        "bytes": 3135383,
+        "sha256": "607df10c83003d882e474a0bb4436a2def264d572fef5c2e759928f36bc388dc"
+      },
+      "face.png": {
+        "bytes": 2060150,
+        "sha256": "d3a2b371af587756efd1c313f5f4a5559b0d2d07f0a21818338bb3ca05509c48"
+      },
+      "face-closed-128-preview.png": {
+        "bytes": 25718,
+        "sha256": "0ffe49d14c61bc3a628cbbd93fe44c98e7c4d24a82ed716e8d8576e261e64cc2"
+      },
+      "face-128-preview.png": {
+        "bytes": 26254,
+        "sha256": "1b2ad8733415560483c7d0a014c936abd6022f0686cd5667b2da81f74c9e69bc"
+      },
+      "face-closed-generated.png": {
+        "bytes": 1915472,
+        "sha256": "b49cd5db01fd47c1e35a10c1d12d9c700ca17197c730a02a3ba722c11711d984"
+      },
+      "face-closed.png": {
+        "bytes": 2033928,
+        "sha256": "8d7e536e34829cd4e4001949dcb03ee5dc8c5812bdaddf5bd74d4241b9123ba7"
+      }
+    }
+  },
+  "fireWorker": {
+    "crop": [
+      209,
+      230,
+      1061,
+      1183
+    ],
+    "eyes": [
+      [
+        354,
+        505,
+        588,
+        616
+      ],
+      [
+        681,
+        505,
+        897,
+        616
+      ]
+    ],
+    "skinPatch": [
+      337,
+      645,
+      411,
+      735
+    ],
+    "hairPatch": [
+      360,
+      64,
+      499,
+      196
+    ],
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "coordinateConvention": "image pixel coordinates, origin top left, crop/rect [x0,y0,x1,y1]",
+    "closedOutsideEyeMaskIdentical": true,
+    "eyesMaskBounds": [
+      354,
+      505,
+      898,
+      617
+    ],
+    "targetFaceSize": [
+      128,
+      128
+    ],
+    "targetGarmentSize": [
+      256,
+      256
+    ],
+    "runtimeUse": "Use same crop for open and closed; PS1 NearestFilter. Source closed edit is eye-only composited over original; do not use face-closed-generated.png directly.",
+    "files": {
+      "shirt.png": {
+        "bytes": 3271514,
+        "sha256": "4e799733b61ee13ffd6e57a4647442e0458546c20a9a2b2e733d6901ff753125"
+      },
+      "face.png": {
+        "bytes": 2263977,
+        "sha256": "97a7f4afbb7e1ee78bc7827503736fae0ddfabd4f6e2f139d0e13aa035f62bc4"
+      },
+      "face-closed-128-preview.png": {
+        "bytes": 30708,
+        "sha256": "7fe4febe3b9e36f5ccbd12ca20bad119898cf72b9eb4d11a57052871756cbf25"
+      },
+      "face-128-preview.png": {
+        "bytes": 31012,
+        "sha256": "d441b186e00119b995e2ba648a5520eb003897d72ba74c2f35bc41a35e13ea5a"
+      },
+      "face-closed-generated.png": {
+        "bytes": 2104359,
+        "sha256": "3b7e42fa780086bfad6f82f6d06da2690e77aed1382f2b4109fd99fe0414aaff"
+      },
+      "face-closed.png": {
+        "bytes": 2235487,
+        "sha256": "a1612370de3cfcfba4fc35fb3b39649dad983bf6e9283cb8eaa01b0345bfa1ff"
+      }
+    }
+  }
+}

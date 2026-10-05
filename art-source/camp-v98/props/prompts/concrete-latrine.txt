@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: seamless dirty concrete diffuse texture for the modeled cement squat pit inside an old lakeside outhouse in a PS1/PS2 survival game.
+Subject: rough cast gray cement, small aggregate grains, old rubbed and chipped surface, irregular black damp discoloration, some brown water runoff stains, thin hairline cracks.
+Composition: orthographic overhead flat surface covering whole square, seamless both axes. This is only the surface material, not a photograph of a toilet or shaped fixture.
+Lighting: neutral even diffuse albedo, no directional shadows or reflections.
+Style: photographic texture with clear broad stain shapes, softened detail to remain legible at 512 pixels; old survival-era rough workmanship.
+Aspect ratio: 1:1.
+Avoid: feces, human body, plumbing objects, drain openings, scene framing, text, watermark.

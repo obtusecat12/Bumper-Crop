@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: seamless diffuse material texture for old rusty corrugated galvanized tin on a low polygon lakeside outhouse.
+Subject: aged sheet metal, vertical evenly spaced corrugation ridges, dull silver gray base with irregular dark orange-brown oxidation mostly along seams, tiny scratches, dark tiny bolt holes.
+Composition: completely frontal orthographic flat texture field with parallel vertical ridges, full-frame, seamless left/right and top/bottom, geometry and normal mapping will add the actual wave profile in game.
+Lighting: flat diffuse neutral illumination, subtle material color variation only, no directional shadows or specular highlights.
+Style: softly detailed PS1/PS2 photo texture, weathered survival-era metal, muted rusty gray.
+Aspect ratio: 1:1.
+Avoid: perspective, roof scene, edge of sheet against a background, extreme orange color, baked sunlight.

@@ -189,6 +189,7 @@ export function findSafeLanding(target,colliders){
   points.push({x:target.x,z:target.z});
   if(target.mapMode==='shore'||target.mapMode==='building')points.push(...(target.mapCandidates||[]));
   points.push(...mapOffsets(target));
+ }else if(target.kind==='camp-outhouse'||target.kind==='outpost'){points.push({x:target.x,z:target.z});for(const r of [1.1,2.2,3.3])for(let j=0;j<16;j++)points.push({x:target.x+Math.sin(j*Math.PI/8)*r,z:target.z+Math.cos(j*Math.PI/8)*r});
  }else if(target.kind==='city-exit'){points.push({x:target.x,z:target.z});
  }else if(target.kind==='reference-barn'){points.push({x:target.x,z:target.z});
  }else if(target.kind==='photo'){points.push({x:target.x,z:target.z});

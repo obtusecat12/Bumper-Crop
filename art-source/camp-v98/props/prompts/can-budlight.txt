@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: unwrapped cylindrical beer can label diffuse texture for a PS1/PS2 lakeside camp game prop.
+Subject: period white/silver Bud Light can print, large blue elongated oval, bold italic white text "BUD LIGHT" centered within it, fine dark-blue side print, subtle silver barley decoration and blue rules, two repeated oval brand marks on flat wrapper with most readable one centered.
+Composition: a single flat rectangular unfolded printed aluminum wrapper fills entire image. Not a photo of a can. Left/right edges join silver-white field seamlessly. No container outline.
+Materials: scuffed printed silver aluminum texture, pale blue and neutral silver-white color, subdued 1990s game photographic texture.
+Lighting: flat even albedo, no gloss or cast shadow.
+Aspect ratio: 3:2.
+Avoid: cylindrical perspective, can top or bottom, pull tab, tabletop, multiple unrelated labels, watermarks.

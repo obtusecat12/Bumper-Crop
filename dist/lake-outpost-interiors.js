@@ -259,10 +259,10 @@ export function createCampInteriors(THREE, mats = {}) {
     beam(g, [-.07, .668, -.456], [.07, .668, -.456], .006, deskBrass, 6);
     for (const x of [-.07, .07]) beam(g, [x, .668, -.439], [x, .668, -.456], .005, deskBrass, 5);
     // The map, folder and radio are arranged for the chair behind the desk.
-    for (let i = 0; i < 5; i++) box(g, .42, .0016, .31, paperMat, .03 + Math.sin(i * 3) * .014, .798 + i * .002, -.13, -.05 + i * .019);
+    for (let i = 0; i < 5; i++) box(g, .42, .0016, .31, paperMat, .03 + Math.sin(i * 3) * .014, .798 + i * .002, .20, -.05 + i * .019);
     box(g, .39, .024, .28, oliveDark, .60, .804, .17, -.09);
     box(g, .34, .026, .019, M.canvas, .76, .806, .16, -.09);
-    beam(g, [-.10, .814, -.20], [.04, .814, -.15], .004, blackIron, 5);
+    beam(g, [-.10, .814, .13], [.04, .814, .18], .004, blackIron, 5);
     cup(g, -.66, .798, -.23);
     const radio = G('portable shortwave field radio'); g.add(radio); radio.position.set(-.68, .798, .18); radio.rotation.y = Math.PI;
     rounded(radio, .38, .23, .135, oliveDark, 0, .115, 0, .022);
@@ -357,14 +357,15 @@ export function createCampInteriors(THREE, mats = {}) {
   for (const x of [-.32, .32]) for (const z of [-.95, .95]) box(rack, .06, 1.62, .06, M.wood, x, .81, z);
   for (const yy of [.10, .64, 1.18]) {
     plankTop(rack, .69, 2.03, yy, 0, 0, M.wood, 9);
-    for (let j = 0; j < 3; j++) { const c = crate(.53, .25, .53, true); c.position.set(0, yy + .036, -.65 + j * .65); rack.add(c); for (let k = 0; k < 3; k++) can(c, -.135 + k * .135, .064, .03, .059, .145, j + k); }
+    for (let layer=0;layer<3;layer++) for(let row=0;row<14;row++) for(let col=0;col<4;col++) can(rack,(col-1.5)*.146,yy+.027+layer*.146,-.906+row*.139,.062,.143,row+col+layer);
   }
   for (const xx of [-1.43, 1.48]) {
     const table = diningTable(.88, 3.16, true); table.position.set(xx, 0, 1.51); kitchen.add(table);
     for (let i = 0; i < 3; i++) for (const side of [-1, 1]) {
       const chair = foldingChair(i % 2 ? fadedFabric[1] : oliveDark); chair.position.set(xx + side * .8, 0, .36 + i * 1.09); chair.rotation.y = -side * Math.PI / 2 + Math.sin(i * 4 + xx) * .06; kitchen.add(chair);
-      tray(table, side * .18, .797, -1.11 + i * 1.08, side * .04 + Math.sin(i * 7) * .04, i !== 2 || side === -1);
-      if (i !== 1) cup(table, side * .18, .797, -.74 + i * .97, M.ceramic);
+      const activeDiner=xx===-1.43&&i===0&&side===-1;
+      tray(table, side * .18, .797, -1.11 + i * 1.08, side * .04 + Math.sin(i * 7) * .04, !activeDiner&&(i !== 2 || side === -1));
+      if (i !== 1&&!activeDiner) cup(table, side * .18, .797, -.74 + i * .97, M.ceramic);
     }
     can(table, .01, .797, -.11, .049, .094, 3);
   }
@@ -383,7 +384,7 @@ export function createCampInteriors(THREE, mats = {}) {
       rounded(g, .85, .036, 1.94, oliveDark, 0, .41, 0, .012);
     }
     softBlock(g, .83, 1.9, .095, fadedFabric[seed % 4], 0, y, 0, seed);
-    const blanket = softBlock(g, .85, 1.15 + .05 * (seed % 2), .057, fadedFabric[(seed + 2) % 4], .01, y + .087, .33, seed + 5); blanket.rotation.y = (seed % 3 - 1) * .025;
+    const blanket = softBlock(g, .85, seed===0?.42:1.15 + .05 * (seed % 2), .057, fadedFabric[(seed + 2) % 4], .01, y + .087, seed===0?.70:.33, seed + 5); blanket.rotation.y = (seed % 3 - 1) * .025;
     const pillow = softBlock(g, .57, .34, .112, paperMat, -.04 + seed % 2 * .08, y + .09, -.68, seed + 20); pillow.rotation.y = -.12 + seed * .03;
     const folded = softBlock(g, .7, .28, .09, oliveDark, .01, y + .155, .72, seed + 10); folded.rotation.y = -.03;
     return g;

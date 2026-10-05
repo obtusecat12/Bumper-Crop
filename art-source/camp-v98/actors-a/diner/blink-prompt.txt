@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Use case: identity-preserve
+Asset type: same-identity closed-eye frame for an NPC blink texture.
+Input image: the supplied face is the exact edit target, not a generic style reference.
+Change only: shut both eyelids naturally in a complete blink; visible eyelid skin matches surrounding tone, no eyeballs visible.
+Keep unchanged: exact person identity, every facial proportion, hair, ears, forehead, eyebrows, nose, cheeks, mouth, jaw, neck, all background pixels, lighting, color and framing. No shift, scaling, rotation, crop or exposure change. The only changed pixels should lie tightly within and immediately around the two eyes; keep eyebrows fixed.
+Composition: same perfectly frontal face and original square framing.
+Style: same photographic diffuse texture source; no retouching or beautification.
+Aspect ratio: 1:1.
+Avoid: new person, changed facial hair, expression change, closed mouth movement, head movement, eye-area smears, captions, collage.

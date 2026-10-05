@@ -1,3 +1,4 @@
+import {createCampLife98} from './camp-life98.js';
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {createCampStructures} from './lake-outpost-structures.js';
@@ -46,7 +47,7 @@ export function createLakeOutpost(renderer){
  for(const c of i.containerBeds?.userData.collisionBoxes||[])localSolid(P.container,c.x,c.z,c.hx,c.hz,c.angle||0);
  localSolid(P.water,2.5,0,1.55,1.55);localSolid(P.water,-3.05,.4,2.9,.65);localSolid(P.generator,0,0,1.55,.95);
  localSolid(P.office,.58,-.26,.43,.43);localSolid(P.office,-1.7,-2.35,1.13,.51);localSolid(P.office,-1.7,-3.29,.25,.26);localSolid(P.office,-2.25,.78,.5,.8);
- localSolid(P.kitchen,-1.9,1, .55,1.4);localSolid(P.kitchen,1.5,1,.55,1.4);
+ localSolid(P.kitchen,-1.43,1.51,.44,1.58);localSolid(P.kitchen,1.48,1.51,.44,1.58);
  for(const p of P.dorms)for(const dx of [-.99,.99])localSolid(p,dx,-.4,.44,1.05);
  // Wheat stacks are only textured crossing cards, with no modeled straw core.
  for(const [x,z,w,h,yaw]of[[-18.4,1.0,1.9,1.9,.2],[-16.8,1.8,1.7,1.65,-.35],[-19.1,2.8,1.8,1.8,.8],[.1,-19.1,1.9,1.85,.1]]){
@@ -91,6 +92,8 @@ export function createLakeOutpost(renderer){
  for(const root of i.dynamicRoots){if(root.name==='moving flame cluster'){root.visible=false;const flame=fx.createFire({scale:root.parent.parent===i.restProps?.42:.34,intensity:1.1,lightDistance:3,embers:false});flame.position.copy(root.position);root.parent.add(flame);excluded.add(flame);}}
  const barrelFire=fx.createFire({scale:.62,intensity:2.4,lightDistance:5});barrelFire.position.set(0,.80,0);i.restProps.add(barrelFire);excluded.add(barrelFire);
  object.add(wet.group);excluded.add(wet.group);excluded.add(fx.smoke);excluded.add(fx.steam);
+ const groundAt=(x,z)=>{const wx=OUTPOST.x+x,wz=OUTPOST.z+z,cx=Math.floor(wx/64),cz=Math.floor(wz/64);return surfaceHeight(wx-cx*64,wz-cz*64,field(BigInt(cx),BigInt(cz),OUTPOST.seed,false))-OUTPOST.y;};
+ const life=createCampLife98({object,interiors:i,renderer,lamps,colliders,excluded,roots,groundAt});
  object.updateMatrixWorld(true);
  for(const root of roots)batch(root,excluded);
  for(const g of a.dynamicRoots)batch(g,new Set());
@@ -98,11 +101,11 @@ export function createLakeOutpost(renderer){
  u.taps.forEach((tap,n)=>{const marker=new T.Object3D();tap.handle.add(marker);tapHit.push({marker,n});});
  const practicalPool=Array.from({length:6},()=>{const l=new T.PointLight(0xffce82,0,7,2);object.add(l);return l;});
  const probe=new T.Vector3(),local={x:0,z:0};let active=false,lastOrigin='';
- function update(time,dt,state){const wx=Number(state.cx)*64+state.x,wz=Number(state.cz)*64+state.z;active=state.level===10&&Math.hypot(wx-OUTPOST.x,wz-OUTPOST.z)<235;object.visible=active;wet.active=active&&Math.hypot(wx-(OUTPOST.x+P.water[0]-3),wz-(OUTPOST.z+P.water[1]+1))<85;if(!active)return;const origin=state.cx+','+state.cz;if(origin!==lastOrigin){object.position.set(OUTPOST.x-Number(state.cx)*64,OUTPOST.y,OUTPOST.z-Number(state.cz)*64);object.updateMatrixWorld(true);lastOrigin=origin;}const closest=lamps.map(l=>({l,d:(l.position.x-wx+OUTPOST.x)**2+(l.position.z-wz+OUTPOST.z)**2})).sort((a,b)=>a.d-b.d);practicalPool.forEach((l,n)=>{const p=closest[n]?.l;if(p){l.position.copy(p.position);l.intensity=p.intensity;l.distance=p.distance;}});a.update(time,dt);u.update(time,dt);i.update(time,dt);fx.update(time,dt);wet.update(time);object.updateMatrixWorld(true);}
+ function update(time,dt,state){const wx=Number(state.cx)*64+state.x,wz=Number(state.cz)*64+state.z;active=state.level===10&&Math.hypot(wx-OUTPOST.x,wz-OUTPOST.z)<235;object.visible=active;wet.active=active&&Math.hypot(wx-(OUTPOST.x+P.water[0]-3),wz-(OUTPOST.z+P.water[1]+1))<85;if(!active)return;const origin=state.cx+','+state.cz;if(origin!==lastOrigin){object.position.set(OUTPOST.x-Number(state.cx)*64,OUTPOST.y,OUTPOST.z-Number(state.cz)*64);object.updateMatrixWorld(true);lastOrigin=origin;}life.update(time,dt);const closest=lamps.map(l=>({l,d:(l.position.x-wx+OUTPOST.x)**2+(l.position.z-wz+OUTPOST.z)**2})).sort((a,b)=>a.d-b.d);practicalPool.forEach((l,n)=>{const p=closest[n]?.l;if(p){l.position.copy(p.position);l.intensity=p.intensity;l.distance=p.distance;}});a.update(time,dt);u.update(time,dt);i.update(time,dt);fx.update(time,dt);wet.update(time);object.updateMatrixWorld(true);}
  function query(camera){if(!active)return null;for(const t of tapHit){t.marker.getWorldPosition(probe);if(probe.distanceTo(camera.position)<2.1)return{kind:'outpost-tap',n:t.n,label:'E '+(u.taps[t.n].on?'关闭':'开启')+'黄铜水龙头'};}const px=camera.position.x-object.position.x,pz=camera.position.z-object.position.z;for(const g of gateHit)if(Math.hypot(px-g.x,pz-g.z)<3.4)return{kind:'outpost-gate',n:g.n,label:'E 开合拼木大门'};return null;}
  function use(hit){if(hit.kind==='outpost-tap')return u.toggleTap(hit.n)?'水龙头已开启。':'水龙头已关闭。';a.toggleGate(hit.n);return '推开 / 合上拼木大门。';}
- function resolve(position,state){if(state.level!==10)return;const ox=OUTPOST.x-Number(state.cx)*64,oz=OUTPOST.z-Number(state.cz)*64;local.x=position.x-ox;local.z=position.z-oz;if(Math.abs(local.x)>OUTPOST.hx+6||Math.abs(local.z)>OUTPOST.hz+6)return;resolveSolid(local,.26,colliders);for(let n=0;n<2;n++){if(!a.gates[n].userData.isOpen){const p=P.gates[n];resolveSolid(local,.26,[{kind:'obb',x:p[0],z:p[1],hx:2.4,hz:.09,angle:p[2]}]);}}position.x=local.x+ox;position.z=local.z+oz;}
- function floor(wx,wz,base){const x=wx-OUTPOST.x-P.container[0],z=wz-OUTPOST.z-P.container[1];if(x> -3.42&&x<3.42&&z> -1.52&&z<1.9)return OUTPOST.y+.25;return base;}
+ function resolve(position,state){if(state.level!==10)return;const ox=OUTPOST.x-Number(state.cx)*64,oz=OUTPOST.z-Number(state.cz)*64;local.x=position.x-ox;local.z=position.z-oz;if(Math.abs(local.x)>OUTPOST.hx+6||Math.abs(local.z)>OUTPOST.hz+16)return;resolveSolid(local,.26,colliders);for(let n=0;n<2;n++){if(!a.gates[n].userData.isOpen){const p=P.gates[n];resolveSolid(local,.26,[{kind:'obb',x:p[0],z:p[1],hx:2.4,hz:.09,angle:p[2]}]);}}position.x=local.x+ox;position.z=local.z+oz;}
+ function floor(wx,wz,base){const shore=life.floor(wx-OUTPOST.x,wz-OUTPOST.z,base-OUTPOST.y)+OUTPOST.y;if(shore>base+.001)return shore;const x=wx-OUTPOST.x-P.container[0],z=wz-OUTPOST.z-P.container[1];if(x> -3.42&&x<3.42&&z> -1.52&&z<1.9)return OUTPOST.y+.25;return base;}
  object.position.set(OUTPOST.x,OUTPOST.y,OUTPOST.z);object.updateMatrixWorld(true);
- return {object,wet,update,query,use,resolve,floor,materials:m,structures:a,utilities:u,interiors:i,effects:fx,colliders,lamps,contains:(x,z)=>outpostDistance(x,z)<0};
+ return {object,wet,life,update,query,use,resolve,floor,materials:m,structures:a,utilities:u,interiors:i,effects:fx,colliders,lamps,contains:(x,z)=>outpostDistance(x,z)<0};
 }

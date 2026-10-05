@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: photographic diffuse texture of dense cooked green peas for a single low-polygon blocklike heap in a PS1/PS2 game dinner plate.
+Subject: very densely packed small boiled peas, olive and medium green, overlapping unevenly, softly wrinkled skins, a slight trace of thin dull green cooking liquid in gaps, no other food.
+Composition: top-down orthographic close-up; peas completely fill every edge of the image, no plate, no table, no backdrop, no margin. The individual pea sizes are consistent, roughly eighteen peas span image width.
+Lighting: soft neutral diffuse light with restrained local crevice shading to describe the individual peas, no large directional shadow or hot specular glare.
+Style: early-console photographic food texture, gently low-fidelity, believable boiled peas rather than bright cartoon spheres.
+Aspect ratio: 1:1.
+Avoid: bowls, cutlery, plates, text, hands, perfect grid, neon green, extreme macro focus blur.

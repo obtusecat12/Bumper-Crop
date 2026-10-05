@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Use case: identity-preserve
+Asset type: same-character fully closed-eye blink texture edit for a PS1 game face.
+Input image: the provided frontal face is the EDIT TARGET, not merely inspiration.
+Primary request: Close both eyes naturally, with relaxed eyelids fully covering the irises. Change ONLY the two very small eye regions including lids and eyelashes.
+Keep unchanged: exact identity, head dimensions and position, face outline, nose, eyebrows, mouth, forehead, hairstyle, ears, chin, all wrinkles, freckles, beard when present, skin color, overall brightness, background, image boundaries and all pixels outside the eyes. Do not redraw or reposition the face. No smile, no head tilt.
+Lighting: retain the original even diffuse illumination and exposure exactly.
+Composition: same full square frontal face composition, same eye-center positions.
+Aspect ratio: 1:1
+Avoid: changed identity, extra lashes or makeup, text, watermark, open eye slits.

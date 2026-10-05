@@ -1,0 +1,266 @@
+{
+  "source": "independently generated built-in image_gen originals; same-image closed-eyelid edits",
+  "filter": "NearestFilter, no mipmaps",
+  "actors": {
+    "clerk": {
+      "face": [
+        128,
+        128
+      ],
+      "shirt": [
+        256,
+        256
+      ],
+      "shirt_crop": [
+        272,
+        30,
+        989,
+        1209
+      ],
+      "face_crop": "full source / geometry-aligned UV",
+      "closed": "eye regions composited into original identity"
+    },
+    "toilet": {
+      "face": [
+        128,
+        128
+      ],
+      "shirt": [
+        256,
+        256
+      ],
+      "shirt_crop": [
+        238,
+        45,
+        1012,
+        1195
+      ],
+      "face_crop": "full source / geometry-aligned UV",
+      "closed": "eye regions composited into original identity"
+    },
+    "diner": {
+      "face": [
+        128,
+        128
+      ],
+      "shirt": [
+        256,
+        256
+      ],
+      "shirt_crop": [
+        257,
+        44,
+        1012,
+        1211
+      ],
+      "face_crop": "full source / geometry-aligned UV",
+      "closed": "eye regions composited into original identity"
+    },
+    "fireWorker": {
+      "face": [
+        128,
+        128
+      ],
+      "shirt": [
+        256,
+        256
+      ],
+      "shirt_crop": [
+        313,
+        75,
+        953,
+        1178
+      ],
+      "face_crop": "full source / geometry-aligned UV",
+      "closed": "eye regions composited into original identity"
+    },
+    "fireElder": {
+      "face": [
+        128,
+        128
+      ],
+      "shirt": [
+        256,
+        256
+      ],
+      "shirt_crop": [
+        313,
+        75,
+        953,
+        1178
+      ],
+      "face_crop": "full source / geometry-aligned UV",
+      "closed": "eye regions composited into original identity"
+    },
+    "fireYoung": {
+      "face": [
+        128,
+        128
+      ],
+      "shirt": [
+        256,
+        256
+      ],
+      "shirt_crop": [
+        313,
+        75,
+        953,
+        1178
+      ],
+      "face_crop": "full source / geometry-aligned UV",
+      "closed": "eye regions composited into original identity"
+    },
+    "sleeper": {
+      "face": [
+        128,
+        128
+      ],
+      "shirt": [
+        256,
+        256
+      ],
+      "shirt_crop": [
+        313,
+        75,
+        953,
+        1178
+      ],
+      "face_crop": "full source / geometry-aligned UV",
+      "closed": "eye regions composited into original identity"
+    }
+  },
+  "props": {
+    "radio-front": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/radio-front.png",
+      "native": [
+        1536,
+        1024
+      ],
+      "runtime": [
+        512,
+        341
+      ],
+      "sha256": "1e4562ce692cf71c6182326fae0cfb84c2cd1cefd1b46e83cb86115a56dde9cf"
+    },
+    "cigarettes-turquoise": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/cigarettes-turquoise.png",
+      "native": [
+        1024,
+        1536
+      ],
+      "runtime": [
+        256,
+        384
+      ],
+      "sha256": "eef598e9bbf2d98f4dcd139633fd37e0ced8ff9f254f9c68622c1da2e38a3971"
+    },
+    "cigarettes-red": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/cigarettes-red.png",
+      "native": [
+        1024,
+        1536
+      ],
+      "runtime": [
+        256,
+        384
+      ],
+      "sha256": "040585e2df2bd8c44f5e03b000bc6c53817aaaa590f3589fe712bb656a120ea7"
+    },
+    "can-vanilla": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/can-vanilla.png",
+      "native": [
+        1536,
+        1024
+      ],
+      "runtime": [
+        512,
+        341
+      ],
+      "sha256": "b060cffde6c2869e41abacd225b91e60435a08b33474dd54323c524c0f7c3004"
+    },
+    "can-budlight": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/can-budlight-v2.png",
+      "native": [
+        1536,
+        1024
+      ],
+      "runtime": [
+        512,
+        341
+      ],
+      "sha256": "644f0e01ed0f84f05ea6aeacdbb939f947fe9633c9fd81e5da8915b02f54dbcb"
+    },
+    "can-modelo": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/can-modelo.png",
+      "native": [
+        1536,
+        1024
+      ],
+      "runtime": [
+        512,
+        341
+      ],
+      "sha256": "a55ba73f88f61f1496ab956f49228afc3bc9fda9d295bf469e2b3966f5e275da"
+    },
+    "cooler-panel": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/cooler-red.png",
+      "native": [
+        1536,
+        1024
+      ],
+      "runtime": [
+        512,
+        512
+      ],
+      "sha256": "e688945050a05fd73326098728e30b17c6fef447e8d24610e6e99b7cbb404b1d"
+    },
+    "weathered-boards": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/timber-damp.png",
+      "native": [
+        1254,
+        1254
+      ],
+      "runtime": [
+        512,
+        512
+      ],
+      "sha256": "3861a722efc0d527ebce264f1b2df9c6452252e520831c9c156323d39eb641fe"
+    },
+    "rusty-tin": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/tin-rust.png",
+      "native": [
+        1254,
+        1254
+      ],
+      "runtime": [
+        512,
+        512
+      ],
+      "sha256": "07706009a1ed71e4e7d654b0c284db81d08280f787f1acc4f3142f031ee4dba7"
+    },
+    "dirty-concrete": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/concrete-latrine.png",
+      "native": [
+        1254,
+        1254
+      ],
+      "runtime": [
+        512,
+        512
+      ],
+      "sha256": "49422c95f707ecf499c36f86bddacab50e52bc2d365477d4116a0f5cd22df9da"
+    },
+    "peas": {
+      "source": "/workspace/scratch/85111d38430a/camp98-art/props/peas-dense.png",
+      "native": [
+        1254,
+        1254
+      ],
+      "runtime": [
+        512,
+        512
+      ],
+      "sha256": "3d7d69d4524e33273ac39bfdc08f0ee00a373eb9d10a8a58adad9b8844c6c20c"
+    }
+  }
+}

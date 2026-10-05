@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: unwrapped cylindrical beer can label diffuse texture for a PS1/PS2 office desk game prop.
+Subject: recognizable Modelo Especial can print, ivory white/silver background, large navy blue blackletter "Modelo", tiny gold script "Especial", fine red line of print above it, gold lions and circular red/blue/gold crest below, narrow gold bands at top and bottom. Two repeated fronts across the width with one clear centered brand.
+Composition: flat rectangular unfolded can print covers full frame, no margins, no cylindrical distortion. Seamless ivory-colored left/right edges, main branding clear and large.
+Materials: lightly worn ivory printed aluminum, pale gold ink, muted fine scratches, photographic early-console texture with softly resolved small print.
+Lighting: even flat albedo, no specular reflections or directional light.
+Aspect ratio: 3:2.
+Avoid: actual 3D can, lid, pull tab, perspective, surrounding objects, drop shadows, watermark.

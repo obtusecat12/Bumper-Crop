@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: exact recognizable red-and-white Marlboro cigarette packet front label texture for a low polygon late-1990s PS1/PS2 camp desk prop.
+Subject: off-white paper packet face, red roof chevron across upper third, central small red-and-gold crest, black tall serif word "Marlboro", thin red rule at bottom, a few fine gray package print details, worn corners and slightly yellow paper.
+Composition: perfectly straight-on flattened rectangular packet front filling entire image, no perspective, no sides, no background or shadows.
+Style: photographed printed packaging converted to softly detailed old game diffuse texture, not vector art, restrained paper wear, readable main word.
+Lighting: completely even diffuse albedo.
+Aspect ratio: 2:3.
+Avoid: cigarettes, smoke, tabletop, staged product photography, extra panels, watermark, oversharpening.

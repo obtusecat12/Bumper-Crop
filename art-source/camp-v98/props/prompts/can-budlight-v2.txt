@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: ONE unwrapped cylindrical beer can label diffuse texture for a low polygon PS1/PS2 camp prop.
+Subject: a SINGLE period white/silver Bud Light print, ONE large blue oval filling the central sixty percent of the entire image height, white italic capital words "BUD" above "LIGHT" inside this one blue oval, fine dark blue product print at far left and far right, subtle silver barley trim underneath.
+Composition: one flat rectangular unfolded aluminum wrapper covering entire image, ONE logo only centered both vertically and horizontally, SINGLE ROW ONLY. Logo is not duplicated. Can shape is not shown. Left/right outer edges silver-white. Thin paired blue lines only near the absolute top and bottom edges.
+Materials: slightly scratched silver-white printed aluminum and blue ink, softly detailed 1990s game texture, retain readable large brand words.
+Lighting: flat even albedo only.
+Aspect ratio: 3:2.
+Avoid: repeated logos, stacked labels, multiple rows, can lid, actual cylinder, perspective, table, cast shadows, watermark.

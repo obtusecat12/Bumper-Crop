@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: front label texture of one old turquoise cigarette packet for a low polygon PS1/PS2 game prop.
+Subject: flat rectangular turquoise paperboard front, dark narrow serif cigarette-brand typography reading "PALL MALL", a small dark red heraldic shield with tiny gold trim centered below the lettering, period 1990s layout, subtly scuffed and faded.
+Composition: orthographic flattened package front, entire frame covered by printed paper, no perspective, no box thickness, no background.
+Materials: finely printed paper grain, slightly dusty folds and rubbed corners, detailed yet softly filtered old game photo texture.
+Lighting: even diffuse albedo, no cast shadows.
+Aspect ratio: 2:3.
+Avoid: cigarette objects, smoke, scene, extra panels, watermark, oversharpening.

@@ -1,0 +1,78 @@
+{
+  "promptSkillSource": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "promptSkillDownloaded": "../gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "id": "sleeper",
+      "face": {
+        "method": "built-in imagegen generation",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-a444048e-0c2f-4400-a7cb-87da81a7a34b.png",
+        "prompt": "face.prompt.txt"
+      },
+      "closed": {
+        "method": "built-in imagegen referenced-image edit of face, subsequently local eye-only compositing",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-08c50d12-2fc8-45fd-8de6-7c5878c15e83.png",
+        "prompt": "face-closed.prompt.txt"
+      },
+      "shirt": {
+        "method": "built-in imagegen generation",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-c4ddcf79-ed09-4710-b053-1d7f0c3b7af2.png",
+        "prompt": "shirt.prompt.txt"
+      }
+    },
+    {
+      "id": "fireElder",
+      "face": {
+        "method": "built-in imagegen generation",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-cd169e76-0f6c-4775-b6d8-e01e5007a2a7.png",
+        "prompt": "face.prompt.txt"
+      },
+      "closed": {
+        "method": "built-in imagegen referenced-image edit of face, subsequently local eye-only compositing",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-3f78cd35-a0cc-4bda-a9df-ddc8bcb2a0bf.png",
+        "prompt": "face-closed.prompt.txt"
+      },
+      "shirt": {
+        "method": "built-in imagegen generation",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-325a7f5d-3a83-461e-baaa-25a679a6c58a.png",
+        "prompt": "shirt.prompt.txt"
+      }
+    },
+    {
+      "id": "fireYoung",
+      "face": {
+        "method": "built-in imagegen generation",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-c85e31a6-d887-4e97-86e7-65beef59338b.png",
+        "prompt": "face.prompt.txt"
+      },
+      "closed": {
+        "method": "built-in imagegen referenced-image edit of face, subsequently local eye-only compositing",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-2e75a974-f2a8-40db-9678-cb2934343429.png",
+        "prompt": "face-closed.prompt.txt"
+      },
+      "shirt": {
+        "method": "built-in imagegen generation",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-292d2361-3323-493a-ab42-326ab35c3654.png",
+        "prompt": "shirt.prompt.txt"
+      }
+    },
+    {
+      "id": "fireWorker",
+      "face": {
+        "method": "built-in imagegen generation",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-d1bc0f5b-4900-4426-a2a0-3cd15ff05244.png",
+        "prompt": "face.prompt.txt"
+      },
+      "closed": {
+        "method": "built-in imagegen referenced-image edit of face, subsequently local eye-only compositing",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-2744f492-289c-4c4b-a6e4-3d8b06fce2b8.png",
+        "prompt": "face-closed.prompt.txt"
+      },
+      "shirt": {
+        "method": "built-in imagegen generation",
+        "source": "/workspace/scratch/85111d38430a/generated_images/exec-489bac76-9657-4a8c-87fc-067f6fc5b722.png",
+        "prompt": "shirt.prompt.txt"
+      }
+    }
+  ]
+}

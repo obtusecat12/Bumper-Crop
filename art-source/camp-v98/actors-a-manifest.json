@@ -1,0 +1,246 @@
+{
+  "version": 98,
+  "kind": "generated source assets only; not runtime-mapped or code-integrated",
+  "source": "built-in image_gen",
+  "prompt_skill": "https://raw.githubusercontent.com/UzenUPozitiv4ik/gpt-image-2-skill/main/gpt_image_2_prompt_skill.md",
+  "coordinates": "pixels, origin top-left; crop boxes [x0,y0,x1,y1], suggested mapping starting points from visual inspection",
+  "actors": [
+    {
+      "id": "toilet",
+      "recommended_runtime_face_size": [
+        128,
+        128
+      ],
+      "recommended_runtime_shirt_size": [
+        256,
+        256
+      ],
+      "eyes": [
+        [
+          350,
+          522,
+          564,
+          636
+        ],
+        [
+          684,
+          522,
+          899,
+          636
+        ]
+      ],
+      "face_crop": [
+        256,
+        160,
+        1000,
+        1160
+      ],
+      "shirt_crop": [
+        238,
+        45,
+        1012,
+        1195
+      ],
+      "fabric_patch": [
+        280,
+        830,
+        545,
+        1110
+      ],
+      "note": "Composite generated closed eyelid regions back over original face, preferably mildly feather only patch edges, before identical crop and resize. Outside eye rectangles must remain original pixels. Shirt front crop excludes detached sleeves and gray backdrop; use fabric_patch for side/back and arm surfaces. No glasses baked in clerk face.",
+      "files": [
+        {
+          "filename": "face.png",
+          "path": "/workspace/scratch/85111d38430a/camp98-art/actors-a/toilet/face.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "625ae5702b0e400bc4ae0ce1a18c9c268839ee57312fa603a0cf9f2bc3571809",
+          "bytes": 1955533,
+          "status": "new generated source"
+        },
+        {
+          "filename": "face-closed.png",
+          "path": "/workspace/scratch/85111d38430a/camp98-art/actors-a/toilet/face-closed.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "6de1c642afcd08ff156e267fdb968fe706abfaa8a4fef125a5904d9e932add4d",
+          "bytes": 1950957,
+          "status": "same-source eye edit"
+        },
+        {
+          "filename": "shirt.png",
+          "path": "/workspace/scratch/85111d38430a/camp98-art/actors-a/toilet/shirt.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "fafc27366bb6d83e5472ea0aa2da67f7deae4ac7949ab557e82f8ad99a1998fe",
+          "bytes": 2291513,
+          "status": "new generated source"
+        }
+      ]
+    },
+    {
+      "id": "clerk",
+      "recommended_runtime_face_size": [
+        128,
+        128
+      ],
+      "recommended_runtime_shirt_size": [
+        256,
+        256
+      ],
+      "eyes": [
+        [
+          350,
+          515,
+          574,
+          624
+        ],
+        [
+          680,
+          515,
+          905,
+          624
+        ]
+      ],
+      "face_crop": [
+        241,
+        158,
+        1015,
+        1250
+      ],
+      "shirt_crop": [
+        272,
+        30,
+        989,
+        1209
+      ],
+      "fabric_patch": [
+        293,
+        839,
+        566,
+        1109
+      ],
+      "note": "Composite generated closed eyelid regions back over original face, preferably mildly feather only patch edges, before identical crop and resize. Outside eye rectangles must remain original pixels. Shirt front crop excludes detached sleeves and gray backdrop; use fabric_patch for side/back and arm surfaces. No glasses baked in clerk face.",
+      "files": [
+        {
+          "filename": "face.png",
+          "path": "/workspace/scratch/85111d38430a/camp98-art/actors-a/clerk/face.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "eaf7fe219a5186702bbaee90f4577eb93c94111217ad54dd8923a1bf8af0af12",
+          "bytes": 1986145,
+          "status": "new generated source"
+        },
+        {
+          "filename": "face-closed.png",
+          "path": "/workspace/scratch/85111d38430a/camp98-art/actors-a/clerk/face-closed.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "ac1a409a629e38064ffbd16a06b480abf2347b9d781255a21c81e739b7bececc",
+          "bytes": 2059350,
+          "status": "same-source eye edit"
+        },
+        {
+          "filename": "shirt.png",
+          "path": "/workspace/scratch/85111d38430a/camp98-art/actors-a/clerk/shirt.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "c369b4035a0dfa3707f9e289c94d506ae23b9619b7fd95fe207bd9c6cf5e8184",
+          "bytes": 2167385,
+          "status": "new generated source"
+        }
+      ]
+    },
+    {
+      "id": "diner",
+      "recommended_runtime_face_size": [
+        128,
+        128
+      ],
+      "recommended_runtime_shirt_size": [
+        256,
+        256
+      ],
+      "eyes": [
+        [
+          350,
+          539,
+          570,
+          648
+        ],
+        [
+          680,
+          537,
+          913,
+          648
+        ]
+      ],
+      "face_crop": [
+        250,
+        165,
+        1020,
+        1230
+      ],
+      "shirt_crop": [
+        257,
+        44,
+        1012,
+        1211
+      ],
+      "fabric_patch": [
+        291,
+        667,
+        538,
+        909
+      ],
+      "note": "Composite generated closed eyelid regions back over original face, preferably mildly feather only patch edges, before identical crop and resize. Outside eye rectangles must remain original pixels. Shirt front crop excludes detached sleeves and gray backdrop; use fabric_patch for side/back and arm surfaces. No glasses baked in clerk face.",
+      "files": [
+        {
+          "filename": "face.png",
+          "path": "/workspace/scratch/85111d38430a/camp98-art/actors-a/diner/face.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "0a45df5f859e6a8ad1b170ad50b370eb29680d597154ca8bc01b680f6fd96ce0",
+          "bytes": 1787408,
+          "status": "new generated source"
+        },
+        {
+          "filename": "face-closed.png",
+          "path": "/workspace/scratch/85111d38430a/camp98-art/actors-a/diner/face-closed.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "82d223c284db2fea939681c15a55b3732b2a9ed22b629e90878f3e522cdf780c",
+          "bytes": 1826274,
+          "status": "same-source eye edit"
+        },
+        {
+          "filename": "shirt.png",
+          "path": "/workspace/scratch/85111d38430a/camp98-art/actors-a/diner/shirt.png",
+          "size": [
+            1254,
+            1254
+          ],
+          "sha256": "bee18f6cc4f6a83c800a78b694315091ca0166a002ad8a479639614bfd0523b0",
+          "bytes": 2581162,
+          "status": "new generated source"
+        }
+      ]
+    }
+  ]
+}

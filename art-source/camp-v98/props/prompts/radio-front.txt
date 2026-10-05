@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: photographic diffuse texture for the front panel of a 1980s taupe silver portable cassette boombox in a PS1/PS2 lakeside survival game.
+Subject: one rectangular radio face, two large round fabric-and-metal speakers at lower left and lower right, cassette deck centered between them, long analog FM/AM tuning display across the upper quarter, small ridged vent at each top corner, tiny push buttons and tuning scale, worn beige-silver plastic and dull brown trim matching an old basic portable stereo.
+Composition: perfectly straight-on orthographic front, panel occupies the entire rectangle with no perspective, no top face or side faces, no handle, no antenna, no backdrop, no multiple views.
+Texture: dense realistic speaker grille perforation, dust in crevices, mildly faded plastic, worn fine printed legends, photographic but soft 1999 game texture quality; detail will be downsampled to 512 pixels.
+Lighting: diffuse flat even illumination, no cast shadow, no glare or dramatic shading.
+Aspect ratio: 3:2.
+Avoid: surrounding objects, table, scene, watermarks, UI, oversharpening.

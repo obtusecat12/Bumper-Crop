@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: front panel diffuse texture for one old red-and-white insulated picnic cooler, a PS1/PS2 low polygon lakeside camping prop.
+Subject: scratched faded red molded-plastic lower body panel, a narrow cream-white upper rim at top tenth, subtly worn plastic stipple, dirt low on panel and thin horizontal molded seam, small white italic "Igloo" wordmark at lower right.
+Composition: perfectly flat orthographic front rectangle entirely filling the image, no visible side faces or lid top, no perspective, no background. Red panel comprises ninety percent of image height.
+Lighting: neutral flat diffuse albedo, no cast shadow, no highlights.
+Style: photographed early-console texture with realistic gentle scuffing and softened detail.
+Aspect ratio: 3:2.
+Avoid: handles, can objects, tabletop, outdoor scene, product-photo backdrop, watermark.

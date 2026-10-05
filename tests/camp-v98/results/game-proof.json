@@ -1,0 +1,79 @@
+{
+  "errors": [],
+  "floor": -0.56,
+  "collisionDisplaced": 0.23000000000000398,
+  "diagnostics": {
+    "actors": [
+      {
+        "id": "toilet",
+        "triangles": 652,
+        "blinkCount": 0,
+        "closed": false,
+        "breathing": 1.003142355642379,
+        "faceSize": 128
+      },
+      {
+        "id": "clerk",
+        "triangles": 821,
+        "blinkCount": 0,
+        "closed": false,
+        "breathing": 1.0047962123911665,
+        "faceSize": 128
+      },
+      {
+        "id": "diner",
+        "triangles": 649,
+        "blinkCount": 0,
+        "closed": false,
+        "breathing": 0.9992513391694547,
+        "faceSize": 128
+      },
+      {
+        "id": "sleeper",
+        "triangles": 605,
+        "blinkCount": 1,
+        "closed": true,
+        "breathing": 0.9948939679314364,
+        "faceSize": 128
+      },
+      {
+        "id": "fireElder",
+        "triangles": 577,
+        "blinkCount": 0,
+        "closed": false,
+        "breathing": 0.9981684887690537,
+        "faceSize": 128
+      },
+      {
+        "id": "fireYoung",
+        "triangles": 605,
+        "blinkCount": 0,
+        "closed": false,
+        "breathing": 1.0042557831578394,
+        "faceSize": 128
+      },
+      {
+        "id": "fireWorker",
+        "triangles": 577,
+        "blinkCount": 0,
+        "closed": false,
+        "breathing": 1.0039554884934987,
+        "faceSize": 128
+      }
+    ],
+    "pea": {
+      "phase": "plate",
+      "launches": 0,
+      "sinks": 0,
+      "visible": false,
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "time": 0.3220000000000074
+    },
+    "outhouseTriangles": 652
+  },
+  "shaderErrors": 0
+}

@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Use case: photorealistic-natural
+Asset type: single frontal face diffuse mother image for a PS1 low-polygon game character.
+Subject: One 35-year-old white woman with a long oval face, dark auburn chin-length bob, thin lips, a few light freckles and gray-green eyes.
+Composition: straight front, head upright and centered, very weak perspective, full forehead, chin, both ears and hair visible. Face fills most of square image. Neutral relaxed expression with both eyes open, looking straight ahead. Crop below base of neck. Plain middle gray background.
+Style: natural photographic human proportions and recognizable large features, slightly soft analog photo texture suitable for later 128-pixel reduction. This is one person's face, not a rendered game model.
+Lighting: soft even diffuse lighting, neutral exposure, minimal directional shadow and minimal specular glare, no warm color cast.
+Constraints: only one face, no glasses, no accessories, no text, no watermark, no grid or multiple views, no cartoon, no painterly brushstrokes, no extreme pores or sharpening.
+Aspect ratio: 1:1

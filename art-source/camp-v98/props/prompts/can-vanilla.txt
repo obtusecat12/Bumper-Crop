@@ -1,0 +1,8 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: unwrapped cylindrical beverage can label diffuse texture for a PS1/PS2 lakeside camp game prop.
+Subject: recognizable period Coca-Cola Vanilla tall can print, red background, large cream-white Coca-Cola script, small pale gold word "Vanilla", cream swoosh accents, narrow side area of fine nutrition text and barcode.
+Composition: a single flat rectangular unfolded printed wrapper, not a photograph of a cylinder. Label fills the entire frame with no margins. Continuous red color joins at left/right edges. Two repeated front brand marks spaced horizontally to wrap around the can; the primary readable logo at image center. Top/bottom edges have tiny subdued silver printing seams only.
+Materials: faded red aluminum ink, fine scratches, slight age and dust, softly detailed PS1/PS2 photographic texture.
+Lighting: even albedo only, no gradient lighting, highlights or reflections.
+Aspect ratio: 3:2.
+Avoid: can top, pull tab, 3D can shape, perspective, cast shadows, tabletop, watermark.

@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Use case: product-mockup
+Asset type: single garment front albedo texture for a PS1 low-polygon character, not a person portrait.
+Subject: A pale powder-blue quilted jacket, with small horizontal quilt channels, worn matte nylon, aged off-white zipper and a simple padded collar. Light creases and subtle damp hems, no logos.
+Composition: Front torso panel only from neck opening at top edge to waist hem at bottom edge; viewed perfectly straight-on and flattened into a rectangular square texture, no perspective. Garment extends completely to both left and right edges, the collar and center closure aligned to vertical center. Show the chest and abdomen fabric surface filling the entire frame. No arms, hands, body, skin, head, mannequin, hanger, tabletop or background.
+Style: natural photographic aged textile surface, soft large wrinkles and readable seams, suitable for 256-pixel reduction and nearest filtering. Low-contrast fabric grain, no hyperreal microscopic fibers.
+Lighting: neutral uniform diffuse illumination for albedo; no baked hard shadows, shiny hotspots, or cinematic coloring.
+Aspect ratio: 1:1
+Avoid: collage, multiple views, text, watermarks, garment on human, freestanding product silhouette, background border.

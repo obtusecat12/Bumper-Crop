@@ -1,0 +1,7 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+Asset: seamless diffuse material texture for rough weathered pieced timber boards of a lakeside outhouse, low fidelity PS1/PS2 game.
+Subject: gray-brown rough sawn vertical wooden planks of varied widths, deeply weathered grain, split ends, old small dark nail marks, a few rotten knots, very subtle damp moss stain at cracks, wood worn by years beside a muddy lake.
+Composition: completely orthographic flat surface, fills the entire frame, evenly lit, continuous tiling edges on both axes.
+Material: rich photographic grain and dampness, subdued gray-brown palette, moderately broad details so 512-pixel downsample remains readable, no baked ambient glow.
+Aspect ratio: 1:1.
+Avoid: diagonal light, hard shadows, object framing, building photo, orange saturation, polished wood, excessive sharpness.
