@@ -1,0 +1,21 @@
+{
+  "errors": [],
+  "origin": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "restored": {
+    "x": 0.6,
+    "z": 52,
+    "cx": "0",
+    "cz": "0",
+    "level": 10
+  },
+  "passage": {
+    "spawnClear": true,
+    "landmarks": 20
+  }
+}

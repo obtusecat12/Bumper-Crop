@@ -1,0 +1,5 @@
+{
+  "runtimeBytes": 3041022,
+  "method": "Eight independent native generations. 512px diffuse and luminance-derived approximate normal maps, lossless normals and 256px single-channel roughness. Mirror 512x768. CRT unperforated margin crop is separate plastic surface. Originals and exact prompts retained. PBR maps are estimates, not measured scans.",
+  "crtNormalRepair": "Normal regenerated from diffuse central derivatives after detecting an empty encoder result; lossless method4."
+}

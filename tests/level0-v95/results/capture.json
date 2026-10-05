@@ -1,0 +1,115 @@
+{
+  "errors": [],
+  "stats": {
+    "field": {
+      "calls": 145,
+      "triangles": 1627748,
+      "chunks": 59,
+      "batches": 236,
+      "instances": 44539,
+      "rebuildCount": 2,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 7,
+      "offCircuits": 0
+    },
+    "ceiling": {
+      "calls": 132,
+      "triangles": 1269164,
+      "chunks": 56,
+      "batches": 235,
+      "instances": 43620,
+      "rebuildCount": 2,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 5,
+      "offCircuits": 0
+    },
+    "furniture": {
+      "calls": 177,
+      "triangles": 1483224,
+      "chunks": 61,
+      "batches": 228,
+      "instances": 43812,
+      "rebuildCount": 4,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 4,
+      "offCircuits": 0
+    },
+    "blockade": {
+      "calls": 188,
+      "triangles": 2112988,
+      "chunks": 63,
+      "batches": 245,
+      "instances": 44486,
+      "rebuildCount": 3,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 7,
+      "offCircuits": 0
+    },
+    "details": {
+      "calls": 150,
+      "triangles": 1390796,
+      "chunks": 63,
+      "batches": 247,
+      "instances": 43871,
+      "rebuildCount": 5,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 5,
+      "offCircuits": 0
+    },
+    "crt": {
+      "calls": 146,
+      "triangles": 1474494,
+      "chunks": 62,
+      "batches": 250,
+      "instances": 44122,
+      "rebuildCount": 2,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 7,
+      "offCircuits": 0
+    },
+    "cooler": {
+      "calls": 150,
+      "triangles": 1502918,
+      "chunks": 62,
+      "batches": 250,
+      "instances": 44122,
+      "rebuildCount": 2,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 7,
+      "offCircuits": 0
+    },
+    "wrong": {
+      "calls": 292,
+      "triangles": 2207326,
+      "chunks": 62,
+      "batches": 234,
+      "instances": 44067,
+      "rebuildCount": 3,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 6,
+      "offCircuits": 0
+    },
+    "ceiling2": {
+      "calls": 140,
+      "triangles": 1292808,
+      "chunks": 56,
+      "batches": 235,
+      "instances": 43620,
+      "rebuildCount": 2,
+      "textureUnits": 32,
+      "estimatedSamplerPeak": 12,
+      "breakers": 5,
+      "offCircuits": 0
+    },
+    "map": true
+  },
+  "renderer": "Chrome / SwiftShader software WebGL2"
+}

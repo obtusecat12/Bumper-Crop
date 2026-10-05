@@ -1,0 +1,42 @@
+[
+  {
+    "id": "01-insulation-batt",
+    "original": "/workspace/scratch/85111d38430a/generated_images/exec-5a125a96-f8e8-4fc2-922a-02b9965eaed3.png",
+    "target": "/workspace/scratch/85111d38430a/level0-v95-art/01-insulation-batt.png"
+  },
+  {
+    "id": "02-galvanized-hvac",
+    "original": "/workspace/scratch/85111d38430a/generated_images/exec-de70887e-d299-45e5-9db5-dac5b9d32e58.png",
+    "target": "/workspace/scratch/85111d38430a/level0-v95-art/02-galvanized-hvac.png"
+  },
+  {
+    "id": "03-crt-beige-vents",
+    "original": "/workspace/scratch/85111d38430a/generated_images/exec-d319d39d-885c-4d76-a18d-03c831889868.png",
+    "target": "/workspace/scratch/85111d38430a/level0-v95-art/03-crt-beige-vents.png"
+  },
+  {
+    "id": "04-crt-screen-off",
+    "original": "/workspace/scratch/85111d38430a/generated_images/exec-89e5f4ed-db20-43ec-8ed9-0e45d304adf0.png",
+    "target": "/workspace/scratch/85111d38430a/level0-v95-art/04-crt-screen-off.png"
+  },
+  {
+    "id": "05-sofa-stripe-fabric",
+    "original": "/workspace/scratch/85111d38430a/generated_images/exec-0b550925-93d1-41df-9323-7de80a9a2171.png",
+    "target": "/workspace/scratch/85111d38430a/level0-v95-art/05-sofa-stripe-fabric.png"
+  },
+  {
+    "id": "06-burled-walnut",
+    "original": "/workspace/scratch/85111d38430a/generated_images/exec-897620e1-0785-46b0-a911-034a19420f00.png",
+    "target": "/workspace/scratch/85111d38430a/level0-v95-art/06-burled-walnut.png"
+  },
+  {
+    "id": "07-aged-mirror",
+    "original": "/workspace/scratch/85111d38430a/generated_images/exec-a720733e-3e49-4964-b59b-acc34f80d6d9.png",
+    "target": "/workspace/scratch/85111d38430a/level0-v95-art/07-aged-mirror.png"
+  },
+  {
+    "id": "08-water-dispenser-front",
+    "original": "/workspace/scratch/85111d38430a/generated_images/exec-90b89f1e-c3c9-4df6-bc65-efcb26a25dd9.png",
+    "target": "/workspace/scratch/85111d38430a/level0-v95-art/08-water-dispenser-front.png"
+  }
+]
