@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: usable square diffuse material texture for real drawer handles, hinges and escutcheons on traditional furniture
+subject: aged satin brass surface filling the entire square image edge to edge
+materials and colors: aged satin brass, tarnish in pits, fine directional rubbing, restrained warm highlights baked as diffuse only
+composition: flat straight-on surface texture, no perspective, no surrounding background
+style: believable vintage PS2 photographic material softness, not oversharp noise
+aspect ratio: 1:1
+Avoid: fixtures, objects, text, labels, watermarks, hard glare, mirror reflections, oversharpening.

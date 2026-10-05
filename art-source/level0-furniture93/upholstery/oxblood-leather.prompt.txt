@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset type: square albedo texture for a retro PS2 lounge sofa
+object: dark oxblood / burgundy old aniline leather upholstery material swatch
+materials and detail: subtle fine creases, fine leather grain, broad contact-polished patches represented only as gentle color and surface-grain variation
+composition: flat front-on material swatch filling the complete square image, seamless where practical
+style: restrained PS2 photographic softness, aged photographic leather texture, not pixel art
+lighting: neutral even diffuse color suitable for an albedo map, no baked highlights or cast shadows
+aspect ratio: 1:1
+Avoid: baked button tufts, large seams, sculpted upholstery forms, borders, text, logos, watermarks, directional light, glare, pixel art, oversharpening

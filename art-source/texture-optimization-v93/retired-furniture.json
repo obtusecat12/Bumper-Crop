@@ -1,0 +1,57 @@
+{
+  "reason": "Replaced furniture no longer instantiates old geometry or loads old maps. Originals preserved at base Git commit; Manila chair-wood and furniture-walnut maps remain.",
+  "files": [
+    {
+      "path": "dist/assets/level0-v2/sofa-floral.webp",
+      "bytes": 464082
+    },
+    {
+      "path": "dist/assets/level0-v2/sofa-floral-height.webp",
+      "bytes": 49144
+    },
+    {
+      "path": "dist/assets/level0-v2/sofa-teal-height.webp",
+      "bytes": 54288
+    },
+    {
+      "path": "dist/assets/level0-v2/sofa-teal.webp",
+      "bytes": 455500
+    },
+    {
+      "path": "dist/assets/level0-v2/sofa-velour.webp",
+      "bytes": 114786
+    },
+    {
+      "path": "dist/assets/level0-v2/sofa-velour-height.webp",
+      "bytes": 44758
+    },
+    {
+      "path": "dist/assets/level0-k92/cabinet-oak-normal.webp",
+      "bytes": 9884
+    },
+    {
+      "path": "dist/assets/level0-k92/cabinet-oak-roughness.webp",
+      "bytes": 228
+    },
+    {
+      "path": "dist/assets/level0-k92/cabinet-oak.webp",
+      "bytes": 172060
+    },
+    {
+      "path": "dist/assets/level0-k92/beige-corduroy-normal.webp",
+      "bytes": 15632
+    },
+    {
+      "path": "dist/assets/level0-k92/beige-corduroy-roughness.webp",
+      "bytes": 842
+    },
+    {
+      "path": "dist/assets/level0-k92/beige-corduroy.webp",
+      "bytes": 310348
+    },
+    {
+      "path": "dist/assets/level0-k92/beige-corduroy-height.webp",
+      "bytes": 13012
+    }
+  ]
+}

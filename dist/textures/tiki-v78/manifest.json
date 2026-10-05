@@ -71,7 +71,7 @@
       ]
     },
     "moai/normal": {
-      "file": "moai-normal.png",
+      "file": "moai-normal.webp",
       "data": true,
       "repeat": true,
       "source": "pond/moai-resin-normal.png",
@@ -81,7 +81,7 @@
       ]
     },
     "moai/roughness": {
-      "file": "moai-roughness.png",
+      "file": "moai-roughness.webp",
       "data": true,
       "repeat": true,
       "source": "pond/moai-resin-roughness.png",
@@ -91,7 +91,7 @@
       ]
     },
     "moai/ao": {
-      "file": "moai-ao.png",
+      "file": "moai-ao.webp",
       "data": true,
       "repeat": true,
       "source": "pond/moai-resin-ao.png",
@@ -101,7 +101,7 @@
       ]
     },
     "moai/height": {
-      "file": "moai-height.png",
+      "file": "moai-height.webp",
       "data": true,
       "repeat": true,
       "source": "pond/moai-resin-height.png",

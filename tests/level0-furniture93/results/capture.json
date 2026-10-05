@@ -1,0 +1,36 @@
+{
+  "errors": [],
+  "stats": {
+    "pile": {
+      "calls": 206,
+      "triangles": 1753376,
+      "maxSamplers": 6
+    },
+    "cabinets": {
+      "calls": 100,
+      "triangles": 1497910,
+      "maxSamplers": 6
+    },
+    "sofa": {
+      "calls": 106,
+      "triangles": 1436102,
+      "maxSamplers": 6
+    },
+    "joinery": {
+      "calls": 149,
+      "triangles": 1414038,
+      "maxSamplers": 6
+    },
+    "settee": {
+      "calls": 95,
+      "triangles": 1393634,
+      "maxSamplers": 6
+    },
+    "furniture": {
+      "calls": 109,
+      "triangles": 1438534,
+      "maxSamplers": 6
+    }
+  },
+  "renderer": "Chrome / SwiftShader software WebGL2"
+}

@@ -1,0 +1,11 @@
+{
+  "errors": [],
+  "stats": {
+    "interior": {
+      "calls": 173,
+      "triangles": 1753358,
+      "maxSamplers": 10
+    }
+  },
+  "renderer": "Chrome / SwiftShader software WebGL2"
+}

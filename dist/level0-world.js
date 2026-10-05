@@ -1,3 +1,4 @@
+import {createFurniture93} from './level0-furniture93.js';
 import {createKaneProps} from './level0-k-props.js';
 import {createManilaRoom} from './manila-room.js';
 import {inManila,nearManila} from './manila-plan.js';
@@ -10,7 +11,7 @@ export function createLevel0World(T,renderer){
  RectAreaLightUniformsLib.init();
  const scene=new T.Scene();scene.userData.noAtmosphere=true;scene.background=new T.Color(0x686752);scene.fog=new T.FogExp2(0x99977f,.016);
  const group=new T.Group();group.name='Level 0 · 阈界';scene.add(group);
- const {mats,uniforms,ready}=createL0Materials(T,renderer),assets=createLevel0DetailAssets(T),props={...createLevel0Props(T),...createKaneProps(T)},box=new T.BoxGeometry(1,1,1),plane=new T.PlaneGeometry(1,1),floorPlane=plane.clone().rotateX(-Math.PI/2),tmp=new T.Object3D();
+ const {mats,uniforms,ready}=createL0Materials(T,renderer),assets=createLevel0DetailAssets(T),props={...createLevel0Props(T),...createKaneProps(T),...createFurniture93(T)},box=new T.BoxGeometry(1,1,1),plane=new T.PlaneGeometry(1,1),floorPlane=plane.clone().rotateX(-Math.PI/2),tmp=new T.Object3D();
  const manila=createManilaRoom(T,renderer,scene);
  const hemi=new T.HemisphereLight(0xfffbef,0xbcb9a4,2.1);scene.add(hemi);
  const key=new T.DirectionalLight(0xfff9e4,.48);key.position.set(1,9,1);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.camera.left=-25;key.shadow.camera.right=25;key.shadow.camera.top=25;key.shadow.camera.bottom=-25;key.shadow.camera.near=.5;key.shadow.camera.far=22;key.shadow.bias=-.0003;key.shadow.normalBias=.035;key.shadow.radius=4;scene.add(key,key.target);

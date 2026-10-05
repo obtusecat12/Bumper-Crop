@@ -1,0 +1,10 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+
+asset: usable diffuse texture for traditional timber furniture, intended to wrap carved apron and cabinet cornice
+subject: a horizontal strip of shallow hand-carved walnut acanthus and rope molding
+composition: straight-on orthographic, rectangular crop filled edge to edge by the continuous carved wood molding, no perspective
+materials and colors: warm dark walnut, small wear on raised relief
+style: believable vintage PS2 photographic material softness, not oversharp noise
+lighting: subdued diffuse texture illumination; shallow relief remains readable
+aspect ratio: 3:1
+Avoid: object photography, cast-shadow background, perspective, labels, text, watermarks, oversharpening.

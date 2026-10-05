@@ -1,0 +1,57 @@
+{
+  "scope": "Independent square albedo textures; scene geometry owns button tufting, rolled arms, seams.",
+  "prompt_skill": "/workspace/scratch/85111d38430a/level0-art-new/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "asset": "oxblood-leather",
+      "tool": "image_gen.imagegen (built-in)",
+      "generation_date": "2026-10-05",
+      "source_original": "/workspace/scratch/85111d38430a/generated_images/exec-414d4e7e-92a4-45b4-baa7-e7fc3fb0ef85.png",
+      "saved_original": "/workspace/scratch/85111d38430a/level0-art-new/upholstery/oxblood-leather.original.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/level0-art-new/upholstery/oxblood-leather.prompt.txt",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "bytes": 3074494,
+      "sha256": "158404ead1d8bb3bcf215513bc4517711fee7f6048bdddcea98ea2605236d853",
+      "inspection": "Dark burgundy leather, fine branching creases and gentle broad wear variation; no tufts or major seams.",
+      "limitations": "Seamlessness requested and visually plausible, but edges are not mathematically guaranteed tileable. Root to derive/compress scene maps."
+    },
+    {
+      "asset": "tobacco-leather",
+      "tool": "image_gen.imagegen (built-in)",
+      "generation_date": "2026-10-05",
+      "source_original": "/workspace/scratch/85111d38430a/generated_images/exec-9665dc80-f5d9-4268-a916-757c7a659b69.png",
+      "saved_original": "/workspace/scratch/85111d38430a/level0-art-new/upholstery/tobacco-leather.original.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/level0-art-new/upholstery/tobacco-leather.prompt.txt",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "bytes": 3226764,
+      "sha256": "c6259f4f778da9c81c571371f5fc47f3f431689443ce429ad14656287e72ad5e",
+      "inspection": "Warm tobacco/caramel leather with finer micrograin and softly mottled patina; no tufts or major seams.",
+      "limitations": "Seamlessness requested and visually plausible, but edges are not mathematically guaranteed tileable. Root to derive/compress scene maps."
+    },
+    {
+      "asset": "olive-gold-damask",
+      "tool": "image_gen.imagegen (built-in)",
+      "generation_date": "2026-10-05",
+      "source_original": "/workspace/scratch/85111d38430a/generated_images/exec-cc4b6bbb-0581-415c-9e97-99b5d0183271.png",
+      "saved_original": "/workspace/scratch/85111d38430a/level0-art-new/upholstery/olive-gold-damask.original.png",
+      "prompt_file": "/workspace/scratch/85111d38430a/level0-art-new/upholstery/olive-gold-damask.prompt.txt",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "bytes": 3526839,
+      "sha256": "7eb6ccacf3368654536fb3e7a8636b82c2c373f957a9dca01294e34200e17d6a",
+      "inspection": "Muted olive and faded gold woven floral/damask upholstery with compact repeating motifs; no seams or tuft shapes.",
+      "limitations": "Seamlessness requested and visually plausible, but edges are not mathematically guaranteed tileable. Root to derive/compress scene maps."
+    }
+  ]
+}

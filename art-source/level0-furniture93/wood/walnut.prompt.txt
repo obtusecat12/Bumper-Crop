@@ -1,0 +1,9 @@
+Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - 
+material: warm dark walnut bookmatched cabinet veneer
+wood identity: broad flame grain forming a natural bookmatched veneer pattern
+asset: square furniture diffuse surface texture for physically modeled PS2-era cabinets, desks, chests and chairs
+composition: flat material swatch filling the entire square; no furniture photograph; edges tile where practical
+lighting: neutral uniform diffuse light, no cast shadows
+texture quality: high-quality realistic wood; believable fine pores, restrained surface detail, no over-sharp grunge
+aspect ratio: 1:1
+Avoid: borders, text, watermarks, cast shadows, baked highlights, excessive yellow, oversharpening, obvious repeating stamps

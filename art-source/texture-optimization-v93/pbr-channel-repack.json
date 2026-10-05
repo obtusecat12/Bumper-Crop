@@ -1,0 +1,866 @@
+{
+  "note": "Verified consumers are MeshStandard/Physical roughness G, metallic B, AO/displacement R; tangent normals retain RGB. No dimensional, quantization, or sampled-channel change. PNG data becomes lossless WebP; original pixels retained in base Git commit.",
+  "count": 78,
+  "beforeBytes": 28784190,
+  "afterBytes": 13554786,
+  "files": [
+    {
+      "from": "dist/textures/tiki-v76/lava-rock/metalness.webp",
+      "to": "dist/textures/tiki-v76/lava-rock/metalness.webp",
+      "oldBytes": 125990,
+      "newBytes": 53774,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/lava-rock/roughness.webp",
+      "to": "dist/textures/tiki-v76/lava-rock/roughness.webp",
+      "oldBytes": 461110,
+      "newBytes": 204398,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/lava-rock/ao.webp",
+      "to": "dist/textures/tiki-v76/lava-rock/ao.webp",
+      "oldBytes": 378366,
+      "newBytes": 181800,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/lava-rock/height.webp",
+      "to": "dist/textures/tiki-v76/lava-rock/height.webp",
+      "oldBytes": 320556,
+      "newBytes": 156306,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/carved-wood/metalness.webp",
+      "to": "dist/textures/tiki-v76/carved-wood/metalness.webp",
+      "oldBytes": 124620,
+      "newBytes": 61184,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/carved-wood/roughness.webp",
+      "to": "dist/textures/tiki-v76/carved-wood/roughness.webp",
+      "oldBytes": 421010,
+      "newBytes": 188926,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/carved-wood/ao.webp",
+      "to": "dist/textures/tiki-v76/carved-wood/ao.webp",
+      "oldBytes": 433412,
+      "newBytes": 189628,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/carved-wood/height.webp",
+      "to": "dist/textures/tiki-v76/carved-wood/height.webp",
+      "oldBytes": 412654,
+      "newBytes": 180548,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/floor-slate/metalness.webp",
+      "to": "dist/textures/tiki-v76/floor-slate/metalness.webp",
+      "oldBytes": 33832,
+      "newBytes": 13354,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/floor-slate/roughness.webp",
+      "to": "dist/textures/tiki-v76/floor-slate/roughness.webp",
+      "oldBytes": 354752,
+      "newBytes": 177580,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/floor-slate/ao.webp",
+      "to": "dist/textures/tiki-v76/floor-slate/ao.webp",
+      "oldBytes": 334976,
+      "newBytes": 163800,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/floor-slate/height.webp",
+      "to": "dist/textures/tiki-v76/floor-slate/height.webp",
+      "oldBytes": 407162,
+      "newBytes": 178732,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/woven-mat/metalness.webp",
+      "to": "dist/textures/tiki-v76/woven-mat/metalness.webp",
+      "oldBytes": 20180,
+      "newBytes": 7562,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/woven-mat/roughness.webp",
+      "to": "dist/textures/tiki-v76/woven-mat/roughness.webp",
+      "oldBytes": 368516,
+      "newBytes": 136580,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/woven-mat/ao.webp",
+      "to": "dist/textures/tiki-v76/woven-mat/ao.webp",
+      "oldBytes": 287330,
+      "newBytes": 138434,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/woven-mat/height.webp",
+      "to": "dist/textures/tiki-v76/woven-mat/height.webp",
+      "oldBytes": 224816,
+      "newBytes": 108544,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/red-vinyl/metalness.webp",
+      "to": "dist/textures/tiki-v76/red-vinyl/metalness.webp",
+      "oldBytes": 25254,
+      "newBytes": 13376,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/red-vinyl/roughness.webp",
+      "to": "dist/textures/tiki-v76/red-vinyl/roughness.webp",
+      "oldBytes": 398322,
+      "newBytes": 184854,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/red-vinyl/ao.webp",
+      "to": "dist/textures/tiki-v76/red-vinyl/ao.webp",
+      "oldBytes": 438898,
+      "newBytes": 199492,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/red-vinyl/height.webp",
+      "to": "dist/textures/tiki-v76/red-vinyl/height.webp",
+      "oldBytes": 458204,
+      "newBytes": 207746,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/bamboo/metalness.webp",
+      "to": "dist/textures/tiki-v76/bamboo/metalness.webp",
+      "oldBytes": 32178,
+      "newBytes": 13146,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/bamboo/roughness.webp",
+      "to": "dist/textures/tiki-v76/bamboo/roughness.webp",
+      "oldBytes": 276994,
+      "newBytes": 144196,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/bamboo/ao.webp",
+      "to": "dist/textures/tiki-v76/bamboo/ao.webp",
+      "oldBytes": 276760,
+      "newBytes": 136968,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/bamboo/height.webp",
+      "to": "dist/textures/tiki-v76/bamboo/height.webp",
+      "oldBytes": 237902,
+      "newBytes": 113358,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/counter-wood/metalness.webp",
+      "to": "dist/textures/tiki-v76/counter-wood/metalness.webp",
+      "oldBytes": 35602,
+      "newBytes": 13412,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/counter-wood/roughness.webp",
+      "to": "dist/textures/tiki-v76/counter-wood/roughness.webp",
+      "oldBytes": 289548,
+      "newBytes": 153134,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/counter-wood/ao.webp",
+      "to": "dist/textures/tiki-v76/counter-wood/ao.webp",
+      "oldBytes": 297048,
+      "newBytes": 152124,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/counter-wood/height.webp",
+      "to": "dist/textures/tiki-v76/counter-wood/height.webp",
+      "oldBytes": 286062,
+      "newBytes": 147420,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/thatch/metalness.webp",
+      "to": "dist/textures/tiki-v76/thatch/metalness.webp",
+      "oldBytes": 51586,
+      "newBytes": 24222,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/thatch/roughness.webp",
+      "to": "dist/textures/tiki-v76/thatch/roughness.webp",
+      "oldBytes": 394530,
+      "newBytes": 173912,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/thatch/ao.webp",
+      "to": "dist/textures/tiki-v76/thatch/ao.webp",
+      "oldBytes": 385394,
+      "newBytes": 164218,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v76/thatch/height.webp",
+      "to": "dist/textures/tiki-v76/thatch/height.webp",
+      "oldBytes": 272234,
+      "newBytes": 137984,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/moai-stone-normal.png",
+      "to": "dist/textures/tiki-v77/idols/moai-stone-normal.webp",
+      "oldBytes": 520481,
+      "newBytes": 455350,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/cone-lamp-steel-roughness.png",
+      "to": "dist/textures/tiki-v77/idols/cone-lamp-steel-roughness.webp",
+      "oldBytes": 505882,
+      "newBytes": 176496,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/pond-masonry-metalness.png",
+      "to": "dist/textures/tiki-v77/idols/pond-masonry-metalness.webp",
+      "oldBytes": 50100,
+      "newBytes": 14008,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/lantern-brass-metalness.png",
+      "to": "dist/textures/tiki-v77/idols/lantern-brass-metalness.webp",
+      "oldBytes": 561587,
+      "newBytes": 183292,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/cone-lamp-steel-normal.png",
+      "to": "dist/textures/tiki-v77/idols/cone-lamp-steel-normal.webp",
+      "oldBytes": 437716,
+      "newBytes": 353550,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/moai-stone-roughness.png",
+      "to": "dist/textures/tiki-v77/idols/moai-stone-roughness.webp",
+      "oldBytes": 607949,
+      "newBytes": 204518,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/pond-masonry-normal.png",
+      "to": "dist/textures/tiki-v77/idols/pond-masonry-normal.webp",
+      "oldBytes": 467415,
+      "newBytes": 401658,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/moai-stone-height.png",
+      "to": "dist/textures/tiki-v77/idols/moai-stone-height.webp",
+      "oldBytes": 489129,
+      "newBytes": 162334,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/cone-lamp-steel-height.png",
+      "to": "dist/textures/tiki-v77/idols/cone-lamp-steel-height.webp",
+      "oldBytes": 426686,
+      "newBytes": 149506,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/pond-masonry-ao.png",
+      "to": "dist/textures/tiki-v77/idols/pond-masonry-ao.webp",
+      "oldBytes": 466409,
+      "newBytes": 157532,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/lantern-brass-normal.png",
+      "to": "dist/textures/tiki-v77/idols/lantern-brass-normal.webp",
+      "oldBytes": 486257,
+      "newBytes": 413416,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/cone-lamp-steel-ao.png",
+      "to": "dist/textures/tiki-v77/idols/cone-lamp-steel-ao.webp",
+      "oldBytes": 494815,
+      "newBytes": 167024,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/moai-stone-metalness.png",
+      "to": "dist/textures/tiki-v77/idols/moai-stone-metalness.webp",
+      "oldBytes": 29887,
+      "newBytes": 10006,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/cone-lamp-steel-metalness.png",
+      "to": "dist/textures/tiki-v77/idols/cone-lamp-steel-metalness.webp",
+      "oldBytes": 308552,
+      "newBytes": 110716,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/lantern-brass-ao.png",
+      "to": "dist/textures/tiki-v77/idols/lantern-brass-ao.webp",
+      "oldBytes": 537916,
+      "newBytes": 177288,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/pond-masonry-roughness.png",
+      "to": "dist/textures/tiki-v77/idols/pond-masonry-roughness.webp",
+      "oldBytes": 528131,
+      "newBytes": 180570,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/lantern-brass-roughness.png",
+      "to": "dist/textures/tiki-v77/idols/lantern-brass-roughness.webp",
+      "oldBytes": 536881,
+      "newBytes": 184112,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/pond-masonry-height.png",
+      "to": "dist/textures/tiki-v77/idols/pond-masonry-height.webp",
+      "oldBytes": 382487,
+      "newBytes": 133894,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/moai-stone-ao.png",
+      "to": "dist/textures/tiki-v77/idols/moai-stone-ao.webp",
+      "oldBytes": 610118,
+      "newBytes": 198864,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/idols/lantern-brass-height.png",
+      "to": "dist/textures/tiki-v77/idols/lantern-brass-height.webp",
+      "oldBytes": 506336,
+      "newBytes": 169592,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/pineapple-ao.png",
+      "to": "dist/textures/tiki-v77/fruit/pineapple-ao.webp",
+      "oldBytes": 491904,
+      "newBytes": 161408,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/papaya-green-normal.png",
+      "to": "dist/textures/tiki-v77/fruit/papaya-green-normal.webp",
+      "oldBytes": 447646,
+      "newBytes": 390398,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/cantaloupe-roughness.png",
+      "to": "dist/textures/tiki-v77/fruit/cantaloupe-roughness.webp",
+      "oldBytes": 564965,
+      "newBytes": 191128,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/pineapple-height.png",
+      "to": "dist/textures/tiki-v77/fruit/pineapple-height.webp",
+      "oldBytes": 359119,
+      "newBytes": 123236,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/cantaloupe-metallic.png",
+      "to": "dist/textures/tiki-v77/fruit/cantaloupe-metallic.webp",
+      "oldBytes": 40745,
+      "newBytes": 12132,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/pineapple-roughness.png",
+      "to": "dist/textures/tiki-v77/fruit/pineapple-roughness.webp",
+      "oldBytes": 535137,
+      "newBytes": 180012,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/papaya-yellow-normal.png",
+      "to": "dist/textures/tiki-v77/fruit/papaya-yellow-normal.webp",
+      "oldBytes": 444643,
+      "newBytes": 387478,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/cantaloupe-height.png",
+      "to": "dist/textures/tiki-v77/fruit/cantaloupe-height.webp",
+      "oldBytes": 457617,
+      "newBytes": 153274,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/pineapple-metallic.png",
+      "to": "dist/textures/tiki-v77/fruit/pineapple-metallic.webp",
+      "oldBytes": 40233,
+      "newBytes": 9886,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/pineapple-normal.png",
+      "to": "dist/textures/tiki-v77/fruit/pineapple-normal.webp",
+      "oldBytes": 472656,
+      "newBytes": 407446,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/cantaloupe-normal.png",
+      "to": "dist/textures/tiki-v77/fruit/cantaloupe-normal.webp",
+      "oldBytes": 467905,
+      "newBytes": 402876,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/fruit/cantaloupe-ao.png",
+      "to": "dist/textures/tiki-v77/fruit/cantaloupe-ao.webp",
+      "oldBytes": 490524,
+      "newBytes": 161740,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/rug-normal.png",
+      "to": "dist/textures/tiki-v77/buffet/rug-normal.webp",
+      "oldBytes": 528191,
+      "newBytes": 436114,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/rug-ao.png",
+      "to": "dist/textures/tiki-v77/buffet/rug-ao.webp",
+      "oldBytes": 486675,
+      "newBytes": 165766,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/rug-metallic.png",
+      "to": "dist/textures/tiki-v77/buffet/rug-metallic.webp",
+      "oldBytes": 42640,
+      "newBytes": 11964,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/rug-height.png",
+      "to": "dist/textures/tiki-v77/buffet/rug-height.webp",
+      "oldBytes": 578027,
+      "newBytes": 190586,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/canoe-roughness.png",
+      "to": "dist/textures/tiki-v77/buffet/canoe-roughness.webp",
+      "oldBytes": 496309,
+      "newBytes": 170754,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/canoe-metallic.png",
+      "to": "dist/textures/tiki-v77/buffet/canoe-metallic.webp",
+      "oldBytes": 54434,
+      "newBytes": 13748,
+      "samplePreserved": "B",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/canoe-height.png",
+      "to": "dist/textures/tiki-v77/buffet/canoe-height.webp",
+      "oldBytes": 460027,
+      "newBytes": 157320,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/rug-roughness.png",
+      "to": "dist/textures/tiki-v77/buffet/rug-roughness.webp",
+      "oldBytes": 507320,
+      "newBytes": 174822,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/canoe-normal.png",
+      "to": "dist/textures/tiki-v77/buffet/canoe-normal.webp",
+      "oldBytes": 476746,
+      "newBytes": 410248,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v77/buffet/canoe-ao.png",
+      "to": "dist/textures/tiki-v77/buffet/canoe-ao.webp",
+      "oldBytes": 446840,
+      "newBytes": 155480,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v78/moai-height.png",
+      "to": "dist/textures/tiki-v78/moai-height.webp",
+      "oldBytes": 524275,
+      "newBytes": 174302,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v78/moai-normal.png",
+      "to": "dist/textures/tiki-v78/moai-normal.webp",
+      "oldBytes": 505218,
+      "newBytes": 431044,
+      "samplePreserved": "RGB",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v78/moai-ao.png",
+      "to": "dist/textures/tiki-v78/moai-ao.webp",
+      "oldBytes": 521913,
+      "newBytes": 177864,
+      "samplePreserved": "R",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "from": "dist/textures/tiki-v78/moai-roughness.png",
+      "to": "dist/textures/tiki-v78/moai-roughness.webp",
+      "oldBytes": 521949,
+      "newBytes": 179322,
+      "samplePreserved": "G",
+      "dimensions": [
+        512,
+        512
+      ]
+    }
+  ]
+}

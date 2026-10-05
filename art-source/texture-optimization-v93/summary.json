@@ -1,0 +1,8 @@
+{
+  "baseRuntimeBytes": 266427312,
+  "finalRuntimeBytes": 229977316,
+  "textureEncodingSavingsBytes": 38252267,
+  "replacedOldFurnitureTextureBytes": 1704564,
+  "newFurnitureTextureBytes": 3498708,
+  "note": "Runtime folder bytes, before ZIP compression. Texture file reduction is not hardware FPS or resident VRAM measurement."
+}

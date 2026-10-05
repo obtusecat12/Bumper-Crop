@@ -1,0 +1,59 @@
+{
+  "required_prompt_skill": "/workspace/scratch/85111d38430a/level0-art-new/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "asset": "mahogany",
+      "file": "/workspace/scratch/85111d38430a/level0-art-new/wood/mahogany.png",
+      "source_original": "/workspace/scratch/85111d38430a/generated_images/exec-c7f7682f-0394-4e89-a408-f5416da61097.png",
+      "generator": "built-in image_gen.imagegen",
+      "generation_mode": "independent new-image generation",
+      "transparent_background": false,
+      "prompt_file": "/workspace/scratch/85111d38430a/level0-art-new/wood/mahogany.prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nmaterial: rich reddish aged mahogany\nwood identity: fine lengthwise ribbon grain with a restrained worn shellac finish\nasset: square furniture diffuse surface texture for physically modeled PS2-era cabinets, desks, chests and chairs\ncomposition: flat material swatch filling the entire square; no furniture photograph; edges tile where practical\nlighting: neutral uniform diffuse light, no cast shadows\ntexture quality: high-quality realistic wood; believable fine pores, restrained surface detail, no over-sharp grunge\naspect ratio: 1:1\nAvoid: borders, text, watermarks, cast shadows, baked highlights, excessive yellow, oversharpening, obvious repeating stamps\n",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "abb74fbccea42577afa2152e81ca1273479a1f1f9b88937752cb200b9cb3b25c",
+      "visual_observations": "Reddish brown aged shellac surface with fine vertical ribbon grain and softly mottled pores. Distinctive rich red identity, even illumination.",
+      "derivations": "none; byte-identical original copy"
+    },
+    {
+      "asset": "walnut",
+      "file": "/workspace/scratch/85111d38430a/level0-art-new/wood/walnut.png",
+      "source_original": "/workspace/scratch/85111d38430a/generated_images/exec-9ad67144-03d1-4827-b1ce-dfbc44f781cb.png",
+      "generator": "built-in image_gen.imagegen",
+      "generation_mode": "independent new-image generation",
+      "transparent_background": false,
+      "prompt_file": "/workspace/scratch/85111d38430a/level0-art-new/wood/walnut.prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nmaterial: warm dark walnut bookmatched cabinet veneer\nwood identity: broad flame grain forming a natural bookmatched veneer pattern\nasset: square furniture diffuse surface texture for physically modeled PS2-era cabinets, desks, chests and chairs\ncomposition: flat material swatch filling the entire square; no furniture photograph; edges tile where practical\nlighting: neutral uniform diffuse light, no cast shadows\ntexture quality: high-quality realistic wood; believable fine pores, restrained surface detail, no over-sharp grunge\naspect ratio: 1:1\nAvoid: borders, text, watermarks, cast shadows, baked highlights, excessive yellow, oversharpening, obvious repeating stamps\n",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "0cda926cda6c3ed84a6ee47f3b4ffbf25540e13a8e4c9b42f0bd42ae64c54a0d",
+      "visual_observations": "Warm umber brown broad flame-grain bookmatch, mirrored along the center. Use a single panel placement to retain veneer identity; strict edge tiling is not verified.",
+      "derivations": "none; byte-identical original copy"
+    },
+    {
+      "asset": "ebonized",
+      "file": "/workspace/scratch/85111d38430a/level0-art-new/wood/ebonized.png",
+      "source_original": "/workspace/scratch/85111d38430a/generated_images/exec-8378741b-bd4b-4c62-9a7d-cb8f55976fb7.png",
+      "generator": "built-in image_gen.imagegen",
+      "generation_mode": "independent new-image generation",
+      "transparent_background": false,
+      "prompt_file": "/workspace/scratch/85111d38430a/level0-art-new/wood/ebonized.prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \nmaterial: ebonized almost-black timber\nwood identity: visible brown pore grain and worn warm edges; dark timber must not become pitch black\nasset: square furniture diffuse surface texture for physically modeled PS2-era cabinets, desks, chests and chairs\ncomposition: flat material swatch filling the entire square; no furniture photograph; edges tile where practical\nlighting: neutral uniform diffuse light, no cast shadows\ntexture quality: high-quality realistic wood; believable fine pores, restrained surface detail, no over-sharp grunge\naspect ratio: 1:1\nAvoid: borders, text, watermarks, cast shadows, baked highlights, excessive yellow, oversharpening, obvious repeating stamps\n",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "78d708d87c2fd1420454263c4122848be1e65175057968f90a797a25fe9ab812",
+      "visual_observations": "Charcoal brown timber with visible warm tan pore lines and restrained cathedral grain. Dark field retains value and brown warmth; not pitch black. Edge wear is carried mainly by warm pore contrast, not a border.",
+      "derivations": "none; byte-identical original copy"
+    }
+  ]
+}

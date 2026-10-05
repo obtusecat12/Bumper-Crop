@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-10-05",
+  "tool": "built-in image_gen.imagegen",
+  "model": "tool-managed; not exposed",
+  "reference_images": [],
+  "transparent_background": false,
+  "prompt_skill": "/workspace/scratch/85111d38430a/level0-art-new/gpt_image_2_prompt_skill.md",
+  "assets": [
+    {
+      "file": "/workspace/scratch/85111d38430a/level0-art-new/details/walnut-carved-molding-native.png",
+      "source_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-fcc643c1-bcc1-48cd-8127-8d6859195a96.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGB",
+      "sha256": "78abd446bb314c6d47e6182009ff6ef8c8f89354a1a6823bcece5089b85bc617",
+      "prompt_file": "/workspace/scratch/85111d38430a/level0-art-new/details/walnut-prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: usable diffuse texture for traditional timber furniture, intended to wrap carved apron and cabinet cornice\nsubject: a horizontal strip of shallow hand-carved walnut acanthus and rope molding\ncomposition: straight-on orthographic, rectangular crop filled edge to edge by the continuous carved wood molding, no perspective\nmaterials and colors: warm dark walnut, small wear on raised relief\nstyle: believable vintage PS2 photographic material softness, not oversharp noise\nlighting: subdued diffuse texture illumination; shallow relief remains readable\naspect ratio: 3:1\nAvoid: object photography, cast-shadow background, perspective, labels, text, watermarks, oversharpening.",
+      "postprocessing": "none; native output copied byte-for-byte"
+    },
+    {
+      "file": "/workspace/scratch/85111d38430a/level0-art-new/details/aged-satin-brass-native.png",
+      "source_native_path": "/workspace/scratch/85111d38430a/generated_images/exec-9d400dee-1403-4309-90bf-69860b780135.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "9cdd3f25d0194cd011dcb763c549555b5a68ee1d1f573e9b9a8f7aa69d0fca0c",
+      "prompt_file": "/workspace/scratch/85111d38430a/level0-art-new/details/brass-prompt.txt",
+      "exact_prompt": "Generate an image with the following prompt, dont change it(DO NOT CHANGE THIS PROMPT, IT'S ALREADY AN IMPROVED PROMPT) - \n\nasset: usable square diffuse material texture for real drawer handles, hinges and escutcheons on traditional furniture\nsubject: aged satin brass surface filling the entire square image edge to edge\nmaterials and colors: aged satin brass, tarnish in pits, fine directional rubbing, restrained warm highlights baked as diffuse only\ncomposition: flat straight-on surface texture, no perspective, no surrounding background\nstyle: believable vintage PS2 photographic material softness, not oversharp noise\naspect ratio: 1:1\nAvoid: fixtures, objects, text, labels, watermarks, hard glare, mirror reflections, oversharpening.",
+      "postprocessing": "none; native output copied byte-for-byte"
+    }
+  ],
+  "review": "Both inspected visually. Walnut is a straight-on 3:1 repeating acanthus panel between rope borders with no outside background. Brass is a square edge-to-edge aged satin surface with restrained texture and no fixtures or text. Neither is a calibrated normal/roughness map; parent can derive estimated maps."
+}

@@ -1,0 +1,106 @@
+[
+  {
+    "name": "mahogany",
+    "generatedOriginal": "wood/mahogany.png",
+    "basePixels": [
+      512,
+      512
+    ],
+    "dataPixels": [
+      512,
+      512
+    ],
+    "derivedMaps": "Estimated luminance-frequency normal/roughness, not measured scans. Real tufting, bevels, seams and hardware are mesh geometry."
+  },
+  {
+    "name": "walnut",
+    "generatedOriginal": "wood/walnut.png",
+    "basePixels": [
+      512,
+      512
+    ],
+    "dataPixels": [
+      512,
+      512
+    ],
+    "derivedMaps": "Estimated luminance-frequency normal/roughness, not measured scans. Real tufting, bevels, seams and hardware are mesh geometry."
+  },
+  {
+    "name": "ebony",
+    "generatedOriginal": "wood/ebonized.png",
+    "basePixels": [
+      512,
+      512
+    ],
+    "dataPixels": [
+      512,
+      512
+    ],
+    "derivedMaps": "Estimated luminance-frequency normal/roughness, not measured scans. Real tufting, bevels, seams and hardware are mesh geometry."
+  },
+  {
+    "name": "oxblood",
+    "generatedOriginal": "upholstery/oxblood-leather.original.png",
+    "basePixels": [
+      512,
+      512
+    ],
+    "dataPixels": [
+      512,
+      512
+    ],
+    "derivedMaps": "Estimated luminance-frequency normal/roughness, not measured scans. Real tufting, bevels, seams and hardware are mesh geometry."
+  },
+  {
+    "name": "tobacco",
+    "generatedOriginal": "upholstery/tobacco-leather.original.png",
+    "basePixels": [
+      512,
+      512
+    ],
+    "dataPixels": [
+      512,
+      512
+    ],
+    "derivedMaps": "Estimated luminance-frequency normal/roughness, not measured scans. Real tufting, bevels, seams and hardware are mesh geometry."
+  },
+  {
+    "name": "damask",
+    "generatedOriginal": "upholstery/olive-gold-damask.original.png",
+    "basePixels": [
+      512,
+      512
+    ],
+    "dataPixels": [
+      512,
+      512
+    ],
+    "derivedMaps": "Estimated luminance-frequency normal/roughness, not measured scans. Real tufting, bevels, seams and hardware are mesh geometry."
+  },
+  {
+    "name": "carved",
+    "generatedOriginal": "details/walnut-carved-molding-native.png",
+    "basePixels": [
+      1024,
+      341
+    ],
+    "dataPixels": [
+      512,
+      171
+    ],
+    "derivedMaps": "Estimated luminance-frequency normal/roughness, not measured scans. Real tufting, bevels, seams and hardware are mesh geometry."
+  },
+  {
+    "name": "brass",
+    "generatedOriginal": "details/aged-satin-brass-native.png",
+    "basePixels": [
+      512,
+      512
+    ],
+    "dataPixels": [
+      512,
+      512
+    ],
+    "derivedMaps": "Estimated luminance-frequency normal/roughness, not measured scans. Real tufting, bevels, seams and hardware are mesh geometry."
+  }
+]
