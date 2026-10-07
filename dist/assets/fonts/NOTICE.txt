@@ -9,3 +9,7 @@ Rebecca Bettencourt, Ho-Seok Ee, et al.
 This modified font is distributed under the SIL Open Font License 1.1.
 See unifont-OFL-1.1.txt. The upstream dual-license notice is included
 as unifont-LICENSE.txt. These font licenses do not apply to game code.
+
+VonwaonBitmap-12px.woff2 / VonwaonBitmap-16px.woff2
+凤凰点阵体 Vonwaon Bitmap v1.02 by Haoyu Qiu (TimothyQiu), CC0 1.0 (public domain).
+https://timothyqiu.itch.io/vonwaon-bitmap — converted from TTF to WOFF2 unchanged.

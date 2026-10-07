@@ -4,7 +4,7 @@ export const FIELD_THEME=Object.freeze({
  shell:'#403d2e',shellTop:'#756747',shellBottom:'#28271e',bevelLight:'#b1a17a',bevelDark:'#191d17',screen:'#302f24',screenDeep:'#171c17',
  screenInk:'#bdb494',glass:'#bfc8aa',button:'#373b2e',buttonActive:'#e0d2a6',buttonInk:'#c8ba96',activeInk:'#e0d2a6',shadow:'#10160f',
  vialLiquid:'#af9561',vialShadow:'#544c30',vialLight:'#c3b47c',vialSurface:'#d7d9b0',
- mapBackground:'#27302a',mapGrid:'#364037',mapPlayer:'#e2d9b3',mapOutline:'#121b18',mapCursor:'#fff2c1',
+ mapBackground:'#f1ead2',mapGrid:'#d8cda8',mapPlayer:'#c2412a',mapOutline:'#1c1a14',mapCursor:'#1c1a14',
  radius:'0px',bezel:'0px',font:"Georgia, HarvestSerif, 'Times New Roman', 'Songti SC', SimSun, serif",
  // Compatibility tokens retained for registered themes; default instruments
  // use geometry and palette tokens rather than whole-widget image skins.

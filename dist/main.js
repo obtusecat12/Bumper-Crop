@@ -94,13 +94,18 @@ import {createWheatDetailLayer,initializeCerealTextures,releaseCerealGPU,resumeC
 import {createAtmosphere} from './atmosphere.js?v=60';
 import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=60';
 import {initializeRuralTextures} from './rural-textures.js?v=60';
-import {createNavigationMap} from './map-ui.js?v=return-1';
+import {createNavigationMap} from './map-ui.js?v=ui-v99';
+import {drawAsciiTitle} from './ascii-title.js?v=99e';
+import {enhanceDeveloperPanel} from './dev-ui.js?v=99';
 
+await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
 const $=s=>document.querySelector(s),game=$('#game');
 game.innerHTML=`
 <main class="screen" id="menu">
+ <div class="rx-pattern" aria-hidden="true"></div><div class="rx-crt" aria-hidden="true"></div>
+ <div class="rx-osd tl" aria-hidden="true"><span class="rx-blink">▶</span> <b id="rx-mode">PLAY</b><small>SP · STEREO</small></div><div class="rx-osd tr" aria-hidden="true">CH <span data-ui-copy="number">010</span><small id="rx-date">— — —</small></div><div class="rx-osd bl" aria-hidden="true"><span id="rx-tc">0:00:00</span></div><div class="rx-osd br" aria-hidden="true">AV-1</div><div class="rx-copy" aria-hidden="true">© 1997 M.E.G. FIELD DIVISION · LICENSED BY THE BACKROOMS</div>
  <header class="topline"><span>THE BACKROOMS</span><span class="tape-mode">FIELD RECORD / <span data-ui-copy="number">010</span></span></header>
- <div class="hero" data-ui-part="menu"><div class="title-window"><p class="eyebrow" id="eyebrow">EXPLORATION</p><h1 class="level" data-ui-copy="code">LEVEL 10</h1><h2 class="cn-title" data-ui-copy="name">丰裕</h2><div class="subtitle" data-ui-copy="subtitle">ABUNDANCE</div></div>
+ <div class="hero" data-ui-part="menu"><div class="title-window"><p class="eyebrow" id="eyebrow">PRESS START</p><h1 class="level" data-ui-copy="code">LEVEL 10</h1><canvas class="rx-ascii" aria-hidden="true"></canvas><h2 class="cn-title" data-ui-copy="name">丰裕</h2><div class="subtitle" data-ui-copy="subtitle">ABUNDANCE</div></div>
  <nav class="menu" aria-label="主菜单"><button class="menu-button primary selected" id="start" disabled><span>正在进入麦田</span><small>…</small></button><button class="menu-button" id="open-settings"><span>游戏设置</span></button><button class="menu-button" id="open-journal"><span>层级档案</span></button><button class="menu-button" id="open-controls"><span>操作说明</span></button><button class="menu-button" id="open-developer"><span>开发者模式</span></button></nav></div>
 
  <div class="loading" id="loading">LOADING <span id="load-number">0%</span><div class="loading-track"><i id="load-bar"></i></div></div>
@@ -127,6 +132,12 @@ game.innerHTML=`
 game.insertAdjacentHTML('beforeend',`<div class="modal" id="developer" data-ui-part="developer" role="dialog" aria-modal="true" aria-labelledby="developer-title" hidden><div class="panel developer-panel" tabindex="-1"><div class="panel-header"><h2 id="developer-title">开发者模式 / F2</h2><button class="close" data-close aria-label="关闭">×</button></div><p class="developer-caption">地标传送</p><div class="developer-actions"><button data-teleport="level0-10">K 版陈设 · 家具山</button><button data-teleport="level0-11">K 版陈设 · 音箱与蓝椅</button><button data-teleport="level0-12">K 版陈设 · 平行柜列</button><button data-teleport="level0-13">连续套间 · 厚墙拱门</button><button data-teleport="level0-14">缓坡 · 红木栏杆</button><button data-teleport="level0-15">梯背椅堆</button><button data-teleport="level0-16">开放空间 · 折返与梳齿墙</button><button data-teleport="level0-17">吊顶 · 连片破损与保温棉</button><button data-teleport="level0-18">错构家具 · 多余部件</button><button data-teleport="level0-20">无底天井 · 房间剖面</button><button data-teleport="level0-21">无底天井 · 对岸与夹层</button><button data-teleport="level0-22">无底天井 · 纵深</button><button data-teleport="level0-24">假窗 · 窗外全黑</button><button data-teleport="level0-25">假窗 · 墙面格栅</button><button data-teleport="level0-23">马尼拉 · 稀有生成实例</button><button data-teleport="level0-19">沙发与柜子 · 堵塞走廊</button><button data-teleport="level0-8">马尼拉 · 门口照片机位</button><button data-teleport="level0-9">马尼拉 · 室内照片机位</button><button data-teleport="level0-6">Level 0 · 电闸</button><button data-teleport="level0-7">Level 0 · 家具遗留区</button><button data-teleport="level0-0">Level 0 · 阈界</button><button data-teleport="level0-1">Level 0 · 拱窗长廊</button><button data-teleport="level0-2">Level 0 · 柱厅</button><button data-teleport="level0-3">Level 0 · 深坑</button><button data-teleport="level0-4">Level 0 · 熄灯区</button><button data-teleport="level0-5">Level 0 · 红室边缘</button><button data-teleport="level0-return">返回进入 Level 0 前的位置</button><button data-teleport="outhouse">Level 10 · 湖岸旱厕与营地居民</button><button data-teleport="outpost">M.E.G. 湖岸前哨站</button><button data-teleport="pond">最近的湖泊</button><button data-teleport="building">最近的建筑</button><button data-teleport="grove">最近的树林</button><button data-teleport="farm-a">农场 · 照片一机位</button><button data-teleport="farm-b">农场 · 照片二机位</button><button data-teleport="barn">砖砌谷仓</button><button data-teleport="barn-photo">谷仓 · 照片机位</button><button data-teleport="city-exit">Level 11 出口小径 · 约 503 m</button><button data-teleport="photo-hope">图一 · Hope St 照片机位</button><button data-teleport="photo-clinic">图二 · 诊所与糕点房机位</button><button data-teleport="city-edge">Level 11 · 商业边缘区</button><button data-teleport="city-return">Level 11 · 面粉厂返程后巷</button><button data-teleport="city-core">Level 11 · 金融街峡谷</button><button data-teleport="city-plaza">Level 11 · 棕榈喷泉广场</button><button data-teleport="city-vending">Level 11 · 瀑布售货机与候座</button><button data-teleport="city-bath">Level 27 入口 · 热水浴室</button><button data-teleport="city-tiki">Level 11 · Lantern Reef 餐厅酒吧</button><button data-teleport="city-ad">Level 11 · ECHO 服装广告</button><button data-teleport="start">返回初始小径</button></div><div class="developer-status" id="developer-status" role="status" aria-live="polite">选择目的地，抵达后自动继续探索。</div><dl class="developer-coordinates"><div><dt>区块</dt><dd id="developer-cell">0 / 0</dd></div><div><dt>位置</dt><dd id="developer-position">—</dd></div></dl><p class="developer-caption">本机性能 / V43</p><div class="developer-status" id="developer-performance">正在采样…</div><div class="panel-note">传送会落在湖岸或建筑外侧。F2 再次打开此面板；移动端也可从暂停菜单进入。</div></div></div>`);
 
 $('#developer .developer-caption').insertAdjacentHTML('beforebegin',`<p class="developer-caption">天气与异常</p><div class="developer-actions"><button data-weather="rain">触发下雨</button><button data-weather="fog">触发浓雾</button><button data-weather="blackout">天空断电</button><button data-weather="wallpaper">重复蓝天</button><button data-weather="sunbreak">晴空转黄昏</button><button data-weather="normal">恢复正常天气</button></div><div class="developer-status" id="weather-status">阴天 · 概率按每轮天气判定</div>`);
+// V99: lay out F2 as a tabbed service-mode menu (after weather controls exist).
+queueMicrotask(()=>enhanceDeveloperPanel($('#developer')));
+{const h=$('#menu .level'),pre=$('#menu .rx-ascii'),sync=()=>{h.classList.toggle('rx-ascii-on',drawAsciiTitle(pre,h.textContent.trim()));};sync();new MutationObserver(sync).observe(h,{childList:true,characterData:true,subtree:true});}
+// V99 title OSD: VCR counter + date stamp (UI only).
+{const t0=performance.now(),tc=$('#rx-tc'),dt=$('#rx-date'),M=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];const d=new Date();if(dt)dt.textContent=`${M[d.getMonth()]}. ${String(d.getDate()).padStart(2,'0')} 1997`;
+ setInterval(()=>{if(!tc||$('#menu').hidden)return;const s=Math.floor((performance.now()-t0)/1000);tc.textContent=`SP ${Math.floor(s/3600)}:${String(Math.floor(s/60)%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;},500);}
 const instrumentParts=await loadInstrumentParts();
 const survivalDisplay=createSurvivalDisplay(game,instrumentParts);survivalDisplay.update(100,100,0);
 const touchDevice=matchMedia('(pointer:coarse)').matches,reduceCameraMotion=matchMedia('(prefers-reduced-motion:reduce)');
@@ -570,7 +581,7 @@ const weatherDirector=new WeatherDirector({onCue:kind=>audio.powerCue(kind)});le
 for(const button of document.querySelectorAll('[data-weather]'))button.onclick=()=>{if(!ready||teleportJob)return;if(state.level===0||millingActive||state.level===27||bathhouse.active){$('#weather-status').textContent='洞穴与室外天气隔离。返回街道后可更改天气。';return;}audio.start();const kind=button.dataset.weather;weatherDirector.start(kind,{manual:true});if(kind==='normal'){weatherDirector.wetness=0;rainEffects.clear();lensWater.reset();waterRipples.reset();waterImpact.clear();weatherFlare.reset();}weatherState=weatherDirector.update(0);closeModal(false);start();toast(kind==='sunbreak'?'晴空已触发 · 4 秒后开始转入黄昏':WEATHER_LABELS[kind]+' · 已触发');};
 
 function toast(text){$('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),3600)}
-function setPlay(value){resetLookInput();if(value!==playing){weatherDirector.resetClock();cameraRig.resume();wetPoseFresh=true;lastFrame=performance.now();}survivalDisplay.resetMotion();playing=value;$('#menu').hidden=value;$('#hud').hidden=!value;$('#touch').hidden=!value||!touchDevice;if(value){audio.start();if(!started){started=true;toast('沿着小径前行。地上的瓶子可以按 E 拾取。')}$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';$('#eyebrow').textContent='PAUSED';}else{springSession.closing=0;springOpen=0;eyelids.style.opacity='0';pointerLockHeld=false;audio.ctx?.suspend().catch(()=>{});keys.clear();joy.x=joy.z=0;touchRun=false;zoomHeld=false;zoomSetting=1;waterPipeline.focus.setZoom(1);$('#touch-zoom').textContent='1×';$('#stick').style.transform='';if(document.pointerLockElement)document.exitPointerLock();}}
+function setPlay(value){resetLookInput();if(value!==playing){weatherDirector.resetClock();cameraRig.resume();wetPoseFresh=true;lastFrame=performance.now();}survivalDisplay.resetMotion();playing=value;$('#menu').hidden=value;$('#hud').hidden=!value;$('#touch').hidden=!value||!touchDevice;if(value){audio.start();if(!started){started=true;document.body.classList.remove('rx-title');toast('沿着小径前行。地上的瓶子可以按 E 拾取。')}$('#start').innerHTML='<span>继续探索</span><small>ENTER ↵</small>';$('#eyebrow').textContent='PAUSED';const rxm=$('#rx-mode');if(rxm)rxm.textContent='PAUSE';}else{springSession.closing=0;springOpen=0;eyelids.style.opacity='0';pointerLockHeld=false;audio.ctx?.suspend().catch(()=>{});keys.clear();joy.x=joy.z=0;touchRun=false;zoomHeld=false;zoomSetting=1;waterPipeline.focus.setZoom(1);$('#touch-zoom').textContent='1×';$('#stick').style.transform='';if(document.pointerLockElement)document.exitPointerLock();}}
 function start(){if(state.level===0&&state.health<=0)return;if(!ready||teleportJob||developerSearch)return;setPlay(true);if(!touchDevice){try{const p=renderer.domElement.requestPointerLock?.();if(p&&p.catch)p.catch(()=>toast('按住鼠标拖动环顾，W A S D 移动。'))}catch{toast('按住鼠标拖动环顾，W A S D 移动。')}}}
 $('#start').onclick=start;$('#pause-button').onclick=()=>setPlay(false);
 document.addEventListener('pointerlockchange',()=>{const held=document.pointerLockElement===renderer.domElement,lost=pointerLockHeld&&!held;pointerLockHeld=held;resetLookInput(held);if(lost&&playing&&!touchDevice&&!activeModal)setPlay(false);});
@@ -612,12 +623,12 @@ function leaveReferenceView(){
  if(!referenceView)return;referenceView=null;resize();if(state.level===0)return;if(state.level===11){scene.fog.near=160;scene.fog.far=400;return;}scene.fog.near=60;scene.fog.far=Math.min(225,Math.max(.2,coverageRadius*64+Math.min(state.x,state.z,64-state.x,64-state.z)-8));updateQueue();
 }
 function beginTeleport(target){
- restoreRural();exitArmed=false;exitLastS=-1;transitionProgress.value=0;
+ const fromLevel=state.level;restoreRural();exitArmed=false;exitLastS=-1;transitionProgress.value=0;
  lensWater.reset();waterState.reset();bodyWater.reset();waterBubbles.clear();waterPipeline.reset(camera);waterImpact.clear();waterRipples.reset();rainEffects.clear();weatherFlare.reset();wetPoseFresh=true;
  if(streamFailed){developerBusy(false);$('#developer-status').textContent='场景加载失败，请刷新页面重试。';return;}
  const previous={};for(const key of ['cx','cz','x','z','y','yaw','pitch'])previous[key]=state[key];
  const previousReference=referenceView;referenceView=target.kind==='photo'?target:null;resize();
- teleportJob={target,previous,previousReference};developerBusy(true);setPlay(false);interaction=null;$('#interact').hidden=true;
+ teleportJob={target,previous,previousReference,fromLevel};developerBusy(true);setPlay(false);interaction=null;$('#interact').hidden=true;
  applyTeleport(state,{cx:target.cx,cz:target.cz,x:target.x,z:target.z,y:surfaceHeight(target.x,target.z,target.field)+1.77,yaw:target.yaw??state.yaw,pitch:-.045});resetCameraRig();
  ready=false;$('#start').disabled=true;$('#loading').hidden=false;$('#load-number').textContent='0%';$('#load-bar').style.width='0%';
  updateQueue();updateDeveloperCoordinates();
@@ -635,6 +646,11 @@ function advanceDeveloperSearch(){
 function completeTeleport(){
  if(!teleportJob||queue.length||activeBuild||!neighbourhoodReady())return;
  const job=teleportJob,landing=job.restoring?job.previous:findSafeLanding(job.target,teleportColliders());
+ if(!landing&&job.fromLevel!==10&&!job.restoring){
+  // Coming from another level, the old pose is not a Level 10 position (city
+  // coordinates sit on the 10→11 corridor). Fall back to the start path instead.
+  const f=field(0n,0n,seed);referenceView=null;resize();job.target={field:f,cx:0n,cz:0n,x:.6,z:52,kind:'start',label:'初始小径'};job.restoring=false;applyTeleport(state,{cx:0n,cz:0n,x:.6,z:52,y:surfaceHeight(.6,52,f)+1.77,yaw:state.yaw,pitch:-.045});resetCameraRig();updateQueue();return;
+ }
  if(!landing){
   referenceView=job.previousReference;resize();applyTeleport(state,job.previous);resetCameraRig();job.restoring=true;job.target={...job.target,label:'原位置'};updateQueue();return;
  }
