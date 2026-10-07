@@ -30,13 +30,40 @@
       showFailure(event.error);
     }
   });
-  const timeout = setTimeout(() => {
-    if (document.documentElement.dataset.bootState !== 'ready') {
+  // V99: transient network errors on any of the hundreds of startup requests
+  // used to abort the whole boot. Retry idempotent GETs with backoff first.
+  const nativeFetch = window.fetch.bind(window);
+  window.fetch = async (input, init) => {
+    const method = (init && init.method) || (input && input.method) || 'GET';
+    if (method !== 'GET') return nativeFetch(input, init);
+    for (let attempt = 0; ; attempt++) {
+      try {
+        const response = await nativeFetch(input, init);
+        if (response.status < 500 || attempt >= 3) return response;
+      } catch (error) {
+        if (attempt >= 3 || (init && init.signal && init.signal.aborted)) throw error;
+      }
+      await new Promise(resolve => setTimeout(resolve, 600 * 2 ** attempt));
+    }
+  };
+  // The watchdog only fires after a long stretch with no download progress,
+  // so a slow connection keeps loading instead of failing at a fixed 30 s.
+  let lastProgress = performance.now();
+  const bump = () => { lastProgress = performance.now(); };
+  try { new PerformanceObserver(bump).observe({ type: 'resource', buffered: false }); } catch {}
+  performance.setResourceTimingBufferSize && performance.setResourceTimingBufferSize(4000);
+  const watcher = new MutationObserver(bump);
+  watcher.observe(document.documentElement, { attributes: true, subtree: true, childList: true, characterData: true });
+  const timeout = setInterval(() => {
+    const state = document.documentElement.dataset.bootState;
+    if (state === 'ready' || state === 'failed') { clearInterval(timeout); watcher.disconnect(); return; }
+    if (performance.now() - lastProgress > 60000) {
+      clearInterval(timeout);
       showFailure(new Error('游戏加载超时。请检查网络连接后重试。'));
     }
-  }, 30000);
-  import('./main.js?v=ui-v99').then(() => clearTimeout(timeout)).catch(error => {
-    clearTimeout(timeout);
+  }, 2000);
+  import('./main.js?v=ui-v100').then(() => { clearInterval(timeout); watcher.disconnect(); }).catch(error => {
+    clearInterval(timeout);
     console.error('Game startup failed', error);
     showFailure(error);
   });
