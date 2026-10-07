@@ -1,1 +1,86 @@
-/* V101 backOS-inspired title/menu polish (owned by the backOS UI task) */
+/* V101 backOS-inspired title/menu polish (owned by the backOS UI task)
+   Reference: Object 94 "Back OS™" (Backrooms CN wiki) — Win95-style yellow-window logo,
+   outset 2px bevels, hard 4px drop shadows, version 4.0.011, "正 在 开 机 . . ." / "关机…？".
+   Scope: #menu (title + pause) and the settings / journal / controls modals only.
+   No backdrop-filter, no full-screen filters, no scanlines. Only steps() blinks. */
+#menu{
+ --bos-hi:#8a7236;      /* bevel highlight (top/left) */
+ --bos-lo:#050402;      /* bevel shade (bottom/right) */
+ --bos-face:#14110a;    /* window face */
+ --bos-shadow:4px 4px 0 #000000a0;
+ --bos-logo:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12' shape-rendering='crispEdges'%3E%3Cg fill='%23c48a2c'%3E%3Crect x='0' y='3' width='1' height='1'/%3E%3Crect x='2' y='1' width='1' height='1'/%3E%3Crect x='1' y='7' width='1' height='1'/%3E%3Crect x='3' y='5' width='1' height='1'/%3E%3Crect x='2' y='9' width='1' height='1'/%3E%3C/g%3E%3Crect x='5' y='0' width='11' height='12' fill='%23000'/%3E%3Cg fill='%23f2c75a'%3E%3Crect x='6' y='1' width='4' height='4'/%3E%3Crect x='11' y='1' width='4' height='4'/%3E%3Crect x='6' y='7' width='4' height='4'/%3E%3Crect x='11' y='7' width='4' height='4'/%3E%3C/g%3E%3C/svg%3E");
+}
+#menu .bos-logo,.modal .bos-logo{display:inline-block;width:16px;height:12px;background:var(--bos-logo,none) 0 0/16px 12px no-repeat;image-rendering:pixelated;vertical-align:-1px;flex:none}
+@keyframes bos-blink{50%{visibility:hidden}}
+
+/* --- boot / status block above the eyebrow --- */
+#menu .hero{gap:20px!important}
+#menu .bos-boot{display:flex;flex-direction:column;gap:2px;margin:0 0 -6px;padding:0 0 8px;font:400 12px/16px var(--rx-font-sm)!important;letter-spacing:.12em;color:var(--rx-ink);
+ background:repeating-linear-gradient(90deg,var(--rx-line) 0 2px,#0000 2px 4px) 0 100%/100% 2px no-repeat;max-width:100%}
+#menu .bos-boot>div{display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#menu .bos-boot b{font-weight:400;color:var(--rx-gold);letter-spacing:.18em}
+#menu .bos-boot sup{font-size:8px;line-height:0;vertical-align:6px;letter-spacing:0}
+#menu .bos-boot .bos-dim,#menu .bos-boot small{color:var(--rx-dim)}
+#menu .bos-boot small{font:inherit;color:var(--rx-line);letter-spacing:.1em;margin-left:8px}
+#menu .bos-boot .bos-ok{color:#0d0c07;background:var(--rx-ochre);padding:0 4px;letter-spacing:.05em}
+#menu[data-bos="boot"] .bos-boot .bos-ok{background:var(--rx-line);color:var(--rx-ink)}
+#menu[data-bos="paused"] .bos-boot .bos-ok{background:var(--rx-gold)}
+
+/* --- window chrome around the menu list --- */
+#menu .bos-win{display:flex;flex-direction:column;min-width:min(360px,100%);max-width:100%;background:var(--bos-face);padding:2px;
+ box-shadow:inset 2px 2px 0 var(--bos-hi),inset -2px -2px 0 var(--bos-lo),var(--bos-shadow)}
+#menu .bos-bar{display:flex;align-items:center;gap:8px;height:24px;padding:0 4px 0 6px;margin:0 0 4px;
+ background:linear-gradient(90deg,var(--rx-ochre),var(--rx-gold));color:#120f06;font:400 12px/16px var(--rx-font-sm)!important;letter-spacing:.2em;white-space:nowrap}
+#menu .bos-bar .bos-logo{filter:none}
+#menu .bos-bar span{flex:1;overflow:hidden;text-overflow:ellipsis}
+#menu .bos-bar small{font:inherit;opacity:.7;letter-spacing:.12em}
+#menu .bos-ctl{display:flex;gap:2px;font-weight:400}
+#menu .bos-ctl i{display:block;width:16px;height:14px;font:400 12px/14px var(--rx-font-sm)!important;font-style:normal;text-align:center;letter-spacing:0;color:#120f06;background:#e6c983;
+ box-shadow:inset 1px 1px 0 #fff3cf,inset -1px -1px 0 #5a4416}
+#menu .bos-ctl i:last-child{margin-left:2px}
+#menu .bos-win .menu{padding:2px 4px!important;gap:0!important;align-items:stretch!important;width:auto!important;max-width:none!important}
+
+/* terminal-menu selection: inverted gold bar, dotted focus rect on hover */
+#menu .bos-win .menu-button{min-height:30px!important;padding:3px 24px 3px 32px!important;width:100%!important;max-width:none!important;box-sizing:border-box}
+#menu .bos-win .menu-button.selected{background:var(--rx-gold)!important;color:#120f06!important;text-shadow:none!important}
+#menu .bos-win .menu-button.selected:before{color:#120f06!important}
+#menu .bos-win .menu-button:not(.selected):hover,#menu .bos-win .menu-button:not(.selected):focus-visible{background:#2a2412!important;outline:1px dotted var(--rx-gold)!important;outline-offset:-3px}
+#menu .bos-win .menu-button.selected:disabled{background:var(--rx-line)!important;color:var(--rx-ink)!important}
+#menu .bos-win .menu-button.selected small{color:#120f06aa!important}
+
+/* status bar / tray: sunken panes, prompt with block cursor, clock */
+#menu .bos-tray{display:flex;gap:2px;margin:4px 0 0;font:400 12px/16px var(--rx-font-sm)!important;letter-spacing:.1em;color:var(--rx-dim);white-space:nowrap}
+#menu .bos-tray>span{padding:2px 8px;box-shadow:inset 1px 1px 0 var(--bos-lo),inset -1px -1px 0 var(--bos-hi)}
+#menu .bos-tray>span:first-child{flex:1;overflow:hidden;text-overflow:ellipsis}
+#menu .bos-tray b{font-weight:400;color:var(--rx-gold)}
+#menu .bos-tray small{font:inherit;color:var(--rx-line)}
+#menu .bos-cur{display:inline-block;width:7px;height:12px;margin-left:3px;vertical-align:-2px;background:var(--rx-gold);animation:bos-blink 1.06s steps(1) infinite}
+#menu[hidden] .bos-cur{animation:none}
+
+/* backOS-style beveled key caps in the bottom hints */
+#menu .bottomline .key{display:inline-block;padding:1px 6px;margin-right:6px;background:var(--bos-face);color:var(--rx-gold)!important;
+ box-shadow:inset 1px 1px 0 var(--bos-hi),inset -1px -1px 0 var(--bos-lo),2px 2px 0 #000;border:0!important}
+#menu .bottomline:after{content:'关机…？';color:var(--rx-line);letter-spacing:.2em}
+#menu[data-bos="boot"] .bottomline:after{content:'BACK OS™ 4.0.011'}
+
+/* --- modals opened from the menu (never #world-map) --- */
+#settings .panel,#journal .panel,#controls .panel{box-shadow:inset 2px 2px 0 #8a7236,inset -2px -2px 0 #050402,6px 6px 0 #000000b0!important}
+#settings .panel-header h2,#journal .panel-header h2,#controls .panel-header h2{display:flex;align-items:center;gap:12px}
+#settings .panel-header h2:before,#journal .panel-header h2:before,#controls .panel-header h2:before{content:'';width:32px;height:24px;flex:none;image-rendering:pixelated;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12' shape-rendering='crispEdges'%3E%3Cg fill='%237a5418'%3E%3Crect x='0' y='3' width='1' height='1'/%3E%3Crect x='2' y='1' width='1' height='1'/%3E%3Crect x='1' y='7' width='1' height='1'/%3E%3Crect x='3' y='5' width='1' height='1'/%3E%3Crect x='2' y='9' width='1' height='1'/%3E%3C/g%3E%3Crect x='5' y='0' width='11' height='12' fill='%23120f06'/%3E%3Cg fill='%23f2c75a'%3E%3Crect x='6' y='1' width='4' height='4'/%3E%3Crect x='11' y='1' width='4' height='4'/%3E%3Crect x='6' y='7' width='4' height='4'/%3E%3Crect x='11' y='7' width='4' height='4'/%3E%3C/g%3E%3C/svg%3E") 0 0/32px 24px no-repeat}
+#settings .close,#journal .close,#controls .close{width:32px!important;height:28px!important;font:400 24px/24px var(--rx-font)!important;background:#e6c983!important;
+ box-shadow:inset 2px 2px 0 #fff3cf,inset -2px -2px 0 #5a4416!important}
+#settings .close:hover,#journal .close:hover,#controls .close:hover{background:#120f06!important;color:var(--rx-gold)!important;box-shadow:inset 2px 2px 0 #050402,inset -2px -2px 0 #8a7236!important}
+#settings .panel-note,#journal .panel-note,#controls .panel-note{position:relative}
+#settings .panel:after,#journal .panel:after,#controls .panel:after{content:'BACK OS™ 4.0.011 · M.E.G. TERMINAL　　ESC 关闭';display:block;margin:16px -24px 0;padding:4px 12px;
+ font:400 12px/16px var(--rx-font-sm);letter-spacing:.15em;color:var(--rx-dim);background:#0d0c07;box-shadow:inset 0 2px 0 var(--rx-line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+@media(max-width:900px){
+ #menu .bos-boot small{display:none}
+ #menu .bottomline:after{display:none}
+ #menu .bos-win{min-width:0;width:100%}
+}
+@media(max-height:640px){
+ #menu .bos-boot>div:last-child{display:none}
+ #menu .bos-win .menu-button{min-height:30px!important;padding-top:4px!important;padding-bottom:4px!important}
+}

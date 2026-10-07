@@ -97,6 +97,7 @@ import {initializeRuralTextures} from './rural-textures.js?v=60';
 import {createNavigationMap} from './map-ui.js?v=ui-v99';
 import {drawAsciiTitle} from './ascii-title.js?v=100';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=99';
+import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
 
 await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
 const $=s=>document.querySelector(s),game=$('#game');
@@ -105,8 +106,8 @@ game.innerHTML=`
  <div class="rx-pattern" aria-hidden="true"></div><div class="rx-crt" aria-hidden="true"></div>
  <div class="rx-osd tl" aria-hidden="true"><span class="rx-blink">▶</span> <b id="rx-mode">PLAY</b><small>SP · STEREO</small></div><div class="rx-osd tr" aria-hidden="true">CH <span data-ui-copy="number">010</span><small id="rx-date">— — —</small></div><div class="rx-osd bl" aria-hidden="true"><span id="rx-tc">0:00:00</span></div><div class="rx-osd br" aria-hidden="true">AV-1</div><div class="rx-copy" aria-hidden="true">© 1997 M.E.G. FIELD DIVISION · LICENSED BY THE BACKROOMS</div>
  <header class="topline"><span>THE BACKROOMS</span><span class="tape-mode">FIELD RECORD / <span data-ui-copy="number">010</span></span></header>
- <div class="hero" data-ui-part="menu"><div class="title-window"><p class="eyebrow" id="eyebrow">PRESS START</p><h1 class="level" data-ui-copy="code">LEVEL 10</h1><canvas class="rx-ascii" aria-hidden="true"></canvas><h2 class="cn-title" data-ui-copy="name">丰裕</h2><div class="subtitle" data-ui-copy="subtitle">ABUNDANCE</div></div>
- <nav class="menu" aria-label="主菜单"><button class="menu-button primary selected" id="start" disabled><span>正在进入麦田</span><small>…</small></button><button class="menu-button" id="open-settings"><span>游戏设置</span></button><button class="menu-button" id="open-journal"><span>层级档案</span></button><button class="menu-button" id="open-controls"><span>操作说明</span></button><button class="menu-button" id="open-developer"><span>开发者模式</span></button></nav></div>
+ <div class="hero" data-ui-part="menu"><!-- V101 backOS: boot/status block --><div class="bos-boot" aria-hidden="true"><div><i class="bos-logo"></i><b>BACK OS<sup>™</sup></b> 4.0.011 <span class="bos-dim">· M.E.G. TERMINAL · NODE <span data-ui-copy="number">010</span></span></div><div class="bos-dim"><span class="bos-ok">[ OK ]</span> <span id="bos-state">正 在 开 机 . . .</span> <small>BACKNET · 离线 OFFLINE</small></div></div><div class="title-window"><p class="eyebrow" id="eyebrow">PRESS START</p><h1 class="level" data-ui-copy="code">LEVEL 10</h1><canvas class="rx-ascii" aria-hidden="true"></canvas><h2 class="cn-title" data-ui-copy="name">丰裕</h2><div class="subtitle" data-ui-copy="subtitle">ABUNDANCE</div></div>
+ <!-- V101 backOS: window chrome around menu --><div class="bos-win"><div class="bos-bar" aria-hidden="true"><i class="bos-logo"></i><span>主菜单 <small>MENU.EXE</small></span><b class="bos-ctl"><i>_</i><i>□</i><i>×</i></b></div><nav class="menu" aria-label="主菜单"><button class="menu-button primary selected" id="start" disabled><span>正在进入麦田</span><small>…</small></button><button class="menu-button" id="open-settings"><span>游戏设置</span></button><button class="menu-button" id="open-journal"><span>层级档案</span></button><button class="menu-button" id="open-controls"><span>操作说明</span></button><button class="menu-button" id="open-developer"><span>开发者模式</span></button></nav><div class="bos-tray" aria-hidden="true"><span>C:\\BACKROOMS\\LV<span data-ui-copy="number">010</span>&gt;<i class="bos-cur"></i></span><span><small>BKN</small> <b id="bos-clock">--:--</b></span></div></div></div>
 
  <div class="loading" id="loading">LOADING <span id="load-number">0%</span><div class="loading-track"><i id="load-bar"></i></div></div>
  <footer class="bottomline"><span class="desktop-hint"><kbd class="key">↑ ↓</kbd>选择　 <kbd class="key">ENTER</kbd>确定</span><span class="mobile-hint">轻触选项进入</span><span><kbd class="key">ESC</kbd>返回</span></footer>
@@ -135,6 +136,8 @@ $('#developer .developer-caption').insertAdjacentHTML('beforebegin',`<p class="d
 // V99: lay out F2 as a tabbed service-mode menu (after weather controls exist).
 queueMicrotask(()=>enhanceDeveloperPanel($('#developer')));
 {const h=$('#menu .level'),pre=$('#menu .rx-ascii'),sync=()=>{h.classList.toggle('rx-ascii-on',drawAsciiTitle(pre,h.textContent.trim()));};sync();new MutationObserver(sync).observe(h,{childList:true,characterData:true,subtree:true});}
+// V101 backOS: tray clock + boot state line.
+try{initBackOS($('#menu'));}catch(e){console.warn('backOS ui',e);}
 // V99 title OSD: VCR counter + date stamp (UI only).
 {const t0=performance.now(),tc=$('#rx-tc'),dt=$('#rx-date'),M=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];const d=new Date();if(dt)dt.textContent=`${M[d.getMonth()]}. ${String(d.getDate()).padStart(2,'0')} 1997`;
  setInterval(()=>{if(!tc||$('#menu').hidden)return;const s=Math.floor((performance.now()-t0)/1000);tc.textContent=`SP ${Math.floor(s/3600)}:${String(Math.floor(s/60)%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;},500);}
