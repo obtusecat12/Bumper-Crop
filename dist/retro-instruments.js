@@ -1,7 +1,7 @@
 // Small reusable material / object parts. Never a screenshot of a whole widget.
 export const PART_NAMES=['leather_panel','brass_panel','wheat_sprig','rivet','almond_water_bottle','housing_ring','glass_lid','loop_crown','caption_tag','cork','back_glass','front_glass','holder_single_band_optional'];
 export const PART_URL=name=>new URL('./assets/ui-v20/'+name+'.png',import.meta.url).href;
-export async function loadInstrumentParts(){return Object.fromEntries(await Promise.all(PART_NAMES.map(async name=>{const im=new Image();im.src=PART_URL(name);await im.decode();return[name,im];})));}
+export async function loadInstrumentParts(){return Object.fromEntries(await Promise.all(PART_NAMES.map(async name=>{const im=new Image();im.crossOrigin='anonymous';im.src=PART_URL(name);await im.decode();return[name,im];})));}
 export const GAUGES=[{rx:218,ry:196,t:34,label:'体力',y:101,colors:['#6e844d','#bcb067','#a55d48']},{rx:167,ry:147,t:30,label:'水分',y:150,colors:['#578b7d','#588090','#546991']},{rx:120,ry:102,t:24,label:'血量',y:195,colors:['#834e45','#ad7865','#b69876']}];
 const f=n=>Number(n.toFixed(3));
 export function gaugePath(index,value=100){const{rx,ry,t}=GAUGES[index],v=Math.max(0,Math.min(100,Number(value)||0));if(!v)return'';

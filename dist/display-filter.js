@@ -95,7 +95,7 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  }
  function configure(next,w,h){if(disposed||(mode===next&&outputWidth===w&&outputHeight===h))return;
   epoch++;readback.cancel();if(readJob){readJob.slot.busy=false;readJob=null;}
-  mode=next;if(mode!=='vhs')stopWorkers();outputWidth=w;outputHeight=h;const scale=Math.min(1,720/h);width=Math.max(2,Math.round(w*scale/2)*2);height=Math.max(2,Math.round(h*scale/2)*2);lastCapture=-Infinity;lastOutput=0;displayed=-1;
+  mode=next;compositor?.setActive?.(mode==='vhs');if(mode!=='vhs')stopWorkers();outputWidth=w;outputHeight=h;const scale=Math.min(1,720/h);width=Math.max(2,Math.round(w*scale/2)*2);height=Math.max(2,Math.round(h*scale/2)*2);lastCapture=-Infinity;lastOutput=0;displayed=-1;
   source?.dispose();texture?.dispose();internal?.dispose();source=texture=null;
   const presentationFilter=mode==='native'?T.LinearFilter:T.NearestFilter;
   internal=new T.WebGLRenderTarget(width,height,{depthBuffer:false,minFilter:presentationFilter,magFilter:presentationFilter});internal.texture.colorSpace=T.NoColorSpace;
@@ -104,15 +104,16 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  }
  function setLensEffect(next){lensEffect=next;}
  function setScenePipeline(next){scenePipeline=next;}
- function setCompositor(next){compositor=next;uiTexture?.dispose();uiTexture=new T.CanvasTexture(next.canvas);uiWidth=next.canvas.width;uiHeight=next.canvas.height;uiTexture.flipY=true;uiTexture.colorSpace=T.NoColorSpace;uiTexture.minFilter=uiTexture.magFilter=T.LinearFilter;uiTexture.generateMipmaps=false;uiMaterial.uniforms.picture.value=uiTexture;}
+ function setCompositor(next){compositor=next;next.setActive?.(mode==='vhs');uiTexture?.dispose();uiTexture=new T.CanvasTexture(next.canvas);uiWidth=next.canvas.width;uiHeight=next.canvas.height;uiTexture.flipY=true;uiTexture.colorSpace=T.NoColorSpace;uiTexture.minFilter=uiTexture.magFilter=T.LinearFilter;uiTexture.generateMipmaps=false;uiMaterial.uniforms.picture.value=uiTexture;}
  function compose(scene,view,beforeScene,skipScene){
   // Upload changed UI before 3D draw submission, not in the middle of it.
-  if(compositor){const changed=compositor.paint(width,height);if(uiWidth!==compositor.canvas.width||uiHeight!==compositor.canvas.height)setCompositor(compositor);else if(changed)uiTexture.needsUpdate=true;renderer.initTexture(uiTexture);}
+  const ui=mode==='vhs'&&compositor?uiTexture:null;
+  if(ui){const changed=compositor.paint(width,height);if(uiWidth!==compositor.canvas.width||uiHeight!==compositor.canvas.height)setCompositor(compositor);else if(changed)uiTexture.needsUpdate=true;renderer.initTexture(uiTexture);}
   renderer.setRenderTarget(internal);
-  if(scenePipeline){if(skipScene)scenePipeline.renderUI(width,height,internal,uiTexture,mode==='vhs'?2:0);else scenePipeline.render(scene,view,beforeScene,width,height,internal,uiTexture,mode==='vhs'?2:0);return;}
+  if(scenePipeline){if(skipScene)scenePipeline.renderUI(width,height,internal,ui,mode==='vhs'?2:0);else scenePipeline.render(scene,view,beforeScene,width,height,internal,ui,mode==='vhs'?2:0);return;}
   if(skipScene)renderer.clear();else{beforeScene?.();renderer.render(scene,view);lensEffect?.render(width,height);}
   renderer.setRenderTarget(internal);
-  if(uiTexture){const old=renderer.autoClear;renderer.autoClear=false;renderer.render(uiScene,camera);renderer.autoClear=old;}
+  if(ui){const old=renderer.autoClear;renderer.autoClear=false;renderer.render(uiScene,camera);renderer.autoClear=old;}
  }
  function present(picture,kind){material.uniforms.picture.value=picture;material.uniforms.filterMode.value=kind;material.uniforms.frameHeight.value=height;renderer.render(screen,camera);}
  function render(scene,view,now,beforeScene,skipScene=false){

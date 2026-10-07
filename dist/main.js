@@ -112,7 +112,7 @@ game.innerHTML=`
 <div class="touch-ui" id="touch" data-ui-part="touch" hidden><div class="joystick" id="joystick"><div class="stick" id="stick"></div></div><div class="touch-actions"><button id="touch-zoom" aria-label="切换镜头变焦">1×</button><button id="touch-run" aria-label="奔跑">跑</button><button id="touch-jump" aria-label="跳跃">跃</button><button id="touch-use" aria-label="拾取">E</button><button id="touch-drink" aria-label="饮水">Q</button></div></div>
 <div class="modal" id="settings" data-ui-part="settings" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden><div class="panel"><div class="panel-header"><h2 id="settings-title">画面与声音</h2><button class="close" data-close aria-label="关闭">×</button></div>
  <label class="setting"><span>画面质量<small>控制麦田细节与远景密度</small></span><select id="quality"><option value="high">精细</option><option value="balanced">均衡 · 推荐</option><option value="low">流畅</option></select></label>
- <label class="setting"><span>画面滤镜<small>720p 内部渲染 · 1080p 输出</small></span><select id="filter"><option value="vhs">VHS · 1080P（默认）</option><option value="pixel">像素锯齿 · 原版</option><option value="ps1">PS1 · 320P</option><option value="native">清晰 · 无滤镜</option></select></label>
+ <label class="setting"><span>画面滤镜<small>720p 内部渲染 · 1080p 输出</small></span><select id="filter"><option value="pixel">像素锯齿 · 原版（默认）</option><option value="vhs">VHS · 1080P（可选）</option><option value="ps1">PS1 · 320P</option><option value="native">清晰 · 无滤镜</option></select></label>
  <label class="setting"><span>视野 <b id="fov-value">72°</b></span><input id="fov" type="range" min="55" max="95" step="1" value="72"></label>
  <label class="setting"><span>鼠标灵敏度</span><input id="sensitivity" type="range" min="20" max="180" value="75"></label>
  <label class="setting"><span>环境音量</span><input id="volume" type="range" min="0" max="100" value="65"></label>
@@ -131,10 +131,10 @@ const instrumentParts=await loadInstrumentParts();
 const survivalDisplay=createSurvivalDisplay(game,instrumentParts);survivalDisplay.update(100,100,0);
 const touchDevice=matchMedia('(pointer:coarse)').matches,reduceCameraMotion=matchMedia('(prefers-reduced-motion:reduce)');
 document.body.classList.toggle('touch-mode',touchDevice);
-let settings={quality:touchDevice?'low':'balanced',filter:'vhs',fov:72,sensitivity:75,volume:65,bob:!matchMedia('(prefers-reduced-motion:reduce)').matches,showfps:false,devMode:false};
+let settings={quality:touchDevice?'low':'balanced',filter:'pixel',fov:72,sensitivity:75,volume:65,bob:!matchMedia('(prefers-reduced-motion:reduce)').matches,showfps:false,devMode:false};
 try{const saved=JSON.parse(localStorage.getItem('level10.preferences.v1')||'null');if(saved&&typeof saved==='object')settings={...settings,...saved}}catch{}
 settings.devMode=settings.devMode===true;
-if(!FILTERS.includes(settings.filter))settings.filter='vhs';
+if(!FILTERS.includes(settings.filter))settings.filter='pixel';
 delete settings.retro;
 if(!['high','balanced','low'].includes(settings.quality))settings.quality='balanced';
 let renderer;

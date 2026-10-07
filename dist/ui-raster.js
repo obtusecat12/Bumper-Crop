@@ -25,17 +25,20 @@ function retrofitSelects(host,invalidate){const records=[];
  return records;
 }
 export function createUIRaster(host,{survival,navigation}){
- const canvas=document.createElement('canvas'),c=canvas.getContext('2d',{alpha:true});let dirty=true,layoutDirty=true,commands=[],frame=null,lastRevision='',disposed=false;
+ const canvas=document.createElement('canvas'),c=canvas.getContext('2d',{alpha:true});let dirty=true,layoutDirty=true,commands=[],frame=null,lastRevision='',disposed=false,active=true;
  const custom=new Map([[survival.root,survival],[navigation.root,navigation]]);
  const invalidate=()=>{dirty=layoutDirty=true;};const selects=retrofitSelects(host,invalidate);
- const observer=new MutationObserver(records=>{for(const m of records){if(m.type==='attributes'&&(m.attributeName.startsWith('aria-')||m.attributeName==='d'))continue;
+ const observer=new MutationObserver(records=>{if(!active)return;for(const m of records){if(m.type==='attributes'&&(m.attributeName.startsWith('aria-')||m.attributeName==='d'))continue;
   const target=m.target.nodeType===1?m.target:m.target.parentElement;if(target?.closest('.stats,.map-mini')){dirty=true;if(m.target===navigation.root&&m.attributeName==='hidden')layoutDirty=true;continue;}
   if(target?.closest('canvas.scene'))continue;if(target?.closest('[hidden]')&&!(m.type==='attributes'&&m.attributeName==='hidden'))continue;invalidate();break;}});
  observer.observe(host,{subtree:true,attributes:true,childList:true,characterData:true});
  const onEvent=()=>invalidate();for(const name of ['input','change','focusin','focusout','pointerover','pointerout','scroll'])host.addEventListener(name,onEvent,true);
  document.documentElement.addEventListener('ui-themechange',invalidate);
  const resize=new ResizeObserver(invalidate);resize.observe(host);document.fonts?.ready.then(invalidate);
- for(const el of host.querySelectorAll(':scope > '+roots.split(',').join(',:scope > ')))el.classList.add('raster-source');
+ const rootEls=()=>host.querySelectorAll(':scope > '+roots.split(',').join(',:scope > '));
+ // VHS mode paints the DOM UI into the filtered frame; every other mode shows the DOM UI directly.
+ function setActive(next){next=!!next;if(next===active)return;active=next;for(const el of rootEls())el.classList.toggle('raster-source',active);if(active)invalidate();}
+ for(const el of rootEls())el.classList.add('raster-source');
  function textRuns(node,style){const content=node.textContent;if(!content?.trim())return[];const range=document.createRange();range.selectNodeContents(node);const rects=[...range.getClientRects()].filter(r=>r.width&&r.height);if(!rects.length)return[];
   if(rects.length===1)return[{text:content.replace(/[ \t\r\n\f]+/g,' '),r:rects[0]}];
   const runs=[];for(let i=0;i<content.length;i++){range.setStart(node,i);range.setEnd(node,i+1);const r=range.getBoundingClientRect();if(!r.width||!r.height)continue;const last=runs.at(-1);if(last&&Math.abs(last.r.top-r.top)<1&&Math.abs(last.right-r.left)<2){last.text+=content[i];last.right=r.right;}else runs.push({text:content[i],r,right:r.right});}return runs;
@@ -74,5 +77,5 @@ export function createUIRaster(host,{survival,navigation}){
   for(const command of commands)command();dirty=false;return true;
  }
  function dispose(){disposed=true;document.documentElement.removeEventListener('ui-themechange',invalidate);observer.disconnect();resize.disconnect();for(const name of ['input','change','focusin','focusout','pointerover','pointerout','scroll'])host.removeEventListener(name,onEvent,true);for(const el of host.querySelectorAll('.raster-source'))el.classList.remove('raster-source');}
- return{canvas,paint,invalidate,dispose};
+ return{canvas,paint,invalidate,dispose,setActive};
 }
