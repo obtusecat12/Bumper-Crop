@@ -8,7 +8,8 @@ import {pondShoreWidth,pondContours,pondHabitat} from './lake-shape.js?v=60';
 // textures, vegetation geometry, or the streamed chunk manager.
 // X increases right, Z increases down; all absolute cell indices remain BigInt.
 const SIZE=64,TAU=Math.PI*2;
-export const MAP_COLORS={wheat:'#b8a46c',barley:'#998061',stubble:'#81705b',grass:'#74845a',yard:'#a28f70',rut:'#8c7658',water:'#649298',shore:'#a3a17c',tree:'#4d6849',hedge:'#61774d',building:'#a46e59'};
+// V99: USGS 7.5-minute quadrangle palette (paper, woodland green, survey blue, black culture, red tracks).
+export const MAP_COLORS={wheat:'#f3ecd3',barley:'#ece2bf',stubble:'#e4d9b6',grass:'#dde7c2',yard:'#e9dfc3',rut:'#a33c25',water:'#a9d3e6',shore:'#4a86b4',tree:'#b6da9b',hedge:'#9fcc85',building:'#1c1a14'};
 const COLORS=MAP_COLORS;
 const TREE_RADII=[5.1,4.3,6.0,3.8,3.0,3.0];
 const FARM_NAMES=['红色谷仓','农舍附屋','农舍附屋','旧农舍','旧农舍','农具棚'];
@@ -57,12 +58,12 @@ function metadata(f){
 
 function drawParcels(ctx,f,n){
  const layer=makeCanvas(n),g=layer.getContext('2d'),pixels=g.createImageData(n,n),classes=new Uint8Array(n*n),crop={},road={};
- const colors=[[184,164,108],[149,121,84],[116,96,72]];
+ const colors=[[243,236,211],[236,226,191],[228,217,182]];
  for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=(i+.5)*64/n,z=(j+.5)*64/n;cropSample(x,z,f,crop);roadProfile(x,z,f,road);
-  let color=colors[crop.crop],v=crop.tone*(crop.crop===2?(1+(Math.cos(crop.row*1.57)>.55?.025:-.01)):1),kind=crop.crop;
-  const margin=shoreGrassCover(x,z,f);if(margin>.23){color=[113,131,81];v=.92+margin*.08;kind=4;}
-  if(road.distance<2.1){color=road.rut>.13?[132,111,79]:[107,122,74];v=1;kind=road.rut>.13?3:4;}
-  if(road.yard>.1){color=[139,119,89];v=.92+road.yard*.08;kind=5;}
+  let color=colors[crop.crop],v=1-(1-crop.tone)*.2*(crop.crop===2?(1+(Math.cos(crop.row*1.57)>.55?.025:-.01)):1),kind=crop.crop;
+  const margin=shoreGrassCover(x,z,f);if(margin>.23){color=[221,231,194];v=1;kind=4;}
+  if(road.distance<2.1){const track=road.distance<1.45||road.rut>.13;color=track?[163,60,37]:[243,236,211];v=1;kind=track?3:4;}// V100: solid USGS track band, not 0.5 m twin ruts
+  if(road.yard>.1){color=[233,223,195];v=1;kind=5;}
   const k=j*n+i;classes[k]=kind;pixels.data[k*4]=color[0]*v;pixels.data[k*4+1]=color[1]*v;pixels.data[k*4+2]=color[2]*v;pixels.data[k*4+3]=255;
  }g.putImageData(pixels,0,0);ctx.drawImage(layer,0,0,64,64);return{size:n,classes};
 }
@@ -72,7 +73,7 @@ function drawMeadow(ctx,f){
  for(let z=0;z<n;z++)for(let x=0;x<n;x++){
   meadowEnvironment((x+.5)*64/n,(z+.5)*64/n,f.meadow,env);
   const c=env.cover*(roadProfile((x+.5)*64/n,(z+.5)*64/n,f,{}).distance<2.5||compoundAt((x+.5)*64/n,(z+.5)*64/n,f,{}).clearing?0:1);if(c<=.001)continue;const i=(z*n+x)*4,wet=env.moisture,d=env.patchDensity;
-  pixels.data[i]=Math.round(122-wet*15+d*8);pixels.data[i+1]=Math.round(133+wet*7+d*7);pixels.data[i+2]=Math.round(78+wet*10+d*6);pixels.data[i+3]=Math.round(Math.min(1,c*1.25)*255);
+  pixels.data[i]=Math.round(214-wet*20);pixels.data[i+1]=Math.round(230-wet*6);pixels.data[i+2]=Math.round(190+wet*14);pixels.data[i+3]=Math.round(Math.min(1,c*1.25)*255);
  }
  g.putImageData(pixels,0,0);ctx.drawImage(layer,0,0,64,64);
 }
@@ -84,7 +85,7 @@ function drawLane(ctx,f,l){
  // grassy median follow the exact same centre curve as roadProfile().
  if(!f.farm&&!f.barn){
   line(ctx,points,COLORS.grass,4.1);
-  for(const sign of [-1,1])line(ctx,points.map(p=>{const phase=p.t*Math.PI/32,offset=sign*(.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11));return{x:p.x+(l.axis==='x'?offset:0),z:p.z+(l.axis==='z'?offset:0)}}),COLORS.rut,.47);
+  for(const sign of [-1,1])line(ctx,points.map(p=>{const phase=p.t*Math.PI/32,offset=sign*(.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11));return{x:p.x+(l.axis==='x'?offset:0),z:p.z+(l.axis==='z'?offset:0)}}),COLORS.rut,1.6);
   return;
  }
  // The photographic clearing suppresses procedural roads with a gradual
@@ -92,7 +93,7 @@ function drawLane(ctx,f,l){
  for(let i=1;i<points.length;i++){
   const a=points[i-1],b=points[i],weight=farmRoadWeight((a.x+b.x)/2,(a.z+b.z)/2,f);if(weight<=.005)continue;
   ctx.globalAlpha=weight;line(ctx,[a,b],COLORS.grass,4.1);
-  for(const sign of [-1,1])line(ctx,[a,b].map(p=>{const phase=p.t*Math.PI/32,offset=sign*(.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11));return{x:p.x+(l.axis==='x'?offset:0),z:p.z+(l.axis==='z'?offset:0)}}),COLORS.rut,.47);
+  for(const sign of [-1,1])line(ctx,[a,b].map(p=>{const phase=p.t*Math.PI/32,offset=sign*(.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11));return{x:p.x+(l.axis==='x'?offset:0),z:p.z+(l.axis==='z'?offset:0)}}),COLORS.rut,1.6);
  }
  ctx.globalAlpha=1;
 }
@@ -102,7 +103,7 @@ function drawDrive(ctx,d){
  const ux=dx/len,uz=dz/len;
  const points=[{x:d.x1-ux*2.2,z:d.z1-uz*2.2},{x:d.x2,z:d.z2}];
  line(ctx,points,COLORS.grass,4.1);
- for(const sign of [-1,1])line(ctx,points.map(p=>({x:p.x-uz*.77*sign,z:p.z+ux*.77*sign})),COLORS.rut,.47);
+ for(const sign of [-1,1])line(ctx,points.map(p=>({x:p.x-uz*.77*sign,z:p.z+ux*.77*sign})),COLORS.rut,1.6);
 }
 function drawBank(ctx,f,fraction,color){
  // Slope/height masks, sampled from the same final profile as terrain.
@@ -112,12 +113,12 @@ function drawPond(ctx,f){
  ctx.beginPath();for(const loop of pondContours(f)){if(!loop.length)continue;ctx.moveTo(loop[0].x,loop[0].z);for(let i=1;i<loop.length;i++)ctx.lineTo(loop[i].x,loop[i].z);ctx.closePath()}ctx.fillStyle=COLORS.water;ctx.fill('evenodd');
 }
 function drawBuilding(ctx,p,variant=0){
- if(p.kind==='silo'){ctx.beginPath();ctx.arc(p.x,p.z,p.hx,0,TAU);ctx.fillStyle='#9ca197';ctx.fill();ctx.strokeStyle='#585c54';ctx.lineWidth=.35;ctx.stroke();return;}
+ if(p.kind==='silo'){ctx.beginPath();ctx.arc(p.x,p.z,p.hx,0,TAU);ctx.fillStyle='#1c1a14';ctx.fill();ctx.strokeStyle='#1c1a14';ctx.lineWidth=.35;ctx.stroke();return;}
  ctx.save();ctx.translate(p.x,p.z);ctx.rotate(-p.angle);
- variant=p.variant??variant;const shade=({red:'#995f4e',ochre:'#9c8a60',whitewash:'#b7b7a5',olive:'#747d5e',darkwood:'#655c4d'})[p.finish]||(p.kind==='farm-building'?'#9b7968':['#857761','#8c8371','#a46e59','#916d59','#8b7364','#817663','#8c7d67','#8f806a'][variant%8]);
+ variant=p.variant??variant;const shade='#1c1a14';
  ctx.fillStyle=shade;ctx.fillRect(-p.hx,-p.hz,p.hx*2,p.hz*2);
- ctx.fillStyle='rgba(40,34,28,.16)';ctx.fillRect(0,-p.hz,p.hx,p.hz*2);
- ctx.strokeStyle='#5e5847';ctx.lineWidth=.35;ctx.strokeRect(-p.hx,-p.hz,p.hx*2,p.hz*2);
+ 
+ ctx.strokeStyle='#1c1a14';ctx.lineWidth=.35;ctx.strokeRect(-p.hx,-p.hz,p.hx*2,p.hz*2);
  line(ctx,[{x:0,z:-p.hz},{x:0,z:p.hz}],'#c0a58a',.30);ctx.restore();
 }
 function drawYard(ctx,p){if(p.kind==='compound-building'||p.kind==='silo')return;path(ctx,corners(p.x,p.z,p.hx+3.4,p.hz+4.3,p.angle));ctx.fillStyle=COLORS.yard;ctx.fill()}
@@ -125,10 +126,10 @@ function drawTree(ctx,t,dx=0,dz=0,isPhoto=false){
  const x=t.x+dx,z=t.z+dz,r=isPhoto?t.crownWidth*.50:TREE_RADII[t.variant%6]*t.scale;if(x+r<0||z+r<0||x-r>64||z-r>64)return;
  const phase=(t.seed??0)%997/997*TAU;
  const burgundy=isPhoto&&t.kind==='burgundy',conifer=isPhoto?t.kind==='evergreen':t.variant===5;
- const color=burgundy?'#785b54':conifer?'#416352':COLORS.tree;
+ const color=burgundy?'#c9d9a0':conifer?'#9fcc85':COLORS.tree;
  const points=[];for(let i=0;i<12;i++){const a=i*TAU/12,rad=r*(.89+.10*Math.sin(i*2.1+phase));points.push({x:x+Math.cos(a)*rad,z:z+Math.sin(a)*rad})}
- path(ctx,points);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='rgba(39,65,40,.28)';ctx.lineWidth=.22;ctx.stroke();
- ctx.beginPath();ctx.arc(x-r*.20,z-r*.20,r*.44,0,TAU);ctx.fillStyle=burgundy?'rgba(188,130,108,.14)':'rgba(166,191,112,.16)';ctx.fill();
+ path(ctx,points);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='rgba(70,120,55,.55)';ctx.lineWidth=.22;ctx.stroke();
+ ctx.beginPath();ctx.arc(x-r*.20,z-r*.20,r*.44,0,TAU);ctx.fillStyle='rgba(255,255,240,.18)';ctx.fill();
 }
 function drawShrub(ctx,s,dx,dz){
  const x=s.x+dx,z=s.z+dz,r=s.width*s.scale*.50;if(x+r<0||z+r<0||x-r>64||z-r>64)return;

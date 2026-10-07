@@ -61,7 +61,7 @@ export function farmClearing(x,z,f){
 }
 export const FARM_VIEWS={
  'farm-a':{label:'Kephart 农场 · 照片一',x:-120,z:142,eye:2.05,focusX:-25,focusZ:4,focusY:4.2,fov:16.1,range:365},
- 'farm-b':{label:'Kephart 农场 · 照片二',x:362,z:248,eye:2,focusX:-3,focusZ:0,focusY:4,fov:7.3,range:620}
+ 'farm-b':{label:'Kephart 农场 · 照片二',x:283.4,z:194.6,eye:2,focusX:-3,focusZ:0,focusY:4,fov:9.3,range:620}
 };
 export function farmViewTarget(name,field,seed){
  const v=FARM_VIEWS[name];if(!v)return null;

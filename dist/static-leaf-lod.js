@@ -27,6 +27,8 @@ function use(mesh,level){const range=mesh.userData.leafLOD.ranges[level];mesh.co
 export function setLeafLOD(mesh,level){mesh.userData.leafLOD.level=level;use(mesh,level);}
 export function selectLeafLOD(mesh,distance){setLeafLOD(mesh,distance<24?0:distance<70?1:2);}
 export function bindLeafShadowLOD(mesh){
- mesh.onBeforeShadow=()=>use(mesh,Math.max(1,mesh.userData.leafLOD.level));
+ // V100: near trees cast shadows from their exact sprays. The merged (enlarged)
+ // shadow proxies used to sit around the real leaves and shade them black.
+ mesh.onBeforeShadow=()=>{const l=mesh.userData.leafLOD.level;use(mesh,l===0?0:Math.max(1,l));};
  mesh.onAfterShadow=()=>use(mesh,mesh.userData.leafLOD.level);
 }

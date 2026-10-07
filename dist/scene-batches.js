@@ -49,7 +49,7 @@ export function createSceneBatches(){
    if(shadowsUpdating&&m.castShadow)for(const l of lights)if(!m.frustumCulled||l.shadow.getFrustum().intersectsSphere(sphere))shadows++;
    const unit=(g.index?.count||g.attributes.position.count)/3;
    const mainCount=leaf?unit*m.count:Math.min(g.drawRange.count,g.index?.count||g.attributes.position.count)/3*(m.isInstancedMesh?m.count:g.isInstancedBufferGeometry?g.instanceCount:1);
-   const shadowCount=leaf?unit*leaf.ranges[Math.max(1,leaf.level)].count:lod?lod.at(-1).count/3:mainCount;
+   const shadowCount=leaf?unit*leaf.ranges[leaf.level===0?0:Math.max(1,leaf.level)].count:lod?lod.at(-1).count/3:mainCount;
    total+=(main?mainCount:0)+shadows*shadowCount;
    if((leaf||lod)&&(main||shadows)){
     let record=budgetRecords.get(m);if(!record){record={m,main:false,shadows:0,unit:0,distance:0};budgetRecords.set(m,record);}
@@ -61,7 +61,7 @@ export function createSceneBatches(){
   if(total>limit){
    candidates.sort((a,b)=>b.distance-a.distance);
    for(const c of candidates){if(total<=limit)break;const {m,main,shadows,unit}=c,leaf=m.userData.leafLOD,g=m.geometry;
-    if(leaf&&leaf.level<2){const before=(main?m.count:0)+shadows*leaf.ranges[Math.max(1,leaf.level)].count;setLeafLOD(m,2);const after=(main?m.count:0)+shadows*m.count;total-=(before-after)*unit;}
+    if(leaf&&leaf.level<2&&c.distance>=32){const before=(main?m.count:0)+shadows*leaf.ranges[leaf.level===0?0:Math.max(1,leaf.level)].count;setLeafLOD(m,2);const after=(main?m.count:0)+shadows*m.count;total-=(before-after)*unit;}
     else if(main&&g.userData.staticLOD&&c.distance>=STATIC_LOD_NEAR){const range=g.userData.staticLOD[c.distance>95?3:1];if(range.count<g.drawRange.count){total-=(g.drawRange.count-range.count)/3;g.setDrawRange(range.start,range.count);}}
    }
   }
