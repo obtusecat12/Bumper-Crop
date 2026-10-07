@@ -62,7 +62,7 @@ function drawParcels(ctx,f,n){
  for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=(i+.5)*64/n,z=(j+.5)*64/n;cropSample(x,z,f,crop);roadProfile(x,z,f,road);
   let color=colors[crop.crop],v=1-(1-crop.tone)*.2*(crop.crop===2?(1+(Math.cos(crop.row*1.57)>.55?.025:-.01)):1),kind=crop.crop;
   const margin=shoreGrassCover(x,z,f);if(margin>.23){color=[221,231,194];v=1;kind=4;}
-  if(road.distance<2.1){color=road.rut>.13?[163,60,37]:[243,236,211];v=1;kind=road.rut>.13?3:4;}
+  if(road.distance<2.1){const track=road.distance<1.45||road.rut>.13;color=track?[163,60,37]:[243,236,211];v=1;kind=track?3:4;}// V100: solid USGS track band, not 0.5 m twin ruts
   if(road.yard>.1){color=[233,223,195];v=1;kind=5;}
   const k=j*n+i;classes[k]=kind;pixels.data[k*4]=color[0]*v;pixels.data[k*4+1]=color[1]*v;pixels.data[k*4+2]=color[2]*v;pixels.data[k*4+3]=255;
  }g.putImageData(pixels,0,0);ctx.drawImage(layer,0,0,64,64);return{size:n,classes};
@@ -85,7 +85,7 @@ function drawLane(ctx,f,l){
  // grassy median follow the exact same centre curve as roadProfile().
  if(!f.farm&&!f.barn){
   line(ctx,points,COLORS.grass,4.1);
-  for(const sign of [-1,1])line(ctx,points.map(p=>{const phase=p.t*Math.PI/32,offset=sign*(.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11));return{x:p.x+(l.axis==='x'?offset:0),z:p.z+(l.axis==='z'?offset:0)}}),COLORS.rut,.47);
+  for(const sign of [-1,1])line(ctx,points.map(p=>{const phase=p.t*Math.PI/32,offset=sign*(.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11));return{x:p.x+(l.axis==='x'?offset:0),z:p.z+(l.axis==='z'?offset:0)}}),COLORS.rut,1.6);
   return;
  }
  // The photographic clearing suppresses procedural roads with a gradual
@@ -93,7 +93,7 @@ function drawLane(ctx,f,l){
  for(let i=1;i<points.length;i++){
   const a=points[i-1],b=points[i],weight=farmRoadWeight((a.x+b.x)/2,(a.z+b.z)/2,f);if(weight<=.005)continue;
   ctx.globalAlpha=weight;line(ctx,[a,b],COLORS.grass,4.1);
-  for(const sign of [-1,1])line(ctx,[a,b].map(p=>{const phase=p.t*Math.PI/32,offset=sign*(.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11));return{x:p.x+(l.axis==='x'?offset:0),z:p.z+(l.axis==='z'?offset:0)}}),COLORS.rut,.47);
+  for(const sign of [-1,1])line(ctx,[a,b].map(p=>{const phase=p.t*Math.PI/32,offset=sign*(.77+.020*Math.sin(phase*5)+.012*Math.sin(phase*11));return{x:p.x+(l.axis==='x'?offset:0),z:p.z+(l.axis==='z'?offset:0)}}),COLORS.rut,1.6);
  }
  ctx.globalAlpha=1;
 }
@@ -103,7 +103,7 @@ function drawDrive(ctx,d){
  const ux=dx/len,uz=dz/len;
  const points=[{x:d.x1-ux*2.2,z:d.z1-uz*2.2},{x:d.x2,z:d.z2}];
  line(ctx,points,COLORS.grass,4.1);
- for(const sign of [-1,1])line(ctx,points.map(p=>({x:p.x-uz*.77*sign,z:p.z+ux*.77*sign})),COLORS.rut,.47);
+ for(const sign of [-1,1])line(ctx,points.map(p=>({x:p.x-uz*.77*sign,z:p.z+ux*.77*sign})),COLORS.rut,1.6);
 }
 function drawBank(ctx,f,fraction,color){
  // Slope/height masks, sampled from the same final profile as terrain.
