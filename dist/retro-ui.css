@@ -75,7 +75,7 @@ body:not(.rx-title) #menu.screen:after{content:'';position:absolute;inset:0;z-in
 @media(max-height:640px){#menu .cn-title{font-size:32px!important;line-height:32px!important;margin-top:12px}#menu .hero{gap:16px}#menu .menu-button{min-height:32px!important;font-size:16px!important;line-height:16px!important}}
 
 /* ── Modals (settings, journal, controls, F2 developer, F map) ── */
-.modal{background:#0d0c07d8!important}
+.modal{background:#0d0c07!important}
 .modal:before{content:'';position:fixed;inset:0;z-index:-1;background:url('./assets/ui-v99/escher-wheat.png') 0 0/256px 256px repeat;opacity:.12;image-rendering:pixelated;pointer-events:none}
 .modal .panel{padding:0 24px 20px!important;color:var(--rx-ink)}
 .modal .panel-header{margin:0 -24px 20px!important;padding:8px 12px 8px 24px!important;background:var(--rx-gold);box-shadow:inset 0 -2px 0 var(--rx-ochre)!important;align-items:center}
