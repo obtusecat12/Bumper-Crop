@@ -10,6 +10,7 @@ import {BUILDING_TYPES} from './urban-buildings.js?v=60';
 import {paintCompass} from './retro-instruments.js?v=60';
 import {createMapAtlas} from './map-atlas.js?v=99';
 import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=102';
+import {paintWin98Compass,blueprintize,cadUCS,cadCursor,cadPlayer,mountCadChrome,mountTaskManager} from './win98-ui.js?v=102b';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
 export function mapPoint(center,dx,dz){
@@ -114,7 +115,7 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   for(let dz=minZ;dz<=maxZ;dz++)for(let dx=minX;dx<=maxX;dx++)list.push({cx:c.cx+BigInt(dx),cz:c.cz+BigInt(dz),x:w/2+(dx*64-c.x)*scale,z:h/2+(dz*64-c.z)*scale,d:(dx*64+32-c.x)**2+(dz*64+32-c.z)**2});
   return list;
  }
- let urbanReferenceShapes=[];const GMAPS_CITY=true;const gmUpdate=mountGmapsChrome(modal,{invalidate:()=>{dirty=true;}});mountGmapsVitals();
+ let urbanReferenceShapes=[];const GMAPS_CITY=true;const gmUpdate=mountGmapsChrome(modal,{invalidate:()=>{dirty=true;}});mountGmapsVitals();const cadUpdate=mountCadChrome(modal,{onClose});mountTaskManager();
  function setUrbanReferenceShapes(shapes){urbanReferenceShapes=shapes.filter(q=>q.kind==='obb'&&q.w>4&&q.d>4);dirty=true;miniCenter=null;}
  function cityPaint(context,c,w,h,scale){
   // V101: Level 11 uses the classic-maps palette (gmaps-ui.js); legacy painter kept below.
@@ -134,7 +135,9 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
  function springPaint(context,c,w,h,scale){context.fillStyle='#18211d';context.fillRect(0,0,w,h);const x=p=>w/2+(p[0]-c.x)*scale,z=p=>h/2+(p[1]-c.z)*scale;context.fillStyle='#656956';context.beginPath();context.ellipse(x([ANNEX.x,0]),z([0,ANNEX.z]),ANNEX.rx*scale,ANNEX.rz*scale,0,0,Math.PI*2);context.fill();context.fillRect(x([1.1,0]),z([0,-10.4]),3.8*scale,7.4*scale);context.fillStyle='#276b60';context.beginPath();CAVE_PLAN.forEach((p,i)=>i?context.lineTo(x(p),z(p)):context.moveTo(x(p),z(p)));context.closePath();context.fill();context.strokeStyle='#9dc4ad';context.lineWidth=1.3;context.stroke();context.strokeStyle='#638d87';context.lineWidth=.60*scale;context.beginPath();streamPath().forEach((p,i)=>i?context.lineTo(x([p[0],0]),z([0,p[2]])):context.moveTo(x([p[0],0]),z([0,p[2]])));context.stroke();context.strokeStyle='#c0b494';context.lineWidth=1.2;for(let i=0;i<STAIRS.count;i++){const zz=STAIRS.start+(i+.5)*STAIRS.tread,xx=stairCenter(zz);context.beginPath();for(let j=0;j<=12;j++){const px=xx+(j/12-.5)*1.06,pz=stairBoundary(i+1,px);if(j)context.lineTo(x([px,0]),z([0,pz]));else context.moveTo(x([px,0]),z([0,pz]));}context.stroke();}return 0;}
  function setLevel(value){if(level===value)return;level=value;zoom=level===27?28:level===0?6:1.5;modal.querySelector('.map-zoom').textContent=Math.round(zoom/1.5*100)+'%';tiles.dispose();if(level===10)tiles=createMapAtlas({seed,maxTiles:384,tilePixels:128,maxPending:512});dirty=true;miniCenter=null;lastRevision=lastMapRevision=-1;modal.querySelector('.map-legend').hidden=level!==10;modal.querySelector('.map-header p').textContent=level===27?'岩体泉 · 泉池、石滩与返回通道':'拖动浏览 · 滚轮缩放 · 点击地面传送';setStatus(level===0?'Level 0 · 点击传送至安全地毯；黑色区域为深坑':level===27?'Level 27 · 独立岩洞 · 沿溪流旁原石踏步返回':level===11?'Level 11 · 连续城市街网 · F2 前往金融街或广场':'点击地图可传送；湖泊会落在岸边。');}
  function terrainPaint(context,c,w,h,scale,usgs=false){
-  if(level===0&&zeroWorld){context.fillStyle='#252216';context.fillRect(0,0,w,h);zeroWorld.map(context,Number(c.cx)*64+c.x,Number(c.cz)*64+c.z,w/2,h/2,scale,Math.max(w,h)/scale/2+22);return 0;}
+  if(level===0&&zeroWorld){const ox=Number(c.cx)*64+c.x,oz=Number(c.cz)*64+c.z;context.fillStyle='#252216';context.fillRect(0,0,w,h);zeroWorld.map(context,ox,oz,w/2,h/2,scale,Math.max(w,h)/scale/2+22);
+   // V102b: AutoCAD R14 blueprint (win98-ui.js) for both minimap and full map.
+   blueprintize(context,w,h,ox,oz,scale,{grid:true});if(context===ctx)cadUCS(context,w,h);return 0;}
   if(level===27)return springPaint(context,c,w,h,scale);
   if(level===11)return cityPaint(context,c,w,h,scale);
   context.fillStyle=uiPalette.mapBackground;context.fillRect(0,0,w,h);context.imageSmoothingEnabled=false;const list=visibleTiles(c,w,h,scale);let missing=0;
@@ -147,11 +150,12 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
  }
  function drawPlayer(context,c,w,h,scale){const p=mapOffset(player,c);if(!p)return;const x=w/2+p.x*scale,z=h/2+p.z*scale;if(x< -20||z< -20||x>w+20||z>h+20)return;
   if(level===11&&context===ctx){gmDrawPin(context,x,z,player.yaw);return;}
+  if(level===0){cadPlayer(context,x,z,player.yaw);return;}
   context.save();context.translate(x,z);context.rotate(-player.yaw);context.beginPath();context.moveTo(0,-9);context.lineTo(6,7);context.lineTo(0,4);context.lineTo(-6,7);context.closePath();const u=level===10&&context===ctx;context.fillStyle=u?'#c2412a':uiPalette.mapPlayer;context.strokeStyle=u?'#1c1a14':uiPalette.mapOutline;context.lineWidth=3;context.stroke();context.fill();context.restore();
  }
  function paintMap(){const missing=terrainPaint(ctx,center,canvas.width,canvas.height,zoom,level===10);ctx.imageSmoothingEnabled=false;drawPlayer(ctx,center,canvas.width,canvas.height,zoom);
-  const p=hover||keyboardTarget&&{x:canvas.width/2,z:canvas.height/2};if(p){ctx.strokeStyle=level===10?'#1c1a14':uiPalette.mapCursor;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x-8,p.z);ctx.lineTo(p.x+8,p.z);ctx.moveTo(p.x,p.z-8);ctx.lineTo(p.x,p.z+8);ctx.stroke();}
-  const metres=level===27?2:zoom>4?10:zoom>2?25:50;modal.querySelector('.map-scale i').style.width=(metres*zoom/canvas.width*surface.clientWidth)+'px';modal.querySelector('.map-scale span').textContent=metres+' m';if(level===11)gmUpdate(zoom,player?.yaw||0);loading.textContent=busy?'正在准备目的地…':missing?'正在绘制周边…':'';counts.mapPaints++;dirty=false;
+  const p=hover||keyboardTarget&&{x:canvas.width/2,z:canvas.height/2};if(p&&level===0)cadCursor(ctx,p,canvas.width,canvas.height);else if(p){ctx.strokeStyle=level===10?'#1c1a14':uiPalette.mapCursor;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x-8,p.z);ctx.lineTo(p.x+8,p.z);ctx.moveTo(p.x,p.z-8);ctx.lineTo(p.x,p.z+8);ctx.stroke();}
+  const metres=level===27?2:zoom>4?10:zoom>2?25:50;modal.querySelector('.map-scale i').style.width=(metres*zoom/canvas.width*surface.clientWidth)+'px';modal.querySelector('.map-scale span').textContent=metres+' m';if(level===11)gmUpdate(zoom,player?.yaw||0);if(level===0)cadUpdate(zoom);loading.textContent=busy?'正在准备目的地…':missing?'正在绘制周边…':'';counts.mapPaints++;dirty=false;
  }
  function update(state,now,visible,allowWork=true){if(disposed)return;player={cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw};if(mini.hidden!==(!visible||open))mini.hidden=!visible||open;
   if(!visible&&!open)return;
@@ -172,5 +176,5 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
  function hide(){open=false;modal.hidden=true;pointer=null;tiles.cancelPending();miniCenter=null;}
  function setBusy(value,text){busy=value;modal.setAttribute('aria-busy',String(value));modal.querySelectorAll('button').forEach(b=>b.disabled=value);if(text)setStatus(text);dirty=true;}
  function dispose(){disposed=true;observer.disconnect();tiles.dispose();mini.remove();modal.remove();}
- const api={root:mini,paint(c,r){c.save();c.translate(r.left,r.top);if(level===11){const k=Math.min(r.width/256,r.height/296);c.translate((r.width-256*k)/2,(r.height-296*k)/2);c.scale(k,k);paintSafariCompass(c,miniCanvas,player?.yaw||0,mini.querySelector('.map-mini-bearing').textContent);c.restore();return;}c.scale(r.width/256,r.height/296);paintCompass(c,parts,miniCanvas,player?.yaw||0,mini.querySelector('.map-mini-bearing').textContent,{...uiTokens,pixelMode:document.body.dataset.filter==='ps1'});c.restore();},get revision(){return counts.minimapPaints+','+counts.mapPaints+','+lastYaw;},setLevel0World(world){zeroWorld=world;dirty=true;miniCenter=null;},invalidate(){dirty=true;miniCenter=null;},update,show,hide,setLevel,setUrbanReferenceShapes,setBusy,setStatus,setUITheme,dispose,modal,stats:()=>({...counts,...tiles.stats()}),get isOpen(){return open;}};return api;
+ const api={root:mini,paint(c,r){c.save();c.translate(r.left,r.top);if(level===0){const k=Math.min(r.width/256,r.height/296);c.translate((r.width-256*k)/2,(r.height-296*k)/2);c.scale(k,k);paintWin98Compass(c,miniCanvas,player?.yaw||0,mini.querySelector('.map-mini-bearing').textContent);c.restore();return;}if(level===11){const k=Math.min(r.width/256,r.height/296);c.translate((r.width-256*k)/2,(r.height-296*k)/2);c.scale(k,k);paintSafariCompass(c,miniCanvas,player?.yaw||0,mini.querySelector('.map-mini-bearing').textContent);c.restore();return;}c.scale(r.width/256,r.height/296);paintCompass(c,parts,miniCanvas,player?.yaw||0,mini.querySelector('.map-mini-bearing').textContent,{...uiTokens,pixelMode:document.body.dataset.filter==='ps1'});c.restore();},get revision(){return counts.minimapPaints+','+counts.mapPaints+','+lastYaw;},setLevel0World(world){zeroWorld=world;dirty=true;miniCenter=null;},invalidate(){dirty=true;miniCenter=null;},update,show,hide,setLevel,setUrbanReferenceShapes,setBusy,setStatus,setUITheme,dispose,modal,stats:()=>({...counts,...tiles.stats()}),get isOpen(){return open;}};return api;
 }
