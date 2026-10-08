@@ -94,7 +94,7 @@ import {createWheatDetailLayer,initializeCerealTextures,releaseCerealGPU,resumeC
 import {createAtmosphere} from './atmosphere.js?v=60';
 import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=60';
 import {initializeRuralTextures} from './rural-textures.js?v=60';
-import {createNavigationMap} from './map-ui.js?v=ui-v101';
+import {createNavigationMap} from './map-ui.js?v=ui-v102';
 import {drawAsciiTitle} from './ascii-title.js?v=100';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=99';
 import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS

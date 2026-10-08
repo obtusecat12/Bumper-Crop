@@ -9,7 +9,7 @@ import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.j
 import {BUILDING_TYPES} from './urban-buildings.js?v=60';
 import {paintCompass} from './retro-instruments.js?v=60';
 import {createMapAtlas} from './map-atlas.js?v=99';
-import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=101';
+import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=102';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
 export function mapPoint(center,dx,dz){

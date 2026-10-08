@@ -6,13 +6,14 @@
 import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan,cityDistrict} from './urban-layout.js?v=return-1';
 import {BUILDING_TYPES} from './urban-buildings.js?v=60';
 import {exitPoint} from './exit-route.js?v=60';
+import {paintSatellite} from './gmaps-satellite.js?v=102';
 
 const FONT='Arial, Helvetica, sans-serif',AQUA="'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 // Classic (pre-2013) tile palette. Satellite/Hybrid are a dark aerial look.
 const PALETTES={
  map:{land:'#f2efe9',park:'#c8deb5',parkEdge:'#b5d29f',casing:'#c9c2b3',street:'#ffffff',artCase:'#e3b24a',art:'#ffe168',hwyCase:'#d48a2a',hwy:'#f9b235',bld:'#e8e4dc',bldTall:'#ddd8ce',bldEdge:'#cbc4b6',label:'#333333',halo:'#ffffff',water:'#a5bfdd'},
  satellite:{land:'#5b5d55',park:'#4a5e3a',parkEdge:'#43552f',casing:'#3a3c38',street:'#41433f',artCase:'#3a3c38',art:'#474944',hwyCase:'#363833',hwy:'#4a4b46',bld:'#8d8f87',bldTall:'#a7a89f',bldEdge:'#3b3d38',label:null,halo:null,water:'#2f4a5e'},
- hybrid:{land:'#5b5d55',park:'#4a5e3a',parkEdge:'#43552f',casing:'#3a3c38',street:'#ffffffb8',artCase:'#3a3c38',art:'#ffe168d0',hwyCase:'#3a3c38',hwy:'#f9b235e0',bld:'#8d8f87',bldTall:'#a7a89f',bldEdge:'#3b3d38',label:'#ffffff',halo:'#000000',water:'#2f4a5e'}
+ hybrid:{land:'#5b5d55',park:'#4a5e3a',parkEdge:'#43552f',casing:'#00000038',street:'#ffffffa8',artCase:'#0000004a',art:'#ffe168c8',hwyCase:'#00000055',hwy:'#f9b235e0',bld:'#8d8f87',bldTall:'#a7a89f',bldEdge:'#3b3d38',label:'#ffffff',halo:'#000000',water:'#2f4a5e'}
 };
 let mode='map',invalidate=()=>{};
 export const gmMode=()=>mode;
@@ -22,28 +23,32 @@ const streetName=j=>j===0?'Exit Blvd':`${j<0?'S':'N'} ${ord(j)} St`;
 
 // ---------- City map painter (full map + minimap) ----------
 export function gmCityPaint(context,c,w,h,scale,shapes=[],opts={}){
- const P=PALETTES[opts.mode||mode]||PALETTES.map,labels=opts.labels&&P.label;
+ const m=opts.mode||mode,P=PALETTES[m]||PALETTES.map,labels=opts.labels&&P.label;
  const ox=Number(c.cx)*64+c.x,oz=Number(c.cz)*64+c.z;
+ // V102: full-map Satellite/Hybrid is a fake low-res aerial photo (gmaps-satellite.js);
+ // the minimap keeps the cheap flat palette because it repaints while walking.
+ const photo=opts.labels&&(m==='satellite'||m==='hybrid');
+ if(photo){paintSatellite(context,ox,oz,w,h,scale,shapes);if(m==='satellite')return 0;}
  const xy=p=>[w/2+(p.x-ox)*scale,h/2+(p.z-oz)*scale];
  const center=worldToCity(ox,oz),bx=Math.floor(center.x/CITY_BLOCK),bz=Math.floor(center.z/CITY_BLOCK),r=Math.ceil(Math.max(w,h)/scale/CITY_BLOCK*.72)+1;
- context.fillStyle=P.land;context.fillRect(0,0,w,h);
+ if(!photo){context.fillStyle=P.land;context.fillRect(0,0,w,h);}
  const quad=(pts,fill,stroke)=>{context.beginPath();pts.forEach((p,k)=>k?context.lineTo(...p):context.moveTo(...p));context.closePath();if(fill){context.fillStyle=fill;context.fill();}if(stroke){context.strokeStyle=stroke;context.lineWidth=1;context.stroke();}};
  // Civic blocks read as parks/campus green, like classic Maps' park polygons.
- for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++){const x=ix*CITY_BLOCK,z=iz*CITY_BLOCK;if(cityDistrict(x+56,z+56)!=='civic')continue;quad([[x+8,z+8],[x+104,z+8],[x+104,z+104],[x+8,z+104]].map(p=>xy(cityToWorld(p[0],p[1]))),P.park,P.parkEdge);}
+ if(!photo)for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++){const x=ix*CITY_BLOCK,z=iz*CITY_BLOCK;if(cityDistrict(x+56,z+56)!=='civic')continue;quad([[x+8,z+8],[x+104,z+8],[x+104,z+104],[x+8,z+104]].map(p=>xy(cityToWorld(p[0],p[1]))),P.park,P.parkEdge);}
  const line=(a,b)=>{context.beginPath();context.moveTo(...a);context.lineTo(...b);context.stroke();};
  const roads=[];
  for(let i=-r;i<=r;i++)for(const axis of[0,1]){const k=axis?bz+i:bx+i,a=xy(cityToWorld(axis?(bx-r)*CITY_BLOCK:k*CITY_BLOCK,axis?k*CITY_BLOCK:(bz-r)*CITY_BLOCK)),b=xy(cityToWorld(axis?(bx+r+1)*CITY_BLOCK:k*CITY_BLOCK,axis?k*CITY_BLOCK:(bz+r+1)*CITY_BLOCK));roads.push({a,b,axis,k,cls:k%4===0?1:0});}
  context.lineCap='butt';
- const width=(cls)=>Math.max(cls?3.5:2,(cls?18:15)*scale);
+ const width=(cls)=>photo?Math.min(cls?5:3.5,Math.max(cls?3:2,(cls?18:15)*scale*.3)):Math.max(cls?3.5:2,(cls?18:15)*scale);
  // casings first, then fills (so intersections stay clean), arterials on top.
  for(const cls of[0,1]){context.strokeStyle=cls?P.artCase:P.casing;for(const q of roads)if(q.cls===cls){context.lineWidth=width(cls)+2;line(q.a,q.b);}context.strokeStyle=cls?P.art:P.street;for(const q of roads)if(q.cls===cls){context.lineWidth=width(cls);line(q.a,q.b);}}
  // Entry boulevard + exit route as the orange "highway" class.
  const hw=[[cityToWorld(0,-32),cityToWorld(0,448)],[cityToWorld(-160,0),cityToWorld(160,0)]].map(s=>s.map(xy));
  const route=[];for(let s=110;s<=430;s+=8)route.push(xy(exitPoint(s)));
  const hwy=(lw,col)=>{context.strokeStyle=col;context.lineWidth=lw;context.lineJoin='round';for(const s of hw)line(...s);context.beginPath();route.forEach((p,k)=>k?context.lineTo(...p):context.moveTo(...p));context.stroke();};
- hwy(Math.max(5,19*scale)+2,P.hwyCase);hwy(Math.max(4,19*scale),P.hwy);
+ const hwW=photo?6:Math.max(4,19*scale);hwy(hwW+2,P.hwyCase);hwy(hwW,P.hwy);
  // Building footprints (light fill, darker 1px edge) once zoomed in.
- if(scale>.45){
+ if(scale>.45&&!photo){
   const foot=(q,x,z,ry,bw,bd,toW,fill)=>{const pts=[];for(let k=0;k<4;k++){const u=(k===0||k===3?-1:1)*bw/2,v=(k<2?-1:1)*bd/2;pts.push(xy(toW(x+Math.cos(ry)*u+Math.sin(ry)*v,z-Math.sin(ry)*u+Math.cos(ry)*v)));}quad(pts,fill,scale>.6?P.bldEdge:null);};
   for(const q of shapes)foot(q,q.x,q.z,q.ry,q.w,q.d,(x,z)=>({x,z}),P.bld);
   for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++)for(const b of cityBlockPlan(ix,iz,BUILDING_TYPES).buildings)foot(b,b.x,b.z,b.ry,b.w,b.d,cityToWorld,b.floors>7?P.bldTall:P.bld);
