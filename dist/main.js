@@ -1,5 +1,5 @@
 import {inManila,nearManila} from './manila-plan.js';
-import {createLevel0World} from './level0-world.js?v=103';
+import {createLevel0World} from './level0-world.js?v=104';
 import {makeAlmondBottle} from './almond-water-assets.js?v=60';
 import {L0_CHUNK,l0Hash} from './level0-layout.js';
 import {initializeOutpostTextures,attachOutpostGround} from './lake-outpost-materials.js';

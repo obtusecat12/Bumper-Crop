@@ -11,8 +11,8 @@ import {createKaneProps} from './level0-k-props.js';
 import {createManilaField96} from './manila-field96.js';
 import {inManila,nearManila,manilaRegionsNear} from './manila-plan.js';
 import {L0_CELL as S,L0_CHUNK as K,L0_HEIGHT as H,l0Hash,l0Type,l0TypeAt,L0_LANDMARKS,createL0Chunk,l0SolidAt,l0FloorBase} from './level0-layout.js';
-import {createL0Materials} from './level0-materials.js?v=103';
-import {createLevel0LightField} from './level0-lightfield.js?v=103';
+import {createL0Materials} from './level0-materials.js?v=104';
+import {createLevel0LightField} from './level0-lightfield.js?v=104';
 import {createLevel0DetailAssets} from './level0-ceiling-details.js';
 import {createLevel0Props} from './level0-props.js';
 import {RectAreaLightUniformsLib} from './vendor/RectAreaLightUniformsLib.js';
@@ -32,6 +32,19 @@ export function createLevel0World(T,renderer){
  const shadows=Array.from({length:2},()=>{const a=new T.SpotLight(0xfff6dc,5.5,12,1.18,.85,2);a.castShadow=true;a.shadow.mapSize.set(1024,1024);a.shadow.camera.near=.10;a.shadow.camera.far=12;a.shadow.normalBias=.014;a.shadow.bias=-.0002;a.shadow.radius=4;a.shadow.autoUpdate=false;a.intensity=0;scene.add(a,a.target);return a;});
  const bs=new T.Shape();bs.moveTo(-.497,-.497);bs.lineTo(.497,-.497);bs.lineTo(.497,.497);bs.lineTo(-.497,.497);bs.closePath();const wallBox=new T.ExtrudeGeometry(bs,{depth:.994,bevelEnabled:true,bevelThickness:.003,bevelSize:.003,bevelSegments:1,steps:1});wallBox.translate(0,0,-.497);const whiteColors=g=>{const a=new Float32Array(g.attributes.position.count*3);a.fill(1);g.setAttribute('color',new T.BufferAttribute(a,3));return g;};whiteColors(wallBox);
  const depression=new T.PlaneGeometry(S,S,12,12).rotateX(-Math.PI/2);const dp=depression.attributes.position;for(let i=0;i<dp.count;i++){const r=Math.hypot(dp.getX(i),dp.getZ(i))/(S*.48);dp.setY(i,-.16*Math.pow(Math.max(0,1-r*r),2));}depression.computeVertexNormals();
+ // V104 troffer geometry (origin = ceiling plane): flange ring, sloped reflector well, recessed diffuser, halo plane.
+ const troffer=(()=>{const parts=[];const ring=[[0,.2715,1.196,.053],[0,-.2715,1.196,.053],[.5715,0,.053,.49],[-.5715,0,.053,.49]];for(const[x,z,w,d]of ring){const g=new T.BoxGeometry(w,.012,d);g.translate(x,-.006,z);parts.push(g.toNonIndexed());}
+  const frame=mergeGeometries(parts,false);parts.forEach(g=>g.dispose());
+  const q=[],ox=.545,oz=.245,ix=.530,iz=.230,y0=-.012,y1=.040,push=(...v)=>q.push(...v);
+  // four sloped quads, wound to face into the well (downward-inward)
+  push(-ox,y0,-oz, ox,y0,-oz, ix,y1,-iz, -ox,y0,-oz, ix,y1,-iz, -ix,y1,-iz);
+  push(ox,y0,oz, -ox,y0,oz, -ix,y1,iz, ox,y0,oz, -ix,y1,iz, ix,y1,iz);
+  push(-ox,y0,oz, -ox,y0,-oz, -ix,y1,-iz, -ox,y0,oz, -ix,y1,-iz, -ix,y1,iz);
+  push(ox,y0,-oz, ox,y0,oz, ix,y1,iz, ox,y0,-oz, ix,y1,iz, ix,y1,-iz);
+  const well=new T.BufferGeometry();well.setAttribute('position',new T.Float32BufferAttribute(q,3));well.computeVertexNormals();well.setAttribute('uv',new T.Float32BufferAttribute(new Float32Array(q.length/3*2),2));
+  const diffuser=new T.PlaneGeometry(1.06,.46).rotateX(Math.PI/2).translate(0,y1,0);
+  const glow=new T.PlaneGeometry(3.2,2.0).rotateX(Math.PI/2).translate(0,-.014,0);
+  return{frame,well,diffuser,glow};})();
  const chunks=new Map(),batches=new Map(),circuits=new Map(),leverRefs=new Map();let activeFeet=0;let activeKey='',elapsed=0,rebuildCount=0,instances=0,visibleBreakers=[];
  let recording=null;
  function emit(e){recording.push(e);}
@@ -73,7 +86,7 @@ export function createLevel0World(T,renderer){
   const damage=c.damage,lamps=c.lights,vents=c.details.filter(a=>a.kind<4);
   const services=[...manilaRegionsNear(c.ox+K/2,c.oz+K/2,30).map(r=>({x:r.x,z:r.z,w:10,d:10})),{x:302,z:70,w:22.8,d:28.8},...vents.map(a=>({...a,w:a.kind===1?1.205:.635,d:a.kind===1?.218:.635}))],openings=[...services,...damage.tiles],railCuts=[...services,...damage.breaks];
   if(damage.tiles.length){add(box,mats.void,c.ox+K/2,H+.86,c.oz+K/2,K,.05,K,0,false,false);for(const p of damage.tiles){add(box,mats.dark,p.x-.54,H+.54,p.z,.065,.14,.59,0,false);add(box,mats.dark,p.x+.54,H+.54,p.z,.065,.14,.59,0,false);}}
-  for(let iz=0;iz<36;iz++)for(let ix=0;ix<18;ix++){const x=c.ox+(ix+.5)*1.2,z=c.oz+(iz+.5)*.6;const light=lamps.find(a=>Math.abs(a.x-x)<.1&&Math.abs(a.z-z)<.1);if(light&&!inManila(x,z,.6)&&!inAtrium96(x,z,.6)){add(box,mats.grid,x,H-.018,z,1.18,.05,.58,0,false);add(box,light.on?mats.lamp:mats.lampOff,x,H-.039,z,1.09,.012,.46,0,false,false);continue;}
+  for(let iz=0;iz<36;iz++)for(let ix=0;ix<18;ix++){const x=c.ox+(ix+.5)*1.2,z=c.oz+(iz+.5)*.6;const light=lamps.find(a=>Math.abs(a.x-x)<.1&&Math.abs(a.z-z)<.1);if(light&&!inManila(x,z,.6)&&!inAtrium96(x,z,.6)){add(troffer.frame,mats.lampFrame,x,H,z,1,1,1,0,false);add(troffer.well,light.on?mats.lampSide:mats.lampFrame,x,H,z,1,1,1,0,false,false);add(troffer.diffuser,light.on?mats.lamp:mats.lampOff,x,H,z,1,1,1,0,false,false);if(light.on)add(troffer.glow,mats.lampGlow,x,H,z,1,1,1,0,false,false);continue;}
    let pieces=[{x0:x-.5985,x1:x+.5985,z0:z-.2985,z1:z+.2985}];for(const o of openings){const a=o.x-o.w/2,b=o.x+o.w/2,u=o.z-o.d/2,v=o.z+o.d/2;pieces=pieces.flatMap(r=>{if(r.x1<=a||r.x0>=b||r.z1<=u||r.z0>=v)return[r];return[{...r,x1:Math.max(r.x0,a)},{...r,x0:Math.min(r.x1,b)},{x0:Math.max(r.x0,a),x1:Math.min(r.x1,b),z0:r.z0,z1:Math.max(r.z0,u)},{x0:Math.max(r.x0,a),x1:Math.min(r.x1,b),z0:Math.min(r.z1,v),z1:r.z1}].filter(q=>q.x1-q.x0>.003&&q.z1-q.z0>.003);});}for(const r of pieces)add(box,mats.ceiling,(r.x0+r.x1)/2,H+.03,(r.z0+r.z1)/2,r.x1-r.x0,.06,r.z1-r.z0,0,false);}
   // T-grid is retained under absent panels; only real service cuts and broken ribs interrupt it.
   for(const vertical of[true,false])for(let i=0;i<(vertical?18:36);i++){const cross=(vertical?c.ox:c.oz)+i*(vertical?1.2:.6);let spans=[[vertical?c.oz:c.ox,(vertical?c.oz:c.ox)+K]];for(const o of railCuts){if(Math.abs(cross-(vertical?o.x:o.z))>=(vertical?o.w:o.d)/2-.003)continue;const a=(vertical?o.z-o.d/2:o.x-o.w/2),b=(vertical?o.z+o.d/2:o.x+o.w/2);spans=spans.flatMap(([u,v])=>v<=a||u>=b?[[u,v]]:[[u,Math.max(u,a)],[Math.min(v,b),v]].filter(([u,v])=>v-u>.003));}for(const[a,b]of spans){if(vertical){add(box,mats.grid,cross,H+.004,(a+b)/2,.018,.012,b-a,0,false);add(box,mats.grid,cross,H+.037,(a+b)/2,.005,.058,b-a,0,false);}else{add(box,mats.grid,(a+b)/2,H+.004,cross,b-a,.012,.018,0,false);add(box,mats.grid,(a+b)/2,H+.037,cross,b-a,.058,.005,0,false);}}}
@@ -107,9 +120,17 @@ export function createLevel0World(T,renderer){
  // Lamps of the resident window feed the light field. A pulled breaker removes its lamps' emission;
  // the field keeps the light that spills in from the rest of the floor.
  const fieldLamps=[];
+ // Occluders baked into the field: full-height walls/columns block light; low partitions, arches and
+ // floor-standing furniture only add ambient occlusion. Cached per chunk as [x0,x1,z0,z1,kind].
+ function occOf(c){if(c.l0Occ)return c.l0Occ;const o=[];const put=(x,z,w,d,k)=>{if(!(w>0&&d>0))return;o.push(x-w/2,x+w/2,z-d/2,z+d/2,k);};
+  for(const w of[...c.walls,...c.pillars]){const base=w.y-w.h/2;if(base>.6)continue;put(w.x,w.z,w.w,w.d,w.h>=2.2?1:.7);}
+  for(const a of c.arches)put(a.x,a.z,.2,a.w,.75);
+  for(const f of c.furniture){if(Math.abs((f.y||0)-l0FloorBase(f.x,f.z))>=.03)continue;const q=f.mapFootprint||f;if(q.w&&q.d)put(q.x,q.z,Math.min(q.w,4),Math.min(q.d,4),.5);}
+  return c.l0Occ=Float32Array.from(o);}
  function computeField(instant){fieldLamps.length=0;const {cx,cz}=center;if(!Number.isFinite(cx))return;for(let z=cz-3;z<=cz+3;z++)for(let x=cx-3;x<=cx+3;x++)for(const l of getChunk(x,z).lights)if(l.on){let p=1;for(const c of circuits.values())p*=T.MathUtils.smoothstep(Math.hypot(l.x-c.x,l.z-c.z),c.radius*.82,c.radius);fieldLamps.push({x:l.x,z:l.z,power:p});}
   const ox=(cx-3)*K,oz=(cz-3)*K,neutral=[ATRIUM_RECT96,...manilaRegionsNear(ox+3.5*K,oz+3.5*K,95).map(r=>({x0:r.x-5.2,x1:r.x+5.2,z0:r.z-5.2,z1:r.z+5.2}))];
-  field.compute(ox,oz,fieldLamps,neutral,{instant,seconds:.65});}
+  const parts=[];let len=0;for(let z=cz-3;z<=cz+3;z++)for(let x=cx-3;x<=cx+3;x++){const a=occOf(getChunk(x,z));parts.push(a);len+=a.length;}const occ=new Float32Array(len);let off=0;for(const a of parts){occ.set(a,off);off+=a.length;}
+  field.compute(ox,oz,fieldLamps,neutral,{instant,seconds:.65,occ,sync:!field.ready});field.ready=true;}
  // Generate chunk plans ahead of need, one per frame, so a window shift only copies packed arrays.
  function prefetch(){if(!Number.isFinite(center.cx))return;for(let r=1;r<=4;r++)for(let dz=-r;dz<=r;dz++)for(let dx=-r;dx<=r;dx++){if(Math.max(Math.abs(dx),Math.abs(dz))!==r)continue;const k=`${center.cx+dx},${center.cz+dz}`;if(!chunks.has(k)){getChunk(center.cx+dx,center.cz+dz);return;}const c=chunks.get(k);if(!c.renderPlan){generateMesh(c);return;}}}
  // Hysteresis: the window recentres only once the player is 2.5 m into a neighbouring chunk.
@@ -134,8 +155,8 @@ export function createLevel0World(T,renderer){
   // Player-local environment follows the field and eases, so fog/ambient never switch at a zone edge.
   const f=field.sample(x,z),litHere=f.neutral>.5?1:Math.min(1,Math.max(0,(f.direct*.75+f.bounce*.55)/1.05)),k=env.init?1-Math.exp(-dt*2.2):1;env.init=true;
   env.dark+=(smooth01((.62-litHere)/.55)-env.dark)*k;env.man+=((man?1:0)-env.man)*k;env.atri+=((atri?1:0)-env.atri)*k;env.red+=((red?1:0)-env.red)*k;
-  uniforms.darkness.value=env.dark;uniforms.brightness.value=1;mats.ceiling.emissiveIntensity=T.MathUtils.lerp(.19,.16,env.man);
-  hemi.intensity=T.MathUtils.lerp(T.MathUtils.lerp(.66,1.34,env.man),1.42,env.atri*(1-env.man));hemi.color.copy(hemiLit).lerp(hemiRed,env.red).lerp(hemiMan,env.man);hemi.groundColor.copy(groundLit).lerp(groundMan,env.man);
+  uniforms.darkness.value=env.dark;uniforms.brightness.value=1;mats.ceiling.emissiveIntensity=T.MathUtils.lerp(.10,.16,env.man);
+  hemi.intensity=T.MathUtils.lerp(T.MathUtils.lerp(.50,1.34,env.man),1.42,env.atri*(1-env.man));hemi.color.copy(hemiLit).lerp(hemiRed,env.red).lerp(hemiMan,env.man);hemi.groundColor.copy(groundLit).lerp(groundMan,env.man);
   key.intensity=T.MathUtils.lerp(.21,.16,env.man);key.color.copy(keyLit).lerp(keyRed,env.red).lerp(keyDark,env.dark*(1-env.red));
   scene.fog.color.copy(fogLit).lerp(fogRed,env.red).lerp(fogDark,env.dark).lerp(fogAtri,env.atri);scene.fog.density=T.MathUtils.lerp(T.MathUtils.lerp(T.MathUtils.lerp(.009,.03,env.dark),.002,env.man),.006,env.atri);
   // Directional fill shadow: recentred on a 7.2 m grid (its 50 m frustum keeps >14 m of margin).
