@@ -158,3 +158,54 @@
 :root[data-ui-level="0"] .modal:not(.map-modal) .retro-options{background:var(--w98-field)!important;border:1px solid var(--w98-dark)!important;padding:0!important}
 :root[data-ui-level="0"] .modal:not(.map-modal) .retro-options button{min-height:0!important;padding:2px 6px!important;font:400 12px/16px var(--w98-font)!important;color:var(--w98-ink)!important;background:var(--w98-field)!important;box-shadow:none!important}
 :root[data-ui-level="0"] .modal:not(.map-modal) .retro-options button[aria-selected=true],:root[data-ui-level="0"] .modal:not(.map-modal) .retro-options button:focus,:root[data-ui-level="0"] .modal:not(.map-modal) .retro-options button:hover{background:var(--w98-t1)!important;color:#fffbe8!important;outline:0!important}
+
+/* ───────────── V102c · F2 developer panel ("SERVICE MODE", dev-ui.js) as a Win98 property sheet ───────────── */
+:root[data-ui-level="0"] #developer .developer-panel[data-svc]{width:min(860px,calc(100vw - 24px))!important;height:min(600px,calc(100vh - 24px))!important;max-height:none!important;padding:3px!important;gap:0;background:var(--w98-face)!important;border:0!important;overflow:hidden!important;box-shadow:var(--w98-window),4px 4px 0 #00000080!important}
+:root[data-ui-level="0"] #developer [data-svc] .panel-header{flex:none;display:flex!important;justify-content:space-between;align-items:center;margin:0!important;padding:0 2px 0 3px!important;height:20px!important;min-height:0!important;background:var(--w98-title)!important;box-shadow:none!important}
+:root[data-ui-level="0"] #developer [data-svc] .panel-header h2{display:flex!important;flex-direction:row!important;align-items:center;gap:4px!important;min-width:0;margin:0!important;padding:0!important;overflow:hidden;white-space:nowrap}
+:root[data-ui-level="0"] #developer [data-svc] .panel-header h2,:root[data-ui-level="0"] #developer [data-svc] .panel-header h2 *{font:700 12px/20px var(--w98-font)!important;letter-spacing:0!important;color:#fffbe8!important}
+:root[data-ui-level="0"] #developer [data-svc] .panel-header h2:before{content:'';flex:none;display:block;width:16px;height:16px;background:url("./assets/ui-v102/backos-icon-32.png") 0 0/16px 16px no-repeat;image-rendering:pixelated}
+:root[data-ui-level="0"] #developer [data-svc] .panel-header h2 .svc-kicker{order:2;display:inline!important}
+:root[data-ui-level="0"] #developer [data-svc] .panel-header h2 .svc-kicker:before{content:'— '}
+:root[data-ui-level="0"] #developer [data-svc] .close{flex:none;display:grid!important;place-items:center;width:16px!important;height:14px!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;font:700 12px/12px var(--w98-font)!important;color:var(--w98-ink)!important;background:var(--w98-face)!important;box-shadow:var(--w98-raised)!important}
+:root[data-ui-level="0"] #developer [data-svc] .close:hover{color:var(--w98-ink)!important;background:var(--w98-face)!important}
+:root[data-ui-level="0"] #developer [data-svc] .close:active{box-shadow:var(--w98-sunken)!important}
+:root[data-ui-level="0"] #developer .svc-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 248px;gap:8px;padding:8px 8px 6px}
+:root[data-ui-level="0"] #developer .svc-main{min-height:0;display:flex;flex-direction:column;padding:0!important}
+/* tab control */
+:root[data-ui-level="0"] #developer .svc-tabs{flex:none;display:flex;align-items:flex-end;gap:0;margin:0!important;padding:0 0 0 2px;box-shadow:none!important;position:relative;z-index:1}
+:root[data-ui-level="0"] #developer .svc-tab{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:5px;margin-top:2px;padding:2px 10px 3px!important;font:400 12px/16px var(--w98-font)!important;letter-spacing:0!important;color:var(--w98-ink)!important;background:var(--w98-face)!important;white-space:nowrap;
+ box-shadow:inset -1px 0 var(--w98-dark),inset 1px 1px var(--w98-hi),inset -2px 0 var(--w98-shadow),inset 2px 2px var(--w98-light)!important}
+:root[data-ui-level="0"] #developer .svc-tab b{font:700 12px/16px var(--w98-font)!important;color:var(--w98-t1)!important}
+:root[data-ui-level="0"] #developer .svc-tab:hover{color:var(--w98-ink)!important}
+:root[data-ui-level="0"] #developer .svc-tab.on{margin:0 -2px -2px;padding:3px 12px 6px!important;position:relative;z-index:2;color:var(--w98-ink)!important;background:var(--w98-face)!important}
+:root[data-ui-level="0"] #developer .svc-tab:focus-visible{outline:1px dotted var(--w98-ink);outline-offset:-4px}
+/* tab page holding a list view */
+:root[data-ui-level="0"] #developer .svc-lists{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden!important;padding:10px 8px 8px!important;background:var(--w98-face);box-shadow:var(--w98-window)}
+:root[data-ui-level="0"] #developer .svc-list{flex:1;min-height:0;overflow:auto;margin:0;padding:2px;list-style:none;columns:2;column-gap:2px;background:var(--w98-field);box-shadow:var(--w98-sunken);scrollbar-color:var(--w98-face) var(--w98-light)}
+:root[data-ui-level="0"] #developer .svc-list[hidden]{display:none!important}
+:root[data-ui-level="0"] #developer .svc-list li{break-inside:avoid;margin:0;padding:0}
+:root[data-ui-level="0"] #developer .svc-list button{all:unset;box-sizing:border-box;cursor:pointer;display:flex!important;align-items:center;gap:8px;width:100%;min-height:0!important;padding:2px 6px!important;font:400 12px/18px var(--w98-font)!important;color:var(--w98-ink)!important;background:transparent!important;border:0!important;box-shadow:none!important;outline:0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:root[data-ui-level="0"] #developer .svc-list button i{flex:none;min-width:16px;font:400 12px/18px var(--w98-font)!important;font-style:normal;color:#857337!important}
+:root[data-ui-level="0"] #developer .svc-list button:hover,:root[data-ui-level="0"] #developer .svc-list button:focus-visible{color:#fffbe8!important;background:var(--w98-t1)!important;outline:1px dotted var(--w98-t2)!important;outline-offset:-1px!important}
+:root[data-ui-level="0"] #developer .svc-list button:hover i,:root[data-ui-level="0"] #developer .svc-list button:focus-visible i{color:#ebdfa6!important}
+:root[data-ui-level="0"] #developer .svc-list button:hover:after,:root[data-ui-level="0"] #developer .svc-list button:focus-visible:after{content:none!important}
+:root[data-ui-level="0"] #developer .svc-list button:disabled{opacity:1;color:#857337!important;cursor:wait}
+/* readout column = group boxes with sunken status fields */
+:root[data-ui-level="0"] #developer .svc-readout{min-height:0;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:6px 2px 4px!important;background:none!important;box-shadow:none!important}
+:root[data-ui-level="0"] #developer .svc-readout h3{display:none!important}
+:root[data-ui-level="0"] #developer .svc-row{position:relative;display:block!important;margin:0;padding:12px 8px 8px!important;border:0!important;box-shadow:inset 1px 1px var(--w98-shadow),inset -1px -1px var(--w98-hi),inset 2px 2px var(--w98-hi),inset -2px -2px var(--w98-shadow)!important}
+:root[data-ui-level="0"] #developer .svc-row>span{position:absolute;left:7px;top:-7px;padding:0 3px;font:400 12px/14px var(--w98-font)!important;letter-spacing:0!important;color:var(--w98-ink)!important;background:var(--w98-face)!important;white-space:nowrap}
+:root[data-ui-level="0"] #developer .svc-row>*:not(span){display:block;margin:0!important;padding:3px 5px!important;min-height:0!important;max-height:none;font:400 12px/16px var(--w98-font)!important;color:var(--w98-ink)!important;background:var(--w98-field)!important;box-shadow:var(--w98-sunken)!important;border:0!important;overflow-wrap:anywhere;white-space:normal;font-variant-numeric:tabular-nums}
+:root[data-ui-level="0"] #developer .svc-readout .panel-note{margin:0!important;padding:0 2px!important;font:400 12px/16px var(--w98-font)!important;color:#5a4a14!important;background:none!important;box-shadow:none!important}
+/* footer = status bar with key hints */
+:root[data-ui-level="0"] #developer .svc-foot{flex:none;display:flex;gap:2px;margin:0 8px 2px;padding:0!important;box-shadow:none!important;font:400 12px/16px var(--w98-font)!important;letter-spacing:0!important;color:var(--w98-ink)!important}
+:root[data-ui-level="0"] #developer .svc-foot span{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;color:var(--w98-ink)!important;box-shadow:var(--w98-status);white-space:nowrap}
+:root[data-ui-level="0"] #developer .svc-foot span:last-child{flex:1}
+:root[data-ui-level="0"] #developer .svc-foot kbd{margin:0!important;padding:0 4px!important;font:700 12px/14px var(--w98-font)!important;color:var(--w98-ink)!important;background:var(--w98-face)!important;box-shadow:var(--w98-raised)}
+@media(max-width:820px){
+ :root[data-ui-level="0"] #developer .svc-body{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+ :root[data-ui-level="0"] #developer .svc-list{columns:1}
+ :root[data-ui-level="0"] #developer .svc-readout{max-height:170px}
+ :root[data-ui-level="0"] #developer .svc-tabs{overflow-x:auto;overflow-y:hidden}
+}
