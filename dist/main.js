@@ -1,5 +1,5 @@
 import {inManila,nearManila} from './manila-plan.js';
-import {createLevel0World} from './level0-world.js';
+import {createLevel0World} from './level0-world.js?v=103';
 import {makeAlmondBottle} from './almond-water-assets.js?v=60';
 import {L0_CHUNK,l0Hash} from './level0-layout.js';
 import {initializeOutpostTextures,attachOutpostGround} from './lake-outpost-materials.js';
@@ -300,7 +300,7 @@ async function enterZero(index=0){
  renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=true;renderer.shadowMap.needsUpdate=true;camera.far=180;camera.updateProjectionMatrix();navigationMap.setLevel0World(zeroWorld);navigationMap.setLevel(0);uiThemes.applyLevel('0');$('#journal .journal-body').innerHTML=zeroJournal;renderer.domElement.setAttribute('aria-label','Level 0 阈界 · 无限回廊');
  waterInspection.clear();lensWater.reset();waterState.reset();bodyWater.reset();waterBubbles.clear();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);showerAudio.mute();bathhouse.spa?.muteAudio();waterPipeline.focus.setSceneQuery(()=>8);waterPipeline.setBathSteam(0);waterPipeline.focus.setMist(0);irradiance.pause();
  zeroPickupKey='';refreshZeroSupplies();resetCameraRig();waterPipeline.reset(camera);zeroWorld.update(0,state.x,state.z,state.yaw);renderer.toneMappingExposure=.91;resize();
- await renderer.compileAsync(zeroWorld.scene,camera);$('#load-bar').style.width='90%';await nextPaint();await displayFilter.settleScene(()=>{waterPipeline.update(0,camera,state,false,false,zeroWorld.scene.background,zeroUp,0,-20);displayFilter.render(zeroWorld.scene,camera,performance.now());});
+ await (zeroWorld.prewarm?zeroWorld.prewarm(renderer,camera):renderer.compileAsync(zeroWorld.scene,camera));$('#load-bar').style.width='90%';await nextPaint();await displayFilter.settleScene(()=>{waterPipeline.update(0,camera,state,false,false,zeroWorld.scene.background,zeroUp,0,-20);displayFilter.render(zeroWorld.scene,camera,performance.now());});
  $('#loading').hidden=true;bathLoading=false;ready=true;$('#start').disabled=false;developerBusy(false);resetLookInput();lastFrame=performance.now();setPlay(true);toast('Level 0 · '+p.name+'。F 地图 · F2 区域传送。');
  }catch(e){console.error('Level 0 entry failed',e);bathLoading=false;$('#loading').hidden=true;leaveZero(false);developerBusy(false);toast('Level 0 未能加载，请重试。');}
 }
