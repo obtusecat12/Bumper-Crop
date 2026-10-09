@@ -98,7 +98,7 @@ import {createNavigationMap} from './map-ui.js?v=107';
 import {drawAsciiTitle} from './ascii-title.js?v=100';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=99';
 import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
-import {createLevel1World} from './level1-world.js?v=107'; // V107 Level 1
+import {createLevel1World} from './level1-world.js?v=108'; // V107 Level 1
 
 await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
 const $=s=>document.querySelector(s),game=$('#game');
@@ -337,7 +337,7 @@ function animateOne(now,dt,rawDt){
  const rig=cameraRig.update(dt,{x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,eyeY:(crouch?1.05:1.72)+zeroFall,jump:0,moved,dx,dz,grounded:state.grounded,running:false,crouch,stamina:state.stamina,landingSpeed,enabled:settings.bob&&!reduceCameraMotion.matches,locked:false});state.y=rig.eyeHeight;step=rig.phase;if(playing){survivalDisplay.animate(dt,state,step);zeroSteps+=state.grounded?moved:0;if(state.grounded&&zeroSteps>.66){zeroSteps=0;audio.footstep(false,false);}}
  if(audio.ctx){audio.motion.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);audio.rain.gain.setTargetAtTime(0,audio.ctx.currentTime,.2);if(!oneHum){const osc=audio.ctx.createOscillator(),gain=audio.ctx.createGain(),filter=audio.ctx.createBiquadFilter();osc.type='triangle';osc.frequency.value=48;gain.gain.value=0;filter.type='lowpass';filter.frequency.value=160;osc.connect(filter);filter.connect(gain);gain.connect(audio.master);osc.start();oneHum={osc,gain};}oneHum.gain.gain.setTargetAtTime(playing?.012*oneWorld.power:0,audio.ctx.currentTime,.3);}
  exitAudio.update(0,false,time);navigationMap.update(mapPose(),now,playing,false);waterPipeline.focus.setZoom(playing&&(keys.has('KeyZ')||zoomHeld)?Math.max(3,zoomSetting):zoomSetting);waterPipeline.focus.setMist(0);waterPipeline.update(playing?dt:0,camera,state,playing,false,oneWorld.scene.background,zeroUp,0,-20);renderer.toneMappingExposure=1;
- uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent=oneType==='flicker'?'闪烁 · 一片漆黑':'管道滴水 · 远处金属撞击';const door1=oneWorld.nearDoor(state.x,state.z,state.yaw);$('#interact').hidden=!playing||(!waterInspection.active&&!door1);$('#interact').textContent=door1?(door1.back?'E 推门回到过道':'E 推开出口门 · 进入小径'):'';$('.crosshair').hidden=waterInspection.active;}
+ uiTick+=dt;if(uiTick>.12){uiTick=0;updateHUD();$('#weather-label').textContent=oneType==='flicker'?'闪烁 · 一片漆黑':'管道滴水 · 远处金属撞击';const door1=oneWorld.nearDoor(state.x,state.z,state.yaw);$('#interact').hidden=!playing||(!waterInspection.active&&!door1);$('#interact').textContent=door1?door1.label||(door1.back?'E 推门回到过道':'E 推开出口门 · 进入小径'):'';$('.crosshair').hidden=waterInspection.active;}
  performanceMeter.markSimulation();displayFilter.render(oneWorld.scene,camera,now,()=>performanceMeter.beforeRender());performanceMeter.end();document.documentElement.dataset.bootState='ready';frameCount++;frameTime+=rawDt;if(frameTime>=1.5){fps=frameCount/frameTime;frameCount=0;frameTime=0;}
 }
 function animateZero(now,dt,rawDt){

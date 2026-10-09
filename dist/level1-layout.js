@@ -31,3 +31,11 @@ bool l1col(int x,int z){return l1h(x,z,1)>.1||l1wx(x,z)||l1wx(x-1,z)||l1wz(x,z)|
 bool l1dx(int x,int z){return l1wx(x,z)&&l1h(x,z,4)<.22;}
 bool l1dz(int x,int z){return l1wz(x,z)&&l1h(x,z,14)<.22;}
 `;
+// Floating origin: the scene is drawn relative to O (a multiple of R, so every shader pattern —
+// textures, noise, hashed bays — has a period dividing R and nothing shifts on a rebase).
+// JS keeps true doubles; only the GPU sees small numbers. Camera is shifted for the render only.
+export const L1_REBASE=1600;
+export function l1Rebase(scene,R=L1_REBASE){const o={x:0,z:0};let cam=null;
+ scene.onBeforeRender=(r,s,c)=>{if(cam||c.userData.l1Virt||c.parent||(o.x===0&&o.z===0))return;cam=c;c.position.x-=o.x;c.position.z-=o.z;c.updateMatrixWorld();};
+ scene.onAfterRender=(r,s,c)=>{if(cam!==c)return;c.position.x+=o.x;c.position.z+=o.z;c.updateMatrixWorld();cam=null;};
+ return{o,update(x,z){if(Math.abs(x-o.x)<=R*.75&&Math.abs(z-o.z)<=R*.75)return false;o.x=Math.round(x/R)*R;o.z=Math.round(z/R)*R;scene.position.set(-o.x,0,-o.z);scene.updateMatrixWorld();return true;}};}
