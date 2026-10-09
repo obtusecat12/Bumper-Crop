@@ -17,7 +17,7 @@ export function createSurvivalDisplay(host,parts){
   paint(c,r){c.save();c.translate(r.left,r.top);c.scale(r.width/640,r.height/320);paintVial(c,parts,shown[3],slope,ripple,tokens);paintVitals(c,parts,shown,bottles,{...tokens,pixelMode:document.body.dataset.filter==='ps1'});c.restore();},
   update(stamina,hydration,n,health=100,spirit=100){target=[stamina,hydration,health,spirit].map(percent);target.forEach((v,i)=>(meters[i]||sanity).setAttribute('aria-valuenow',String(Math.round(v))));
    n=Math.max(0,Math.floor(Number(n)||0));if(n!==bottles){bottles=n;count.textContent=String(n).padStart(2,'0');count.setAttribute('aria-label',`杏仁水 ${n} 瓶`);shellPaint();}updatePaths();},
-  animate(dt,state,phase){clock+=dt;if(clock<1/30)return;const elapsed=Math.min(.1,clock);clock=0;const ease=reduced?.matches?1:-Math.expm1(-elapsed*13);shown=shown.map((v,i)=>Math.abs(v-target[i])<.015?target[i]:v+(target[i]-v)*ease);
+  animate(dt,state,phase){globalThis.__bcHudState=state;clock+=dt;if(clock<1/30)return;const elapsed=Math.min(.1,clock);clock=0;const ease=reduced?.matches?1:-Math.expm1(-elapsed*13);shown=shown.map((v,i)=>Math.abs(v-target[i])<.015?target[i]:v+(target[i]-v)*ease);
    const result=motion.step({dt:elapsed,yaw:state.yaw,vx:state.velocity.x,vz:state.velocity.z,vy:state.vy,grounded:state.grounded,phase,reduced:reduced?.matches});slope=result.slope;ripple=result.ripple;updatePaths();},
   resetMotion(){motion.reset();slope=ripple=clock=0;updatePaths();},setUITheme(t){tokens={...t};shellPaint();key='';updatePaths();}
  };

@@ -78,7 +78,7 @@ import {updateBarnDoors} from './reference-barn.js?v=60';
 import {initializeLandmarkTextures} from './landmark-textures.js?v=60';
 import {loadInstrumentParts} from './retro-instruments.js?v=60';
 import {createUIRaster} from './ui-raster.js?v=60';
-import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=60';
+import {survivalMarkup,createSurvivalDisplay} from './survival-hud.js?v=104';
 import {createUIThemes} from './ui-themes.js?v=60';
 import {createMaterialFinish} from './material-finish.js?v=71';
 import {createRuralShadows} from './rural-shadows.js?v=60';
@@ -94,7 +94,7 @@ import {createWheatDetailLayer,initializeCerealTextures,releaseCerealGPU,resumeC
 import {createAtmosphere} from './atmosphere.js?v=60';
 import {findNearestLandmark,findSafeLanding,applyTeleport,createMapTarget} from './developer-tools.js?v=60';
 import {initializeRuralTextures} from './rural-textures.js?v=60';
-import {createNavigationMap} from './map-ui.js?v=ui-v102b';
+import {createNavigationMap} from './map-ui.js?v=104';
 import {drawAsciiTitle} from './ascii-title.js?v=100';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=99';
 import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
