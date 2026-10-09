@@ -17,7 +17,7 @@ const CN="Vonwaon16,Vonwaon12,'Songti SC',SimSun,serif";
 const W=640,H=400;
 // sprite-space facts measured on the renders
 const SP={stopwatch:{ax:150,ay:238,dial:104,crownY:96},barometer:{ax:120,ay:118,dial:82},drum:{ax:0,ay:0,paper:{x:58,y:24,w:284,h:146},pen:{x:306,y:44}},
- tube:{ax:42,ay:0,in0:11,in1:73,top:70,bot:276},compass:{ax:200,ay:271,disc:150}};
+ tube:{ax:42,ay:0,in0:10,in1:52,top:64,bot:272},compass:{ax:200,ay:271,disc:150}};
 const L={
  leather:{x:322,y:276,s:.62,r:-3*D,ax:320,ay:201},
  wheatBack:{x:232,y:332,s:.62,r:-50*D,ax:395,ay:228,flip:1},

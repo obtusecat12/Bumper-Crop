@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {CAMP_ACTORS98,OUTHOUSE98 as H,DINNER98 as D,outhouseSolids98,outhouseFloor98} from './camp-life-plan98.js';
-import {createCampActor98,countTriangles98} from './camp-npc98.js';
+import {createCampActor98,countTriangles98} from './camp-npc98.js?v=106';
 import {createCampPropKit98} from './camp-life-props98.js';
 import {warmCampTextures98} from './camp-life-materials98.js';
 export function createCampLife98({object,interiors:i,renderer,lamps,colliders,excluded,roots,groundAt}){

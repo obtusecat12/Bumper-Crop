@@ -1,4 +1,4 @@
-import {createCampLife98} from './camp-life98.js';
+import {createCampLife98} from './camp-life98.js?v=106';
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {createCampStructures} from './lake-outpost-structures.js';
