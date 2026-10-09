@@ -4,7 +4,7 @@
 :root[data-ui-level="10"] .map-mini canvas.map-mini-dom{left:0!important;top:0!important;width:100%!important;height:100%!important;transform:none!important;image-rendering:auto!important;filter:drop-shadow(2px 4px 4px #0008)}
 :root[data-ui-level="10"] .map-mini{--compass-width:clamp(160px,calc(var(--scene-width,100vw) * .17),232px)}
 /* Dashboard */
-:root[data-ui-level="10"] .stats{aspect-ratio:640/360!important;width:clamp(300px,calc(var(--scene-width,100vw) * .35),520px)!important;filter:none!important}
+:root[data-ui-level="10"] .stats{aspect-ratio:640/400!important;width:clamp(330px,calc(var(--scene-width,100vw) * .40),580px)!important;filter:none!important}
 :root[data-ui-level="10"] .stats:not(.raster-source)>.vitals-art,:root[data-ui-level="10"] .stats:not(.raster-source)>.vitals-gauges,:root[data-ui-level="10"] .stats:not(.raster-source)>.sanity-vial{display:none!important}
 :root[data-ui-level="10"] .l10-dash{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 3px 5px #000a)}
 :root[data-ui-level="10"] .l10-dash canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:auto}
