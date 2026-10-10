@@ -47,11 +47,14 @@ export const l1TubeOffZ=(ix,iz)=>(l1Hash(ix,iz,20)-.5)*4;
 // they can never touch (always an Aquila band between), and the arrival stays Aquila.
 export const L1_SEC_G=.7,L1_SEC_O=.27;
 const sb=(x,z,s)=>Math.floor(l1Hash(x,z,s)*256);
-export function l1SecV(bx,bz){const X=bx+SH,Z=bz+SH,gx=X>>5,gz=Z>>5,fx=X&31,fz=Z&31,wx=(fx*fx*(96-2*fx))>>10,wz=(fz*fz*(96-2*fz))>>10;
- const a=sb(gx,gz,301),b=sb(gx+1,gz,301),c=sb(gx,gz+1,301),d=sb(gx+1,gz+1,301);return((a*(32-wx)+b*wx)*(32-wz)+(c*(32-wx)+d*wx)*wz)/261120;}
-// 0 Aquila, 1 Gild, 2 Gothic
-export function l1Sector(bx,bz){if(bx>=-2&&bx<=2&&bz>=-2&&bz<=2)return 0;const v=l1SecV(bx,bz);return v>L1_SEC_G?1:v<L1_SEC_O?2:0;}
-export const L1_SEC_H=[3.3,5.6,4.25];
+export function l1SecV(bx,bz,s=301){const X=bx+SH,Z=bz+SH,gx=X>>5,gz=Z>>5,fx=X&31,fz=Z&31,wx=(fx*fx*(96-2*fx))>>10,wz=(fz*fz*(96-2*fz))>>10;
+ const a=sb(gx,gz,s),b=sb(gx+1,gz,s),c=sb(gx,gz+1,s),d=sb(gx+1,gz+1,s);return((a*(32-wx)+b*wx)*(32-wz)+(c*(32-wx)+d*wx)*wz)/261120;}
+// 0 Aquila, 1 Gild, 2 Gothic, 3 Ouroboros 衔尾 (renovation), 4 Fabled 传说 (classical wood).
+// 3/4 live in the middle band of v (.36-.61) and are picked by a second noise w; the .09 v-gap and the .36 w-gap are wider than
+// one bay's maximum noise step (~.047), so no two non-Aquila sectors ever touch.
+export function l1Sector(bx,bz){if(bx>=-2&&bx<=2&&bz>=-2&&bz<=2)return 0;const v=l1SecV(bx,bz);if(v>L1_SEC_G)return 1;if(v<L1_SEC_O)return 2;
+ if(v<.36||v>.61)return 0;const w=l1SecV(bx,bz,302);return w>.68?3:w<.32?4:0;}
+export const L1_SEC_H=[3.3,5.6,4.25,4.3,3.7];
 
 // ---- Level 2 thresholds: at most one per 512 m lattice cell (64 bays), hashed; site kept 12 bays inside its cell
 // so a point only ever needs its own cell. p rises 0→1 from 80 m out to the maintenance door at the core.
@@ -81,9 +84,9 @@ bool l1cdk(ivec2 g,ivec4 c,int k){return k==int(floor(l1h(g.x,g.y,405)*float(2*c
 bool l1dx(int x,int z){if(l1cex(x,z)!=1)return false;ivec4 c=l1cC;return l1cdk(l1cG,c,z==c.y?x-c.x:c.z+x-c.x);}
 bool l1dz(int x,int z){if(l1cez(x,z)!=1)return false;ivec4 c=l1cC;return l1cdk(l1cG,c,x==c.x?2*c.z+z-c.y:2*c.z+c.w+z-c.y);}
 int l1sb(int x,int z,int s){return int(floor(l1h(x,z,s)*256.0));}
-float l1secv(int bx,int bz){int X=bx+1048576,Z=bz+1048576,gx=X>>5,gz=Z>>5,fx=X&31,fz=Z&31,wx=(fx*fx*(96-2*fx))>>10,wz=(fz*fz*(96-2*fz))>>10;
- int a=l1sb(gx,gz,301),b=l1sb(gx+1,gz,301),c=l1sb(gx,gz+1,301),d=l1sb(gx+1,gz+1,301);return float((a*(32-wx)+b*wx)*(32-wz)+(c*(32-wx)+d*wx)*wz)/261120.0;}
-int l1sec(int bx,int bz){if(bx>=-2&&bx<=2&&bz>=-2&&bz<=2)return 0;float v=l1secv(bx,bz);return v>.7?1:v<.27?2:0;}
+float l1secv(int bx,int bz,int s){int X=bx+1048576,Z=bz+1048576,gx=X>>5,gz=Z>>5,fx=X&31,fz=Z&31,wx=(fx*fx*(96-2*fx))>>10,wz=(fz*fz*(96-2*fz))>>10;
+ int a=l1sb(gx,gz,s),b=l1sb(gx+1,gz,s),c=l1sb(gx,gz+1,s),d=l1sb(gx+1,gz+1,s);return float((a*(32-wx)+b*wx)*(32-wz)+(c*(32-wx)+d*wx)*wz)/261120.0;}
+int l1sec(int bx,int bz){if(bx>=-2&&bx<=2&&bz>=-2&&bz<=2)return 0;float v=l1secv(bx,bz,301);if(v>.7)return 1;if(v<.27)return 2;if(v<.36||v>.61)return 0;float w=l1secv(bx,bz,302);return w>.68?3:w<.32?4:0;}
 // continuous version for shading blends (float weights), bf = global bay coordinate
 float l1secf(vec2 bf){ivec2 ib=ivec2(floor(bf));vec2 fr=fract(bf);int X=ib.x+1048576,Z=ib.y+1048576,gx=X>>5,gz=Z>>5;vec2 f=(vec2(float(X&31),float(Z&31))+fr)/32.0;f=f*f*(3.0-2.0*f);
  float a=float(l1sb(gx,gz,301)),b=float(l1sb(gx+1,gz,301)),c=float(l1sb(gx,gz+1,301)),d=float(l1sb(gx+1,gz+1,301));return mix(mix(a,b,f.x),mix(c,d,f.x),f.y)/255.0;}

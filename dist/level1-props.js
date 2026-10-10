@@ -1,7 +1,7 @@
 // Level 1 v3 props: textured crates (15+ looks) and leftovers (chairs, buckets, signs, AC units, boards,
 // bikes, ladders, cables, tyres, cones, debris). Pure, hash-driven; everything goes through the world's
 // merged-geometry put(), so props cost no draw calls of their own.
-import {l1Hash} from './level1-layout.js?v=111';
+import {l1Hash} from './level1-layout.js?v=112';
 export function makeL1Props(T,{P,C,box,cyl,vcyl,solid}){
  const torus=new T.TorusGeometry(1,.18,5,14),wheel=new T.TorusGeometry(1,.05,4,16),cone=new T.CylinderGeometry(.03,.5,1,10,1,false),disc=new T.CylinderGeometry(1,1,1,14,1,false);
  // place a part in a prop's local frame (lx,lz) rotated by ry about (px,pz); rx/rz tilt the part itself
@@ -36,14 +36,25 @@ export function makeL1Props(T,{P,C,box,cyl,vcyl,solid}){
  function cones(px,pz,ry,k){const n=1+Math.floor(r(k,5,15)*3);for(let i=0;i<n;i++){const x=px+i*.6*Math.cos(ry),z=pz-i*.6*Math.sin(ry);if(i===1&&r(k,6,16)>.5){R(cone,C.cone,x,z,0,0,.12,0,.16,.68,.16,0,1.5);continue;}R(cone,C.cone,x,z,0,0,.36,0,.16,.68,.16);R(box,C.rubber,x,z,ry,0,.02,0,.4,.03,.4);}}
  function debris(px,pz,ry,k){const n=4+Math.floor(r(k,8,17)*6);for(let i=0;i<n;i++){const a=r(k,i,18)*6.28,d=r(k,i,19)*.9,x=px+Math.cos(a)*d,z=pz+Math.sin(a)*d,t=r(k,i,20);
    if(t<.35)R(box,i%2?C.osb:C.plyW,x,z,a,0,.02+i*.01,0,.6+t*1.6,.025,.1+t*.1);else if(t<.6)R(box,C.paper,x,z,a,0,.006,0,.2,.004,.28);else if(t<.8)R(box,C.cartontop,x,z,a,0,.01,0,.5,.01,.4);else R(box,C.rust,x,z,a,0,.03,0,.5,.05,.06);}}
+ // renovation (衔尾) and timber-room (传说) leftovers
+ function grilleLean(px,pz,ry){R(box,C.grille,px,pz,ry,0,1.0,.18,1.25,2.05,.04,0,-.12);if(l1Hash(px*7|0,pz*7|0,24)>.5)R(box,C.grille,px,pz,ry,.35,.95,.3,1.25,1.95,.04,0,-.16);SOL(px,pz,ry,1.4,.5);}
+ function doorLean(px,pz,ry,k){const m=r(k,3,25)>.4?C.dooryel:C.doorwood;R(box,m,px,pz,ry,0,1.02,.22,.9,2.05,.045,.08,-.2);if(r(k,4,26)>.5)R(box,C.frame,px,pz,ry,.5,1.05,.3,.07,2.2,.05,0,-.15);SOL(px,pz,ry,1.1,.5);}
+ function sawhorse(px,pz,ry,k){for(const a of[-.55,.55])for(const b of[-.16,.16])R(box,C.osb,px,pz,ry,a,.36,b,.05,.74,.05,0,b>0?.2:-.2);R(box,C.osb,px,pz,ry,0,.72,0,1.3,.06,.1);
+  if(r(k,5,27)>.4)R(box,C.plyW,px,pz,ry,.1,.77,0,2.0,.03,.6,.12);if(r(k,6,28)>.5)R(vcyl,C.bucket,px,pz,ry,.9,.19,.3,.15,.38,.15);SOL(px,pz,ry,1.5,.7);}
+ function rubble(px,pz,ry,k){debris(px,pz,ry,k);for(let i=0;i<3;i++){const a=r(k,i,29)*6.28,d=.2+r(k,i,30)*.5;R(box,C.paper,px+Math.cos(a)*d,pz+Math.sin(a)*d,a,0,.1,0,.55,.18,.36,0,.0,(r(k,i,31)-.5)*.3);}
+  R(box,C.conc||C.low,px,pz,ry,.5,.12,-.3,.5,.24,.4,.4);R(box,C.low,px,pz,ry,-.4,.08,.4,.35,.16,.3,1.1);SOL(px,pz,ry,1.2,1.0);}
+ function desk(px,pz,ry,k){R(box,C.desk,px,pz,ry,0,.74,0,1.3,.05,.7);for(const a of[-.6,.6])for(const b of[-.3,.3])R(box,C.desk,px,pz,ry,a,.36,b,.05,.72,.05);R(box,C.desk,px,pz,ry,.4,.5,0,.4,.42,.62);
+  if(r(k,7,32)>.4)R(box,C.paper,px,pz,ry,-.2,.77,.05,.3,.01,.22,.3);if(r(k,8,33)>.3)chair(px+.1*Math.cos(ry)+.6*Math.sin(ry),pz-.1*Math.sin(ry)+.6*Math.cos(ry),ry+Math.PI+(r(k,9,34)-.5),r(k,10,35)>.8);SOL(px,pz,ry,1.35,.75);}
+ function cabinet(px,pz,ry,k){R(box,C.desk,px,pz,ry,0,.9,0,.9,1.8,.42);for(let i=0;i<3;i++)R(box,C.wainsP||C.desk,px,pz,ry,0,.35+i*.55,.215,.8,.45,.01);SOL(px,pz,ry,.95,.5);}
  function note(px,pz,ry){R(box,C.paper,px,pz,ry,0,.004,0,.21,.004,.29,.3);}
  // ---- clusters: a few hand-composed vignettes; picked per bay by hash, dressed against a wall when there is one ----
  const KINDS=[
   (x,z,ry,k)=>stack(x,z,ry,k),(x,z,ry,k)=>crate(x,z,ry,0,Math.floor(r(k,0,21)*LOOK.length)),(x,z,ry,k)=>openCrate(x,z,ry),(x,z,ry,k)=>broken(x,z,ry,k),(x,z,ry,k)=>pallet(x,z,ry,k),
   (x,z,ry,k)=>barber(x,z,ry),(x,z,ry,k)=>chair(x,z,ry,r(k,1,22)>.6),(x,z,ry,k)=>bucket(x,z,ry,k),(x,z,ry,k)=>wetsign(x,z,ry),(x,z,ry,k)=>acUnit(x,z,ry),
-  (x,z,ry,k)=>boards(x,z,ry,k),(x,z,ry,k)=>ladder(x,z,ry),(x,z,ry,k)=>r(k,2,23)>.5?bike(x,z,ry):bikeDown(x,z,ry),(x,z,ry,k)=>cable(x,z,ry,k),(x,z,ry,k)=>tyres(x,z,ry,k),(x,z,ry,k)=>cones(x,z,ry,k),(x,z,ry,k)=>debris(x,z,ry,k)];
+  (x,z,ry,k)=>boards(x,z,ry,k),(x,z,ry,k)=>ladder(x,z,ry),(x,z,ry,k)=>r(k,2,23)>.5?bike(x,z,ry):bikeDown(x,z,ry),(x,z,ry,k)=>cable(x,z,ry,k),(x,z,ry,k)=>tyres(x,z,ry,k),(x,z,ry,k)=>cones(x,z,ry,k),(x,z,ry,k)=>debris(x,z,ry,k),
+  (x,z,ry,k)=>grilleLean(x,z,ry),(x,z,ry,k)=>doorLean(x,z,ry,k),(x,z,ry,k)=>sawhorse(x,z,ry,k),(x,z,ry,k)=>rubble(x,z,ry,k),(x,z,ry,k)=>desk(x,z,ry,k),(x,z,ry,k)=>cabinet(x,z,ry,k)];
  // wall-hugging kinds (backs to a wall): boards, ladder, ac, bike, stack, pallet, barber, chair
- const WALL=[10,11,9,12,0,4,5,6,1,7],FREE=[1,2,3,7,8,13,14,15,16,0,6,12],GARAGE=[14,15,8,16,7,13,1,3],STORE=[0,1,2,3,4,1,0],ROOM=[5,6,7,8,9,10,16];
+ const WALL=[10,11,9,12,0,4,5,6,1,7],FREE=[1,2,3,7,8,13,14,15,16,0,6,12],GARAGE=[14,15,8,16,7,13,1,3],STORE=[0,1,2,3,4,1,0],ROOM=[5,6,7,8,9,10,16],RENO=[17,18,19,20,20,16,11,7,13,10,15,8],FABLE=[21,22,6,18,1,10,21,2];
  function place(kind,x,z,ry,k){KINDS[kind](x,z,ry,k);}
- return{place,KINDS,WALL,FREE,GARAGE,STORE,ROOM,crate,LOOK,note,debris};
+ return{place,KINDS,WALL,FREE,GARAGE,STORE,ROOM,RENO,FABLE,crate,LOOK,note,debris};
 }

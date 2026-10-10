@@ -3,10 +3,10 @@
 // global floor/ceiling planes. Lighting is analytic and layout-hashed in the shader: a constant
 // number of light evaluations per fragment, no scene lights → no program recompiles.
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {makeL1Props} from './level1-props.js?v=111';
-import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=111';
-import {createLevel1Corridors} from './level1-corridors.js?v=111';
-import {l1Rebase,L1_BAY as B,L1_CHUNK as K,L1_H as H,L1_COL,L1_WALL,l1Hash,l1WallX,l1WallZ,l1Column,l1DoorX,l1DoorZ,l1Ceiling,l1ColumnTube,l1ColumnFace,l1TubeX,l1TubeZ,l1TubeSideX,l1TubeSideZ,l1TubeOffX,l1TubeOffZ,l1RunX,l1RunZ,l1RunSideX,l1RunSideZ,l1LowX,l1LowZ,l1Sector,l1SecV,L1_SEC_H,L1_SEC_G,L1_SEC_O,l1ThrSite,l1Thr,l1InClu,L1_LAYOUT_GLSL} from './level1-layout.js?v=111';
+import {makeL1Props} from './level1-props.js?v=112';
+import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=112';
+import {createLevel1Corridors} from './level1-corridors.js?v=112';
+import {l1Rebase,L1_BAY as B,L1_CHUNK as K,L1_H as H,L1_COL,L1_WALL,l1Hash,l1WallX,l1WallZ,l1Column,l1DoorX,l1DoorZ,l1Ceiling,l1ColumnTube,l1ColumnFace,l1TubeX,l1TubeZ,l1TubeSideX,l1TubeSideZ,l1TubeOffX,l1TubeOffZ,l1RunX,l1RunZ,l1RunSideX,l1RunSideZ,l1LowX,l1LowZ,l1Sector,l1SecV,L1_SEC_H,L1_SEC_G,L1_SEC_O,l1ThrSite,l1Thr,l1InClu,L1_LAYOUT_GLSL} from './level1-layout.js?v=112';
 
 const LIGHT_GLSL=`${L1_LAYOUT_GLSL}
 uniform ivec2 l1OB;// floating-origin offset in bays (integer, exact)
@@ -22,34 +22,35 @@ float l1vis(int fx,int fz,int bx,int bz){int dx=bx-fx,dz=bz-fz;if(dx==0&&dz==0)r
  if(!a&&!b)return 1.0;if(!a||!b)return .55;return .04;}
 vec3 l1light(vec3 P,vec3 N){
  vec3 Q=P+N*.06;int fx=int(floor(Q.x/L1B)),fz=int(floor(Q.z/L1B));vec3 acc=vec3(0.0);float up=0.0;l1cset(fx+l1OB.x,fz+l1OB.y);
- for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){int bx=fx+i,bz=fz+j;int k=lsec(bx,bz);float hl=lh(bx,bz,5);if(k==0&&hl<=.55||k==2&&hl<=.4)continue;if(l1inc(bx+l1OB.x,bz+l1OB.y))continue;
+ for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){int bx=fx+i,bz=fz+j;int k=lsec(bx,bz);float hl=lh(bx,bz,5);if(k==0&&hl<=.55||k==2&&hl<=.4||k==3&&hl<=.42||k==4&&hl<=.3)continue;if(l1inc(bx+l1OB.x,bz+l1OB.y))continue;
   // Aquila batten at 3.18 / Gild double battens hung at 4.75 under the open truss / Gothic warm lantern under the crown
-  float ly=k==1?4.75:k==2?3.7:3.18,LI=k==1?4.8:k==2?3.6:3.9,LR=k==1?19.0:k==2?13.0:15.0;vec3 LC=k==2?vec3(1.08,.8,.52):k==1?vec3(1.0,1.0,.97):vec3(1.0);LC=mix(LC,vec3(1.1,.66,.36),l1T)*(1.0-.3*l1T);
+  float ly=k==1?4.75:k==2?3.7:k==3?3.84:k==4?3.39:3.18,LI=k==1?4.8:k==2?4.0:k==3?3.5:k==4?3.9:4.3,LR=k==1?19.0:k==2?14.0:k==3?15.0:k==4?13.0:15.0;vec3 LC=k==2?vec3(1.12,.78,.46):k==1?vec3(1.0,1.0,.97):k==3?vec3(.97,1.0,1.03):k==4?vec3(1.06,.97,.82):vec3(1.0);LC=mix(LC,vec3(1.1,.66,.36),l1T)*(1.0-.3*l1T);
   vec3 lp=vec3(float(bx)*L1B+4.0,ly,float(bz)*L1B+4.0);vec3 d=lp-P;vec3 l=normalize(d);
   float ndl=max(dot(N,l),0.0)*.82+.18*max(N.y*-.5+.5,0.0);float lobe=.35+.65*clamp(-l.y*-1.0,0.0,1.0);
   float vv=l1vis(fx,fz,bx,bz);acc+=LC*(LI*ndl*lobe*l1fall(d,k==1?.12:.33,LR)*vv);up+=l1fall(d,.2,13.0)*vv;}
  // vertical tubes on columns (nearest corner neighbourhood)
  int cx0=int(floor(Q.x/L1B+.5)),cz0=int(floor(Q.z/L1B+.5));
- for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){int cx=cx0+i,cz=cz0+j;if(!(lcol(cx,cz)&&lh(cx,cz,6)>.32)||lsec(cx,cz)==2)continue;int f=int(floor(lh(cx,cz,11)*4.0));
+ for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){int cx=cx0+i,cz=cz0+j;if(!(lcol(cx,cz)&&lh(cx,cz,6)>.32)||lsec(cx,cz)!=0)continue;int f=int(floor(lh(cx,cz,11)*4.0));
   vec3 dir=f==0?vec3(1,0,0):f==1?vec3(-1,0,0):f==2?vec3(0,0,1):vec3(0,0,-1);vec3 lp=vec3(float(cx)*L1B,2.0,float(cz)*L1B)+dir*.52;vec3 d=lp-P;
   float side=smoothstep(-.05,.25,dot(P-lp+dir*.1,dir)+.0);vec3 l=normalize(d);float ndl=max(dot(N,l),0.0)*.9+.1;
-  acc+=(1.0-.5*l1T)*4.2*ndl*side*l1fall(d,.5,12.0);}
+  acc+=(1.0-.5*l1T)*5.2*ndl*side*l1fall(d,.45,13.0);}
  // vertical tubes on walls
- for(int j=0;j<=1;j++)for(int i=-1;i<=1;i++){int ix=fx+i,iz=fz+j;if(lrx(ix,iz)){float s=lh(0,iz,96)>.5?1.0:-1.0;float x0=float(ix)*L1B;vec3 lp=vec3(clamp(P.x,x0+.5,x0+7.5),clamp(P.y,1.45,2.55),float(iz)*L1B+s*.3);vec3 d=lp-P;float side=smoothstep(.0,.2,(P.z-float(iz)*L1B)*s);vec3 l=normalize(d);acc+=(1.0-.5*l1T)*1.5*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.9,10.0);continue;}
-  if(!(lwx(ix,iz)&&!ldx(ix,iz)&&lh(ix,iz,7)>.35))continue;float s=lh(ix,iz,8)>.5?1.0:-1.0;
+ for(int j=0;j<=1;j++)for(int i=-1;i<=1;i++){int ix=fx+i,iz=fz+j;if(lrx(ix,iz)){if(lsec(ix,iz)!=0)continue;float s=lh(0,iz,96)>.5?1.0:-1.0;float x0=float(ix)*L1B;vec3 lp=vec3(clamp(P.x,x0+.5,x0+7.5),clamp(P.y,1.45,2.55),float(iz)*L1B+s*.3);vec3 d=lp-P;float side=smoothstep(.0,.2,(P.z-float(iz)*L1B)*s);vec3 l=normalize(d);acc+=(1.0-.5*l1T)*1.5*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.9,10.0);continue;}
+  if(!(lwx(ix,iz)&&!ldx(ix,iz)&&lh(ix,iz,7)>.35))continue;{int ks=lsec(ix,iz);if(ks!=0&&ks!=2)continue;}float s=lh(ix,iz,8)>.5?1.0:-1.0;
   vec3 lp=vec3(float(ix)*L1B+4.0+(lh(ix,iz,10)-.5)*4.0,2.0,float(iz)*L1B+s*.3);vec3 d=lp-P;float side=smoothstep(.0,.2,(P.z-float(iz)*L1B)*s);vec3 l=normalize(d);
   acc+=(1.0-.5*l1T)*3.1*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.55,11.0);}
- for(int j=-1;j<=1;j++)for(int i=0;i<=1;i++){int ix=fx+i,iz=fz+j;if(lrz(ix,iz)){float s=lh(ix,0,97)>.5?1.0:-1.0;float z0=float(iz)*L1B;vec3 lp=vec3(float(ix)*L1B+s*.3,clamp(P.y,1.45,2.55),clamp(P.z,z0+.5,z0+7.5));vec3 d=lp-P;float side=smoothstep(.0,.2,(P.x-float(ix)*L1B)*s);vec3 l=normalize(d);acc+=(1.0-.5*l1T)*1.5*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.9,10.0);continue;}
-  if(!(lwz(ix,iz)&&!ldz(ix,iz)&&lh(ix,iz,17)>.35))continue;float s=lh(ix,iz,18)>.5?1.0:-1.0;
+ for(int j=-1;j<=1;j++)for(int i=0;i<=1;i++){int ix=fx+i,iz=fz+j;if(lrz(ix,iz)){if(lsec(ix,iz)!=0)continue;float s=lh(ix,0,97)>.5?1.0:-1.0;float z0=float(iz)*L1B;vec3 lp=vec3(float(ix)*L1B+s*.3,clamp(P.y,1.45,2.55),clamp(P.z,z0+.5,z0+7.5));vec3 d=lp-P;float side=smoothstep(.0,.2,(P.x-float(ix)*L1B)*s);vec3 l=normalize(d);acc+=(1.0-.5*l1T)*1.5*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.9,10.0);continue;}
+  if(!(lwz(ix,iz)&&!ldz(ix,iz)&&lh(ix,iz,17)>.35))continue;{int ks=lsec(ix,iz);if(ks!=0&&ks!=2)continue;}float s=lh(ix,iz,18)>.5?1.0:-1.0;
   vec3 lp=vec3(float(ix)*L1B+s*.3,2.0,float(iz)*L1B+4.0+(lh(ix,iz,20)-.5)*4.0);vec3 d=lp-P;float side=smoothstep(.0,.2,(P.x-float(ix)*L1B)*s);vec3 l=normalize(d);
   acc+=(1.0-.5*l1T)*3.1*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.55,11.0);}
  // 小径 lamps: fixed slots re-aimed at the nearest live cluster lamps (no recompiles)
- for(int i=0;i<8;i++){if(i>=l1PtN)break;vec4 L=l1Pt[i];vec3 d=vec3(L.x,2.62,L.z)-P;vec3 l=normalize(d);acc+=vec3(1.0,.96,.88)*L.w*(max(dot(N,l),0.0)*.85+.15)*l1fall(d,.7,6.5);}
+ for(int i=0;i<8;i++){if(i>=l1PtN)break;vec4 L=l1Pt[i];vec3 d=vec3(L.x,2.62,L.z)-P;vec3 l=normalize(d);acc+=vec3(1.0,.86,.66)*L.w*(max(dot(N,l),0.0)*.85+.15)*l1fall(d,.7,6.5);}
  // contact darkening at column feet and wall bases
  vec2 cc=abs(P.xz-vec2(float(cx0),float(cz0))*L1B);float colD=max(cc.x,cc.y)-.45;float ao=1.0-.45*(1.0-smoothstep(0.0,.7,colD))*(1.0-smoothstep(0.0,.9,P.y))*(lcol(cx0,cz0)?1.0:0.0);
  float hemi=mix(.55,1.0,N.y*.5+.5);
  // ceilings: bounce from the lit floor below (the photo's ceiling reads near-white)
  float cb=max(-N.y,0.0)*(.3*up+.03);vec3 accT=acc;
+ if(l1inc(fx+l1OB.x,fz+l1OB.y))hemi*=.6;
  return (l1Amb*hemi*l1AmbK*(.08+.92*l1Power)+l1Lamp*(accT+cb*(1.0-.6*l1T))*l1Power)*ao;}
 `;
 const NOISE_GLSL=`
@@ -83,25 +84,27 @@ varying vec4 vC;varying vec4 vT;varying vec2 vUv;varying vec3 vW;varying vec3 vN
 ${LIGHT_GLSL}
 ${NOISE_GLSL}
 void main(){vec3 N=normalize(vN);vec3 alb=vC.rgb;
- float sv=l1secf(vW.xz/L1B+vec2(l1OB));float gw=smoothstep(.62,.76,sv),ow=1.0-smoothstep(.21,.33,sv);l1T=l1thr(vW.xz/L1B+vec2(l1OB));l1AmbK=(1.0+.45*gw+.25*ow)*(1.0-.2*l1T);
+ float sv=l1secf(vW.xz/L1B+vec2(l1OB));float gw=smoothstep(.62,.76,sv),ow=1.0-smoothstep(.21,.33,sv);l1T=l1thr(vW.xz/L1B+vec2(l1OB));int kf=lsec(int(floor(vW.x/L1B)),int(floor(vW.z/L1B)));float rw=kf==3?1.0:0.0,fw=kf==4?1.0:0.0;l1AmbK=(1.0+.45*gw+.35*ow-.2*rw+.05*fw)*(1.0-.2*l1T);
  if(vT.x>=0.0){vec2 uv=vT.y<.5?vUv*vT.zw:vT.y<1.5?(abs(N.x)>.5?vec2(-vW.z*sign(N.x),vW.y):abs(N.y)>.5?vW.xz:vec2(vW.x*sign(N.z),vW.y))*vT.z:vT.y<2.5?vUv.yx*vT.zw:vUv;
   vec4 s=texture(l1Atlas,vec3(uv,vT.x));if(vT.y>2.5&&s.a<.5)discard;vec3 t=s.rgb;
   if(vT.y>.5&&vT.y<1.5&&abs(N.y)<.5){t=mix(t,t*vec3(1.04,.97,.86),ow*.6);t=mix(t,t*vec3(.86,.74,.6),l1T*.7);
    float g=1.0-smoothstep(.05,.75,vW.y)*.9;t*=1.0-.3*g*(.6+.4*l1n(vec2(uv.x*3.0,1.0),vec2(4800.0,1.0)));}
   alb*=t;}
- vec3 lit=l1light(vW,N);vec3 col=alb*lit;
+ vec3 lit=l1light(vW,N)*mix(vec3(1.0),vec3(1.1,.94,.74),ow*.85)*mix(vec3(1.0),vec3(1.05,.96,.82),fw);vec3 col=alb*lit;
 #ifdef L1_FLOOR
  vec2 p=vW.xz;float st=l1fbm(p*.11,176.0);{float pm0=l1fbm(p*.2+vec2(13.7,4.1),320.0)*.78+.1*l1fbm(p*.05,80.0)+.22*l1n(p*.7,vec2(1120.0))+.04*l1n(p*3.0,vec2(4800.0));float ww=smoothstep(.48,.6,pm0)*(1.0-gw)*.7;if(ww>0.0)col=mix(col,texture(l1Atlas,vec3(p*.25,4.0)).rgb*vC.rgb*lit,ww);}float tyre=smoothstep(.7,.0,abs(fract(p.x*.125+.5)-.5)*8.0-1.0);
  col*=mix(.8,1.06,st)*(1.0-.1*tyre*l1n(p*vec2(.4,3.0),vec2(640.0,4800.0)));
+ if(kf==4){vec3 wd=texture(l1Atlas,vec3(p.yx*vec2(.4,.25),35.0)).rgb;col=wd*vec3(.62,.58,.54)*lit*mix(.75,1.08,st)*(1.0-.25*smoothstep(.55,.8,l1fbm(p*.3,480.0)));}
+ if(kf==3){col*=1.4*mix(vec3(.86,.84,.8),vec3(1.0),smoothstep(.35,.7,l1fbm(p*.6+3.1,960.0)));col=mix(col,vec3(.42,.4,.37)*lit,.25*smoothstep(.5,.75,l1n(p*1.3,vec2(2080.0))));}
  // dark tyre tracks running down the driving aisles (bay centres), wandering slightly
  {int lx=int(floor(p.x/L1B)),lz=int(floor(p.y/L1B));float tr=0.0;
   if(lh(lx,-l1OB.y,150)>.12){float w=(l1n(vec2(p.y*.05,float(lx+l1OB.x)),vec2(80.0,65536.0))-.5)*1.6;float u=p.x-float(lx)*L1B-4.0-w;float d=min(abs(u-.8),abs(u+.8));tr=max(tr,(1.0-smoothstep(.04,.32,d))*(.45+.55*l1n(p*vec2(1.7,1.7),vec2(2720.0)))*smoothstep(.3,.65,l1n(vec2(p.y*.09,float(lx+l1OB.x)*3.0),vec2(144.0,65536.0))));}
   if(lh(-l1OB.x,lz,151)>.55){float w=(l1n(vec2(p.x*.05,float(lz+l1OB.y)),vec2(80.0,65536.0))-.5)*1.6;float u=p.y-float(lz)*L1B-4.0-w;float d=min(abs(u-.8),abs(u+.8));tr=max(tr,(1.0-smoothstep(.04,.32,d))*(.45+.55*l1n(p*vec2(1.7,1.7),vec2(2720.0)))*smoothstep(.3,.65,l1n(vec2(p.x*.09,float(lz+l1OB.y)*3.0),vec2(144.0,65536.0))));}
-  float oil=smoothstep(.62,.8,l1fbm(p*.21+vec2(5.3,1.7),336.0));col*=(1.0-.42*tr*(1.0-ow))*(1.0-.35*oil*(1.0-.5*gw));
+  float oil=smoothstep(.62,.8,l1fbm(p*.21+vec2(5.3,1.7),336.0));col*=(1.0-.62*tr*(1.0-ow)*(1.0-fw)*(1.0-.7*rw))*(1.0-.35*oil*(1.0-.5*gw)*(1.0-fw));
   // Gild: lighter swept slab; Gothic: painted parking bays between the round columns
   col*=(1.0+.25*gw)*(1.0-.35*l1T);vec2 q=p-floor(p/L1B)*L1B;float pl=(1.0-smoothstep(.04,.07,min(abs(q.x-2.67),abs(q.x-5.33))))*step(.6,q.y)*step(q.y,5.2)+(1.0-smoothstep(.04,.07,abs(q.y-5.2)))*step(.3,q.x)*step(q.x,7.7);
-  col=mix(col,vec3(.5,.48,.44)*(.55+.45*st)*l1Power,pl*ow*.8);}
- float pm=l1fbm(p*.2+vec2(13.7,4.1),320.0)*.78+.1*l1fbm(p*.05,80.0)+.22*l1n(p*.7,vec2(1120.0))+.04*l1n(p*3.0,vec2(4800.0));float dry=(1.0-gw)*(1.0-.75*ow)*(1.0-.8*l1T)*(l1inc(int(floor(p.x/L1B))+l1OB.x,int(floor(p.y/L1B))+l1OB.y)?0.0:1.0);float wet=smoothstep(.5,.62,pm)*dry;float pud=smoothstep(.615,.625,pm)*dry;
+  col=mix(col,vec3(.5,.48,.44)*(.55+.45*st)*l1Power,pl*ow*.8*(1.0-fw));}
+ float pm=l1fbm(p*.2+vec2(13.7,4.1),320.0)*.78+.1*l1fbm(p*.05,80.0)+.22*l1n(p*.7,vec2(1120.0))+.04*l1n(p*3.0,vec2(4800.0));float dry=(1.0-gw)*(1.0-.75*ow)*(1.0-.8*l1T)*(1.0-rw*.85)*(1.0-fw)*(l1inc(int(floor(p.x/L1B))+l1OB.x,int(floor(p.y/L1B))+l1OB.y)?0.0:1.0);float wet=smoothstep(.5,.62,pm)*dry;float pud=smoothstep(.615,.625,pm)*dry;
  col*=1.0-.5*wet;
  vec2 rip=vec2(l1n(p*3.1+mod(l1Time*.15,4960.0),vec2(4960.0)),l1n(p*3.3-mod(l1Time*.12,5280.0),vec2(5280.0)))-.5;vec4 r=vR;r.xy+=rip*.004*r.w;
  vec3 refl=texture2DProj(l1Mirror,r).rgb;vec3 V=normalize(cameraPosition-vW);float fres=.38+.55*pow(1.0-max(V.y,0.0),3.0);
@@ -111,6 +114,7 @@ void main(){vec3 N=normalize(vN);vec3 alb=vC.rgb;
 #include <tonemapping_fragment>
 #include <colorspace_fragment>
 #include <fog_fragment>
+ gl_FragColor.rgb*=mix(vec3(1.0),vec3(1.07,.97,.84),ow*.8)*mix(vec3(1.0),vec3(1.04,.98,.9),fw);
 }`;
 
 export function createLevel1World(T,renderer){
@@ -141,7 +145,14 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
 #include <fog_fragment>
 }`;
  const mkGlow=fog=>{const m=new T.ShaderMaterial({uniforms:T.UniformsUtils.merge([T.UniformsLib.fog,{l1Glow:{value:1}}]),vertexShader:GV,fragmentShader:GF,fog});m.uniforms.l1Atlas=uniforms.l1Atlas;return m;};
- const glowMat=mkGlow(true),exitMat=mkGlow(false);glowMat.color={setScalar:v=>{glowMat.uniforms.l1Glow.value=v;}};
+ // soft camera-facing halos around vertical tubes (image-19 column glow): one additive mesh per chunk, power-dimmed
+ const HV=`attribute vec3 hc;varying vec2 vQ;varying float vI;uniform float l1Glow;void main(){vQ=hc.xy;vI=hc.z;vec4 mv=modelViewMatrix*vec4(position,1.0);vec2 sz=uv;mv.xy+=hc.xy*sz;mv.z+=.25;gl_Position=projectionMatrix*mv;vI*=l1Glow*clamp(1.0-(-mv.z-20.0)/30.0,0.0,1.0);}`,
+  HF=`varying vec2 vQ;varying float vI;void main(){float r=dot(vQ,vQ);float a=exp(-r*3.2)-.04;if(a<=0.0)discard;gl_FragColor=vec4(vec3(.62,.68,.72)*a*vI,1.0);}`;
+ const haloMat=new T.ShaderMaterial({uniforms:{l1Glow:null},vertexShader:HV,fragmentShader:HF,transparent:true,depthWrite:false,blending:T.AdditiveBlending});
+ function haloGeo(list){const n=list.length,pos=new Float32Array(n*12),uv=new Float32Array(n*8),hc=new Float32Array(n*12),idx=[];
+  list.forEach(([x,y,z,w,h,i],k)=>{for(let c=0;c<4;c++){const qx=c&1?1:-1,qy=c&2?1:-1;pos.set([x,y,z],k*12+c*3);uv.set([w,h],k*8+c*2);hc.set([qx,qy,i],k*12+c*3);}idx.push(k*4,k*4+1,k*4+3,k*4,k*4+3,k*4+2);});
+  const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(pos,3));g.setAttribute('uv',new T.BufferAttribute(uv,2));g.setAttribute('hc',new T.BufferAttribute(hc,3));g.setIndex(idx);g.computeBoundingSphere();return g;}
+ const glowMat=mkGlow(true),exitMat=mkGlow(false);haloMat.uniforms.l1Glow=glowMat.uniforms.l1Glow;glowMat.color={setScalar:v=>{glowMat.uniforms.l1Glow.value=v;}};
  // global floor and ceiling planes, snapped under the player
  const plane=(w,y,flip)=>{const g=new T.PlaneGeometry(w,w).rotateX(flip?Math.PI/2:-Math.PI/2);g.translate(0,y,0);const c=flip?[.78,.79,.8,1]:[.9,.9,.89,1];c.t=flip?TX('ceil',1,.25):TX('floor',1,.25);col(g,c);return g;};
  const NOT=[-1,0,1,1];
@@ -168,19 +179,21 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   tray:[[.8,.8,.8,0],TX('galv',1,1)],door:[[1,1,1,0],TX('door2',0)],frame:[[.6,.62,.62,0],TX('steel',1,1.25)],ply:[[1,1,1,0],TX('osb',1,1.25)],plyD:[[.7,.62,.55,0],TX('osb',1,1.25)],batten:[[.95,.95,.95,0],TX('steel',1,1.25)],
   panel:[[1,1,1,0],TX('epanel',0)],hose:[[1,1,1,0],TX('hose',0)],sign:[[.5,.5,.5,0],TX('steel',1,2)],shelf:[[.6,.72,.95,0],TX('steel',1,1.25)],rust:[[1,1,1,0],TX('rust',2,.8,1)],copper:[[1,.75,.6,0],TX('rust',2,.8,1)],
   pipeG:[[.75,.78,.78,0],TX('steel',2,.8,1)],dial:[[.95,.93,.85,0],TX('paper',0)],needle:[[.7,.05,.03,0]],door2:[[1,1,1,0],TX('rustbox',0)],paper:[[1,1,1,0],TX('paper',0)],tape:[[.8,.75,.55,0]],steel:[[.55,.57,.6,0],TX('steel',1,1.25)],
-  deck:[[.75,.75,.75,0],TX('galv',1,.5)],duct:[[1,1,1,0],TX('galv',2,.5,1)],gcol:[[1,.97,.9,1],TX('cream',1,.625)],vault:[[1,.97,.9,1],TX('cream',1,.3125)],wire:[[.1,.1,.1,0]],shelfB:[[1,.55,.2,0],TX('steel',1,1.25)],
+  deck:[[.4,.4,.4,0],TX('galv',1,.5)],duct:[[1,1,1,0],TX('galv',2,.5,1)],gcol:[[1,.97,.9,1],TX('cream',1,.625)],vault:[[1,.97,.9,1],TX('cream',1,.3125)],wire:[[.1,.1,.1,0]],shelfB:[[1,.55,.2,0],TX('steel',1,1.25)],
   osb:[[1,1,1,0],TX('osb',0)],osbD:[[.45,.4,.35,0],TX('osb',0)],straw:[[1,1,1,0],TX('straw',0)],chrome:[[1,1,1,0],TX('chrome',0)],leather:[[1,1,1,0],TX('leather',0)],steelP:[[.5,.52,.5,0],TX('steel',0)],
   bucket:[[1,1,1,0],TX('bucket',0)],wetsign:[[1,1,1,0],TX('wetsign',0)],ac:[[1,1,1,0],Object.assign(TX('ac',0),{})],pipeW:[[1,1,1,0],TX('pipew',2,1,1)],plyW:[[1,1,1,0],TX('crate2',0)],alu:[[.95,.97,1,0],TX('steel',0)],
   rubber:[[.6,.6,.6,0],TX('tread',0)],bikeF:[[.7,.12,.1,0],TX('steel',0)],cable:[[.12,.12,.12,0]],cone:[[1,1,1,0],TX('orange',0)],cartontop:[[1,1,1,0],TX('cartontop',0)],foil:[[.9,.95,1,0],TX('foil',0)],
   cloth:[[1,1,1,0],TX('cloth',1,2)],letter:[[1,1,1,0],TX('colF',3)],exitT:[[1,1,1,0],TX('exit',0)],fluor:[[1,1,1,0],TX('fluor',0)],lag:[[1,1,1,0],TX('lag',2,.8,1)],grille:[[1,1,1,0],TX('grille',0)],hazard:[[1,1,1,0],TX('hazard',0)],
   padded:[[1,1,1,1],TX('padded',1,.625)],brick:[[1,1,1,1],TX('brick',1,.5)],cwall:[[1,1,1,1],TX('form',1,.3125)],cwallP:[[1,1,1,1],TX('paint',1,.3125)],cceil:[[.9,.9,.9,1],TX('paint',1,.5)],
   desk:[[.75,.6,.45,0],TX('wfloor',1,1)],crt:[[.85,.82,.72,0],TX('steel',0)],mirror:[[.55,.6,.62,0],TX('chrome',0)],mattress:[[.9,.88,.8,0],TX('padded',0)],
-  canvas0:[[1,.8,.6,0],TX('cloth',0)],canvas1:[[.6,.75,1,0],TX('cloth',0)],canvas2:[[.8,1,.7,0],TX('cloth',0)]};
+  gwall:[[.97,.97,.96,1],TX('form',1,.25)],peelW:[[1,1,1,1],TX('peel',1,.3125)],yelW:[[1,.96,.86,1],TX('yellow',1,.3125)],wains:[[1,1,1,0],TX('wains',1,.8)],wbeam:[[.8,.72,.62,0],TX('beam',1,.625)],
+  wceil:[[.42,.36,.31,1],TX('wfloor',1,.5)],window:[[1,1,1,0],TX('window',0,6,1.4)],lagC:[[1,1,1,0],TX('lag',1,.625)],ceilst:[[.72,.71,.69,1],TX('ceilstain',1,.25)],dooryel:[[1,1,1,0],TX('dooryel',0)],ductF:[[.92,.94,.96,0],TX('foil',2,.6,1)],doorwood:[[1,1,1,0],TX('doorwood',0)],
+  dark:[[.16,.16,.17,0],TX('door2',0)],canvas0:[[1,.8,.6,0],TX('cloth',0)],canvas1:[[.6,.75,1,0],TX('cloth',0)],canvas2:[[.8,1,.7,0],TX('cloth',0)]};
  for(const[k,top]of[['crate1','crate1'],['crate2','crate4'],['crate4','crate4'],['crate5','crate1'],['carton','cartontop'],['carton2','cartontop'],['carton3','cartontop'],['tote','tote4'],['tote2','tote2'],['tote3','tote3'],['tote4','tote4'],['locker','locker'],['locker2','locker2'],['rustbox','rustbox']])CM[k]=[[1,1,1,0],TX(k,0,1,1,0,top)];
  const C={};for(const k in CM){const[c0,t]=CM[k];const c=new T.Color(Math.min(1,c0[0]),Math.min(1,c0[1]),Math.min(1,c0[2])).convertSRGBToLinear();C[k]=[c.r*(c0[0]>1?c0[0]:1),c.g,c.b,c0[3]];C[k].t=t;}
  const LET=['colF','colE','colG','colB3','colD','colA7','colH','colC2'].map(n=>{const c=[1,1,1,0];c.t=TX(n,3);return c;});
  const GLOW={amber:[2.4,1.0,.3],warm:[2.2,1.6,.9],tube:[1.7,1.85,1.95],exit:[1.25,1.35,1.25],dim:[.5,.55,.6]};GLOW.screen=[.25,.55,.45];GLOW.tube.t=TX('fluor',0);GLOW.dim.t=TX('fluor',0);GLOW.exit.t=TX('exitcn',0);
- let parts=null,glows=null,exits=null,solids=null,ox0=0,oz0=0;
+ let parts=null,glows=null,exits=null,solids=null,halos=null,ox0=0,oz0=0;const HL=(x,y,z,w,h,i)=>halos.push([x-ox0,y,z-oz0,w,h,i]);
  tmp.rotation.order='YXZ';
  function put(list,geo,c,x,y,z,w,h,d,ry=0,rx=0,rz=0){tmp.position.set(x-ox0,y,z-oz0);tmp.rotation.set(rx,ry,rz);tmp.scale.set(w,h,d);tmp.updateMatrix();const g=geo.clone().applyMatrix4(tmp.matrix);list.push(c.length===4?col(g,c,[w,h,d]):colGlow(g,c));}
  function colGlow(g,c){const n=g.attributes.position.count,a=new Float32Array(n*3);for(let i=0;i<n;i++)a.set(c,i*3);g.setAttribute('color',new T.BufferAttribute(a,3));return texAttr(g,c.t);}
@@ -203,6 +216,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  // ---- sector pieces ----
  const HC2=2.45,HP2=L1_SEC_H[2],arch=t=>HC2+(HP2-HC2)*(1-Math.pow(1-Math.max(0,Math.min(1,t)),1.6));
  const ceilQuad=new T.PlaneGeometry(B,B).rotateX(Math.PI/2),vaultBase=new T.PlaneGeometry(B,B,10,10).rotateX(Math.PI/2);
+ const wedgeG=(()=>{const g=new T.BoxGeometry(1,1,1),p=g.attributes.position;for(let i=0;i<p.count;i++)if(p.getY(i)>0)p.setY(i,.06+.44*(p.getX(i)+.5));g.computeVertexNormals();return g;})();
  const capital=new T.CylinderGeometry(1.0,.36,.5,12,1,false),shaft=new T.CylinderGeometry(.36,.4,1,12,1,true);
  function vaultGeo(X,Z){const g=vaultBase.clone(),p=g.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i);p.setY(i,Math.max(arch(1-Math.abs(x)/4),arch(1-Math.abs(z)/4)));}
   g.translate(X+4-ox0,0,Z+4-oz0);g.computeVertexNormals();return col(g,C.vault);}
@@ -212,11 +226,45 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
     for(let k=0;k<2;k++){nor.push(axis==='x'?0:f,0,axis==='x'?f:0);uv.push(0,0);}}
    for(let i=0;i<n;i++){const a=b0+i*2;if((f>0)===(axis==='x'))idx.push(a,a+2,a+1,a+1,a+2,a+3);else idx.push(a,a+1,a+2,a+1,a+3,a+2);}}
   const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('normal',new T.Float32BufferAttribute(nor,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);return col(g,C.vault);}
+
+ // ---- 衔尾 Ouroboros (renovation, image-21) and 传说 Fabled (classical timber, image-22) ----
+ const H3=L1_SEC_H[3],H4=L1_SEC_H[4];
+ function ceilOuro(ix,iz,X,Z,r,row,col2){P(ceilQuad,C.ceilst,X+4,H3,Z+4,1,1,1);
+  // deep concrete downstands, a lagged main duct on strap hangers, foil branch, exposed red fire mains
+  P(box,C.beam,X+4,H3-.3,Z,B,.6,.55);if(col2(44)>.4)P(box,C.beam,X,H3-.2,Z+4,.45,.4,B);
+  if(row(36)>.55){const z=Z+5.4+row(39)*.8,y=H3-1.05;P(cyl,C.lag,X+4,y,z,B,.42,.42);for(const hx of[1.2,5.2]){P(box,C.wire,X+hx,(H3+y)/2,z,.02,H3-y,.02);P(box,C.steel,X+hx,y-.43,z,.06,.03,.9);}if(r(140)<.3)P(box,C.lagC,X+2+r(141)*4,y-.5,z+.1,.5,.3,.2,r(142));}
+  if(col2(37)>.62){const x=X+2.1+col2(39)*1.2;P(cyl,C.ductF,x,H3-.9,Z+4,B,.3,.3,Math.PI/2);}
+  {const z=Z+1.4+row(31)*1.2,y=H3-.62;P(cyl,C.red,X+4,y,z,B,.075,.075);for(const hx of[2,6])P(box,C.wire,X+hx,(H3+y)/2,z,.015,H3-y,.015);if(r(144)<.35)P(vcyl,C.red,X+1+r(145)*6,y-.2,z,.04,.32,.04);}
+  if(col2(35)>.55){const x=X+4.6+col2(36)*2;P(cyl,C.red,x,H3-.45,Z+4,B,.06,.06,Math.PI/2);}
+  if(row(34)>.5)for(let k=0;k<2;k++)P(cyl,C.conduit,X+4,H3-.25-k*.02,Z+7.1+k*.12,B,.022,.022);
+  // bare battens on chains, about half the bays; dangling loose cable now and then
+  if(l1Hash(ix,iz,5)>.42){const a=(r(343)-.5)*.6,lit=r(344)>.12;for(const q of[-.5,.5])P(box,C.wire,X+4+q*Math.cos(a),(H3+3.9)/2,Z+4-q*Math.sin(a),.012,H3-3.9,.012);P(box,C.batten,X+4,3.88,Z+4,1.3,.06,.16,a);G(lit?GLOW.tube:GLOW.dim,X+4,3.84,Z+4,1.22,.03,.12,a);}
+  if(r(146)<.25)P(box,C.cable,X+1+r(147)*6,H3-.9,Z+1+r(148)*6,.015,1.6,.015,0,(r(149)-.5)*.4);}
+ function ceilFable(ix,iz,X,Z,r,row,col2){P(ceilQuad,C.wceil,X+4,H4,Z+4,1,1,1);
+  // exposed timber: girder on the x grid line, joists along z every 1.6 m
+  P(box,C.wbeam,X+4,H4-.2,Z,B,.4,.34);for(let k=0;k<5;k++)P(box,C.wbeam,X+.8+k*1.6,H4-.11,Z+4,.16,.22,B);
+  if(col2(44)>.5)P(box,C.wbeam,X,H4-.2,Z+4,.34,.4,B);
+  // old twin-tube fittings screwed under the joists
+  if(l1Hash(ix,iz,5)>.3){const lit=r(344)>.1;P(box,C.batten,X+4,H4-.25,Z+4,1.35,.06,.24);G(lit?GLOW.tube:GLOW.dim,X+4,H4-.285,Z+4-.05,1.25,.025,.05);G(lit?GLOW.tube:GLOW.dim,X+4,H4-.285,Z+4+.05,1.25,.025,.05);}
+  // wiki: coloured cables strung along the beams
+  if(row(33)>.7){const cc=CLOTH[Math.floor(row(34)*CLOTH.length)];P(cyl,cc,X+4,H4-.42,Z+.25,B,.012,.012);}}
+ function fableWall(ix,iz,x,z,axis,h){if(l1Sector(ix,iz)!==4)return false;const ax=axis==='x',r=s=>l1Hash(ix,iz,s),Q=(c,u,y,w,hh,d)=>P(box,c,ax?x+u:x,y,ax?z:z+u,ax?w:d,hh,ax?d:w);
+  if(r(150)<.45){// glazed timber partition: wainscot base, small-pane glazing, plaster header
+   Q(C.wains,0,.5,B,1.0,L1_WALL);Q(C.wbeam,0,1.03,B,.08,L1_WALL+.06);Q(C.window,0,1.9,B,1.66,.07);Q(C.wbeam,0,2.76,B,.08,L1_WALL+.04);Q(C.yelW,0,(2.8+h)/2,B,h-2.8,L1_WALL);
+   for(const u of[-3.98,-1.33,1.33,3.98])Q(C.wbeam,u,1.9,.1,1.7,.16);}
+  else{Q(C.yelW,0,h/2,B,h,L1_WALL);Q(C.wains,0,.6,B,1.2,L1_WALL+.05);Q(C.wbeam,0,1.22,B,.06,L1_WALL+.08);Q(C.wbeam,0,.06,B,.12,L1_WALL+.08);}
+  return true;}
+ function sectorWall(ix,iz,x,z,ax,kb){const r=s=>l1Hash(ix,iz,s),side=r(155)>.5?1:-1,o=L1_WALL/2,u=(r(156)-.5)*4.4,F=(c,uu,y,w,hh,d,off,rx=0,rz=0)=>P(box,c,ax?x+uu:x+side*off,y,ax?z+side*off:z+uu,ax?w:d,hh,ax?d:w,0,ax?rx:0,ax?0:rz);
+  if(kb===4){if(r(150)>=.45&&r(152)<.45){F(C.wbeam,u,1.1,1.12,2.28,.06,o+.03);F(C.doorwood,u,1.05,.92,2.1,.04,o+.06);}return;}
+  // Ouroboros: an unfinished yellow door, a steel grille leant on the wall, a bare red riser
+  if(r(152)<.32){F(C.frame,u,1.12,1.06,2.24,.05,o+.025);F(C.dooryel,u,1.05,.9,2.1,.04,o+.05);if(r(157)<.5)F(C.peelW,u+.95,1.6,.6,.5,.02,o+.03);}
+  else if(r(153)<.4){const t=.13;F(C.grille,u,1.04,1.3,2.1,.04,o+.2,-side*t,side*t);}
+  if(r(154)<.4){const v=u+(u>0?-1.4:1.4),hh=L1_SEC_H[3];F(C.red,v,hh/2,.09,hh,.09,o+.08);}}
  // chunk build is a generator: two bay rows per step, so streaming spreads one chunk over ~5 frames.
  // The shared scratch lists are restored after every yield (a synchronous ensure() may build another chunk in between).
  function buildChunk(cx,cz){const g=chunkGen(cx,cz);let r;do r=g.next();while(!r.done);return r.value;}
- function* chunkGen(cx,cz){parts=[];glows=[];exits=[];solids=[];const x0=cx*8,z0=cz*8;ox0=cx*K;oz0=cz*K;const ctx={parts,glows,exits,solids};
-  const resume=()=>{parts=ctx.parts;glows=ctx.glows;exits=ctx.exits;solids=ctx.solids;ox0=cx*K;oz0=cz*K;};
+ function* chunkGen(cx,cz){parts=[];glows=[];exits=[];solids=[];halos=[];const x0=cx*8,z0=cz*8;ox0=cx*K;oz0=cz*K;const ctx={parts,glows,exits,solids,halos};
+  const resume=()=>{parts=ctx.parts;glows=ctx.glows;exits=ctx.exits;solids=ctx.solids;halos=ctx.halos;ox0=cx*K;oz0=cz*K;};
   const kc=new Map(),kind=(a,b)=>{const k=a*100003+b;let v=kc.get(k);if(v===undefined){v=l1Sector(a,b);kc.set(k,v);}return v;},hgt=(a,b)=>L1_SEC_H[kind(a,b)];
   for(let iz=z0;iz<z0+8;iz++){if(iz>z0){yield;resume();}for(let ix=x0;ix<x0+8;ix++){
    const X=ix*B,Z=iz*B,r=(s)=>l1Hash(ix,iz,s),kb=kind(ix,iz),hb=L1_SEC_H[kb],gw=Math.max(0,Math.min(1,(l1SecV(ix,iz)-.62)/.14))*(kb===2?0:1);
@@ -224,33 +272,41 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
    // column at corner (Gothic: round shaft + mushroom capital when all four bays are Gothic)
    const goth=kb===2&&kind(ix-1,iz)===2&&kind(ix,iz-1)===2&&kind(ix-1,iz-1)===2;
    if(goth&&(l1Hash(ix,iz,1)>.1||l1WallX(ix,iz)||l1WallX(ix-1,iz)||l1WallZ(ix,iz)||l1WallZ(ix,iz-1))){P(shaft,C.gcol,X,1.03,Z,1,2.06,1);P(capital,C.gcol,X,2.3,Z,1,1,1);P(box,C.gcol,X,.06,Z,.95,.12,.95);}
-   else if(l1Column(ix,iz)){P(box,C.column,X,hCol/2,Z,L1_COL,hCol,L1_COL);
-    if(l1ColumnTube(ix,iz)&&kb!==2){const f=l1ColumnFace(ix,iz),dx=f===0?1:f===1?-1:0,dz=f===2?1:f===3?-1:0,o=L1_COL/2+.035;G(GLOW.tube,X+dx*o,2.0,Z+dz*o,dx?.05:.07,1.22,dz?.05:.07);P(box,C.frame,X+dx*(o-.01),2.0,Z+dz*(o-.01),dx?.03:.11,1.32,dz?.03:.11);}
-    if(r(23)<.3){const q=r(24)>.5?1:-1,o=L1_COL/2+.006;P(box,C.yellow,X+q*o,1.0,Z+o,.05,2.0,.012);}
+   else if(l1Column(ix,iz)){if(kb===4){P(box,C.wbeam,X,hCol/2,Z,L1_COL*.62,hCol,L1_COL*.62);P(box,C.wbeam,X,hCol-.25,Z,L1_COL*.9,.2,L1_COL*.9);P(box,C.wbeam,X,.1,Z,L1_COL*.75,.2,L1_COL*.75);}else P(box,C.column,X,hCol/2,Z,L1_COL,hCol,L1_COL);
+    if(kb===3&&r(141)<.6){const t=.6+r(142)*(hCol-1.2);P(box,C.lagC,X,t/2+.05,Z,L1_COL+.12,t,L1_COL+.12);if(r(143)<.5)P(box,C.foil,X,t+.2,Z,L1_COL+.08,.4,L1_COL+.08);}
+    if(l1ColumnTube(ix,iz)&&kb===0){const f=l1ColumnFace(ix,iz),dx=f===0?1:f===1?-1:0,dz=f===2?1:f===3?-1:0,o=L1_COL/2+.035;G(GLOW.tube,X+dx*o,2.0,Z+dz*o,dx?.05:.07,1.22,dz?.05:.07);HL(X+dx*(o+.15),2.0,Z+dz*(o+.15),.85,1.25,1.0);P(box,C.frame,X+dx*(o-.01),2.0,Z+dz*(o-.01),dx?.03:.11,1.32,dz?.03:.11);}
+    if(r(23)<.3&&kb!==4){const q=r(24)>.5?1:-1,o=L1_COL/2+.006;P(box,C.yellow,X+q*o,1.0,Z+o,.05,2.0,.012);}
     if(kb===0&&r(26)<.55){const Lc=LET[Math.floor(r(27)*LET.length)],o=L1_COL/2+.004,y=1.65;for(const[dx,dz]of[[0,1],[0,-1],[1,0],[-1,0]])if(r(28+dx+dz*2)<.7)P(box,Lc,X+dx*o,y,Z+dz*o,dz?.46:.004,.46,dx?.46:.004);}
-    if(l1ColumnTube(ix,iz)&&kb!==2){}else if(r(21)<.18){const f=Math.floor(r(22)*4),dx=f===0?1:f===1?-1:0,dz=f===2?1:f===3?-1:0,o=L1_COL/2+.09;P(box,C.hose,X+dx*o,1.3,Z+dz*o,dx?.18:.62,.62,dz?.18:.62);}
+    if((l1ColumnTube(ix,iz)&&kb===0)||kb===4){}else if(r(21)<.18){const f=Math.floor(r(22)*4),dx=f===0?1:f===1?-1:0,dz=f===2?1:f===3?-1:0,o=L1_COL/2+.09;P(box,C.hose,X+dx*o,1.3,Z+dz*o,dx?.18:.62,.62,dz?.18:.62);}
     else if(r(21)>.93){const f=Math.floor(r(22)*4),dx=f===0?1:f===1?-1:0,dz=f===2?1:f===3?-1:0,o=L1_COL/2+.07;P(box,C.panel,X+dx*o,1.45,Z+dz*o,dx?.14:.5,.72,dz?.14:.5);}}
    // walls on the two edges this bay owns
-   if(l1WallX(ix,iz)){if(l1DoorX(ix,iz)){for(const sg of[-1,1]){P(box,C.concrete,X+4+sg*2.4,hX/2,Z,3.2,hX,L1_WALL);solid(X+4+sg*2.4,Z,3.2,L1_WALL+.02);}P(box,C.concrete,X+4,(hX+2.3)/2,Z,1.6,hX-2.3,L1_WALL);}else{P(box,C.concrete,X+4,hX/2,Z,B,hX,L1_WALL);solid(X+4,Z,B,L1_WALL+.02);}decorWall(ix,iz,X+4,Z,'x');}
-   if(l1WallZ(ix,iz)){if(l1DoorZ(ix,iz)){for(const sg of[-1,1]){P(box,C.concrete,X,hZ/2,Z+4+sg*2.4,L1_WALL,hZ,3.2);solid(X,Z+4+sg*2.4,L1_WALL+.02,3.2);}P(box,C.concrete,X,(hZ+2.3)/2,Z+4,L1_WALL,hZ-2.3,1.6);}else{P(box,C.concrete,X,hZ/2,Z+4,L1_WALL,hZ,B);solid(X,Z+4,L1_WALL+.02,B);}decorWall(ix,iz,X,Z+4,'z');}
+   const WM=kb===1?C.gwall:kb===3?C.peelW:kb===4?C.yelW:C.concrete;
+   if(l1WallX(ix,iz)){if(l1DoorX(ix,iz)){for(const sg of[-1,1]){P(box,WM,X+4+sg*2.4,hX/2,Z,3.2,hX,L1_WALL);solid(X+4+sg*2.4,Z,3.2,L1_WALL+.02);}P(box,WM,X+4,(hX+2.3)/2,Z,1.6,hX-2.3,L1_WALL);}else{solid(X+4,Z,B,L1_WALL+.02);if(!fableWall(ix,iz,X+4,Z,'x',hX))P(box,WM,X+4,hX/2,Z,B,hX,L1_WALL);}decorWall(ix,iz,X+4,Z,'x',kb);}
+   if(l1WallZ(ix,iz)){if(l1DoorZ(ix,iz)){for(const sg of[-1,1]){P(box,WM,X,hZ/2,Z+4+sg*2.4,L1_WALL,hZ,3.2);solid(X,Z+4+sg*2.4,L1_WALL+.02,3.2);}P(box,WM,X,(hZ+2.3)/2,Z+4,L1_WALL,hZ-2.3,1.6);}else{solid(X,Z+4,L1_WALL+.02,B);if(!fableWall(ix,iz,X,Z+4,'z',hZ))P(box,WM,X,hZ/2,Z+4,L1_WALL,hZ,B);}decorWall(ix,iz,X,Z+4,'z',kb);}
    // long corrugated runs (Aquila photo, right side): cladding + a vertical tube every 2 m
-   if(l1RunX(ix,iz)){const s=l1RunSideX(iz),o=L1_WALL/2+.03;P(box,C.clad,X+4,H/2-.05,Z+s*o,B,H-.1,.05);for(let k=0;k<4;k++){G(GLOW.tube,X+1+k*2,2.0,Z+s*(o+.04),.07,1.22,.05);P(box,C.frame,X+1+k*2,2.0,Z+s*(o+.02),.12,1.32,.03);}}
-   if(l1RunZ(ix,iz)){const s=l1RunSideZ(ix),o=L1_WALL/2+.03;P(box,C.clad,X+s*o,H/2-.05,Z+4,.05,H-.1,B);for(let k=0;k<4;k++){G(GLOW.tube,X+s*(o+.04),2.0,Z+1+k*2,.05,1.22,.07);P(box,C.frame,X+s*(o+.02),2.0,Z+1+k*2,.03,1.32,.12);}}
+   if(l1RunX(ix,iz)&&kb===0){const s=l1RunSideX(iz),o=L1_WALL/2+.03;P(box,C.clad,X+4,H/2-.05,Z+s*o,B,H-.1,.05);for(let k=0;k<4;k++){G(GLOW.tube,X+1+k*2,2.0,Z+s*(o+.04),.07,1.22,.05);HL(X+1+k*2,2.0,Z+s*(o+.2),.7,1.15,.7);P(box,C.frame,X+1+k*2,2.0,Z+s*(o+.02),.12,1.32,.03);}}
+   if(l1RunZ(ix,iz)&&kb===0){const s=l1RunSideZ(ix),o=L1_WALL/2+.03;P(box,C.clad,X+s*o,H/2-.05,Z+4,.05,H-.1,B);for(let k=0;k<4;k++){G(GLOW.tube,X+s*(o+.04),2.0,Z+1+k*2,.05,1.22,.07);HL(X+s*(o+.2),2.0,Z+1+k*2,.7,1.15,.7);P(box,C.frame,X+s*(o+.02),2.0,Z+1+k*2,.03,1.32,.12);}}
    // low concrete partitions (ramp parapets in the photo)
-   if(l1LowX(ix,iz)){const a=r(160)*2,b=r(161)*2;P(box,C.low,X+4+(a-b)/2,.58,Z,B-1-a-b,1.16,.24);}
-   if(l1LowZ(ix,iz)){const a=r(162)*2,b=r(163)*2;P(box,C.low,X,.58,Z+4+(a-b)/2,.24,1.16,B-1-a-b);}
+   // half of the Aquila parapets guard a car ramp: the parapet top climbs with the slab behind it (image-19, left)
+   if(l1LowX(ix,iz)){const a=r(160)*2,b=r(161)*2,L=B-1-a-b,cx=X+4+(a-b)/2;if(kb===0&&r(164)<.5){const s=r(165)>.5?1:-1,f=r(166)>.5?1:-1,ang=Math.atan(.72/L);P(wedgeG,C.low,cx,.85,Z,L,1.7,.24,f>0?0:Math.PI);P(box,C.concrete,cx,.3,Z+s*1.66,L/Math.cos(ang),.14,3.0,0,0,f*ang);P(box,C.low,cx,.35,Z+s*3.2,L,.7,.18);solid(cx,Z+s*1.66,L,3.2);}else P(box,C.low,cx,.58,Z,L,1.16,.24);}
+   if(l1LowZ(ix,iz)){const a=r(162)*2,b=r(163)*2,L=B-1-a-b,cz=Z+4+(a-b)/2;if(kb===0&&r(164)<.5){const s=r(165)>.5?1:-1,f=r(166)>.5?1:-1,ang=Math.atan(.72/L);P(wedgeG,C.low,X,.85,cz,L,1.7,.24,f>0?-Math.PI/2:Math.PI/2);P(box,C.concrete,X+s*1.66,.3,cz,3.0,.14,L/Math.cos(ang),0,-f*ang,0);P(box,C.low,X+s*3.2,.35,cz,.18,.7,L);solid(X+s*1.66,cz,3.2,L);}else P(box,C.low,X,.58,cz,.24,1.16,L);}
    // sector seams: fascia between flat ceilings of different height, arched spandrel on Gothic edges
    for(const[ax,ka,kb2,top,hh]of[['x',kind(ix,iz-1),kb,hX,Math.min(hb,hgt(ix,iz-1))],['z',kind(ix-1,iz),kb,hZ,Math.min(hb,hgt(ix-1,iz))]]){if(ka===kb2)continue;if((ax==='x'?l1WallX:l1WallZ)(ix,iz))continue;
     if(ka===2||kb2===2)parts.push(spandrel(X,Z,ax,top));else if(ax==='x')P(box,C.beam,X+4,(hh+top)/2,Z,B,top-hh,.32);else P(box,C.beam,X,(hh+top)/2,Z+4,.32,top-hh,B);}
    if(l1InClu(ix,iz)){CL.bay(ix,iz);continue;}
    const row=(s)=>l1Hash(0,iz,s),col2=(s)=>l1Hash(ix,0,s);
    if(kb===2){parts.push(vaultGeo(X,Z));if(r(5)>.4){P(box,C.wire,X+4,(HP2+3.8)/2,Z+4,.02,HP2-3.8,.02);P(box,C.frame,X+4,3.86,Z+4,.3,.12,.3);G(GLOW.warm,X+4,3.7,Z+4,.2,.24,.2);}}
+   else if(kb===3)ceilOuro(ix,iz,X,Z,r,row,col2);
+   else if(kb===4)ceilFable(ix,iz,X,Z,r,row,col2);
    else if(kb===1){const HG=L1_SEC_H[1];P(ceilQuad,C.deck,X+4,HG,Z+4,1,1,1);
     // open steel truss on every x grid line, purlins along z, the odd big duct
     P(box,C.steel,X+4,HG-.12,Z,B,.14,.16);P(box,C.steel,X+4,HG-.78,Z,B,.12,.14);for(let k=0;k<8;k++)P(box,C.steel,X+.5+k,HG-.45,Z,.06,.66,.06,0);
     for(let k=0;k<4;k++)P(box,C.steel,X+1+k*2,HG-.25,Z+4,.08,.1,B);P(box,C.steel,X,HG-.2,Z+4,.22,.3,B);
-    if(row(36)>.45)P(cyl,C.duct,X+4,HG-1.25,Z+6.2,B,.36,.36);if(row(37)>.6)P(cyl,C.red,X+4,HG-.95,Z+2.4,B,.05,.05);
-    for(const dz of [2.6,5.4]){P(box,C.wire,X+3.4,(HG+4.86)/2,Z+dz,.015,HG-4.86,.015);P(box,C.wire,X+4.6,(HG+4.86)/2,Z+dz,.015,HG-4.86,.015);P(box,C.batten,X+4,4.82,Z+dz,1.5,.08,.2);G(GLOW.tube,X+4,4.77,Z+dz,1.4,.03,.12);}}
+    // insulated round ducts (silver foil lagging) on strap hangers, a smaller galvanised branch
+    if(row(36)>.3){P(cyl,C.duct,X+4,HG-1.15,Z+6.1,B,.46,.46);for(let k=0;k<4;k++)P(cyl,C.steel,X+1+k*2,HG-1.15,Z+6.1,.05,.475,.475);for(const hx of[1.5,5.5]){P(box,C.wire,X+hx,HG-.45,Z+6.1,.02,1.2,.02);P(box,C.steel,X+hx,HG-1.15,Z+6.1,.05,.05,1.0);}}
+    if(col2(38)>.55){P(cyl,C.duct,X+6.3,HG-1.0,Z+4,B,.26,.26,Math.PI/2);}if(row(37)>.7)P(cyl,C.red,X+4,HG-.95,Z+2.4,B,.05,.05);
+    // square pendant lamps on two wires
+    for(const dz of [2.6,5.4]){P(box,C.wire,X+3.7,(HG+4.86)/2,Z+dz,.012,HG-4.86,.012);P(box,C.wire,X+4.3,(HG+4.86)/2,Z+dz,.012,HG-4.86,.012);P(box,C.batten,X+4,4.84,Z+dz,1.25,.08,.62);G(GLOW.tube,X+4,4.795,Z+dz,1.17,.02,.54);}}
    else{P(ceilQuad,C.ceil,X+4,H,Z+4,1,1,1);
    // drop beams: wide shallow downstands along x on grid lines, narrower along z (image-19)
    P(box,C.beam,X+4,H-.07,Z,B,.14,1.1);if(col2(44)>.5)P(box,C.beam,X,H-.05,Z+4,.9,.1,B);
@@ -260,12 +316,13 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
    if(row(32)>.3){const o2=4.6+row(33)*2.4,y2=H-.42;P(cyl,C.white,X+4,y2,Z+o2,B,.045,.045);for(const hx of[2.6,6.6])P(box,C.wire,X+hx,(H+y2)/2,Z+o2,.01,H-y2,.01);if(r(39)>.55)P(vcyl,C.red,X+2+r(40)*4,y2-.07,Z+o2,.026,.05,.026);}
    if(col2(35)>.5){const xo=1.2+col2(36)*5.6;P(cyl,C.white,X+xo,H-.36,Z+4,B,.028,.028,Math.PI/2);if(r(41)>.4)P(vcyl,C.red,X+xo,H-.43,Z+1.5+r(42)*5,.026,.05,.026);}
    if(r(45)<.18){const a=(r(46)>.5?1:-1)*(.35+r(47)*.4),L=B/Math.cos(a);P(cyl,C.white,X+4,H-.3,Z+4,L,.026,.026,a);}
+   if(row(30)>.45){const o3=row(29)*1.2+.2,y3=H-.3;P(cyl,C.white,X+4,y3,Z+o3,B,.022,.022);for(const hx of[.9,3.6,6.3])P(box,C.wire,X+hx,(H+y3)/2,Z+o3,.008,H-y3,.008);}
    if(row(34)>.62)for(let k=0;k<3;k++)P(cyl,C.conduit,X+4,H-.3-k*.012,Z+6.9+k*.1,B,.022,.022);
    if(row(37)>.82)P(box,C.tray,X+4,H-.5,Z+3.2,B,.05,.36);
    // ceiling batten (paired with the analytic lamp at bay centre)
    if(l1Ceiling(ix,iz)){const lit=l1Hash(ix,iz,342)>l1Thr(X+4,Z+4)*.7,a=(r(343)-.5)*.5;P(box,C.batten,X+4,H-.03,Z+4,1.3,.06,.2,a);G(lit?GLOW.tube:GLOW.dim,X+4,H-.075,Z+4,1.22,.03,.16,a);}}
    // Level 2 threshold: pipes and gauges multiply toward the core, battens die out
-   const th=l1Thr(X+4,Z+4);if(th>.02){const n=Math.floor(th*9+.3);const hc=kb===1?L1_SEC_H[1]:kb===2?HC2:H;
+   const th=l1Thr(X+4,Z+4);if(th>.02){const n=Math.floor(th*9+.3);const hc=kb===2?HC2:L1_SEC_H[kb];
     // pipe k of a grid row/column keeps its offset, height and colour along the whole line, so runs stay continuous and thicken toward the core
     for(let k=0;k<n;k++){const along=k%2===0,L=along?iz:ix,rad=.04+l1Hash(L,k,332)*.11,y=Math.max(2.3,hc-.4-l1Hash(L,k,333)*Math.max(0,hc-2.6)),o=.6+l1Hash(L,k,334)*6.8,c=[C.rust,C.copper,C.pipeG,C.grey][Math.floor(l1Hash(L,k,335)*4)];
      if(along)P(cyl,c,X+4,y,Z+o,B,rad,rad);else P(cyl,c,X+o,y,Z+4,B,rad,rad,Math.PI/2);}
@@ -278,23 +335,23 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
      P(vcyl,C.copper,u+.6,(hc+1.3)/2,Z+sd*.24,.05,hc-1.3,.05,0);}
    }
    // storage shelving: rare (Gild a bit more), mostly half-empty
-   if(r(70)<.012+.07*gw&&!(ix>=-1&&ix<=1&&iz>=-1&&iz<=1)){const alongX=r(71)>.5,o=(r(77)>.5?1.6:-1.6),sx=alongX?X+4:X+4+o,sz=alongX?Z+4+o:Z+4,L=6.2,w=alongX?L:.62,d=alongX?.62:L;
+   if(r(70)<(kb===1?.006:kb===0?.012:0)&&!(ix>=-1&&ix<=1&&iz>=-1&&iz<=1)){const alongX=r(71)>.5,o=(r(77)>.5?1.6:-1.6),sx=alongX?X+4:X+4+o,sz=alongX?Z+4+o:Z+4,L=6.2,w=alongX?L:.62,d=alongX?.62:L;
      for(const e of [-1,1])for(const f of [-1,1])P(box,C.shelf,sx+(alongX?e*L/2:f*.29),1.2,sz+(alongX?f*.29:e*L/2),.05,2.4,.05);
      for(let lv=0;lv<4;lv++){const y=.12+lv*.74;P(box,C.shelf,sx,y,sz,w,.03,d);P(box,C.shelfB,sx+(alongX?0:.29),y+.05,sz+(alongX?.29:0),alongX?L:.03,.06,alongX?.03:L);
       if(lv<3)for(let k=0;k<5;k++){if(l1Hash(ix*13+k,iz*7+lv,72)<.55)continue;const t=-L/2+.7+k*1.2;PR.crate(sx+(alongX?t:0),sz+(alongX?0:t),alongX?0:Math.PI/2,y+.015,Math.floor(l1Hash(ix+k,iz+lv,74)*14),.7);}}
      solid(sx,sz,w+.1,d+.1);}
    // leftovers: a hand-composed vignette in ~1 bay in 7, backed against a wall when the bay has one
-   else if(r(80)<.22+.12*gw&&!(ix===0&&iz===0)){const wx=l1WallX(ix,iz),wz=l1WallZ(ix,iz),k=ix*977+iz*131;
-     const set=kb===1?PR.STORE:r(81)<.35?PR.GARAGE:(wx||wz)?PR.WALL:PR.FREE,n=1+Math.floor(r(82)*(r(83)<.3?3:1.6));
+   else if(r(80)<(kb===3?.5:kb===4?.3:kb===1?.12:.22)&&!(ix===0&&iz===0)){const wx=l1WallX(ix,iz),wz=l1WallZ(ix,iz),k=ix*977+iz*131;
+     const set=kb===1?PR.STORE:kb===3?PR.RENO:kb===4?PR.FABLE:r(81)<.35?PR.GARAGE:(wx||wz)?PR.WALL:PR.FREE,n=1+Math.floor(r(82)*(r(83)<.3?3:1.6));
      for(let q=0;q<n;q++){const kind=set[Math.floor(l1Hash(ix+q*31,iz,84)*set.length)];let x,z,ry;
       if((wx||wz)&&q<2){const along=1.4+l1Hash(ix,iz+q*17,85)*5.2;if(wx){x=X+along;z=Z+L1_WALL/2+.45;ry=0;}else{x=X+L1_WALL/2+.45;z=Z+along;ry=-Math.PI/2;}ry+=(l1Hash(ix,iz,86+q)-.5)*.25;}
       else{x=X+1.6+l1Hash(ix,iz+q,87)*4.8;z=Z+1.6+l1Hash(ix+q,iz,88)*4.8;ry=l1Hash(ix,iz,89+q)*6.28;}
       PR.place(kind,x,z,ry,k+q*7);}}
-   else if(r(40)<.05)PR.debris(X+1.5+r(42)*5,Z+1.5+r(43)*5,0,ix*31+iz);
+   else if(r(40)<(kb===3?.6:.05))PR.debris(X+1.5+r(42)*5,Z+1.5+r(43)*5,0,ix*31+iz);
   }}
   yield;resume();
   // Level 2 maintenance door at a threshold core
-  const site=l1ThrSite(x0+4,z0+4);if(site&&site.bx>=x0&&site.bx<x0+8&&site.bz>=z0&&site.bz<z0+8){const st=site,{x,z}=st,kb=kind(st.bx,st.bz),hc=kb===1?L1_SEC_H[1]:kb===2?HC2:H,[fx,fz]=siteDir(st),rx=fz,rz=-fx,alongZ=fx===0;
+  const site=l1ThrSite(x0+4,z0+4);if(site&&site.bx>=x0&&site.bx<x0+8&&site.bz>=z0&&site.bz<z0+8){const st=site,{x,z}=st,kb=kind(st.bx,st.bz),hc=kb===2?HC2:L1_SEC_H[kb],[fx,fz]=siteDir(st),rx=fz,rz=-fx,alongZ=fx===0;
    const Q=(g,c,a,y,b,w,h,d,disc=false)=>put(c.length===4?parts:glows,g,c,x+a*rx+b*fx,y,z+a*rz+b*fz,disc?w:alongZ?w:d,h,disc?d:alongZ?d:w,disc?(alongZ?Math.PI/2:0):0);
    Q(box,C.concrete,0,hc/2,0,5,hc,1.6);solid(x,z,alongZ?5.1:1.7,alongZ?1.7:5.1);Q(box,C.frame,0,1.17,.81,1.5,2.34,.04);Q(box,C.door2,0,1.1,.84,1.3,2.18,.04);Q(box,C.pipeG,.45,1.05,.88,.08,.36,.05);
    Q(box,C.yellow,-1.6,.6,.81,.5,1.2,.02);for(const yy of [.35,.6,.85])Q(box,C.mark,-1.6,yy,.825,.4,.08,.01);
@@ -310,8 +367,9 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   yield;resume();
   const geo=mergeGeometries(parts,false),glow=glows.length?mergeGeometries(glows,false):null;parts.forEach(g=>g.dispose());glows.forEach(g=>g.dispose());
   const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
-  const out={cx,cz,group,solids};parts=glows=exits=solids=null;return out;}
- function decorWall(ix,iz,x,z,axis){if(axis==='x'?l1RunX(ix,iz):l1RunZ(ix,iz))return;const ax=axis==='x',door=ax?l1DoorX(ix,iz):l1DoorZ(ix,iz),side=(ax?l1TubeSideX:l1TubeSideZ)(ix,iz);
+  if(halos.length){const hm=new T.Mesh(haloGeo(halos),haloMat);hm.renderOrder=5;group.add(hm);}
+  const out={cx,cz,group,solids};parts=glows=exits=solids=halos=null;return out;}
+ function decorWall(ix,iz,x,z,axis,kb){if((axis==='x'?l1RunX(ix,iz):l1RunZ(ix,iz))&&kb===0)return;const ax=axis==='x',door=ax?l1DoorX(ix,iz):l1DoorZ(ix,iz),side=(ax?l1TubeSideX:l1TubeSideZ)(ix,iz);
   if(door){const inS=ax?(l1InClu(ix,iz)?1:-1):(l1InClu(ix,iz)?1:-1);
    for(const sd of [1,-1]){const o=L1_WALL/2+.02,fx=ax?0:sd*o,fz=ax?sd*o:0;
     // frame jambs + head
@@ -319,7 +377,8 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
     P(box,C.sign,x+fx*1.4,2.62,z+fz*1.4,ax?.5:.06,.24,ax?.06:.5);G(GLOW.exit,x+fx*1.95,2.62,z+fz*1.95,ax?.46:.02,.2,ax?.02:.46);}
    // leaves pushed open into the corridor side, ~75 degrees
    for(const q of[-1,1]){const a=q*1.3,hx=q*.8,lx=hx-q*.4*Math.cos(1.3),lz=.4*Math.sin(1.3)*inS;if(ax)P(box,C.door,x+lx,1.1,z+lz+inS*.17,.8,2.18,.045,q*inS*-1.3);else P(box,C.door,x+lz+inS*.17,1.1,z+lx,.045,2.18,.8,q*inS*1.3);}}
-  else if((ax?l1TubeX:l1TubeZ)(ix,iz)){const off=(ax?l1TubeOffX:l1TubeOffZ)(ix,iz),o=L1_WALL/2+.04;if(ax){G(GLOW.tube,x+off,2.0,z+side*o,.07,1.22,.05);P(box,C.frame,x+off,2.0,z+side*(o-.015),.12,1.32,.03);}else{G(GLOW.tube,x+side*o,2.0,z+off,.05,1.22,.07);P(box,C.frame,x+side*(o-.015),2.0,z+off,.03,1.32,.12);}}
+  else if(kb===4||kb===3){sectorWall(ix,iz,x,z,ax,kb);}
+  else if((ax?l1TubeX:l1TubeZ)(ix,iz)&&(kb===0||kb===2)){const off=(ax?l1TubeOffX:l1TubeOffZ)(ix,iz),o=L1_WALL/2+.04;if(ax){G(GLOW.tube,x+off,2.0,z+side*o,.07,1.22,.05);HL(x+off,2.0,z+side*(o+.15),.85,1.25,.9);P(box,C.frame,x+off,2.0,z+side*(o-.015),.12,1.32,.03);}else{G(GLOW.tube,x+side*o,2.0,z+off,.05,1.22,.07);HL(x+side*(o+.15),2.0,z+off,.85,1.25,.9);P(box,C.frame,x+side*(o-.015),2.0,z+off,.03,1.32,.12);}}
   else if(l1Hash(ix,iz,ax?60:61)<.2){const o=L1_WALL/2+.06,off=(l1Hash(ix,iz,62)-.5)*4;if(ax)P(box,C.panel,x+off,1.5,z+side*o,.62,.82,.12);else P(box,C.panel,x+side*o,1.5,z+off,.12,.82,.62);}}
  // ---- streaming window: 3×3 chunks, one build per frame ----
  const rebase=l1Rebase(scene),chunks=new Map(),key=(a,b)=>a+','+b;let want=[],center='';
@@ -348,7 +407,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   floor.position.set(Math.round(x/B)*B,0,Math.round(z/B)*B);ceiling.position.copy(floor.position);
   let target=1;if(forced!==null)target=forced;else{if(flickerEnd<0&&elapsed>nextFlicker){flickerStart=elapsed;flickerEnd=elapsed+6+Math.random()*16;}if(flickerEnd>0){target=0;if(elapsed<flickerStart+1.1)target=Math.sin(elapsed*47)+Math.sin(elapsed*31)>.4?1:0;if(elapsed>=flickerEnd){flickerEnd=-1;target=1;nextFlicker=elapsed+90+Math.random()*240;}}}
   power+=(target-power)*Math.min(1,dt*(target>power?4:16));uniforms.l1Power.value=power;
-  if((lampTick=(lampTick+1)%6)===0){const ls=CL.lampsNear(x,z,8),U=uniforms.l1Pt.value;for(let i=0;i<8;i++){const L=ls[i];if(L)U[i].set(L.x-rebase.o.x,0,L.z-rebase.o.z,L.bulb?1.7:2.4);else U[i].w=0;}uniforms.l1PtN.value=ls.length;}glowMat.color.setScalar(.04+.96*power);propLight.intensity=.08+1.02*power;if(mode==='corridor'){corridors.update(dt,x,z,power);return power<.3?'flicker':'corridor:'+(corridors.roomAt(x,z)||'');}
+  if((lampTick=(lampTick+1)%6)===0){const ls=CL.lampsNear(x,z,8),U=uniforms.l1Pt.value;for(let i=0;i<8;i++){const L=ls[i];if(L)U[i].set(L.x-rebase.o.x,0,L.z-rebase.o.z,L.bulb?1.45:1.9);else U[i].w=0;}uniforms.l1PtN.value=ls.length;}glowMat.color.setScalar(.04+.96*power);propLight.intensity=.08+1.02*power;if(mode==='corridor'){corridors.update(dt,x,z,power);return power<.3?'flicker':'corridor:'+(corridors.roomAt(x,z)||'');}
   if(power<.3)return 'flicker';const rk=CL.at(x,z)?CL.roomAt(x,z):null;return rk!==null?'corridor:'+rk:'halls';}
  function setPower(v){forced=v;}
  function nearDoor(x,z,yaw){if(mode==='corridor')return corridors.atDoor(x,z);return null;const ix=Math.floor(x/B),iz=Math.floor(z/B);
@@ -367,7 +426,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  function map(ctx,ox,oz,cxp,cyp,scale,radius){if(mode==='corridor')return corridors.map(ctx,ox,oz,cxp,cyp,scale,radius);ctx.save();ctx.fillStyle='#1d2022';ctx.fillRect(cxp-radius*scale,cyp-radius*scale,radius*scale*2,radius*scale*2);
   const x0=Math.floor((ox-radius)/B)-1,x1=Math.ceil((ox+radius)/B)+1,z0=Math.floor((oz-radius)/B)-1,z1=Math.ceil((oz+radius)/B)+1,sx=v=>cxp+(v-ox)*scale,sz=v=>cyp+(v-oz)*scale;
   ctx.fillStyle='#3a3f42';ctx.fillRect(sx(x0*B),sz(z0*B),(x1-x0)*B*scale,(z1-z0)*B*scale);
-  for(let iz=z0;iz<=z1;iz++)for(let ix=x0;ix<=x1;ix++){const k=l1Sector(ix,iz);if(k){ctx.fillStyle=k===1?'#4a4f50':'#3f3a33';ctx.fillRect(sx(ix*B),sz(iz*B),B*scale+.5,B*scale+.5);}}
+  for(let iz=z0;iz<=z1;iz++)for(let ix=x0;ix<=x1;ix++){const k=l1Sector(ix,iz);if(k){ctx.fillStyle=['','#4a4f50','#3f3a33','#45403a','#4a3b2c'][k];ctx.fillRect(sx(ix*B),sz(iz*B),B*scale+.5,B*scale+.5);}}
   ctx.fillStyle='#c9cfd2';for(let iz=z0;iz<=z1;iz++)for(let ix=x0;ix<=x1;ix++){const X=ix*B,Z=iz*B;if(l1WallX(ix,iz))ctx.fillRect(sx(X),sz(Z)-Math.max(1,.15*scale),B*scale,Math.max(2,.3*scale));if(l1WallZ(ix,iz))ctx.fillRect(sx(X)-Math.max(1,.15*scale),sz(Z),Math.max(2,.3*scale),B*scale);if(l1LowX(ix,iz)){ctx.fillStyle='#7d8487';ctx.fillRect(sx(X+.5),sz(Z)-1,(B-1)*scale,2);ctx.fillStyle='#c9cfd2';}if(l1LowZ(ix,iz)){ctx.fillStyle='#7d8487';ctx.fillRect(sx(X)-1,sz(Z+.5),2,(B-1)*scale);ctx.fillStyle='#c9cfd2';}if(l1Column(ix,iz))ctx.fillRect(sx(X)-.45*scale,sz(Z)-.45*scale,Math.max(2,.9*scale),Math.max(2,.9*scale));
    if(l1DoorX(ix,iz)){ctx.fillStyle='#3fd36b';ctx.fillRect(sx(X+3),sz(Z)-1.5,2*scale,3);ctx.fillStyle='#c9cfd2';}if(l1DoorZ(ix,iz)){ctx.fillStyle='#3fd36b';ctx.fillRect(sx(X)-1.5,sz(Z+3),3,2*scale);ctx.fillStyle='#c9cfd2';}}
   CL.map(ctx,sx,sz,scale,x0,x1,z0,z1);
@@ -378,10 +437,11 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  // hashed features nearest the arrival (found from the pure layout, so they work anywhere in the infinite plane)
  {const spiral=(R,f)=>{for(let r=0;r<R;r++)for(let z=-r;z<=r;z++)for(let x=-r;x<=r;x++){if(Math.max(Math.abs(x),Math.abs(z))!==r)continue;const v=f(x,z);if(v)return v;}return null;};
   const sec=k=>spiral(160,(x,z)=>l1Sector(x,z)===k&&[[2,0],[-2,0],[0,2],[0,-2],[2,2],[-2,-2]].every(([a,b])=>l1Sector(x+a,z+b)===k)?{x:x*B+4,z:z*B+4}:null);
-  const g=sec(1),o=sec(2);if(g)landmarks.push({name:'跃金段 · 货架仓库',x:g.x,z:g.z,yaw:.4,pitch:.12});if(o)landmarks.push({name:'哥特段 · 拱顶柱厅',x:o.x,z:o.z,yaw:.3,pitch:.15});
-  const c=spiral(12,(x,z)=>campAt(x,z));if(c)landmarks.push({name:'团体地标 · 彩布与杏仁水',x:c.bottle.x+c.nx*2.2,z:c.bottle.z+c.nz*2.2,yaw:Math.atan2(c.nx,c.nz),pitch:-.12});
-  const t=spiral(6,(x,z)=>l1ThrSite(x*64+32,z*64+32));if(t){const[fx,fz]=siteDir(t);landmarks.push({name:'阈界 · 通往 Level 2 的管道区',x:t.x+fx*6,z:t.z+fz*6,yaw:Math.atan2(fx,fz),pitch:.06});}
-  {const d=CL.nearest(4,4);if(d)landmarks.push({name:'小径 · 过道墙上的门洞',x:d.x,z:d.z,yaw:d.yaw,pitch:-.02});}}
+  const L0=landmarks[0],add=(v,o)=>landmarks.push(v?{...o,x:v.x,z:v.z}:{...L0});const g=sec(1),o=sec(2);add(g,{name:'跃金段 · 空仓库',yaw:.4,pitch:.12});add(o,{name:'哥特段 · 拱顶柱厅',yaw:.3,pitch:.15});
+  const c=spiral(12,(x,z)=>campAt(x,z));if(!c)add(null);if(c)landmarks.push({name:'团体地标 · 彩布与杏仁水',x:c.bottle.x+c.nx*2.2,z:c.bottle.z+c.nz*2.2,yaw:Math.atan2(c.nx,c.nz),pitch:-.12});
+  const t=spiral(6,(x,z)=>l1ThrSite(x*64+32,z*64+32));if(!t)add(null);if(t){const[fx,fz]=siteDir(t);landmarks.push({name:'阈界 · 通往 Level 2 的管道区',x:t.x+fx*6,z:t.z+fz*6,yaw:Math.atan2(fx,fz),pitch:.06});}
+  {const d=CL.nearest(4,4);if(!d)add(null);if(d)landmarks.push({name:'小径 · 过道墙上的门洞',x:d.x,z:d.z,yaw:d.yaw,pitch:-.02});}
+  add(sec(3),{name:'衔尾段 · 装修中',yaw:.5,pitch:.1});add(sec(4),{name:'传说段 · 木构老屋',yaw:.5,pitch:.05});}
  async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);await r.compileAsync(scene,camera);}
  return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='corridor'?corridors.scene:scene},get mode(){return mode},nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt:()=>H,
   powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
