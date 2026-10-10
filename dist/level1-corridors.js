@@ -4,13 +4,14 @@
 // so the whole plane is one connected labyrinth. 3×3 chunk window, one chunk built per frame.
 // Fixed light count (6 point lights re-targeted to the nearest lamps) → no recompiles.
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {l1Hash,l1Rebase} from './level1-layout.js?v=108';
+import {l1Hash,l1Rebase} from './level1-layout.js?v=109';
 const CELL=3,CN=8,CK=CELL*CN,HC=2.75,WT=.22;
 const KINDS=['office','brick','infirmary','rubber','paintings','mattress','empty','empty'];
 export function createLevel1Corridors(T,renderer,textures){
  const scene=new T.Scene();scene.background=new T.Color(0x0d0f10);scene.fog=new T.FogExp2(0x101315,.06);
  const rebase=l1Rebase(scene);
- const wallMat=new T.MeshLambertMaterial({map:textures.wall,color:0xf2f4f3}),floorMat=new T.MeshLambertMaterial({map:textures.floor,color:0xb8bab9}),ceilMat=new T.MeshLambertMaterial({map:textures.ceil,color:0xd6d8d8});
+ const wallMat=new T.MeshLambertMaterial({map:textures.wall,color:0xf2f4f3}),floorMat=new T.MeshLambertMaterial({map:textures.floor,color:0xb8bab9}),// painted ceiling (the photo's corridors are white overhead too): wall plaster map, faint self-bounce so it never reads black
+ ceilMat=new T.MeshLambertMaterial({map:textures.wall,color:0xe4e6e5,emissive:0x2c2f30,emissiveMap:textures.wall});
  const plain=c=>new T.MeshLambertMaterial({color:c}),glow=new T.MeshBasicMaterial({color:0xf2f8ff,toneMapped:false}),bulbM=new T.MeshBasicMaterial({color:0xfff1c8,toneMapped:false}),exitM=new T.MeshBasicMaterial({color:0x25ff5a,toneMapped:false}),crtM=new T.MeshBasicMaterial({color:0x5f8f86,toneMapped:false});
  const M={door:plain(0x2a2c2e),frame:plain(0x4a4c4c),desk:plain(0x6b5a44),metal:plain(0x7b8184),beige:plain(0xc9bc9c),rubber:plain(0xc8c2b0),brick:plain(0x8a4a36),bed:plain(0xdfe3e2),sheet:plain(0x9fb7b5),mattress:plain(0x9c9078),canvas:plain(0x7a6f58),chair:plain(0x3b3f43),ply:plain(0xa8875a),sign:plain(0x1a1e1c)};
  const amb=new T.HemisphereLight(0xdfe6ea,0xb0b4b4,.45);scene.add(amb);
@@ -105,7 +106,7 @@ export function createLevel1Corridors(T,renderer,textures){
  function update(dt,x,z,pw){power=pw;if(rebase.update(x,z)){}plan(x,z);if(want.length){const[a,b]=want.shift();chunkAt(a,b);}
   if((tick+=dt)>.1||!near.length){tick=0;const all=[];for(const c of chunks.values())for(const l of c.lamps)all.push([l,(l.x-x)**2+(l.z-z)**2]);all.sort((a,b)=>a[1]-b[1]);near=all.slice(0,6);}
   lights.forEach((L,i)=>{const n=near[i];if(!n){L.intensity=0;return;}const l=n[0];L.position.set(l.x,HC-.55,l.z);L.color.set(l.exit?0x48ff7a:l.bulb?0xffe2b0:0xe8f0ff);L.distance=l.exit?4:9;L.intensity=(l.exit?1.6:l.bulb?4.5:9.5)*(l.exit?1:pw);});
-  glow.color.setScalar(.04+.96*pw);bulbM.color.setRGB(.04+.96*pw,(.04+.96*pw)*.94,(.04+.96*pw)*.78);amb.intensity=.03+.42*pw;}
+  glow.color.setScalar(.04+.96*pw);bulbM.color.setRGB(.04+.96*pw,(.04+.96*pw)*.94,(.04+.96*pw)*.78);amb.intensity=.03+.42*pw;ceilMat.emissiveIntensity=.04+.96*pw;}
  function roomAt(x,z){const gx=Math.floor(x/CELL),gz=Math.floor(z/CELL),cx=Math.floor(gx/CN),cz=Math.floor(gz/CN);return maze(cx,cz).room[(gz-cz*CN)*CN+(gx-cx*CN)]||null;}
  // map: drawn cell by cell from the pure layout, so it never shows an edge
  function map(ctx,ox,oz,cxp,cyp,scale,radius){ctx.save();ctx.fillStyle='#141618';ctx.fillRect(cxp-radius*scale,cyp-radius*scale,radius*2*scale,radius*2*scale);
