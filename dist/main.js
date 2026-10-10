@@ -98,7 +98,7 @@ import {createNavigationMap} from './map-ui.js?v=107';
 import {drawAsciiTitle} from './ascii-title.js?v=100';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=99';
 import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
-import {createLevel1World} from './level1-world.js?v=109'; // V107 Level 1
+import {createLevel1World} from './level1-world.js?v=110'; // V107 Level 1
 
 await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
 const $=s=>document.querySelector(s),game=$('#game');
@@ -318,7 +318,7 @@ async function enterOne(index=0){
  if(bathLoading)return;audio.start();if(state.level===0)leaveZero(false);if(millingActive)leaveMillingCity();if(tikiActive)leaveTiki(false);if(state.level===27)leaveSpring(false);if(bathhouse.active)leaveBath(false);
  if(state.level!==1)oneOrigin={level:state.level,cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch,shadowType:renderer.shadowMap.type,shadowAuto:renderer.shadowMap.autoUpdate};
  bathLoading=true;keys.clear();joy.x=joy.z=0;resetLookInput();closeModal(false);$('#loading').hidden=false;$('#load-number').textContent='LEVEL 1';$('#load-bar').style.width='15%';await nextPaint();
- try{if(!oneWorld){oneWorld=createLevel1World(T,renderer);globalThis.__bcLevel1=oneWorld;oneWorld.__state=state;}await oneWorld.ready;const p=oneWorld.landmarks[index]||oneWorld.landmarks[0],q=oneWorld.safe(p.x,p.z);oneWorld.ensure(q.x,q.z);$('#load-bar').style.width='60%';await nextPaint();
+ try{if(!oneWorld){oneWorld=createLevel1World(T,renderer);globalThis.__bcLevel1=oneWorld;oneWorld.__state=state;}await oneWorld.ready;oneWorld.toHalls?.();const p=oneWorld.landmarks[index]||oneWorld.landmarks[0],q=oneWorld.safe(p.x,p.z);oneWorld.ensure(q.x,q.z);$('#load-bar').style.width='60%';await nextPaint();
  state.level=1;state.cx=state.cz=0n;Object.assign(state,q,{yaw:p.yaw??0,pitch:p.pitch??-.03});state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;if(state.health<=0)state.health=100;zeroFall=0;referenceView=null;interaction=null;
  renderer.shadowMap.autoUpdate=false;camera.far=140;camera.updateProjectionMatrix();navigationMap.setLevel1World(oneWorld);navigationMap.setLevel(1);uiThemes.applyLevel('1');$('#journal .journal-body').innerHTML=oneJournal;renderer.domElement.setAttribute('aria-label','Level 1 宜居地带 · 天鹰段');
  waterInspection.clear();lensWater.reset();waterState.reset();bodyWater.reset();waterBubbles.clear();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);showerAudio.mute();bathhouse.spa?.muteAudio();waterPipeline.focus.setSceneQuery(()=>8);waterPipeline.setBathSteam(0);waterPipeline.focus.setMist(0);irradiance.pause();
@@ -327,7 +327,7 @@ async function enterOne(index=0){
  $('#loading').hidden=true;bathLoading=false;ready=true;$('#start').disabled=false;developerBusy(false);resetLookInput();lastFrame=performance.now();setPlay(true);toast('Level 1 · '+p.name+'。F 地图 · F2 区域传送。');
  }catch(e){console.error('Level 1 entry failed',e);bathLoading=false;$('#loading').hidden=true;leaveOne(false);developerBusy(false);toast('Level 1 未能加载，请重试。');}
 }
-function leaveOne(announce=true){if(!oneOrigin)return;referenceView=null;clearOneSupplies();oneHum?.gain.gain.setTargetAtTime(0,audio.ctx.currentTime,.1);const p=oneOrigin;oneOrigin=null;Object.assign(state,{level:p.level,cx:p.cx,cz:p.cz,x:p.x,z:p.z,yaw:p.yaw,pitch:p.pitch});state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;renderer.shadowMap.type=p.shadowType;renderer.shadowMap.autoUpdate=p.shadowAuto;renderer.shadowMap.needsUpdate=true;navigationMap.setLevel(state.level);uiThemes.applyLevel(String(state.level));$('#journal .journal-body').innerHTML=state.level===11?cityJournal:fieldJournal;waterInspection.clear();waterPipeline.focus.setSceneQuery(null);waterPipeline.reset(camera);keys.clear();joy.x=joy.z=0;resetCameraRig();resize();naturalShadows.invalidate();if(state.level===11)exitScene.update(state);if(announce)toast('已返回进入 Level 1 前的位置。');}
+function leaveOne(announce=true){if(!oneOrigin)return;oneWorld?.toHalls?.();referenceView=null;clearOneSupplies();oneHum?.gain.gain.setTargetAtTime(0,audio.ctx.currentTime,.1);const p=oneOrigin;oneOrigin=null;Object.assign(state,{level:p.level,cx:p.cx,cz:p.cz,x:p.x,z:p.z,yaw:p.yaw,pitch:p.pitch});state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;renderer.shadowMap.type=p.shadowType;renderer.shadowMap.autoUpdate=p.shadowAuto;renderer.shadowMap.needsUpdate=true;navigationMap.setLevel(state.level);uiThemes.applyLevel(String(state.level));$('#journal .journal-body').innerHTML=state.level===11?cityJournal:fieldJournal;waterInspection.clear();waterPipeline.focus.setSceneQuery(null);waterPipeline.reset(camera);keys.clear();joy.x=joy.z=0;resetCameraRig();resize();naturalShadows.invalidate();if(state.level===11)exitScene.update(state);if(announce)toast('已返回进入 Level 1 前的位置。');}
 // V109 Level 1 group landmarks: one almond-water bottle on each hashed camp crate (same pickup flow as Level 0)
 let oneSupplies=[],onePickupKey='';
 function clearOneSupplies(){for(const p of oneSupplies)releaseAlmondBottle(p.mesh);oneSupplies=[];onePickupKey='';}

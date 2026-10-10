@@ -4,7 +4,7 @@
 // so the whole plane is one connected labyrinth. 3×3 chunk window, one chunk built per frame.
 // Fixed light count (6 point lights re-targeted to the nearest lamps) → no recompiles.
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {l1Hash,l1Rebase} from './level1-layout.js?v=109';
+import {l1Hash,l1Rebase} from './level1-layout.js?v=110';
 const CELL=3,CN=8,CK=CELL*CN,HC=2.75,WT=.22;
 const KINDS=['office','brick','infirmary','rubber','paintings','mattress','empty','empty'];
 export function createLevel1Corridors(T,renderer,textures){

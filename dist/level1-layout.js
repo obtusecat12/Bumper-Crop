@@ -19,8 +19,8 @@ export const l1LowZ=(ix,iz)=>!l1WallZ(ix,iz)&&!(clear(ix,iz)&&clear(ix-1,iz))&&l
 export function l1Column(ix,iz){return l1Hash(ix,iz,1)>.1||l1WallX(ix,iz)||l1WallX(ix-1,iz)||l1WallZ(ix,iz)||l1WallZ(ix,iz-1);}
 export const l1DoorX=(ix,iz)=>l1WallX(ix,iz)&&!l1RunX(ix,iz)&&l1Hash(ix,iz,4)<.22;
 export const l1DoorZ=(ix,iz)=>l1WallZ(ix,iz)&&!l1RunZ(ix,iz)&&l1Hash(ix,iz,14)<.22;
-export const l1Ceiling=(bx,bz)=>l1Hash(bx,bz,5)>.22;
-export const l1ColumnTube=(cx,cz)=>l1Column(cx,cz)&&l1Hash(cx,cz,6)>.5;
+export const l1Ceiling=(bx,bz)=>l1Hash(bx,bz,5)>.55;
+export const l1ColumnTube=(cx,cz)=>l1Column(cx,cz)&&l1Hash(cx,cz,6)>.32;
 export const l1ColumnFace=(cx,cz)=>Math.floor(l1Hash(cx,cz,11)*4); // 0:+x 1:-x 2:+z 3:-z
 export const l1TubeX=(ix,iz)=>l1WallX(ix,iz)&&!l1RunX(ix,iz)&&!l1DoorX(ix,iz)&&l1Hash(ix,iz,7)>.35;
 export const l1TubeZ=(ix,iz)=>l1WallZ(ix,iz)&&!l1RunZ(ix,iz)&&!l1DoorZ(ix,iz)&&l1Hash(ix,iz,17)>.35;
