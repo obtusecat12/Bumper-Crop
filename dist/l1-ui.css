@@ -1,0 +1,45 @@
+/* V114 · Level 1 宜居地带 — 2007–2009 skeuomorphic garage UI. Everything scoped to :root[data-ui-level="1"]. */
+:root:not([data-ui-level="1"]) .l1-dash,:root:not([data-ui-level="1"]) .l1-legend{display:none!important}
+/* ---- navigation cluster: acrylic directory sign + liquid ball compass (painted into .map-mini-dom) ---- */
+:root[data-ui-level="1"] .map-mini{width:clamp(270px,calc(var(--scene-width,100vw) * .27),420px)!important;height:auto!important;aspect-ratio:400/210;right:14px!important;top:10px!important;transform:none!important}
+:root[data-ui-level="1"] .map-mini .instrument-label,:root[data-ui-level="1"] .map-mini .map-cardinal,:root[data-ui-level="1"] .map-mini .map-mini-caption,:root[data-ui-level="1"] .map-mini .map-mini-player,:root[data-ui-level="1"] .map-mini .map-mini-art{visibility:hidden!important}
+:root[data-ui-level="1"] .map-mini .map-mini-viewport{opacity:0!important}
+:root[data-ui-level="1"] .map-mini canvas.map-mini-dom{position:absolute;left:0!important;top:0!important;width:100%!important;height:100%!important;transform:none!important;image-rendering:auto!important;z-index:3}
+/* ---- dashboard ---- */
+:root[data-ui-level="1"] .stats{aspect-ratio:640/300!important;width:clamp(340px,calc(var(--scene-width,100vw) * .40),620px)!important;filter:none!important;overflow:visible!important}
+:root[data-ui-level="1"] .stats:not(.raster-source)>.vitals-art,:root[data-ui-level="1"] .stats:not(.raster-source)>.vitals-gauges,:root[data-ui-level="1"] .stats:not(.raster-source)>.sanity-vial,:root[data-ui-level="1"] .stats>.vitals-label,:root[data-ui-level="1"] .stats>.vitals-count{display:none!important}
+:root[data-ui-level="1"] .l1-dash{position:absolute;inset:0;pointer-events:none}
+:root[data-ui-level="1"] .l1-dash canvas{position:absolute;image-rendering:auto;transform-origin:50% 100%;will-change:transform}
+.compact-picture:root[data-ui-level="1"] .stats,:root[data-ui-level="1"] .compact-picture .stats{width:300px!important}
+/* ---- F map: an acrylic parking-garage directory on a white painted block wall ---- */
+:root[data-ui-level="1"] .map-modal{background:#dcdbd5 url('./assets/ui-v114/wall.jpg') center/cover!important}
+:root[data-ui-level="1"] .map-modal::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 18%,#ffffff30,#0000 55%),linear-gradient(#0000 70%,#0000001c)}
+:root[data-ui-level="1"] .map-modal .map-panel{position:relative;background:#f8f8f5!important;border:0!important;border-radius:3px!important;padding:0 18px 12px!important;color:#30353b!important;
+ box-shadow:0 0 0 14px #e9f4f166,0 0 0 15px #ffffffd0,0 0 0 16.5px #86b6ad80,0 0 0 17px #4f7d7560,18px 26px 34px 6px #2a2a2a59,4px 6px 10px 2px #0000002e!important}
+:root[data-ui-level="1"] .map-modal .map-panel::before{content:'';position:absolute;inset:5px;pointer-events:none;z-index:6;
+ background:url('./assets/ui-v114/standoff.webp') left top/22px no-repeat,url('./assets/ui-v114/standoff.webp') right top/22px no-repeat,url('./assets/ui-v114/standoff.webp') left bottom/22px no-repeat,url('./assets/ui-v114/standoff.webp') right bottom/22px no-repeat;filter:drop-shadow(1px 3px 2px #0007)}
+:root[data-ui-level="1"] .map-modal .map-panel::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:5;border-radius:6px;
+ background:linear-gradient(118deg,#ffffff38 0%,#ffffff10 26%,#ffffff00 26.4%,#ffffff00 64%,#ffffff14 64.5%,#ffffff00 72%)}
+:root[data-ui-level="1"] .map-modal .map-panel *{text-shadow:none!important}
+:root[data-ui-level="1"] .map-modal .map-header{display:flex!important;align-items:center!important;margin:0 -18px 0!important;padding:10px 16px 10px 18px!important;background:linear-gradient(#1f7a43,#155e33)!important;border-bottom:4px solid #e9c54a!important}
+:root[data-ui-level="1"] .map-modal .map-header h2,:root[data-ui-level="1"] .map-modal .map-header h2 *{font:700 30px/32px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;color:#fff!important;letter-spacing:.01em}
+:root[data-ui-level="1"] .map-modal .map-header h2::before{content:'P1';display:inline-grid;place-items:center;width:40px;height:40px;margin-right:12px;border-radius:50%;background:#fff;color:#155e33;font:700 19px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;vertical-align:middle;position:relative;top:-2px}
+:root[data-ui-level="1"] .map-modal .map-header p{color:#d6efdc!important;font:600 13px/18px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;margin-left:52px!important}
+:root[data-ui-level="1"] .map-modal .map-panel button{background:linear-gradient(#ffffff,#dfe3e6)!important;color:#30353b!important;border:1px solid #9aa2a8!important;border-radius:4px!important;box-shadow:inset 0 1px #fff,0 1px 2px #0003!important;font:700 13px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;padding:5px 12px!important}
+:root[data-ui-level="1"] .map-modal .map-panel button:hover{background:linear-gradient(#f4fbf6,#cfe6d6)!important}
+:root[data-ui-level="1"] .map-modal .map-header .map-close{background:linear-gradient(#ffffff,#e4e8ea)!important;color:#155e33!important}
+:root[data-ui-level="1"] .map-modal .map-tools{color:#30353b!important;font:700 13px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;padding:10px 0 8px!important}
+:root[data-ui-level="1"] .map-modal .map-tools *{color:#30353b!important}
+:root[data-ui-level="1"] .map-modal .map-surface{background:#e9ebe6!important;box-shadow:0 0 0 1px #30353b,0 0 0 4px #f8f8f5,0 0 0 5px #b9bfc3!important;border:0!important}
+:root[data-ui-level="1"] .map-modal .map-scale{color:#30353b!important;font:700 12px 'Helvetica Neue',Helvetica,Arial,sans-serif!important}
+:root[data-ui-level="1"] .map-modal .map-scale i{background:#30353b!important;border-color:#30353b!important}
+:root[data-ui-level="1"] .map-modal .map-footer{color:#30353b!important;font:600 13px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;padding-top:10px!important;display:flex!important;gap:16px;align-items:center;flex-wrap:wrap}
+:root[data-ui-level="1"] .map-modal .map-readout{color:#30353b!important;background:none!important;box-shadow:none!important;font:600 13px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;padding:0!important;margin-left:auto}
+:root[data-ui-level="1"] .map-modal .map-loading{color:#30353b!important}
+:root[data-ui-level="1"] .l1-legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+:root[data-ui-level="1"] .l1-legend span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+:root[data-ui-level="1"] .l1-legend i{display:inline-block;width:16px;height:12px;border:1px solid #30353b80;border-radius:2px}
+:root[data-ui-level="1"] .l1-legend .here i{width:12px!important;height:12px!important;border-radius:50%!important;background:#d7261e!important;border:2px solid #fff!important;flex:none;box-shadow:0 0 0 1px #d7261e}
+:root[data-ui-level="1"] .l1-legend .here{color:#c3201a;font-weight:700}
+
+:root[data-ui-level="1"] .map-modal{padding:34px 52px!important}

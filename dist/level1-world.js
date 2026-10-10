@@ -4,7 +4,7 @@
 // number of light evaluations per fragment, no scene lights → no program recompiles.
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {makeL1Props} from './level1-props.js?v=113';
-import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=113';
+import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=114';
 import {createLevel1Corridors} from './level1-corridors.js?v=113';
 import {L1_DEC,L1_ATLAS_LAYERS as NLAY} from './level1-decals.js?v=113';
 import {l1Rebase,L1_BAY as B,L1_CHUNK as K,L1_H as H,L1_COL,L1_WALL,l1Hash,l1WallX,l1WallZ,l1Column,l1DoorX,l1DoorZ,l1Ceiling,l1ColumnTube,l1ColumnFace,l1TubeX,l1TubeZ,l1TubeSideX,l1TubeSideZ,l1TubeOffX,l1TubeOffZ,l1RunX,l1RunZ,l1RunSideX,l1RunSideZ,l1LowX,l1LowZ,l1Sector,l1SecV,L1_SEC_H,L1_SEC_G,L1_SEC_O,l1ThrSite,l1Thr,l1InClu,L1_LAYOUT_GLSL} from './level1-layout.js?v=113';
@@ -456,15 +456,16 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   hallReturn=d.axis==='x'?{x:d.x,z:d.z+d.side*1.1,yaw:d.side>0?0:Math.PI}:{x:d.x+d.side*1.1,z:d.z,yaw:d.side>0?Math.PI/2:-Math.PI/2};
   const p=corridors.build(Math.abs(d.id)%100000);mode='corridor';return{...p,mode};}
 
- function map(ctx,ox,oz,cxp,cyp,scale,radius){if(mode==='corridor')return corridors.map(ctx,ox,oz,cxp,cyp,scale,radius);ctx.save();ctx.fillStyle='#1d2022';ctx.fillRect(cxp-radius*scale,cyp-radius*scale,radius*scale*2,radius*scale*2);
+ const MAPPAL={bg:'#1d2022',floor:'#3a3f42',sec:['','#4a4f50','#3f3a33','#45403a','#4a3b2c'],wall:'#c9cfd2',low:'#7d8487',door:'#3fd36b',thr:'#e58a2a',cluBg:'#2a2826',cluRoom:'#3a3530',cluWall:'#e6e0d4'};
+ function map(ctx,ox,oz,cxp,cyp,scale,radius,pal){const P=pal||MAPPAL;if(mode==='corridor')return corridors.map(ctx,ox,oz,cxp,cyp,scale,radius);ctx.save();ctx.fillStyle=P.bg;ctx.fillRect(cxp-radius*scale,cyp-radius*scale,radius*scale*2,radius*scale*2);
   const x0=Math.floor((ox-radius)/B)-1,x1=Math.ceil((ox+radius)/B)+1,z0=Math.floor((oz-radius)/B)-1,z1=Math.ceil((oz+radius)/B)+1,sx=v=>cxp+(v-ox)*scale,sz=v=>cyp+(v-oz)*scale;
-  ctx.fillStyle='#3a3f42';ctx.fillRect(sx(x0*B),sz(z0*B),(x1-x0)*B*scale,(z1-z0)*B*scale);
-  for(let iz=z0;iz<=z1;iz++)for(let ix=x0;ix<=x1;ix++){const k=l1Sector(ix,iz);if(k){ctx.fillStyle=['','#4a4f50','#3f3a33','#45403a','#4a3b2c'][k];ctx.fillRect(sx(ix*B),sz(iz*B),B*scale+.5,B*scale+.5);}}
-  ctx.fillStyle='#c9cfd2';for(let iz=z0;iz<=z1;iz++)for(let ix=x0;ix<=x1;ix++){const X=ix*B,Z=iz*B;if(l1WallX(ix,iz))ctx.fillRect(sx(X),sz(Z)-Math.max(1,.15*scale),B*scale,Math.max(2,.3*scale));if(l1WallZ(ix,iz))ctx.fillRect(sx(X)-Math.max(1,.15*scale),sz(Z),Math.max(2,.3*scale),B*scale);if(l1LowX(ix,iz)){ctx.fillStyle='#7d8487';ctx.fillRect(sx(X+.5),sz(Z)-1,(B-1)*scale,2);ctx.fillStyle='#c9cfd2';}if(l1LowZ(ix,iz)){ctx.fillStyle='#7d8487';ctx.fillRect(sx(X)-1,sz(Z+.5),2,(B-1)*scale);ctx.fillStyle='#c9cfd2';}if(l1Column(ix,iz))ctx.fillRect(sx(X)-.45*scale,sz(Z)-.45*scale,Math.max(2,.9*scale),Math.max(2,.9*scale));
-   if(l1DoorX(ix,iz)){ctx.fillStyle='#3fd36b';ctx.fillRect(sx(X+3),sz(Z)-1.5,2*scale,3);ctx.fillStyle='#c9cfd2';}if(l1DoorZ(ix,iz)){ctx.fillStyle='#3fd36b';ctx.fillRect(sx(X)-1.5,sz(Z+3),3,2*scale);ctx.fillStyle='#c9cfd2';}}
-  CL.map(ctx,sx,sz,scale,x0,x1,z0,z1);
+  ctx.fillStyle=P.floor;ctx.fillRect(sx(x0*B),sz(z0*B),(x1-x0)*B*scale,(z1-z0)*B*scale);
+  for(let iz=z0;iz<=z1;iz++)for(let ix=x0;ix<=x1;ix++){const k=l1Sector(ix,iz);if(k){ctx.fillStyle=P.sec[k];ctx.fillRect(sx(ix*B),sz(iz*B),B*scale+.5,B*scale+.5);}}
+  ctx.fillStyle=P.wall;for(let iz=z0;iz<=z1;iz++)for(let ix=x0;ix<=x1;ix++){const X=ix*B,Z=iz*B;if(l1WallX(ix,iz))ctx.fillRect(sx(X),sz(Z)-Math.max(1,.15*scale),B*scale,Math.max(2,.3*scale));if(l1WallZ(ix,iz))ctx.fillRect(sx(X)-Math.max(1,.15*scale),sz(Z),Math.max(2,.3*scale),B*scale);if(l1LowX(ix,iz)){ctx.fillStyle=P.low;ctx.fillRect(sx(X+.5),sz(Z)-1,(B-1)*scale,2);ctx.fillStyle=P.wall;}if(l1LowZ(ix,iz)){ctx.fillStyle=P.low;ctx.fillRect(sx(X)-1,sz(Z+.5),2,(B-1)*scale);ctx.fillStyle=P.wall;}if(l1Column(ix,iz))ctx.fillRect(sx(X)-.45*scale,sz(Z)-.45*scale,Math.max(2,.9*scale),Math.max(2,.9*scale));
+   if(l1DoorX(ix,iz)){ctx.fillStyle=P.door;ctx.fillRect(sx(X+3),sz(Z)-1.5,2*scale,3);ctx.fillStyle=P.wall;}if(l1DoorZ(ix,iz)){ctx.fillStyle=P.door;ctx.fillRect(sx(X)-1.5,sz(Z+3),3,2*scale);ctx.fillStyle=P.wall;}}
+  CL.map(ctx,sx,sz,scale,x0,x1,z0,z1,P);
   for(const c of camps(ox,oz)){ctx.fillStyle=`rgb(${c.col.map(v=>Math.round(Math.pow(v,1/2.2)*255)).slice(0,3).join(',')})`;ctx.fillRect(sx(c.x)-3,sz(c.z)-3,6,6);}
-  {const s=l1ThrSite(Math.floor(ox/B),Math.floor(oz/B));if(s&&Math.abs(s.x-ox)<radius+8&&Math.abs(s.z-oz)<radius+8){ctx.fillStyle='#e58a2a';ctx.fillRect(sx(s.x)-2.5*scale,sz(s.z)-.8*scale,5*scale,1.6*scale);}}
+  {const s=l1ThrSite(Math.floor(ox/B),Math.floor(oz/B));if(s&&Math.abs(s.x-ox)<radius+8&&Math.abs(s.z-oz)<radius+8){ctx.fillStyle=P.thr;ctx.fillRect(sx(s.x)-2.5*scale,sz(s.z)-.8*scale,5*scale,1.6*scale);}}
   ctx.restore();}
  const landmarks=[{name:'天鹰段 · 切入点',x:4,z:4,yaw:-.6,pitch:-.03},{name:'天鹰段 · 积水长廊',x:2.2,z:-3.2,yaw:-2.35,pitch:-.05},{name:'天鹰段 · 柱列纵深',x:-3,z:4.4,yaw:1.0,pitch:-.02},{name:'储物货架 · 板条箱',x:-12,z:-17.6,yaw:0,pitch:-.06}];
  // hashed features nearest the arrival (found from the pure layout, so they work anywhere in the infinite plane)

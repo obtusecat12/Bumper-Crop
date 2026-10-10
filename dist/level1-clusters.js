@@ -83,8 +83,8 @@ export function makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW}){
    if(Math.abs(c.ox*B+c.w*4-x)>c.w*4+30||Math.abs(c.oz*B+c.d*4-z)>c.d*4+30)continue;for(const L of data(c).lamps)if(L.on)out.push([Math.hypot(L.x-x,L.z-z),L]);}
   out.sort((a,b)=>a[0]-b[0]);return out.slice(0,n).map(v=>v[1]);}
  function nearest(x,z){let best=null;const bx=Math.floor(x/B),bz=Math.floor(z/B);for(let j=-12;j<=12;j++)for(let i=-12;i<=12;i++){const c=l1Clu(bx+i*16,bz+j*16);if(!c)continue;const m=data(c);for(const d of m.ext){const px=c.ox*B+(d.x+.5)*CS+d.nx*(CS/2+2.2),pz=c.oz*B+(d.z+.5)*CS+d.nz*(CS/2+2.2),r=Math.hypot(px-x,pz-z);if(!best||r<best.r)best={r,x:px,z:pz,yaw:Math.atan2(d.nx,d.nz)};}}return best;}
- function map(ctx,sx,sz,scale,x0,x1,z0,z1){const seen=new Set();for(let bz=z0;bz<=z1;bz++)for(let bx=x0;bx<=x1;bx++){if(!l1InClu(bx,bz))continue;const c=l1Clu(bx,bz);if(seen.has(c.id))continue;seen.add(c.id);const m=data(c),OX=c.ox*B,OZ=c.oz*B;
-   ctx.fillStyle='#2a2826';ctx.fillRect(sx(OX),sz(OZ),c.w*B*scale,c.d*B*scale);for(const r of m.rooms){ctx.fillStyle='#3a3530';ctx.fillRect(sx(OX+r.x*CS),sz(OZ+r.z*CS),r.w*CS*scale,r.d*CS*scale);}
-   ctx.fillStyle='#e6e0d4';const t=Math.max(1,WT*scale);for(let z=0;z<m.M;z++)for(let x=0;x<m.N;x++){if(closedE(m,x,z))ctx.fillRect(sx(OX+(x+1)*CS)-t/2,sz(OZ+z*CS),t,CS*scale+t/2);if(closedS(m,x,z))ctx.fillRect(sx(OX+x*CS),sz(OZ+(z+1)*CS)-t/2,CS*scale+t/2,t);}}}
+ function map(ctx,sx,sz,scale,x0,x1,z0,z1,P={cluBg:'#2a2826',cluRoom:'#3a3530',cluWall:'#e6e0d4'}){const seen=new Set();for(let bz=z0;bz<=z1;bz++)for(let bx=x0;bx<=x1;bx++){if(!l1InClu(bx,bz))continue;const c=l1Clu(bx,bz);if(seen.has(c.id))continue;seen.add(c.id);const m=data(c),OX=c.ox*B,OZ=c.oz*B;
+   ctx.fillStyle=P.cluBg;ctx.fillRect(sx(OX),sz(OZ),c.w*B*scale,c.d*B*scale);for(const r of m.rooms){ctx.fillStyle=P.cluRoom;ctx.fillRect(sx(OX+r.x*CS),sz(OZ+r.z*CS),r.w*CS*scale,r.d*CS*scale);}
+   ctx.fillStyle=P.cluWall;const t=Math.max(1,WT*scale);for(let z=0;z<m.M;z++)for(let x=0;x<m.N;x++){if(closedE(m,x,z))ctx.fillRect(sx(OX+(x+1)*CS)-t/2,sz(OZ+z*CS),t,CS*scale+t/2);if(closedS(m,x,z))ctx.fillRect(sx(OX+x*CS),sz(OZ+(z+1)*CS)-t/2,CS*scale+t/2,t);}}}
  return{bay,blocked,roomAt,lampsNear,nearest,map,data,at};
 }

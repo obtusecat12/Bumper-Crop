@@ -62,7 +62,7 @@
       showFailure(new Error('游戏加载超时。请检查网络连接后重试。'));
     }
   }, 2000);
-  import('./main.js?v=ui-113').then(() => { clearInterval(timeout); watcher.disconnect(); }).catch(error => {
+  import('./main.js?v=ui-114').then(() => { clearInterval(timeout); watcher.disconnect(); }).catch(error => {
     clearInterval(timeout);
     console.error('Game startup failed', error);
     showFailure(error);
