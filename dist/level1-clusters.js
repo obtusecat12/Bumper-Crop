@@ -1,7 +1,7 @@
 // Level 1 v3 "小径" clusters: finite corridor complexes embedded in the infinite halls (same scene, same map).
 // Each cluster (level1-layout l1Clu) is a w×d-bay block cut into 8/3 m cells (3 per bay): a hashed maze with
 // a few rooms, entered through door openings in its outline. Pure + cached; geometry goes through the world's put().
-import {l1Hash,l1Clu,l1InClu,l1DoorX,l1DoorZ,L1_BAY as B} from './level1-layout.js?v=112';
+import {l1Hash,l1Clu,l1InClu,l1DoorX,l1DoorZ,L1_BAY as B} from './level1-layout.js?v=113';
 export const CS=B/3,HC=2.75,WT=.16;
 const KINDS=['office','barber','infirmary','rubber','brick','paintings','storage','empty','empty','boards'];
 export function makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW}){

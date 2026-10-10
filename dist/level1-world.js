@@ -3,10 +3,11 @@
 // global floor/ceiling planes. Lighting is analytic and layout-hashed in the shader: a constant
 // number of light evaluations per fragment, no scene lights → no program recompiles.
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {makeL1Props} from './level1-props.js?v=112';
-import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=112';
-import {createLevel1Corridors} from './level1-corridors.js?v=112';
-import {l1Rebase,L1_BAY as B,L1_CHUNK as K,L1_H as H,L1_COL,L1_WALL,l1Hash,l1WallX,l1WallZ,l1Column,l1DoorX,l1DoorZ,l1Ceiling,l1ColumnTube,l1ColumnFace,l1TubeX,l1TubeZ,l1TubeSideX,l1TubeSideZ,l1TubeOffX,l1TubeOffZ,l1RunX,l1RunZ,l1RunSideX,l1RunSideZ,l1LowX,l1LowZ,l1Sector,l1SecV,L1_SEC_H,L1_SEC_G,L1_SEC_O,l1ThrSite,l1Thr,l1InClu,L1_LAYOUT_GLSL} from './level1-layout.js?v=112';
+import {makeL1Props} from './level1-props.js?v=113';
+import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=113';
+import {createLevel1Corridors} from './level1-corridors.js?v=113';
+import {L1_DEC,L1_ATLAS_LAYERS as NLAY} from './level1-decals.js?v=113';
+import {l1Rebase,L1_BAY as B,L1_CHUNK as K,L1_H as H,L1_COL,L1_WALL,l1Hash,l1WallX,l1WallZ,l1Column,l1DoorX,l1DoorZ,l1Ceiling,l1ColumnTube,l1ColumnFace,l1TubeX,l1TubeZ,l1TubeSideX,l1TubeSideZ,l1TubeOffX,l1TubeOffZ,l1RunX,l1RunZ,l1RunSideX,l1RunSideZ,l1LowX,l1LowZ,l1Sector,l1SecV,L1_SEC_H,L1_SEC_G,L1_SEC_O,l1ThrSite,l1Thr,l1InClu,L1_LAYOUT_GLSL} from './level1-layout.js?v=113';
 
 const LIGHT_GLSL=`${L1_LAYOUT_GLSL}
 uniform ivec2 l1OB;// floating-origin offset in bays (integer, exact)
@@ -124,8 +125,8 @@ export function createLevel1World(T,renderer){
  const lin=c=>new T.Color(c).convertSRGBToLinear?.()??new T.Color(c);
  const AL={"conc": 0, "col": 1, "ceil": 2, "floor": 3, "floorwet": 4, "corr": 5, "form": 6, "paint": 7, "crate1": 8, "crate2": 9, "osb": 10, "carton": 11, "cartontop": 12, "tote": 13, "locker": 14, "rustbox": 15, "pipew": 16, "piper": 17, "galv": 18, "foil": 19, "lag": 20, "rust": 21, "steel": 22, "grate": 23, "door2": 24, "exit": 25, "fluor": 26, "hose": 27, "epanel": 28, "dooryel": 29, "doorwood": 30, "grille": 31, "peel": 32, "yellow": 33, "wains": 34, "wfloor": 35, "beam": 36, "window": 37, "brick": 38, "cream": 39, "leather": 40, "bucket": 41, "wetsign": 42, "ac": 43, "padded": 44, "cloth": 45, "paper": 46, "hazard": 47, "ceilstain": 48, "concwet": 49, "exitcn": 50, "chrome": 51, "tread": 52, "orange": 53, "straw": 54, "colF": 55, "colE": 56, "colG": 57, "colB3": 58, "colD": 59, "colA7": 60, "colH": 61, "colC2": 62, "crate4": 63, "crate5": 64, "carton2": 65, "carton3": 66, "tote2": 67, "tote3": 68, "tote4": 69, "locker2": 70};
  const TX=(n,m,su=1,sv=1,ax=0,top)=>{const t=[AL[n],m,su,sv,ax];if(top)t.top=AL[top];return t;};
- const atlas=new T.DataArrayTexture(new Uint8Array(4*256*256*80),256,256,80);Object.assign(atlas,{format:T.RGBAFormat,colorSpace:T.SRGBColorSpace,wrapS:T.RepeatWrapping,wrapT:T.RepeatWrapping,minFilter:T.LinearMipmapLinearFilter,magFilter:T.LinearFilter,generateMipmaps:true,anisotropy:4});
- pending.push(fetch('./assets/level1/atlas.webp?v=111').then(r=>r.blob()).then(b=>createImageBitmap(b,{premultiplyAlpha:'none',colorSpaceConversion:'none'})).then(img=>{const c=document.createElement('canvas');c.width=2176;c.height=2720;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,0,0);const d=atlas.image.data;for(let l=0;l<80;l++){const px=g.getImageData((l%8)*272+8,Math.floor(l/8)*272+8,256,256).data;for(let y=0;y<256;y++)d.set(px.subarray((255-y)*1024,(256-y)*1024),l*262144+y*1024);}atlas.needsUpdate=true;}));
+ const atlas=new T.DataArrayTexture(new Uint8Array(4*256*256*NLAY),256,256,NLAY);Object.assign(atlas,{format:T.RGBAFormat,colorSpace:T.SRGBColorSpace,wrapS:T.RepeatWrapping,wrapT:T.RepeatWrapping,minFilter:T.LinearMipmapLinearFilter,magFilter:T.LinearFilter,generateMipmaps:true,anisotropy:4});
+ pending.push(fetch('./assets/level1/atlas.webp?v=113').then(r=>r.blob()).then(b=>createImageBitmap(b,{premultiplyAlpha:'none',colorSpaceConversion:'none'})).then(img=>{const c=document.createElement('canvas');c.width=2176;c.height=Math.ceil(NLAY/8)*272;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,0,0);const d=atlas.image.data;for(let l=0;l<NLAY;l++){const px=g.getImageData((l%8)*272+8,Math.floor(l/8)*272+8,256,256).data;for(let y=0;y<256;y++)d.set(px.subarray((255-y)*1024,(256-y)*1024),l*262144+y*1024);}atlas.needsUpdate=true;}));
  const uniforms={l1Atlas:{value:atlas},l1Floor:{value:tex('floor.webp')},l1Wall:{value:tex('wall.webp')},l1Ceil:{value:tex('ceiling.webp')},l1Power:{value:1},l1Time:{value:0},l1Amb:{value:new T.Vector3(.11,.115,.12)},l1Lamp:{value:new T.Vector3(.95,1.0,1.04)},l1OB:{value:new T.Vector2(0,0)},l1Pt:{value:Array.from({length:8},()=>new T.Vector4(0,0,0,0))},l1PtN:{value:0}};
  const corridors=createLevel1Corridors(T,renderer,{wall:uniforms.l1Wall.value,floor:uniforms.l1Floor.value,ceil:uniforms.l1Ceil.value});let mode='halls',hallReturn=null;
  const mk=(defines={})=>new T.ShaderMaterial({uniforms:T.UniformsUtils.merge([T.UniformsLib.fog,{}]),vertexShader:VERT,fragmentShader:FRAG,fog:true,defines});
@@ -276,7 +277,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
     if(kb===3&&r(141)<.6){const t=.6+r(142)*(hCol-1.2);P(box,C.lagC,X,t/2+.05,Z,L1_COL+.12,t,L1_COL+.12);if(r(143)<.5)P(box,C.foil,X,t+.2,Z,L1_COL+.08,.4,L1_COL+.08);}
     if(l1ColumnTube(ix,iz)&&kb===0){const f=l1ColumnFace(ix,iz),dx=f===0?1:f===1?-1:0,dz=f===2?1:f===3?-1:0,o=L1_COL/2+.035;G(GLOW.tube,X+dx*o,2.0,Z+dz*o,dx?.05:.07,1.22,dz?.05:.07);HL(X+dx*(o+.15),2.0,Z+dz*(o+.15),.85,1.25,1.0);P(box,C.frame,X+dx*(o-.01),2.0,Z+dz*(o-.01),dx?.03:.11,1.32,dz?.03:.11);}
     if(r(23)<.3&&kb!==4){const q=r(24)>.5?1:-1,o=L1_COL/2+.006;P(box,C.yellow,X+q*o,1.0,Z+o,.05,2.0,.012);}
-    if(kb===0&&r(26)<.55){const Lc=LET[Math.floor(r(27)*LET.length)],o=L1_COL/2+.004,y=1.65;for(const[dx,dz]of[[0,1],[0,-1],[1,0],[-1,0]])if(r(28+dx+dz*2)<.7)P(box,Lc,X+dx*o,y,Z+dz*o,dz?.46:.004,.46,dx?.46:.004);}
+    colDecals(ix,iz,X,Z,kb,r);
     if((l1ColumnTube(ix,iz)&&kb===0)||kb===4){}else if(r(21)<.18){const f=Math.floor(r(22)*4),dx=f===0?1:f===1?-1:0,dz=f===2?1:f===3?-1:0,o=L1_COL/2+.09;P(box,C.hose,X+dx*o,1.3,Z+dz*o,dx?.18:.62,.62,dz?.18:.62);}
     else if(r(21)>.93){const f=Math.floor(r(22)*4),dx=f===0?1:f===1?-1:0,dz=f===2?1:f===3?-1:0,o=L1_COL/2+.07;P(box,C.panel,X+dx*o,1.45,Z+dz*o,dx?.14:.5,.72,dz?.14:.5);}}
    // walls on the two edges this bay owns
@@ -369,7 +370,39 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
   if(halos.length){const hm=new T.Mesh(haloGeo(halos),haloMat);hm.renderOrder=5;group.add(hm);}
   const out={cx,cz,group,solids};parts=glows=exits=solids=halos=null;return out;}
- function decorWall(ix,iz,x,z,axis,kb){if((axis==='x'?l1RunX(ix,iz):l1RunZ(ix,iz))&&kb===0)return;const ax=axis==='x',door=ax?l1DoorX(ix,iz):l1DoorZ(ix,iz),side=(ax?l1TubeSideX:l1TubeSideZ)(ix,iz);
+
+ // ---- column numbers + 牛皮癣 ads (atlas decal layers, 4 cut-outs of 128 px per layer; quads merge into the chunk mesh: no extra draw calls)
+ const DQ=new T.PlaneGeometry(1,1),DN={any:[]},DA={any:[]};for(const d of L1_DEC){const m=d[1]==='num'?DN:DA;(m[d[2]]=m[d[2]]||[]).push(d);}
+ const DREG=['cn','cn','cn','cn','jp','jp','kr','us','us','eu','eu','ru','ru'],pick=(a,h)=>a[Math.min(a.length-1,Math.floor(h*a.length))];
+ const regOf=(ix,iz)=>{const rx=Math.floor(ix/5),rz=Math.floor(iz/5);return{rx,rz,g:pick(DREG,l1Hash(rx,rz,400))};}; // ~40 m numbering regions
+ const AGE=[[1,1,1],[.93,.9,.84],[.84,.8,.72],[.72,.69,.62]];
+ // d=[name,kind,group,aspect,layer,quad]; L = metres of the item's long side; (nx,nz) face normal; roll in radians
+ function decal(d,x,y,z,nx,nz,L,roll,age){const g=DQ.clone(),uv=g.attributes.uv,qx=d[5]%2,qy=d[5]>>1;for(let i=0;i<uv.count;i++)uv.setXY(i,(qx+uv.getX(i))*.5,(1-qy+uv.getY(i))*.5);
+  const s=L*128/122;tmp.position.set(x-ox0,y,z-oz0);tmp.rotation.set(0,Math.atan2(nx,nz),roll);tmp.scale.set(s,s,1);tmp.updateMatrix();g.applyMatrix4(tmp.matrix);
+  const a=AGE[age|0],c=[a[0],a[1],a[2],0];c.t=[d[4],3,1,1,0];parts.push(col(g,c,[s,s,0]));}
+ const FACES=[[0,1],[0,-1],[1,0],[-1,0]];
+ // 1-5 overlapping ads around an anchor on one face; tangent = (nz,-nx); foot-heavy heights
+ function adCluster(x,z,nx,nz,o,half,reg,h,n){const tx=nz,tz=-nx,u0=(h(0)-.5)*2*half*.7,y0=.28+Math.pow(h(1),1.5)*1.55;
+  const used=new Set();for(let k=0;k<n;k++){const lang=h(10+k)<.55?DA.cn:h(20+k)<.6&&DA[reg]?DA[reg]:h(30+k)<.3?DA.any:pick([DA.cn,DA.jp,DA.us,DA.ru,DA.kr,DA.eu],h(40+k));
+   let j=Math.floor(h(50+k)*lang.length)%lang.length;for(let t=0;t<lang.length&&used.has(lang[j]);t++)j=(j+1)%lang.length;let d=lang[j];if(used.has(d)){const c=DA.cn;d=c[Math.floor(h(55+k)*c.length)];for(let t=0;t<c.length&&used.has(d);t++)d=c[(c.indexOf(d)+1)%c.length];}used.add(d);
+   const L=(.17+.13*h(60+k))*(d[3]>1.6||d[3]<.62?1.18:1),rl=(h(90+k)-.5)*.32,w=L*Math.min(1,d[3])*.5*(1+Math.abs(rl))+L*Math.min(1,1/d[3])*.5*Math.abs(rl)+.03,u=Math.max(-half+w,Math.min(half-w,u0+(h(70+k)-.5)*.42)),y=Math.max(L*.5+.06,y0+(h(80+k)-.5)*.45);
+   const oo=o+.003+k*.0025;decal(d,x+nx*oo+tx*u,y,z+nz*oo+tz*u,nx,nz,L,rl,Math.floor(h(100+k)*3.99));}}
+ function colDecals(ix,iz,X,Z,kb,r){if(kb===4||kb===2)return;const R=regOf(ix,iz),rh=s=>l1Hash(R.rx,R.rz,s),o=L1_COL/2;
+  const lag=kb===3&&r(141)<.6,doorN=l1DoorX(ix,iz)||l1DoorX(ix-1,iz)||l1DoorZ(ix,iz)||l1DoorZ(ix,iz-1);
+  // numbers: one region format, a second older format, a few odd ones (chalk, repaint layers); image-19 big letters kept in some Aquila regions
+  if(!lag&&r(410)<(kb===0?.72:kb===1?.5:.4)){const e=r(411);let d=null;
+   if(kb===0&&rh(405)<.3){const Lc=LET[Math.floor(r(27)*LET.length)],y=1.65;for(const[dx,dz]of FACES)if(r(28+dx+dz*2)<.7)P(box,Lc,X+dx*(o+.004),y,Z+dz*(o+.004),dz?.46:.004,.46,dx?.46:.004);}
+   else{const pool=DN[R.g]||DN.cn;d=e<.7?pick(pool,rh(401)):e<.9?pick(pool,rh(402)):pick(DN.any.concat(DN.cn),r(412));
+    const age=e<.7?Math.floor(rh(404)*2.2):1+Math.floor(r(413)*2.99),wide=d[3]>2,L=wide?.62:.42+.1*rh(406),y=(wide?1.25:1.45)+rh(403)*.45+(r(414)-.5)*.06,fm=rh(407);
+    for(let f=0;f<4;f++)if(f===0||((fm*16)>>f&1)||r(415+f)<.25){const[nx,nz]=FACES[f];decal(d,X+nx*(o+.004),y,Z+nz*(o+.004),nx,nz,L,(r(420+f)-.5)*.05,age);}}}
+  // ads: sparse, clustered, more beside doorways and at the column foot
+  if(r(430)<(doorN?.5:kb===3?.22:.13)){const f=Math.floor(r(431)*4),[nx,nz]=FACES[f];adCluster(X,Z,nx,nz,o+(lag?.06:0),o,R.g,s=>l1Hash(ix,iz,440+s),1+Math.floor(Math.pow(r(432),1.7)*5));
+   if(r(433)<.3){const[mx,mz]=FACES[(f+2+Math.floor(r(434)*2))%4];adCluster(X,Z,mx,mz,o+(lag?.06:0),o,R.g,s=>l1Hash(ix,iz,600+s),1+Math.floor(r(435)*2));}}}
+ function wallAds(ix,iz,x,z,ax,door,kb){if(kb===4)return;const R=regOf(ix,iz),o=L1_WALL/2;
+  for(const sd of[1,-1]){const h=s=>l1Hash(ix,iz,(sd>0?700:800)+s),nx=ax?0:sd,nz=ax?sd:0;
+   if(door){if(h(0)<.55){const side=h(1)<.5?1:-1,u=side*(1.05+h(2)*.6),cx=x+(ax?u:0),cz=z+(ax?0:u);adCluster(cx,cz,nx,nz,o,.3,R.g,s=>h(10+s),1+Math.floor(Math.pow(h(3),1.4)*5));}}
+   else if(h(4)<.07){const u=(h(5)-.5)*5,cx=x+(ax?u:0),cz=z+(ax?0:u);adCluster(cx,cz,nx,nz,o,.4,R.g,s=>h(10+s),1+Math.floor(h(6)*3));}}}
+ function decorWall(ix,iz,x,z,axis,kb){if((axis==='x'?l1RunX(ix,iz):l1RunZ(ix,iz))&&kb===0)return;const ax=axis==='x',door=ax?l1DoorX(ix,iz):l1DoorZ(ix,iz),side=(ax?l1TubeSideX:l1TubeSideZ)(ix,iz);wallAds(ix,iz,x,z,ax,door,kb);
   if(door){const inS=ax?(l1InClu(ix,iz)?1:-1):(l1InClu(ix,iz)?1:-1);
    for(const sd of [1,-1]){const o=L1_WALL/2+.02,fx=ax?0:sd*o,fz=ax?sd*o:0;
     // frame jambs + head

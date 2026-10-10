@@ -1,7 +1,7 @@
 // Level 1 v3 props: textured crates (15+ looks) and leftovers (chairs, buckets, signs, AC units, boards,
 // bikes, ladders, cables, tyres, cones, debris). Pure, hash-driven; everything goes through the world's
 // merged-geometry put(), so props cost no draw calls of their own.
-import {l1Hash} from './level1-layout.js?v=112';
+import {l1Hash} from './level1-layout.js?v=113';
 export function makeL1Props(T,{P,C,box,cyl,vcyl,solid}){
  const torus=new T.TorusGeometry(1,.18,5,14),wheel=new T.TorusGeometry(1,.05,4,16),cone=new T.CylinderGeometry(.03,.5,1,10,1,false),disc=new T.CylinderGeometry(1,1,1,14,1,false);
  // place a part in a prop's local frame (lx,lz) rotated by ry about (px,pz); rx/rz tilt the part itself

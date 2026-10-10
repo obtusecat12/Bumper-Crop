@@ -98,7 +98,7 @@ import {createNavigationMap} from './map-ui.js?v=107';
 import {drawAsciiTitle} from './ascii-title.js?v=100';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=99';
 import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
-import {createLevel1World} from './level1-world.js?v=112'; // V107 Level 1
+import {createLevel1World} from './level1-world.js?v=113'; // V107 Level 1
 
 await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
 const $=s=>document.querySelector(s),game=$('#game');
