@@ -38,8 +38,8 @@ export const SPAWN_WALLS=[
 export const SPAWN_RAILS=[{x:X(-3.9),z:Z(1.85)+.012,y:.27,w:3.6,d:.022}];
 export const SPAWN_OUTLETS=[{x:X(.63),z:Z(1.78)+.002,y:.29,rotation:0,style:0}];
 // one troffer row through the open bay (u≈−1.2, every 2.4 m as in the photo) + the camera room's own lamps
-export const SPAWN_LIGHTS=[[-1.8,5.1],[-1.8,7.5],[-1.8,9.9],[-1.8,12.3],[4.2,9.9],[-4.2,-.6],[1.8,-.6]].map(([u,v],i)=>({x:X(u),z:Z(v),on:true,phase:i*1.7,spawn:true}));
-export const SPAWN_VIEW={name:'出生点 · 经典原图机位',x:C.x,y:1.5,z:C.z,yaw:.14,pitch:-.265,fov:64.6,manila:true,spawn:true};
+export const SPAWN_LIGHTS=[[-1.8,5.1],[-1.8,7.5],[-1.8,9.9],[-1.8,12.3],[4.2,9.9],[-4.2,-1.2],[1.8,-1.2]].map(([u,v],i)=>({x:X(u),z:Z(v),on:true,phase:i*1.7,spawn:true}));
+export const SPAWN_VIEW={name:'出生点 · 经典原图机位',x:C.x,y:1.5,z:C.z,yaw:.14,pitch:-.1047,shiftY:.1316,fov:64.6,manila:true,spawn:true};// V119b: 6° tilt + rising front (principal 63 px above centre of 480) = same floor/lamp fit as the 15.2° pinhole, verticals near plumb like the photo
 export const SPAWN_PLAY={name:'出生点',x:C.x,z:C.z,yaw:.14,pitch:-.12,spawn:true};
 // the tile you fall through in the first-run intro stays missing (ceiling slot grid: x ≡ .6 mod 1.2, z ≡ .3 mod .6)
 export const SPAWN_HOLES=[{x:C.x-.6,z:C.z-.3}];

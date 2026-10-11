@@ -118,9 +118,10 @@ export function createFlashlight117(T){
  // distance: on screen it still leaves the lens, but it can never poke through a wall the player is touching.
  const vmScene=new T.Scene();vmScene.add(rig);const vmCam=new T.PerspectiveCamera(70,1,.01,6);
  const hemi=new T.HemisphereLight(0xfff2c8,0x5a4c2a,1.6),key=new T.DirectionalLight(0xfff4dc,.9);key.position.set(-.4,1,.6);vmScene.add(hemi,key);
- const LOOK={0:[0xfff4d6,0x7a6a3c,3.0,1.5],1:[0xd6dde0,0x44484a,1.7,.8],10:[0xfff8ec,0x7a7060,3.2,1.8],11:[0xf2f4f8,0x60646a,3.0,1.6]};
+ // V119b: the world pipeline leaves the frame display-encoded, so the viewmodel is encoded too (it was composited linear → dark red-orange skin); ambient retuned for that
+ const LOOK={0:[0xfff6e0,0x8a7c58,1.5,.85],1:[0xdfe4e6,0x5a5e60,.9,.5],10:[0xfff8ec,0x8a8070,1.3,.8],11:[0xf2f4f8,0x6a6e74,1.2,.7]};
  torch.traverse(o=>{if(o.isMesh&&o.material.metalness>.05&&o.material!==chrome){o.material.metalness=.05;o.material.roughness=Math.max(.45,o.material.roughness);}});
- let vmTarget=null;const quadMat=new T.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,uniforms:{map:{value:null}},vertexShader:'varying vec2 vU;void main(){vU=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:'uniform sampler2D map;varying vec2 vU;void main(){vec4 c=texture2D(map,vU);if(c.a<.5)discard;gl_FragColor=vec4(c.rgb,1.);}'});
+ let vmTarget=null;const quadMat=new T.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,uniforms:{map:{value:null}},vertexShader:'varying vec2 vU;void main(){vU=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:'uniform sampler2D map;varying vec2 vU;void main(){vec4 c=texture2D(map,vU);if(c.a<.5)discard;gl_FragColor=sRGBTransferOETF(vec4(c.rgb,1.));}'});
  const quad=new T.Mesh(new T.PlaneGeometry(2,2),quadMat);quad.frustumCulled=false;const quadScene=new T.Scene();quadScene.add(quad);const quadCam=new T.OrthographicCamera(-1,1,1,-1,0,1);
  function overlay(renderer,target,view,w,h){if(!rig.visible||!view)return;
   if(!vmTarget||vmTarget.width!==w||vmTarget.height!==h){vmTarget?.dispose();vmTarget=new T.WebGLRenderTarget(w,h,{depthBuffer:true,minFilter:T.NearestFilter,magFilter:T.NearestFilter});vmTarget.texture.colorSpace=target?.texture?.colorSpace??T.NoColorSpace;quadMat.uniforms.map.value=vmTarget.texture;}

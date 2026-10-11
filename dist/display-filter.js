@@ -118,8 +118,16 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
   if(ui){const old=renderer.autoClear;renderer.autoClear=false;renderer.render(uiScene,camera);renderer.autoClear=old;}
  }
  function present(picture,kind){material.uniforms.picture.value=picture;material.uniforms.filterMode.value=kind;material.uniforms.frameHeight.value=height;renderer.render(screen,camera);}
+ // V119b: photo-mode shift lens (rising front). The reference photo was taken with the camera tilted only a little and
+ // the frame shifted down, so verticals converge far less than a plain 15° pitched pinhole. ref.shiftY = principal
+ // point height above the frame centre as a fraction of the frame height; ref.fov stays the 4:3 frame's vertical fov.
+ function lensShift(view){const ref=globalThis.__bcDebug?.ref,sy=ref?.shiftY;if(!view?.isPerspectiveCamera)return;
+  if(!sy){if(view.view?.enabled){view.clearViewOffset();}return;}
+  const a=ref.referenceAspect||4/3,h=1000,w=h*a,t=Math.tan(ref.fov*Math.PI/360),fh=h*(1+2*Math.abs(sy)),fov=2*Math.atan(t*fh/h)*180/Math.PI,oy=sy>0?h*2*sy:0;
+  const v=view.view;if(v?.enabled&&v.fullHeight===fh&&v.offsetY===oy&&Math.abs(view.fov-fov)<1e-6&&Math.abs(view.aspect-w/fh)<1e-9)return;
+  view.fov=fov;view.aspect=w/fh;view.setViewOffset(w,fh,0,oy,w,h);}
  function render(scene,view,now,beforeScene,skipScene=false){
-  renderer.info.reset();
+  renderer.info.reset();lensShift(view);
   if(mode==='native'||mode==='pixel'||failed){compose(scene,view,beforeScene,skipScene);renderer.setRenderTarget(null);present(internal.texture,3);return;}
   if(mode==='ps1'){compose(scene,view,beforeScene,skipScene);renderer.setRenderTarget(null);present(internal.texture,1);return;}
   const slot=workers.find(s=>s.ready&&!s.busy);
