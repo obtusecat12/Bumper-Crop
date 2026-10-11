@@ -16,7 +16,7 @@ bool lwx(int x,int z){return l1wx(x+l1OB.x,z+l1OB.y);}bool lwz(int x,int z){retu
 bool lrx(int x,int z){return l1rx(x+l1OB.x,z+l1OB.y);}bool lrz(int x,int z){return l1rz(x+l1OB.x,z+l1OB.y);}
 int lsec(int x,int z){return l1sec(x+l1OB.x,z+l1OB.y);}
 bool lcol(int x,int z){return l1col(x+l1OB.x,z+l1OB.y);}bool ldx(int x,int z){return l1dx(x+l1OB.x,z+l1OB.y);}bool ldz(int x,int z){return l1dz(x+l1OB.x,z+l1OB.y);}
-float l1AmbK=1.0,l1T=0.0;uniform vec4 l1Pt[8];uniform int l1PtN;uniform float l1Power;uniform float l1Time;uniform vec3 l1Amb;uniform vec3 l1Lamp;
+float l1AmbK=1.0,l1T=0.0;uniform vec4 l1Pt[8];uniform int l1PtN;uniform vec4 l1FlP;uniform vec4 l1FlD;uniform float l1Power;uniform float l1Time;uniform vec3 l1Amb;uniform vec3 l1Lamp;
 float l1fall(vec3 d,float k,float range){float r2=dot(d,d);float c=clamp(1.0-r2/(range*range),0.0,1.0);return c*c/(1.0+r2*k);}
 float l1vis(int fx,int fz,int bx,int bz){int dx=bx-fx,dz=bz-fz;if(dx==0&&dz==0)return 1.0;int xl=max(fx,bx),zl=max(fz,bz);
  bool a=(dx!=0&&lwz(xl,fz))||(dz!=0&&lwx(bx,zl));bool b=(dz!=0&&lwx(fx,zl))||(dx!=0&&lwz(xl,bz));
@@ -52,7 +52,10 @@ vec3 l1light(vec3 P,vec3 N){
  // ceilings: bounce from the lit floor below (the photo's ceiling reads near-white)
  float cb=max(-N.y,0.0)*(.3*up+.03);vec3 accT=acc;
  if(l1inc(fx+l1OB.x,fz+l1OB.y))hemi*=.6;
- return (l1Amb*hemi*l1AmbK*(.08+.92*l1Power)+l1Lamp*(accT+cb*(1.0-.6*l1T))*l1Power)*ao;}
+ // V117 hand torch (flashlight117): soft-edged cone, inverse-square falloff, independent of the hall power
+ vec3 fl=vec3(0.0);if(l1FlP.w>0.0){vec3 d=l1FlP.xyz-P;float r2=max(dot(d,d),.04);vec3 l=d*inversesqrt(r2);float c=dot(-l,l1FlD.xyz);
+  float cone=smoothstep(l1FlD.w,mix(l1FlD.w,1.0,.55),c);float ring=.85+.15*sin(acos(clamp(c,-1.,1.))*38.0);fl=vec3(1.0,.93,.8)*l1FlP.w*cone*ring*(max(dot(N,l),0.0)*.92+.08)/(1.0+r2*.55);}
+ return (l1Amb*hemi*l1AmbK*(.08+.92*l1Power)+l1Lamp*(accT+cb*(1.0-.6*l1T))*l1Power+fl)*ao;}
 `;
 const NOISE_GLSL=`
 float l1n(vec2 p,vec2 per){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);vec2 i0=mod(i,per),i1=mod(i+1.0,per);
@@ -132,7 +135,7 @@ export function createLevel1World(T,renderer){
  const NI=new Float32Array(128).fill(-1);for(const k in L1_NORM)NI[+k]=L1_NORM[k];
  pending.push(fetch('./assets/level1/atlas-n.webp?v=116').then(r=>r.blob()).then(b=>createImageBitmap(b,{premultiplyAlpha:'none',colorSpaceConversion:'none'})).then(img=>{const c=document.createElement('canvas');c.width=2176;c.height=272;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,0,0);const d=natlas.image.data;for(let l=0;l<8;l++){const px=g.getImageData(l*272+8,8,256,256).data;for(let y=0;y<256;y++)d.set(px.subarray((255-y)*1024,(256-y)*1024),l*262144+y*1024);}natlas.needsUpdate=true;}));
  pending.push(fetch('./assets/level1/atlas.webp?v=116').then(r=>r.blob()).then(b=>createImageBitmap(b,{premultiplyAlpha:'none',colorSpaceConversion:'none'})).then(img=>{const c=document.createElement('canvas');c.width=2176;c.height=Math.ceil(NLAY/8)*272;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,0,0);const d=atlas.image.data;for(let l=0;l<NLAY;l++){const px=g.getImageData((l%8)*272+8,Math.floor(l/8)*272+8,256,256).data;for(let y=0;y<256;y++)d.set(px.subarray((255-y)*1024,(256-y)*1024),l*262144+y*1024);}atlas.needsUpdate=true;}));
- const uniforms={l1Atlas:{value:atlas},l1Norm:{value:natlas},l1NI:{value:NI},l1Floor:{value:tex('floor.webp')},l1Wall:{value:tex('wall.webp')},l1Ceil:{value:tex('ceiling.webp')},l1Power:{value:1},l1Time:{value:0},l1Amb:{value:new T.Vector3(.11,.115,.12)},l1Lamp:{value:new T.Vector3(.95,1.0,1.04)},l1OB:{value:new T.Vector2(0,0)},l1Pt:{value:Array.from({length:8},()=>new T.Vector4(0,0,0,0))},l1PtN:{value:0}};
+ const uniforms={l1FlP:{value:new T.Vector4(0,0,0,0)},l1FlD:{value:new T.Vector4(0,0,-1,.9)},l1Atlas:{value:atlas},l1Norm:{value:natlas},l1NI:{value:NI},l1Floor:{value:tex('floor.webp')},l1Wall:{value:tex('wall.webp')},l1Ceil:{value:tex('ceiling.webp')},l1Power:{value:1},l1Time:{value:0},l1Amb:{value:new T.Vector3(.11,.115,.12)},l1Lamp:{value:new T.Vector3(.95,1.0,1.04)},l1OB:{value:new T.Vector2(0,0)},l1Pt:{value:Array.from({length:8},()=>new T.Vector4(0,0,0,0))},l1PtN:{value:0}};
  const corridors=createLevel1Corridors(T,renderer,{wall:uniforms.l1Wall.value,floor:uniforms.l1Floor.value,ceil:uniforms.l1Ceil.value});let mode='halls',hallReturn=null;
  const mk=(defines={})=>new T.ShaderMaterial({uniforms:T.UniformsUtils.merge([T.UniformsLib.fog,{}]),vertexShader:VERT,fragmentShader:FRAG,fog:true,defines});
  const mat=mk();Object.assign(mat.uniforms,uniforms);
@@ -277,8 +280,11 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  function buildChunk(cx,cz){const g=chunkGen(cx,cz);let r;do r=g.next();while(!r.done);return r.value;}
  function* chunkGen(cx,cz){parts=[];glows=[];exits=[];solids=[];halos=[];const x0=cx*8,z0=cz*8;ox0=cx*K;oz0=cz*K;const ctx={parts,glows,exits,solids,halos};
   const resume=()=>{parts=ctx.parts;glows=ctx.glows;exits=ctx.exits;solids=ctx.solids;halos=ctx.halos;ox0=cx*K;oz0=cz*K;};
+  // V117: merge each bay row's small geometries as soon as the row is done (spreads mergeGeometries over the build
+  // instead of one ~2000-piece merge on the frame the chunk appears)
+  const rowP=[],rowG=[],flush=()=>{if(ctx.parts.length){rowP.push(mergeGeometries(ctx.parts,false));ctx.parts.forEach(g=>g.dispose());ctx.parts.length=0;}if(ctx.glows.length){rowG.push(mergeGeometries(ctx.glows,false));ctx.glows.forEach(g=>g.dispose());ctx.glows.length=0;}};
   const kc=new Map(),kind=(a,b)=>{const k=a*100003+b;let v=kc.get(k);if(v===undefined){v=l1Sector(a,b);kc.set(k,v);}return v;},hgt=(a,b)=>L1_SEC_H[kind(a,b)];
-  for(let iz=z0;iz<z0+8;iz++){if(iz>z0){yield;resume();}for(let ix=x0;ix<x0+8;ix++){
+  for(let iz=z0;iz<z0+8;iz++){if(iz>z0){flush();yield;resume();}for(let ix=x0;ix<x0+8;ix++){if(ix>x0){yield;resume();}
    const X=ix*B,Z=iz*B,r=(s)=>l1Hash(ix,iz,s),kb=kind(ix,iz),hb=L1_SEC_H[kb],gw=Math.max(0,Math.min(1,(l1SecV(ix,iz)-.62)/.14))*(kb===2?0:1);
    const hX=Math.max(hb,hgt(ix,iz-1)),hZ=Math.max(hb,hgt(ix-1,iz)),hCol=Math.max(hX,hZ,hgt(ix-1,iz-1));
    // column at corner (Gothic: round shaft + mushroom capital when all four bays are Gothic)
@@ -376,8 +382,8 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
    let[fx,fz]=F(.17);P(box,cc,fx,1.75,fz,w(1.15,.02),1.25,w(.02,1.15));[fx,fz]=F(.18);P(box,camp.col2,fx+w(.25,0),1.2,fz+w(0,.25),w(.35,.022),.5,w(.022,.35));
    [fx,fz]=F(.19);P(box,C.paper,fx+w(.7,0),1.55,fz+w(0,.7),w(.22,.01),.3,w(.01,.22));P(box,C.tape,fx+w(.7,0),1.69,fz+w(0,.7),w(.1,.012),.03,w(.012,.1));
    [fx,fz]=F(.42);PR.crate(fx,fz,ax?0:Math.PI/2,0,1,.75);solid(fx,fz,.6,.6);}
-  yield;resume();
-  const geo=mergeGeometries(parts,false),glow=glows.length?mergeGeometries(glows,false):null;parts.forEach(g=>g.dispose());glows.forEach(g=>g.dispose());
+  flush();yield;resume();
+  const geo=rowP.length>1?mergeGeometries(rowP,false):rowP[0],glow=rowG.length?(rowG.length>1?mergeGeometries(rowG,false):rowG[0]):null;if(rowP.length>1)rowP.forEach(g=>g.dispose());if(rowG.length>1)rowG.forEach(g=>g.dispose());
   const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
   if(halos.length){const hm=new T.Mesh(haloGeo(halos),haloMat);hm.renderOrder=5;group.add(hm);}
   const out={cx,cz,group,solids};parts=glows=exits=solids=halos=null;return out;}
@@ -433,7 +439,8 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  const rebase=l1Rebase(scene),chunks=new Map(),key=(a,b)=>a+','+b;let want=[],center='';
  let building=null;
  function chunkAt(cx,cz){const k=key(cx,cz);let c=chunks.get(k);if(!c){if(building&&building.k===k){let r;do r=building.g.next();while(!r.done);c=r.value;building=null;}else c=buildChunk(cx,cz);chunks.set(k,c);scene.add(c.group);}return c;}
- function stepBuild(){if(!building){while(want.length){const[a,b]=want.shift(),k=key(a,b);if(!chunks.has(k)){building={k,g:chunkGen(a,b)};break;}}}if(!building)return;const r=building.g.next();if(r.done){chunks.set(building.k,r.value);scene.add(r.value.group);building=null;}}
+ function stepBuild(){if(!building){while(want.length){const[a,b]=want.shift(),k=key(a,b);if(!chunks.has(k)){building={k,g:chunkGen(a,b)};break;}}}if(!building)return;const t0=performance.now();let r;do{r=building.g.next();}while(!r.done&&performance.now()-t0<BUILD_MS);if(r.done){chunks.set(building.k,r.value);scene.add(r.value.group);building=null;}}
+ const BUILD_MS=2;
  function ensure(x,z){if(mode==='corridor')return corridors.ensure(x,z);const cx=Math.floor(x/K),cz=Math.floor(z/K);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)chunkAt(cx+dx,cz+dz);}
  function plan(x,z){const cx=Math.floor((x+K/2)/K-.5),cz=Math.floor((z+K/2)/K-.5),k=key(Math.floor(x/K),Math.floor(z/K));if(k===center)return;center=k;const ccx=Math.floor(x/K),ccz=Math.floor(z/K);want=[];
   for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)if(!chunks.has(key(ccx+dx,ccz+dz)))want.push([ccx+dx,ccz+dz]);
@@ -492,7 +499,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   const t=spiral(6,(x,z)=>l1ThrSite(x*64+32,z*64+32));if(!t)add(null);if(t){const[fx,fz]=siteDir(t);landmarks.push({name:'阈界 · 通往 Level 2 的管道区',x:t.x+fx*6,z:t.z+fz*6,yaw:Math.atan2(fx,fz),pitch:.06});}
   {const d=CL.nearest(4,4);if(!d)add(null);if(d)landmarks.push({name:'小径 · 过道墙上的门洞',x:d.x,z:d.z,yaw:d.yaw,pitch:-.02});}
   add(sec(3),{name:'衔尾段 · 装修中',yaw:.5,pitch:.1});add(sec(4),{name:'传说段 · 木构老屋',yaw:.5,pitch:.05});}
- async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);await r.compileAsync(scene,camera);}
+ async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);const g=new T.Group();for(const m of [mat,glowMat,exitMat]){const q=new T.Mesh(col(box.clone(),C.concrete,[1,1,1]),m);q.position.set(camera.position.x,-50,camera.position.z);g.add(q);}g.add(new T.Mesh(haloGeo([[0,-50,0,1,1,1]]),haloMat));scene.add(g);await r.compileAsync(scene,camera);scene.remove(g);g.traverse(o=>o.geometry?.dispose());}
  return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='corridor'?corridors.scene:scene},get mode(){return mode},nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt:()=>H,
-  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
+  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA)=>{uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
 }

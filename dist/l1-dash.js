@@ -106,7 +106,7 @@ function navStatic(w,h,k){
  b.save();b.shadowColor='#1f4a3f70';b.shadowBlur=2.5;b.shadowOffsetX=1;b.shadowOffsetY=1.5;b.fillStyle='#f6f6f1';b.fillRect(px,py,pw,ph);b.restore();
  const hb=32;b.fillStyle=lg(b,0,py,0,py+hb,[[0,'#237f49'],[1,'#165c34']]);b.fillRect(px,py,pw,hb);b.fillStyle='#e8c04a';b.fillRect(px,py+hb,pw,2.5);
  b.fillStyle='#ffffff';b.beginPath();b.arc(px+16,py+hb/2,11.5,0,TAU);b.fill();text(b,'P1',px+16,py+hb/2+1,f16(),'#165c34',null);
- blockText(b,'LEVEL 1',px+32,py+5,12,{shadow:'#0b2e1a'});
+ text(b,'LEVEL 1',px+32,py+11,f16(),'#ffffff','#0b2e1a','left');
  text(b,'宜居地带',px+32,py+25.5,f12(),'#d8f0de',null,'left');
  text(b,'PARKING',px+pw-6,py+10,f12(),'#ffffff',null,'right');text(b,'DIRECTORY',px+pw-6,py+22,f12(),'#bfe3c9',null,'right');
  const fy=py+ph-17;b.fillStyle='#eeefea';b.fillRect(px,fy,pw,17);b.fillStyle='#cfd3cd';b.fillRect(px,fy,pw,1);
@@ -214,8 +214,8 @@ export function l1MapPlayer(c,x,z,yaw,big){const s=big?1.5:1;c.save();c.translat
 // with one reflection covers the lot. Static layers are cached; only needles / liquids / sweep repaint.
 // =====================================================================================================
 const DW=760,DH=316;
-const HO={cx:144,cy:180,R:138,top:66,x0:6,x1:754,y1:308,rc:40};   // housing geometry
-const GA={x:144,y:180,R:114},SUB={x:304,y:150,R:44},MID={x:354,y:88,w:212,h:100,r:12},
+const HO={cx:144,cy:180,R:96,top:96,x0:48,x1:716,y1:302,rc:30};   // V117: housing inset — gauges overhang its edge   // housing geometry
+const GA={x:144,y:180,R:114},SUB={x:244,y:82,R:44},MID={x:354,y:88,w:212,h:100,r:12},
  RAD={x:622,y:190,R:52},SIG={x:352,y:206,w:118,h:60},ICO={x:486,y:204,s:58},TUB={x:704,y:92,w:26,h:172},BADGE={x:574,y:84,w:114,h:34};
 function housePath(c,ins){const R=HO.R-ins,cx=HO.cx,cy=HO.cy,top=HO.top+ins,x0=HO.x0+ins,x1=HO.x1-ins,y1=HO.y1-ins,rc=Math.max(4,HO.rc-ins);
  const dx=Math.sqrt(Math.max(0,R*R-(cy-top)**2)),ae=Math.atan2(top-cy,dx);
@@ -293,6 +293,10 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   // shadows on the scene: wide ambient + tight contact
   c.save();c.shadowColor='#000000a0';c.shadowBlur=22;c.shadowOffsetY=10;housePath(c,0);c.fillStyle='#000';c.fill();c.restore();
   c.save();c.shadowColor='#000000c0';c.shadowBlur=4;c.shadowOffsetY=2;housePath(c,0);c.fillStyle='#000';c.fill();c.restore();
+  // V117 pods: the speedometer, its m/s sub-dial and the tube break out of the housing outline; each sits in its own
+  // deep black cup that throws a contact shadow onto the scene and onto the hood
+  for(const [x,y,R] of [[GA.x,GA.y,GA.R+4],[SUB.x,SUB.y,SUB.R+7]]){c.save();c.shadowColor='#000000b0';c.shadowBlur=18;c.shadowOffsetX=3;c.shadowOffsetY=9;c.fillStyle='#000';c.beginPath();c.arc(x,y,R,0,TAU);c.fill();c.restore();}
+  c.save();c.shadowColor='#000000a0';c.shadowBlur=12;c.shadowOffsetY=6;rr(c,TUB.x-11,TUB.y-12,TUB.w+22,TUB.h+24,13);c.fillStyle='#000';c.fill();c.restore();
   // leather hood
   c.save();housePath(c,0);c.clip();c.fillStyle=ok(IMG.leather)?c.createPattern(IMG.leather,'repeat'):'#1b1b1c';c.fillRect(0,0,DW,DH);
   c.fillStyle=lg(c,0,HO.cy-HO.R,0,HO.y1,[[0,'#ffffff1e'],[.25,'#ffffff08'],[.6,'#00000000'],[1,'#00000070']]);c.fillRect(0,0,DW,DH);
@@ -320,7 +324,10 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   c.restore();
   housePath(c,IN+.6);c.lineWidth=1.2;c.strokeStyle=lg(c,0,HO.top,0,HO.y1,[[0,'#00000080'],[.6,'#ffffff30'],[1,'#ffffffa0']]);c.stroke();
   // wells
-  well(c,GA.x,GA.y,GA.R);well(c,SUB.x,SUB.y,SUB.R+2);well(c,RAD.x,RAD.y,RAD.R+3);
+  for(const [x,y,R] of [[GA.x,GA.y,GA.R+4],[SUB.x,SUB.y,SUB.R+7]]){c.save();c.shadowColor='#000000c0';c.shadowBlur=10;c.shadowOffsetY=5;c.beginPath();c.arc(x,y,R,0,TAU);
+   c.fillStyle=lg(c,0,y-R,0,y+R,[[0,'#3a3e42'],[.5,'#16181a'],[1,'#050606']]);c.fill();c.restore();c.lineWidth=1;c.strokeStyle='#ffffff28';c.beginPath();c.arc(x,y,R-.5,Math.PI*1.1,Math.PI*1.9);c.stroke();}
+  rr(c,TUB.x-11,TUB.y-12,TUB.w+22,TUB.h+24,13);c.fillStyle=lg(c,TUB.x-11,0,TUB.x+TUB.w+11,0,[[0,'#2c3034'],[.5,'#121416'],[1,'#26292c']]);c.fill();
+  well(c,GA.x,GA.y,GA.R);well(c,RAD.x,RAD.y,RAD.R+3);
   rwell(c,MID.x,MID.y,MID.w,MID.h,MID.r);rwell(c,SIG.x,SIG.y,SIG.w,SIG.h,9);rwell(c,ICO.x-6,ICO.y-6,ICO.s+12,ICO.s+12,16);rwell(c,TUB.x-7,TUB.y-8,TUB.w+14,TUB.h+16,10);
   // printed scale beside the tube
   for(let i=0;i<=10;i++){const yy=TUB.y+TUB.h-(TUB.h-12)*i/10;c.fillStyle='#ffffff70';c.fillRect(TUB.x+TUB.w+9,yy+.7,i%5?5:9,1);c.fillStyle='#202326';c.fillRect(TUB.x+TUB.w+9,yy,i%5?5:9,1);}
@@ -334,9 +341,8 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   // screws
   screw(c,338,96,6,.4);screw(c,338,284,6,1.1);screw(c,600,284,6,.9);screw(c,672,128,6,.2);
   // ---- front layer: chrome rings, glass, the one lens over everything ----
-  chromeRing(f,GA.x,GA.y,GA.R-4,6);
-  if(ok(IMG['gauge-ring'])){f.drawImage(IMG['gauge-ring'],SUB.x-SUB.R*1.13,SUB.y-SUB.R*1.13,SUB.R*2.26,SUB.R*2.26);f.drawImage(IMG['gauge-ring'],RAD.x-RAD.R*1.13,RAD.y-RAD.R*1.13,RAD.R*2.26,RAD.R*2.26);}
-  else{chromeRing(f,SUB.x,SUB.y,SUB.R,5);chromeRing(f,RAD.x,RAD.y,RAD.R,5);}
+  if(ok(IMG['gauge-ring'])){f.drawImage(IMG['gauge-ring'],RAD.x-RAD.R*1.13,RAD.y-RAD.R*1.13,RAD.R*2.26,RAD.R*2.26);}
+  else{chromeRing(f,RAD.x,RAD.y,RAD.R,5);}
   chromeRect(f,MID.x,MID.y,MID.w,MID.h,MID.r,3);chromeRect(f,SIG.x,SIG.y,SIG.w,SIG.h,9,2.5);
   // tube clamps
   for(const cy of [TUB.y+6,TUB.y+TUB.h-22]){f.save();f.shadowColor='#000000a0';f.shadowBlur=4;f.shadowOffsetY=2;rr(f,TUB.x-9,cy,TUB.w+18,12,3);f.fillStyle=lg(f,0,cy,0,cy+12,[[0,'#f6f8f9'],[.4,'#9ba1a6'],[.55,'#5b6166'],[1,'#d6dadd']]);f.fill();f.restore();
@@ -377,11 +383,12 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
  function draw(){if(statKey!==size+'/'+imgGen)buildStatic();FK=1/S.k;const c=ctx,s=S.k*S.dpr;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cvs.width,cvs.height);c.drawImage(stat,0,0);c.setTransform(s,0,0,s,0,0);
   // ---- speedometer (stamina) ----
   const F=GA.R-12,m=face(c,GA.x,GA.y,F,S.needle.a,{label:'STAMINA',label2:'体力 %',red:.2});
-  const pct=Math.round(S.shown[0]),lw=106,lh=54,lx=GA.x-lw/2,ly=GA.y+F*.3;rr(c,lx,ly,lw,lh,5);c.fillStyle=lg(c,0,ly,0,ly+lh,[[0,'#050607'],[1,'#1c2124']]);c.fill();rr(c,lx+.5,ly+.5,lw-1,lh-1,4.5);c.strokeStyle='#ffffff26';c.lineWidth=1;c.stroke();
-  blockText(c,String(pct),GA.x,ly+6,lh-12,{align:'center',shadow:'#000',glow:pct<20?'#ff5030':'#9fe8ff70',pal:pct<20?LOW_PAL:undefined});
-  needle(c,GA.x,GA.y,F,m.ang,S.needle.a);dome(c,GA.x,GA.y,F+2);
+  const pct=Math.round(S.shown[0]),lw=78,lh=28,lx=GA.x-lw/2,ly=GA.y+F*.42;rr(c,lx,ly,lw,lh,5);c.fillStyle=lg(c,0,ly,0,ly+lh,[[0,'#050607'],[1,'#1c2124']]);c.fill();rr(c,lx+.5,ly+.5,lw-1,lh-1,4.5);c.strokeStyle='#ffffff26';c.lineWidth=1;c.stroke();
+  text3d(c,pct+'%',GA.x,ly+lh/2+1,f16(),pct<20?{top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20',depth:2}:{depth:2});
+  needle(c,GA.x,GA.y,F,m.ang,S.needle.a);dome(c,GA.x,GA.y,F+2);chromeRing(c,GA.x,GA.y,GA.R-4,6);
   // ---- sub dial: walking speed ----
   const sF=SUB.R-2,sm=face(c,SUB.x,SUB.y,sF,S.sub.a,{max:8,step:2,minor:1,big:false});text(c,'m/s',SUB.x,SUB.y+sF*.62,f12(),'#aeb8c2',null);needle(c,SUB.x,SUB.y,sF,sm.ang,S.sub.a,'#ff7a1f');dome(c,SUB.x,SUB.y,sF+1);
+  if(ok(IMG['gauge-ring']))c.drawImage(IMG['gauge-ring'],SUB.x-SUB.R*1.13,SUB.y-SUB.R*1.13,SUB.R*2.26,SUB.R*2.26);else chromeRing(c,SUB.x,SUB.y,SUB.R,5);
   drawMID(c);drawSignal(c);drawRadar(c);drawTube(c);drawIcon(c);
   c.setTransform(1,0,0,1,0,0);c.drawImage(front,0,0);}
  function drawMID(c){const {x,y,w,h,r}=MID;c.save();rr(c,x,y,w,h,r);c.clip();
@@ -404,7 +411,7 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   c.fillStyle=lg(c,0,iy,0,iy+ih*.45,[[0,'#ffffff55'],[1,'#ffffff00']]);rr(c,ix+2,iy+1,iw-4,ih*.42,ir-1);c.fill();rr(c,ix,iy,iw,ih,ir);c.strokeStyle='#00000080';c.lineWidth=1.2;c.stroke();
   if(fl>.01){c.save();c.shadowColor='#ff1a0a';c.shadowBlur=14*fl;rr(c,bx-1,by-1,bw+2,bh+2,br+1);c.strokeStyle=`rgba(255,40,24,${.95*fl})`;c.lineWidth=3;c.stroke();rr(c,bx+bw-1,by+bh*.3,9,bh*.4,3);c.stroke();c.restore();}
   // health readout in 3D block numerals (reflection of the battery on the glass below it)
-  const hp=Math.round(S.shown[2]);blockText(c,String(hp),x+w-8,y+30,48,{align:'right',shadow:'#000',glow:low?'#ff4020':'#bfffb070',pal:low?LOW_PAL:undefined});
+  const hp=Math.round(S.shown[2]);text3d(c,String(hp),x+w-14,y+52,`${(32*FK).toFixed(2)}px ${PX16}`,low?{align:'right',top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20'}:{align:'right',top:'#eaffd8',bot:'#7fc85a',line:'#1f5a14'});
   // screen glass: top gloss band
   c.fillStyle=lg(c,0,y,0,y+h*.5,[[0,'#ffffff24'],[1,'#ffffff00']]);c.beginPath();c.moveTo(x,y);c.lineTo(x+w,y);c.lineTo(x+w,y+h*.28);c.quadraticCurveTo(x+w*.5,y+h*.5,x,y+h*.42);c.closePath();c.fill();
   c.restore();}

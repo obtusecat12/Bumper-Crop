@@ -4,6 +4,7 @@
 const GROUPS=[
  {id:'weather',label:'天气',code:'WX'},
  {id:'l0',label:'LEVEL 0',code:'L0',test:k=>k.startsWith('level0-')},
+ {id:'l1',label:'LEVEL 1',code:'L1',test:k=>k.startsWith('level1-')},
  {id:'l10',label:'LEVEL 10',code:'L10',test:k=>['outhouse','outpost','pond','building','grove','farm-a','farm-b','barn','barn-photo','city-exit','start'].includes(k)},
  {id:'l11',label:'LEVEL 11',code:'L11',test:()=>true}
 ];
@@ -22,7 +23,7 @@ export function enhanceDeveloperPanel(root){
   const page=document.createElement('ol');page.className='svc-list';page.dataset.page=g.id;page.hidden=true;lists.append(page);pages[g.id]=page;
  }
  for(const b of weather?[...weather.children]:[])pages.weather.append(b);
- for(const b of teleports?[...teleports.children]:[]){const k=b.dataset.teleport||'';(GROUPS.slice(1).find(g=>g.test(k))||GROUPS[3]);pages[GROUPS.slice(1).find(g=>g.test(k)).id].append(b);}
+ for(const b of teleports?[...teleports.children]:[]){const k=b.dataset.teleport||'';pages[GROUPS.slice(1).find(g=>g.test(k)).id].append(b);}
  for(const page of Object.values(pages))[...page.children].forEach((b,i)=>{const li=document.createElement('li');b.insertAdjacentHTML('afterbegin',`<i>${String(i+1).padStart(2,'0')}</i>`);li.append(b);page.append(li);});
  const side=document.createElement('aside');side.className='svc-readout';
  side.innerHTML='<h3>READOUT</h3>';

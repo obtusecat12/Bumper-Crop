@@ -10,8 +10,8 @@ import {createFurniture93} from './level0-furniture93.js';
 import {createKaneProps} from './level0-k-props.js';
 import {createManilaField96} from './manila-field96.js';
 import {inManila,nearManila,manilaRegionsNear} from './manila-plan.js';
-import {L0_CELL as S,L0_CHUNK as K,L0_HEIGHT as H,l0Hash,l0Type,l0TypeAt,L0_LANDMARKS,createL0Chunk,l0SolidAt,l0FloorBase} from './level0-layout.js';
-import {createL0Materials} from './level0-materials.js?v=104';
+import {L0_CELL as S,L0_CHUNK as K,L0_HEIGHT as H,l0Hash,l0Type,l0TypeAt,L0_LANDMARKS,createL0Chunk,l0SolidAt,l0FloorBase} from './level0-layout.js?v=117';
+import {createL0Materials} from './level0-materials.js?v=117';
 import {createLevel0LightField} from './level0-lightfield.js?v=104';
 import {createLevel0DetailAssets} from './level0-ceiling-details.js';
 import {createLevel0Props} from './level0-props.js';
@@ -75,9 +75,9 @@ export function createLevel0World(T,renderer){
  }
  function generateMesh(c){if(c.renderPlan)return c.renderPlan;recording=[];
   const red=c.type==='red',wallM=red?[mats.red,mats.red,mats.red]:mats.wall,ground=red?mats.redFloor:mats.carpet;
-  const slopeParts=[];for(const f of c.floors){const ground=f.type==='red'?mats.redFloor:mats.carpet;if(f.type==='blackout'&&l0Hash(Math.round(f.x/S),Math.round(f.z/S),71)>.94){add(depression,ground,f.x,0,f.z,1,1,1,0,false);add(floorPlane,mats.water,f.x,-.028,f.z,2.58,1,2.58,0,false,false);}else if([[-.5,-.5],[.5,.5],[0,0],[-.5,.5],[.5,-.5]].some(([a,b])=>Math.abs(l0FloorBase(f.x+a*f.w,f.z+b*f.d))>.001)){if(!c.slopeGeometry)slopeParts.push(floorGeometry(f));}else add(floorPlane,ground,f.x,0,f.z,f.w,1,f.d,0,false);}
+  const slopeParts=[];for(const f of c.floors){const ground=f.type==='red'?mats.redFloor:f.type==='spawn'?mats.spawnCarpet:mats.carpet;if(f.type==='blackout'&&l0Hash(Math.round(f.x/S),Math.round(f.z/S),71)>.94){add(depression,ground,f.x,0,f.z,1,1,1,0,false);add(floorPlane,mats.water,f.x,-.028,f.z,2.58,1,2.58,0,false,false);}else if([[-.5,-.5],[.5,.5],[0,0],[-.5,.5],[.5,-.5]].some(([a,b])=>Math.abs(l0FloorBase(f.x+a*f.w,f.z+b*f.d))>.001)){if(!c.slopeGeometry)slopeParts.push(floorGeometry(f));}else add(floorPlane,ground,f.x,0,f.z,f.w,1,f.d,0,false);}
   if(slopeParts.length){c.slopeGeometry=mergeGeometries(slopeParts,false);slopeParts.forEach(g=>g.dispose());}if(c.slopeGeometry)add(c.slopeGeometry,mats.carpet,0,0,0,1,1,1,0,false);
-  for(const w of [...c.walls,...c.pillars]){const base=w.y-w.h/2;add(wallBox,l0TypeAt(w.x,w.z)==='red'?mats.red:w.kind==='column'?mats.columnWall:mats.wall[w.mat||0],w.x,w.y,w.z,w.w,w.h,w.d);if(base<.6){add(box,mats.trim,w.x,base+.045,w.z,w.w+.010,.09,w.d+.010);ao(w.x,w.z,w.w,w.d);}if(w.h<1.6&&base<.6)add(wallBox,mats.railWood,w.x,base+w.h+.025,w.z,w.w+.058,.05,w.d+.058);}
+  for(const w of [...c.walls,...c.pillars]){const base=w.y-w.h/2;add(wallBox,l0TypeAt(w.x,w.z)==='red'?mats.red:w.kind==='column'?mats.columnWall:mats.wall[w.mat||0],w.x,w.y,w.z,w.w,w.h,w.d);if(base<.6&&w.mat!==5){add(box,mats.trim,w.x,base+.045,w.z,w.w+.010,.09,w.d+.010);ao(w.x,w.z,w.w,w.d);}if(w.h<1.6&&base<.6)add(wallBox,mats.railWood,w.x,base+w.h+.025,w.z,w.w+.058,.05,w.d+.058);}
   for(const p of c.portals)add(portalGeos[p.style],mats.wall[p.mat||0],p.x,p.spring,p.z,p.w,p.top-p.spring,p.d,p.rotation);
   for(const r of c.rails){const c0=Math.cos(r.rotation),s0=Math.sin(r.rotation),len=r.length,n=Math.ceil(len/.24);for(let i=0;i<=n;i++){const u=-len/2+i*len/n,x=r.x+u*c0,z=r.z-u*s0,base=(r.y||0)+l0FloorBase(x,z);add(railPost,mats.railWood,x,base+.26,z);if(i===0||i===n)add(wallBox,mats.railWood,x,base+.44,z,.105,.88,.105);if(i<n){const xx=r.x+(u+len/n)*c0,zz=r.z-(u+len/n)*s0,by=(r.y||0)+l0FloorBase(xx,zz),delta=new T.Vector3(xx-x,by-base,zz-z),q=new T.Quaternion().setFromUnitVectors(new T.Vector3(1,0,0),delta.clone().normalize());for(const[y,h,d]of[[.87,.068,.095],[.22,.05,.06]])emit({geo:wallBox,mat:mats.railWood,cast:true,receive:true,matrix:new T.Matrix4().compose(new T.Vector3((x+xx)/2,(base+by)/2+y,(z+zz)/2),q,new T.Vector3(delta.length()+.002,h,d))});}}}
   for(const a of c.arches){add(realArch,mats.pale,a.x,0,a.z,1,1,1,a.rotation);add(box,mats.pale,a.x,.455,a.z,.20,.91,a.w);add(box,mats.pale,a.x,2.505,a.z-a.w/2,.20,.41,.20);add(box,mats.trim,a.x,.04,a.z,.212,.08,a.w);ao(a.x,a.z,.20,a.w);}
