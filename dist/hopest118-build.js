@@ -7,18 +7,83 @@
 // referenceGround already paves z -1.5..2.95 at y .15 along this face; V118's extra strip z-fought it).
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {H118B_KIOSK as K,H118B_GLASS as G} from './hopest118-atlas.js?v=118b';
+import {H118B_KIOSK as K,H118B_GLASS as G,H118D_ROOMS} from './hopest118-atlas.js?v=118d';
 const A=new URL('./assets/l11-v118/',import.meta.url).href;
 export const H118_PROPS={atm:[0,.7187,.1875,.2812],atmside:[.1875,.7187,.0625,.2812],plank:[.25,.9062,.375,.0937],commute:[.25,.6562,.375,.25],cash:[.625,.7656,.1875,.1406],kioskback:[0,.375,.5,.2812],lotto:[.875,.2187,.0937,.1562],steel:[.25,0,.0625,.0625]};
 const texCache={};
 export function h118Texture(name,{repeat=false,nearest=false}={}){
  const k=name+repeat+nearest;if(texCache[k])return texCache[k];
- const t=new T.TextureLoader().load(A+name+'.webp?v=118b');t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;t.generateMipmaps=true;t.minFilter=T.LinearMipmapLinearFilter;
+ const t=new T.TextureLoader().load(A+name+'.webp?v=118d');t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;t.generateMipmaps=true;t.minFilter=T.LinearMipmapLinearFilter;
  if(repeat)t.wrapS=t.wrapT=T.RepeatWrapping;if(nearest)t.magFilter=T.NearestFilter;
  return texCache[k]=t;
 }
 // tiled surfaces (metres per tile) – each face family has its own texture
-const TILES={h118StoneUpper:['stoneupper',3.6],h118StonePier:['stonepier',1.25],h118GraniteBase:['granitebase',1.5],h118KioskL:['kioskl',1.3],h118KioskR:['kioskr',1.0],h118Ceiling:['ceiling',.62],h118Floor:['floor',.7]};
+const TILES={h118StoneUpper:['stoneupper',3.9],h118StonePier:['stonepier',2.7],h118GraniteBase:['granitebase',1.5],h118KioskL:['kioskl',1.3],h118KioskR:['kioskr',1.0],h118Ceiling:['ceiling',.62],h118Floor:['floor',.7]};
+// V118d: stone walls are sampled in WORLD space (courses line up across every box, the tile is seamless) and get
+// low-frequency, non-repeating variation from 3-D world-space value noise (tone, warmth, a soft damp base)
+// instead of any per-tile grime. Kiosk surfaces keep their uvs but get the same noise so repeats break up.
+const H118_NOISE=`
+float h118h(vec3 p){p=fract(p*.3183099+vec3(.71,.113,.419));p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
+float h118n(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
+ return mix(mix(mix(h118h(i),h118h(i+vec3(1,0,0)),f.x),mix(h118h(i+vec3(0,1,0)),h118h(i+vec3(1,1,0)),f.x),f.y),
+            mix(mix(h118h(i+vec3(0,0,1)),h118h(i+vec3(1,0,1)),f.x),mix(h118h(i+vec3(0,1,1)),h118h(i+vec3(1,1,1)),f.x),f.y),f.z);}
+vec3 h118vary(vec3 c,vec3 w,float amt){
+ float a=h118n(w*.21)*.55+h118n(w*.57+7.3)*.30+h118n(w*1.9+3.1)*.15;
+ float b=h118n(w*.13+19.7);
+ c*=mix(1.-.22*amt,1.+.12*amt,a);
+ c*=mix(vec3(1.025,1.,.965),vec3(.975,1.,1.03),b*amt+(1.-amt)*.5);
+ float damp=(1.-smoothstep(.15,1.1+.5*h118n(w*vec3(.9,0.,.9)),w.y))*amt;
+ return c*(1.-.10*damp);
+}`;
+function stoneMaterial(tex,tile,rough,world,bx=3,by=6,seed=1){
+ const m=new T.MeshStandardMaterial({map:h118Texture(tex,{repeat:true}),roughness:rough,vertexColors:true});
+ m.onBeforeCompile=sh=>{
+  sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vH118W;varying vec3 vH118N;').replace('#include <fog_vertex>','#include <fog_vertex>\nvH118W=(modelMatrix*vec4(transformed,1.)).xyz;vH118N=normalize(mat3(modelMatrix)*normal);');
+  sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vH118W;varying vec3 vH118N;'+H118_NOISE).replace('#include <map_fragment>',world?`
+  {vec3 an=abs(vH118N);vec2 wuv=an.y>max(an.x,an.z)?vH118W.xz:an.x>an.z?vec2(vH118W.z,vH118W.y):vH118W.xy;
+   // every world block samples a randomly chosen block of the tile (whole-block shifts keep joints and stagger),
+   // so the 'tile' never repeats on the wall; plus a per-block tone jitter
+   vec2 q=wuv/${tile.toFixed(3)}*vec2(${bx}.,${by}.);float row=floor(q.y),odd=mod(row,2.);float col=floor(q.x-odd*.5);
+   float hs=h118h(vec3(col*1.37+.5,row*2.11+.5,${seed}.));float hs2=h118h(vec3(row*.91+3.,col*1.73+1.,${seed}.+5.));
+   vec2 sh=vec2(floor(hs*${bx}.),2.*floor(hs2*${by/2}.));
+   vec2 g=fwidth(q);vec4 texelColor=textureGrad(map,(q+sh)/vec2(${bx}.,${by}.),dFdx(q)/vec2(${bx}.,${by}.),dFdy(q)/vec2(${bx}.,${by}.));
+   texelColor.rgb*=.95+.10*h118h(vec3(col+.3,row+.7,${seed}.+9.));
+   diffuseColor*=texelColor;diffuseColor.rgb=h118vary(diffuseColor.rgb,vH118W,1.);}`:`
+  #include <map_fragment>
+  diffuseColor.rgb=h118vary(diffuseColor.rgb,vH118W,.7);`);
+ };
+ m.customProgramCacheKey=()=>'h118d-stone-'+tex+(world?'w':'u');return m;
+}
+// V118d: street windows get interior-mapped fake rooms again (only the stair-top entrance doors stay patterned glass).
+// rooms.webp = 8 separately generated rooms (4x2 cells); quad uv v carries the room index (v in [2i,2i+1]).
+function interiorMaterial(){
+ const t=h118Texture('rooms');t.generateMipmaps=false;t.minFilter=T.LinearFilter;
+ const m=new T.MeshBasicMaterial({map:t,vertexColors:true});
+ const R=H118D_ROOMS.map(r=>`vec4(${r.map(v=>v.toFixed(4)).join(',')})`).join(',');
+ m.onBeforeCompile=sh=>{
+  sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vH118W;varying vec3 vH118N;varying vec2 vH118U;').replace('#include <fog_vertex>','#include <fog_vertex>\nvH118W=(modelMatrix*vec4(transformed,1.)).xyz;vH118N=normalize(mat3(modelMatrix)*normal);vH118U=uv;');
+  sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vH118W;varying vec3 vH118N;varying vec2 vH118U;\nconst vec4 H118R[8]=vec4[8]('+R+');').replace('#include <map_fragment>',`
+  vec3 N=normalize(vH118N),V=normalize(vH118W-cameraPosition);
+  vec3 dp1=dFdx(vH118W),dp2=dFdy(vH118W);vec2 du1=dFdx(vH118U),du2=dFdy(vH118U);
+  float det=sign(du1.x*du2.y-du2.x*du1.y);vec3 Tg=normalize(dp1*du2.y-dp2*du1.y)*det;vec3 Bg=normalize(dp2*du1.x-dp1*du2.x)*det;
+  int ri=int(floor(vH118U.y*.5+.001));vec2 lu=vec2(vH118U.x,vH118U.y-float(ri)*2.);vec4 rp=H118R[ri];
+  float lit=vColor.r;
+  vec3 d=vec3(dot(V,Tg),dot(V,Bg),dot(V,-N));d.x/=1.1;d.y/=1.38;d.z/=2.6; // half-width, half-height, depth (m)
+  vec3 p=vec3(lu*2.-1.,0.);
+  vec3 tb=vec3((sign(d.x)-p.x)/d.x,(sign(d.y)-p.y)/d.y,(1.-p.z)/max(d.z,1e-4));
+  float t=min(min(tb.x,tb.y),tb.z);vec3 h=p+d*t;float f=clamp(h.z,0.,1.);
+  vec2 k=rp.zw,sc=1./(1.+f*(1./k-1.));
+  vec2 i0=.5+.5*h.xy;vec2 ruv=rp.xy+(i0-rp.xy)*sc;ruv=clamp(ruv,.006,.994);
+  ruv=(ruv+vec2(float(ri-(ri/4)*4),float(1-ri/4)))*vec2(.25,.5);
+  vec4 texelColor=texture2D(map,ruv);
+  vec3 interior=texelColor.rgb*lit*(1.-f*.25);
+  vec3 R=reflect(V,N);float sky=smoothstep(-.05,.35,R.y);
+  vec3 env=mix(vec3(.15,.16,.15)+.07*step(.5,fract(R.x*1.7+R.z*1.7)),vec3(.74,.78,.74),sky);
+  float fr=.07+.5*pow(1.-max(dot(-V,N),0.),4.);
+  diffuseColor.rgb=mix(interior*vec3(.93,.96,.95),env,fr);`).replace('#include <color_fragment>','');
+ };
+ m.customProgramCacheKey=()=>'h118d-interior';return m;
+}
 export function addHope118Materials(m){
  const props=h118Texture('props'),kiosk=h118Texture('kiosk',{nearest:true}),glass=h118Texture('glass');
  m.h118Props=new T.MeshStandardMaterial({map:props,roughness:.72,vertexColors:true});
@@ -30,7 +95,8 @@ export function addHope118Materials(m){
  m.h118GlassWin=new T.MeshStandardMaterial({map:glass,emissiveMap:glass,emissive:0xb9c4c0,emissiveIntensity:.22,roughness:.18,metalness:.2,vertexColors:true});
  m.h118Counter=new T.MeshStandardMaterial({map:h118Texture('counter'),roughness:.8,vertexColors:true});
  m.h118Cabinet=new T.MeshStandardMaterial({map:h118Texture('cabinet'),roughness:.8,vertexColors:true});
- for(const[k,[tex,tile]]of Object.entries(TILES)){m[k]=new T.MeshStandardMaterial({map:h118Texture(tex,{repeat:true}),roughness:k==='h118GraniteBase'?.45:.88,vertexColors:true});URBAN_TILE_SIZE[k]=tile;}
+ for(const[k,[tex,tile]]of Object.entries(TILES)){const gb=k==='h118GraniteBase';m[k]=stoneMaterial(tex,tile,gb?.45:.88,/Stone|Granite/.test(k),gb?2:3,gb?4:6,tex.length);URBAN_TILE_SIZE[k]=tile;}
+ m.h118Room=interiorMaterial();
  m.h118Bronze=new T.MeshStandardMaterial({color:0x3b302a,roughness:.5,metalness:.55,vertexColors:true});
  m.h118Fitting=new T.MeshStandardMaterial({color:0xc9ccc8,roughness:.3,metalness:.85,vertexColors:true});
  m.h118Dark=new T.MeshStandardMaterial({color:0x1d1f1d,roughness:.8,vertexColors:true});
@@ -118,9 +184,9 @@ function southFace(b){
    b.box('h118StonePier',m,sill-.1,FACE+.17,w,.2,.34);
    for(const s of[a,c])b.box('h118StonePier',s+(s===a?.05:-.05),(sill+head)/2,FACE+depth/2,.1,head-sill,depth);
    b.box('h118StonePier',m,head-.05,FACE+depth/2,w,.1,depth);b.box('h118GraniteBase',m,sill+.03,FACE+depth/2-.06,w,.06,depth+.12);
-   // patterned glass: two lights per window, family varies window to window, every light its own crop
-   const fam=[2,3,1,4,0,3,2,4,1][win%9];win++;const gw=(w-.2)/2,gy=(sill+head)/2+.03,gh=head-sill-.14;
-   for(const s of[-1,1])pane(b,'h118GlassWin',[m+s*gw/2,gy,FACE+depth],[0,0,-1],gw-.02,gh,(fam+(s>0&&R()<.4?1:0))%5,.6+R()*.25);
+   // V118d: fake interior behind the glass, a different generated room in every window (8 windows, 8 rooms)
+   const ri=win%H118D_ROOMS.length,lit=[.95,.62,.8,1.0,.9,.85,.45,.7][ri];win++;
+   addQuad(b,'h118Room',[m,(sill+head)/2+.03,FACE+depth],[0,0,-1],w-.2,head-sill-.14,Object.assign([0,ri*2,1,1],{tiled:true}),lit);
    for(const dx of[-(w-.2)/2,0,(w-.2)/2])b.box('h118Bronze',m+dx,(sill+head)/2,FACE+depth-.03,.06,head-sill-.1,.06);
    for(const y of[sill+.1,head-.12,sill+2.15])b.box('h118Bronze',m,y,FACE+depth-.03,w-.18,.05,.06);
   }

@@ -10,7 +10,7 @@ import * as T from './vendor/three.module.min.js';
 import {createRetroActor75} from './retro-cast-v75.js?v=118c';
 import {HEAD118C} from './hopest118-head.js?v=118c';
 const A=new URL('./assets/l11-v118/keeper/',import.meta.url).href;
-function tex(n){const t=new T.TextureLoader().load(A+n+'.png?v=118c');t.colorSpace=T.SRGBColorSpace;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;return t;}
+function tex(n){const t=new T.TextureLoader().load(A+n+'.png?v=118d');t.colorSpace=T.SRGBColorSpace;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;return t;}
 // un-mirrored Hope frame: kiosk x 61.7..66.1, street face z 2.78; he stands behind the counter facing the street (-z)
 export const HOPE118_KEEPER={x:63.9,z:3.5,y:.15,face:[0,-1]};
 const _v=new T.Vector3(),_w=new T.Vector3(),_e=new T.Euler();
