@@ -6,7 +6,7 @@ import {CITY_ORIGIN,CITY_ANGLE,cityToWorld,worldToCity} from './urban-layout.js?
 import * as P from './urban-props.js?v=60';
 import {addBuilding} from './urban-buildings.js?v=60';
 import {addHope118,addHope118Materials} from './hopest118-build.js?v=118b';
-import {createHope118People} from './hopest118-people.js?v=118b';
+import {createHope118People} from './hopest118-people.js?v=118c';
 const Y=EXIT_CITY_Y,UP=new T.Vector3(0,1,0),plane=new T.PlaneGeometry(1,1);
 const CLINIC_PATH=282,cp=exitPoint(CLINIC_PATH);
 export const CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);

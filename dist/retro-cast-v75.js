@@ -190,6 +190,8 @@ export function createRetroActor75(T, role, textures, opts={}) {
   const landmarks={homeless:[.44,.65,.758,.97,.328,.666],wallman:[.414,.636,.742,.967,.333,.666],reader:[.365,.605,.746,.96,.307,.701],plaid:[.375,.605,.718,.96,.331,.668],receptionist:[.337,.636,.779,.936,.282,.731],poolman:[.353,.634,.750,.935,.313,.683]}[role];
   faceRows[0][3]=landmarks[3];faceRows[1][3]=(landmarks[2]+landmarks[3])*.5;faceRows[2][3]=landmarks[2];faceRows[3][3]=landmarks[1];faceRows[4][3]=landmarks[0];faceRows[5][3]=landmarks[0]-.10;
   const faceX=[-1,-.70,-.32,0,.32,.70,1],faceU=[.018,.12,landmarks[4],.5,landmarks[5],.88,.982];
+  // V118c: opts.noHead skips the built-in face/skull/ears/hair so a caller can mount its own UV-unwrapped head on bones.head.
+  if(!opts.noHead){
   const front=faceRows.map(([y,w,z],i)=>faceX.map((s,j)=>{
     let zz=z*(1-.75*Math.pow(Math.abs(s),3));
     if(i===3)zz+=(j===3?.022:j===2||j===4?.011:0)*profile.nose;
@@ -227,6 +229,7 @@ export function createRetroActor75(T, role, textures, opts={}) {
   part='texturedHair';
   for(let r=0;r<3;r++)for(let j=0;j<hN;j++){const k=(j+1)%hN;quad(6,hairR[r][j],hairR[r][k],hairR[r+1][k],hairR[r+1][j],[[j/hN,r/3],[(j+1)/hN,r/3],[(j+1)/hN,(r+1)/3],[j/hN,(r+1)/3]],white,[W('head'),W('head'),W('head'),W('head')]);}
   for(let j=0;j<hN;j++)tri(6,[.008,headY+.256*hH,-.008],hairR[3][j],hairR[3][(j+1)%hN],[.5,1],[j/hN,.86],[(j+1)/hN,.86],white,W('head'));
+  }
   if(role==='receptionist'){
     part='glasses';const fc=color(0x2d2823),z=.103*hD,yy=headY+.127*hH;
     for(const s of[-1,1]){
