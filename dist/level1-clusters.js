@@ -55,12 +55,15 @@ export function makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW}){
    if(open!==1)continue;const q=l1Hash(c.gx*7+x,c.gz*5+z,60),ccx=OX+(x+.5)*CS,ccz=OZ+(z+.5)*CS,ry=Math.atan2(dir[0],dir[1]);
    // image-24: the corridor dies at a pair of black steel doors, a sheet of ply leant on the side wall
    if(q<.7){const out=x-dir[0]<0||x-dir[0]>=m.N||z-dir[1]<0||z-dir[1]>=m.M,ins=CS/2-(out?.15:WT/2)-.025,dx=ccx-dir[0]*ins,dz=ccz-dir[1]*ins,ax=dir[0]===0;
-    const D=(c2,u,y,w,h,t)=>P(box,c2,ax?dx+u:dx,y,ax?dz:dz+u,ax?w:t,h,ax?t:w);D(C.frame,0,1.08,1.74,2.16,.05);for(const u of[-.42,.42])D(C.dark,u,1.03,.8,2.04,.07);D(C.steelP,-.06,1.0,.04,.3,.09);D(C.steelP,.06,1.0,.04,.3,.09);D(C.cwallP,0,2.32,1.9,.3,.03);}
-   if(q<.45||q>=.7&&q<.85){const sd=l1Hash(c.gx+x,c.gz+z,62)>.5?1:-1,px=ccx+(dir[1]!==0?sd*(CS/2-.35):-dir[0]*.4),pz=ccz+(dir[0]!==0?sd*(CS/2-.35):-dir[1]*.4);PR.place(10,px,pz,Math.atan2(dir[1]!==0?-sd:0,dir[0]!==0?-sd:0)+Math.PI,c.gx*13+x*7+z);}
+    const D=(c2,u,y,w,h,t,o=0)=>P(box,c2,ax?dx+u:dx+dir[0]*o,y,ax?dz+dir[1]*o:dz+u,ax?w:t,h,ax?t:w);
+    // V116: doors with volume: recessed dark reveal, 8×14 cm steel jambs + head standing proud of the wall, 5 cm leaves hung on three knuckle hinges
+    D(C.dark,0,1.06,1.6,2.12,.02,-.01);for(const u of[-.84,.84])D(C.frame,u,1.1,.08,2.2,.14,.03);D(C.frame,0,2.2,1.76,.08,.14,.03);for(const u of[-.4,.4])D(C.dark,u,1.04,.78,2.06,.05,.03);
+    for(const u of[-.795,.795])for(const y of[.35,1.05,1.75])D(C.chrome,u,y,.03,.12,.07,.045);D(C.steelP,-.06,1.0,.04,.3,.06,.075);D(C.steelP,.06,1.0,.04,.3,.06,.075);D(C.cwallP,0,2.38,1.9,.24,.03);}
+   if(q<.45||q>=.7&&q<.85){const sd=l1Hash(c.gx+x,c.gz+z,62)>.5?1:-1,px=ccx+(dir[1]!==0?sd*(CS/2-.35):-dir[0]*.4),pz=ccz+(dir[0]!==0?sd*(CS/2-.35):-dir[1]*.4);PR.place(10,px,pz,Math.atan2(dir[1]!==0?-sd:0,dir[0]!==0?-sd:0),c.gx*13+x*7+z,CS/2-.35-WT/2);}
    else if(q>=.85&&q<.95)PR.place(l1Hash(x,z,63)>.5?1:16,ccx-dir[0]*CS*.25,ccz-dir[1]*CS*.25,ry,c.gx*13+x*7+z);}}
  function dress(m,r,ri,rx,rz){const c=m.c,k=c.gx*31+c.gz*17+ri,hw=r.w*CS/2,hd=r.d*CS/2,wallZ=rz-hd+.45;
   switch(r.kind){
-   case 'office':PR.place(22,rx-hw+.4,rz+.2,Math.PI/2,k);if(l1Hash(k,3,65)<.5)PR.place(11,rx+hw-.4,rz+hd-.4,-Math.PI/2,k);P(box,C.desk,rx,.38,wallZ+.2,1.4,.05,.7);for(const a of[-.65,.65])P(box,C.steelP,rx+a,.18,wallZ+.2,.04,.36,.66);P(box,C.crt,rx-.2,.6,wallZ+.15,.42,.38,.4);G(GLOW.screen,rx-.2,.62,wallZ+.36,.32,.26,.01);PR.place(6,rx+.3,wallZ+.9,Math.PI+.4,k);PR.place(16,rx+.6,rz+.4,0,k);break;
+   case 'office':PR.place(22,rx-hw+.4,rz+.2,Math.PI/2,k);if(l1Hash(k,3,65)<.5)PR.place(11,rx+hw-.4,rz+hd-.4,-Math.PI/2,k,.4-WT/2);P(box,C.desk,rx,.38,wallZ+.2,1.4,.05,.7);for(const a of[-.65,.65])P(box,C.steelP,rx+a,.18,wallZ+.2,.04,.36,.66);P(box,C.crt,rx-.2,.6,wallZ+.15,.42,.38,.4);G(GLOW.screen,rx-.2,.62,wallZ+.36,.32,.26,.01);PR.place(6,rx+.3,wallZ+.9,Math.PI+.4,k);PR.place(16,rx+.6,rz+.4,0,k);break;
    case 'barber':{// image-23: two chairs side by side against the back wall, wet-floor sign, AC unit, pipes under the ceiling, a bin
     const bz=rz-hd+.75;PR.place(5,rx-.45,bz,0,k);PR.place(5,rx+.45,bz+.25,-.15,k+1);P(box,C.mirror,rx,1.5,rz-hd+.1,1.6,.7,.02);P(box,C.desk,rx,.95,rz-hd+.2,1.7,.04,.24);
     PR.place(8,rx-.1,bz+1.0,.5,k);PR.place(9,rx+hw-.3,rz+.3,Math.PI/2,k);P(vcyl,C.bucket,rx+.95,.17,bz-.1,.13,.34,.13);
@@ -69,8 +72,8 @@ export function makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW}){
    case 'infirmary':P(box,C.steelP,rx-.3,.3,rz,1.0,.06,2.0);P(box,C.mattress,rx-.3,.42,rz,.92,.14,1.9);for(const a of[-.45,.45])for(const b of[-.95,.95])P(box,C.steelP,rx-.3+a,.15,rz+b,.04,.3,.04);P(box,C.desk,rx+.65,.32,rz-.7,.45,.64,.45);PR.place(7,rx+.7,rz+.5,0,k);break;
    case 'rubber':PR.place(6,rx,rz,.7,k);break;
    case 'paintings':for(let i=0;i<4;i++){const cc=C['canvas'+(i%3)];P(box,cc,rx-hw+.8+i*.9,1.5,wallZ-.4,.6,.75,.03);}for(let i=0;i<3;i++){const cc=C['canvas'+((i+1)%3)];P(box,cc,rx-.6+i*.7,.35,rz+.4,.55,.7,.03,(i-1)*.3,-.25);}break;
-   case 'storage':PR.place(4,rx-hw+.8,rz+hd-.8,.1,k+3);PR.place(18,rx+hw-.45,rz+.2,-Math.PI/2,k);PR.place(0,rx-.6,rz-.5,0,k);PR.place(4,rx+.5,rz+.3,.2,k+1);PR.place(1,rx+.8,rz-.7,.6,k+2);break;
-   case 'boards':PR.place(10,rx,wallZ-.2,0,k);PR.place(16,rx,rz+.4,0,k);break;
+   case 'storage':PR.place(4,rx-hw+.8,rz+hd-.8,.1,k+3);PR.place(18,rx+hw-.45,rz+.2,-Math.PI/2,k,.45-WT/2);PR.place(0,rx-.6,rz-.5,0,k);PR.place(4,rx+.5,rz+.3,.2,k+1);PR.place(1,rx+.8,rz-.7,.6,k+2);break;
+   case 'boards':PR.place(10,rx,wallZ-.2,0,k,.25-WT/2);PR.place(16,rx,rz+.4,0,k);break;
    default:if(l1Hash(k,1,61)<.5)PR.place(16,rx,rz,0,k);}}
  // ---- collision (analytic, from the cached maze) ----
  function blocked(x,z,r){for(const[dx,dz]of[[0,0],[r,0],[-r,0],[0,r],[0,-r]]){const m=at(x+dx,z+dz);if(!m)continue;const c=m.c,lx=(x-c.ox*B)/CS,lz=(z-c.oz*B)/CS,cx=Math.floor(lx),cz=Math.floor(lz),hw=WT/2/CS+r/CS;

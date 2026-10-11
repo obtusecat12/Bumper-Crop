@@ -2,6 +2,9 @@
 // bikes, ladders, cables, tyres, cones, debris). Pure, hash-driven; everything goes through the world's
 // merged-geometry put(), so props cost no draw calls of their own.
 import {l1Hash} from './level1-layout.js?v=113';
+// V116: lean-to props really touch their support: each is built against a plane at local z=-D (the wall face, D
+// passed by the caller); with no wall they lie flat on the floor. A-frame sign closes at the apex. Ladder rungs sit on
+// the rails' own line. Box-like props take six-face unwraps (level1-world.js UWF).
 export function makeL1Props(T,{P,C,box,cyl,vcyl,solid}){
  const torus=new T.TorusGeometry(1,.18,5,14),wheel=new T.TorusGeometry(1,.05,4,16),cone=new T.CylinderGeometry(.03,.5,1,10,1,false),disc=new T.CylinderGeometry(1,1,1,14,1,false);
  // place a part in a prop's local frame (lx,lz) rotated by ry about (px,pz); rx/rz tilt the part itself
@@ -12,9 +15,13 @@ export function makeL1Props(T,{P,C,box,cyl,vcyl,solid}){
   ['tote',.6,.32,.4],['tote2',.6,.32,.4],['tote3',.6,.32,.4],['tote4',.6,.32,.4],['locker',.95,.42,.48],['locker2',.95,.42,.48],['rustbox',.55,.5,.5]];
  function crate(px,pz,ry,y,k,s=1){const[m,w,h,d]=LOOK[k%LOOK.length];R(box,C[m],px,pz,ry,0,y+h*s/2,0,w*s,h*s,d*s);return h*s;}
  const r=(a,b,s)=>l1Hash(a,b,s);
+ // a slab (w × h × t) leaning back onto the plane z=-D at angle a from vertical, bottom edge on the floor;
+ // dz pushes it out by whole slab thicknesses so a stack leans on the slab behind it
+ const lean=(m,px,pz,ry,lx,w,h,t,D,a,dz=0)=>{const ca=Math.cos(a),sa=Math.sin(a);R(box,m,px,pz,ry,lx,h/2*ca+t/2*sa,-D+dz+h/2*sa+t/2*ca,w,h,t,0,-a);};
+ const flat=(m,px,pz,ry,lx,lz,w,h,t,y,yaw=0)=>R(box,m,px,pz,ry,lx,y+t/2,lz,w,t,h,yaw);
  // ---- leftovers ----
  function openCrate(px,pz,ry){const w=.8,h=.6,t=.03,c=C.crate1;R(box,C.osbD,px,pz,ry,0,.03,0,w,.04,w);for(const[a,b,ww,dd]of[[0,w/2,w,t],[0,-w/2,w,t],[w/2,0,t,w],[-w/2,0,t,w]])R(box,c,px,pz,ry,a,h/2,b,ww,h,dd);
-  R(box,C.straw,px,pz,ry,0,h*.55,0,w-.08,.05,w-.08);R(box,c,px,pz,ry,.25,.42,w/2+.1,w,.03,w,.4,-1.15);SOL(px,pz,ry,w,w);}
+  R(box,C.straw,px,pz,ry,0,h*.55,0,w-.08,.05,w-.08);R(box,c,px,pz,ry,.25,.375,.58,w,.03,w,.4,-1.15);SOL(px,pz,ry,w,w);}
  function broken(px,pz,ry,k){R(box,C.crate2,px,pz,ry,0,.34,0,.95,.6,.7,0,0,.12);for(let i=0;i<4;i++)R(box,C.osb,px,pz,ry,-.3+i*.32,.02+i*.012,.7+(i%2)*.1,.9,.025,.11,.6+i*.7);SOL(px,pz,ry,1,.8);}
  function stack(px,pz,ry,k){let y=0;const n=2+Math.floor(r(k,7,1)*2);for(let i=0;i<n;i++){const kk=Math.floor(r(k,i,2)*LOOK.length);y+=crate(px+(r(k,i,3)-.5)*.08,pz+(r(k,i,4)-.5)*.08,ry+(r(k,i,5)-.5)*.3,y,kk,i?.85:1);}SOL(px,pz,ry,.9,.8);}
  function pallet(px,pz,ry,k){R(box,C.osb,px,pz,ry,0,.07,0,1.2,.14,1.0);for(let i=0;i<4;i++){const kk=4+Math.floor(r(k,i,6)*3);crate(px+((i&1)-.5)*.55*Math.cos(ry),pz-((i&1)-.5)*.55*Math.sin(ry)+((i>>1)-.5)*.48,ry,.14,kk,.95);}
@@ -24,10 +31,17 @@ export function makeL1Props(T,{P,C,box,cyl,vcyl,solid}){
  function chair(px,pz,ry,tip){const c=C.steelP,rx=tip?1.45:0;R(box,c,px,pz,ry,0,tip?.24:.45,0,.42,.03,.4,0,rx);if(!tip){R(box,c,px,pz,ry,0,.72,-.2,.42,.3,.03);for(const a of[-.19,.19])for(const b of[-.18,.18])R(box,c,px,pz,ry,a,.22,b,.025,.45,.025);R(box,c,px,pz,ry,-.19,.6,-.2,.025,.3,.025);R(box,c,px,pz,ry,.19,.6,-.2,.025,.3,.025);}
   else{R(box,c,px,pz,ry,0,.2,.28,.42,.4,.03,0,.4);}SOL(px,pz,ry,.5,.5);}
  function bucket(px,pz,ry,k){const n=1+Math.floor(r(k,1,8)*3);for(let i=0;i<n;i++){const a=i*1.9+k,o=i?.36:0,x=px+Math.cos(a)*o,z=pz+Math.sin(a)*o;R(vcyl,C.bucket,x,z,ry+a,0,.19,0,.15,.38,.15);R(disc,C.steelP,x,z,0,0,.385,0,.152,.012,.152);if(i===2)R(vcyl,C.bucket,x,z,ry,0,.15,.25,.15,.38,.15,0,1.57);}SOL(px,pz,0,.5,.5);}
- function wetsign(px,pz,ry){for(const s of[-1,1])R(box,C.wetsign,px,pz,ry,0,.33,s*.1,.3,.64,.012,0,s*.16);}
+ function wetsign(px,pz,ry){const h=.64,a=.24,ca=Math.cos(a),sa=Math.sin(a);for(const s of[-1,1])R(box,C.wetsign,px,pz,ry,0,h/2*ca,s*(h/2*sa+.008),.3,h,.012,0,-s*a);
+  // closed apex: moulded hinge cap + handle slot block, and the spreader bar between the legs
+  R(box,C.wetsign,px,pz,ry,0,h*ca+.012,0,.31,.03,.05);for(const e of[-.135,.135])R(box,C.steelP,px,pz,ry,e,h*ca*.45,0,.012,.012,2*(h*.55*sa));SOL(px,pz,ry,.35,.35);}
  function acUnit(px,pz,ry){R(box,C.ac,px,pz,ry,0,.33,0,.8,.62,.3);R(box,C.steelP,px,pz,ry,0,.02,0,.7,.04,.32);R(cyl,C.pipeW,px,pz,ry,.5,.5,-.1,.4,.02,.02);SOL(px,pz,ry,.85,.35);}
- function boards(px,pz,ry,k){const n=2+Math.floor(r(k,2,9)*3);for(let i=0;i<n;i++){const w=.6+r(k,i,10)*.6,h=1.6+r(k,i,11)*.8,m=r(k,i,12)>.5?C.osb:C.plyW;R(box,m,px,pz,ry,(i-n/2)*.25,h/2*Math.cos(.2),.1+i*.035+h/2*Math.sin(.2),w,h,.02,0,-.2-(i%2)*.04);}SOL(px,pz,ry,1.1,.5);}
- function ladder(px,pz,ry){const h=2.4,t=-.22;for(const s of[-.21,.21])R(box,C.alu,px,pz,ry,s,h/2*Math.cos(t),-h/2*Math.sin(t),.05,h,.025,0,t);for(let i=0;i<8;i++){const y=.25+i*.28;R(box,C.alu,px,pz,ry,0,y*Math.cos(t),-y*Math.sin(t),.4,.025,.04,0,t);}SOL(px,pz,ry,.5,.4);}
+ function boards(px,pz,ry,k,D){const n=2+Math.floor(r(k,2,9)*3);for(let i=0;i<n;i++){const w=.6+r(k,i,10)*.6,h=1.6+r(k,i,11)*.8,m=r(k,i,12)>.5?C.osb:C.plyW,lx=(i-n/2)*.25;
+   if(D)lean(m,px,pz,ry,lx,w,h,.02,D,.17,i*.024);else flat(m,px,pz,ry,lx*.3,0,w,h,.02,i*.021,(r(k,i,13)-.5)*.3);}SOL(px,pz,ry,1.1,D?.5:1.2);}
+ function ladder(px,pz,ry,D){const h=2.4,a=.22,ca=Math.cos(a),sa=Math.sin(a),td=.05;
+  if(D){for(const s of[-.21,.21])lean(C.alu,px,pz,ry,s,.05,h,td,D,a);
+   // rungs on the rails' centre line: at distance u from the foot, y=u·cos a, z=-D+(h-u)·sin a (+ half rail depth)
+   for(let i=0;i<8;i++){const u=.28+i*.28;R(box,C.alu,px,pz,ry,0,u*ca+td/2*sa,-D+(h-u)*sa+td/2*ca,.37,.03,.035,0,-a);}SOL(px,pz,ry,.5,.7);}
+  else{for(const s of[-.21,.21])flat(C.alu,px,pz,ry,s,0,.05,h,td,0);for(let i=0;i<8;i++)R(box,C.alu,px,pz,ry,0,td/2,-h/2+.28+i*.28,.37,.035,.03);SOL(px,pz,ry,.5,2.4);}}
  function bike(px,pz,ry){for(const s of[-.52,.52]){R(wheel,C.rubber,px,pz,ry,s,.34,0,.31,.31,.6);R(wheel,C.chrome,px,pz,ry,s,.34,0,.27,.27,.2);}const f=C.bikeF;R(box,f,px,pz,ry,0,.52,0,.62,.03,.03,0,0,.0);R(box,f,px,pz,ry,-.18,.5,0,.03,.4,.03,0,0,.35);R(box,f,px,pz,ry,.3,.55,0,.03,.45,.03,0,0,-.3);
   R(box,C.leather,px,pz,ry,-.24,.74,0,.2,.04,.08);R(box,f,px,pz,ry,.36,.84,0,.03,.03,.46);SOL(px,pz,ry,1.4,.4);}
  function bikeDown(px,pz,ry){for(const s of[-.52,.52])R(wheel,C.rubber,px,pz,ry,s,.03,0,.31,.31,.6,0,Math.PI/2);R(box,C.bikeF,px,pz,ry,0,.08,0,1.0,.03,.03);R(box,C.bikeF,px,pz,ry,.36,.1,.3,.03,.03,.46);SOL(px,pz,ry,1.4,.8);}
@@ -37,24 +51,28 @@ export function makeL1Props(T,{P,C,box,cyl,vcyl,solid}){
  function debris(px,pz,ry,k){const n=4+Math.floor(r(k,8,17)*6);for(let i=0;i<n;i++){const a=r(k,i,18)*6.28,d=r(k,i,19)*.9,x=px+Math.cos(a)*d,z=pz+Math.sin(a)*d,t=r(k,i,20);
    if(t<.35)R(box,i%2?C.osb:C.plyW,x,z,a,0,.02+i*.01,0,.6+t*1.6,.025,.1+t*.1);else if(t<.6)R(box,C.paper,x,z,a,0,.006,0,.2,.004,.28);else if(t<.8)R(box,C.cartontop,x,z,a,0,.01,0,.5,.01,.4);else R(box,C.rust,x,z,a,0,.03,0,.5,.05,.06);}}
  // renovation (衔尾) and timber-room (传说) leftovers
- function grilleLean(px,pz,ry){R(box,C.grille,px,pz,ry,0,1.0,.18,1.25,2.05,.04,0,-.12);if(l1Hash(px*7|0,pz*7|0,24)>.5)R(box,C.grille,px,pz,ry,.35,.95,.3,1.25,1.95,.04,0,-.16);SOL(px,pz,ry,1.4,.5);}
- function doorLean(px,pz,ry,k){const m=r(k,3,25)>.4?C.dooryel:C.doorwood;R(box,m,px,pz,ry,0,1.02,.22,.9,2.05,.045,.08,-.2);if(r(k,4,26)>.5)R(box,C.frame,px,pz,ry,.5,1.05,.3,.07,2.2,.05,0,-.15);SOL(px,pz,ry,1.1,.5);}
+ function grilleLean(px,pz,ry,D){const two=l1Hash(px*7|0,pz*7|0,24)>.5;if(D){lean(C.grille,px,pz,ry,0,1.25,2.05,.04,D,.12);if(two)lean(C.grille,px,pz,ry,.35,1.25,1.95,.04,D,.12,.045);}
+  else{flat(C.grille,px,pz,ry,0,0,1.25,2.05,.04,0);if(two)flat(C.grille,px,pz,ry,.2,.1,1.25,1.95,.04,.04,.15);}SOL(px,pz,ry,1.4,D?.5:2.1);}
+ function doorLean(px,pz,ry,k,D){const m=r(k,3,25)>.4?C.dooryel:C.doorwood,fr=r(k,4,26)>.5;if(D){lean(m,px,pz,ry,0,.9,2.05,.045,D,.16);if(fr)lean(C.frame,px,pz,ry,.5,.07,2.2,.05,D,.16,.05);}
+  else{flat(m,px,pz,ry,0,0,.9,2.05,.045,0);if(fr)flat(C.frame,px,pz,ry,.6,0,.07,2.2,.05,0,.1);}SOL(px,pz,ry,1.1,D?.5:2.1);}
  function sawhorse(px,pz,ry,k){for(const a of[-.55,.55])for(const b of[-.16,.16])R(box,C.osb,px,pz,ry,a,.36,b,.05,.74,.05,0,b>0?.2:-.2);R(box,C.osb,px,pz,ry,0,.72,0,1.3,.06,.1);
   if(r(k,5,27)>.4)R(box,C.plyW,px,pz,ry,.1,.77,0,2.0,.03,.6,.12);if(r(k,6,28)>.5)R(vcyl,C.bucket,px,pz,ry,.9,.19,.3,.15,.38,.15);SOL(px,pz,ry,1.5,.7);}
  function rubble(px,pz,ry,k){debris(px,pz,ry,k);for(let i=0;i<3;i++){const a=r(k,i,29)*6.28,d=.2+r(k,i,30)*.5;R(box,C.paper,px+Math.cos(a)*d,pz+Math.sin(a)*d,a,0,.1,0,.55,.18,.36,0,.0,(r(k,i,31)-.5)*.3);}
   R(box,C.conc||C.low,px,pz,ry,.5,.12,-.3,.5,.24,.4,.4);R(box,C.low,px,pz,ry,-.4,.08,.4,.35,.16,.3,1.1);SOL(px,pz,ry,1.2,1.0);}
  function desk(px,pz,ry,k){R(box,C.desk,px,pz,ry,0,.74,0,1.3,.05,.7);for(const a of[-.6,.6])for(const b of[-.3,.3])R(box,C.desk,px,pz,ry,a,.36,b,.05,.72,.05);R(box,C.desk,px,pz,ry,.4,.5,0,.4,.42,.62);
   if(r(k,7,32)>.4)R(box,C.paper,px,pz,ry,-.2,.77,.05,.3,.01,.22,.3);if(r(k,8,33)>.3)chair(px+.1*Math.cos(ry)+.6*Math.sin(ry),pz-.1*Math.sin(ry)+.6*Math.cos(ry),ry+Math.PI+(r(k,9,34)-.5),r(k,10,35)>.8);SOL(px,pz,ry,1.35,.75);}
- function cabinet(px,pz,ry,k){R(box,C.desk,px,pz,ry,0,.9,0,.9,1.8,.42);for(let i=0;i<3;i++)R(box,C.wainsP||C.desk,px,pz,ry,0,.35+i*.55,.215,.8,.45,.01);SOL(px,pz,ry,.95,.5);}
+ function cabinet(px,pz,ry,k){R(box,C.cabinet||C.desk,px,pz,ry,0,.9,0,.9,1.8,.42);for(let i=0;i<3;i++)R(box,C.chrome,px,pz,ry,0,.46+i*.55,.225,.16,.025,.03);SOL(px,pz,ry,.95,.5);}
  function note(px,pz,ry){R(box,C.paper,px,pz,ry,0,.004,0,.21,.004,.29,.3);}
  // ---- clusters: a few hand-composed vignettes; picked per bay by hash, dressed against a wall when there is one ----
  const KINDS=[
   (x,z,ry,k)=>stack(x,z,ry,k),(x,z,ry,k)=>crate(x,z,ry,0,Math.floor(r(k,0,21)*LOOK.length)),(x,z,ry,k)=>openCrate(x,z,ry),(x,z,ry,k)=>broken(x,z,ry,k),(x,z,ry,k)=>pallet(x,z,ry,k),
   (x,z,ry,k)=>barber(x,z,ry),(x,z,ry,k)=>chair(x,z,ry,r(k,1,22)>.6),(x,z,ry,k)=>bucket(x,z,ry,k),(x,z,ry,k)=>wetsign(x,z,ry),(x,z,ry,k)=>acUnit(x,z,ry),
-  (x,z,ry,k)=>boards(x,z,ry,k),(x,z,ry,k)=>ladder(x,z,ry),(x,z,ry,k)=>r(k,2,23)>.5?bike(x,z,ry):bikeDown(x,z,ry),(x,z,ry,k)=>cable(x,z,ry,k),(x,z,ry,k)=>tyres(x,z,ry,k),(x,z,ry,k)=>cones(x,z,ry,k),(x,z,ry,k)=>debris(x,z,ry,k),
-  (x,z,ry,k)=>grilleLean(x,z,ry),(x,z,ry,k)=>doorLean(x,z,ry,k),(x,z,ry,k)=>sawhorse(x,z,ry,k),(x,z,ry,k)=>rubble(x,z,ry,k),(x,z,ry,k)=>desk(x,z,ry,k),(x,z,ry,k)=>cabinet(x,z,ry,k)];
+  (x,z,ry,k,D)=>boards(x,z,ry,k,D),(x,z,ry,k,D)=>ladder(x,z,ry,D),(x,z,ry,k)=>r(k,2,23)>.5?bike(x,z,ry):bikeDown(x,z,ry),(x,z,ry,k)=>cable(x,z,ry,k),(x,z,ry,k)=>tyres(x,z,ry,k),(x,z,ry,k)=>cones(x,z,ry,k),(x,z,ry,k)=>debris(x,z,ry,k),
+  (x,z,ry,k,D)=>grilleLean(x,z,ry,D),(x,z,ry,k,D)=>doorLean(x,z,ry,k,D),(x,z,ry,k)=>sawhorse(x,z,ry,k),(x,z,ry,k)=>rubble(x,z,ry,k),(x,z,ry,k)=>desk(x,z,ry,k),(x,z,ry,k)=>cabinet(x,z,ry,k)];
  // wall-hugging kinds (backs to a wall): boards, ladder, ac, bike, stack, pallet, barber, chair
  const WALL=[10,11,9,12,0,4,5,6,1,7],FREE=[1,2,3,7,8,13,14,15,16,0,6,12],GARAGE=[14,15,8,16,7,13,1,3],STORE=[0,1,2,3,4,1,0],ROOM=[5,6,7,8,9,10,16],RENO=[17,18,19,20,20,16,11,7,13,10,15,8],FABLE=[21,22,6,18,1,10,21,2];
- function place(kind,x,z,ry,k){KINDS[kind](x,z,ry,k);}
- return{place,KINDS,WALL,FREE,GARAGE,STORE,ROOM,RENO,FABLE,crate,LOOK,note,debris};
+ // D = distance from the prop origin to the wall face behind it (local -z); 0 / undefined = free-standing
+ const LEAN=new Set([10,11,17,18]);
+ function place(kind,x,z,ry,k,D=0){if(globalThis.__l1PropLog)globalThis.__l1PropLog.push([kind,x,z,ry,D]);KINDS[kind](x,z,ry,k,D);}
+ return{place,LEAN,KINDS,WALL,FREE,GARAGE,STORE,ROOM,RENO,FABLE,crate,LOOK,note,debris};
 }

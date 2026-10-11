@@ -3,10 +3,10 @@
 // global floor/ceiling planes. Lighting is analytic and layout-hashed in the shader: a constant
 // number of light evaluations per fragment, no scene lights → no program recompiles.
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {makeL1Props} from './level1-props.js?v=113';
-import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=114';
+import {makeL1Props} from './level1-props.js?v=116';
+import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=116';
 import {createLevel1Corridors} from './level1-corridors.js?v=113';
-import {L1_DEC,L1_ATLAS_LAYERS as NLAY} from './level1-decals.js?v=113';
+import {L1_DEC,L1_ATLAS_LAYERS as NLAY,L1_NORM} from './level1-decals.js?v=116';
 import {l1Rebase,L1_BAY as B,L1_CHUNK as K,L1_H as H,L1_COL,L1_WALL,l1Hash,l1WallX,l1WallZ,l1Column,l1DoorX,l1DoorZ,l1Ceiling,l1ColumnTube,l1ColumnFace,l1TubeX,l1TubeZ,l1TubeSideX,l1TubeSideZ,l1TubeOffX,l1TubeOffZ,l1RunX,l1RunZ,l1RunSideX,l1RunSideZ,l1LowX,l1LowZ,l1Sector,l1SecV,L1_SEC_H,L1_SEC_G,L1_SEC_O,l1ThrSite,l1Thr,l1InClu,L1_LAYOUT_GLSL} from './level1-layout.js?v=113';
 
 const LIGHT_GLSL=`${L1_LAYOUT_GLSL}
@@ -75,7 +75,7 @@ vec4 mvPosition=viewMatrix*w;gl_Position=projectionMatrix*mvPosition;
 #include <fog_vertex>
 }`;
 const FRAG=`
-uniform highp sampler2DArray l1Atlas;
+uniform highp sampler2DArray l1Atlas;uniform highp sampler2DArray l1Norm;uniform float l1NI[128];
 #ifdef L1_FLOOR
 uniform sampler2D l1Mirror;varying vec4 vR;
 #endif
@@ -88,6 +88,8 @@ void main(){vec3 N=normalize(vN);vec3 alb=vC.rgb;
  float sv=l1secf(vW.xz/L1B+vec2(l1OB));float gw=smoothstep(.62,.76,sv),ow=1.0-smoothstep(.21,.33,sv);l1T=l1thr(vW.xz/L1B+vec2(l1OB));int kf=lsec(int(floor(vW.x/L1B)),int(floor(vW.z/L1B)));float rw=kf==3?1.0:0.0,fw=kf==4?1.0:0.0;l1AmbK=(1.0+.45*gw+.35*ow-.2*rw+.05*fw)*(1.0-.2*l1T);
  if(vT.x>=0.0){vec2 uv=vT.y<.5?vUv*vT.zw:vT.y<1.5?(abs(N.x)>.5?vec2(-vW.z*sign(N.x),vW.y):abs(N.y)>.5?vW.xz:vec2(vW.x*sign(N.z),vW.y))*vT.z:vT.y<2.5?vUv.yx*vT.zw:vUv;
   vec4 s=texture(l1Atlas,vec3(uv,vT.x));if(vT.y>2.5&&s.a<.5)discard;vec3 t=s.rgb;
+  // V116 normal maps on tiles / boards / panels (derivative tangent frame, no tangent attribute needed)
+  float ni=l1NI[int(vT.x+.5)];if(ni>-.5){vec3 nm=texture(l1Norm,vec3(uv,ni)).xyz*2.0-1.0;vec3 q1=dFdx(vW),q2=dFdy(vW);vec2 t1=dFdx(uv),t2=dFdy(uv);vec3 a2=cross(q2,N),a1=cross(N,q1);vec3 Tg=a2*t1.x+a1*t2.x,Bg=a2*t1.y+a1*t2.y;float iv=inversesqrt(max(max(dot(Tg,Tg),dot(Bg,Bg)),1e-12));N=normalize(mat3(Tg*iv,Bg*iv,N)*nm);}
   if(vT.y>.5&&vT.y<1.5&&abs(N.y)<.5){t=mix(t,t*vec3(1.04,.97,.86),ow*.6);t=mix(t,t*vec3(.86,.74,.6),l1T*.7);
    float g=1.0-smoothstep(.05,.75,vW.y)*.9;t*=1.0-.3*g*(.6+.4*l1n(vec2(uv.x*3.0,1.0),vec2(4800.0,1.0)));}
   alb*=t;}
@@ -123,11 +125,14 @@ export function createLevel1World(T,renderer){
  const loader=new T.TextureLoader(),pending=[];
  const tex=(f,rep=true)=>{let ok,no;pending.push(new Promise((a,b)=>{ok=a;no=b;}));const t=loader.load('./assets/level1/'+f+'?v=1',ok,undefined,no);t.wrapS=t.wrapT=T.RepeatWrapping;t.colorSpace=T.SRGBColorSpace;t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());t.generateMipmaps=true;return t;};
  const lin=c=>new T.Color(c).convertSRGBToLinear?.()??new T.Color(c);
- const AL={"conc": 0, "col": 1, "ceil": 2, "floor": 3, "floorwet": 4, "corr": 5, "form": 6, "paint": 7, "crate1": 8, "crate2": 9, "osb": 10, "carton": 11, "cartontop": 12, "tote": 13, "locker": 14, "rustbox": 15, "pipew": 16, "piper": 17, "galv": 18, "foil": 19, "lag": 20, "rust": 21, "steel": 22, "grate": 23, "door2": 24, "exit": 25, "fluor": 26, "hose": 27, "epanel": 28, "dooryel": 29, "doorwood": 30, "grille": 31, "peel": 32, "yellow": 33, "wains": 34, "wfloor": 35, "beam": 36, "window": 37, "brick": 38, "cream": 39, "leather": 40, "bucket": 41, "wetsign": 42, "ac": 43, "padded": 44, "cloth": 45, "paper": 46, "hazard": 47, "ceilstain": 48, "concwet": 49, "exitcn": 50, "chrome": 51, "tread": 52, "orange": 53, "straw": 54, "colF": 55, "colE": 56, "colG": 57, "colB3": 58, "colD": 59, "colA7": 60, "colH": 61, "colC2": 62, "crate4": 63, "crate5": 64, "carton2": 65, "carton3": 66, "tote2": 67, "tote3": 68, "tote4": 69, "locker2": 70};
- const TX=(n,m,su=1,sv=1,ax=0,top)=>{const t=[AL[n],m,su,sv,ax];if(top)t.top=AL[top];return t;};
+ const AL={"conc": 0, "col": 1, "ceil": 2, "floor": 3, "floorwet": 4, "corr": 5, "form": 6, "paint": 7, "crate1": 8, "crate2": 9, "osb": 10, "carton": 11, "cartontop": 12, "tote": 13, "locker": 14, "rustbox": 15, "pipew": 16, "piper": 17, "galv": 18, "foil": 19, "lag": 20, "rust": 21, "steel": 22, "grate": 23, "door2": 24, "exit": 25, "fluor": 26, "hose": 27, "epanel": 28, "dooryel": 29, "doorwood": 30, "grille": 31, "peel": 32, "yellow": 33, "wains": 34, "wfloor": 35, "beam": 36, "window": 37, "brick": 38, "cream": 39, "leather": 40, "bucket": 41, "wetsign": 42, "ac": 43, "padded": 44, "cloth": 45, "paper": 46, "hazard": 47, "ceilstain": 48, "concwet": 49, "exitcn": 50, "chrome": 51, "tread": 52, "orange": 53, "straw": 54, "colF": 55, "colE": 56, "colG": 57, "colB3": 58, "colD": 59, "colA7": 60, "colH": 61, "colC2": 62, "crate4": 63, "crate5": 64, "carton2": 65, "carton3": 66, "tote2": 67, "tote3": 68, "tote4": 69, "locker2": 70, "crate1S": 71, "crate1B": 72, "crate1T": 73, "crate5S": 74, "crate5T": 75, "crate2S": 76, "crate2T": 77, "crate4S": 78, "cartonS": 79, "carton2S": 80, "toteS": 81, "toteT": 82, "tote2S": 83, "tote2T": 84, "tote3S": 85, "tote3T": 86, "tote4S": 87, "tote4T": 88, "lockerS": 89, "lockerT": 90, "locker2S": 91, "locker2T": 92, "rustS": 93, "acS": 94, "acB": 95, "acT": 96, "cabF": 97, "cabS": 98, "cabT": 99};
+ const TX=(n,m,su=1,sv=1,ax=0,top,faces)=>{const t=[AL[n],m,su,sv,ax];if(top)t.top=AL[top];if(faces)t.faces=faces.map(f=>AL[f]);return t;};
  const atlas=new T.DataArrayTexture(new Uint8Array(4*256*256*NLAY),256,256,NLAY);Object.assign(atlas,{format:T.RGBAFormat,colorSpace:T.SRGBColorSpace,wrapS:T.RepeatWrapping,wrapT:T.RepeatWrapping,minFilter:T.LinearMipmapLinearFilter,magFilter:T.LinearFilter,generateMipmaps:true,anisotropy:4});
- pending.push(fetch('./assets/level1/atlas.webp?v=113').then(r=>r.blob()).then(b=>createImageBitmap(b,{premultiplyAlpha:'none',colorSpaceConversion:'none'})).then(img=>{const c=document.createElement('canvas');c.width=2176;c.height=Math.ceil(NLAY/8)*272;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,0,0);const d=atlas.image.data;for(let l=0;l<NLAY;l++){const px=g.getImageData((l%8)*272+8,Math.floor(l/8)*272+8,256,256).data;for(let y=0;y<256;y++)d.set(px.subarray((255-y)*1024,(256-y)*1024),l*262144+y*1024);}atlas.needsUpdate=true;}));
- const uniforms={l1Atlas:{value:atlas},l1Floor:{value:tex('floor.webp')},l1Wall:{value:tex('wall.webp')},l1Ceil:{value:tex('ceiling.webp')},l1Power:{value:1},l1Time:{value:0},l1Amb:{value:new T.Vector3(.11,.115,.12)},l1Lamp:{value:new T.Vector3(.95,1.0,1.04)},l1OB:{value:new T.Vector2(0,0)},l1Pt:{value:Array.from({length:8},()=>new T.Vector4(0,0,0,0))},l1PtN:{value:0}};
+ const natlas=new T.DataArrayTexture(new Uint8Array(4*256*256*8).fill(255),256,256,8);Object.assign(natlas,{format:T.RGBAFormat,wrapS:T.RepeatWrapping,wrapT:T.RepeatWrapping,minFilter:T.LinearMipmapLinearFilter,magFilter:T.LinearFilter,generateMipmaps:true});
+ const NI=new Float32Array(128).fill(-1);for(const k in L1_NORM)NI[+k]=L1_NORM[k];
+ pending.push(fetch('./assets/level1/atlas-n.webp?v=116').then(r=>r.blob()).then(b=>createImageBitmap(b,{premultiplyAlpha:'none',colorSpaceConversion:'none'})).then(img=>{const c=document.createElement('canvas');c.width=2176;c.height=272;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,0,0);const d=natlas.image.data;for(let l=0;l<8;l++){const px=g.getImageData(l*272+8,8,256,256).data;for(let y=0;y<256;y++)d.set(px.subarray((255-y)*1024,(256-y)*1024),l*262144+y*1024);}natlas.needsUpdate=true;}));
+ pending.push(fetch('./assets/level1/atlas.webp?v=116').then(r=>r.blob()).then(b=>createImageBitmap(b,{premultiplyAlpha:'none',colorSpaceConversion:'none'})).then(img=>{const c=document.createElement('canvas');c.width=2176;c.height=Math.ceil(NLAY/8)*272;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,0,0);const d=atlas.image.data;for(let l=0;l<NLAY;l++){const px=g.getImageData((l%8)*272+8,Math.floor(l/8)*272+8,256,256).data;for(let y=0;y<256;y++)d.set(px.subarray((255-y)*1024,(256-y)*1024),l*262144+y*1024);}atlas.needsUpdate=true;}));
+ const uniforms={l1Atlas:{value:atlas},l1Norm:{value:natlas},l1NI:{value:NI},l1Floor:{value:tex('floor.webp')},l1Wall:{value:tex('wall.webp')},l1Ceil:{value:tex('ceiling.webp')},l1Power:{value:1},l1Time:{value:0},l1Amb:{value:new T.Vector3(.11,.115,.12)},l1Lamp:{value:new T.Vector3(.95,1.0,1.04)},l1OB:{value:new T.Vector2(0,0)},l1Pt:{value:Array.from({length:8},()=>new T.Vector4(0,0,0,0))},l1PtN:{value:0}};
  const corridors=createLevel1Corridors(T,renderer,{wall:uniforms.l1Wall.value,floor:uniforms.l1Floor.value,ceil:uniforms.l1Ceil.value});let mode='halls',hallReturn=null;
  const mk=(defines={})=>new T.ShaderMaterial({uniforms:T.UniformsUtils.merge([T.UniformsLib.fog,{}]),vertexShader:VERT,fragmentShader:FRAG,fog:true,defines});
  const mat=mk();Object.assign(mat.uniforms,uniforms);
@@ -158,7 +163,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  const plane=(w,y,flip)=>{const g=new T.PlaneGeometry(w,w).rotateX(flip?Math.PI/2:-Math.PI/2);g.translate(0,y,0);const c=flip?[.78,.79,.8,1]:[.9,.9,.89,1];c.t=flip?TX('ceil',1,.25):TX('floor',1,.25);col(g,c);return g;};
  const NOT=[-1,0,1,1];
  function texAttr(g,t,dims){const n=g.attributes.position.count,a=new Float32Array(n*4);t=t||NOT;let su=t[2],sv=t[3];if(dims&&t[1]===2)su=t[2]*Math.max(dims[0],dims[1],dims[2]);
-  for(let i=0;i<n;i++){a[i*4]=t[0];a[i*4+1]=t[1];a[i*4+2]=su;a[i*4+3]=sv;}if(t.top!==undefined&&n===24)for(let i=8;i<12;i++)a[i*4]=t.top;
+  for(let i=0;i<n;i++){a[i*4]=t[0];a[i*4+1]=t[1];a[i*4+2]=su;a[i*4+3]=sv;}if(t.faces&&n===24){for(let i=0;i<24;i++)a[i*4]=t.faces[i>>2];}else if(t.top!==undefined&&n===24)for(let i=8;i<12;i++)a[i*4]=t.top;
   if(!g.attributes.uv)g.setAttribute('uv',new T.BufferAttribute(new Float32Array(n*2),2));g.setAttribute('l1t',new T.BufferAttribute(a,4));return g;}
  function col(g,c,dims){const n=g.attributes.position.count,a=new Float32Array(n*4);for(let i=0;i<n;i++)a.set(c,i*4);g.setAttribute('l1c',new T.BufferAttribute(a,4));return texAttr(g,c.t,dims);}
  const floor=new T.Mesh(plane(256,0,false),floorMat),ceiling=new T.Mesh(plane(256,H,true),mat);floor.frustumCulled=ceiling.frustumCulled=false;scene.add(floor);
@@ -190,7 +195,13 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   gwall:[[.97,.97,.96,1],TX('form',1,.25)],peelW:[[1,1,1,1],TX('peel',1,.3125)],yelW:[[1,.96,.86,1],TX('yellow',1,.3125)],wains:[[1,1,1,0],TX('wains',1,.8)],wbeam:[[.8,.72,.62,0],TX('beam',1,.625)],
   wceil:[[.42,.36,.31,1],TX('wfloor',1,.5)],window:[[1,1,1,0],TX('window',0,6,1.4)],lagC:[[1,1,1,0],TX('lag',1,.625)],ceilst:[[.72,.71,.69,1],TX('ceilstain',1,.25)],dooryel:[[1,1,1,0],TX('dooryel',0)],ductF:[[.92,.94,.96,0],TX('foil',2,.6,1)],doorwood:[[1,1,1,0],TX('doorwood',0)],
   dark:[[.16,.16,.17,0],TX('door2',0)],canvas0:[[1,.8,.6,0],TX('cloth',0)],canvas1:[[.6,.75,1,0],TX('cloth',0)],canvas2:[[.8,1,.7,0],TX('cloth',0)]};
- for(const[k,top]of[['crate1','crate1'],['crate2','crate4'],['crate4','crate4'],['crate5','crate1'],['carton','cartontop'],['carton2','cartontop'],['carton3','cartontop'],['tote','tote4'],['tote2','tote2'],['tote3','tote3'],['tote4','tote4'],['locker','locker'],['locker2','locker2'],['rustbox','rustbox']])CM[k]=[[1,1,1,0],TX(k,0,1,1,0,top)];
+ // V116 unwraps: every box-like prop has six distinct faces (+x,-x,top,bottom,front +z,back -z) cut from its generated net
+ const UWF={crate1:['crate1S','crate1B','crate1T','crate1T','crate1','crate1B'],crate5:['crate5S','crate5S','crate5T','crate5T','crate5','crate5S'],crate2:['crate2S','crate2S','crate2T','crate2T','crate2','crate2S'],
+  crate4:['crate4S','crate4S','osb','osb','crate4','crate4S'],carton:['cartonS','cartonS','cartontop','cartontop','carton','carton2S'],carton2:['carton2S','carton2S','cartontop','cartontop','carton2','cartonS'],carton3:['cartonS','carton2S','cartontop','cartontop','carton3','cartonS'],
+  tote:['toteS','toteS','toteT','toteS','tote','tote'],tote2:['tote2S','tote2S','tote2T','tote2S','tote2','tote2'],tote3:['tote3S','tote3S','tote3T','tote3S','tote3','tote3'],tote4:['tote4S','tote4S','tote4T','tote4S','tote4','tote4'],
+  locker:['lockerS','lockerS','lockerT','lockerS','locker','locker'],locker2:['locker2S','locker2S','locker2T','locker2S','locker2','locker2'],rustbox:['rustS','rustS','rustbox','rustS','rustbox','rustS'],
+  ac:['acS','acS','acT','acT','ac','acB'],cabinet:['cabS','cabS','cabT','cabT','cabF','cabS']};
+ for(const k in UWF)CM[k]=[[1,1,1,0],TX(UWF[k][4],0,1,1,0,null,UWF[k])];
  const C={};for(const k in CM){const[c0,t]=CM[k];const c=new T.Color(Math.min(1,c0[0]),Math.min(1,c0[1]),Math.min(1,c0[2])).convertSRGBToLinear();C[k]=[c.r*(c0[0]>1?c0[0]:1),c.g,c.b,c0[3]];C[k].t=t;}
  const LET=['colF','colE','colG','colB3','colD','colA7','colH','colC2'].map(n=>{const c=[1,1,1,0];c.t=TX(n,3);return c;});
  const GLOW={amber:[2.4,1.0,.3],warm:[2.2,1.6,.9],tube:[1.7,1.85,1.95],exit:[1.25,1.35,1.25],dim:[.5,.55,.6]};GLOW.screen=[.25,.55,.45];GLOW.tube.t=TX('fluor',0);GLOW.dim.t=TX('fluor',0);GLOW.exit.t=TX('exitcn',0);
@@ -345,9 +356,9 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
    else if(r(80)<(kb===3?.5:kb===4?.3:kb===1?.12:.22)&&!(ix===0&&iz===0)){const wx=l1WallX(ix,iz),wz=l1WallZ(ix,iz),k=ix*977+iz*131;
      const set=kb===1?PR.STORE:kb===3?PR.RENO:kb===4?PR.FABLE:r(81)<.35?PR.GARAGE:(wx||wz)?PR.WALL:PR.FREE,n=1+Math.floor(r(82)*(r(83)<.3?3:1.6));
      for(let q=0;q<n;q++){const kind=set[Math.floor(l1Hash(ix+q*31,iz,84)*set.length)];let x,z,ry;
-      if((wx||wz)&&q<2){const along=1.4+l1Hash(ix,iz+q*17,85)*5.2;if(wx){x=X+along;z=Z+L1_WALL/2+.45;ry=0;}else{x=X+L1_WALL/2+.45;z=Z+along;ry=-Math.PI/2;}ry+=(l1Hash(ix,iz,86+q)-.5)*.25;}
+      let D=0;if((wx||wz)&&q<2){const along=1.4+l1Hash(ix,iz+q*17,85)*5.2;if(wx){x=X+along;z=Z+L1_WALL/2+.45;ry=0;}else{x=X+L1_WALL/2+.45;z=Z+along;ry=Math.PI/2;}if(PR.LEAN.has(kind))D=.45;else ry+=(l1Hash(ix,iz,86+q)-.5)*.25;}
       else{x=X+1.6+l1Hash(ix,iz+q,87)*4.8;z=Z+1.6+l1Hash(ix+q,iz,88)*4.8;ry=l1Hash(ix,iz,89+q)*6.28;}
-      PR.place(kind,x,z,ry,k+q*7);}}
+      PR.place(kind,x,z,ry,k+q*7,D);}}
    else if(r(40)<(kb===3?.6:.05))PR.debris(X+1.5+r(42)*5,Z+1.5+r(43)*5,0,ix*31+iz);
   }}
   yield;resume();
@@ -409,7 +420,12 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
     for(const q of[-.82,.82])P(box,C.frame,x+(ax?q:fx),1.15,z+(ax?fz:q),ax?.07:.05,2.3,ax?.05:.07);P(box,C.frame,x+fx,2.33,z+fz,ax?1.71:.05,.07,ax?.05:1.71);
     P(box,C.sign,x+fx*1.4,2.62,z+fz*1.4,ax?.5:.06,.24,ax?.06:.5);G(GLOW.exit,x+fx*1.95,2.62,z+fz*1.95,ax?.46:.02,.2,ax?.02:.46);}
    // leaves pushed open into the corridor side, ~75 degrees
-   for(const q of[-1,1]){const a=q*1.3,hx=q*.8,lx=hx-q*.4*Math.cos(1.3),lz=.4*Math.sin(1.3)*inS;if(ax)P(box,C.door,x+lx,1.1,z+lz+inS*.17,.8,2.18,.045,q*inS*-1.3);else P(box,C.door,x+lz+inS*.17,1.1,z+lx,.045,2.18,.8,q*inS*1.3);}}
+   // V116: the opening is lined: full-depth steel jambs + head through the wall, so the frame has volume
+   {const dp=L1_WALL+.12;for(const q of[-.82,.82])P(box,C.frame,x+(ax?q:0),1.15,z+(ax?0:q),ax?.08:dp,2.3,ax?dp:.08);P(box,C.frame,x,2.33,z,ax?1.72:dp,.08,ax?1.72:dp);}
+   // leaves (5 cm) hung from the jamb faces on three knuckle hinges, pushed open ~75 degrees into the corridor side
+   for(const q of[-1,1]){const hx=q*.775,hz=inS*(L1_WALL/2+.06),c1=Math.cos(1.3),s1=Math.sin(1.3),lx=hx-q*.39*c1,lz=hz+.39*s1*inS;
+    if(ax)P(box,C.door,x+lx,1.1,z+lz,.78,2.18,.05,q*inS*-1.3);else P(box,C.door,x+lz,1.1,z+lx,.05,2.18,.78,q*inS*1.3);
+    for(const y of[.35,1.1,1.85]){if(ax)P(vcyl,C.chrome,x+hx,y,z+hz,.022,.13,.022);else P(vcyl,C.chrome,x+hz,y,z+hx,.022,.13,.022);}}}
   else if(kb===4||kb===3){sectorWall(ix,iz,x,z,ax,kb);}
   else if((ax?l1TubeX:l1TubeZ)(ix,iz)&&(kb===0||kb===2)){const off=(ax?l1TubeOffX:l1TubeOffZ)(ix,iz),o=L1_WALL/2+.04;if(ax){G(GLOW.tube,x+off,2.0,z+side*o,.07,1.22,.05);HL(x+off,2.0,z+side*(o+.15),.85,1.25,.9);P(box,C.frame,x+off,2.0,z+side*(o-.015),.12,1.32,.03);}else{G(GLOW.tube,x+side*o,2.0,z+off,.05,1.22,.07);HL(x+side*(o+.15),2.0,z+off,.85,1.25,.9);P(box,C.frame,x+side*(o-.015),2.0,z+off,.03,1.32,.12);}}
   else if(l1Hash(ix,iz,ax?60:61)<.2){const o=L1_WALL/2+.06,off=(l1Hash(ix,iz,62)-.5)*4;if(ax)P(box,C.panel,x+off,1.5,z+side*o,.62,.82,.12);else P(box,C.panel,x+side*o,1.5,z+off,.12,.82,.62);}}
