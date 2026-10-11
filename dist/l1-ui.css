@@ -1,40 +1,49 @@
-/* V114 · Level 1 宜居地带 — 2007–2009 skeuomorphic garage UI. Everything scoped to :root[data-ui-level="1"]. */
+/* V116 (master redo; V114 base) · Level 1 宜居地带 — 2007–2009 skeuomorphic garage UI. Everything scoped to :root[data-ui-level="1"]. */
 :root:not([data-ui-level="1"]) .l1-dash,:root:not([data-ui-level="1"]) .l1-legend{display:none!important}
 /* ---- navigation cluster: acrylic directory sign + liquid ball compass (painted into .map-mini-dom) ---- */
-:root[data-ui-level="1"] .map-mini{width:clamp(270px,calc(var(--scene-width,100vw) * .27),420px)!important;height:auto!important;aspect-ratio:400/210;right:14px!important;top:10px!important;transform:none!important}
+:root[data-ui-level="1"] .map-mini{width:clamp(270px,calc(var(--scene-width,100vw) * .27),420px)!important;height:auto!important;aspect-ratio:400/214;right:14px!important;top:10px!important;transform:none!important}
 :root[data-ui-level="1"] .map-mini .instrument-label,:root[data-ui-level="1"] .map-mini .map-cardinal,:root[data-ui-level="1"] .map-mini .map-mini-caption,:root[data-ui-level="1"] .map-mini .map-mini-player,:root[data-ui-level="1"] .map-mini .map-mini-art{visibility:hidden!important}
 :root[data-ui-level="1"] .map-mini .map-mini-viewport{opacity:0!important}
 :root[data-ui-level="1"] .map-mini canvas.map-mini-dom{position:absolute;left:0!important;top:0!important;width:100%!important;height:100%!important;transform:none!important;image-rendering:auto!important;z-index:3}
 /* ---- dashboard ---- */
-:root[data-ui-level="1"] .stats{aspect-ratio:640/300!important;width:clamp(340px,calc(var(--scene-width,100vw) * .40),620px)!important;filter:none!important;overflow:visible!important}
+:root[data-ui-level="1"] .stats{aspect-ratio:760/316!important;width:clamp(380px,calc(var(--scene-width,100vw) * .44),700px)!important;filter:none!important;overflow:visible!important}
 :root[data-ui-level="1"] .stats:not(.raster-source)>.vitals-art,:root[data-ui-level="1"] .stats:not(.raster-source)>.vitals-gauges,:root[data-ui-level="1"] .stats:not(.raster-source)>.sanity-vial,:root[data-ui-level="1"] .stats>.vitals-label,:root[data-ui-level="1"] .stats>.vitals-count{display:none!important}
 :root[data-ui-level="1"] .l1-dash{position:absolute;inset:0;pointer-events:none}
-:root[data-ui-level="1"] .l1-dash canvas{position:absolute;image-rendering:auto;transform-origin:50% 100%;will-change:transform}
+:root[data-ui-level="1"] .l1-dash canvas{position:absolute;left:0;top:0;width:100%;height:100%;image-rendering:auto;transform-origin:30% 100%;will-change:transform}
 .compact-picture:root[data-ui-level="1"] .stats,:root[data-ui-level="1"] .compact-picture .stats{width:300px!important}
-/* ---- F map: an acrylic parking-garage directory on a white painted block wall ---- */
+/* ---- F map (V116): a 3/8" cast-acrylic parking directory on a painted block wall ----
+   clear acrylic margin round the back-printed sheet, polished green edge with visible thickness (bottom-right),
+   two shadows on the wall (pale one from the clear plate, darker one from the opaque print), stainless standoffs
+   with barrels, glare + dust/fingerprints in the reflection, 3D block LEVEL 1 header, Vonwaon type. */
 :root[data-ui-level="1"] .map-modal{background:#dcdbd5 url('./assets/ui-v114/wall.jpg') center/cover!important}
-:root[data-ui-level="1"] .map-modal::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 18%,#ffffff30,#0000 55%),linear-gradient(#0000 70%,#0000001c)}
-:root[data-ui-level="1"] .map-modal .map-panel{position:relative;background:#f8f8f5!important;border:0!important;border-radius:3px!important;padding:0 18px 12px!important;color:#30353b!important;
- box-shadow:0 0 0 14px #e9f4f166,0 0 0 15px #ffffffd0,0 0 0 16.5px #86b6ad80,0 0 0 17px #4f7d7560,18px 26px 34px 6px #2a2a2a59,4px 6px 10px 2px #0000002e!important}
-:root[data-ui-level="1"] .map-modal .map-panel::before{content:'';position:absolute;inset:5px;pointer-events:none;z-index:6;
- background:url('./assets/ui-v114/standoff.webp') left top/22px no-repeat,url('./assets/ui-v114/standoff.webp') right top/22px no-repeat,url('./assets/ui-v114/standoff.webp') left bottom/22px no-repeat,url('./assets/ui-v114/standoff.webp') right bottom/22px no-repeat;filter:drop-shadow(1px 3px 2px #0007)}
-:root[data-ui-level="1"] .map-modal .map-panel::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:5;border-radius:6px;
- background:linear-gradient(118deg,#ffffff38 0%,#ffffff10 26%,#ffffff00 26.4%,#ffffff00 64%,#ffffff14 64.5%,#ffffff00 72%)}
+:root[data-ui-level="1"] .map-modal::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 12%,#ffffff38,#0000 55%),radial-gradient(ellipse at 50% 120%,#00000030,#0000 60%)}
+:root[data-ui-level="1"] .map-modal .map-panel{position:relative;overflow:visible!important;background:#f7f7f2!important;border:0!important;border-radius:2px!important;padding:0 18px 12px!important;color:#30353b!important;
+ box-shadow:0 0 0 1px #2f6a5a50,0 0 0 22px #e3f3edb8,0 0 0 23px #ffffffe6,0 0 0 24.5px #8cc7b6b0,5px 7px 0 24px #3e8c75c8,7px 10px 0 23.5px #1f5a49b0,
+  12px 16px 10px 4px #00000045,26px 36px 34px 24px #2a2a2a4a,40px 56px 60px 30px #1a1a1a26!important}
+:root[data-ui-level="1"] .map-modal .map-panel::before{content:'';position:absolute;inset:-17px;pointer-events:none;z-index:6;
+ background:url('./assets/ui-v114/standoff.webp') left top/26px no-repeat,url('./assets/ui-v114/standoff.webp') right top/26px no-repeat,url('./assets/ui-v114/standoff.webp') left bottom/26px no-repeat,url('./assets/ui-v114/standoff.webp') right bottom/26px no-repeat;
+ filter:drop-shadow(2px 3px 0 #6f767bcc) drop-shadow(3px 6px 4px #0008)}
+:root[data-ui-level="1"] .map-modal .map-panel::after{content:'';position:absolute;inset:-24px;pointer-events:none;z-index:5;border-radius:10px;
+ background:linear-gradient(118deg,#ffffff40 0%,#ffffff12 24%,#ffffff00 24.4%,#ffffff00 63%,#ffffff18 63.4%,#ffffff04 70%,#ffffff00 70.4%),
+  linear-gradient(90deg,#9fe0c855 0,#9fe0c800 10px,#9fe0c800 calc(100% - 10px),#2f8f7255 100%),linear-gradient(#bff0dd66 0,#bff0dd00 10px,#bff0dd00 calc(100% - 10px),#2f8f7266 100%),
+  url('./assets/ui-v116/dust.jpg') center/cover;mix-blend-mode:screen;opacity:.85}
 :root[data-ui-level="1"] .map-modal .map-panel *{text-shadow:none!important}
-:root[data-ui-level="1"] .map-modal .map-header{display:flex!important;align-items:center!important;margin:0 -18px 0!important;padding:10px 16px 10px 18px!important;background:linear-gradient(#1f7a43,#155e33)!important;border-bottom:4px solid #e9c54a!important}
-:root[data-ui-level="1"] .map-modal .map-header h2,:root[data-ui-level="1"] .map-modal .map-header h2 *{font:700 30px/32px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;color:#fff!important;letter-spacing:.01em}
-:root[data-ui-level="1"] .map-modal .map-header h2::before{content:'P1';display:inline-grid;place-items:center;width:40px;height:40px;margin-right:12px;border-radius:50%;background:#fff;color:#155e33;font:700 19px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;vertical-align:middle;position:relative;top:-2px}
-:root[data-ui-level="1"] .map-modal .map-header p{color:#d6efdc!important;font:600 13px/18px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;margin-left:52px!important}
-:root[data-ui-level="1"] .map-modal .map-panel button{background:linear-gradient(#ffffff,#dfe3e6)!important;color:#30353b!important;border:1px solid #9aa2a8!important;border-radius:4px!important;box-shadow:inset 0 1px #fff,0 1px 2px #0003!important;font:700 13px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;padding:5px 12px!important}
+:root[data-ui-level="1"] .map-modal .map-header{display:flex!important;align-items:center!important;margin:0 -18px 0!important;padding:12px 16px 10px 18px!important;background:linear-gradient(#237f49,#165c34)!important;border-bottom:4px solid #e8c04a!important}
+:root[data-ui-level="1"] .map-modal .map-header h2,:root[data-ui-level="1"] .map-modal .map-header h2 *{font:400 32px/40px var(--rx-font)!important;color:#fff!important;letter-spacing:.04em}
+:root[data-ui-level="1"] .map-modal .map-header h2 [data-ui-code],:root[data-ui-level="1"] .map-modal .map-header h2 [data-ui-copy="code"]{display:inline-block!important;width:261px;height:64px;vertical-align:middle;margin-right:14px;font-size:0!important;line-height:0!important;color:transparent!important;
+ background:url('./assets/ui-v116/banner-level1.png') 0 0/261px 64px no-repeat;image-rendering:pixelated}
+:root[data-ui-level="1"] .map-modal .map-header h2::before{content:'P1';display:inline-grid;place-items:center;width:46px;height:46px;margin-right:14px;border-radius:50%;background:#fff;color:#165c34;font:400 32px/1 var(--rx-font)!important;vertical-align:middle;box-shadow:inset 0 -2px #0002,0 1px 2px #0005}
+:root[data-ui-level="1"] .map-modal .map-header p{color:#d6efdc!important;font:400 16px/20px var(--rx-font)!important;margin-left:60px!important}
+:root[data-ui-level="1"] .map-modal .map-panel button{background:linear-gradient(#ffffff,#dfe3e6)!important;color:#30353b!important;border:1px solid #9aa2a8!important;border-radius:4px!important;box-shadow:inset 0 1px #fff,0 1px 2px #0003!important;font:400 16px var(--rx-font)!important;padding:5px 12px!important}
 :root[data-ui-level="1"] .map-modal .map-panel button:hover{background:linear-gradient(#f4fbf6,#cfe6d6)!important}
 :root[data-ui-level="1"] .map-modal .map-header .map-close{background:linear-gradient(#ffffff,#e4e8ea)!important;color:#155e33!important}
-:root[data-ui-level="1"] .map-modal .map-tools{color:#30353b!important;font:700 13px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;padding:10px 0 8px!important}
+:root[data-ui-level="1"] .map-modal .map-tools{color:#30353b!important;font:400 16px var(--rx-font)!important;padding:10px 0 8px!important}
 :root[data-ui-level="1"] .map-modal .map-tools *{color:#30353b!important}
-:root[data-ui-level="1"] .map-modal .map-surface{background:#e9ebe6!important;box-shadow:0 0 0 1px #30353b,0 0 0 4px #f8f8f5,0 0 0 5px #b9bfc3!important;border:0!important}
-:root[data-ui-level="1"] .map-modal .map-scale{color:#30353b!important;font:700 12px 'Helvetica Neue',Helvetica,Arial,sans-serif!important}
+:root[data-ui-level="1"] .map-modal .map-surface{background:#e9ebe6!important;box-shadow:0 0 0 1px #30353b,0 0 0 4px #f7f7f2,0 0 0 5px #b9bfc3!important;border:0!important}
+:root[data-ui-level="1"] .map-modal .map-scale{color:#30353b!important;font:400 12px var(--rx-font-sm)!important}
 :root[data-ui-level="1"] .map-modal .map-scale i{background:#30353b!important;border-color:#30353b!important}
-:root[data-ui-level="1"] .map-modal .map-footer{color:#30353b!important;font:600 13px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;padding-top:10px!important;display:flex!important;gap:16px;align-items:center;flex-wrap:wrap}
-:root[data-ui-level="1"] .map-modal .map-readout{color:#30353b!important;background:none!important;box-shadow:none!important;font:600 13px 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei','DejaVu Sans',Vonwaon16,sans-serif!important;padding:0!important;margin-left:auto}
+:root[data-ui-level="1"] .map-modal .map-footer{color:#30353b!important;font:400 16px var(--rx-font)!important;padding-top:10px!important;display:flex!important;gap:16px;align-items:center;flex-wrap:wrap}
+:root[data-ui-level="1"] .map-modal .map-readout{color:#30353b!important;background:none!important;box-shadow:none!important;font:400 16px var(--rx-font)!important;padding:0!important;margin-left:auto}
 :root[data-ui-level="1"] .map-modal .map-loading{color:#30353b!important}
 :root[data-ui-level="1"] .l1-legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
 :root[data-ui-level="1"] .l1-legend span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
@@ -42,4 +51,9 @@
 :root[data-ui-level="1"] .l1-legend .here i{width:12px!important;height:12px!important;border-radius:50%!important;background:#d7261e!important;border:2px solid #fff!important;flex:none;box-shadow:0 0 0 1px #d7261e}
 :root[data-ui-level="1"] .l1-legend .here{color:#c3201a;font-weight:700}
 
-:root[data-ui-level="1"] .map-modal{padding:34px 52px!important}
+:root[data-ui-level="1"] .map-modal{padding:52px 70px!important}
+
+/* ---- V116: Level 1 title page + modal backdrop: the parking-garage Escher tessellation ---- */
+:root[data-ui-level="1"] #menu .rx-pattern{background:#8d9196 url('./assets/ui-v116/escher-garage.png') 0 0/256px 256px repeat}
+:root[data-ui-level="1"] #menu.screen:after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#14191bd8 0%,#14191bb0 38%,#14191b40 70%,#14191b10 100%)}
+:root[data-ui-level="1"] .modal:not(.map-modal):before{background-image:url('./assets/ui-v116/escher-garage.png')}

@@ -11,7 +11,7 @@ import {paintCompass} from './retro-instruments.js?v=60';
 import {createMapAtlas} from './map-atlas.js?v=99';
 import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=102';
 import {mountL10Dash,paintBrassCompass} from './l10-dash.js?v=106';
-import {mountL1Dash,paintL1Nav,l1MapPlayer,L1_MAP_PAL,L1_LEGEND} from './l1-dash.js?v=114';
+import {mountL1Dash,paintL1Nav,l1MapPlayer,L1_MAP_PAL,L1_LEGEND} from './l1-dash.js?v=116';
 import {paintWin98Compass,blueprintize,cadUCS,cadCursor,cadPlayer,mountCadChrome,mountTaskManager} from './win98-ui.js?v=102b';
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
