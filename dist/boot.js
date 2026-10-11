@@ -10,7 +10,7 @@
     panel.className = 'fatal';
     panel.setAttribute('role', 'alert');
     const title = document.createElement('h1');
-    title.textContent = error?.userTitle || '麦田未能启动';
+    title.textContent = error?.userTitle || '游戏未能启动';
     const message = document.createElement('p');
     message.textContent = error?.userMessage || '游戏加载时出现错误，请重新加载。';
     const retry = document.createElement('button');
@@ -62,7 +62,7 @@
       showFailure(new Error('游戏加载超时。请检查网络连接后重试。'));
     }
   }, 2000);
-  import('./main.js?v=ui-119').then(() => { clearInterval(timeout); watcher.disconnect(); }).catch(error => {
+  import('./main.js?v=ui-120').then(() => { clearInterval(timeout); watcher.disconnect(); }).catch(error => {
     clearInterval(timeout);
     console.error('Game startup failed', error);
     showFailure(error);
