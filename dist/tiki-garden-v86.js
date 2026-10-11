@@ -10,6 +10,7 @@ import {createGardenArchitecture81,createSandal81,GARDEN_FIXTURES81} from './tik
 import {createGardenWater81} from './tiki-garden-water-v85.js';
 import {createGardenEffects81} from './tiki-garden-effects-v86.js';
 import {GARDEN81} from './tiki-garden-plan-v86.js';
+import {preloadFountain118e,createFountain118e} from './tiki-garden-fountain-v118e.js';
 import {compileBathBatches74,prepareStaticProbe74} from './bath-preparation-v74.js';
 import {nextPaint} from './bath-loading-v72.js';
 function lighting(scene){RectAreaLightUniformsLib.init();const points=[],areas=[];
@@ -28,23 +29,24 @@ function lighting(scene){RectAreaLightUniformsLib.init();const points=[],areas=[
  const recess=new T.PointLight(0xffb261,3.5,2.7,2);recess.position.set(-1.08,2.04,9.97);scene.add(recess);points.push(recess);
  const hood=new T.PointLight(0xffb766,1.25,2.3,2);hood.position.set(2.05,3.03,7.02);scene.add(hood);points.push(hood);
  const barFill=new T.RectAreaLight(0xe9dbbd,2.1,3.3,1.7);barFill.position.set(-5.4,2.6,4.65);barFill.lookAt(-8.1,1.7,4.65);scene.add(barFill);areas.push(barFill);
- return{points,areas,shadow:main,portal};
+ return{points,areas,shadow:main,portal,fountain:{cyan,spill,cyanBase:cyan.intensity,spillBase:spill.intensity}};
 }
 export async function prepareGarden81(report=()=>{}){
- await preloadGarden81(p=>report(.35*p,'正在读取石墙、雨林和植物贴图'));await nextPaint();
+ await preloadGarden81(p=>report(.33*p,'正在读取石墙、雨林和植物贴图'));await preloadFountain118e(p=>report(.33+.02*p,'正在读取喷泉水花与焦散贴图'));await nextPaint();
  await preloadGardenPeople85(p=>report(.35+.10*p,'正在读取两位访客的独立 UV 贴图'));await preloadGardenDrinks85(p=>report(.45+.12*p,'正在读取热带饮品与售货机画面'));await nextPaint();
  const {m,texture,textures,streamTexture}=gardenMaterials81(),scene=new T.Scene();scene.name='Lantern Reef / Indoor Tide Garden';scene.background=new T.Color(0x101819);scene.fog=new T.FogExp2(0x222b2b,.004);scene.userData.noAtmosphere=true;
  const object=createGardenArchitecture81(m);scene.add(object);report(.76,'正在围砌两个独立水池与高挑网格吊顶');await nextPaint();
  const sandal=createSandal81(m);scene.add(sandal);const lights=lighting(scene),water=createGardenWater81(scene,texture('surfaces','boulder','roughness'),texture('props','splash')),effects=createGardenEffects81();
- const cocktail=createGardenCocktails85(scene,m,texture('surfaces','boulder','normal'),texture('props','splash'));const people=await createGardenPeople85(scene);const vending=createGardenVending85();scene.add(vending.object);const sprinklers=createGardenSprinklers85(scene,streamTexture,t=>people.react(t),texture('props','splash'));
- const optics={...water,bind(...args){water.bind(...args);cocktail.optics.bind(...args);},update(t){water.update(t);cocktail.optics.update(t);},dispose(){water.dispose();}};
+ const cocktail=createGardenCocktails85(scene,m,texture('surfaces','boulder','normal'),texture('props','splash'));const people=await createGardenPeople85(scene);const vending=createGardenVending85();scene.add(vending.object);for(const o of[water.basin,water.sheet,water.drops])o.visible=false;const fountain=createFountain118e(scene,m);m.fountainRim=fountain.materials[0];m.fountainBed=fountain.materials[1];
+ const sprinklers=createGardenSprinklers85(scene,streamTexture,t=>people.react(t),texture('props','splash'));
+ const optics={...water,bind(...args){water.bind(...args);cocktail.optics.bind(...args);fountain.bind(...args);},update(t){water.update(t);cocktail.optics.update(t);},dispose(){water.dispose();}};
  cocktail.materials.forEach((v,i)=>m['cocktail'+i]=v);Object.entries(vending.mats).forEach(([k,v])=>m['vending'+k]=v);
  for(const [type,a]of Object.entries(vending.prototypes))a.group.traverse(o=>{if(o.isMesh)m['drink'+type+o.id]=o.material;});
- const allTextures=[...new Set([...textures,...people.textures,...gardenDrinkTextures85(),...Object.values(m).flatMap(a=>[a.map,a.normalMap,a.roughnessMap,a.emissiveMap].filter(Boolean))])];
+ const allTextures=[...new Set([...fountain.textures,...textures,...people.textures,...gardenDrinkTextures85(),...Object.values(m).flatMap(a=>[a.map,a.normalMap,a.roughnessMap,a.emissiveMap].filter(Boolean))])];
  scene.userData.prepareMainVfx=camera=>optics.setCamera(camera);scene.userData.showerWater=optics;scene.userData.springVolume=effects;scene.updateMatrixWorld(true);report(1,'室内水景已就绪');
- const room={scene,object,sandal,mats:m,optics,effects,lights,people,vending,sprinklers,cocktail,textures:allTextures,warmed:false,probe:null,stats:{...object.userData.cityStats,newSourceImages:18,runtimeTextureFiles:allTextures.length,...effects.stats},
-  update(t,dt=0,playing=true,camera=null){people.update(t);sprinklers.update(t);vending.tick(dt,null,playing,camera);const p=sandal.userData.base;sandal.position.set(p.x+Math.sin(t*.105)*.065,p.y+Math.sin(t*.37)*.003,p.z+Math.sin(t*.083)*.052);sandal.rotation.set(Math.sin(t*.31)*.018,-.55+Math.sin(t*.07)*.07,Math.cos(t*.29)*.018);optics.update(t);effects.setTime(t);},
-  dispose(){people.dispose();vending.dispose();sprinklers.dispose();cocktail.dispose();optics.dispose();effects.dispose();object.traverse(o=>o.geometry?.dispose());sandal.traverse(o=>o.geometry?.dispose());for(const mat of new Set(Object.values(m)))mat.dispose();room.probe?.dispose();lights.shadow.shadow?.dispose();lights.portal.shadow?.dispose();scene.clear();}
+ const room={scene,object,sandal,mats:m,optics,fountain,effects,lights,people,vending,sprinklers,cocktail,textures:allTextures,warmed:false,probe:null,stats:{...object.userData.cityStats,newSourceImages:18,runtimeTextureFiles:allTextures.length,...effects.stats},
+  update(t,dt=0,playing=true,camera=null){people.update(t);fountain.update(t,camera,playing,lights.fountain);sprinklers.update(t);vending.tick(dt,null,playing,camera);const p=sandal.userData.base;sandal.position.set(p.x+Math.sin(t*.105)*.065,p.y+Math.sin(t*.37)*.003,p.z+Math.sin(t*.083)*.052);sandal.rotation.set(Math.sin(t*.31)*.018,-.55+Math.sin(t*.07)*.07,Math.cos(t*.29)*.018);optics.update(t);effects.setTime(t);},
+  dispose(){fountain.dispose();people.dispose();vending.dispose();sprinklers.dispose();cocktail.dispose();optics.dispose();effects.dispose();object.traverse(o=>o.geometry?.dispose());sandal.traverse(o=>o.geometry?.dispose());for(const mat of new Set(Object.values(m)))mat.dispose();room.probe?.dispose();lights.shadow.shadow?.dispose();lights.portal.shadow?.dispose();scene.clear();}
  };return room;
 }
 export async function warmGarden81(room,renderer,camera,report=()=>{},renderFrame){if(room.warmed)return;let i=0;

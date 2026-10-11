@@ -1,6 +1,7 @@
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {createRetroActor75,RETRO_ROLES75} from './retro-cast-v75.js';
+import {HEAD118E} from './retro-heads-v118e.js';
 
 const assets=new Map();let pending=null;
 export const INDOOR_OCCUPANTS75=[
@@ -16,10 +17,10 @@ export const ALLEY_OCCUPANTS75=[
 export function initializeRetroTextures75(decode=null){
  if(pending)return pending;const loader=new T.TextureLoader();
  const load=async key=>{const url=new URL(`./textures/npc-v75/${key}.png`,import.meta.url);let t;if(decode){const im=await decode(url,128,128);t=new T.DataTexture(im.data,128,128);t.flipY=true;t.needsUpdate=true;}else t=await loader.loadAsync(url.href);t.colorSpace=T.SRGBColorSpace;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;t.anisotropy=1;assets.set(key,t);return t;};
- pending=Promise.all([...RETRO_ROLES75.flatMap(r=>[`${r}/face`,`${r}/body`,`${r}/hair`,...(r==='homeless'?[]:[`${r}/face-blink`])]),'old-pier-label-128','ochre-water-streaks-128','reader-newspaper-128','rubber-mat-128'].map(load));return pending;
+ pending=Promise.all([...RETRO_ROLES75.flatMap(r=>[`${r}/face`,`${r}/body`,`${r}/hair`,...(r==='homeless'?[]:[`${r}/face-blink`]),...(HEAD118E[r]?[`${r}/head-side`]:[])]),'old-pier-label-128','ochre-water-streaks-128','reader-newspaper-128','rubber-mat-128'].map(load));return pending;
 }
-function textures(role){return{hair:assets.get(`${role}/hair`),face:assets.get(`${role}/face`),faceBlink:assets.get(`${role}/face-blink`),body:assets.get(`${role}/body`),newspaper:assets.get('reader-newspaper-128')};}
-function actorAt(p){const actor=createRetroActor75(T,p.role,textures(p.role),p);actor.group.position.set(p.x,p.y,p.z);actor.group.rotation.y=p.yaw;return actor;}
+function textures(role){return{hair:assets.get(`${role}/hair`),face:assets.get(`${role}/face`),faceBlink:assets.get(`${role}/face-blink`),body:assets.get(`${role}/body`),headSide:assets.get(`${role}/head-side`),newspaper:assets.get('reader-newspaper-128')};}
+function actorAt(p){const actor=createRetroActor75(T,p.role,textures(p.role),HEAD118E[p.role]?{...p,head118e:HEAD118E[p.role]}:p);actor.group.position.set(p.x,p.y,p.z);actor.group.rotation.y=p.yaw;return actor;}
 export function createIndoorOccupants75(scene){
  const group=new T.Group();group.name='Six residents V75 / four indoor actors';scene.add(group);
  const actors=INDOOR_OCCUPANTS75.map(p=>{const a=actorAt(p);group.add(a.group);a.group.traverse(o=>o.layers.enable(5));return a;});

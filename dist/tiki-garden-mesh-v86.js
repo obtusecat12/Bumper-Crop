@@ -58,10 +58,7 @@ function poolBasin(k){const {pool,fountain}=GARDEN81;
   rock(k,x,.47*h-.10,z,w,h,d,i+9,'boulder',a+.4);
   if(i%3===0){const[xx,zz]=poolEdge81(a+.026,1.035);rock(k,xx,.105,zz,.41,.31,.38,i+120,'boulder',a);}
  }
- // The separate fountain has a complete retaining wall and a concrete basin.
- const shape=new T.CircleGeometry(fountain.r,80);shape.rotateX(-Math.PI/2);shape.translate(fountain.x,fountain.bed,fountain.z);k.add(worldUV(shape,1.5),'bed');
- const wall=new T.CylinderGeometry(fountain.r,fountain.r,.63,80,1,true);wall.scale(-1,1,1);wall.computeVertexNormals();wall.translate(fountain.x,-.055,fountain.z);k.add(worldUV(wall,1.2),'bed');
- for(let i=0;i<20;i++){const a=i/20*TAU;rock(k,fountain.x+Math.cos(a)*(fountain.r+.055),.19,fountain.z+Math.sin(a)*(fountain.r+.055),.73,.62,.60,i+270,'boulder',-a);}
+ // V118e: the separate fountain (lip, caustic bed, boulders, jet) now lives in tiki-garden-fountain-v118e.js.
  // Discrete gravel at rock contacts makes the displacement ground read as a
  // bed of individual stones without a per-frame instance update.
  for(let i=0;i<340;i++){const x=-7.9+rand(i+882)*15.8,z=-9.4+rand(i+1290)*16.8;if((z>5.60&&Math.abs(x)<2.65)||poolDistance81(x,z)<.64||Math.hypot(x-fountain.x,z-fountain.z)<fountain.r+.38)continue;

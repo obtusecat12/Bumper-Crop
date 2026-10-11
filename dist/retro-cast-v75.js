@@ -59,7 +59,8 @@ export function createRetroActor75(T, role, textures, opts={}) {
   const bindWorld=Object.fromEntries(boneList.map(b=>[b.name,b.matrixWorld.clone()]));
   const index=name=>bones[name].userData.index;
   const W=(name,w=1,other=null)=>other?[[index(name),w],[index(other),1-w]]:[[index(name),w]];
-  const bins=Array.from({length:7},()=>({p:[],uv:[],c:[],si:[],sw:[]}));
+  const H118E=(textures.headSide&&opts.head118e)?opts.head118e:null; // V118e: opt-in rear-skull unwrap + modelled ears
+  const bins=Array.from({length:H118E?8:7},()=>({p:[],uv:[],c:[],si:[],sw:[]}));
   const partTriangles={};let part='body';
   function vertex(bin,p,uv,col,w) {
     bin.p.push(...p);bin.uv.push(...uv);bin.c.push(...col);
@@ -209,12 +210,15 @@ export function createRetroActor75(T, role, textures, opts={}) {
     return[Math.sin(a)*w*hW,headY+y*hH,Math.cos(a)*depth*hD-.010];
   }));
   part='jawTemplesOcciput';
-  for(let i=0;i<7;i++)for(let j=0;j<6;j++)quad(2,rear[i][j+1],rear[i][j],rear[i+1][j],rear[i+1][j+1],[skinUV,skinUV,skinUV,skinUV],white,[W('head'),W('head'),W('head'),W('head')]);
+  if(H118E){const [u0,v0,u1,v1]=H118E.band,ruv=(i,j)=>[u0+(u1-u0)*j/6,v0+(v1-v0)*faceRows[i][0]/.220];
+   for(let i=0;i<7;i++)for(let j=0;j<6;j++)quad(7,rear[i][j+1],rear[i][j],rear[i+1][j],rear[i+1][j+1],[ruv(i,j+1),ruv(i,j),ruv(i+1,j),ruv(i+1,j+1)],white,[W('head'),W('head'),W('head'),W('head')]);}
+  else for(let i=0;i<7;i++)for(let j=0;j<6;j++)quad(2,rear[i][j+1],rear[i][j],rear[i+1][j],rear[i+1][j+1],[skinUV,skinUV,skinUV,skinUV],white,[W('head'),W('head'),W('head'),W('head')]);
   for(const r of[0,7]){
     const ring=[...front[r],...rear[r].slice(1,6).reverse()],center=[0,headY+faceRows[r][0]*hH,-.012];
     for(let j=0;j<ring.length;j++){const k=(j+1)%ring.length;tri(2,center,...(r===0?[ring[k],ring[j]]:[ring[j],ring[k]]),skinUV,skinUV,skinUV,white,W('head'));}
   }
-  part='ears';for(const s of[-1,1])poly(new T.OctahedronGeometry(1,0),2,white,W('head'),transform([s*.088*hW,headY+.114*hH,.002],[.015,.030,.018]),skinUV);
+  part='ears';if(H118E&&H118E.ears.length){const e=H118E.ears;for(let k=0;k<e.length;k+=15)tri(7,[e[k],e[k+1],e[k+2]],[e[k+5],e[k+6],e[k+7]],[e[k+10],e[k+11],e[k+12]],[e[k+3],e[k+4]],[e[k+8],e[k+9]],[e[k+13],e[k+14]],white,W('head'));}
+  else for(const s of[-1,1])poly(new T.OctahedronGeometry(1,0),2,white,W('head'),transform([s*.088*hW,headY+.114*hH,.002],[.015,.030,.018]),skinUV);
   // Separate textured scalp, temples, sideburns and an asymmetric side part.
   const hN=12,hairBottom=a=>{
     const f=Math.cos(a);if(f>.45)return role==='wallman'?.200:.177+.007*Math.sin(a);
@@ -352,7 +356,7 @@ export function createRetroActor75(T, role, textures, opts={}) {
   }
   resetPose();group.updateMatrixWorld(true);
 
-  const texturesUsed=new Set([textures.face,textures.faceBlink??textures.face,textures.body,textures.hair,textures.newspaper].filter(Boolean));
+  const texturesUsed=new Set([textures.face,textures.faceBlink??textures.face,textures.body,textures.hair,textures.newspaper,H118E?textures.headSide:null].filter(Boolean));
   for(const texture of texturesUsed) {
     const im=texture.image??texture.source?.data;
     if(im?.width&&im?.height&&(im.width!==128||im.height!==128))throw new Error(`V75 ${role} texture must be 128×128; got ${im.width}×${im.height}.`);
@@ -362,7 +366,7 @@ export function createRetroActor75(T, role, textures, opts={}) {
   }
   const makeMat=(name,map,extra={})=>{const m=new T.MeshLambertMaterial({map:map??null,flatShading:true,vertexColors:true,...extra});if(map){m.emissive.setHex(0xffffff);m.emissiveMap=map;m.emissiveIntensity=isPool?.28:.10;}m.name=`V75 ${role} / ${name}`;return m;};
   const faceMaterial=makeMat('front face',role==='homeless'?(textures.faceBlink??textures.face):textures.face);
-  const materials=[makeMat('body',textures.body),faceMaterial,makeMat('skin and hair patches',textures.face),makeMat('solid prop'),makeMat('newspaper',textures.newspaper??null,{side:T.DoubleSide}),makeMat('transparent reading glass',null,{color:0xb9cfc7,transparent:true,opacity:.13,depthWrite:false}),makeMat('independent textured hair',textures.hair??textures.face)];
+  const materials=[makeMat('body',textures.body),faceMaterial,makeMat('skin and hair patches',textures.face),makeMat('solid prop'),makeMat('newspaper',textures.newspaper??null,{side:T.DoubleSide}),makeMat('transparent reading glass',null,{color:0xb9cfc7,transparent:true,opacity:.13,depthWrite:false}),makeMat('independent textured hair',textures.hair??textures.face)];if(H118E)materials.push(makeMat('V118e rear skull + ears unwrap',textures.headSide));
   const geometry=new T.BufferGeometry(),joined={p:[],uv:[],c:[],si:[],sw:[]};let start=0;
   for(let i=0;i<bins.length;i++)if(bins[i].p.length){const b=bins[i];geometry.addGroup(start,b.p.length/3,i);for(const k of Object.keys(joined))joined[k].push(...b[k]);start+=b.p.length/3;}
   geometry.setAttribute('position',new T.Float32BufferAttribute(joined.p,3));geometry.setAttribute('uv',new T.Float32BufferAttribute(joined.uv,2));geometry.setAttribute('color',new T.Float32BufferAttribute(joined.c,3));geometry.setAttribute('skinIndex',new T.Uint16BufferAttribute(joined.si,4));geometry.setAttribute('skinWeight',new T.Float32BufferAttribute(joined.sw,4));geometry.computeVertexNormals();
