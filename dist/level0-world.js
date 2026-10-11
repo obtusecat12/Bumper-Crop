@@ -10,8 +10,8 @@ import {createFurniture93} from './level0-furniture93.js';
 import {createKaneProps} from './level0-k-props.js';
 import {createManilaField96} from './manila-field96.js';
 import {inManila,nearManila,manilaRegionsNear} from './manila-plan.js';
-import {L0_CELL as S,L0_CHUNK as K,L0_HEIGHT as H,l0Hash,l0Type,l0TypeAt,L0_LANDMARKS,createL0Chunk,l0SolidAt,l0FloorBase} from './level0-layout.js?v=117';
-import {createL0Materials} from './level0-materials.js?v=117';
+import {L0_CELL as S,L0_CHUNK as K,L0_HEIGHT as H,l0Hash,l0Type,l0TypeAt,L0_LANDMARKS,createL0Chunk,l0SolidAt,l0FloorBase} from './level0-layout.js?v=119';
+import {createL0Materials} from './level0-materials.js?v=119';
 import {createLevel0LightField} from './level0-lightfield.js?v=104';
 import {createLevel0DetailAssets} from './level0-ceiling-details.js';
 import {createLevel0Props} from './level0-props.js';
@@ -69,15 +69,15 @@ export function createLevel0World(T,renderer){
   for(const p of c.puddles){const g=new T.PlaneGeometry(p.w,p.d,12,12).rotateX(-Math.PI/2).rotateY(p.phase),pos=g.attributes.position;
    for(let i=0;i<pos.count;i++){const x=pos.getX(i)+p.x,z=pos.getZ(i)+p.z;pos.setXYZ(i,x,floorAt(x,z)+.002,z);}
    // Reject triangles at actual wall footprints. This also prevents smears across baseboards.
-   const index=g.index.array,keep=[];for(let i=0;i<index.length;i+=3){const ids=[index[i],index[i+1],index[i+2]];if(ids.some(v=>c.walls.some(w=>Math.abs(pos.getX(v)-w.x)<w.w/2+.012&&Math.abs(pos.getZ(v)-w.z)<w.d/2+.012)))continue;keep.push(...ids);}g.setIndex(keep);g.computeVertexNormals();geos.push(g.toNonIndexed());g.dispose();
+   const index=g.index.array,keep=[];for(let i=0;i<index.length;i+=3){const ids=[index[i],index[i+1],index[i+2]];if(ids.some(v=>c.walls.some(w=>!w.ry&&Math.abs(pos.getX(v)-w.x)<w.w/2+.012&&Math.abs(pos.getZ(v)-w.z)<w.d/2+.012)))continue;keep.push(...ids);}g.setIndex(keep);g.computeVertexNormals();geos.push(g.toNonIndexed());g.dispose();
   }
   const merged=geos.length?mergeGeometries(geos,false):null;geos.forEach(g=>g.dispose());return merged;
  }
  function generateMesh(c){if(c.renderPlan)return c.renderPlan;recording=[];
   const red=c.type==='red',wallM=red?[mats.red,mats.red,mats.red]:mats.wall,ground=red?mats.redFloor:mats.carpet;
-  const slopeParts=[];for(const f of c.floors){const ground=f.type==='red'?mats.redFloor:f.type==='spawn'?mats.spawnCarpet:mats.carpet;if(f.type==='blackout'&&l0Hash(Math.round(f.x/S),Math.round(f.z/S),71)>.94){add(depression,ground,f.x,0,f.z,1,1,1,0,false);add(floorPlane,mats.water,f.x,-.028,f.z,2.58,1,2.58,0,false,false);}else if([[-.5,-.5],[.5,.5],[0,0],[-.5,.5],[.5,-.5]].some(([a,b])=>Math.abs(l0FloorBase(f.x+a*f.w,f.z+b*f.d))>.001)){if(!c.slopeGeometry)slopeParts.push(floorGeometry(f));}else add(floorPlane,ground,f.x,0,f.z,f.w,1,f.d,0,false);}
+  const slopeParts=[];for(const f of c.floors){const ground=f.type==='red'?mats.redFloor:f.type==='spawn'?mats.carpet:mats.carpet;if(f.type==='blackout'&&l0Hash(Math.round(f.x/S),Math.round(f.z/S),71)>.94){add(depression,ground,f.x,0,f.z,1,1,1,0,false);add(floorPlane,mats.water,f.x,-.028,f.z,2.58,1,2.58,0,false,false);}else if([[-.5,-.5],[.5,.5],[0,0],[-.5,.5],[.5,-.5]].some(([a,b])=>Math.abs(l0FloorBase(f.x+a*f.w,f.z+b*f.d))>.001)){if(!c.slopeGeometry)slopeParts.push(floorGeometry(f));}else add(floorPlane,ground,f.x,0,f.z,f.w,1,f.d,0,false);}
   if(slopeParts.length){c.slopeGeometry=mergeGeometries(slopeParts,false);slopeParts.forEach(g=>g.dispose());}if(c.slopeGeometry)add(c.slopeGeometry,mats.carpet,0,0,0,1,1,1,0,false);
-  for(const w of [...c.walls,...c.pillars]){const base=w.y-w.h/2;add(wallBox,l0TypeAt(w.x,w.z)==='red'?mats.red:w.kind==='column'?mats.columnWall:mats.wall[w.mat||0],w.x,w.y,w.z,w.w,w.h,w.d);if(base<.6&&w.mat!==5){add(box,mats.trim,w.x,base+.045,w.z,w.w+.010,.09,w.d+.010);ao(w.x,w.z,w.w,w.d);}if(w.h<1.6&&base<.6)add(wallBox,mats.railWood,w.x,base+w.h+.025,w.z,w.w+.058,.05,w.d+.058);}
+  for(const w of [...c.walls,...c.pillars]){const base=w.y-w.h/2;add(wallBox,l0TypeAt(w.x,w.z)==='red'?mats.red:w.kind==='column'?mats.columnWall:mats.wall[w.mat||0],w.x,w.y,w.z,w.w,w.h,w.d,w.ry||0);if(base<.6&&w.mat!==5){if(!(w.id&&w.id.startsWith('spawn-wall-')))add(box,mats.trim,w.x,base+.045,w.z,w.w+.010,.09,w.d+.010,w.ry||0);if(!w.ry)ao(w.x,w.z,w.w,w.d);}if(w.h<1.6&&base<.6&&w.mat!==5)add(wallBox,mats.railWood,w.x,base+w.h+.025,w.z,w.w+.058,.05,w.d+.058);}
   for(const p of c.portals)add(portalGeos[p.style],mats.wall[p.mat||0],p.x,p.spring,p.z,p.w,p.top-p.spring,p.d,p.rotation);
   for(const r of c.rails){const c0=Math.cos(r.rotation),s0=Math.sin(r.rotation),len=r.length,n=Math.ceil(len/.24);for(let i=0;i<=n;i++){const u=-len/2+i*len/n,x=r.x+u*c0,z=r.z-u*s0,base=(r.y||0)+l0FloorBase(x,z);add(railPost,mats.railWood,x,base+.26,z);if(i===0||i===n)add(wallBox,mats.railWood,x,base+.44,z,.105,.88,.105);if(i<n){const xx=r.x+(u+len/n)*c0,zz=r.z-(u+len/n)*s0,by=(r.y||0)+l0FloorBase(xx,zz),delta=new T.Vector3(xx-x,by-base,zz-z),q=new T.Quaternion().setFromUnitVectors(new T.Vector3(1,0,0),delta.clone().normalize());for(const[y,h,d]of[[.87,.068,.095],[.22,.05,.06]])emit({geo:wallBox,mat:mats.railWood,cast:true,receive:true,matrix:new T.Matrix4().compose(new T.Vector3((x+xx)/2,(base+by)/2+y,(z+zz)/2),q,new T.Vector3(delta.length()+.002,h,d))});}}}
   for(const a of c.arches){add(realArch,mats.pale,a.x,0,a.z,1,1,1,a.rotation);add(box,mats.pale,a.x,.455,a.z,.20,.91,a.w);add(box,mats.pale,a.x,2.505,a.z-a.w/2,.20,.41,.20);add(box,mats.trim,a.x,.04,a.z,.212,.08,a.w);ao(a.x,a.z,.20,a.w);}
@@ -123,7 +123,7 @@ export function createLevel0World(T,renderer){
  // Occluders baked into the field: full-height walls/columns block light; low partitions, arches and
  // floor-standing furniture only add ambient occlusion. Cached per chunk as [x0,x1,z0,z1,kind].
  function occOf(c){if(c.l0Occ)return c.l0Occ;const o=[];const put=(x,z,w,d,k)=>{if(!(w>0&&d>0))return;o.push(x-w/2,x+w/2,z-d/2,z+d/2,k);};
-  for(const w of[...c.walls,...c.pillars]){const base=w.y-w.h/2;if(base>.6)continue;put(w.x,w.z,w.w,w.d,w.h>=2.2?1:.7);}
+  for(const w of[...c.walls,...c.pillars]){const base=w.y-w.h/2;if(base>.6)continue;if(w.ry){const n=Math.max(1,Math.ceil(w.w/.3)),c2=Math.cos(w.ry),s2=Math.sin(w.ry);for(let i=0;i<n;i++){const t=(i+.5)/n-.5;put(w.x+c2*t*w.w,w.z-s2*t*w.w,.3,.3,w.h>=2.2?1:.7);}continue;}put(w.x,w.z,w.w,w.d,w.h>=2.2?1:.7);}
   for(const a of c.arches)put(a.x,a.z,.2,a.w,.75);
   for(const f of c.furniture){if(Math.abs((f.y||0)-l0FloorBase(f.x,f.z))>=.03)continue;const q=f.mapFootprint||f;if(q.w&&q.d)put(q.x,q.z,Math.min(q.w,4),Math.min(q.d,4),.5);}
   return c.l0Occ=Float32Array.from(o);}

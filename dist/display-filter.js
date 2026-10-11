@@ -103,6 +103,8 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
   if(mode==='vhs'){failed=false;startWorkers();}
  }
  function setLensEffect(next){lensEffect=next;}
+ // V119: first-person viewmodel (flashlight hand) drawn in its own pass after the scene, so it never clips into walls.
+ let overlay=null;function setOverlay(next){overlay=next;}
  function setScenePipeline(next){scenePipeline=next;}
  function setCompositor(next){compositor=next;next.setActive?.(mode==='vhs');uiTexture?.dispose();uiTexture=new T.CanvasTexture(next.canvas);uiWidth=next.canvas.width;uiHeight=next.canvas.height;uiTexture.flipY=true;uiTexture.colorSpace=T.NoColorSpace;uiTexture.minFilter=uiTexture.magFilter=T.LinearFilter;uiTexture.generateMipmaps=false;uiMaterial.uniforms.picture.value=uiTexture;}
  function compose(scene,view,beforeScene,skipScene){
@@ -110,8 +112,8 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
   const ui=mode==='vhs'&&compositor?uiTexture:null;
   if(ui){const changed=compositor.paint(width,height);if(uiWidth!==compositor.canvas.width||uiHeight!==compositor.canvas.height)setCompositor(compositor);else if(changed)uiTexture.needsUpdate=true;renderer.initTexture(uiTexture);}
   renderer.setRenderTarget(internal);
-  if(scenePipeline){if(skipScene)scenePipeline.renderUI(width,height,internal,ui,mode==='vhs'?2:0);else scenePipeline.render(scene,view,beforeScene,width,height,internal,ui,mode==='vhs'?2:0);return;}
-  if(skipScene)renderer.clear();else{beforeScene?.();renderer.render(scene,view);lensEffect?.render(width,height);}
+  if(scenePipeline){if(skipScene)scenePipeline.renderUI(width,height,internal,ui,mode==='vhs'?2:0);else{scenePipeline.render(scene,view,beforeScene,width,height,internal,ui,mode==='vhs'?2:0);overlay?.(renderer,internal,view,width,height);}return;}
+  if(skipScene)renderer.clear();else{beforeScene?.();renderer.render(scene,view);lensEffect?.render(width,height);overlay?.(renderer,internal,view,width,height);}
   renderer.setRenderTarget(internal);
   if(ui){const old=renderer.autoClear;renderer.autoClear=false;renderer.render(uiScene,camera);renderer.autoClear=old;}
  }
@@ -149,5 +151,5 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  }
  function contextLost(){scenePipeline?.contextLost();lensEffect?.contextLost();epoch++;readback.cancel(true);if(readJob){readJob.slot.busy=false;readJob=null;}width=height=outputWidth=outputHeight=0;compositor?.invalidate();}
  function dispose(){scenePipeline?.dispose();lensEffect?.dispose();disposed=true;epoch++;readback.cancel(renderer.getContext().isContextLost());stopWorkers();source?.dispose();texture?.dispose();internal?.dispose();uiTexture?.dispose();geometry.dispose();material.dispose();uiMaterial.dispose();compositor?.dispose();}
- return{configure,render,settleScene,contextLost,dispose,setCompositor,setLensEffect,setScenePipeline,values};
+ return{configure,render,settleScene,contextLost,dispose,setCompositor,setLensEffect,setScenePipeline,setOverlay,values};
 }

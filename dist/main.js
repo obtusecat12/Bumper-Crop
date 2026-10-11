@@ -1,7 +1,7 @@
 import {inManila,nearManila} from './manila-plan.js';
-import {createLevel0World} from './level0-world.js?v=117';
+import {createLevel0World} from './level0-world.js?v=119';
 import {makeAlmondBottle} from './almond-water-assets.js?v=60';
-import {L0_CHUNK,l0Hash,L0_SPAWN_INDEX} from './level0-layout.js?v=117';
+import {L0_CHUNK,l0Hash,L0_SPAWN_INDEX} from './level0-layout.js?v=119';
 import {initializeOutpostTextures,attachOutpostGround} from './lake-outpost-materials.js';
 import {createLakeOutpost} from './lake-outpost.js';
 import {initializeCampLife98} from './camp-life-materials98.js';
@@ -83,7 +83,7 @@ import {createUIThemes} from './ui-themes.js?v=60';
 import {createMaterialFinish} from './material-finish.js?v=71';
 import {createRuralShadows} from './rural-shadows.js?v=60';
 import {createIrradianceField} from './irradiance-field.js?v=60';
-import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=63';
+import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=119';
 import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=60';
 import {createPerformanceMeter} from './performance-meter.js?v=60';
 import {createChunkStream} from './world-stream.js?v=60';
@@ -98,7 +98,7 @@ import {createNavigationMap} from './map-ui.js?v=117';
 import {drawAsciiTitle} from './ascii-title.js?v=116';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=117';
 import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
-import {createInventory117} from './inventory117.js?v=117';import {createFlashlight117} from './flashlight117.js?v=117';import {createIntro117} from './intro117.js?v=117';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=117'; // V117 shared inventory
+import {createInventory117} from './inventory117.js?v=117';import {createFlashlight117} from './flashlight117.js?v=119';import {createIntro117} from './intro117.js?v=117';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=119'; // V117 shared inventory
 import {createLevel1World} from './level1-world.js?v=117'; // V107 Level 1
 
 await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
@@ -168,9 +168,9 @@ const performanceMeter=createPerformanceMeter(renderer);
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.23;
 const displayFilter=createDisplayFilter(renderer,{onError:()=>{settings.filter='pixel';$('#filter').value='pixel';resize();savePreferences();toast('VHS 滤镜未能运行，已切换为像素画面；可在设置中重试。')}});
 // V117 flashlight: rides the camera into whichever scene is rendered this frame
-const flashlight=createFlashlight117(T),intro=createIntro117(T);globalThis.__bcIntro=intro;globalThis.__bcFlashlight=flashlight;{const r0=displayFilter.render.bind(displayFilter);let lt=performance.now();displayFilter.render=(sc,cam,...rest)=>{const now=performance.now(),dt=Math.min(.1,(now-lt)/1000);lt=now;
- if(cam&&intro.active)intro.apply(cam,dt);flashlight.setEquipped(playing&&!intro.active&&inventory.selected()==='flashlight');flashlight.setLevel(state.level);const sp=Math.hypot(state.velocity.x,state.velocity.z);flashlight.update(dt,{moving:Math.min(1,sp/2),running:sp>2.6,yaw:state.yaw,pitch:state.pitch,step:state.distance*.75});
- if(sc&&cam)flashlight.prepare(sc,cam);if(state.level===1&&oneWorld?.setFlash){const b=flashlight.beam;oneWorld.setFlash(b.p,b.d,b.i*7,b.cos);}return r0(sc,cam,...rest);};}
+const flashlight=createFlashlight117(T),intro=createIntro117(T);globalThis.__bcIntro=intro;globalThis.__bcFlashlight=flashlight;displayFilter.setOverlay?.(flashlight.overlay);{const r0=displayFilter.render.bind(displayFilter);let lt=performance.now();displayFilter.render=(sc,cam,...rest)=>{const now=performance.now(),dt=Math.min(.1,(now-lt)/1000);lt=now;
+ if(cam&&intro.active)intro.apply(cam,dt);flashlight.setEquipped(playing&&!intro.active&&!referenceView&&inventory.selected()==='flashlight');flashlight.setLevel(state.level);const sp=Math.hypot(state.velocity.x,state.velocity.z);flashlight.update(dt,{moving:Math.min(1,sp/2),running:sp>2.6,yaw:state.yaw,pitch:state.pitch,step:state.distance*.75});
+ if(sc&&cam){flashlight.prepare(sc,cam);globalThis.__bcLast={sc,cam,T};}if(state.level===1&&oneWorld?.setFlash){const b=flashlight.beam;oneWorld.setFlash(b.p,b.d,b.i*7,b.cos);}return r0(sc,cam,...rest);};}
 const scene=new T.Scene();scene.matrixAutoUpdate=false;scene.background=new T.Color('#acb6b1');scene.fog=new T.Fog('#acb6b1',60,225);
 const skyFill=new T.HemisphereLight('#c9d2d4','#6b6042',1.4);scene.add(skyFill);
 // A stable local light avoids shader recompilation as the shelter streams.

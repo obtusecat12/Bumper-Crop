@@ -4,6 +4,12 @@
 // additive volumetric cone with drifting dust lights the world. The light lives in whichever scene is being rendered
 // (prepare(scene) is called right before each render), and is never removed — only its intensity changes, so toggling
 // never triggers a shader recompile. Shadows are off (the cost of a moving shadow map was not worth it here).
+import {GLTFLoader} from './vendor/GLTFLoader.js';
+// V117b: the hand is now the CC0 "PSX First Person Arms" by Drillimpact (assets/fp-arms-v117/CREDITS.txt). Its knife_idle
+// fist is baked once on the CPU into a static mesh (no skinning at runtime: cheaper, and SwiftShader loses the context on
+// skinned draws), the left arm is dropped, and the torch is parented to the hand.R bone frame so the fingers wrap it.
+// Pivot pose (GR, GP) was tuned by eye in /workspace/work/fl/bake.html: an overhand grip, beam forward, forearm from below right.
+const GRIP_ROLL=4.3,GRIP_POS=[.16,-.16,-.38],GRIP_EDITS={thumb02R:[-.7,0,0],thumb03R:[-.5,0,0],handR:[0,0,-.5]};let btnRest=null;
 export function createFlashlight117(T){
  const rig=new T.Group();rig.name='flashlight117';rig.visible=false;
  const hand=new T.Group();rig.add(hand);
@@ -15,9 +21,9 @@ export function createFlashlight117(T){
  knurl.repeat.set(6,3);
  const skin=new T.MeshStandardMaterial({map:skinTex,roughness:.62,metalness:0,color:0xffffff});
  const sleeve=new T.MeshStandardMaterial({color:0x2c3138,roughness:.95});
- const alu=new T.MeshStandardMaterial({color:0x3a3e44,roughness:.38,metalness:.85});
- const body=new T.MeshStandardMaterial({map:knurl,color:0xffffff,roughness:.55,metalness:.7});
- const rubber=new T.MeshStandardMaterial({color:0x111214,roughness:.9});
+ const alu=new T.MeshStandardMaterial({color:0x6a7078,roughness:.42,metalness:.35,emissive:0x15171a});
+ const body=new T.MeshStandardMaterial({map:knurl,color:0xc8ccd2,roughness:.55,metalness:.3,emissive:0x101214});
+ const rubber=new T.MeshStandardMaterial({color:0x26282b,roughness:.9,emissive:0x08090a});
  const chrome=new T.MeshStandardMaterial({color:0xe8ecef,roughness:.12,metalness:1});
  const lensMat=new T.MeshBasicMaterial({color:0xfff2d0,toneMapped:false});
  const M=(geo,mat,parent=torch)=>{const m=new T.Mesh(geo,mat);parent.add(m);return m;};
@@ -50,6 +56,37 @@ export function createFlashlight117(T){
  const t2=new T.Group();t2.position.z=-.032;t2.rotation.set(0,-.95,0);t1.add(t2);{const m=new T.Mesh(seg(.0085,.02),skin);m.rotation.x=Math.PI/2;m.position.z=-.012;t2.add(m);}
  const nail=new T.Mesh(new T.BoxGeometry(.011,.002,.012),new T.MeshStandardMaterial({color:0xe6b8a2,roughness:.35}));nail.position.set(0,.007,-.018);t2.add(nail);
  hand.position.set(.2,-.21,-.4);hand.rotation.set(-.04,Math.PI+.08,0);
+ const armRoot=new T.Group();armRoot.visible=false;rig.add(armRoot);let armsReady=false;const btnN=new T.Vector3(0,1,0);
+ // V119 grip (user 14:43: no overhand fist with the torch poking out of the top): the barrel now runs THROUGH the
+ // curled fingers (axis = normal of the middle/ring finger curl plane), lens out of the index side, thumb straightened
+ // along the top of the barrel onto the switch, beam converging on the view axis ~10 m ahead, forearm leaving the
+ // frame to the lower right. Tuned in /workspace/work/fl/grip.html (solve()).
+ new GLTFLoader().load('./assets/fp-arms-v117/arms.glb?v=117',g=>{try{const mixer=new T.AnimationMixer(g.scene),cl=g.animations.find(a=>a.name==='knife_idle');mixer.clipAction(cl).play();mixer.setTime(0);
+  for(const[n,e]of Object.entries(GRIP_EDITS)){const bn=g.scene.getObjectByName(n);bn.quaternion.multiply(new T.Quaternion().setFromEuler(new T.Euler(...e)));}
+  g.scene.updateMatrixWorld(true);
+  let sk=null;g.scene.traverse(o=>{if(o.isSkinnedMesh)sk=o;});sk.skeleton.update();const src=sk.geometry,P=src.attributes.position,J=src.attributes.skinIndex,W=src.attributes.skinWeight,n=P.count,bones=sk.skeleton.bones;
+  const camN=g.scene.getObjectByName('camera');const C=new T.Matrix4().makeTranslation(new T.Vector3().setFromMatrixPosition(camN.matrixWorld)).multiply(new T.Matrix4().makeRotationY(Math.PI)),inv=C.clone().invert();
+  const bp=nm=>new T.Vector3().setFromMatrixPosition(g.scene.getObjectByName(nm).matrixWorld).applyMatrix4(inv);
+  // grip frame of the fist: z = barrel axis (towards the index finger), y = towards the knuckles, origin = ring centre
+  const ax=new T.Vector3();for(const f of['middle','ring']){const u1=bp('f_'+f+'02R').sub(bp('f_'+f+'01R')),u2=bp('f_'+f+'03R').sub(bp('f_'+f+'02R'));ax.add(u1.cross(u2).normalize());}ax.normalize();if(ax.dot(bp('f_index01R').sub(bp('f_pinky01R')))<0)ax.negate();
+  const ctr=new T.Vector3();for(const f of['index','middle','ring','pinky'])for(const j of['01','02','03'])ctr.add(bp('f_'+f+j+'R'));ctr.multiplyScalar(1/12);
+  const kn=bp('f_middle01R').add(bp('f_ring01R')).multiplyScalar(.5).sub(ctr);kn.addScaledVector(ax,-kn.dot(ax)).normalize();
+  const F=new T.Matrix4().makeBasis(new T.Vector3().crossVectors(kn,ax),kn,ax).setPosition(ctr).invert();
+  const P0=new T.Vector3(...GRIP_POS),fwd=new T.Vector3(0,0,-10).sub(P0).normalize(),up=new T.Vector3(Math.cos(GRIP_ROLL),Math.sin(GRIP_ROLL),0);up.addScaledVector(fwd,-up.dot(fwd)).normalize();
+  const Tm=new T.Matrix4().makeBasis(new T.Vector3().crossVectors(up,fwd),up,fwd).setPosition(P0),M=Tm.clone().multiply(F).multiply(inv);
+  const pos=new Float32Array(n*3),v=new T.Vector3(),isL=new Uint8Array(n);
+  for(let i=0;i<n;i++){v.fromBufferAttribute(P,i);sk.applyBoneTransform(i,v);v.applyMatrix4(sk.matrixWorld).applyMatrix4(M);pos[i*3]=v.x;pos[i*3+1]=v.y;pos[i*3+2]=v.z;let best=0,bi=0;for(let k=0;k<4;k++){const w=W.getComponent(i,k);if(w>best){best=w;bi=J.getComponent(i,k);}}isL[i]=/L$/.test(bones[bi].name)?1:0;}
+  const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(pos,3));geo.setAttribute('uv',src.attributes.uv.clone());const idx=src.index.array,keep=[];for(let i=0;i<idx.length;i+=3)if(!(isL[idx[i]]||isL[idx[i+1]]||isL[idx[i+2]]))keep.push(idx[i],idx[i+1],idx[i+2]);geo.setIndex(keep);geo.computeVertexNormals();
+  const map=sk.material.map;if(map){map.colorSpace=T.SRGBColorSpace;map.magFilter=T.NearestFilter;}
+  const mat=new T.MeshStandardMaterial({map,color:0xd9cdc6,roughness:.7,metalness:0,side:T.DoubleSide});// V119 tint: the PSX arm texture reads orange under warm light
+  const arm=new T.Mesh(geo,mat);arm.frustumCulled=false;
+  // torch in the grip frame: barrel centred in the fist, tail just past the little finger, switch under the thumb pad
+  const tg=new T.Group();Tm.decompose(tg.position,tg.quaternion,tg.scale);
+  const th=new T.Vector3().setFromMatrixPosition(g.scene.getObjectByName('thumb03R').matrixWorld).applyMatrix4(M);tg.updateMatrixWorld(true);tg.worldToLocal(th);
+  torch.removeFromParent();torch.position.set(0,0,.055);torch.rotation.set(0,0,0);tg.add(torch);
+  const ang=Math.atan2(th.y,th.x);btn.position.set(Math.cos(ang)*.0175,Math.sin(ang)*.0175,th.z-.055-.004);btn.rotation.set(0,0,ang-Math.PI/2);btnRest=btn.position.clone();btnN.set(Math.cos(ang),Math.sin(ang),0);
+  armRoot.add(arm,tg);torch.traverse(o=>{if(o.isMesh)o.frustumCulled=false;});
+  hand.visible=false;armRoot.visible=true;armsReady=true;mixer.stopAllAction();}catch(e){console.warn('fp arms bake failed, keeping procedural hand',e);}},undefined,e=>console.warn('fp arms load failed',e));
  rig.traverse(o=>{if(o.isMesh){o.castShadow=false;o.receiveShadow=false;o.frustumCulled=false;}});
 
  // ---- light ----
@@ -75,10 +112,29 @@ export function createFlashlight117(T){
  let ac=null;function click(up){try{ac=ac||new (globalThis.AudioContext||globalThis.webkitAudioContext)();if(ac.state==='suspended')ac.resume();const sr=ac.sampleRate,b=ac.createBuffer(1,Math.round(sr*.06),sr),d=b.getChannelData(0);let p=0;
   for(let i=0;i<d.length;i++){const tt=i/sr;p+=(Math.random()*2-1-p)*.5;d[i]=(Math.sin(tt*6.283*(up?2600:2100))*.5+p*.6)*Math.exp(-tt*(up?700:450))+Math.sin(tt*6.283*(up?700:520))*.35*Math.exp(-tt*120);}
   const s=ac.createBufferSource(),g=ac.createGain();s.buffer=b;g.gain.value=.22;s.connect(g);g.connect(ac.destination);s.start();}catch{}}
- function prepare(sc,camera){if(sc!==scene){rig.parent?.remove(rig);lightRig.parent?.remove(lightRig);scene=sc;if(sc){sc.add(rig);sc.add(lightRig);}}
-  // follow the camera: the hand is a child of a camera-locked rig; the light rides the torch lens
-  rig.position.copy(camera.position);rig.quaternion.copy(camera.quaternion);rig.updateMatrixWorld(true);
-  lens.getWorldPosition(lightRig.position);if(sc)sc.worldToLocal(lightRig.position);torch.getWorldQuaternion(lightRig.quaternion);lightRig.updateMatrixWorld(true);fdir.set(0,0,1).applyQuaternion(lightRig.quaternion);}
+ // V119 viewmodel pass: the hand + torch live in their own scene, drawn after the world into the same frame with a
+ // fresh depth buffer and a camera with a 1 cm near plane, so they never sink into walls. Lighting is a per-level
+ // ambient matched to each level's look. The world light (spot + cone) starts on the eye→lens ray at 40 % of the lens
+ // distance: on screen it still leaves the lens, but it can never poke through a wall the player is touching.
+ const vmScene=new T.Scene();vmScene.add(rig);const vmCam=new T.PerspectiveCamera(70,1,.01,6);
+ const hemi=new T.HemisphereLight(0xfff2c8,0x5a4c2a,1.6),key=new T.DirectionalLight(0xfff4dc,.9);key.position.set(-.4,1,.6);vmScene.add(hemi,key);
+ const LOOK={0:[0xfff4d6,0x7a6a3c,3.0,1.5],1:[0xd6dde0,0x44484a,1.7,.8],10:[0xfff8ec,0x7a7060,3.2,1.8],11:[0xf2f4f8,0x60646a,3.0,1.6]};
+ torch.traverse(o=>{if(o.isMesh&&o.material.metalness>.05&&o.material!==chrome){o.material.metalness=.05;o.material.roughness=Math.max(.45,o.material.roughness);}});
+ let vmTarget=null;const quadMat=new T.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,uniforms:{map:{value:null}},vertexShader:'varying vec2 vU;void main(){vU=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:'uniform sampler2D map;varying vec2 vU;void main(){vec4 c=texture2D(map,vU);if(c.a<.5)discard;gl_FragColor=vec4(c.rgb,1.);}'});
+ const quad=new T.Mesh(new T.PlaneGeometry(2,2),quadMat);quad.frustumCulled=false;const quadScene=new T.Scene();quadScene.add(quad);const quadCam=new T.OrthographicCamera(-1,1,1,-1,0,1);
+ function overlay(renderer,target,view,w,h){if(!rig.visible||!view)return;
+  if(!vmTarget||vmTarget.width!==w||vmTarget.height!==h){vmTarget?.dispose();vmTarget=new T.WebGLRenderTarget(w,h,{depthBuffer:true,minFilter:T.NearestFilter,magFilter:T.NearestFilter});vmTarget.texture.colorSpace=target?.texture?.colorSpace??T.NoColorSpace;quadMat.uniforms.map.value=vmTarget.texture;}
+  vmCam.fov=view.fov||70;vmCam.aspect=view.aspect||w/h;vmCam.updateProjectionMatrix();
+  const L=LOOK[level]||LOOK[0];hemi.color.setHex(L[0]);hemi.groundColor.setHex(L[1]);hemi.intensity=L[2];key.intensity=L[3];
+  const old=renderer.getRenderTarget(),oc=renderer.getClearColor(new T.Color()),oa=renderer.getClearAlpha(),ab=renderer.autoClear;
+  renderer.setRenderTarget(vmTarget);renderer.setClearColor(0x000000,0);renderer.clear(true,true,false);renderer.autoClear=false;renderer.render(vmScene,vmCam);
+  renderer.setRenderTarget(target);renderer.render(quadScene,quadCam);renderer.autoClear=ab;renderer.setClearColor(oc,oa);renderer.setRenderTarget(old===vmTarget?target:old);}
+ const lensP=new T.Vector3(),tq=new T.Quaternion();
+ function prepare(sc,camera){if(sc!==scene){lightRig.parent?.remove(lightRig);scene=sc;if(sc)sc.add(lightRig);}
+  rig.position.set(0,0,0);rig.quaternion.identity();rig.updateMatrixWorld(true);
+  lens.getWorldPosition(lensP).multiplyScalar(.4);torch.getWorldQuaternion(tq);
+  camera.updateMatrixWorld();lightRig.position.copy(lensP).applyMatrix4(camera.matrixWorld);if(sc)sc.worldToLocal(lightRig.position);
+  lightRig.quaternion.copy(camera.getWorldQuaternion(new T.Quaternion())).multiply(tq);lightRig.updateMatrixWorld(true);fdir.set(0,0,1).applyQuaternion(lightRig.quaternion);}
  const fdir=new T.Vector3(0,0,1);
  function update(dt,{moving=0,running=false,yaw=0,pitch=0,step=0}={}){t+=dt;coneMat.uniforms.uT.value=t;
   raise+=((equipped?1:0)-raise)*Math.min(1,dt*7);rig.visible=raise>.02;
@@ -88,11 +144,11 @@ export function createFlashlight117(T){
   if(lastYaw!==null){let dy=yaw-lastYaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));sway.x+=(dy*.35-sway.x)*Math.min(1,dt*8);sway.y+=((pitch-lastPitch)*.35-sway.y)*Math.min(1,dt*8);}lastYaw=yaw;lastPitch=pitch;
   sway.x*=Math.exp(-dt*6);sway.y*=Math.exp(-dt*6);press=Math.max(0,press-dt*5);
   const breathe=Math.sin(t*1.7)*.0025;
-  hand.position.set(.2+bob.x+sway.x*.4,-.21+bob.y+breathe-(1-raise)*.3-press*.004,-.4);hand.rotation.set(-.04-sway.y*.6-press*.05,Math.PI+.08+sway.x*.8,-bob.x*1.4);
-  thumb.children[0].rotation.x=-press*.25;btn.position.y=.017-press*.002;
+  hand.position.set(.2+bob.x+sway.x*.4,-.21+bob.y+breathe-(1-raise)*.3-press*.004,-.4);hand.rotation.set(-.04-sway.y*.6-press*.05,Math.PI+.08+sway.x*.8,-bob.x*1.4);armRoot.position.set(bob.x+sway.x*.4,bob.y+breathe-(1-raise)*.3-press*.004,0);armRoot.rotation.set(-sway.y*.6-press*.05,sway.x*.8,-bob.x*1.4);
+  thumb.children[0].rotation.x=-press*.25;if(btnRest)btn.position.copy(btnRest).addScaledVector(btnN,-press*.002);else btn.position.y=.017-press*.002;
   let I=on&&equipped?1:0;if(flick>0){flick-=dt;I*=flick>.12?(Math.sin(flick*90)>0?.3:1):1;}
   const lv=level;spot.intensity=I*(lv===10||lv===11?28:46);spot.decay=2;coneMat.uniforms.uI.value=I;cone.visible=I>0;lensMat.color.setScalar(I?1.6:.12);}
  function toggle(){if(!equipped)return;on=!on;press=1;click(on);if(on)flick=.22;}
  function setEquipped(v){if(v===equipped)return;equipped=v;}
- return{rig,prepare,update,toggle,setEquipped,setLevel(v){level=v;},get on(){return on&&equipped;},get beam(){return{p:lightRig.position,d:fdir,i:coneMat.uniforms.uI.value,cos:Math.cos(.46)};},get equipped(){return equipped;},spot};
+ return{rig,prepare,overlay,update,toggle,setEquipped,setLevel(v){level=v;},get on(){return on&&equipped;},get beam(){return{p:lightRig.position,d:fdir,i:coneMat.uniforms.uI.value,cos:Math.cos(.46)};},get equipped(){return equipped;},spot,cone,armRoot,torch};
 }

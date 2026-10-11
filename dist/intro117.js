@@ -52,11 +52,14 @@ export function createIntro117(T){
    :root.intro117-on body *{visibility:hidden!important}:root.intro117-on canvas.intro117-world,:root.intro117-on .intro117,:root.intro117-on .intro117 *{visibility:visible!important}`;o.append(st);parent.append(o);return o;}
  function start({scene,camera,spawn,hole,lamps,parent,canvas,onDone}){if(act)return;
   const root=overlay(parent||document.body);canvas?.classList.add('intro117-world');document.documentElement.classList.add('intro117-on');const group=build(scene,hole,lamps||[]);
-  act={t:0,scene,spawn,hole,root,group,canvas,onDone,shards:[],flags:{},blur:0,shake:0,seed:Math.random()*10};
+  // the Level 0 plenum void cap sits at 3.6 m: it z-fought with the tile backs and hid the hole, so it is hidden for the intro
+  const voids=new Set();scene.traverse(o=>{const m=o.material;if(o.isMesh&&m&&!Array.isArray(m)&&m.isMeshBasicMaterial&&m.color&&m.color.getHex()===0x090908&&m.visible)voids.add(m);});for(const m of voids)m.visible=false;
+  act={t:0,scene,spawn,hole,root,group,canvas,onDone,shards:[],flags:{},blur:0,shake:0,seed:Math.random()*10,voids};
   const skip=e=>{if(!act)return;if(e.type==='keydown'&&!['Space','Enter','Escape'].includes(e.code))return;e.preventDefault?.();act.t=Math.max(act.t,8.9);};act.skip=skip;
   addEventListener('keydown',skip,true);addEventListener('mousedown',skip,true);sfx('wind');}
  function finish(){if(!act)return;const a=act;act=null;removeEventListener('keydown',a.skip,true);removeEventListener('mousedown',a.skip,true);a.scene.remove(a.group);a.group.traverse(o=>{o.geometry?.dispose();});
-  a.root.remove();a.canvas?.classList.remove('intro117-world');document.documentElement.classList.remove('intro117-on');if(a.canvas)a.canvas.style.filter='';for(const n of nodes){try{n.gain.cancelScheduledValues(0);n.gain.value=0;}catch{}}nodes=[];a.onDone?.();}
+  a.root.remove();for(const sh of a.shards){if(!sh.rest){sh.m.position.y=.012;sh.m.rotation.set(0,sh.m.rotation.y,0);sh.rest=true;}}// a skipped intro used to leave the tile shards frozen mid-air in front of the camera
+  for(const m of a.voids||[])m.visible=true;a.canvas?.classList.remove('intro117-world');document.documentElement.classList.remove('intro117-on');if(a.canvas)a.canvas.style.filter='';for(const n of nodes){try{n.gain.cancelScheduledValues(0);n.gain.value=0;}catch{}}nodes=[];a.onDone?.();}
  const E=new T.Euler(0,0,0,'YXZ');
  function apply(camera,dt){if(!act)return false;const a=act;a.t+=Math.min(dt,.05);const t=a.t,S=a.spawn,H=a.hole,el=a.root;
   const black=el.querySelector('.i-black'),white=el.querySelector('.i-white'),lt=el.querySelector('.i-lid.t'),lb=el.querySelector('.i-lid.b');

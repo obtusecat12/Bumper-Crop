@@ -1,0 +1,2 @@
+PSX First Person Arms (free) by Drillimpact — https://drillimpact.itch.io/psx-first-person-arms-free
+License: CC0 1.0 (public domain). Used for the V117 first-person flashlight hand (arms_rig.glb, knife_idle pose, left arm hidden).
