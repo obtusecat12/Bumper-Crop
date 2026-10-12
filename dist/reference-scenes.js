@@ -7,6 +7,7 @@ import * as P from './urban-props.js?v=60';
 import {addBuilding} from './urban-buildings.js?v=60';
 import {addHope118,addHope118Materials} from './hopest118-build.js?v=118d';
 import {createHope118People} from './hopest118-people.js?v=118d';
+import {createBlock122,addBlock122Materials,block122Waypoint} from './block122-scene.js?v=122';
 import {addHope122Materials,H122_LETTER_KEYS,ficus122,ribTower122,distant122,car122} from './hopest122-street.js?v=122';
 const Y=EXIT_CITY_Y,UP=new T.Vector3(0,1,0),plane=new T.PlaneGeometry(1,1);
 const CLINIC_PATH=282,cp=exitPoint(CLINIC_PATH);
@@ -251,8 +252,9 @@ function photoHandedness(part,origin,angle,scaleX=1){
  for(const q of part.walks){Object.assign(q,reflect(q.x,q.z));q.ry=2*angle-q.ry;q.w*=scaleX;q.slopeX=-q.slopeX/scaleX;}
  return part;
 }
-export function createReferenceScenes(mats){addHope118Materials(mats);addHope122Materials(mats);const hope=hopeStreet(mats),clinic=clinicCourt(mats),object=new T.Group();hope.materials=clinic.materials=mats;photoHandedness(hope,CITY_ORIGIN,CITY_ANGLE);photoHandedness(clinic,CLINIC_ORIGIN,CLINIC_ANGLE,.64);object.name='Two photographic street landmarks';object.add(hope.object,clinic.object);const people=createHope118People({toWorld:(x,z)=>cityToWorld(-x,z),Y,angle:CITY_ANGLE});object.add(people.object);hope.people=people;object.userData.cityStats={triangles:hope.object.userData.cityStats.triangles+clinic.object.userData.cityStats.triangles,draws:hope.object.userData.cityStats.draws+clinic.object.userData.cityStats.draws,parts:0};return{object,hope,clinic,colliders:[...hope.colliders,...clinic.colliders],walks:[...hope.walks,...clinic.walks]};}
+export function createReferenceScenes(mats){addHope118Materials(mats);addHope122Materials(mats);const hope=hopeStreet(mats),clinic=clinicCourt(mats),object=new T.Group();hope.materials=clinic.materials=mats;photoHandedness(hope,CITY_ORIGIN,CITY_ANGLE);photoHandedness(clinic,CLINIC_ORIGIN,CLINIC_ANGLE,.64);object.name='Two photographic street landmarks';object.add(hope.object,clinic.object);const people=createHope118People({toWorld:(x,z)=>cityToWorld(-x,z),Y,angle:CITY_ANGLE});object.add(people.object);hope.people=people;addBlock122Materials(mats);const block122=createBlock122(mats);object.add(block122.object);object.userData.cityStats={triangles:hope.object.userData.cityStats.triangles+clinic.object.userData.cityStats.triangles,draws:hope.object.userData.cityStats.draws+clinic.object.userData.cityStats.draws,parts:0};return{object,hope,clinic,block122,colliders:[...hope.colliders,...clinic.colliders,...block122.colliders],walks:[...hope.walks,...clinic.walks,...block122.walks]};}
 export function referenceWaypoint(name){
+ if(name==='photo-block122')return block122Waypoint();
  if(name==='photo-clinic'){const p=clinicToWorld(-6.4,-7.5);return{...p,label:'图二 · 诊所与糕点房',yaw:CLINIC_ANGLE+Math.PI+.326,pitch:.135,eye:1.7,fov:49.8,referenceAspect:2048/1278,range:480,urbanPhoto:true};}
  const p=cityToWorld(2.8,-22);return{...p,label:'图一 · Hope St',yaw:CITY_ANGLE+Math.PI-.025,pitch:.15,eye:1.8,fov:41.8,referenceAspect:2048/1393,range:510,urbanPhoto:true};
 }
