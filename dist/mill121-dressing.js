@@ -1,5 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {TikiKit} from './tiki-geometry-v76.js';
+import {mergeVertices} from './vendor/BufferGeometryUtils.js';
 import {M121_PROPS as P,M121_DECALS as D} from './mill121-atlas.js';
 // V121-L11: street-side dressing of the flour-mill passage mouth (image-46 view).
 // Local return frame: wall faces at z=0 looking to -z (the street), x>0 = green corrugated
@@ -14,7 +15,7 @@ export function mill121Materials(){const t=textures(),S=o=>new T.MeshStandardMat
   m121s:S({name:'Mill121 / soft stains',map:t.decals,transparent:true,depthWrite:false,roughness:.95,...off(-3)}),
   m121w:S({name:'Mill121 / puddles',map:t.decals,transparent:true,depthWrite:false,roughness:.07,metalness:.1,color:0x8c9194,opacity:.88,...off(-4)}),
   m121g:S({name:'Mill121 / weed cards',map:t.decals,alphaTest:.5,side:T.DoubleSide,roughness:.97,color:0xd8d2bc}),
-  m121b:S({name:'Mill121 / bin bags',map:t.props,roughness:.38,color:0x303030}),m121k:S({name:'Mill121 / pallet timber',map:t.props,roughness:.92,color:0x9a9284}),
+  m121b:S({name:'Mill121 / bin bags',map:t.props,roughness:.62,color:0x2c2c2c}),m121k:S({name:'Mill121 / pallet timber',map:t.props,roughness:.92,color:0x9a9284}),
   m121r:S({name:'Mill121 / rain streaks',map:t.decals,transparent:true,depthWrite:false,roughness:.95,color:0x5c564e,opacity:.42,polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3}),
   m121c:S({name:'Mill121 / cinder block',map:t.cinder,normalMap:t.cinderN,normalScale:new T.Vector2(.9,.9),roughness:.95,color:0xc2beb2})};}
 // deterministic jitter so no two instances show the same crop of a face
@@ -41,7 +42,7 @@ export function createMillDressing(base,{sacks,pallet,ground:G=0}={}){
   for(let i=0;i<7;i++){const [px,py,pz]=pos(.07+i*.176,0);board(px,py,pz,1.18,.14,.022,lean,0,0);}
   for(const xx of[-.52,0,.52]){const [px,py,pz]=pos(.6,.06);board(px+xx,py,pz,.09,1.18,.09,lean,0,0);}return z0;};
  const hyd=(g,key,x,y,z,r=[0,0,0])=>{const uv=g.attributes.uv,q=sub(P.hydrant,.3);for(let i=0;i<uv.count;i++)uv.setXY(i,q[0]+uv.getX(i)*q[2],q[1]+uv.getY(i)*q[3]);at(g,'m121m',x,y,z,r);};
- const bag=(x,z,sc,ry)=>{const g=new T.IcosahedronGeometry(1,2),p=g.attributes.position;for(let i=0;i<p.count;i++){const a=p.getX(i),b=p.getY(i),c=p.getZ(i),n=1+.13*Math.sin(a*7+c*5+sc*9)+.08*Math.sin(b*11+a*3);p.setXYZ(i,a*.33*n,(b>0?b*.40:b*.22)*n,c*.30*n);}g.computeVertexNormals();
+ const bag=(x,z,sc,ry)=>{const g=mergeVertices(new T.IcosahedronGeometry(1,3).deleteAttribute('normal').deleteAttribute('uv')),p=g.attributes.position;g.setAttribute('uv',new T.Float32BufferAttribute(new Float32Array(p.count*2),2));for(let i=0;i<p.count;i++){const a=p.getX(i),b=p.getY(i),c=p.getZ(i),n=1+.13*Math.sin(a*7+c*5+sc*9)+.08*Math.sin(b*11+a*3);p.setXYZ(i,a*.33*n,(b>0?b*.40:b*.22)*n,c*.30*n);}g.computeVertexNormals();
   const uv=g.attributes.uv,r=sub(P.trashbag,.2),fr=v=>v-Math.floor(v);for(let i=0;i<uv.count;i++)uv.setXY(i,r[0]+fr(p.getX(i)*1.3+p.getZ(i)*.9+.5)*r[2],r[1]+fr(p.getY(i)*1.2+.5)*r[3]);at(g,'m121b',x,.2*sc,z,[0,ry,0]);k.add(new T.CylinderGeometry(.035,.06,.14,6),'m121b',x,G+.62*sc,z);};
  const cinder=(x,y,z,ry)=>{const g=new T.BoxGeometry(.40,.20,.20),uv=g.attributes.uv,o=[rnd(),rnd()];for(let i=0;i<uv.count;i++)uv.setXY(i,o[0]+uv.getX(i)*.5,o[1]+uv.getY(i)*.25);at(g,'m121c',x,y+.10,z,[0,ry,0]);};
 
