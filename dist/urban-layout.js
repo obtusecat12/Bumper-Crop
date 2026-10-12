@@ -18,6 +18,14 @@ export function cityBlockPlan(ix,iz,types){
  for(const side of[0,1])for(const[a,c]of[[12,53],[59,100]]){if(ix===0&&iz===4&&side===0&&a===12){add(33,53,12,0,24);continue;}const split=a+(c-a)*(.43+r()*.14);add(a,split,side?100:12,side,24);add(split,c,side?100:12,side,24);}
  for(const side of[2,3]){const split=54+r()*4;add(36,split,side===2?12:100,side,22);add(split,76,side===2?12:100,side,22);}
  if(ix===2&&iz>=0&&iz<=2)result.buildings=result.buildings.filter(q=>q.ry!==-Math.PI/2);
+ // V123-L11: image-48 re-solve. Block 1,1 hosts the authored hotel/mid-rises/brick row (keep only its NW shop and the hidden east laundromat);
+ // block 2,2 gives its NW corner to the red-brick loft; block 2,0 gives its west half to the yellow tower and the Gothic hall.
+ if(ix===1&&iz===1)result.buildings=result.buildings.filter(q=>(q.ry===Math.PI&&q.x<x+40)||(q.ry===Math.PI/2&&q.z>z+60));
+ if(ix===2&&iz===2)result.buildings=result.buildings.filter(q=>!(q.ry===Math.PI&&q.x<x+56));
+ if(ix===2&&iz===0)result.buildings=result.buildings.filter(q=>q.x>=x+56||q.ry===Math.PI/2);
+ // Down the avenue the photo's skyline stays low: cap (not remove) the west row of block 2,1 and the whole 2,-1..-4 run.
+ if(ix===2&&iz===1)for(const q of result.buildings)if(q.ry===0&&q.x<x+56)q.floors=Math.min(q.floors,1);
+ if(ix===2&&iz<=-1&&iz>=-4)for(const q of result.buildings)q.floors=Math.min(q.floors,q.type==='brick_walkup'?6:7);
  return result;
 }
 export function cityWaypoint(name){const edge=exitPoint(282),p=name==='city-core'?cityToWorld(112,478):name==='city-plaza'?cityToWorld(224,702):{x:edge.x+edge.nx*15,z:edge.z+edge.nz*15};return{...p,label:name==='city-core'?'Level 11 · 金融街峡谷':name==='city-plaza'?'Level 11 · 公共广场':'Level 11 · 商业边缘区',yaw:name==='city-plaza'?CITY_ANGLE-Math.PI/2:name==='city-edge'?Math.atan2(-edge.nx,-edge.nz):Math.atan2(-CITY_ORIGIN.tx,-CITY_ORIGIN.tz)};}
