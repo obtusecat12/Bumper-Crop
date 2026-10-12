@@ -70,7 +70,13 @@ uniform mat4 l1TexMat;varying vec4 vR;
 #endif
 #include <common>
 #include <fog_pars_vertex>
-void main(){vec4 w=modelMatrix*vec4(position,1.0);vW=w.xyz;vN=normalize(mat3(modelMatrix)*normal);vC=l1c;vT=l1t;vUv=uv;
+void main(){
+#ifdef USE_INSTANCING
+vec4 w=modelMatrix*instanceMatrix*vec4(position,1.0);vN=normalize(mat3(modelMatrix)*mat3(instanceMatrix)*normal);
+#else
+vec4 w=modelMatrix*vec4(position,1.0);vN=normalize(mat3(modelMatrix)*normal);
+#endif
+vW=w.xyz;vC=l1c;vT=l1t;vUv=uv;
 #ifdef L1_FLOOR
 vR=l1TexMat*vec4(position,1.0);
 #endif
@@ -208,7 +214,11 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  const C={};for(const k in CM){const[c0,t]=CM[k];const c=new T.Color(Math.min(1,c0[0]),Math.min(1,c0[1]),Math.min(1,c0[2])).convertSRGBToLinear();C[k]=[c.r*(c0[0]>1?c0[0]:1),c.g,c.b,c0[3]];C[k].t=t;}
  const LET=['colF','colE','colG','colB3','colD','colA7','colH','colC2'].map(n=>{const c=[1,1,1,0];c.t=TX(n,3);return c;});
  const GLOW={amber:[2.4,1.0,.3],warm:[2.2,1.6,.9],tube:[1.7,1.85,1.95],exit:[1.25,1.35,1.25],dim:[.5,.55,.6]};GLOW.screen=[.25,.55,.45];GLOW.tube.t=TX('fluor',0);GLOW.dim.t=TX('fluor',0);GLOW.exit.t=TX('exitcn',0);
- let parts=null,glows=null,exits=null,solids=null,halos=null,ox0=0,oz0=0;const HL=(x,y,z,w,h,i)=>halos.push([x-ox0,y,z-oz0,w,h,i]);
+ let parts=null,glows=null,exits=null,solids=null,halos=null,loots=null,ox0=0,oz0=0;
+ // V124 openable crates: looks that can be pried/opened (index into PR.LOOK) — no lockers
+ const LOOK1=[0,1,2,3,4,5,6,7,8,9,10,13];
+ function lootAt(id,x,z,ry,li,kb,s){const L=PR.LOOK[LOOK1[li%LOOK1.length]];s=s??(.88+l1Hash(x*13|0,z*13|0,410)*.2);loots.push({id:'l1c:'+id,x,z,ry,look:LOOK1[li%LOOK1.length],s,kb,w:L[1]*s,h:L[2]*s,d:L[3]*s});
+  const a=Math.abs(Math.cos(ry)),b=Math.abs(Math.sin(ry)),w=L[1]*s,d=L[3]*s;solid(x,z,w*a+d*b+.04,w*b+d*a+.04);}const HL=(x,y,z,w,h,i)=>halos.push([x-ox0,y,z-oz0,w,h,i]);
  tmp.rotation.order='YXZ';
  function put(list,geo,c,x,y,z,w,h,d,ry=0,rx=0,rz=0){tmp.position.set(x-ox0,y,z-oz0);tmp.rotation.set(rx,ry,rz);tmp.scale.set(w,h,d);tmp.updateMatrix();const g=geo.clone().applyMatrix4(tmp.matrix);list.push(c.length===4?col(g,c,[w,h,d]):colGlow(g,c));}
  function colGlow(g,c){const n=g.attributes.position.count,a=new Float32Array(n*3);for(let i=0;i<n;i++)a.set(c,i*3);g.setAttribute('color',new T.BufferAttribute(a,3));return texAttr(g,c.t);}
@@ -278,8 +288,8 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  // chunk build is a generator: two bay rows per step, so streaming spreads one chunk over ~5 frames.
  // The shared scratch lists are restored after every yield (a synchronous ensure() may build another chunk in between).
  function buildChunk(cx,cz){const g=chunkGen(cx,cz);let r;do r=g.next();while(!r.done);return r.value;}
- function* chunkGen(cx,cz){parts=[];glows=[];exits=[];solids=[];halos=[];const x0=cx*8,z0=cz*8;ox0=cx*K;oz0=cz*K;const ctx={parts,glows,exits,solids,halos};
-  const resume=()=>{parts=ctx.parts;glows=ctx.glows;exits=ctx.exits;solids=ctx.solids;halos=ctx.halos;ox0=cx*K;oz0=cz*K;};
+ function* chunkGen(cx,cz){parts=[];glows=[];exits=[];solids=[];halos=[];loots=[];const x0=cx*8,z0=cz*8;ox0=cx*K;oz0=cz*K;const ctx={parts,glows,exits,solids,halos,loots};
+  const resume=()=>{parts=ctx.parts;glows=ctx.glows;exits=ctx.exits;solids=ctx.solids;halos=ctx.halos;loots=ctx.loots;ox0=cx*K;oz0=cz*K;};
   // V117: merge each bay row's small geometries as soon as the row is done (spreads mergeGeometries over the build
   // instead of one ~2000-piece merge on the frame the chunk appears)
   const rowP=[],rowG=[],flush=()=>{if(ctx.parts.length){rowP.push(mergeGeometries(ctx.parts,false));ctx.parts.forEach(g=>g.dispose());ctx.parts.length=0;}if(ctx.glows.length){rowG.push(mergeGeometries(ctx.glows,false));ctx.glows.forEach(g=>g.dispose());ctx.glows.length=0;}};
@@ -364,8 +374,12 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
      for(let q=0;q<n;q++){const kind=set[Math.floor(l1Hash(ix+q*31,iz,84)*set.length)];let x,z,ry;
       let D=0;if((wx||wz)&&q<2){const along=1.4+l1Hash(ix,iz+q*17,85)*5.2;if(wx){x=X+along;z=Z+L1_WALL/2+.45;ry=0;}else{x=X+L1_WALL/2+.45;z=Z+along;ry=Math.PI/2;}if(PR.LEAN.has(kind))D=.45;else ry+=(l1Hash(ix,iz,86+q)-.5)*.25;}
       else{x=X+1.6+l1Hash(ix,iz+q,87)*4.8;z=Z+1.6+l1Hash(ix+q,iz,88)*4.8;ry=l1Hash(ix,iz,89+q)*6.28;}
+      if(kind===1&&l1Hash(ix+q,iz,402)<.6){lootAt(`c${ix},${iz},${q}`,x,z,ry,Math.floor(r(21)*LOOK1.length),kb);continue;}
       PR.place(kind,x,z,ry,k+q*7,D);}}
    else if(r(40)<(kb===3?.6:.05))PR.debris(X+1.5+r(42)*5,Z+1.5+r(43)*5,0,ix*31+iz);
+   // V124: loot caches — 1–3 openable crates in a few otherwise empty bays (more in the Gild warehouse)
+   else if(r(403)<(kb===1?.07:kb===4?.05:.035)&&!(ix===0&&iz===0)){const n=1+Math.floor(r(404)*3),cx0=X+2+r(405)*4,cz0=Z+2+r(406)*4,a=r(407)*6.28;
+    for(let q=0;q<n;q++){const ang=a+q*2.1,o=q?1.05:0;lootAt(`k${ix},${iz},${q}`,cx0+Math.cos(ang)*o,cz0+Math.sin(ang)*o,a+(l1Hash(ix,iz,408+q)-.5)*.6,Math.floor(l1Hash(ix+q,iz,409)*LOOK1.length),kb);}}
   }}
   yield;resume();
   // Level 2 maintenance door at a threshold core
@@ -381,12 +395,12 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   const camp=campAt(cx,cz);if(camp){const{x,z,nx,nz,col:cc}=camp,ax=nz!==0,w=(a,b)=>ax?a:b,F=(o)=>[x+nx*o,z+nz*o];
    let[fx,fz]=F(.17);P(box,cc,fx,1.75,fz,w(1.15,.02),1.25,w(.02,1.15));[fx,fz]=F(.18);P(box,camp.col2,fx+w(.25,0),1.2,fz+w(0,.25),w(.35,.022),.5,w(.022,.35));
    [fx,fz]=F(.19);P(box,C.paper,fx+w(.7,0),1.55,fz+w(0,.7),w(.22,.01),.3,w(.01,.22));P(box,C.tape,fx+w(.7,0),1.69,fz+w(0,.7),w(.1,.012),.03,w(.012,.1));
-   [fx,fz]=F(.42);PR.crate(fx,fz,ax?0:Math.PI/2,0,1,.75);solid(fx,fz,.6,.6);}
+   [fx,fz]=F(.42);lootAt(`m${cx},${cz}`,fx,fz,ax?0:Math.PI/2,1,-1,.75);}
   flush();yield;resume();
   const geo=rowP.length>1?mergeGeometries(rowP,false):rowP[0],glow=rowG.length?(rowG.length>1?mergeGeometries(rowG,false):rowG[0]):null;if(rowP.length>1)rowP.forEach(g=>g.dispose());if(rowG.length>1)rowG.forEach(g=>g.dispose());
   const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
   if(halos.length){const hm=new T.Mesh(haloGeo(halos),haloMat);hm.renderOrder=5;group.add(hm);}
-  const out={cx,cz,group,solids};parts=glows=exits=solids=halos=null;return out;}
+  const out={cx,cz,group,solids,loot:loots};parts=glows=exits=solids=halos=loots=null;return out;}
 
  // ---- column numbers + 牛皮癣 ads (atlas decal layers, 4 cut-outs of 128 px per layer; quads merge into the chunk mesh: no extra draw calls)
  const DQ=new T.PlaneGeometry(1,1),DN={any:[]},DA={any:[]};for(const d of L1_DEC){const m=d[1]==='num'?DN:DA;(m[d[2]]=m[d[2]]||[]).push(d);}
@@ -499,7 +513,11 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   const t=spiral(6,(x,z)=>l1ThrSite(x*64+32,z*64+32));if(!t)add(null);if(t){const[fx,fz]=siteDir(t);landmarks.push({name:'阈界 · 通往 Level 2 的管道区',x:t.x+fx*6,z:t.z+fz*6,yaw:Math.atan2(fx,fz),pitch:.06});}
   {const d=CL.nearest(4,4);if(!d)add(null);if(d)landmarks.push({name:'小径 · 过道墙上的门洞',x:d.x,z:d.z,yaw:d.yaw,pitch:-.02});}
   add(sec(3),{name:'衔尾段 · 装修中',yaw:.5,pitch:.1});add(sec(4),{name:'传说段 · 木构老屋',yaw:.5,pitch:.05});}
+ function lootNear(x,z,R=24){const o=[];for(const c of chunks.values()){if(!c.loot)continue;const gx=c.cx*K+K/2,gz=c.cz*K+K/2;if(Math.abs(gx-x)>K/2+R||Math.abs(gz-z)>K/2+R)continue;for(const l of c.loot)if(Math.abs(l.x-x)<R&&Math.abs(l.z-z)<R)o.push(l);}return o;}
+ // build a geometry (local frame, origin at 0) out of the world's own primitives and atlas materials
+ function kitGeo(fn){const sv=[parts,ox0,oz0];parts=[];ox0=oz0=0;try{fn((...a)=>put(parts,...a),C,{box,cyl,vcyl});const g=parts.length>1?mergeGeometries(parts,false):parts[0];if(parts.length>1)parts.forEach(q=>q.dispose());return g;}finally{[parts,ox0,oz0]=sv;}}
+ let hand={i:0,p:new T.Vector3(),d:new T.Vector3(0,0,-1)};
  async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);const g=new T.Group();for(const m of [mat,glowMat,exitMat]){const q=new T.Mesh(col(box.clone(),C.concrete,[1,1,1]),m);q.position.set(camera.position.x,-50,camera.position.z);g.add(q);}g.add(new T.Mesh(haloGeo([[0,-50,0,1,1,1]]),haloMat));scene.add(g);await r.compileAsync(scene,camera);scene.remove(g);g.traverse(o=>o.geometry?.dispose());}
  return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='corridor'?corridors.scene:scene},get mode(){return mode},nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt:()=>H,
-  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA)=>{uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
+  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA)=>{if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
 }
