@@ -7,6 +7,7 @@ import * as P from './urban-props.js?v=60';
 import {addBuilding} from './urban-buildings.js?v=60';
 import {addHope118,addHope118Materials} from './hopest118-build.js?v=118d';
 import {createHope118People} from './hopest118-people.js?v=118d';
+import {addHope122Materials,H122_LETTER_KEYS,ficus122,ribTower122,distant122,car122} from './hopest122-street.js?v=122';
 const Y=EXIT_CITY_Y,UP=new T.Vector3(0,1,0),plane=new T.PlaneGeometry(1,1);
 const CLINIC_PATH=282,cp=exitPoint(CLINIC_PATH);
 export const CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);
@@ -56,18 +57,7 @@ function storefront(b,w,{key='photoRetail',base=.15,top=4.1,step=2.1,logo=false}
  if(logo)b.plane('photoFamima',0,top+.51,-.34,Math.min(5.8,w),.84,Math.PI);
  if(key==='photoShop'){for(let i=0;i<3;i++){const h=base*(i+1)/3;b.box('photoGranite',0,h/2,-.6+i*.19,w,h,.30);b.box('yellow',0,h+.003,-.74+i*.19,w,.01,.045,0,.8);}for(const x of[-w*.32,w*.31]){b.rod('photoRail',[x,base,-.75],[x,base+1,-.75],.025);b.rod('photoRail',[x,base+1,-.75],[x,base+1,.04],.025);}}
 }
-function streetTree(b,x,z,{height=10.4,width=7.4,seed=1,shadow=true,small=false}={}){
- const r=urbanRandom(seed),trunk=height*.38,ry=.17+r()*.34;
- const lean=(r()-.5)*.45,root=[x,.12,z],joint=[x+lean,trunk*.58,z-.12],fork=[x-lean*.6,trunk,z+.18];
- b.rod('photoTrunk',root,joint,.23);b.rod('photoTrunk',joint,fork,.16);
- for(let i=0;i<5;i++){const a=i*2.399+r()*.8,h=trunk+height*(.17+r()*.16),end=[x+Math.cos(a)*width*(.18+r()*.12),h,z+Math.sin(a)*width*.23];b.rod('photoTrunk',i%2?joint:fork,end,.065+r()*.035);b.rod('photoTrunk',end,[end[0]+Math.cos(a+.5)*.65,end[1]+.65,end[2]+Math.sin(a+.5)*.65],.026);}
- for(let i=0;i<4;i++){const a=i*1.6;b.rod('photoTrunk',[x,.22,z],[x+Math.cos(a)*.43,.06,z+Math.sin(a)*.43],.06);}
- if(z>150)for(let j=0;j<2;j++)b.plane('photoTree',x,height*.47,z,width,height,j*Math.PI/2+.1,0,.72);
- const n=small?8:z>150?8:15;
- for(let k=0;k<n;k++){const a=k*2.399,rad=(k%4)/4,px=x+Math.cos(a)*width*.32*rad,pz=z+Math.sin(a)*width*.29*rad,py=height*.64+Math.sin(k*1.63)*height*.14,sz=width*(.48+r()*.15);for(let j=0;j<3;j++)b.plane('photoCrown',px,py,pz,sz,sz*.90,ry+j*Math.PI/3,0,.88+r()*.14);}
- for(let i=0;i<9;i++){const a=i*2.399,px=x+Math.cos(a)*width*.37,pz=z+Math.sin(a)*width*.34;for(let j=0;j<2;j++)b.plane('photoLeaf',px,height*.61+Math.sin(i)*.7,pz,2.5,2.1,a+j*Math.PI/2,0,.8);}
- b.circle(x,z,.29);b.box('photoSteel',x,.012,z,1.44,.025,1.44);for(let i=-4;i<=4;i++)b.box('photoGranite',x+i*.15,.031,z,.026,.014,1.33);
-}
+function streetTree(b,x,z,o={}){ficus122(b,x,z,o);}
 function smallCar(b,x,z,ry=0,tone=.6){b.push(x,.05,z,ry);b.box('photoSteel',0,.48,0,1.76,.60,4.4,0,tone);b.box('photoGlass',0,.97,-.12,1.58,.61,2.25,0,.7);b.box('photoSteel',0,1.30,-.2,1.61,.10,2,0,tone);b.box('photoSteel',0,.82,1.52,1.76,.12,1.2,0,tone);for(const s of[-1,1]){b.box('photoFrame',s*.73,1.02,-.1,.06,.61,2.3);for(const z of[-1.35,1.4])b.cylinder('rubber',s*.90,.35,z,.34,.34,.20,12,0,Math.PI/2);b.box('white',s*.58,.55,2.24,.46,.17,.02);b.box('red',s*.60,.60,-2.24,.43,.12,.02);}b.box('photoFrame',0,.35,2.26,1.7,.08,.06);b.solid(0,0,1.95,4.5);b.pop();}
 function signal(b,x,z,{height=6.7,arm=0,side=1,ped=false}={}){
  b.cylinder('photoPole',x,height/2,z,.075,.105,height,10);for(const[y,rt,rb,h]of[[.10,.28,.30,.20],[.25,.21,.26,.10],[.56,.13,.21,.54],[.85,.14,.14,.055]])b.cylinder('photoPole',x,y,z,rt,rb,h,12);
@@ -89,12 +79,10 @@ function hopeStreet(mats){
  b.box('yellow',0,.02,-3,104,.01,.10,0,.52);b.box('yellow',0,.02,-3.3,104,.01,.10,0,.52);
  place(b,2,.024,-9,0,P.addManhole);place(b,-10.6,.026,13,0,P.addStormDrain);place(b,10.6,.026,18,0,P.addStormDrain);
  // Left foreground tower: deep dark vertical concrete ribs above a recessed shop arcade.
- b.box('photoPrecast',-30,31,39,31,62,62);b.solid(-30,39,31,62);
- b.push(-14.4,0,39,-Math.PI/2);facade(b,{w:62,h:62,cols:34,rows:17,key:'photoPrecast',ground:5,fin:true,seed:48});b.pop();
- b.push(-30,0,7.9,0);facade(b,{w:31,h:62,cols:17,rows:17,key:'photoPrecast',ground:5,fin:true});b.pop();
+ ribTower122(b); // V122: textured dark precast + projecting fins (was facade fin grid)
  b.box('dark',-14.2,4.4,39,.9,1.25,62);b.box('dark',-30,4.4,7.2,31,1.25,.9);
- for(let z=14;z<70;z+=6){b.push(-14,0,z,-Math.PI/2);storefront(b,5.7,{key:'photoShop',base:.46,logo:z<27});b.pop();b.box('photoPrecast',-13.55,2.15,z+3,.65,4.3,.66);}
- b.push(-25,0,7.12,0);storefront(b,9,{key:'photoShop',base:.46,logo:true});b.pop();
+ for(let z=14;z<70;z+=6){b.push(-14,0,z,-Math.PI/2);storefront(b,5.7,{key:z<27?'h122FamStore':'photoShop',base:.46,logo:z<27});b.pop();b.box('photoPrecast',-13.55,2.15,z+3,.65,4.3,.66);}
+ b.push(-25,0,7.12,0);storefront(b,9,{key:'h122FamStore',base:.46,logo:true});b.pop();
  // Projecting circular shop signs, tied to the arcade's actual brackets.
  for(const z of[17,24]){b.rod('photoFrame',[-14.1,4.48,z],[-13.08,4.48,z],.04);b.cylinder('photoFrame',-13.07,4.48,z,.43,.43,.26,32,Math.PI/2);b.cylinder('dark',-13.07,4.48,z-.14,.386,.386,.025,32,Math.PI/2);b.plane('photoFamimaRound',-13.07,4.48,z-.16,.56,.56,Math.PI);}
  for(const x of[-14.4,-18,-23])b.cylinder('yellow',x,.57,5.8,.065,.072,1.1,8);
@@ -123,17 +111,15 @@ function hopeStreet(mats){
  for(let y=2.6;y<16.4;y+=2.6)for(let z=4;z<62;z+=3.2)if(z>15.4||y<3.45)for(const dy of[-.075,.075]){b.box('photoRail',30.265,y+dy,z,.025,.045,.045);b.box('photoFrame',30.25,y-.12,z+.03,.017,.20,.012,0,.75);}
  // PEGASUS: beige panel tower, close-spaced small windows and a narrow vertical banner.
  const px=33.3,pz=130,pw=36,pd=50,ph=95;
- b.box('photoStone',px,ph/2,pz,pw,ph,pd);b.solid(px,pz,pw,pd);
- b.push(px+3.25,0,pz-pd/2-.02,0);facade(b,{w:pw-6.5,h:ph,cols:10,rows:20,ground:5.2,window:2.1,seed:621});b.pop();
- b.push(px-pw/2-.03,0,pz,Math.PI/2);facade(b,{w:pd,h:ph,cols:10,rows:20,ground:5.2,window:2.4,seed:61});b.pop();
+ b.box('h122Beige',px,ph/2,pz,pw,ph,pd);b.solid(px,pz,pw,pd); // V122: punched-window beige panel texture
+ b.box('photoStone',px,2.6,pz,pw+.3,5.2,pd+.3);for(let y=5.2;y<ph;y+=8.7)b.box('photoStone',px,y,pz,pw+.12,.22,pd+.12,0,.92);b.box('photoStone',px,ph+.5,pz,pw+.4,1,pd+.4);
  b.plane('photoBanner',20.8,36.8,104.69,3.8,32,Math.PI);b.rod('photoBronze',[18.82,52.85,104.62],[22.78,52.85,104.62],.04);
  for(let z=110;z<151;z+=5){b.push(15.05,0,z,Math.PI/2);storefront(b,4.85,{key:z%10?'photoRetail':'photoShop',top:4.55,step:2.42});b.pop();}
  // Right depth is formed by a slender glass-and-concrete fin slab.
  b.box('photoGlassBlue',27.5,46,175,27,92,31);b.push(13.9,0,175,Math.PI/2);facade(b,{w:31,h:92,cols:12,rows:23,key:'photoCream',ground:5,fin:true});b.pop();
  b.box('photoStone',27,25,219,29,50,35);b.push(27,0,201.4,0);facade(b,{w:29,h:50,cols:8,rows:14,ground:4,window:2,seed:20});b.pop();
- b.box('photoCream',-26,18,250,25,36,49);b.push(-13.4,0,250,-Math.PI/2);facade(b,{w:49,h:36,cols:15,rows:10,key:'photoCream',ground:4,window:1.9});b.pop();
- for(let i=0;i<7;i++){const s=i%2?1:-1,z=283+i*29,h=24+(i*13%39);b.box(i%3?'photoCream':'photoGlassBlue',s*(19+i%3*5),h/2,z,26,h,25);}
- b.box('photoCream',-24,25,420,25,50,20);for(let y=4;y<50;y+=3.5)b.box('photoGlassBlue',-24,y,409.94,24,.9,.1);
+ b.box('h122DistC',-26,18,250,25,36,49);b.push(-13.4,0,250,-Math.PI/2);facade(b,{w:49,h:36,cols:15,rows:10,key:'photoCream',ground:4,window:1.9});b.pop();
+ distant122(b); // V122: deduced downhill massing with facades (replaces plain boxes)
  // Tree locations and street hardware are authored, not randomly scattered.
  for(const [s,zs]of[[-1,[15,36,54,71,89,109,129,151,174,198,225,251,280]],[1,[26,46,66,88,110,132,156,180,207,237,267,296]]])for(let i=0;i<zs.length;i++)streetTree(b,s*12.1,zs[i],{height:i<3?10.2-i*.36:8.8,width:i<2?8.7:6.5,seed:100+i+s*21,shadow:true});
  streetTree(b,-13.8,-10.5,{height:11.5,width:10.6,seed:985,shadow:true});streetTree(b,-13.8,-23,{height:11.8,width:10.2,seed:987,shadow:true});
@@ -146,7 +132,8 @@ function hopeStreet(mats){
  b.cylinder('photoPole',13.5,1.15,44,.035,.045,2.3,8);b.plane('photoParking',13.5,1.8,43.96,.66,.94,Math.PI);
  for(const s of[-1,1]){const x=s*10.88;b.box('dark',x,.085,6.8,.16,.15,1.0);b.box('photoGranite',x,.18,6.8,.32,.06,1.18);}
  for(const z of[6.9,41.2]){b.cylinder('photoBronze',12.6,.58,z,.36,.39,1.1,16);b.cylinder('photoBronze',12.6,1.17,z,.40,.40,.12,16);b.box('dark',12.6,1.14,z-.30,.40,.13,.045);b.plane('photoBus',12.6,.62,z-.396,.18,.28,Math.PI);}
- smallCar(b,-8.7,57,0,.45);smallCar(b,-8.7,64,0,.71);smallCar(b,8.8,187,Math.PI,.70);smallCar(b,-8.7,300,0,.77);smallCar(b,8.8,310,0,.63);
+ car122(b,'suv',-8.75,52.5,Math.PI);car122(b,'sedan',-8.7,59.4,Math.PI);car122(b,'suv',-8.75,78,Math.PI,{tone:.9});car122(b,'sedan',8.8,96,0);car122(b,'sedan',8.8,187,0);car122(b,'suv',-8.75,300,Math.PI);car122(b,'sedan',8.8,310,0);
+ place(b,-4.2,.024,33,0,P.addManhole);place(b,4.5,.024,71,0,P.addManhole);place(b,-2,.024,118,0,P.addManhole);
  b.pop();return{object:b.finish('Hope Street / authored photographic reconstruction'),colliders:b.colliders,walks:b.walks};
 }
 function dish(b,x,y,z,r=1.4){
@@ -257,14 +244,14 @@ function clinicCourt(mats){
 }
 function photoHandedness(part,origin,angle,scaleX=1){
  const c=Math.cos(angle),s=Math.sin(angle),reflect=(x,z)=>{const dx=x-origin.x,dz=z-origin.z,u=c*dx-s*dz,v=s*dx+c*dz;return{x:origin.x-c*u*scaleX+s*v,z:origin.z+s*u*scaleX+c*v};};
- part.object.traverse(m=>{if(!m.isMesh)return;const g=m.geometry,p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv,isLetter=['photoClinic','photoLab','photoMarisa','photoLabWindow','photoBanner','photoFamima','photoHope','photoDermica','photoShop','photoLobby','photoRetail','photoDermicaGlass','photoBakeryInside','photoClinicInside','photoFamimaRound','photoBus','photoParking','photoWalkHand'].some(k=>m.material===part.materials?.[k])||Object.entries(part.materials||{}).some(([k,v])=>k.startsWith('sign:')&&m.material===v);for(let i=0;i<p.count;i++){const q=reflect(p.getX(i),p.getZ(i));p.setXYZ(i,q.x,p.getY(i),q.z);const nx=c*n.getX(i)-s*n.getZ(i),nz=s*n.getX(i)+c*n.getZ(i),v=new T.Vector3(-c*nx/scaleX+s*nz,n.getY(i),s*nx/scaleX+c*nz).normalize();n.setXYZ(i,v.x,v.y,v.z);if(u&&isLetter)u.setX(i,1-u.getX(i));}
+ part.object.traverse(m=>{if(!m.isMesh)return;const g=m.geometry,p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv,isLetter=['photoClinic','photoLab','photoMarisa','photoLabWindow','photoBanner','photoFamima','photoHope','photoDermica','photoShop','photoLobby','photoRetail','photoDermicaGlass','photoBakeryInside','photoClinicInside','photoFamimaRound','photoBus','photoParking','photoWalkHand',...H122_LETTER_KEYS].some(k=>m.material===part.materials?.[k])||Object.entries(part.materials||{}).some(([k,v])=>k.startsWith('sign:')&&m.material===v);for(let i=0;i<p.count;i++){const q=reflect(p.getX(i),p.getZ(i));p.setXYZ(i,q.x,p.getY(i),q.z);const nx=c*n.getX(i)-s*n.getZ(i),nz=s*n.getX(i)+c*n.getZ(i),v=new T.Vector3(-c*nx/scaleX+s*nz,n.getY(i),s*nx/scaleX+c*nz).normalize();n.setXYZ(i,v.x,v.y,v.z);if(u&&isLetter)u.setX(i,1-u.getX(i));}
  // Restore winding after the handedness conversion; signs keep their readable UV orientation.
  for(const a of Object.values(g.attributes))for(let i=0;i<a.count;i+=3)for(let j=0;j<a.itemSize;j++){const t=a.array[(i+1)*a.itemSize+j];a.array[(i+1)*a.itemSize+j]=a.array[(i+2)*a.itemSize+j];a.array[(i+2)*a.itemSize+j]=t;}g.computeBoundingBox();g.computeBoundingSphere();});
  for(const q of part.colliders){Object.assign(q,reflect(q.x,q.z));if(q.kind==='obb'){q.ry=2*angle-q.ry;q.w*=scaleX;}else q.r*=Math.min(1,scaleX);}
  for(const q of part.walks){Object.assign(q,reflect(q.x,q.z));q.ry=2*angle-q.ry;q.w*=scaleX;q.slopeX=-q.slopeX/scaleX;}
  return part;
 }
-export function createReferenceScenes(mats){addHope118Materials(mats);const hope=hopeStreet(mats),clinic=clinicCourt(mats),object=new T.Group();hope.materials=clinic.materials=mats;photoHandedness(hope,CITY_ORIGIN,CITY_ANGLE);photoHandedness(clinic,CLINIC_ORIGIN,CLINIC_ANGLE,.64);object.name='Two photographic street landmarks';object.add(hope.object,clinic.object);const people=createHope118People({toWorld:(x,z)=>cityToWorld(-x,z),Y,angle:CITY_ANGLE});object.add(people.object);hope.people=people;object.userData.cityStats={triangles:hope.object.userData.cityStats.triangles+clinic.object.userData.cityStats.triangles,draws:hope.object.userData.cityStats.draws+clinic.object.userData.cityStats.draws,parts:0};return{object,hope,clinic,colliders:[...hope.colliders,...clinic.colliders],walks:[...hope.walks,...clinic.walks]};}
+export function createReferenceScenes(mats){addHope118Materials(mats);addHope122Materials(mats);const hope=hopeStreet(mats),clinic=clinicCourt(mats),object=new T.Group();hope.materials=clinic.materials=mats;photoHandedness(hope,CITY_ORIGIN,CITY_ANGLE);photoHandedness(clinic,CLINIC_ORIGIN,CLINIC_ANGLE,.64);object.name='Two photographic street landmarks';object.add(hope.object,clinic.object);const people=createHope118People({toWorld:(x,z)=>cityToWorld(-x,z),Y,angle:CITY_ANGLE});object.add(people.object);hope.people=people;object.userData.cityStats={triangles:hope.object.userData.cityStats.triangles+clinic.object.userData.cityStats.triangles,draws:hope.object.userData.cityStats.draws+clinic.object.userData.cityStats.draws,parts:0};return{object,hope,clinic,colliders:[...hope.colliders,...clinic.colliders],walks:[...hope.walks,...clinic.walks]};}
 export function referenceWaypoint(name){
  if(name==='photo-clinic'){const p=clinicToWorld(-6.4,-7.5);return{...p,label:'图二 · 诊所与糕点房',yaw:CLINIC_ANGLE+Math.PI+.326,pitch:.135,eye:1.7,fov:49.8,referenceAspect:2048/1278,range:480,urbanPhoto:true};}
  const p=cityToWorld(2.8,-22);return{...p,label:'图一 · Hope St',yaw:CITY_ANGLE+Math.PI-.025,pitch:.15,eye:1.8,fov:41.8,referenceAspect:2048/1393,range:510,urbanPhoto:true};
