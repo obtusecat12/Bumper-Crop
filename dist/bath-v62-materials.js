@@ -3,7 +3,7 @@ const maps={};
 const names=['pool','marble','braid','cord','nocturne','azure','pure-line','sundrop','palm-springs','velvet'];
 export async function initializeShowerTextures(decode){
  const loader=new T.TextureLoader();
- await Promise.all(names.flatMap(n=>['','-normal','-roughness','-ao','-height'].map(async suffix=>{
+ await Promise.all(names.flatMap(n=>['','-normal','-roughness','-ao'].map(async suffix=>{
   const key=n+suffix,url=new URL('./textures/bath-v62/'+key+'.webp',import.meta.url);let t;
   if(decode){const im=await decode(url,512,names.indexOf(n)>=4&&n!=='velvet'?1024:512);t=new T.DataTexture(im.data,im.width,im.height);t.flipY=true;t.needsUpdate=true;}else t=await loader.loadAsync(url.href);
   t.colorSpace=suffix?T.NoColorSpace:T.SRGBColorSpace;t.wrapS=t.wrapT=names.indexOf(n)<4?T.RepeatWrapping:T.ClampToEdgeWrapping;t.anisotropy=4;t.minFilter=T.LinearMipmapLinearFilter;t.name='V62 generated '+key;maps[key]=t;

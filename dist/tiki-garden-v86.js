@@ -50,7 +50,7 @@ export async function prepareGarden81(report=()=>{}){
  };return room;
 }
 export async function warmGarden81(room,renderer,camera,report=()=>{},renderFrame){if(room.warmed)return;let i=0;
- for(const t of room.textures){renderer.initTexture(t);report(.24*++i/room.textures.length,'正在上传水景贴图');await nextPaint();}
+ let budget=performance.now();for(const t of room.textures){renderer.initTexture(t);report(.24*++i/room.textures.length,'正在上传水景贴图');if(performance.now()-budget>10){await nextPaint();budget=performance.now();}}await nextPaint();
  const receivers=Object.values(room.mats).filter(m=>m.isMeshStandardMaterial);room.probe=await prepareStaticProbe74(room.scene,renderer,[0,1.55,4.8],receivers,p=>report(.24+p*.15,'正在准备湿岩与灯具反光'));receivers.forEach(m=>m.envMapIntensity=m===room.mats.wall||m===room.mats.lava?.06:m===room.mats.boulder?.26:m===room.mats.ceiling?.12:.26);
  const rt=new T.WebGLRenderTarget(96,64,{type:T.HalfFloatType}),previous=renderer.getRenderTarget();try{renderer.setRenderTarget(rt);await compileBathBatches74(room.scene,renderer,camera,p=>report(.39+p*.48,'正在逐批预热水景材质'));room.scene.updateMatrixWorld(true);renderer.shadowMap.needsUpdate=true;renderer.render(room.scene,camera);await nextPaint();renderer.setRenderTarget(previous);
   room.optics.setCamera(camera);room.optics.prepare(renderer);report(.93,'正在映出球灯与稻草伞');await nextPaint();renderFrame?.();await nextPaint();room.warmed=true;report(1,'正在打开水景室的门');

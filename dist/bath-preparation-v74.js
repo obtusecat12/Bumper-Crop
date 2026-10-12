@@ -38,19 +38,29 @@ export async function prepareStaticProbe74(scene,renderer,position,receivers,rep
  finally{renderer.setRenderTarget(saved,face,mip);renderer.shadowMap.autoUpdate=auto;renderer.shadowMap.needsUpdate=needs;renderer.xr.enabled=xr;pmrem?.dispose();cubeTarget.dispose();materials.forEach(m=>m.dispose());proxy.clear();}
 }
 
-// compileAsync still blocks in browsers without KHR_parallel_shader_compile.
-// Compile one material/object feature combination between paints, with the
-// ORIGINAL scene providing lights/fog/environment and the real HDR target set.
+// V121-bath: compile one representative per program signature, all at once when
+// KHR_parallel_shader_compile exists (the driver links them on its own threads),
+// otherwise one signature per paint. Then upload every object's buffers in
+// time-budgeted batches instead of one object per frame (189 frames in the bath).
+function programSignature121(o){const g=o.geometry||{},a=g.attributes||{},ms=Array.isArray(o.material)?o.material:[o.material];return ms.map(m=>m?.uuid).join(',')+'|'+[o.isInstancedMesh,!!o.instanceColor,o.isSkinnedMesh,o.isBatchedMesh,o.isPoints,o.isLine,!!(g.morphAttributes&&Object.keys(g.morphAttributes).length),!!a.color,!!a.tangent,!!a.uv1,!!a.uv2,o.receiveShadow,o.castShadow].map(Number).join('');}
 export async function compileBathBatches74(scene,renderer,camera,report=()=>{}){
- const unique=new Map();scene.traverse(o=>{if(!o.isMesh&&!o.isPoints&&!o.isLine)return;const ms=Array.isArray(o.material)?o.material:[o.material];const key=o.uuid;if(!unique.has(key))unique.set(key,o);});
- const subset=new T.Scene(),lights=[];scene.traverseVisible(o=>{if(o.isLight)lights.push(o);});subset.environment=scene.environment;subset.fog=scene.fog;let done=0;
- const savedMask=camera.layers.mask;camera.layers.enable(3);scene.updateMatrixWorld(true);
- try{for(const o of unique.values()){
-  subset.children=[o];await preparationStep74('material compile submission',()=>renderer.compileAsync(subset,camera,scene));
-  // Upload each shared vertex/index buffer now, not in a single first draw.
-  subset.children=[...lights,o];const visible=o.visible,culled=o.frustumCulled;o.visible=true;o.frustumCulled=false;
-  try{preparationStep74('material upload and first draw',()=>renderer.render(subset,camera));}finally{o.visible=visible;o.frustumCulled=culled;}
-  report(++done/unique.size,done,unique.size);await nextPaint();
- }}finally{camera.layers.mask=savedMask;}
- subset.children=[];return unique.size;
+ const unique=new Map();scene.traverse(o=>{if(!o.isMesh&&!o.isPoints&&!o.isLine)return;if(!unique.has(o.uuid))unique.set(o.uuid,o);});
+ const objects=[...unique.values()],groups=new Map();for(const o of objects){const k=programSignature121(o);if(!groups.has(k))groups.set(k,o);}
+ const reps=[...groups.values()],parallel=!!renderer.extensions.get('KHR_parallel_shader_compile');
+ const subset=new T.Scene(),lights=[];scene.traverseVisible(o=>{if(o.isLight)lights.push(o);});subset.environment=scene.environment;subset.fog=scene.fog;
+ const savedMask=camera.layers.mask;camera.layers.enable(3);scene.updateMatrixWorld(true);const total=reps.length+objects.length;let done=0;
+ const draw=list=>{const saved=list.map(o=>[o.visible,o.frustumCulled]);for(const o of list){o.visible=true;o.frustumCulled=false;}subset.children=[...lights,...list];try{renderer.render(subset,camera);}finally{list.forEach((o,i)=>{o.visible=saved[i][0];o.frustumCulled=saved[i][1];});}};
+ try{
+  if(parallel){
+   subset.children=reps;let ready=0;const pending=preparationStep74('material compile submission',()=>renderer.compile(subset,camera,scene));const n0=pending.size;
+   const props=m=>renderer.properties.get(m);
+   while(pending.size){for(const m of pending)if(!props(m).currentProgram||props(m).currentProgram.isReady())pending.delete(m);ready=n0-pending.size;report((ready/Math.max(1,n0))*reps.length/total,ready,n0);if(pending.size)await nextPaint();}
+   done=reps.length;
+  }else{
+   for(const o of reps){subset.children=[o];preparationStep74('material compile submission',()=>renderer.compile(subset,camera,scene));preparationStep74('material upload and first draw',()=>draw([o]));report(++done/total,done,total);await nextPaint();}
+  }
+  // Buffer uploads + first draws, ~10 ms of work per paint.
+  let k=8;for(let i=0;i<objects.length;){const batch=objects.slice(i,i+k),t=performance.now();preparationStep74('material upload and first draw',()=>draw(batch));const ms=performance.now()-t;i+=batch.length;done+=batch.length;k=ms<5?Math.min(64,k*2):ms>14?Math.max(1,k>>1):k;report(done/total,done,total);await nextPaint();}
+ }finally{camera.layers.mask=savedMask;}
+ subset.children=[];return reps.length;
 }

@@ -10,7 +10,9 @@ import {createSpringDynamics} from './spring-dynamics.js?v=63';
 import {bathTextures} from './bath-textures.js?v=62';
 import {createMineLamp,createPrimitiveWashStation} from './spring-props-v63.js?v=67';
 import {paintGeology,configureGeology,naturalTreads,organicStone} from './spring-geology-v63.js?v=67';
-import {createSpringVolume} from './spring-volume-v65.js';
+import {createSpringVolume} from './spring-volume-v121.js';
+import {preloadCreek121,createCreek121} from './bath120-creek.js';
+export const preloadLevel27V121=()=>preloadCreek121();
 import {createSpringCascades,createFlowStream} from './spring-cascades-v63.js?v=65';
 import {createSpringNPCs} from './level27-npcs-v69.js';
 const UP=new T.Vector3(0,1,0);
@@ -44,7 +46,8 @@ export function createLevel27(){
  box(rockRoot,mats.black,3.0,3.10,-10.50,3.9,3.0,.14,'Dark continuation of return tunnel');
  rockRoot.add(naturalTreads(mats.step));
  // Rounded flanking fragments seat into the same bed, never cover the pool.
- for(let i=0;i<52;i++){const t=(i+.35)/54,r=.040+.024*(.5+.5*Math.sin(i*3.7)),c=channel.groundedCobble(t,i%2?1:-1,r,i),stone=organicStone(mats.wetRock,c.position,c.scale,i);const contact=new T.Raycaster(new T.Vector3(c.position[0],c.waterY+.38,c.position[2]),new T.Vector3(0,-1,0)).intersectObject(shellMesh)[0];if(contact)stone.position.y=contact.point.y+r*.61;stone.name='Embedded water-rounded creek cobble';rockRoot.add(stone);}
+ // V121-bath: the evenly spaced bank cobble rows were replaced by bath120-creek.js natural cobbles.
+ for(let i=0;i<0;i++){const t=(i+.35)/54,r=.040+.024*(.5+.5*Math.sin(i*3.7)),c=channel.groundedCobble(t,i%2?1:-1,r,i),stone=organicStone(mats.wetRock,c.position,c.scale,i);const contact=new T.Raycaster(new T.Vector3(c.position[0],c.waterY+.38,c.position[2]),new T.Vector3(0,-1,0)).intersectObject(shellMesh)[0];if(contact)stone.position.y=contact.point.y+r*.61;stone.name='Embedded water-rounded creek cobble';rockRoot.add(stone);}
  const plate=box(rockRoot,plaque('M.E.G. / 27','RETURN  ←  ALONG THE STREAM'),4.76,2.60,-6.45,.025,.31,.88,'Wall-fixed return marker');plate.material.side=T.DoubleSide;const signRay=new T.Raycaster(new T.Vector3(3.7,2.60,-6.45),new T.Vector3(1,0,0));plate.position.x=(signRay.intersectObject(shellMesh)[0]?.point.x??4.9)-.002;
  const wash=createPrimitiveWashStation(T,mats);wash.group.position.set(WASH_BASIN.x,poolFloor(WASH_BASIN.x,WASH_BASIN.z),WASH_BASIN.z);scene.add(wash.group);
  const practicals=[],lampMaterials=new Map();scene.updateMatrixWorld(true);
@@ -79,8 +82,8 @@ export function createLevel27(){
  const freefall=channel.fall.map(p=>new T.Vector3(...p)),west=[];let minRadius=100;
  for(let i=0;i<=48;i++){const y=2.10*(1-i/48)+.014,a=3.57,p=wallPoint(a,y),r=Math.min(minRadius,Math.hypot(p[0],p[2])-.035);minRadius=r;west.push(new T.Vector3(Math.cos(a)*r,y,Math.sin(a)*r));}
  const cascade=createSpringCascades(T,{paths:[freefall,west],widths:[.46,.85],textures:tex,waterY:0});const falls=cascade.group;scene.add(falls);const impacts=cascade.impacts;
- const creek=createFlowStream(T,{points:channel.spine.map(p=>new T.Vector3(p.x,p.y,p.z)),width:1.0,widthAt:(t,p)=>channel.section(p.x,p.z).width,bedAt:(x,z)=>{const s=channel.section(x,z),hit=new T.Raycaster(new T.Vector3(x,s.waterY+.32,z),new T.Vector3(0,-1,0)).intersectObject(shellMesh)[0];return hit?.point.y??channel.bedHeight(s);},textures:tex});scene.add(creek.group);
- const volume=createSpringVolume(T,{waterY:0,density:.85,lights:SPRING_LIGHTS,poolPlan:{points:CAVE_PLAN},performanceProfile:{scale:.25,reflectionScale:.2,raySteps:20,reflectionRaySteps:16,simulationHz:24,lightingHz:8,cullVolume:true}});scene.userData.springVolume={compose:(renderer,color,depth,camera,w,h)=>volume.compose(renderer,color,depth,camera,w,h,clock.value)};
+ const creek=createCreek121(T,{channel,scene,bedAt:(x,z)=>{const s=channel.section(x,z),hit=new T.Raycaster(new T.Vector3(x,s.waterY+.32,z),new T.Vector3(0,-1,0)).intersectObject(shellMesh)[0];return hit?.point.y??channel.bedHeight(s);}});scene.add(creek.group);
+ const volume=createSpringVolume(T,{waterY:0,density:1.1,extinction:2.3,wisp:1,belt:1,ambient:1.35,lights:SPRING_LIGHTS,poolPlan:{points:CAVE_PLAN},performanceProfile:{scale:.3,reflectionScale:.2,raySteps:24,reflectionRaySteps:16,simulationHz:24,lightingHz:8,cullVolume:true}});scene.userData.springVolume={compose:(renderer,color,depth,camera,w,h)=>volume.compose(renderer,color,depth,camera,w,h,clock.value)};
  // Main water VFX consume the existing pipeline opaque color/depth target.
  // Only the cached planar mirror needs a separate scene capture.
  const reflection=new T.WebGLRenderTarget(384,384,{type:T.HalfFloatType,depthBuffer:true}),mirrorOpaque=new T.WebGLRenderTarget(384,384,{type:T.HalfFloatType,depthBuffer:true});

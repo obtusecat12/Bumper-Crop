@@ -36,12 +36,12 @@ import {inSpaWater} from './spa-layout-v66.js';
 import {createShowerAudio} from './bath-v62-audio.js?v=62';
 import {initializeCanTextures} from './canned-food.js?v=60';
 import {initializeSpringTextures} from './level27-materials.js?v=63';
-import {createLevel27} from './level27-scene.js?v=69';
+const lazy121=f=>{let p=null;return()=>p||(p=f().catch(e=>{p=null;throw e;}));};const loadL27Scene121=lazy121(()=>import('./level27-scene.js?v=69').then(async m=>{await m.preloadLevel27V121();return m;})); // V121-bath: 4.6 MB shell data off the boot path
 import {initializeSpringNPCs} from './level27-npcs-v69.js';
 import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=68';
 import {nearBathEntrance} from './level27-entry.js?v=75';
 import {initializeBathTextures} from './bath-textures.js?v=62';
-import {prepareBathhouse} from './bathhouse-scene.js?v=75';
+const loadBathScene121=lazy121(()=>import('./bathhouse-scene.js?v=75')); // V121-bath: prefetched at the bath door
 import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=75';
 import {initializeAdvertising} from './advertising-assets.js?v=60';
 import {initializeDistrictTextures} from './clinic-district-materials.js?v=60';
@@ -291,7 +291,7 @@ async function enterSpring(){
  if(bathLoading||state.level===27)return;bathLoading=true;keys.clear();joy.x=joy.z=0;lookInput.reset(performance.now());
  try{
   await springTransition.show();const shown=performance.now();springTransition.progress(4,'正在准备岩体泉空间');await loadLevel27Assets();await nextPaint();
-  if(!spring)spring=createLevel27();springTransition.progress(18,'正在准备泉水与灯光');await nextPaint();
+  if(!spring)spring=(await loadL27Scene121()).createLevel27();springTransition.progress(18,'正在准备泉水与灯光');await nextPaint();
 
  waterPipeline.setBathSteam(0);
  const pose=springSession.enter(state);state.level=27;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.type=T.PCFSoftShadowMap;navigationMap.setLevel(27);state.cx=state.cz=0n;Object.assign(state,pose);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=1;keys.clear();joy.x=joy.z=0;
@@ -480,7 +480,7 @@ async function enterBath(){
  if(bathLoading||bathhouse.active)return;bathLoading=true;keys.clear();joy.x=joy.z=0;lookInput.reset(performance.now());
  try{
   await bathTransition.show();bathTransition.progress(3,'正在读取浴室材质');await loadLevel27Assets();
-  if(!bathhouse.scene){const loaded=[0,0],progress=(i,v)=>{loaded[i]=v;bathTransition.progress(3+(loaded[0]+loaded[1])*12.5,'正在读取浴室材质');};await Promise.all([initializeChangingTextures(null,p=>progress(0,p)),initializeReceptionTextures73(null,p=>progress(1,p))]);await nextPaint();bathhouse=await prepareBathhouse((p,text)=>bathTransition.progress(28+p*39,text));}
+  if(!bathhouse.scene){const loaded=[0,0],progress=(i,v)=>{loaded[i]=v;bathTransition.progress(3+(loaded[0]+loaded[1])*12.5,'正在读取浴室材质');};await Promise.all([initializeChangingTextures(null,p=>progress(0,p)),initializeReceptionTextures73(null,p=>progress(1,p))]);await nextPaint();bathhouse=await (await loadBathScene121()).prepareBathhouse((p,text)=>bathTransition.progress(28+p*39,text));}
   bathOrigin={level:state.level,cx:state.cx,cz:state.cz,x:state.x,z:state.z,yaw:state.yaw,pitch:state.pitch};bathhouse.active=true;bathShadowType=renderer.shadowMap.type;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.type=T.PCFSoftShadowMap;state.cx=state.cz=0n;Object.assign(state,BATH_ARRIVAL);state.velocity.set(0,0,0);state.jump=state.vy=0;state.grounded=true;referenceView=null;interaction=null;springOpen=0;eyelids.style.opacity='0';
   lensWater.reset();waterState.reset();bodyWater.reset();rainEffects.clear();waterImpact.clear();waterRipples.reset();weatherFlare.reset();exitAudio.update(0,false,time);waterPipeline.focus.setSceneQuery(bathhouse.focusDistance);camera.far=32;camera.updateProjectionMatrix();resetCameraRig();waterPipeline.reset(camera);bathhouse.update(bathTime,state);
   bathTransition.progress(68,'正在预载室内贴图');await nextPaint();
@@ -858,7 +858,7 @@ function scanInteraction(){
  if(inspectionPrompt.classList.contains('inspection'))inspectionPrompt.classList.remove('inspection');crosshair.hidden=false;
  if(state.level===11&&!bathhouse.active){
   if(nearTikiDoor(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z)){interaction={kind:'tiki-door'};inspectionPrompt.hidden=false;inspectionPrompt.textContent='E 推开竹木门 · Lantern Reef 酒吧餐厅';return;}
-  if(nearBathEntrance(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z)){interaction={kind:'bath-door'};inspectionPrompt.hidden=false;inspectionPrompt.textContent='E 推开玻璃门 · 进入浴室';return;}
+  if(nearBathEntrance(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z)){interaction={kind:'bath-door'};loadBathScene121().then(()=>loadL27Scene121()).catch(()=>{});inspectionPrompt.hidden=false;inspectionPrompt.textContent='E 推开玻璃门 · 进入浴室';return;}
   const nearby=exitScene.backcourt.query(camera);if(nearby){interaction=nearby;inspectionPrompt.hidden=false;inspectionPrompt.textContent=nearby.kind==='vending-machine'?'E 按售货键 · 随机饮料':'E 拾取 '+nearby.name;return;}
  }
  if(state.level===10){const campHit=lakeOutpost.query(camera);if(campHit){interaction=campHit;inspectionPrompt.hidden=false;inspectionPrompt.textContent=campHit.label;return;}}

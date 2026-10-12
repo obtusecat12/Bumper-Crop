@@ -7,7 +7,7 @@ import {SPA,SPA_ENTRY,SPA_NICHES,SPA_SPILL,inSpaWater} from './spa-layout-v66.js
 import {springTextures} from './level27-materials.js?v=63';
 import {createSpaWater} from './spa-water-v66.js';
 import {createSpaBloom} from './spa-bloom-v65.js';
-import {createSpringVolume} from './spring-volume-v65.js';
+import {createSpringVolume} from './spring-volume-v121.js';
 import {createSpaStatues} from './spa-statues-v65.js';
 import {createSpaRock} from './spa-rock-v66.js';
 import {createSpaFurniture} from './spa-furniture-v66.js';
@@ -134,7 +134,7 @@ export function createSpa(scene){
  const furniture=createSpaFurniture(T,m);furniture.traverse(o=>{if(o.isGroup&&o.name.includes('wall hook and hanging cloth'))o.position.x=-.188;});architecture.add(furniture);
  const statues=createSpaStatues(T,{textures:{marble:textures['spa-marble'],marbleNormal:textures['spa-marble-normal'],marbleRoughness:textures['spa-marble-roughness']}});statues.group.position.set(6.88,1.18,-4.73);scene.add(statues.group);
  const water=createSpaWater(T,{textures:springTextures(),poolCenter:[SPA.cx,SPA.cz],radius:SPA.radius,waterY:SPA.waterY,bottomY:SPA.bottomY,outlet:SPA_SPILL.outlet,outletWidth:SPA_SPILL.width,landingWidth:.84,impact:SPA_SPILL.impact});scene.add(water.group);water.group.traverse(o=>o.layers.set(3));
- const steam=createSpringVolume(T,{waterY:SPA.waterY,poolPlan:Array.from({length:80},(_,i)=>[SPA.cx+Math.cos(i*Math.PI/40)*2.315,SPA.cz+Math.sin(i*Math.PI/40)*2.315]),lights:SPA_LIGHTS.slice(0,4),density:.55,extinction:1.65,performanceProfile:{scale:.25,raySteps:20,reflectionRaySteps:16,simulationHz:20,lightingHz:8}});
+ const steam=createSpringVolume(T,{waterY:SPA.waterY,poolPlan:Array.from({length:80},(_,i)=>[SPA.cx+Math.cos(i*Math.PI/40)*2.315,SPA.cz+Math.sin(i*Math.PI/40)*2.315]),lights:SPA_LIGHTS.slice(0,4),density:.55,extinction:2.0,wisp:1.1,belt:.24,ambient:1.45,performanceProfile:{scale:.3,raySteps:24,reflectionRaySteps:16,simulationHz:20,lightingHz:8}});
  const sound=createSpaAudio();
  const reflections=createSpaReflections(T,{wetTexture:m.wetTexture,marks:m.marks,clock:m.clock});
  const bloom=createSpaBloom(T,{strength:.19,threshold:1.10,cameraMinX:-100});
