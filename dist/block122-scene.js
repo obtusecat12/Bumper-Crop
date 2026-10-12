@@ -9,7 +9,7 @@ import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import {UrbanBatch} from './urban-batch.js?v=60';
 import {CITY_ORIGIN,CITY_ANGLE,CITY_BLOCK,cityToWorld} from './urban-layout.js?v=60';
-import {EXIT_CITY_Y} from './exit-route.js?v=60';
+import {EXIT_CITY_Y,ease} from './exit-route.js?v=60';
 import {car122} from './hopest122-street.js?v=122';
 const A=new URL('./assets/l11-v122/',import.meta.url).href,A3=new URL('./assets/l11-v123/',import.meta.url).href,Y=EXIT_CITY_Y,BX=CITY_BLOCK,BZ=CITY_BLOCK*2;
 function tex(name,{repeat=false,srgb=true,v3=false}={}){const t=new T.TextureLoader().load(v3?A3+name+'.webp?v=123':A+'b_'+name+'.webp?v=122');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;if(repeat)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
@@ -138,7 +138,27 @@ export function createBlock122(mats){
   b.rod('c123Navy',[-.55,deck+1.45,-1.62],[-.55,deck+1.6,-1.62],.012);b.sphere('c123Navy',-.55,deck+1.64,-1.62,.075,.055,.075);b.cylinder('c123Navy',-.55,deck+1.61,-1.62,.07,.07,.03,12);
   b.pop();}
  b.pop();b.pop();
- return{object:b.finish('L11 block 122 / Nick\'s Gaslight (ref image-48)'),colliders:b.colliders,walks:b.walks};
+ const object=b.finish('L11 block 122 / Nick\'s Gaslight (ref image-48)');object.add(block125Haze());return{object,colliders:b.colliders,walks:b.walks};
 }
 // F2 photo camera on the guideway, framing image-48 (V123 photogrammetric solve).
 export function block122Waypoint(){const p=cityToWorld(BX+CX,BZ+112);return{...p,label:'图三 · 酒店与 Nick\'s Gaslight',yaw:CITY_ANGLE+CYAW,pitch:.091,eye:EYE,floorY:EYE-1.75,fov:36,referenceAspect:1024/698,range:560,urbanPhoto:true};}
+
+// V125-L11 weather (image-48): clear late-afternoon sky, low warm sun from the photo camera's LEFT and a little behind it
+// (hotel long face + avenue-facing yellow face sunlit, faces toward the camera/right in shade, shadows thrown across the avenue).
+// Applied only around this block through referenceEnvironment(); the rest of Level 11 keeps its overcast profile.
+const W125=globalThis.B125||{};
+export const BLOCK122_SKY={az:W125.az??.95,el:W125.el??.33};
+export const BLOCK122_SUN=(()=>{const y=CITY_ANGLE+CYAW,f=new T.Vector3(-Math.sin(y),0,-Math.cos(y)),r=new T.Vector3(Math.cos(y),0,-Math.sin(y)),a=BLOCK122_SKY.az;const h=r.multiplyScalar(-Math.cos(a)).addScaledVector(f,-Math.sin(a));h.y=Math.tan(BLOCK122_SKY.el);return h.normalize();})();
+// weight from UNMIRRORED city coords (worldToCity): 1 over block (1,2), the avenue down to block (2,0) and the hotel corner, 0 by x<62 (Hope St)
+export function block122Weather(cx,cz){const dx=Math.max(BX-20-cx,0,cx-(BX+240)),dz=Math.max(-cz,0,cz-(BZ+152));return 1-ease(0,30,Math.hypot(dx,dz));}
+// Pale horizon band (image-48: deep blue zenith fading to an almost white horizon down the avenue). The game's reference sky
+// only scales one colour with elevation, so a camera-height cylinder (r 440 m, inside the 480 m far plane) adds the pale
+// lowest ~10 degrees. Opacity follows block122Weather() at the camera, so it vanishes outside this block.
+function block125Haze(){const R=440,H0=-60,H1=105,seg=96,pos=[],col=[],idx=[],c0=new T.Color('#d4e3ec'),c1=new T.Color('#9fc4e2');const o=cityToWorld(BX+CX,BZ+112);
+ for(let i=0;i<=seg;i++){const a=i/seg*Math.PI*2,x=Math.cos(a)*R,z=Math.sin(a)*R;for(const[y,al,c]of[[H0,.92,c0],[0,.88,c0],[38,.42,c1],[H1,0,c1]]){pos.push(x,y,z);col.push(c.r,c.g,c.b,al);}}
+ for(let i=0;i<seg;i++)for(let k=0;k<3;k++){const a=i*4+k,b2=a+4;idx.push(a,b2,a+1,a+1,b2,b2+1);}
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('color',new T.Float32BufferAttribute(col,4));g.setIndex(idx);
+ const m=new T.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:0,fog:false,depthWrite:false,side:T.DoubleSide,toneMapped:false});
+ const mesh=new T.Mesh(g,m);mesh.name='V125 image-48 horizon haze';mesh.position.set(o.x,Y+9,o.z);mesh.castShadow=mesh.receiveShadow=false;mesh.frustumCulled=false;mesh.renderOrder=-5;mesh.userData.noShadow=true;
+ const ca=Math.cos(CITY_ANGLE),sa=Math.sin(CITY_ANGLE),e=mesh.matrixWorld.elements;mesh.onBeforeRender=(r,sc,cam)=>{const cp=cam.matrixWorld.elements,dx=cp[12]-e[12]+o.x-CITY_ORIGIN.x,dz=cp[14]-e[14]+o.z-CITY_ORIGIN.z;m.opacity=block122Weather(ca*dx-sa*dz,sa*dx+ca*dz);};
+ return mesh;}

@@ -26,6 +26,9 @@ export function cityBlockPlan(ix,iz,types){
  // Down the avenue the photo's skyline stays low: cap (not remove) the west row of block 2,1 and the whole 2,-1..-4 run.
  if(ix===2&&iz===1)for(const q of result.buildings)if(q.ry===0&&q.x<x+56)q.floors=Math.min(q.floors,1);
  if(ix===2&&iz<=-1&&iz>=-4)for(const q of result.buildings)q.floors=Math.min(q.floors,q.type==='brick_walkup'?6:7);
+ // V125-L11 weather: the photo's low sun comes from behind-left of the guideway camera and the lot/hotel base stay sunlit,
+ // so block 1,3 (directly behind the camera) stays low-rise; its towers threw their shadows over the whole lot.
+ if(ix===1&&iz===3)for(const q of result.buildings)q.floors=Math.min(q.floors,3);
  return result;
 }
 export function cityWaypoint(name){const edge=exitPoint(282),p=name==='city-core'?cityToWorld(112,478):name==='city-plaza'?cityToWorld(224,702):{x:edge.x+edge.nx*15,z:edge.z+edge.nz*15};return{...p,label:name==='city-core'?'Level 11 · 金融街峡谷':name==='city-plaza'?'Level 11 · 公共广场':'Level 11 · 商业边缘区',yaw:name==='city-plaza'?CITY_ANGLE-Math.PI/2:name==='city-edge'?Math.atan2(-edge.nx,-edge.nz):Math.atan2(-CITY_ORIGIN.tx,-CITY_ORIGIN.tz)};}
