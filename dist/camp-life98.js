@@ -3,6 +3,7 @@ import {CAMP_ACTORS98,OUTHOUSE98 as H,DINNER98 as D,outhouseSolids98,outhouseFlo
 import {createCampActor98,countTriangles98} from './camp-npc98.js?v=106';
 import {createCampPropKit98} from './camp-life-props98.js';
 import {warmCampTextures98} from './camp-life-materials98.js';
+import {createOutpostTable125} from './outpost125-table.js?v=125b';
 export function createCampLife98({object,interiors:i,renderer,lamps,colliders,excluded,roots,groundAt}){
  const kit=createCampPropKit98(),{box,bevel,cyl,rod,lathe,cable,mesh}=kit,staticRoot=new T.Group();staticRoot.name='Lakeshore outhouse and reference-table V98';staticRoot.position.set(H.x,H.y,H.z);object.add(staticRoot);roots.push(staticRoot);colliders.push(...outhouseSolids98());
  function plank(w,h,d,p,tilt=0){const b=bevel(staticRoot,w,h,d,kit.wood,p,.005);b.rotation.z=tilt;return b;}
@@ -20,7 +21,7 @@ export function createCampLife98({object,interiors:i,renderer,lamps,colliders,ex
  corrugation(1.67,.75,[0,.39,-1.002],[0,Math.PI,0]);corrugation(1.01,.62,[.878,.43,.35],[0,Math.PI/2,0]);corrugation(1.96,2.25,[0,2.22,0],[-Math.PI/2+.067,0,0]);
  for(const x of [-.7,0,.7])plank(.07,.09,2.12,[x,2.15,0]);for(const s of [-1,1]){plank(.34,2.07,.045,[s*.69,1.035,.977]);for(let n=0;n<6;n++)cyl(staticRoot,.009,.008,kit.metal,[s*.73,.19+n*.34,1.003],5).rotation.x=Math.PI/2;}
  plank(1.68,.19,.058,[0,2.01,.977]);const door=new T.Group();door.name='Half-open plank door / fixed hinge and latch';door.position.set(-.48,0,.999);door.rotation.y=H.doorAngle;staticRoot.add(door);for(let n=0;n<5;n++)bevel(door,.179,1.91,.04,kit.wood,[.091+n*.185,.997,0],.004);for(const y of [.29,1.57])box(door,.89,.075,.034,kit.wood,[.46,y,-.03]);rod(door,[.045,.32,-.055],[.85,1.54,-.055],.026,kit.wood,4);for(const y of [.28,1.60]){box(door,.28,.035,.012,kit.metal,[.10,y,.029]);cyl(door,.018,.072,kit.metal,[0,y,0],6);}rod(door,[.82,.94,.037],[.82,1.055,.037],.012,kit.black);box(door,.048,.022,.026,kit.metal,[.82,.935,.037]);
- const table=kit.table(staticRoot,H.table);for(const leg of table.userData.legs){const floor=groundAt(H.x+H.table[0]+leg.position.x,H.z+H.table[2]+leg.position.z)-H.y;leg.scale.y=(.738-floor)/.738;leg.position.y=(.738+floor)/2;}kit.cooler(staticRoot,[-1.17,groundAt(H.x-1.17,H.z+.18)-H.y,.18]);kit.officeSet(i.office);
+ const table=createOutpostTable125(staticRoot,H.table,(x,z)=>groundAt(H.x+x,H.z+z)-H.y,excluded);/* V125b: crate table per files/l10-outpost-table-ref.png */kit.cooler(staticRoot,[-1.17,groundAt(H.x-1.17,H.z+.18)-H.y,.18]);kit.officeSet(i.office);
  // Feeder leaves the existing south gate pole, meets the eave, then the socket.
  cable(object,[[-1,4.7,18],[2.1,2.74,26],[H.x+.76,H.y+2.23,H.z-.81]],.011);cable(staticRoot,[[.76,2.23,-.81],[.76,2.09,-.16],[0,2.10,-.16],[0,1.95,-.16]],.007);
  cyl(staticRoot,.032,.081,kit.black,[0,1.94,-.16],8);const glow=new T.MeshStandardMaterial({color:0xffdea3,emissive:0xffbd65,emissiveIntensity:2.7,roughness:.2});const bulb=mesh(staticRoot,new T.SphereGeometry(.046,8,6),glow,[0,1.86,-.16]);bulb.scale.y=1.4;excluded.add(bulb);rod(staticRoot,[-.012,1.87,-.16],[.012,1.87,-.16],.002,glow,4);const light=new T.Object3D();light.position.set(H.x,H.y+1.86,H.z-.16);light.intensity=1.4;light.distance=3.7;lamps.push(light);
