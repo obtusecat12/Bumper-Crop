@@ -92,7 +92,11 @@ export function gmDrawPin(context,x,y,yaw,title='You are here'){
 
 // ---------- Aqua / Safari compass framing the round minimap ----------
 // Drawn in the same 256x296 design space as paintCompass().
-export function paintSafariCompass(c,map,yaw,bearing){
+// V127: Level 27 reuses this compass; its window shows an upright ~2010 snapshot
+// of a cave hot spring (assets/v127/l27_compass.webp) instead of the street map.
+let springPhoto=null;
+export function springCompassPhoto(){if(!springPhoto){springPhoto=new Image();springPhoto.decoding='async';springPhoto.src='./assets/v127/l27_compass.webp';}return springPhoto.complete&&springPhoto.naturalWidth?springPhoto:null;}
+export function paintSafariCompass(c,map,yaw,bearing,opts={}){
  const X=128,Y=124,R=114;
  c.save();
  // drop shadow
@@ -113,11 +117,12 @@ export function paintSafariCompass(c,map,yaw,bearing){
  c.restore();
  // map window
  c.save();c.beginPath();c.arc(X,Y,RM,0,Math.PI*2);c.fillStyle='#f2efe9';c.fill();c.clip();
- c.translate(X,Y);c.rotate(yaw);if(map)c.drawImage(map,-142,-142,284,284);c.restore();
+ if(opts.photo){const im=springCompassPhoto();if(im){c.drawImage(im,X-RM,Y-RM,RM*2,RM*2);const v=c.createRadialGradient(X,Y,RM*.55,X,Y,RM);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.38)');c.fillStyle=v;c.fillRect(X-RM,Y-RM,RM*2,RM*2);}else{c.fillStyle='#2a3a3a';c.fillRect(X-RM,Y-RM,RM*2,RM*2);}c.restore();}
+ else{c.translate(X,Y);c.rotate(yaw);if(map)c.drawImage(map,-142,-142,284,284);c.restore();}
  c.strokeStyle='#062a63';c.lineWidth=2;c.beginPath();c.arc(X,Y,RM,0,Math.PI*2);c.stroke();
  c.strokeStyle='rgba(0,0,0,.18)';c.lineWidth=6;c.beginPath();c.arc(X,Y,RM-3,0,Math.PI*2);c.stroke();
  // red/white needle pointing north
- c.save();c.translate(X,Y);c.rotate(yaw);c.globalAlpha=.82;c.shadowColor='rgba(0,0,0,.35)';c.shadowBlur=3;c.shadowOffsetY=2;
+ c.save();c.translate(X,Y);c.rotate(yaw);c.globalAlpha=opts.photo?.55:.82;c.shadowColor='rgba(0,0,0,.35)';c.shadowBlur=3;c.shadowOffsetY=2;
  c.beginPath();c.moveTo(0,-74);c.lineTo(6,0);c.lineTo(-6,0);c.closePath();g=c.createLinearGradient(-6,0,6,0);g.addColorStop(0,'#ff5a4a');g.addColorStop(.5,'#e01a0e');g.addColorStop(.5,'#b80f06');g.addColorStop(1,'#d9261a');c.fillStyle=g;c.fill();
  c.beginPath();c.moveTo(0,74);c.lineTo(6,0);c.lineTo(-6,0);c.closePath();g=c.createLinearGradient(-6,0,6,0);g.addColorStop(0,'#ffffff');g.addColorStop(.5,'#f1f1f1');g.addColorStop(.5,'#c9ccd0');g.addColorStop(1,'#e8eaec');c.fillStyle=g;c.fill();
  c.restore();
@@ -184,8 +189,9 @@ export function mountGmapsVitals(){
  function mount(){const stats=document.querySelector('.stats');if(!stats)return null;stats.insertAdjacentHTML('beforeend',`<div class="gm-vitals" aria-hidden="true"><div class="gm-iw"><span class="gm-iw-x">×</span><div class="gm-iw-title"><span class="gm-pin-a small">A</span>You are here</div><div class="gm-iw-addr">Level 11 · The Endless City</div><table>${rows.map(r=>`<tr data-k="${r[0]}"><th>${r[1]} <small>${r[2]}</small></th><td><span class="gm-meter"><i style="background:${r[3]}"></i></span></td><td class="gm-pct">100%</td></tr>`).join('')}</table><div class="gm-iw-foot"><span class="gm-water">Almond water: <b>0</b> bottles</span><span class="gm-iw-links"><a>Directions</a> - <a>Search nearby</a></span></div></div><span class="gm-iw-tail"></span></div>`);return stats.querySelector('.gm-vitals');}
  const val=id=>Math.round(Number(document.getElementById(id)?.getAttribute('aria-valuenow'))||0);
  vitalsTimer=setInterval(()=>{
-  if(document.documentElement.dataset.uiLevel!=='11')return;
+  const lv=document.documentElement.dataset.uiLevel;if(lv!=='11'&&lv!=='27')return;
   card||=mount();if(!card)return;
+  const addr=lv==='27'?'Level 27 · The Bunker Springs':'Level 11 · The Endless City';if(card.dataset.lv!==lv){card.dataset.lv=lv;card.querySelector('.gm-iw-addr').textContent=addr;last='';}
   const v=[val('stamina-meter'),val('hydration-meter'),val('health-meter'),val('sanity-meter')],bottles=parseInt(document.getElementById('bottle-count')?.textContent||'0',10)||0,key=v.join(',')+'|'+bottles;
   if(key===last)return;last=key;
   rows.forEach((r,i)=>{const tr=card.querySelector(`[data-k="${r[0]}"]`);tr.querySelector('i').style.width=v[i]+'%';tr.querySelector('.gm-pct').textContent=v[i]+'%';tr.classList.toggle('low',v[i]<25);});
