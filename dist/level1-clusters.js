@@ -4,7 +4,7 @@
 import {l1Hash,l1Clu,l1InClu,l1DoorX,l1DoorZ,L1_BAY as B} from './level1-layout.js?v=113';
 export const CS=B/3,HC=2.75,WT=.16;
 const KINDS=['office','barber','infirmary','rubber','brick','paintings','storage','empty','empty','boards'];
-export function makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW}){
+export function makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW,solid=()=>{},lootAt=null,doorAt=null}){
  const cache=new Map(),gcylR=new T.CylinderGeometry(1,1,1,8,1,false).rotateZ(Math.PI/2);
  function data(c){let m=cache.get(c.id);if(m)return m;const N=c.w*3,M=c.d*3,h=(a,b,s)=>l1Hash(c.gx*97+a,c.gz*89+b,s),I=(x,z)=>z*N+x;
   const e=new Uint8Array(N*M),s=new Uint8Array(N*M),room=new Int16Array(N*M).fill(-1),vis=new Uint8Array(N*M);
@@ -29,6 +29,10 @@ export function makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW}){
   for(let z=0;z<M;z++)for(let x=0;x<N;x++){if(room[I(x,z)]>=0)continue;const q=h(x,z,30);if(q<.42)lamps.push({x:c.ox*B+(x+.5)*CS,z:c.oz*B+(z+.5)*CS,on:q>.07,bulb:false,ax:h(x,z,31)>.5});}
   const wallTex=['form','form','paint','form'][Math.floor(h(1,1,40)*4)];
   m={c,N,M,e,s,room,rooms,ext,lamps,wallTex,I};cache.set(c.id,m);if(cache.size>64)cache.delete(cache.keys().next().value);return m;}
+ // V124b: dead-end cells (exactly one open side) and which of them are chained store rooms — shared by bay() and lockSites()
+ const deadDir=(m,x,z)=>{if(m.room[m.I(x,z)]>=0)return null;let open=0,dir=null;const o=[[1,0,!closedE(m,x,z)&&x<m.N-1],[-1,0,x>0&&!closedE(m,x-1,z)],[0,1,!closedS(m,x,z)&&z<m.M-1],[0,-1,z>0&&!closedS(m,x,z-1)]];for(const[dx,dz,op]of o)if(op){open++;dir=[dx,dz];}return open===1?dir:null;};
+ const LOCKP=.5,isLocked=(c,x,z,q)=>q<.7&&l1Hash(c.gx*11+x,c.gz*13+z,66)<LOCKP;
+ function lockSites(c){const m=data(c),o=[];for(let z=0;z<m.M;z++)for(let x=0;x<m.N;x++){const dir=deadDir(m,x,z);if(!dir)continue;const q=l1Hash(c.gx*7+x,c.gz*5+z,60);if(!isLocked(c,x,z,q))continue;const ccx=c.ox*B+(x+.5)*CS,ccz=c.oz*B+(z+.5)*CS;o.push({id:'l1d:'+c.gx+','+c.gz+','+x+','+z,x:ccx+dir[0]*.2,z:ccz+dir[1]*.2,nx:dir[0],nz:dir[1],ry:Math.atan2(dir[0],dir[1])});}return o;}
  const at=(x,z)=>{const bx=Math.floor(x/B),bz=Math.floor(z/B);if(!l1InClu(bx,bz))return null;return data(l1Clu(bx,bz));};
  // is the edge east of cell (x,z) closed? (outline handled by the hall walls)
  const closedE=(m,x,z)=>x<m.N-1&&!m.e[m.I(x,z)],closedS=(m,x,z)=>z<m.M-1&&!m.s[m.I(x,z)];
@@ -54,6 +58,26 @@ export function makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW}){
   for(let z=z0;z<z0+3;z++)for(let x=x0;x<x0+3;x++){if(m.room[m.I(x,z)]>=0)continue;let open=0,dir=null;const o=[[1,0,!closedE(m,x,z)&&x<m.N-1],[-1,0,x>0&&!closedE(m,x-1,z)],[0,1,!closedS(m,x,z)&&z<m.M-1],[0,-1,z>0&&!closedS(m,x,z-1)]];for(const[dx,dz,op]of o)if(op){open++;dir=[dx,dz];}
    if(open!==1)continue;const q=l1Hash(c.gx*7+x,c.gz*5+z,60),ccx=OX+(x+.5)*CS,ccz=OZ+(z+.5)*CS,ry=Math.atan2(dir[0],dir[1]);
    // image-24: the corridor dies at a pair of black steel doors, a sheet of ply leant on the side wall
+   // V124b: ~40% of these dead ends are chained shut a step earlier: a wooden double door in a partition across the cell, a
+   // shallow store room behind it (1-2 openable crates). The leaves are drawn + broken by l1loot124-main.js (axe).
+   const lk=lootAt&&doorAt&&isLocked(c,x,z,q);
+   if(lk){const pd=.2,pcx=ccx+dir[0]*pd,pcz=ccz+dir[1]*pd,ax=dir[0]===0,wm=wallMat(m,x,z),hw=CS/2;
+    const D=(c2,u,y,w,h,t,o=0)=>P(box,c2,ax?pcx+u:pcx+dir[0]*o,y,ax?pcz+dir[1]*o:pcz+u,ax?w:t,h,ax?t:w),S=(u,w,t,o=0)=>solid(ax?pcx+u:pcx+dir[0]*o,ax?pcz+dir[1]*o:pcz+u,ax?w:t,ax?t:w);
+    const sw=hw-.88;for(const sg of[-1,1]){D(wm,sg*(.88+sw/2),HC/2,sw+.02,HC,WT);S(sg*(.88+sw/2),sw,WT+.04);}D(wm,0,(2.24+HC)/2,1.78,HC-2.24,WT);
+    for(const o of[-1,1]){for(const u of[-.84,.84])D(C.frame,u,1.1,.08,2.2,.05,o*(WT/2+.02));D(C.frame,0,2.2,1.76,.08,.05,o*(WT/2+.02));}
+    D(C.dark,0,.006,1.6,.012,WT+.06);// worn threshold strip
+    solid(pcx,pcz,ax?1.7:WT+.1,ax?WT+.1:1.7);// the doorway itself, removed once the door is broken (world.unsolid)
+    const id=`${c.gx},${c.gz},${x},${z}`;doorAt({id:'l1d:'+id,x:pcx,z:pcz,nx:dir[0],nz:dir[1],ry});
+    // store room: crates against the far wall, a shelf board on one side
+    const out=x-dir[0]<0||x-dir[0]>=m.N||z-dir[1]<0||z-dir[1]>=m.M,back=hw-(out?.15:WT/2)-.47,bx=ccx-dir[0]*back,bz=ccz-dir[1]*back,two=l1Hash(c.gx+x,c.gz+z,67)<.55;
+    const lat=(u)=>[ax?bx+u:bx,ax?bz:bz+u],li=Math.floor(l1Hash(c.gx*3+x,c.gz*3+z,68)*12);
+    {const[a,b]=lat(two?-.58:(l1Hash(x,z,69)-.5)*.6);lootAt('s'+id+':0',a,b,ry+(l1Hash(x,z,70)-.5)*.3,li,5,.86);}
+    if(two){const[a,b]=lat(.6);lootAt('s'+id+':1',a,b,ry+(l1Hash(x,z,71)-.5)*.4,li+5,5,.8);}
+    const sd=l1Hash(c.gx+x,c.gz+z,72)>.5?1:-1,mid=(back+(-pd))/2+.0;const smx=ccx-dir[0]*mid,smz=ccz-dir[1]*mid,su=sd*(hw-WT/2-.16);
+    for(const y of[1.25,1.75])P(box,C.ply,ax?smx+su:smx,y,ax?smz:smz+su,ax?.3:1.1,.025,ax?1.1:.3);
+    for(const y of[1.22,1.72])for(const e of[-.5,.5])P(box,C.steelP,ax?smx+su+sd*.13:smx+e,y,ax?smz+e:smz+su+sd*.13,ax?.03:.03,.06,ax?.03:.03);
+    PR.place(10,ccx+(dir[1]!==0?sd*(hw-.35):dir[0]*.85),ccz+(dir[0]!==0?sd*(hw-.35):dir[1]*.85),Math.atan2(dir[1]!==0?-sd:0,dir[0]!==0?-sd:0),c.gx*13+x*7+z,hw-.35-WT/2);
+    continue;}
    if(q<.7){const out=x-dir[0]<0||x-dir[0]>=m.N||z-dir[1]<0||z-dir[1]>=m.M,ins=CS/2-(out?.15:WT/2)-.025,dx=ccx-dir[0]*ins,dz=ccz-dir[1]*ins,ax=dir[0]===0;
     const D=(c2,u,y,w,h,t,o=0)=>P(box,c2,ax?dx+u:dx+dir[0]*o,y,ax?dz+dir[1]*o:dz+u,ax?w:t,h,ax?t:w);
     // V116: doors with volume: recessed dark reveal, 8×14 cm steel jambs + head standing proud of the wall, 5 cm leaves hung on three knuckle hinges
@@ -89,5 +113,6 @@ export function makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW}){
  function map(ctx,sx,sz,scale,x0,x1,z0,z1,P={cluBg:'#2a2826',cluRoom:'#3a3530',cluWall:'#e6e0d4'}){const seen=new Set();for(let bz=z0;bz<=z1;bz++)for(let bx=x0;bx<=x1;bx++){if(!l1InClu(bx,bz))continue;const c=l1Clu(bx,bz);if(seen.has(c.id))continue;seen.add(c.id);const m=data(c),OX=c.ox*B,OZ=c.oz*B;
    ctx.fillStyle=P.cluBg;ctx.fillRect(sx(OX),sz(OZ),c.w*B*scale,c.d*B*scale);for(const r of m.rooms){ctx.fillStyle=P.cluRoom;ctx.fillRect(sx(OX+r.x*CS),sz(OZ+r.z*CS),r.w*CS*scale,r.d*CS*scale);}
    ctx.fillStyle=P.cluWall;const t=Math.max(1,WT*scale);for(let z=0;z<m.M;z++)for(let x=0;x<m.N;x++){if(closedE(m,x,z))ctx.fillRect(sx(OX+(x+1)*CS)-t/2,sz(OZ+z*CS),t,CS*scale+t/2);if(closedS(m,x,z))ctx.fillRect(sx(OX+x*CS),sz(OZ+(z+1)*CS)-t/2,CS*scale+t/2,t);}}}
- return{bay,blocked,roomAt,lampsNear,nearest,map,data,at};
+ function nearestLock(x,z){let best=null;const bx=Math.floor(x/B),bz=Math.floor(z/B);for(let j=-6;j<=6;j++)for(let i=-6;i<=6;i++){const c=l1Clu(bx+i*16,bz+j*16);if(!c)continue;for(const d of lockSites(c)){const r=Math.hypot(d.x-x,d.z-z);if(!best||r<best.r)best={...d,r};}}return best;}
+ return{bay,blocked,roomAt,lampsNear,nearest,nearestLock,lockSites,map,data,at};
 }

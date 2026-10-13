@@ -214,7 +214,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  const C={};for(const k in CM){const[c0,t]=CM[k];const c=new T.Color(Math.min(1,c0[0]),Math.min(1,c0[1]),Math.min(1,c0[2])).convertSRGBToLinear();C[k]=[c.r*(c0[0]>1?c0[0]:1),c.g,c.b,c0[3]];C[k].t=t;}
  const LET=['colF','colE','colG','colB3','colD','colA7','colH','colC2'].map(n=>{const c=[1,1,1,0];c.t=TX(n,3);return c;});
  const GLOW={amber:[2.4,1.0,.3],warm:[2.2,1.6,.9],tube:[1.7,1.85,1.95],exit:[1.25,1.35,1.25],dim:[.5,.55,.6]};GLOW.screen=[.25,.55,.45];GLOW.tube.t=TX('fluor',0);GLOW.dim.t=TX('fluor',0);GLOW.exit.t=TX('exitcn',0);
- let parts=null,glows=null,exits=null,solids=null,halos=null,loots=null,ox0=0,oz0=0;
+ let parts=null,glows=null,exits=null,solids=null,halos=null,loots=null,ldoors=null,ox0=0,oz0=0;
  // V124 openable crates: looks that can be pried/opened (index into PR.LOOK) — no lockers
  const LOOK1=[0,1,2,3,4,5,6,7,8,9,10,13];
  function lootAt(id,x,z,ry,li,kb,s){const L=PR.LOOK[LOOK1[li%LOOK1.length]];s=s??(.88+l1Hash(x*13|0,z*13|0,410)*.2);loots.push({id:'l1c:'+id,x,z,ry,look:LOOK1[li%LOOK1.length],s,kb,w:L[1]*s,h:L[2]*s,d:L[3]*s});
@@ -225,7 +225,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  const P=(...a)=>put(parts,...a),G=(...a)=>put(a[0]===GLOW.exit?exits:glows,box,...a);
  function solid(x,z,w,d){solids.push({x,z,w,d});}
  const PR=makeL1Props(T,{P,C,box,cyl,vcyl,solid});
- const CL=makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW});
+ const CL=makeL1Clusters(T,{P,G,C,PR,box,vcyl,GLOW,solid,lootAt,doorAt:d=>ldoors.push(d)});
  // ---- group landmarks (pure): ~1 in 5 chunks, on a wall face (beside a door when the wall has one) ----
  const CLOTH=[[.62,.08,.06],[.08,.22,.6],[.85,.62,.05],[.1,.45,.15],[.42,.12,.5],[.85,.4,.08]].map(c=>{const k=new T.Color(...c).convertSRGBToLinear(),o=[k.r*2.2,k.g*2.2,k.b*2.2,0];o.t=C.cloth.t;return o;});
  const NOTES=['纸条：“水是干净的。拿一瓶，留一瓶。”','纸条：“灯灭了就别动，等它回来。”','纸条：“绿灯门后面的走廊每次都不一样。记住来时的柱子。”','纸条：“蓝布 = 安全。红布 = 别久留。”','纸条：“地上的水不能喝。”','纸条：“管子越来越多的地方，别往深处走。那边是 Level 2。”','纸条：“M.E.G. 来过。补给每周三补。”','纸条：“听见笑声就往有灯的地方走。”'];
@@ -288,8 +288,8 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  // chunk build is a generator: two bay rows per step, so streaming spreads one chunk over ~5 frames.
  // The shared scratch lists are restored after every yield (a synchronous ensure() may build another chunk in between).
  function buildChunk(cx,cz){const g=chunkGen(cx,cz);let r;do r=g.next();while(!r.done);return r.value;}
- function* chunkGen(cx,cz){parts=[];glows=[];exits=[];solids=[];halos=[];loots=[];const x0=cx*8,z0=cz*8;ox0=cx*K;oz0=cz*K;const ctx={parts,glows,exits,solids,halos,loots};
-  const resume=()=>{parts=ctx.parts;glows=ctx.glows;exits=ctx.exits;solids=ctx.solids;halos=ctx.halos;loots=ctx.loots;ox0=cx*K;oz0=cz*K;};
+ function* chunkGen(cx,cz){parts=[];glows=[];exits=[];solids=[];halos=[];loots=[];ldoors=[];const x0=cx*8,z0=cz*8;ox0=cx*K;oz0=cz*K;const ctx={parts,glows,exits,solids,halos,loots,ldoors};
+  const resume=()=>{parts=ctx.parts;glows=ctx.glows;exits=ctx.exits;solids=ctx.solids;halos=ctx.halos;loots=ctx.loots;ldoors=ctx.ldoors;ox0=cx*K;oz0=cz*K;};
   // V117: merge each bay row's small geometries as soon as the row is done (spreads mergeGeometries over the build
   // instead of one ~2000-piece merge on the frame the chunk appears)
   const rowP=[],rowG=[],flush=()=>{if(ctx.parts.length){rowP.push(mergeGeometries(ctx.parts,false));ctx.parts.forEach(g=>g.dispose());ctx.parts.length=0;}if(ctx.glows.length){rowG.push(mergeGeometries(ctx.glows,false));ctx.glows.forEach(g=>g.dispose());ctx.glows.length=0;}};
@@ -400,7 +400,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   const geo=rowP.length>1?mergeGeometries(rowP,false):rowP[0],glow=rowG.length?(rowG.length>1?mergeGeometries(rowG,false):rowG[0]):null;if(rowP.length>1)rowP.forEach(g=>g.dispose());if(rowG.length>1)rowG.forEach(g=>g.dispose());
   const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
   if(halos.length){const hm=new T.Mesh(haloGeo(halos),haloMat);hm.renderOrder=5;group.add(hm);}
-  const out={cx,cz,group,solids,loot:loots};parts=glows=exits=solids=halos=loots=null;return out;}
+  const out={cx,cz,group,solids,loot:loots,ldoors};parts=glows=exits=solids=halos=loots=ldoors=null;return out;}
 
  // ---- column numbers + 牛皮癣 ads (atlas decal layers, 4 cut-outs of 128 px per layer; quads merge into the chunk mesh: no extra draw calls)
  const DQ=new T.PlaneGeometry(1,1),DN={any:[]},DA={any:[]};for(const d of L1_DEC){const m=d[1]==='num'?DN:DA;(m[d[2]]=m[d[2]]||[]).push(d);}
@@ -503,7 +503,10 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   CL.map(ctx,sx,sz,scale,x0,x1,z0,z1,P);
   for(const c of camps(ox,oz)){ctx.fillStyle=`rgb(${c.col.map(v=>Math.round(Math.pow(v,1/2.2)*255)).slice(0,3).join(',')})`;ctx.fillRect(sx(c.x)-3,sz(c.z)-3,6,6);}
   {const s=l1ThrSite(Math.floor(ox/B),Math.floor(oz/B));if(s&&Math.abs(s.x-ox)<radius+8&&Math.abs(s.z-oz)<radius+8){ctx.fillStyle=P.thr;ctx.fillRect(sx(s.x)-2.5*scale,sz(s.z)-.8*scale,5*scale,1.6*scale);}}
+  if(mapOverlay)try{mapOverlay(ctx,sx,sz,scale,ox,oz,radius);}catch(e){console.warn(e);}// V124b: yarn trails + chained doors (l1loot124-main.js)
   ctx.restore();}
+ let mapOverlay=null;
+ function lockDoorsNear(x,z,R=24){const o=[];for(const c of chunks.values()){if(!c.ldoors?.length)continue;const gx=c.cx*K+K/2,gz=c.cz*K+K/2;if(Math.abs(gx-x)>K/2+R||Math.abs(gz-z)>K/2+R)continue;for(const d of c.ldoors)if(Math.abs(d.x-x)<R&&Math.abs(d.z-z)<R)o.push(d);}return o;}
  const landmarks=[{name:'天鹰段 · 切入点',x:4,z:4,yaw:-.6,pitch:-.03},{name:'天鹰段 · 积水长廊',x:2.2,z:-3.2,yaw:-2.35,pitch:-.05},{name:'天鹰段 · 柱列纵深',x:-3,z:4.4,yaw:1.0,pitch:-.02},{name:'储物货架 · 板条箱',x:-12,z:-17.6,yaw:0,pitch:-.06}];
  // hashed features nearest the arrival (found from the pure layout, so they work anywhere in the infinite plane)
  {const spiral=(R,f)=>{for(let r=0;r<R;r++)for(let z=-r;z<=r;z++)for(let x=-r;x<=r;x++){if(Math.max(Math.abs(x),Math.abs(z))!==r)continue;const v=f(x,z);if(v)return v;}return null;};
@@ -512,12 +515,13 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   const c=spiral(12,(x,z)=>campAt(x,z));if(!c)add(null);if(c)landmarks.push({name:'团体地标 · 彩布与杏仁水',x:c.bottle.x+c.nx*2.2,z:c.bottle.z+c.nz*2.2,yaw:Math.atan2(c.nx,c.nz),pitch:-.12});
   const t=spiral(6,(x,z)=>l1ThrSite(x*64+32,z*64+32));if(!t)add(null);if(t){const[fx,fz]=siteDir(t);landmarks.push({name:'阈界 · 通往 Level 2 的管道区',x:t.x+fx*6,z:t.z+fz*6,yaw:Math.atan2(fx,fz),pitch:.06});}
   {const d=CL.nearest(4,4);if(!d)add(null);if(d)landmarks.push({name:'小径 · 过道墙上的门洞',x:d.x,z:d.z,yaw:d.yaw,pitch:-.02});}
-  add(sec(3),{name:'衔尾段 · 装修中',yaw:.5,pitch:.1});add(sec(4),{name:'传说段 · 木构老屋',yaw:.5,pitch:.05});}
+  add(sec(3),{name:'衔尾段 · 装修中',yaw:.5,pitch:.1});add(sec(4),{name:'传说段 · 木构老屋',yaw:.5,pitch:.05});
+  {const d=CL.nearestLock(4,4);if(!d)add(null);if(d)landmarks.push({name:'小径 · 铁链锁住的储藏间',x:d.x+d.nx*2,z:d.z+d.nz*2,yaw:d.ry,pitch:-.04});}}
  function lootNear(x,z,R=24){const o=[];for(const c of chunks.values()){if(!c.loot)continue;const gx=c.cx*K+K/2,gz=c.cz*K+K/2;if(Math.abs(gx-x)>K/2+R||Math.abs(gz-z)>K/2+R)continue;for(const l of c.loot)if(Math.abs(l.x-x)<R&&Math.abs(l.z-z)<R)o.push(l);}return o;}
  // build a geometry (local frame, origin at 0) out of the world's own primitives and atlas materials
  function kitGeo(fn){const sv=[parts,ox0,oz0];parts=[];ox0=oz0=0;try{fn((...a)=>put(parts,...a),C,{box,cyl,vcyl});const g=parts.length>1?mergeGeometries(parts,false):parts[0];if(parts.length>1)parts.forEach(q=>q.dispose());return g;}finally{[parts,ox0,oz0]=sv;}}
  let hand={i:0,p:new T.Vector3(),d:new T.Vector3(0,0,-1)};
  async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);const g=new T.Group();for(const m of [mat,glowMat,exitMat]){const q=new T.Mesh(col(box.clone(),C.concrete,[1,1,1]),m);q.position.set(camera.position.x,-50,camera.position.z);g.add(q);}g.add(new T.Mesh(haloGeo([[0,-50,0,1,1,1]]),haloMat));scene.add(g);await r.compileAsync(scene,camera);scene.remove(g);g.traverse(o=>o.geometry?.dispose());}
  return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='corridor'?corridors.scene:scene},get mode(){return mode},nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt:()=>H,
-  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA)=>{if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
+  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA)=>{if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,lockDoorsNear,setMapOverlay:f=>{mapOverlay=f;},kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
 }
