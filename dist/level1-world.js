@@ -130,7 +130,12 @@ void main(){vec3 N=normalize(vN);vec3 alb=vC.rgb;
 }`;
 
 export function createLevel1World(T,renderer){
- const scene=new T.Scene();scene.userData.noAtmosphere=true;scene.background=new T.Color(0x24282b);scene.fog=new T.FogExp2(0x2b3033,.03);
+ const scene=new T.Scene();scene.userData.noAtmosphere=true;
+ // V124c: almond-water glass (camp bottles, crate loot) lives on ALMOND_GLASS_LAYER and needs the pipeline's glass pass; the pipeline
+ // skips it for noAtmosphere scenes, so report whether any bottle glass is near (rescanned every 0.4 s).
+ {let gT=0,gOn=false;const gp=new T.Vector3();scene.userData.bottleGlass=(cam)=>{const now=performance.now();if(now-gT<400)return gOn;gT=now;gOn=false;
+  scene.traverseVisible(o=>{if(gOn||!o.userData.almondGlass)return;o.getWorldPosition(gp);if(gp.distanceToSquared(cam.position)<900)gOn=true;});return gOn;};}
+scene.background=new T.Color(0x24282b);scene.fog=new T.FogExp2(0x2b3033,.03);
  const loader=new T.TextureLoader(),pending=[];
  const tex=(f,rep=true)=>{let ok,no;pending.push(new Promise((a,b)=>{ok=a;no=b;}));const t=loader.load('./assets/level1/'+f+'?v=1',ok,undefined,no);t.wrapS=t.wrapT=T.RepeatWrapping;t.colorSpace=T.SRGBColorSpace;t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());t.generateMipmaps=true;return t;};
  const lin=c=>new T.Color(c).convertSRGBToLinear?.()??new T.Color(c);
