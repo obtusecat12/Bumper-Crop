@@ -7,6 +7,7 @@ import * as T from './vendor/three.module.min.js';
 import {l1Hash} from './level1-layout.js?v=113';
 import {LOOT_ITEMS,makeLootModel,makeFill,prepareLootItems} from './l1loot124-items.js?v=124';
 import {almondVariant} from './almond-water-assets.js?v=60';
+import {makeBundle,packCrate,PACKS} from './l1loot124-pack.js?v=124c';import {ITEMS} from './inventory117.js?v=124';
 const CSS=`.l1loot-fx{position:absolute;inset:0;pointer-events:none;z-index:30}.l1loot-fx i{position:absolute;inset:0;opacity:0;transition:opacity .15s}
 .l1loot-fx .fx-red{background:radial-gradient(ellipse at center,transparent 45%,rgba(150,0,0,.85) 100%)}.l1loot-fx .fx-cold{background:radial-gradient(ellipse at center,transparent 40%,rgba(200,230,255,.9) 100%);backdrop-filter:saturate(.4)}
 .l1loot-fx .fx-gas{background:radial-gradient(ellipse at center,rgba(170,200,60,.25) 0%,rgba(120,150,20,.75) 100%)}.l1loot-fx .fx-flash{background:#fff3d0;transition:none}.l1loot-fx .fx-match{background:radial-gradient(ellipse 55% 60% at 62% 100%,rgba(255,190,90,.55) 0%,rgba(255,150,60,.18) 45%,transparent 75%);mix-blend-mode:screen}
@@ -42,9 +43,19 @@ export function rollCrate(l,force){const R=rng(l.id);let theme='supplies';
  if(th.need&&!items.some(i=>th.need.includes(i.id)))items.push({id:th.need[Math.floor(R()*th.need.length)],meta:{v:0,id:l.id+':n'}});
  while(items.length<(th.min||1)){const[id]=th.items[Math.floor(R()*th.items.length)];items.push({id,meta:{v:Math.floor(R()*4),id:l.id+':m'+items.length}});}
  let lock=0;if(l.kb!==-1&&l.kb!==5){if(WOOD.has(l.look)&&l1Hash(l.x*17|0,l.z*17|0,411)<.55)lock=1;else if(l.look===RUST)lock=2;}
- return{theme,items,fill:th.fill,full:!!th.full,hazard:th.hazard||null,lock};}
+ // V124c packing: real bundles appended after the base roll (own rng), and a packing mode per crate
+ const P=rng(l.id+':pk'),packs=[],idx=id=>items.map((it,i)=>it.id===id?i:-1).filter(i=>i>=0);
+ const grow=(id,n,kind,p)=>{const roll=P();let ix=idx(id);if(!ix.length||roll>=p)return;const v=items[ix[0]].meta.v;while(ix.length<n){items.push({id,meta:{v:Math.floor(P()*4),id:l.id+':p'+items.length}});ix=idx(id);}if(kind==='cantray')for(const i of ix)items[i].meta.v=v;if(kind==='six'){let sid=l.id+':six';for(let q=0;q<24;q++){const t=l.id+':six'+q;if(almondVariant(t).kind==='glass'){sid=t;break;}}for(const i of ix.slice(0,n))items[i].meta.id=sid;}packs.push({kind,idx:ix.slice(0,n)});};
+ grow('almond',6,'six',theme==='supplies'||l.kb===-1?.6:.3);grow('can',6,'cantray',theme==='pantry'?.65:.35);grow('battery',4,'blister',.75);
+ grow('matches',4,'matchbundle',.55);grow('bandage',4,'gauze',.5);grow('yarn',3,'yarnbundle',.45);
+ if((theme==='junk'||theme==='household'||theme==='tools')&&P()<.4)items.push({id:'note',meta:{v:Math.floor(P()*2),id:l.id+':note'}});
+ const TIDY={supplies:.85,pantry:.9,produce:.55,household:.4,tools:.25,junk:.06,foam:.1,peas:.1,odd:.3,chem:.65,boom:.7,glass:.15,nitro:.5};
+ const mode=P()<(TIDY[theme]??.4)?'tidy':'messy';
+ return{theme,items,fill:th.fill,full:!!th.full,hazard:th.hazard||null,lock,packs,mode};}
 
-export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio,updateHUD=()=>{},enterOne,resetCameraRig=()=>{}}){
+export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio,updateHUD=()=>{},enterOne,resetCameraRig=()=>{},inspect=null}){
+ let shiftDown=false;addEventListener('keydown',e=>{if(e.key==='Shift')shiftDown=true;});addEventListener('keyup',e=>{if(e.key==='Shift')shiftDown=false;});addEventListener('blur',()=>{shiftDown=false;});
+ let FL=null;import('./flashlight117.js?v=119').then(m=>{FL=m;}).catch(()=>{});
  const W=()=>world();let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}');}catch{}
  const save=()=>{try{const k=Object.keys(saved);if(k.length>800)for(const x of k.slice(0,k.length-800))delete saved[x];localStorage.setItem(KEY,JSON.stringify(saved));}catch{}};
  const ready=prepareLootItems();
@@ -74,16 +85,19 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
  function persist(c){saved[c.l.id]={t:[...c.taken],b:c.blown?1:0};save();}
  async function spawnContents(c){if(c.group||!scene)return;await ready;if(c.group)return;const l=c.l,k=kit[l.look],g=new T.Group();g.position.set(l.x,0,l.z);g.rotation.y=l.ry;g.scale.setScalar(l.s);
   let fill=c.roll.fill;if(fill==='straw')fill=TOTE.has(l.look)||l.look===RUST?null:CARTON.has(l.look)?'shred':'straw';
-  const iw=k.w-2*k.t-.01,id=k.d-2*k.t-.01,full=c.roll.full,fy=full?k.wh*.9:fill?k.wh*.6:k.t+.004;
-  if(fill&&fill!=='glass'){const f=makeFill(fill,iw,id,(l.x*3+l.z)%7);f.position.y=fy;g.add(f);}
-  if(fill==='glass'){const f=makeFill(WOOD.has(l.look)?'straw':'shred',iw,id,2);f.position.y=k.wh*.5;g.add(f);}
-  if(fill==='glass'){const sh=makeLootModel('glass',{v:1});sh.position.y=fy;g.add(sh);const sh2=makeLootModel('glass',{v:3});sh2.position.set(iw*.2,fy+.01,-id*.2);g.add(sh2);}
-  // item layout: a loose grid over the bed, biggest first, hashed jitter
-  const R=rng(l.id+':lay'),list=c.roll.items.map((it,i)=>({...it,i})).filter(it=>!c.taken.has(it.i)).sort((a,b)=>LOOT_ITEMS[b.id].size-LOOT_ITEMS[a.id].size);
-  const n=Math.max(1,list.length),cols=Math.max(1,Math.round(Math.sqrt(n*iw/id))),rows=Math.ceil(n/cols);
-  c.items=list.map((it,j)=>{const o=makeLootModel(it.id,{...it.meta});const sz=LOOT_ITEMS[it.id].size,fit=Math.min(1,Math.min(iw/cols,id/rows)*1.25/sz);o.scale.multiplyScalar(fit/l.s);
-   const cx=-iw/2+(j%cols+.5)*iw/cols+(R()-.5)*.03,cz=-id/2+(Math.floor(j/cols)+.5)*id/rows+(R()-.5)*.03;o.position.set(cx,fy+(full?.0:.004),cz);o.rotation.y=R()*6.28;g.add(o);return{...it,obj:o};});
-  scene.add(g);c.group=g;}
+  const iw=k.w-2*k.t-.01,id=k.d-2*k.t-.01,full=c.roll.full,mode=full?'messy':(c.roll.mode||'messy');
+  // bed height: tidy crates are packed from the floor (straw only peeks between items), messy ones were tipped onto a bed
+  const bed=full?k.wh*.9:!fill?k.t+.004:mode==='tidy'?k.t+.004:k.wh*.3;
+  if(fill&&fill!=='glass'){const f=makeFill(fill,iw,id,(l.x*3+l.z)%7);f.position.y=mode==='tidy'&&!full?k.t-.012:bed;g.add(f);}
+  if(fill==='glass'){const f=makeFill(WOOD.has(l.look)?'straw':'shred',iw,id,2);f.position.y=bed;g.add(f);const sh=makeLootModel('glass',{v:1});sh.position.y=bed+.012;g.add(sh);const sh2=makeLootModel('glass',{v:3});sh2.position.set(iw*.2,bed+.014,-id*.2);g.add(sh2);}
+  const inner=new T.Group();inner.scale.setScalar(1/l.s);g.add(inner);
+  const left=c.roll.items.map((it,i)=>({...it,i})).filter(it=>!c.taken.has(it.i)),inPack=new Map();(c.roll.packs||[]).forEach((p,pi)=>p.idx.forEach((i,k2)=>inPack.set(i,[pi,k2])));
+  const units=[],packU=new Map();
+  for(const it of left){const pk=inPack.get(it.i);if(pk){let u=packU.get(pk[0]);if(!u){u={pack:c.roll.packs[pk[0]],members:[],id:it.id};packU.set(pk[0],u);units.push(u);}u.members.push({...it,k:pk[1]});}else units.push({id:it.id,members:[it]});}
+  for(const u of units){if(u.pack&&u.members.length>1){u.obj=makeBundle(u.pack.kind,u.members,u.members.length===u.pack.idx.length);}else{delete u.pack;u.obj=makeLootModel(u.id,{...u.members[0].meta});}}
+  const S=l.s,glassBed=fill==='glass'?.02:0;packCrate(units,{w:iw*S-.006,d:id*S-.006,floor:(bed+glassBed+(full?0:.002))*S,wall:k.wh*S,mode,R:rng(l.id+':lay')});
+  for(const u of units)inner.add(u.obj);c.mode=mode;
+  c.items=units;scene.add(g);c.group=g;}
  function wreck(c){if(c.wreck||!kit)return;const l=c.l,k=kit[l.look];k.plank??=W().kitGeo((P,C,{box})=>P(box,C[k.name]||C.crate1,0,.012,0,k.w*.85,.024,.11));const g=new T.Group(),R=rng(l.id+':w');
   for(let i=0;i<7;i++){const m=new T.Mesh(k.plank,W().lootMat);const a=R()*6.28,d=.3+R()*1.4;m.position.set(l.x+Math.cos(a)*d,i*.01,l.z+Math.sin(a)*d);m.rotation.set(0,R()*6.28,(R()-.5)*.3);m.scale.set(.5+R()*.6,1,1);g.add(m);}scene.add(g);c.wreck=g;}
  function dropContents(c){if(c.wreck&&!near.includes(c.l)){scene?.remove(c.wreck);c.wreck=null;}if(!c.group)return;scene?.remove(c.group);c.group=null;c.items=[];}
@@ -116,7 +130,17 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
  function target(){if(!kit)return null;camera.getWorldDirection(fwd);let best=null,bs=1e9;
   for(const l of near){const c=rt(l);if(c.blown||behindLocked(l))continue;const dx=l.x-state.x,dz=l.z-state.z,dist=Math.hypot(dx,dz)-Math.max(l.w,l.d)/2;if(dist>1.5)continue;const dot=(dx*fwd.x+dz*fwd.z)/Math.max(.01,Math.hypot(dx,dz))/Math.max(.01,Math.hypot(fwd.x,fwd.z));if(dot<.35&&dist>.25)continue;const sc2=dist*.5-dot*2;if(sc2<bs){bs=sc2;best=c;}}return best;}
  function targetItem(c){if(!c.items.length)return null;camera.getWorldPosition(v);camera.getWorldDirection(fwd);let best=c.items[0],ba=-2;const w=new T.Vector3();
-  for(const it of c.items){it.obj.getWorldPosition(w);w.sub(v).normalize();const a=w.dot(fwd);if(a>ba){ba=a;best=it;}}return best;}
+  for(const it of c.items){it.obj.getWorldPosition(w);w.y+=.03;w.sub(v).normalize();const a=w.dot(fwd);if(a>ba){ba=a;best=it;}}return best;}
+ const MW={six:['瓶','扎'],cantray:['罐','托'],blister:['节','卡'],matchbundle:['盒','捆'],gauze:['卷','捆'],yarnbundle:['团','捆']};
+ const QUSE={can:'Q 吃',peas:'Q 吃',pineapple:'Q 吃',melon:'Q 吃',papaya:'Q 吃',bandage:'Q 包扎',soap:'Q 洗手',sanitizer:'Q 洗手',watch:'Q 看时间',matches:'Q 划一根',lighter:'Q 点火',dynamite:'Q 点燃扔出',squirt:'Q 喷射',berries:'Q 吃下',fuyou:'Q 感知',yarn:'Q 放线',junk:'Q 扔掉',foam:'Q 扔掉',glass:'Q 扔掉',nitrogen:'Q 丢在地上',note:'Q 读'};
+ const HAZI={chemical:{kind:'chem',txt:'⚠ 瓶里的液体在晃，瓶口结着白色结晶，闻着刺鼻——别拧开。'},dynamite:{kind:'boom',txt:'⚠ 引信很短，别靠近火源。'},glass:{kind:'glass',txt:'⚠ 边缘锋利，小心划手。'},nitrogen:{kind:'cold',txt:'⚠ 冷得刺手，一直冒着白气。'},berries:{kind:'odd',txt:'它们在盒子里微微发亮。'}};
+ const NOTES=['纸条：“别跟着灯管嗡嗡声走。箱子里有水，但别碰贴骷髅的。——K”','纸条：“CRATE 14 — EMPTY. CRATE 15 — DON\'T.” 背面画着一小段走廊和一个叉。'];
+ function itemVariant(id,meta){if(id==='almond')return meta?.kind?meta:almondVariant(meta?.id||'l1loot');if(id==='drink')return meta;if(id==='soy')return {kind:'vending',type:'soy'};
+  const name=(LOOT_ITEMS[id]||ITEMS[id])?.name||id,h=HAZI[id];let desc=ITEMS[id]?.desc||'';if(id==='note')desc=NOTES[(meta?.v|0)%2];
+  const build=id==='flashlight'?(()=>{if(!FL)return makeLootModel('battery',{});const t=FL.createFlashlight117(T).torch;t.parent?.remove(t);t.position.set(0,0,0);t.rotation.set(0,0,0);return t;}):()=>makeLootModel(id,{...(meta||{})});
+  return {kind:'object',id,name,desc,use:QUSE[id]||'',hazard:h?.kind||null,warn:h?.txt||'',build};}
+ function packVariant(kind,members){const P=PACKS[kind];const ms=members.map((m,k)=>({...m,k}));return {kind:'object',id:P.id,pack:kind,name:P.name+(members.length<P.n?'（剩 '+members.length+'）':''),desc:P.desc,use:'',hazard:null,warn:'',build:()=>makeBundle(kind,ms,true)};}
+ const wp=new T.Vector3();
  const has=id=>inventory.count(x=>x===id)>0;
  function lockInfo(c){if(c.open||c.lockDone||!c.roll.lock)return null;if(c.roll.lock===1)return has('knife')?{ok:true,txt:'E 用猎刀撬开钉死的木箱'}:has('axe')?{ok:true,txt:'E 用手斧撬开钉死的木箱'}:{ok:false,txt:'木箱被钉死了 · 需要小刀或斧头'};
   return has('axe')?{ok:true,txt:'E 用手斧砸开挂锁'}:{ok:false,txt:'铁皮箱上着挂锁 · 需要斧头'};}
@@ -125,7 +149,8 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
   if(!c)return null;let s;
   if(!c.open){const L=lockInfo(c);s=L?L.txt:CARTON.has(c.l.look)?'E 撕开纸箱胶带':TOTE.has(c.l.look)?'E 掀开塑料箱盖':'E 打开板条箱';
    if(c.roll.hazard&&inventory.selected()==='fuyou')s+=' · 福友玉在发烫（'+HAZ_TXT[c.roll.hazard]+'？）';}
-  else{const it=targetItem(c);s=it?'E 拿取 '+LOOT_ITEMS[it.id].name+(c.items.length>1?'（箱里还有 '+c.items.length+' 件）':''):'空箱子';}
+  else{const it=targetItem(c),tot=c.items.reduce((a,u)=>a+u.members.length,0);if(!it)s='空箱子';else{const n=it.members.length,w=MW[it.pack?.kind];
+   s=n>1&&w?'E 拿一'+w[0]+LOOT_ITEMS[it.id].name+' · Shift+E 整'+w[1]+'拿走（'+n+' '+w[0]+'）':'E 拿取 '+LOOT_ITEMS[it.id].name;if(tot>n)s+='（箱里还有 '+tot+' 件）';}}
   return s;}
  function use(){if(!kit||state.level!==1||W().mode!=='halls')return false;const c=target(),dr=targetDoor();
   if(dr&&(!c||dr.dist<Math.hypot(c.l.x-state.x,c.l.z-state.z))){if(!has('axe')){toast('门被铁链锁住了，链子穿过两个把手。需要一把斧头。');sfx('tick');return true;}doorMesh(dr.r);breakDoor(dr.r);toast('你抡起手斧朝门板劈下去——');return true;}
@@ -133,12 +158,19 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
   if(!c.open){const L=lockInfo(c);if(L&&!L.ok){toast(L.txt+'。');sfx('tick');return true;}if(L)c.lockDone=true;openCrate(c);return true;}
   const it=targetItem(c);if(!it){toast('箱子已经空了。');return true;}
   if(c.roll.hazard==='glass'&&rng(c.l.id+':cut'+c.taken.size)()<.45){hurt(9,'碎玻璃');fx.bleed=Math.max(fx.bleed,22);toast('被碎玻璃划破了手——在流血！用纱布包扎。');}
-  const meta={...it.meta};if(it.id==='berries')Object.assign(meta,{lv:1,x:c.l.x+Math.sin(c.l.ry)*.9,z:c.l.z+Math.cos(c.l.ry)*.9});if(it.id==='nitrogen')meta.born=Date.now();if(it.id==='squirt')meta.ammo=6;if(it.id==='lighter')meta.fuel=100;if(it.id==='matches')meta.left=12;if(it.id==='yarn')meta.len=60;if(it.id==='sanitizer')meta.uses=4;
-  if(it.id==='soy')Object.assign(meta,{kind:'vending',type:'soy'});
-  const left=inventory.add(it.id,it.id==='almond'?almondVariant(it.meta.id):meta,1);if(left){toast('背包满了，放不下 '+LOOT_ITEMS[it.id].name+'。');return true;}
-  c.taken.add(it.i);c.items=c.items.filter(x=>x!==it);it.obj.parent?.remove(it.obj);persist(c);audio?.chime?.();toast('拿到了 '+LOOT_ITEMS[it.id].name+(it.id==='nitrogen'?'——它在冒白气，会慢慢升华掉。':''));updateHUD();return true;}
+  const takeMeta=m=>{const meta={...m.meta};if(m.id==='berries')Object.assign(meta,{lv:1,x:c.l.x+Math.sin(c.l.ry)*.9,z:c.l.z+Math.cos(c.l.ry)*.9});if(m.id==='nitrogen')meta.born=Date.now();if(m.id==='squirt')meta.ammo=6;if(m.id==='lighter')meta.fuel=100;if(m.id==='matches')meta.left=12;if(m.id==='yarn')meta.len=60;if(m.id==='sanitizer')meta.uses=4;
+   if(m.id==='soy')Object.assign(meta,{kind:'vending',type:'soy'});return m.id==='almond'?almondVariant(m.meta.id):meta;};
+  // V124c: E takes one item (the top one of a bundle), Shift+E the whole bundle; the bag splits it by stack caps
+  const whole=shiftDown&&it.members.length>1,pick=whole?it.members.slice():[it.members.at(-1)],pv=whole?packVariant(it.pack.kind,pick):null;it.obj.getWorldPosition(wp);
+  let got=0,last=null;for(const m of pick){const meta=takeMeta(m);if(inventory.add(m.id,meta,1))break;got++;last={m,meta};c.taken.add(m.i);const o=it.obj.userData.objs?.get(m.i);if(o&&o!==it.obj){o.getWorldPosition(wp);o.parent?.remove(o);}it.members=it.members.filter(x=>x!==m);}
+  if(!got){toast('背包满了，放不下 '+LOOT_ITEMS[it.id].name+'。');return true;}
+  for(const w of it.obj.userData.wraps||[])w.visible=false;
+  if(!it.members.length){it.obj.parent?.remove(it.obj);c.items=c.items.filter(x=>x!==it);}
+  persist(c);audio?.chime?.();const nm=LOOT_ITEMS[it.id].name;
+  toast(whole?(got<pick.length?'背包只装得下 '+got+' 件 '+nm+'，其余留在箱里。':'整'+MW[it.pack.kind][1]+'拿走：'+got+' 件 '+nm+'，已按堆叠上限放进背包。'):'拿到了 '+nm+(it.id==='nitrogen'?'——它在冒白气，会慢慢升华掉。':''));updateHUD();
+  if(inspect)inspect(whole?pv:itemVariant(last.m.id,last.meta),wp.clone());return true;}
  // ---- using the selected item (Q) ----
- function useSelected(){const id=inventory.selected();if(!id)return false;const i=inventory.sel,s=inventory.slots[i],meta=s.items.at(-1)||{};
+ function useSelected(slot){const i=slot??inventory.sel,s=inventory.slots[i],id=s?.id;if(!id)return false;const meta=s.items.at(-1)||{};
   const eat=(txt,o)=>{inventory.take(i);for(const k in o)state[k]=Math.max(0,Math.min(100,state[k]+o[k]));audio?.chime?.();toast(txt);updateHUD();return true;};
   switch(id){
    case 'can':return eat(has('knife')?'用猎刀撬开罐头，囫囵吃完了。':'没有开罐器，你用牙和指甲硬撬开了它……',{stamina:30,health:has('knife')?8:5,sanity:3});
@@ -162,6 +194,7 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
     fx.match=id==='matches'?14:40;fx.matchMax=fx.match;sfx('tick');toast(id==='matches'?'划着了一根火柴。'+(meta.left>0?'（盒里还剩 '+meta.left+' 根）':'（最后一根）'):'咔哒——打火机的火苗跳了起来。');return true;}
    case 'dynamite':{if(state.level!==1||W()?.mode!=='halls'){toast('这里不是扔炸药的地方。');return true;}if(!has('matches')&&!has('lighter')){toast('需要火柴或打火机才能点燃炸药。');return true;}inventory.take(i);camera.getWorldDirection(fwd);const fl=Math.hypot(fwd.x,fwd.z)||1,x=state.x+fwd.x/fl*3,z=state.z+fwd.z/fl*3;
     const o=makeLootModel('dynamite',{});o.position.set(x,0,z);scene?.add(o);fx.fuses.push({c:null,obj:o,t:3,x,z,spark:spark(x,.08,z)});sfx('hiss');toast('点燃引信，扔了出去——快躲开！');return true;}
+   case 'note':toast(NOTES[(meta.v|0)%2]);return true;
    case 'squirt':return squirt(i,meta);
    case 'berries':{inventory.take(i);const lv=meta.lv??1;if(lv!==1){toast('浆果的味道变了——什么也没发生。');return true;}fx.flash=.8;
     if(state.level!==1){toast('你吞下迁跃浆果，眼前的一切被抽离——');enterOne?.(0,{x:meta.x,z:meta.z});return true;}
@@ -273,5 +306,8 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
   for(const r of doors.values()){if(r.t>=0&&!r.broken)finishDoor(r);r.t=-1;dropDoor(r);}doors.clear();nearDoors=[];nearKey='';W()?.setHandLight?.(0);}
  function stats(){return{near:near.length,live:live.size,open:[...live.values()].filter(c=>c.open).length,drawCalls:kit?kit.reduce((a,k)=>a+(k.body.visible?1:0)+k.parts.filter(p=>p.im.visible).length,0):0};}
  async function prewarm(renderer){if(!kit&&W())buildKit();if(!kit)return;await ready;}
- return{reset:(l)=>{const c=live.get(l.id);if(c)dropContents(c);live.delete(l.id);delete saved[l.id];nearKey='';},force:(l,th)=>{const c=rt(l);c.roll=rollCrate(l,th);return c.roll;},update,prompt,use,useSelected,stats,prewarm,rollCrate,get near(){return near;},live,fx,target,openCrate:(c,f)=>openCrate(c,f),spawnContents,rt,doors,get nearDoors(){return nearDoors;},targetDoor,doorRt,doorMesh,breakDoor,doorBroken,get yarnTrails(){return yarnTrails;},endYarn,mapOverlay,fxTick};
+ function useInspected(v){if(!v||v.kind!=='object'||v.pack||!v.use)return false;let i=inventory.slots[inventory.sel]?.id===v.id?inventory.sel:inventory.slots.findIndex(x=>x?.id===v.id);if(i<0)return false;
+  const before=inventory.count(x=>x===v.id);const r=useSelected(i);return r?{consumed:inventory.count(x=>x===v.id)<before}:false;}
+ function inspectSelected(){if(!inspect)return false;const s=inventory.slots[inventory.sel];if(!s)return false;const v=itemVariant(s.id,s.items.at(-1));if(!v)return false;inspect(v,null);return true;}
+ return{useInspected,inspectSelected,itemVariant,packVariant,reset:(l)=>{const c=live.get(l.id);if(c)dropContents(c);live.delete(l.id);delete saved[l.id];nearKey='';},force:(l,th)=>{const c=rt(l);c.roll=rollCrate(l,th);return c.roll;},update,prompt,use,useSelected,stats,prewarm,rollCrate,get near(){return near;},live,fx,target,openCrate:(c,f)=>openCrate(c,f),spawnContents,rt,doors,get nearDoors(){return nearDoors;},targetDoor,doorRt,doorMesh,breakDoor,doorBroken,get yarnTrails(){return yarnTrails;},endYarn,mapOverlay,fxTick};
 }

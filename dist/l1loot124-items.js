@@ -46,10 +46,14 @@ export const LOOT_ITEMS={
  pineapple:{name:'菠萝',size:.3},melon:{name:'哈密瓜',size:.2},papaya:{name:'木瓜',size:.22},
  fuyou:{name:'福友玉',size:.09},squirt:{name:'滋水枪',size:.36},berries:{name:'迁跃浆果',size:.12},
  chemical:{name:'化学制剂',size:.18},dynamite:{name:'炸药',size:.2},nitrogen:{name:'固态氮块',size:.12},glass:{name:'碎玻璃',size:.15},
+ note:{name:'纸条',size:.13},
 };
 
 // ---- models: build(meta) -> Object3D, origin at its resting bottom centre ----
 const B={
+ note(m){const v=(m?.v|0)%2,w=v?.1:.13,d=v?.1:.08,g=new T.PlaneGeometry(w,d,6,4),p=g.attributes.position;// V124c: a slightly curled sheet, laid flat
+  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i);p.setZ(i,.004*Math.sin(x*41+v)+.006*Math.max(0,Math.abs(y)/d*2-.6)+.003*Math.cos(y*53));}g.computeVertexNormals();
+  return grp(mesh(g,M('note'+v,()=>std(tex(v?'pk/note_b':'pk/note_a'),{side:T.DoubleSide,roughness:.95})),0,.003,0,-Math.PI/2,0,(v?.3:-.15)));},
  can(m){const kinds=['soup','peas','tuna','peaches'],k=kinds[(m?.v|0)%4],tuna=k==='tuna';return makeFloorCans([{kind:k,x:0,z:0,radius:tuna?.054:.047,height:tuna?.044:k==='peaches'?.145:.113,side:!!m?.side,yaw:0}]);},
  almond(m){const g=makeAlmondBottle(almondVariant(m?.id||'l1loot'));return g;},
  soy(){return createVendingDrink(T,'soy',{textures:vendingDrinkTextures()}).group;},
