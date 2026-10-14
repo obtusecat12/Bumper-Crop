@@ -9,6 +9,8 @@ import {CITY_BLOCK as B,CITY_ROAD_HALF as R,CITY_SIDEWALK as W,worldToCity} from
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {canalBlockTask} from './canal128.js?v=128';
 import {CANAL} from './canal128-layout.js?v=128';
+import {subwayEntrances} from './subway128.js?v=128';
+import {subwayStairs,SUB} from './subway128-layout.js?v=128';
 const PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args)=>{const w=b.point(x,y,z),p=worldToCity(w.x,w.z);if(p.x>4.5&&p.x<33.5&&p.z>443&&p.z<471)return;b.push(x,y,z,ry);fn(b,args||{});b.pop();};
 function face(b,key,points){const g=new T.BufferGeometry(),p=[];for(const i of[0,1,2,0,2,3])p.push(...points[i]);g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.computeVertexNormals();if(g.attributes.normal.getY(0)<-.001){const a=g.attributes.position;for(let j=0;j<a.count;j+=3){const v=[a.getX(j+1),a.getY(j+1),a.getZ(j+1)];a.setXYZ(j+1,a.getX(j+2),a.getY(j+2),a.getZ(j+2));a.setXYZ(j+2,...v);}g.computeVertexNormals();}b.add(g,key,0,0,0);g.dispose();}
@@ -26,28 +28,29 @@ function roads(b,cn){
  for(const x of[0,B])for(const z of[0,B]){const sx=x===0?1:-1,sz=z===0?1:-1;face(b,'asphalt',[[x,.045,z],[x,.045,z+sz*R],[x+sx*R,0,z+sz*R],[x+sx*R,.045,z]]);}
 }
 function corner(b,x,z,ry){b.push(x,0,z,ry);face(b,'sidewalk',[[0,.15,W],[W,.15,0],[W,.15,W],[0,.15,W]]);b.walk(W*.70,W*.70,W*.60,W*.60,.15);curb(b,W/2,W/2,W*Math.SQRT2,PI/4);b.pop();}
-function* frontageTask(b,seed,lod,ry,portal,exclude,canalSpan){
+function* frontageTask(b,seed,lod,ry,portal,exclude,canalSpan,hole){
+ const inHole=x=>hole&&x>hole[0]-1.2&&x<hole[1]+1.2;
  b.push(56,0,56,ry);b.push(-56,0,-56);
- for(let[a,c]of(portal?[[12,14],[16,53],[59,96],[98,100]]:[[12,14],[16,96],[98,100]])){if(exclude){if(a>=exclude[0]&&c<=exclude[1])continue;if(a<exclude[0]&&c>exclude[0])c=exclude[0];else if(a<exclude[1]&&c>exclude[1])a=exclude[1];}pavement(b,(a+c)/2,R+W/2,c-a,W);curb(b,(a+c)/2,R,c-a);yield;}
+ for(let[a,c]of(portal?[[12,14],[16,53],[59,96],[98,100]]:[[12,14],[16,96],[98,100]])){if(exclude){if(a>=exclude[0]&&c<=exclude[1])continue;if(a<exclude[0]&&c>exclude[0])c=exclude[0];else if(a<exclude[1]&&c>exclude[1])a=exclude[1];}if(hole&&a<hole[1]&&c>hole[0]){for(const[e,f]of[[a,Math.max(a,hole[0])],[Math.min(c,hole[1]),c]])if(f-e>.01)pavement(b,(e+f)/2,R+W/2,f-e,W);const e=Math.max(a,hole[0]),f=Math.min(c,hole[1]);pavement(b,(e+f)/2,(R+SUB.stairX0)/2,f-e,SUB.stairX0-R);pavement(b,(e+f)/2,(SUB.stairX1+R+W)/2,f-e,R+W-SUB.stairX1);}else pavement(b,(a+c)/2,R+W/2,c-a,W);curb(b,(a+c)/2,R,c-a);yield;}
  if(portal)ramp(b,56,R+W/2,6,W,0);yield;
  // Panel joints stop at the shop line; the unobstructed walking strip is 2.6 m.
- for(let x=14;x<100;x+=2.9){if(portal&&x>52&&x<60)continue;b.box('concrete',x,.152,R+W/2,.013,.004,W-.28,0,.70);yield;}
+ for(let x=14;x<100;x+=2.9){if(portal&&x>52&&x<60)continue;if(inHole(x))continue;b.box('concrete',x,.152,R+W/2,.013,.004,W-.28,0,.70);yield;}
  b.box('concrete',56,.005,R-.21,86,.016,.36,0,.73);
  const r=urbanRandom(seed),stations=[];for(let x=17;x<98;x+=9)stations.push(x);
  for(let i=0;i<stations.length;i++){
-  const x=stations[i];if(portal&&x>51&&x<61)continue;if(canalSpan&&x>CANAL.p0-2&&x<CANAL.p1+2)continue;const z=R+1.05;
+  const x=stations[i];if(portal&&x>51&&x<61)continue;if(canalSpan&&x>CANAL.p0-2&&x<CANAL.p1+2)continue;if(inHole(x))continue;const z=R+1.05;
   if(i===3&&!lod&&seed%3===0){const kind=['pylon','monument','poster','googie'][(seed>>>3)%4],fn={pylon:poleSign,monument:monumentSign,poster:posterStand,googie:googieSign}[kind];place(b,x,.15,z,PI,bb=>fn(bb,adFor(seed*13,kind),0,0,kind==='poster'?6.9:3.2));}
   else if(i%2===0){place(b,x,.15,z,0,P.addStreetTree,{seed:seed+i*771,scale:.88+(i%3)*.055});}
   else if(!lod){const k=(seed+i)%5;place(b,x,.15,z,PI,k===0?P.addHydrant:k===1?P.addParkingMeter:k===2?P.addTrashBin:k===3?S.addNewspaperBox:S.addBikeRack,{seed:seed+i,color:['blue','yellow','red'][i%3]});}
   yield;
  }
- place(b,30,.15,R+.65,PI/2,P.addStreetLight,{height:8.5,arm:2.4});yield;place(b,83,.15,R+.65,PI/2,P.addStreetLight,{height:8.5,arm:2.4});yield;
+ if(!inHole(30))place(b,30,.15,R+.65,PI/2,P.addStreetLight,{height:8.5,arm:2.4});yield;if(!inHole(83))place(b,83,.15,R+.65,PI/2,P.addStreetLight,{height:8.5,arm:2.4});yield;
  if(canalSpan){b.pop();b.pop();return;}
  if(!lod){
   place(b,13.2,.15,10.5,PI,S.addNewspaperBox,{seed,color:'yellow'});place(b,14.0,.15,10.5,PI,S.addNewspaperBox,{seed:seed+1,color:'blue'});yield;
   place(b,96.5,.15,10,PI,P.addUtilityCabinet,{variant:seed%2});place(b,96.5,.15,10,PI,S.addUtilityDetails,{seed,...(seed%2?{width:.76,height:1.32,depth:.43}:{})});yield;
-  if(seed%3!==0)place(b,44,.15,R+1.0,PI,P.addParkingMeter);place(b,72,.15,R+1.0,PI,P.addParkingMeter);
-  place(b,23,.15,R+.58,PI,P.addStreetSign,{kind:seed%3?'restrict':'speed'});
+  if(seed%3!==0&&!inHole(44))place(b,44,.15,R+1.0,PI,P.addParkingMeter);if(!inHole(72))place(b,72,.15,R+1.0,PI,P.addParkingMeter);
+  if(!inHole(23))place(b,23,.15,R+.58,PI,P.addStreetSign,{kind:seed%3?'restrict':'speed'});
   if(portal)for(const x of[52.5,59.5])place(b,x,.15,10.7,0,P.addBollard);
   if(seed%3===0)place(b,70,.05,5.85,PI/2,S.addParkedSedan,{seed});yield;
  }
@@ -59,10 +62,13 @@ export function* addBlockStreetsTask(b,plan,lod){
  b.push(plan.x,Y,plan.z);
  if(plan.reserved){for(const[a,c,u,v]of subtractRectangles(plan.x,plan.x+B,plan.z,plan.z+B,HOPE_GROUND_RECTS)){let pieces=[[[a,0,u],[a,0,v],[c,0,v],[c,0,u]]];if(plan.z<0)for(const shape of[FABRIC_GROUND_POLYGON,...TRANSITION_TERRAIN_QUADS,...APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,...DISTRICT_GROUND_POLYGONS]){const xs=shape.map(p=>p[0]),zs=shape.map(p=>p[1]);if(Math.max(...xs)<a||Math.min(...xs)>c||Math.max(...zs)<u||Math.min(...zs)>v)continue;pieces=pieces.flatMap(p=>subtractConvex(p,shape));}for(const poly of pieces){const g=new T.BufferGeometry(),pos=[];for(let k=1;k<poly.length-1;k++)for(const p of[poly[0],poly[k],poly[k+1]])pos.push(p[0]-plan.x,p[1],p[2]-plan.z);g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.computeVertexNormals();b.add(g,'asphalt',0,0,0);g.dispose();yield;}}b.pop();return;}
  const cn=plan.canal;
- if(cn){b.box('asphalt',56,-.035,CANAL.z0/2,B,.07,CANAL.z0);b.box('asphalt',56,-.035,(CANAL.z1+B)/2,B,.07,B-CANAL.z1);}else b.box('asphalt',56,-.035,56,B,.07,B);
+ const stairs=subwayStairs(plan.ix,plan.iz),holes=stairs.map(q=>[q.x0,q.x1,q.z0,q.z1]);if(cn)holes.push([0,B,CANAL.z0,CANAL.z1]);
+ {const xs=[0,B],zs=[0,B];for(const h of holes){xs.push(h[0],h[1]);zs.push(h[2],h[3]);}const ux=[...new Set(xs)].sort((a,b)=>a-b),uz=[...new Set(zs)].sort((a,b)=>a-b);
+  for(let i=0;i<ux.length-1;i++)for(let j=0;j<uz.length-1;j++){const a=ux[i],c=ux[i+1],u=uz[j],v=uz[j+1],x=(a+c)/2,z=(u+v)/2;if(holes.some(h=>x>h[0]&&x<h[1]&&z>h[2]&&z<h[3]))continue;b.box('asphalt',x,-.035,z,c-a,.07,v-u);}}
+ const holeFor=side=>{for(const q of stairs){if(side===1&&q.axis==='z')return[B-q.z1,B-q.z0];if(side===0&&q.axis==='x')return[q.x0,q.x1];}return null;};
  roads(b,cn);yield;
  // Sidewalk ring surrounds occupied lots, with six-metre rear-access portals.
- const joinsLandmark=plan.ix===0&&plan.iz===4;for(let side=0;side<4;side++){if(cn&&((side===1&&cn.noRoadW)||(side===3&&cn.noRoadE)))continue;yield* frontageTask(b,plan.seed+side*29,lod,side*PI/2,side%2===0,joinsLandmark?(side===0?[0,33]:side===1?[76,112]:null):null,cn&&side%2===1);}
+ const joinsLandmark=plan.ix===0&&plan.iz===4;for(let side=0;side<4;side++){if(cn&&((side===1&&cn.noRoadW)||(side===3&&cn.noRoadE)))continue;yield* frontageTask(b,plan.seed+side*29,lod,side*PI/2,side%2===0,joinsLandmark?(side===0?[0,33]:side===1?[76,112]:null):null,cn&&side%2===1,holeFor(side));}
  for(const[x,z,ry]of[[R,R,0],[B-R,R,-PI/2],[B-R,B-R,PI],[R,B-R,PI/2]]){if(joinsLandmark&&x===R&&z===R)continue;if(cn&&((x===R&&cn.noRoadW)||(x===B-R&&cn.noRoadE)))continue;corner(b,x,z,ry);yield;}
  // Four lanes total: 3.15 m travel lanes with narrow parking/curb space.
  const xr=e=>!(cn&&((e===0&&cn.noRoadW)||(e===B&&cn.noRoadE)));
@@ -73,6 +79,7 @@ export function* addBlockStreetsTask(b,plan,lod){
  for(const edge of[0,B])for(const q of[15,97]){if(joinsLandmark&&edge===0&&q===15)continue;const sign=edge===0?1:-1;if(!(cn&&((q===15&&cn.noRoadW)||(q===97&&cn.noRoadE))))ramp(b,q,edge+sign*(R+W/2),2.0,W,edge===0?0:PI);if(xr(edge))ramp(b,edge+sign*(R+W/2),q,2.0,W,edge===0?PI/2:-PI/2);yield;}
  if(xr(0))place(b,9.2,.15,16,PI,P.addTrafficSignal,{arm:10.8,street:plan.iz%3?'olive':'hope'});yield;if(xr(B))place(b,102.8,.15,96,0,P.addTrafficSignal,{arm:10.8,street:plan.ix%2?'grand':'hope'});yield;
  for(const[x,z]of[[3.6,42],[78,108.6]])if(x>12||xr(0))place(b,x,roadHeight(x,z)+.008,z,0,P.addManhole);
+ subwayEntrances(b,plan,lod);yield;
  if(cn||plan.canalExtra){yield* canalBlockTask(b,plan,lod);if(cn){b.pop();return;}}
  // Real inner service court, bounded by the backs of continuous perimeter buildings.
  b.box('asphalt',56,.008,56,44,.016,40);for(const z of[24,88])b.box('asphalt',56,.008,z,6,.016,24);b.walk(56,56,6,88,.016);for(const front of[true,false]){b.push(56,0,front?13:99,front?0:PI);face(b,'sidewalk',[[-3,.15,-1],[-3,.016,1],[3,.016,1],[3,.15,-1]]);b.walk(0,0,6,2,.083,0,-.067);b.pop();}
