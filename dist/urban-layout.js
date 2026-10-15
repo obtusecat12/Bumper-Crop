@@ -33,10 +33,10 @@ export function cityBlockPlan(ix,iz,types){
  // V128-L11 canal: open canal blocks lose their mid-block side lots (the channel runs there), the south row is 22 m deep
  // (12..34) to leave the south promenade; the photo reach (1,5)+(2,5) is authored (canal128.js), (3,5) stays low,
  // (4,5) gives two lots to the photo's far towers.
- const cn=canalBlock(ix,iz);if(cn){result.canal=cn;result.buildings=result.buildings.filter(q=>q.ry===0||q.ry===Math.PI);for(const q of result.buildings)if(q.ry===Math.PI){q.d=22;q.z=z+23;}if(cn.hero)result.buildings=[];}
+ const cn=canalBlock(ix,iz);if(cn){result.canal=cn;result.buildings=result.buildings.filter(q=>q.ry===0||q.ry===Math.PI);for(const q of result.buildings){if(q.ry===Math.PI){q.d=22;q.z=z+23;}else if(q.ry===0){q.d=20;q.z=z+90;}}if(cn.hero)result.buildings=[];}
  if(iz===CANAL_HERO.row&&ix===3)for(const q of result.buildings)q.floors=Math.min(q.floors,q.ry===Math.PI?4:2);
- if(iz===CANAL_HERO.row&&ix===3){result.canalExtra=true;result.buildings=result.buildings.filter(q=>!(q.ry===0&&q.x>x+60)&&!(q.ry===Math.PI&&q.x>x+56));}
- if(iz===CANAL_HERO.row&&ix===4)for(const q of result.buildings)q.floors=Math.min(q.floors,Math.abs(q.ry)===Math.PI/2?3:8);
+ if(iz===CANAL_HERO.row&&ix===3){result.canalExtra=true;result.buildings=result.buildings.filter(q=>!(q.ry===0&&q.x>x+60)&&!(q.ry===Math.PI&&q.x<x+56));}
+ if(iz===CANAL_HERO.row&&(ix===4||ix===5))for(const q of result.buildings)q.floors=Math.min(q.floors,Math.abs(q.ry)===Math.PI/2?3:ix===4?4:6);   // V129: beyond the far bridge the photo stays low
  return result;
 }
 export function cityWaypoint(name){const edge=exitPoint(282),p=name==='city-core'?cityToWorld(112,478):name==='city-plaza'?cityToWorld(224,702):{x:edge.x+edge.nx*15,z:edge.z+edge.nz*15};return{...p,label:name==='city-core'?'Level 11 · 金融街峡谷':name==='city-plaza'?'Level 11 · 公共广场':'Level 11 · 商业边缘区',yaw:name==='city-plaza'?CITY_ANGLE-Math.PI/2:name==='city-edge'?Math.atan2(-edge.nx,-edge.nz):Math.atan2(-CITY_ORIGIN.tx,-CITY_ORIGIN.tz)};}

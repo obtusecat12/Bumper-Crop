@@ -6,7 +6,7 @@ import {urbanHash} from './urban-batch.js?v=69';
 import {canalRow,canalOpen,canalBlock} from './canal128-layout.js?v=128';
 // heights relative to street level: trackbed, platform, tunnel ceiling, culvert
 export const SUB={bed:-10,plat:-9,ceil:-4.5,half:5,stHalf:11,st0:16,st1:96,stairX0:8.2,stairX1:10.8,stair0:18,rise:.18,run:.3,
- culWater:-4.4,culBed:-5.2,culCeil:-0.9,walk:-3.6,cz0:40,cz1:70,chan:-10.6};
+ culWater:-4.4,culBed:-5.2,culCeil:-0.9,walk:-3.6,cz0:39,cz1:75,chan:-10.6};
 SUB.stairLen=Math.ceil((.15-SUB.plat)/SUB.rise)*SUB.run;   // 51 steps -> 15.3 m
 const authored=(ix,iz)=>(ix===1&&iz===2)||((ix===-1||ix===0)&&iz>=-3&&iz<4);
 export function subwayBlock(ix,iz){

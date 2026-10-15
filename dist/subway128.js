@@ -16,6 +16,7 @@ import {CITY_ORIGIN,CITY_ANGLE} from './urban-layout.js?v=60';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {SUB,subwayBlock,subwayStairs} from './subway128-layout.js?v=128';
 import {CANAL} from './canal128-layout.js?v=128';
+import {stationSpec,station129,addSubway129Materials,entrance129,stepKey,shaftKey,signKey,cellUV} from './subway129-styles.js?v=129';
 const A=new URL('./assets/l11-v128/',import.meta.url).href,B=112,S=SUB;
 function tex(name,srgb=true){const t=new T.TextureLoader().load(A+name+'.webp?v=128');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 const clock={value:0},ca=Math.cos(CITY_ANGLE),sa=Math.sin(CITY_ANGLE);
@@ -47,44 +48,46 @@ export function addSubway128Materials(m){
  m.s128Lamp=new T.MeshBasicMaterial({color:0xfff3d6,vertexColors:true});m.s128Black=new T.MeshBasicMaterial({color:0x020303});
  flowMat(m,'s128FallDown',{dir:1,color:0x9db3b6,opacity:.8});flowMat(m,'s128Foam',{deep:true,color:0xb9c7c4,opacity:.8});flowMat(m,'s128FallUp',{dir:-1,color:0x9db3b6,opacity:.8});flowMat(m,'s128WaterU',{deep:true,color:0x1d3a40,opacity:.95});flowMat(m,'s128Glass',{deep:true,color:0x2e6f86,opacity:.9});
  {const mat=new T.MeshBasicMaterial({map:null,vertexColors:true});mat.name='V128 station boards';m.s128Sign=mat;try{mat.map=signTexture();}catch(e){mat.color.set(0xe9e6d8);}}
+ addSubway129Materials(m,LIGHT);
  return m;
 }
 const quad=(b,key,pts,uv=[[0,0],[1,0],[1,1],[0,1]])=>{const g=new T.BufferGeometry(),p=[],u=[];for(const i of[0,1,2,0,2,3]){p.push(...pts[i]);u.push(...uv[i]);}g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(u,2));g.computeVertexNormals();b.add(g,key,0,0,0);g.dispose();};
 // --------------------------------------------------------------------------------------------- a line segment (frame: u along +z, v across x)
-function* segment(b,s,{u0,u1,station,canal,glass,name,stairV,lod,ox,oz,alongSign}){
+function* segment(b,s,{u0,u1,station,canal,glass,name,stairV,lod,ox,oz,alongSign,spec=null}){
  const h=station?S.stHalf:S.half,bed=S.bed,ceil=S.ceil,cx0=CANAL.z0,cx1=CANAL.z1,X0=canal?cx0-2:1e9,X1=canal?cx1+8:-1e9;
  const pieces=(a,c,skip0,skip1)=>skip1<=a||skip0>=c?[[a,c]]:[[a,Math.max(a,skip0)],[Math.min(c,skip1),c]].filter(q=>q[1]-q[0]>.01);
  const st0=station?S.st0:1e9,st1=station?S.st1:-1e9;
  // --- floors / trackbed
  for(const[a,c]of pieces(u0,u1,canal?cx0:1e9,canal?cx1:-1e9)){b.box('s128Ballast',0,bed-.15,(a+c)/2,10,.3,c-a);b.walk(0,(a+c)/2,10,c-a,bed);
   for(const[e,f]of[[a,Math.min(c,st0)],[Math.max(a,st1),c]])if(f-e>.01){for(const sv of[-1,1]){b.box('s128Tunnel',sv*4.55,bed+.4,(e+f)/2,.9,.8,f-e);b.walk(sv*4.55,(e+f)/2,.9,f-e,bed+.8);}}
-  const p0=Math.max(a,st0),p1=Math.min(c,st1);if(p1-p0>.01)for(const sv of[-1,1]){b.box('s128Plat',sv*7.75,(bed+S.plat)/2-.1,(p0+p1)/2,5.5,S.plat-bed+.2,p1-p0,0,1.5);b.box('s128Edge',sv*5.2,S.plat+.005,(p0+p1)/2,.4,.012,p1-p0,0,1.5);b.walk(sv*7.75,(p0+p1)/2,5.5,p1-p0,S.plat);}
+  const p0=Math.max(a,st0),p1=Math.min(c,st1);if(p1-p0>.01&&!spec)for(const sv of[-1,1]){b.box('s128Plat',sv*7.75,(bed+S.plat)/2-.1,(p0+p1)/2,5.5,S.plat-bed+.2,p1-p0,0,1.5);b.box('s128Edge',sv*5.2,S.plat+.005,(p0+p1)/2,.4,.012,p1-p0,0,1.5);b.walk(sv*7.75,(p0+p1)/2,5.5,p1-p0,S.plat);}
   yield 0;}
  // rails (continuous; over the canal trench they ride a girder viaduct)
- for(const tv of[-2.2,2.2])for(const rv of[-.72,.72])b.box('s128Rail',tv+rv,bed+.08,(u0+u1)/2,.08,.16,u1-u0);
+ for(const[ra,rc]of(spec&&spec.island?[[u0,st0],[st1,u1]]:[[u0,u1]]))for(const tv of[-2.2,2.2])for(const rv of[-.72,.72])b.box('s128Rail',tv+rv,bed+.08,(ra+rc)/2,.08,.16,rc-ra);
  // --- walls (with the canal openings, station widening)
  const wall=(sv,a,c,hw,key,tone=1)=>{if(c-a<.01)return;b.box(key,sv*(hw+.3),(bed+ceil)/2,(a+c)/2,.6,ceil-bed+.6,c-a,0,tone);b.solid(sv*(hw+.3),(a+c)/2,.6,c-a);};
  for(const sv of[-1,1]){
   const cuts=[];if(canal)cuts.push([cx0,cx1]);if(station&&stairV&&Math.sign(stairV)===sv){}
   const segs=[];let a=u0;for(const[e,f]of[[st0,st1]]){if(e<u1&&f>u0){segs.push([a,Math.max(a,e),S.half,'s128Tunnel']);segs.push([Math.max(a,e),Math.min(u1,f),S.stHalf,'s128Tile']);a=Math.min(u1,f);}}segs.push([a,u1,S.half,'s128Tunnel']);
-  for(const[e,f,hw,key]of segs){for(const[p,q]of pieces(e,f,canal?cx0:1e9,canal?cx1:-1e9))wall(sv,p,q,hw,key,key==='s128Tile'?1.45:1);}
+  for(const[e,f,hw,key]of segs){if(spec&&key==='s128Tile')continue;for(const[p,q]of pieces(e,f,canal?cx0:1e9,canal?cx1:-1e9))wall(sv,p,q,hw,key,key==='s128Tile'?1.45:1);}
   // station end walls (between the 5 m tunnel and the 11 m hall)
-  if(station)for(const u of[st0,st1])if(u>u0&&u<u1){b.box('s128Tile',sv*8.3,(bed+ceil)/2,u,5.4,ceil-bed+.6,.6,0,1.3);b.solid(sv*8.3,u,5.4,.6);}
+  if(station&&!spec)for(const u of[st0,st1])if(u>u0&&u<u1){b.box('s128Tile',sv*8.3,(bed+ceil)/2,u,5.4,ceil-bed+.6,.6,0,1.3);b.solid(sv*8.3,u,5.4,.6);}
  }
  // --- ceiling (holes: stair shaft, canal glass / tall crossing chamber)
  const H=station?S.stHalf:S.half;
  const ceilPieces=[];for(const[a,c]of pieces(u0,u1,canal?(glass?cx0:X0):1e9,canal?(glass?cx1:X1):-1e9))ceilPieces.push([a,c]);
  for(const[a,c]of ceilPieces){
   // station ceiling spans the hall; tunnel ceiling 5 m
-  for(const[e,f,hw]of[[a,Math.min(c,st0),S.half],[Math.max(a,st0),Math.min(c,st1),S.stHalf],[Math.max(a,st1),c,S.half]]){if(f-e<.01)continue;
+  for(const[e,f,hw]of[[a,Math.min(c,st0),S.half],[Math.max(a,st0),Math.min(c,st1),S.stHalf],[Math.max(a,st1),c,S.half]]){if(f-e<.01)continue;if(spec&&hw===S.stHalf)continue;
    if(stairV&&hw===S.stHalf){const sz0=S.stair0,sz1=S.stair0+S.stairLen,v0=Math.min(stairV*S.stairX0,stairV*S.stairX1),v1=Math.max(stairV*S.stairX0,stairV*S.stairX1);
     b.box('s128Tunnel',(-hw-.6+v0)/2,ceil+.2,(e+f)/2,v0+hw+.6,.4,f-e,0,1.2);b.box('s128Tunnel',(v1+hw+.6)/2,ceil+.2,(e+f)/2,hw+.6-v1,.4,f-e,0,1.2);
     for(const[g0,g1]of pieces(e,f,sz0,sz1))b.box('s128Tunnel',(v0+v1)/2,ceil+.2,(g0+g1)/2,v1-v0,.4,g1-g0,0,1.2);}
    else b.box('s128Tunnel',0,ceil+.2,(e+f)/2,2*hw+1.2,.4,f-e,0,hw===S.stHalf?1.2:1);}}
  // --- lamps every 10 m, aligned to the city (u coordinate maps to city along = alongSign*u + ox)
- if(!lod){const first=((5-(ox%10))%10+10)%10;for(let k=first;k<u1;k+=10){if(k<u0)continue;const u=alongSign>0?k:k;for(const sv of[-1,1]){const hw=(u>=st0&&u<=st1)?S.stHalf:S.half;if(canal&&u>cx0-1&&u<cx1+1)continue;b.box('s128Lamp',sv*(hw-.2),ceil-.12,u,.18,.08,1.2);}}}
+ if(!lod){const first=((5-(ox%10))%10+10)%10;for(let k=first;k<u1;k+=10){if(k<u0)continue;const u=alongSign>0?k:k;for(const sv of[-1,1]){const hw=(u>=st0&&u<=st1)?S.stHalf:S.half;if(canal&&u>cx0-1&&u<cx1+1)continue;if(spec&&u>=st0&&u<=st1)continue;b.box('s128Lamp',sv*(hw-.2),ceil-.12,u,.18,.08,1.2);}}}
  // --- station dressing: pillars, boards, benches
- if(station){for(let u=st0+6;u<st1-3;u+=8){if(canal&&u>cx0-1&&u<cx1+1)continue;for(const sv of[-1,1]){b.box('s128Pillar',sv*7.2,(S.plat+ceil)/2,u,.6,ceil-S.plat,.6,0,1.3);b.solid(sv*7.2,u,.6,.6);}}
+ if(spec)yield* station129(b,spec,{st0,st1,wallSkip:canal?[cx0,cx1]:null,ceilSkip:canal?(glass?[cx0,cx1]:[X0,X1]):null,stairV,lod});
+ if(station&&!spec){for(let u=st0+6;u<st1-3;u+=8){if(canal&&u>cx0-1&&u<cx1+1)continue;for(const sv of[-1,1]){b.box('s128Pillar',sv*7.2,(S.plat+ceil)/2,u,.6,ceil-S.plat,.6,0,1.3);b.solid(sv*7.2,u,.6,.6);}}
   const v=((name%16)/16),uvR=[[0,1-v-1/16],[1,1-v-1/16],[1,1-v],[0,1-v]];
   for(let u=st0+10;u<st1-5;u+=20){if(canal&&u>cx0-6&&u<cx1+6)continue;for(const sv of[-1,1]){const x=sv*(S.stHalf-.02),y0=S.plat+2.1,y1=y0+.75;quad(b,'s128Sign',sv>0?[[x,y0,u+2.4],[x,y0,u-2.4],[x,y1,u-2.4],[x,y1,u+2.4]]:[[x,y0,u-2.4],[x,y0,u+2.4],[x,y1,u+2.4],[x,y1,u-2.4]],uvR);
     if(!lod){b.box('s128Rail',sv*9.6,S.plat+.45,u+5,.5,.06,2.2);b.box('s128Rail',sv*9.6,S.plat+.22,u+4.1,.06,.44,.06);b.box('s128Rail',sv*9.6,S.plat+.22,u+5.9,.06,.44,.06);}}}}
@@ -150,8 +153,9 @@ export function* subwayBlockTask(mats,plan,lod){
  const b=new UrbanBatch(mats);try{b.push(CITY_ORIGIN.x,0,CITY_ORIGIN.z,CITY_ANGLE);b.push(plan.x,Y,plan.z);b._ox=plan.x;
  const glassW=s.canalOpenHere||s.canalOpenW;
  junction(b,s,{ix:plan.ix,iz:plan.iz,lod});yield;
- if(s.west){yield* segment(b,s,{u0:5,u1:107,station:s.stW,canal:s.canalW,glass:glassW,name:s.name,stairV:s.stW?1:0,lod,ox:plan.z,oz:plan.x,alongSign:1});}
- if(s.south){b.push(0,0,0,Math.PI/2);yield* segment(b,s,{u0:5,u1:107,station:s.stS,canal:false,glass:false,name:(s.name+5)%16,stairV:s.stS?-1:0,lod,ox:plan.x,oz:plan.z,alongSign:1});b.pop();}
+ const specW=s.stW?stationSpec(plan.ix,plan.iz,0):null,specS=s.stS?stationSpec(plan.ix,plan.iz,1):null;if(specW&&s.canalW)specW.island=false;
+ if(s.west){yield* segment(b,s,{u0:5,u1:107,station:s.stW,canal:s.canalW,glass:glassW,name:s.name,stairV:s.stW?1:0,lod,ox:plan.z,oz:plan.x,alongSign:1,spec:specW});}
+ if(s.south){b.push(0,0,0,Math.PI/2);yield* segment(b,s,{u0:5,u1:107,station:s.stS,canal:false,glass:false,name:(s.name+5)%16,stairV:s.stS?-1:0,lod,ox:plan.x,oz:plan.z,alongSign:1,spec:specS});b.pop();}
  if(s.buried){const e=subwayBlock(plan.ix+1,plan.iz);const eOpen=!!(e&&e.canalOpenW);   // east neighbour open -> portal at x 112
   const endE=!e||(!eOpen&&!e.west);const hw=s.west?(s.stW?S.stHalf+.6:S.half):0,he=e&&e.west?(e.stW?S.stHalf+.6:S.half):0;culvert(b,s,{x0:hw,x1:B-he,lod,endW:!s.canalOpenW&&!s.west,endE,seed:s.sewer,water0:s.canalOpenW?0:hw,water1:eOpen?B:B-he});}
  yield;
@@ -161,20 +165,21 @@ export function* subwayBlockTask(mats,plan,lod){
 // --------------------------------------------------------------------------------------------- street-level entrance (in the street batch)
 export function subwayEntrances(b,plan,lod){
  const list=subwayStairs(plan.ix,plan.iz);if(!list.length)return;addSubway128Materials(b.mats);
- for(const st of list){const frameZ=st.axis==='z';b.push(0,0,0,frameZ?0:Math.PI/2);
+ for(const st of list){const frameZ=st.axis==='z';b.push(0,0,0,frameZ?0:Math.PI/2);const spec=stationSpec(plan.ix,plan.iz,frameZ?0:1),stepK=stepKey(spec)||'s128Steps',shK=shaftKey(spec);
   // in frame: stair across v (local x for west / -z for south), descending along +u
   const sv=frameZ?1:-1,v0=sv>0?S.stairX0:-S.stairX1,v1=sv>0?S.stairX1:-S.stairX0,vc=(v0+v1)/2,u0=frameZ?st.z0:st.x0,u1=u0+S.stairLen,n=Math.round(S.stairLen/S.run),top=.15;
-  for(let k=0;k<n;k++){const y=top-S.rise*(k+1),u=u0+S.run*k;b.box('s128Steps',vc,(y+S.plat-.2)/2,u+S.run/2,v1-v0,y-S.plat+.2,S.run,0,1.25);}
+  for(let k=0;k<n;k++){const y=top-S.rise*(k+1),u=u0+S.run*k;b.box(stepK,vc,(y+S.plat-.2)/2,u+S.run/2,v1-v0,y-S.plat+.2,S.run,0,1.25);}
   b.walk(vc,u0+S.stairLen/2,v1-v0,S.stairLen,(top+S.plat)/2,0,-(top-S.plat)/S.stairLen);(b.stairWalks||(b.stairWalks=[])).push(b.walks.at(-1));
   // shaft walls: outer full height, inner above the station ceiling; landing apron
-  const vo=sv>0?v1:v0,vi=sv>0?v0:v1;b.box('s128Tile',vo+sv*.3,(S.plat+top)/2,(u0+u1)/2,.6,top-S.plat,S.stairLen,0,1.3);
-  b.box('s128Tile',vi-sv*.3,(S.ceil+top)/2,(u0+u1)/2,.6,top-S.ceil,S.stairLen,0,1.3);
-  b.box('s128Tile',vc,(S.ceil+top)/2-.0,u1+.3,v1-v0+1.2,top-S.ceil,.6,0,1.3);
+  const vo=sv>0?v1:v0,vi=sv>0?v0:v1;b.box(shK,vo+sv*.3,(S.plat+top)/2,(u0+u1)/2,.6,top-S.plat,S.stairLen,0,1.3);
+  b.box(shK,vi-sv*.3,(S.ceil+top)/2,(u0+u1)/2,.6,top-S.ceil,S.stairLen,0,1.3);
+  b.box(shK,vc,(S.ceil+top)/2-.0,u1+.3,v1-v0+1.2,top-S.ceil,.6,0,1.3);
   // street railings (three sides, open at the top step) + entrance frame with the station board
   for(const v of[v0,v1]){b.box('metal',v,top+1.0,(u0+u1)/2,.06,.06,S.stairLen);if(!lod)for(let u=u0;u<=u1+.01;u+=1.5)b.box('metal',v,top+.5,u,.05,1.0,.05);b.solid(v,(u0+u1)/2,.15,S.stairLen);(b.stairSolids||(b.stairSolids=[])).push(b.colliders.at(-1));}
   b.box('metal',vc,top+1.0,u1,v1-v0,.06,.06);b.solid(vc,u1,v1-v0,.15);b.stairSolids.push(b.colliders.at(-1));
   for(const v of[v0,v1])b.box('s128Rail',v,top+1.3,u0+.1,.12,2.6,.12);b.box('s128Rail',vc,top+2.6,u0+.1,v1-v0+.12,.14,.14);
-  {const vv=((plan.ix*7+plan.iz*3)%16+16)%16/16;quad(b,'s128Sign',[[v1,top+2.0,u0-.02],[v0,top+2.0,u0-.02],[v0,top+2.5,u0-.02],[v1,top+2.5,u0-.02]],[[0,1-vv-1/16],[1,1-vv-1/16],[1,1-vv],[0,1-vv]]);}
+  {const[q0,q1,q2,q3]=cellUV(spec.name);quad(b,signKey(b.mats,spec.sign,spec.lang),[[v1,top+2.0,u0-.02],[v0,top+2.0,u0-.02],[v0,top+2.6,u0-.02],[v1,top+2.6,u0-.02]],[[q0,q1],[q2,q1],[q2,q3],[q0,q3]]);}
+  entrance129(b,spec,{v0,v1,u0,u1,top,lod,sv,ix:plan.ix,iz:plan.iz});
   b.pop();}
 }
 // --------------------------------------------------------------------------------------------- floor / collisions while underground

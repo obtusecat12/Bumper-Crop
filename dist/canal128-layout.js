@@ -3,7 +3,7 @@
 // (water in a sunk channel between two promenades) or buried (the canal runs on underground below a normal block).
 import {urbanHash} from './urban-batch.js?v=69';
 // block-local z: south promenade p0..z0, water z0..z1, north promenade z1..p1; water surface W below street level
-export const CANAL={period:8,row:5,z0:40,z1:70,p0:34,p1:76,water:-1.3,top:.15,mid:55};
+export const CANAL={period:8,row:5,z0:39,z1:75,p0:34,p1:80,water:-1.3,top:.15,mid:57};   // V129: 36 m wide (photo: walls 20.5 m left / 15.5 m right of the footbridge eye)
 const authored=(ix,iz)=>(ix===1&&iz===2)||((ix===-1||ix===0)&&iz>=-3&&iz<4);
 export function canalRow(iz){const p=CANAL.period;return(((iz-CANAL.row)%p)+p)%p===0;}
 export function canalOpen(ix,iz){
