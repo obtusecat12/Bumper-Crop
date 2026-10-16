@@ -3,6 +3,8 @@
  * Supplied textures remain caller-owned. Body and eye animation sample at 24 Hz (plaid: 30 Hz).
  */
 
+import {buildV75Head130} from './retro-head130-gen.js';
+
 export const RETRO_ROLES75 = Object.freeze(['homeless','wallman','reader','plaid','receptionist','poolman']);
 export const RETRO_POSE_HZ75 = 24;
 
@@ -60,7 +62,9 @@ export function createRetroActor75(T, role, textures, opts={}) {
   const index=name=>bones[name].userData.index;
   const W=(name,w=1,other=null)=>other?[[index(name),w],[index(other),1-w]]:[[index(name),w]];
   const H118E=(textures.headSide&&opts.head118e)?opts.head118e:null; // V118e: opt-in rear-skull unwrap + modelled ears
-  const bins=Array.from({length:H118E?8:7},()=>({p:[],uv:[],c:[],si:[],sw:[]}));
+  const H130=!H118E&&!opts.noHead&&opts.head130!==false; // V130-E: generated whole-head net + modelled ears (default)
+  let head130Tex=null;
+  const bins=Array.from({length:H130?9:H118E?8:7},()=>({p:[],uv:[],c:[],si:[],sw:[]}));
   const partTriangles={};let part='body';
   function vertex(bin,p,uv,col,w) {
     bin.p.push(...p);bin.uv.push(...uv);bin.c.push(...col);
@@ -212,18 +216,19 @@ export function createRetroActor75(T, role, textures, opts={}) {
   part='jawTemplesOcciput';
   if(H118E){const [u0,v0,u1,v1]=H118E.band,ruv=(i,j)=>[u0+(u1-u0)*j/6,v0+(v1-v0)*faceRows[i][0]/.220];
    for(let i=0;i<7;i++)for(let j=0;j<6;j++)quad(7,rear[i][j+1],rear[i][j],rear[i+1][j],rear[i+1][j+1],[ruv(i,j+1),ruv(i,j),ruv(i+1,j),ruv(i+1,j+1)],white,[W('head'),W('head'),W('head'),W('head')]);}
-  else for(let i=0;i<7;i++)for(let j=0;j<6;j++)quad(2,rear[i][j+1],rear[i][j],rear[i+1][j],rear[i+1][j+1],[skinUV,skinUV,skinUV,skinUV],white,[W('head'),W('head'),W('head'),W('head')]);
-  for(const r of[0,7]){
+  else if(!H130)for(let i=0;i<7;i++)for(let j=0;j<6;j++)quad(2,rear[i][j+1],rear[i][j],rear[i+1][j],rear[i+1][j+1],[skinUV,skinUV,skinUV,skinUV],white,[W('head'),W('head'),W('head'),W('head')]);
+  if(!H130)for(const r of[0,7]){
     const ring=[...front[r],...rear[r].slice(1,6).reverse()],center=[0,headY+faceRows[r][0]*hH,-.012];
     for(let j=0;j<ring.length;j++){const k=(j+1)%ring.length;tri(2,center,...(r===0?[ring[k],ring[j]]:[ring[j],ring[k]]),skinUV,skinUV,skinUV,white,W('head'));}
   }
   part='ears';if(H118E&&H118E.ears.length){const e=H118E.ears;for(let k=0;k<e.length;k+=15)tri(7,[e[k],e[k+1],e[k+2]],[e[k+5],e[k+6],e[k+7]],[e[k+10],e[k+11],e[k+12]],[e[k+3],e[k+4]],[e[k+8],e[k+9]],[e[k+13],e[k+14]],white,W('head'));}
-  else for(const s of[-1,1])poly(new T.OctahedronGeometry(1,0),2,white,W('head'),transform([s*.088*hW,headY+.114*hH,.002],[.015,.030,.018]),skinUV);
+  else if(!H130)for(const s of[-1,1])poly(new T.OctahedronGeometry(1,0),2,white,W('head'),transform([s*.088*hW,headY+.114*hH,.002],[.015,.030,.018]),skinUV);
   // Separate textured scalp, temples, sideburns and an asymmetric side part.
   const hN=12,hairBottom=a=>{
     const f=Math.cos(a);if(f>.45)return role==='wallman'?.200:.177+.007*Math.sin(a);
     return role==='receptionist'?.050:.091+(f<-.4?-.01:0);
   };
+  if(H130){part='head130';head130Tex=buildV75Head130({T,tri,Wh:W('head'),mat:8,front,rear,faceRows,faceU,landmarks,hW,hH,hD,headY,textures,hairBottom:opts.head130?.bald?null:hairBottom,ears:opts.head130?.ears??role!=='receptionist',sideburn:opts.head130?.sideburn??role!=='receptionist',beard:role==='homeless'?.42:undefined,seed,...(opts.head130||{})});}
   const hairR=[0,1,2,3].map(r=>Array.from({length:hN},(_,j)=>{
     const a=j*Math.PI*2/hN,b=hairBottom(a),y=[b,Math.max(b+.018,.197),.232,.251][r];
     const width=[.088,.087,.064,.030][r]+(role==='receptionist'&&r<2?.015:0),depth=[.099,.104,.080,.039][r];
@@ -240,7 +245,7 @@ export function createRetroActor75(T, role, textures, opts={}) {
       for(const y of[-.017,.017])box([s*.040,yy+y,z],[.065,.004,.004],3,fc,W('head'));
       for(const x of[-.030,.030])box([s*.040+x,yy,z],[.004,.034,.004],3,fc,W('head'));
       box([s*.040,yy,z-.002],[.054,.027,.002],5,white,W('head'));
-      box([s*.077,yy,-.003],[.006,.007,.210],3,fc,W('head'));
+      box([s*.079,yy,.035],[.006,.007,.136],3,fc,W('head'));box([s*.084,yy-.012,-.035],[.006,.026,.007],3,fc,W('head'));
     }
     box([0,yy,z],[.016,.006,.005],3,fc,W('head'));
   }
@@ -366,7 +371,7 @@ export function createRetroActor75(T, role, textures, opts={}) {
   }
   const makeMat=(name,map,extra={})=>{const m=new T.MeshLambertMaterial({map:map??null,flatShading:true,vertexColors:true,...extra});if(map){m.emissive.setHex(0xffffff);m.emissiveMap=map;m.emissiveIntensity=isPool?.28:.10;}m.name=`V75 ${role} / ${name}`;return m;};
   const faceMaterial=makeMat('front face',role==='homeless'?(textures.faceBlink??textures.face):textures.face);
-  const materials=[makeMat('body',textures.body),faceMaterial,makeMat('skin and hair patches',textures.face),makeMat('solid prop'),makeMat('newspaper',textures.newspaper??null,{side:T.DoubleSide}),makeMat('transparent reading glass',null,{color:0xb9cfc7,transparent:true,opacity:.13,depthWrite:false}),makeMat('independent textured hair',textures.hair??textures.face)];if(H118E)materials.push(makeMat('V118e rear skull + ears unwrap',textures.headSide));
+  const materials=[makeMat('body',textures.body),faceMaterial,makeMat('skin and hair patches',textures.face),makeMat('solid prop'),makeMat('newspaper',textures.newspaper??null,{side:T.DoubleSide}),makeMat('transparent reading glass',null,{color:0xb9cfc7,transparent:true,opacity:.13,depthWrite:false}),makeMat('independent textured hair',textures.hair??textures.face)];if(H118E)materials.push(makeMat('V118e rear skull + ears unwrap',textures.headSide));else if(H130)materials.push(materials[2]);if(H130)materials.push(makeMat('V130-E generated head net + ears',head130Tex));
   const geometry=new T.BufferGeometry(),joined={p:[],uv:[],c:[],si:[],sw:[]};let start=0;
   for(let i=0;i<bins.length;i++)if(bins[i].p.length){const b=bins[i];geometry.addGroup(start,b.p.length/3,i);for(const k of Object.keys(joined))joined[k].push(...b[k]);start+=b.p.length/3;}
   geometry.setAttribute('position',new T.Float32BufferAttribute(joined.p,3));geometry.setAttribute('uv',new T.Float32BufferAttribute(joined.uv,2));geometry.setAttribute('color',new T.Float32BufferAttribute(joined.c,3));geometry.setAttribute('skinIndex',new T.Uint16BufferAttribute(joined.si,4));geometry.setAttribute('skinWeight',new T.Float32BufferAttribute(joined.sw,4));geometry.computeVertexNormals();
@@ -414,7 +419,7 @@ export function createRetroActor75(T, role, textures, opts={}) {
     for(const b of boneList)data.bones[b.name]={position:b.getWorldPosition(new T.Vector3()).toArray(),quaternion:b.quaternion.toArray(),scale:b.scale.toArray()};
     mesh.computeBoundingBox();data.bounds={min:mesh.boundingBox.min.clone().multiply(group.scale).toArray(),max:mesh.boundingBox.max.clone().multiply(group.scale).toArray()};lastTick=-Infinity;return data;
   }
-  function dispose(){if(disposed)return;disposed=true;mixer.stopAllAction();mixer.uncacheRoot(group);geometry.dispose();for(const m of materials)m.dispose();skeleton.dispose();if(smoke){smoke.geometry.dispose();smoke.material.dispose();}group.removeFromParent();}
+  function dispose(){if(disposed)return;disposed=true;mixer.stopAllAction();mixer.uncacheRoot(group);geometry.dispose();for(const m of new Set(materials))m.dispose();head130Tex?.dispose();skeleton.dispose();if(smoke){smoke.geometry.dispose();smoke.material.dispose();}group.removeFromParent();}
   group.scale.setScalar(scale);update(0);mesh.computeBoundingBox();diagnostics.bounds={min:mesh.boundingBox.min.clone().multiply(group.scale).toArray(),max:mesh.boundingBox.max.clone().multiply(group.scale).toArray()};
   sockets.leftHand=bones.handL;sockets.rightHand=bones.handR;sockets.head=bones.head;sockets.leftFoot=bones.footL;sockets.rightFoot=bones.footR;
   group.userData.diagnostics=diagnostics;

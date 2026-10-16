@@ -1,3 +1,4 @@
+import {buildV75Head130} from './retro-head130-gen.js';
 import {posePlan79} from './tiki-garden-pose-v85.js';
 /* V79: metre-scale, +Z-facing, nineteen-bone Tiki cast; generated UV surfaces and discrete held poses.
  * No renderer, frame scheduler, network request or global event listener lives here.
@@ -54,7 +55,9 @@ export function createTikiActor79(T, role, textures, opts={}) {
   const bindWorld=Object.fromEntries(boneList.map(b=>[b.name,b.matrixWorld.clone()]));
   const index=name=>bones[name].userData.index;
   const W=(name,w=1,other=null)=>other?[[index(name),w],[index(other),1-w]]:[[index(name),w]];
-  const bins=Array.from({length:9},()=>({p:[],uv:[],c:[],si:[],sw:[]}));
+  const H130=opts.head130!==false; // V130-E: generated whole-head net + modelled ears (default)
+  let head130Tex=null;
+  const bins=Array.from({length:10},()=>({p:[],uv:[],c:[],si:[],sw:[]}));
   const partTriangles={};let part='body';
   function vertex(bin,p,uv,col,w) {
     bin.p.push(...p);bin.uv.push(...uv);bin.c.push(...col);
@@ -202,17 +205,19 @@ export function createTikiActor79(T, role, textures, opts={}) {
     return[Math.sin(a)*w*hW,headY+y*hH,Math.cos(a)*depth*hD-.010];
   }));
   part='jawTemplesOcciput';
+  if(!H130){
   for(let i=0;i<7;i++)for(let j=0;j<6;j++)quad(2,rear[i][j+1],rear[i][j],rear[i+1][j],rear[i+1][j+1],[skinUV,skinUV,skinUV,skinUV],white,[W('head'),W('head'),W('head'),W('head')]);
   for(const r of[0,7]){
     const ring=[...front[r],...rear[r].slice(1,6).reverse()],center=[0,headY+faceRows[r][0]*hH,-.012];
     for(let j=0;j<ring.length;j++){const k=(j+1)%ring.length;tri(2,center,...(r===0?[ring[k],ring[j]]:[ring[j],ring[k]]),skinUV,skinUV,skinUV,white,W('head'));}
   }
-  part='ears';for(const s of[-1,1])poly(new T.OctahedronGeometry(1,0),2,white,W('head'),transform([s*.088*hW,headY+.114*hH,.002],[.015,.030,.018]),skinUV);
+  part='ears';for(const s of[-1,1])poly(new T.OctahedronGeometry(1,0),2,white,W('head'),transform([s*.088*hW,headY+.114*hH,.002],[.015,.030,.018]),skinUV);}
   // Separate textured scalp, temples, sideburns and an asymmetric side part.
   const hN=12,hairBottom=a=>{
     const f=Math.cos(a);if(f>.45)return role==='botanist'?.196+.012*Math.abs(Math.sin(a*2)):.180+.007*Math.sin(a);
     return role==='barwoman'?.015:.091+(f<-.4?-.01:0);
   };
+  if(H130){part='head130';head130Tex=buildV75Head130({T,tri,Wh:W('head'),mat:9,front,rear,faceRows,faceU,landmarks,hW,hH,hD,headY,textures,hairBottom,ears:role!=='barwoman',sideburn:!['barwoman','asianwoman'].includes(role),seed,...(typeof opts.head130==='object'?opts.head130:{})});}
   const hairR=[0,1,2,3].map(r=>Array.from({length:hN},(_,j)=>{
     const a=j*Math.PI*2/hN,b=hairBottom(a),y=[b,Math.max(b+.018,.197),.232,.251][r];
     const width=[.088,.087,.064,.030][r]+(role==='barwoman'&&r<2?.019:0),depth=[.099,.104,.080,.039][r];
@@ -228,7 +233,7 @@ export function createTikiActor79(T, role, textures, opts={}) {
       for(const y of[-.017,.017])box([s*.040,yy+y,z],[.065,.004,.004],3,fc,W('head'));
       for(const x of[-.030,.030])box([s*.040+x,yy,z],[.004,.034,.004],3,fc,W('head'));
       box([s*.040,yy,z-.002],[.054,.027,.002],5,white,W('head'));
-      box([s*.077,yy,-.003],[.006,.007,.210],3,fc,W('head'));
+      box([s*.079,yy,.035],[.006,.007,.136],3,fc,W('head'));box([s*.084,yy-.012,-.035],[.006,.026,.007],3,fc,W('head'));
     }
     box([0,yy,z],[.016,.006,.005],3,fc,W('head'));
   }
@@ -295,7 +300,7 @@ export function createTikiActor79(T, role, textures, opts={}) {
   }
   const makeMat=(name,map,extra={})=>{const m=new T.MeshLambertMaterial({map:map??null,flatShading:true,vertexColors:true,...extra});if(map){m.emissive.setHex(0xffffff);m.emissiveMap=map;m.emissiveIntensity=name==='front face'?.22:.10;}m.name=`V79 ${role} / ${name}`;return m;};
   const faceMaterial=makeMat('front face',role==='sleeper'?(textures.faceBlink??textures.face):textures.face);
-  const materials=[makeMat('body',textures.body),faceMaterial,makeMat('skin and hair patches',textures.face),makeMat('solid prop'),makeMat('newspaper',textures.newspaper??null,{side:T.DoubleSide}),makeMat('transparent reading glass',null,{color:0xb9cfc7,transparent:true,opacity:.13,depthWrite:false}),makeMat('independent textured hair',textures.hair??textures.face),makeMat('independent textured beard',textures.beard??textures.hair??textures.face,{side:T.DoubleSide}),makeMat('baked skin atlas / limbs',textures.body)];
+  const materials=[makeMat('body',textures.body),faceMaterial,makeMat('skin and hair patches',textures.face),makeMat('solid prop'),makeMat('newspaper',textures.newspaper??null,{side:T.DoubleSide}),makeMat('transparent reading glass',null,{color:0xb9cfc7,transparent:true,opacity:.13,depthWrite:false}),makeMat('independent textured hair',textures.hair??textures.face),makeMat('independent textured beard',textures.beard??textures.hair??textures.face,{side:T.DoubleSide}),makeMat('baked skin atlas / limbs',textures.body)];if(H130)materials.push(makeMat('V130-E generated head net + ears',head130Tex));
   const geometry=new T.BufferGeometry(),joined={p:[],uv:[],c:[],si:[],sw:[]};let start=0;
   for(let i=0;i<bins.length;i++)if(bins[i].p.length){const b=bins[i];geometry.addGroup(start,b.p.length/3,i);for(const k of Object.keys(joined))joined[k].push(...b[k]);start+=b.p.length/3;}
   geometry.setAttribute('position',new T.Float32BufferAttribute(joined.p,3));geometry.setAttribute('uv',new T.Float32BufferAttribute(joined.uv,2));geometry.setAttribute('color',new T.Float32BufferAttribute(joined.c,3));geometry.setAttribute('skinIndex',new T.Uint16BufferAttribute(joined.si,4));geometry.setAttribute('skinWeight',new T.Float32BufferAttribute(joined.sw,4));geometry.computeVertexNormals();
@@ -337,7 +342,7 @@ export function createTikiActor79(T, role, textures, opts={}) {
     for(const b of boneList)data.bones[b.name]={position:b.getWorldPosition(new T.Vector3()).toArray(),quaternion:b.quaternion.toArray(),scale:b.scale.toArray()};
     mesh.computeBoundingBox();data.bounds={min:mesh.boundingBox.min.clone().multiply(group.scale).toArray(),max:mesh.boundingBox.max.clone().multiply(group.scale).toArray()};lastTick=-Infinity;return data;
   }
-  function dispose(){if(disposed)return;disposed=true;mixer.stopAllAction();mixer.uncacheRoot(group);geometry.dispose();for(const m of materials)m.dispose();skeleton.dispose();group.removeFromParent();}
+  function dispose(){if(disposed)return;disposed=true;mixer.stopAllAction();mixer.uncacheRoot(group);geometry.dispose();for(const m of materials)m.dispose();head130Tex?.dispose();skeleton.dispose();group.removeFromParent();}
   group.scale.setScalar(scale);update(0);mesh.computeBoundingBox();diagnostics.bounds={min:mesh.boundingBox.min.clone().multiply(group.scale).toArray(),max:mesh.boundingBox.max.clone().multiply(group.scale).toArray()};
   sockets.leftHand=bones.handL;sockets.rightHand=bones.handR;sockets.head=bones.head;sockets.leftFoot=bones.footL;sockets.rightFoot=bones.footR;
   group.userData.diagnostics=diagnostics;

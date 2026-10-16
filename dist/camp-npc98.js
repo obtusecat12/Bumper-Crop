@@ -1,11 +1,39 @@
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {campTexture98} from './camp-life-materials98.js';
+import {bakeHead130,bandUV130,capUV130,emitEars130} from './retro-head130-gen.js';
 const up=new T.Vector3(0,1,0),va=new T.Vector3(),vb=new T.Vector3();
 const profile={toilet:{w:.98,h:1,hair:0x44382d,pants:0x54432e},clerk:{w:1.06,h:1,hair:0x5b5c54,pants:0x353b3c},diner:{w:1.08,h:1.01,hair:0x2c241e,pants:0x404650},sleeper:{w:.88,h:.97,hair:0x4e3028,pants:0x354454},fireElder:{w:1.0,h:1.01,hair:0x87847c,pants:0x4a4440},fireYoung:{w:.86,h:.95,hair:0x211f20,pants:0x4d4540},fireWorker:{w:1.10,h:1.03,hair:0x34352f,pants:0x45483b}};
 const mesh=(p,g,m,pos=[0,0,0])=>{const o=new T.Mesh(g,m);o.position.fromArray(pos);o.castShadow=o.receiveShadow=true;p.add(o);return o;};
 const lambert=(map,color=0xffffff)=>new T.MeshLambertMaterial({map,color,flatShading:true,emissive:map?0xffffff:0,emissiveMap:map,emissiveIntensity:.035});
 function loft(rows,n=8){const ps=[],uv=[],ind=[];rows.forEach(([y,rx,rz,z=0],i)=>{for(let j=0;j<=n;j++){const a=j/n*Math.PI*2;ps.push(Math.sin(a)*rx,y,z+Math.cos(a)*rz);uv.push((Math.sin(a)+1)*.5,i/(rows.length-1));if(i&&j) {const k=i*(n+1)+j;ind.push(k,k-1,k-n-2,k,k-n-2,k-n-1);}}});for(const [row,flip] of [[0,false],[rows.length-1,true]]){const b=row*(n+1);for(let j=1;j<n-1;j++)ind.push(b,b+(flip?j:j+1),b+(flip?j+1:j));}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(ps,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(ind);g.computeVertexNormals();return g;}
+// V130-E: the same connected face grid (pixel-identical UVs) + generated whole-head net: jaw/temples/occiput rows,
+// chin and crown caps, modelled cupped ears. One extra draw call (group 1 = head130 net) replaces the skin/hair fan.
+const CAMP_HEAD130={ys:[0,.042,.095,.145,.181,.244,.294],xs:[.075,.094,.105,.108,.106,.088,.035],zs:[.072,.094,.102,.097,.094,.069,.014],imageY:[.914,.776,.630,.467,.363,.163,.035],back:[.075,.092,.108,.114,.110,.090,.048]};
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),mix=(a,b,t)=>a+(b-a)*t;
+function headGeometry130(id,longHair){
+ const {ys,xs,zs,imageY,back}=CAMP_HEAD130,C=-.012,top=ys[6],p=[],uv=[],ix=[];
+ for(let r=0;r<7;r++)for(let c=0;c<5;c++){const f=(c-2)/2;let z=zs[r]-(Math.abs(f)**1.6)*.035;if(c===2&&r===2)z+=.042;if(c===2&&r===3)z+=.012;p.push(f*xs[r],ys[r],z);uv.push(.5+f*xs[r]/.135*.35,1-imageY[r]);}
+ for(let r=0;r<6;r++)for(let c=0;c<4;c++){const k=r*5+c;ix.push(k,k+1,k+5,k+1,k+6,k+5);}
+ const P=(r,c)=>p.slice((r*5+c)*3,(r*5+c)*3+3);
+ const rear=ys.map((y,r)=>Array.from({length:7},(_,j)=>{if(j===0)return P(r,0);if(j===6)return P(r,4);const a=-Math.PI/2-j*Math.PI/6;return[Math.sin(a)*xs[r],y,C+Math.cos(a)*back[r]];}));
+ const hairY=a=>{const f=Math.cos(a);return(f<-.35?.115:mix(.115,.174,clamp((f+.35)/.35,0,1)))/top;};
+ const skullX=(y,z)=>{let i=0;while(i<5&&ys[i+1]<y)i++;const t=clamp((y-ys[i])/(ys[i+1]-ys[i]),0,1),w=mix(xs[i],xs[i+1],t),d=mix(back[i],back[i+1],t),q=(z-C)/d;return z<C?w*Math.sqrt(Math.max(.05,1-q*q)):w;};
+ const ear={yTop:.168,yBot:.086,zFront:.014,depth:.046};
+ const zEdge=rear[3][0][2],z1=rear[3][1][2],jfOf=z=>clamp((zEdge-z)/(zEdge-z1),0,1)/6;
+ const tex=bakeHead130(T,{face:campTexture98(id+'/face'),hair:campTexture98(id+'/hair'),hairTint:[.74,.71,.67],seed:id.length*977,
+  rows:ys.map((y,r)=>({h:y/top,v:imageY[r]})),edgeU:h=>{let i=0;while(i<5&&ys[i+1]/top<h)i++;const t=clamp((h-ys[i]/top)/((ys[i+1]-ys[i])/top),0,1),w=mix(xs[i],xs[i+1],t)/.135*.35;return[.5-w+.004,.5+w-.004];},
+  cheek:[.29,.50,.34,.70],hairY,beard:{fireWorker:.42,fireElder:.36}[id],sideburn:!longHair,nape:.6,ear:longHair?null:{hTop:ear.yTop/top,hBot:ear.yBot/top,jf0:jfOf(ear.zFront),jf1:jfOf(ear.zFront-ear.depth)}});
+ const base=ix.length;
+ const emit=(a,b,c,ua,ub,uc)=>{const n=p.length/3;p.push(...a,...b,...c);uv.push(...ua,...ub,...uc);ix.push(n,n+1,n+2);};
+ for(let i=0;i<6;i++)for(let j=0;j<6;j++){const u=(r,k)=>bandUV130(k/6,ys[r]/top),a=rear[i][j+1],b=rear[i][j],c=rear[i+1][j],d=rear[i+1][j+1];emit(a,b,d,u(i,j+1),u(i,j),u(i+1,j+1));emit(b,c,d,u(i,j),u(i+1,j),u(i+1,j+1));}
+ for(const r of[0,6]){const ring=[...Array.from({length:5},(_,c)=>P(r,c)),...rear[r].slice(1,6).reverse()],center=[0,ys[r]+(r===6?.006:0),C],kind=r===0?'chin':'top';
+  const R=Math.max(...ring.map(q=>Math.hypot(q[0],q[2]-C)))||1,cu=q=>capUV130(kind,q[0]/R,(q[2]-C)/R);
+  for(let j=0;j<ring.length;j++){const k=(j+1)%ring.length,[a,b]=r===0?[ring[k],ring[j]]:[ring[j],ring[k]];emit(center,a,b,cu(center),cu(a),cu(b));}}
+ if(!longHair)emitEars130({skullX,...ear,lift:.017,cup:.007},emit);
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(ix);g.clearGroups();g.addGroup(0,144,0);g.addGroup(144,ix.length-144,1);g.computeVertexNormals();
+ return{geo:g,tex};
+}
 function headGeometry(){
  // Connected facial landmarks: jaw, mouth, nose tip, eye ridge and forehead; skull closes behind them.
  const ys=[0,.042,.095,.145,.181,.244,.294],xs=[.075,.094,.105,.108,.106,.088,.035],zs=[.072,.094,.102,.097,.094,.069,.014],imageY=[.914,.776,.630,.467,.363,.163,.035],p=[],uv=[],ix=[];
@@ -29,11 +57,11 @@ export function createCampActor98(spec){
  const id=spec.id,p=profile[id],g=new T.Group();g.name='V98 adult / '+id;const motion=new T.Group();g.add(motion);const torso=new T.Group();motion.add(torso);const faceOpen=campTexture98(id+'/face'),faceClosed=campTexture98(id+'/face-closed');
  const skin=lambert(campTexture98(id+'/skin')),shirt=lambert(campTexture98(id+'/shirt')),fabric=lambert(campTexture98(id+'/fabric')),pants=lambert(campTexture98(id+'/fabric'),p.pants),shoes=lambert(campTexture98(id+'/hair'),0x494640),hair=lambert(campTexture98(id+'/hair'),0xbdb6ab),face=lambert(id==='sleeper'?faceClosed:faceOpen);
  const pelvis=mesh(motion,loft([[-.002,.147,.10],[.13,.151,.105]],6),pants);const bodyGeo=loft([[.1,.145,.108],[.29,.167*p.w,.112],[.48,.224*p.w,.105],[.54,.099,.077]],8);const buv=bodyGeo.attributes.uv,bp=bodyGeo.attributes.position,front=[],back=[];for(let k=0;k<bp.count;k++)buv.setXY(k,.5+bp.getX(k)/(.224*p.w)*.48,(bp.getY(k)-.10)/.44);for(let k=0;k<bodyGeo.index.count;k+=3){const tri=Array.from(bodyGeo.index.array.slice(k,k+3));(tri.reduce((v,j)=>v+bp.getZ(j),0)>.025?front:back).push(...tri);}bodyGeo.setIndex(front.concat(back));bodyGeo.clearGroups();bodyGeo.addGroup(0,front.length,0);bodyGeo.addGroup(front.length,back.length,1);const body=mesh(torso,bodyGeo,[shirt,fabric]);
- mesh(torso,new T.CylinderGeometry(.054,.064,.074,6),skin,[0,.545,0]);const head=new T.Group();head.position.set(0,.57,0);head.scale.x=.96+(p.w-.86)*.35;torso.add(head);mesh(head,headGeometry(),[face,skin,hair]);
+ mesh(torso,new T.CylinderGeometry(.054,.064,.074,6),skin,[0,.545,0]);const head=new T.Group();head.position.set(0,.57,0);head.scale.x=.96+(p.w-.86)*.35;torso.add(head);const h130=headGeometry130(id,id==='sleeper'||id==='fireYoung'),head130=lambert(h130.tex);mesh(head,h130.geo,[face,head130]);
  const scalp=loft([[.174,.109,.094,-.032],[.257,.088,.083,-.023],[.302,.037,.041,-.01]],8);const hp=mesh(head,scalp,hair); // Open the front hairline, leaving forehead and receding temples readable.
  const idx=scalp.index.array,keep=[];for(let n=0;n<idx.length;n+=3){const a=idx[n],b=idx[n+1],c=idx[n+2],pos=scalp.attributes.position;if((pos.getZ(a)+pos.getZ(b)+pos.getZ(c))/3<.035||Math.min(pos.getY(a),pos.getY(b),pos.getY(c))>.257)keep.push(a,b,c);}scalp.setIndex(keep);scalp.computeVertexNormals();
  if(id==='sleeper'||id==='fireYoung')mesh(head,loft([[-.035,.103,.077,-.045],[.18,.116,.10,-.025]],8),hair).scale.z=1.13;
- for(const s of [-1,1]){const ear=mesh(head,new T.OctahedronGeometry(.028,0),skin,[s*.111,.116,.009]);ear.scale.set(.35,1,.6);}
+ /* V130-E: modelled ears live in headGeometry130 (octahedron ears removed) */
  const limbs={},hands={};for(const s of [-1,1]){const key=s===-1?'L':'R';for(const [part,mat,r1,r2,n] of [['upper',fabric,.066,.09,5],['fore',id==='toilet'?skin:fabric,.046,.061,5],['thigh',pants,.082,.104,6],['shin',pants,.047,.069,6]]){const o=mesh(motion,new T.CylinderGeometry(r1,r2,1,n,1,false),mat);limbs[part+key]=o;}limbs['knee'+key]=mesh(motion,new T.OctahedronGeometry(.077,0),pants);limbs['elbow'+key]=mesh(motion,new T.OctahedronGeometry(.058,0),fabric);const hand=new T.Group();motion.add(hand);hands[key]=hand;mesh(hand,new T.BoxGeometry(.054,.086,.038),skin,[0,-.015,0]);for(let f=0;f<3;f++){const finger=mesh(hand,new T.BoxGeometry(.012,.039,.018),skin,[(f-1)*.015,-.066,.01]);finger.rotation.x=-.55;}const thumb=mesh(hand,new T.BoxGeometry(.018,.047,.021),skin,[s*.034,-.02,.018]);thumb.rotation.z=-s*.48;const foot=mesh(motion,new T.BoxGeometry(.116,.085,.245),shoes);limbs['foot'+key]=foot;}
  for(const hand of Object.values(hands)){const parts=[];for(const part of hand.children){part.updateMatrix();parts.push(part.geometry.clone().applyMatrix4(part.matrix));part.geometry.dispose();}hand.clear();mesh(hand,mergeGeometries(parts,false),skin);parts.forEach(g=>g.dispose());}
  const sockets={left:hands.L,right:hands.R,head};let blinkCount=0,lastBlink=false,lastTick=-1;const seed=spec.seed??id.split('').reduce((n,c)=>n+c.charCodeAt(0),0);let extraMotion=null;

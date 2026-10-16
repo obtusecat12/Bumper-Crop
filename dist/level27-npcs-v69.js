@@ -3,14 +3,29 @@ import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {clone as cloneSkin} from './vendor/SkeletonUtils.js';
 import {SPRING_OCCUPANTS} from './level27-occupants-v68.js';
 import {poolFloor} from './level27-layout.js?v=68';
+import {retrofitSkinnedHead130} from './retro-head130-gen.js';
 
 let templates=[];
 export async function initializeSpringNPCs(load){
  const loader=new GLTFLoader();
  templates=await Promise.all(SPRING_OCCUPANTS.map(p=>{const url=new URL('./models/spring-v69/'+p.file,import.meta.url);return load?load(loader,url):loader.loadAsync(url.href);}));
  for(const gltf of templates)gltf.scene.traverse(o=>{if(!o.isMesh)return;for(const m of(Array.isArray(o.material)?o.material:[o.material])){if(!m.isMeshBasicMaterial)throw new Error('Spring NPC must use baked unlit diffuse.');const t=m.map;if(t){t.colorSpace=T.SRGBColorSpace;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;t.anisotropy=1;t.needsUpdate=true;const im=t.image;if(![128,256].includes(im.width)||im.width!==im.height)throw new Error('Spring NPC diffuse must be 128² or 256².');}}});
+ templates.forEach((gltf,i)=>head130Retrofit(gltf.scene,SPRING_OCCUPANTS[i].id));
 }
 
+// V130-E: the V69 bathers wrapped one front photo all the way round the skull (mirrored face strip and the photo's
+// ears on the back of the head) and carried two flat diamond ears. Rear triangles now use a generated head130 band and
+// modelled ears; the front of the face keeps its original triangles and texels.
+const HEAD130_L27={seated:{cheek:[.27,.55,.33,.66],hairTexture:null,hairColor:0xbdb9b1,hairY:a=>Math.cos(a)<-.2?.30:.56,hairTop:a=>.84,beard:.30,earV:[.37,.60],earZ:-.12},standing:{cheek:[.27,.55,.33,.66],hairRect:[.30,.04,.70,.12],hairY:a=>Math.cos(a)<-.2?.40:.66,earV:[.35,.59],earZ:-.12}};
+function head130Retrofit(scene,id){
+ const cfg=HEAD130_L27[id];if(!cfg)return;let face=null,body=null;
+ scene.traverse(o=>{if(o.isSkinnedMesh){const n=(Array.isArray(o.material)?o.material[0]:o.material).name;if(n==='face')face=o;else if(n==='body')body=o;}});
+ if(!face)return;const hi=face.skeleton.bones.findIndex(b=>b.name==='head');
+ if(body&&hi>=0){const P=body.geometry.attributes.position,SI=body.geometry.attributes.skinIndex,SW=body.geometry.attributes.skinWeight;
+  for(let t=0;t<P.count;t+=3){let all=true;for(let k=0;k<3;k++)if(!(SI.getX(t+k)===hi&&SW.getX(t+k)>.5))all=false;if(all)for(let k=1;k<3;k++)P.setXYZ(t+k,P.getX(t),P.getY(t),P.getZ(t));} // collapse the flat diamond ears
+  P.needsUpdate=true;}
+ retrofitSkinnedHead130(T,face,{...cfg,phi0:100,makeMaterial:tex=>{const m=face.material.clone();m.map=tex;m.name='face head130';return m;}});
+}
 function retroMaterial(src){
  const m=src.clone();m.name='PS2 baked diffuse / '+src.name;m.color.setRGB(.82,.83,.78);m.toneMapped=true;
  m.onBeforeCompile=s=>{
