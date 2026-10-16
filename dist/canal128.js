@@ -9,6 +9,7 @@ import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import * as P from './urban-props.js?v=60';
 import {CITY_ORIGIN,CITY_ANGLE} from './urban-layout.js?v=60';
 import {CANAL,CANAL_HERO} from './canal128-layout.js?v=128';
+import {canal130Life} from './canal130-life.js?v=130';   // V130-A canal life + fake interiors
 const A=new URL('./assets/l11-v128/',import.meta.url).href,B=112,C=CANAL,WY=C.water;
 function tex(name,{srgb=true}={}){const t=new T.TextureLoader().load(A+name+'.webp?v=128');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 // facade tiles in metres [file, tile width, tile height] (floor/bay periods from reps.json)
@@ -122,6 +123,7 @@ export function* canalBlockTask(b,plan,lod){
  for(const[on,x0,x1]of[[cn.noRoadE,100,B],[cn.noRoadW,0,12]]){if(!on)continue;for(const[za,zb]of[[7.5,12],[100,104.5]]){b.box('sidewalk',(x0+x1)/2,top/2,(za+zb)/2,x1-x0,top,zb-za);b.walk((x0+x1)/2,(za+zb)/2,x1-x0,zb-za,top);}
   for(const[za,zb]of[[12,C.p0],[C.p1,100]]){b.box('k128Pave',(x0+x1)/2,top/2,(za+zb)/2,x1-x0,top,zb-za);b.walk((x0+x1)/2,(za+zb)/2,x1-x0,zb-za,top);}yield;}
  if(cn.hero)yield* hero(b,plan,lod);
+ yield* canal130Life(b,plan,lod);
 }
 // ---------------------------------------------------------------- photo reach (city x = hero coords; z block-local)
 // camera: footbridge in block (1,5) at city x 149, z 58.3, deck +1.65, eye 1.7 -> looks east (+x) down the canal, fov 34.3
