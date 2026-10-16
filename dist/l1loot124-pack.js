@@ -4,7 +4,7 @@
 // on each other). Collision is a conservative height field over each item's rotated bounding box, so nothing
 // interpenetrates. Packaging art: art-l1loot124c/ (each generated alone) -> tools/l1loot124c_assets.py -> assets/l1-loot-v124/pk.
 import * as T from './vendor/three.module.min.js';
-import {makeLootModel} from './l1loot124-items.js?v=124';
+import {makeLootModel} from './l1loot124-items.js?v=130';
 
 const A='./assets/l1-loot-v124/pk/';const loader=new T.TextureLoader(),texC=new Map(),matC=new Map();
 function tex(n,rep=false){if(texC.has(n))return texC.get(n);const t=loader.load(new URL(A+n+'.webp?v=124c',import.meta.url).href);t.colorSpace=T.SRGBColorSpace;t.wrapS=t.wrapT=rep?T.RepeatWrapping:T.ClampToEdgeWrapping;t.magFilter=T.NearestFilter;t.anisotropy=2;texC.set(n,t);return t;}
@@ -38,7 +38,16 @@ export const PACKS={
  matchbundle:{id:'matches',n:4,name:'火柴 · 一捆四盒',desc:'用麻绳十字捆好的四盒火柴。'},
  gauze:{id:'bandage',n:4,name:'医用纱布 · 一捆四卷',desc:'纸腰封扎着的四卷纱布。'},
  yarnbundle:{id:'yarn',n:3,name:'毛线团 · 一捆三团',desc:'麻绳串起来的三团毛线。'},
+ // V130-B
+ beer6:{id:'beer',n:6,name:'啤酒 · 六罐一扎',desc:'塑料提环套着的六罐啤酒。'},
+ cola6:{id:'cola',n:6,name:'可乐 · 六罐一扎',desc:'塑料提环套着的六罐可乐。'},
+ cigstack:{id:'cigarettes',n:10,name:'香烟 · 一条十包',desc:'十包同牌子的香烟，用一条多语种免税纸腰封扎着。'},
 };
+// V130-B six-pack ring yoke: one ring per can top, joined by small webs (clear-ish LDPE)
+function yoke(dw,y){const g=new T.Group(),m=M('yoke',()=>new T.MeshStandardMaterial({color:0xe8ece8,transparent:true,opacity:.6,roughness:.25,side:T.DoubleSide,depthWrite:false}));
+ for(let k=0;k<6;k++){const r=new T.Mesh(new T.RingGeometry(.026,.0335,14),m);r.rotation.x=-Math.PI/2;r.position.set((k%3-1)*dw,y,(Math.floor(k/3)-.5)*dw);g.add(r);}
+ for(let k=0;k<2;k++){const b=new T.Mesh(new T.PlaneGeometry(dw*2,.008),m);b.rotation.x=-Math.PI/2;b.position.set(0,y,(k-.5)*dw);g.add(b);}
+ const c=new T.Mesh(new T.PlaneGeometry(.008,dw),m);c.rotation.x=-Math.PI/2;c.position.set(0,y,0);g.add(c);return g;}
 // Build a bundle. members: [{i,id,meta}] (only the ones still in the crate). full: original count -> wraps intact.
 export function makeBundle(kind,members,full=true){const g=new T.Group(),objs=new Map(),wraps=[];g.userData.pack=kind;
  const put=(m,o,x,y,z,ry=0)=>{o.position.set(x,y,z);o.rotation.y=ry;g.add(o);if(m)objs.set(m.i,o);return o;};
@@ -52,6 +61,13 @@ export function makeBundle(kind,members,full=true){const g=new T.Group(),objs=ne
   for(let k=0;k<6;k++){const m=slot(k);if(!m)continue;const o=k===0?sample:makeLootModel(m.id,m.meta);put(m,o,(k%3-1)*dw,.004,(Math.floor(k/3)-.5)*dw,(k*1.3)%6.28);}
   if(full){const fh=kind==='six'?H*.62:H+.01,f=box(w+.006,fh,d+.006,film(),0,fh/2+.002,0);wraps.push(f);g.add(f);
    if(kind==='six'){const top=box(w*.92,.002,d*.25,film(),0,H+.006,0);wraps.push(top);g.add(top);}}// carry strip over the caps
+ }else if(kind==='beer6'||kind==='cola6'){// V130-B: six cans held only by the ring yoke over their tops
+  const id=PACKS[kind].id,sample=makeLootModel(id,members[0]?.meta||{});const b=dims(sample),dw=b.max.x-b.min.x+.002,H=b.max.y-b.min.y;
+  for(let k=0;k<6;k++){const m=slot(k);if(!m)continue;const o=k===members[0].k?sample:makeLootModel(id,m.meta);put(m,o,(k%3-1)*dw,0,(Math.floor(k/3)-.5)*dw,(k*1.9)%6.28);}
+  if(full){const y=yoke(dw,H-.012);g.add(y);wraps.push(y);}
+ }else if(kind==='cigstack'){// V130-B: ten packs lying face up, 5 x 2 layers, a printed paper band round the middle
+  const pw=.055,pt=.022;for(let k=0;k<10;k++){const m=slot(k);if(!m)continue;const o=makeLootModel('cigarettes',m.meta);o.rotation.x=-Math.PI/2;const w=new T.Group();w.add(o);o.position.set(0,.011,.0425);w.userData.lootId='cigarettes';put(m,w,(k%5-2)*(pw+.001),Math.floor(k/5)*pt,0);}
+  if(full){const bnd=loop(5*(pw+.001)+.004,2*pt+.004,.034,M('cigband',()=>std(new T.TextureLoader().load(new URL('./assets/l1-loot-v130/cig_band.webp?v=130',import.meta.url).href,t=>{t.colorSpace=T.SRGBColorSpace;t.magFilter=T.NearestFilter;}),{roughness:.8})),'z');bnd.position.y=pt;g.add(bnd);wraps.push(bnd);}
  }else if(kind==='blister'){
   const card=new T.Mesh(new T.BoxGeometry(.064,.0025,.096),[kraft(),kraft(),M('blf',()=>std(tex('blister_front'),{roughness:.6})),M('blb',()=>std(tex('blister_back'),{roughness:.7})),kraft(),kraft()]);card.position.y=.00125;g.add(card);
   for(let k=0;k<4;k++){const m=slot(k);if(!m)continue;const o=makeLootModel('battery',m.meta);put(m,o,(k-1.5)*.0145,.0025,-.004,Math.PI/2);}
@@ -71,8 +87,8 @@ export function makeBundle(kind,members,full=true){const g=new T.Group(),objs=ne
  g.userData.objs=objs;g.userData.wraps=wraps.filter(Boolean);return g;}
 
 // Orientation choices for a unit in messy mode
-const ROLLY=new Set(['almond','soy','can','sanitizer','chemical','battery','dynamite','yarn','melon','papaya','pineapple']);
-const BOXY=new Set(['bandage','soap','charger','matches','lighter','berries','nitrogen']);
+const ROLLY=new Set(['almond','soy','can','sanitizer','chemical','battery','dynamite','yarn','melon','papaya','pineapple','drink','beer','cola','peacetin','tumbler','duck']);
+const BOXY=new Set(['bandage','soap','charger','matches','lighter','berries','nitrogen','cigarettes','pager','teeth','snowglobe']);
 // Pack units into a crate interior (meters, centred at origin). units: [{obj, id}] (obj origin = resting bottom centre).
 // opts: {w,d,floor,wall,mode:'tidy'|'messy',R}
 export function packCrate(units,{w,d,floor,wall,mode,R}){const c=.015,nx=Math.max(2,Math.floor(w/c)),nz=Math.max(2,Math.floor(d/c)),H=new Float32Array(nx*nz).fill(floor),x0=-nx*c/2,z0=-nz*c/2;

@@ -4,7 +4,7 @@
 // merge, Shift+click quick-moves between hotbar and backpack, right-drag... (kept simple: right click splits half).
 export const ITEMS={
  almond:{name:'杏仁水',max:4,drink:true,desc:'恢复水分、体力与理智。'},
- drink:{name:'饮料',max:6,drink:true,desc:'售货机饮料。'},
+ drink:{name:'售货机饮料',max:6,drink:true,desc:'售货机里的杏仁水（塑料瓶 / 易拉罐）。'},
  can:{name:'罐头',max:16,desc:'密封的罐头食品。'},
  battery:{name:'电池',max:8,desc:'1.5 V 电池，手电筒用。'},
  flashlight:{name:'手电筒',max:1,desc:'点击开关；装电池延长续航。'},
@@ -33,6 +33,21 @@ export const ITEMS={
  chemical:{name:'化学制剂',max:4,desc:'贴着骷髅标签的瓶子。别喝。'},
  dynamite:{name:'炸药',max:4,desc:'有火柴或打火机时 Q 点燃并扔出，3 秒后爆炸，能炸开附近的箱子。'},
  nitrogen:{name:'固态氮块',max:4,desc:'约 2.5 分钟后会升华消失。Q 丢在地上。'},
+ // V130-B loot+ (Level 1 crates). drink = the Level 11 back-court vending almond water (PET / can), as from the machine
+ beer:{name:'啤酒',max:6,desc:'罐装啤酒。Q 喝：理智上升，体力略降，会有点晕。'},
+ cola:{name:'可乐',max:6,desc:'罐装可乐。Q 喝：补水分和体力。'},
+ cigarettes:{name:'香烟',max:10,desc:'一包 20 支。有火柴或打火机时 Q 抽一支：理智上升，伤一点身体。'},
+ peacetin:{name:'罐装和平香烟',max:2,desc:'Peace 圆铁罐，50 支装。有火时 Q 抽一支。'},
+ tvdinner:{name:'电视晚餐（预制菜）',max:4,desc:'铝托盘冷冻套餐。Q 吃：没有烤箱，只能半冻着吃。'},
+ tumbler:{name:'玻璃杯',max:4,desc:'Q 倒一杯杏仁水喝（用背包里的杏仁水）：比对瓶吹更能安神。'},
+ duck:{name:'橡皮鸭',max:4,desc:'Q 捏一下。'},
+ cassette:{name:'录音磁带',max:8,desc:'没有录音机。标签上有字。'},
+ floppy:{name:'软盘',max:10,desc:'1.44 MB。没有电脑。'},
+ motelkey:{name:'汽车旅馆钥匙',max:1,desc:'菱形钥匙牌：OASIS 汽车旅馆 13 号房。'},
+ snowglobe:{name:'雪花水晶球',max:1,desc:'Q 摇一摇。'},
+ teeth:{name:'发条假牙',max:1,desc:'Q 上发条。'},
+ pager:{name:'寻呼机',max:1,desc:'Q 看消息。'},
+ polaroid:{name:'拍立得照片',max:16,desc:'Q 看照片。'},
 };
 // V124: every item has its own icon, generated large on its own and reduced to 32 px (assets/l1-loot-v124/icon)
 const ICON_FILES=new Set(['almond','drink','soy','can','battery','flashlight','note','bandage','soap','sanitizer','charger','matches','lighter','knife','axe','watch','yarn','junk','foam','peas','pineapple','melon','papaya','fuyou','squirt','berries','chemical','dynamite','nitrogen']);
@@ -49,7 +64,10 @@ function icon(id,meta){const c=document.createElement('canvas');c.width=c.height
  else if(id==='note'){R(8,6,16,20,'#efe8cf');R(8,6,16,2,'#d8cfae');for(let y=11;y<24;y+=3)R(10,y,12,1,'#8a8270');R(13,4,6,3,'#d8c46a80');}
  else{R(8,8,16,16,'#888');}
  return c.toDataURL();}
-const iconCache=new Map();const iconUrl=(id,meta)=>{if(ICON_FILES.has(id))return new URL('./assets/l1-loot-v124/icon/'+id+'.png?v=124',import.meta.url).href;const k=id+':'+(id==='drink'?(meta?.type|0)%4:0);if(!iconCache.has(k))iconCache.set(k,icon(id,meta));return iconCache.get(k);};
+// V130-B: icons rendered from the real 3D models in the showcase rig (one per brand variant), 32 px, quantized
+const ICON130={lighter:4,sanitizer:4,beer:4,cola:3,cigarettes:4,tumbler:2,drink:2,peacetin:1,tvdinner:1,duck:1,cassette:1,floppy:1,motelkey:1,snowglobe:1,teeth:1,pager:1,polaroid:1};
+const icon130=(id,meta)=>{const n=ICON130[id];if(!n)return null;if(id==='drink'&&!(meta?.kind==='vending'&&(meta.type==='pet'||meta.type==='can')))return null;const v=id==='drink'?(meta.type==='can'?1:0):((meta?.v|0)%n+n)%n;return new URL('./assets/l1-loot-v130/icon/'+id+(n>1?'_'+v:'')+'.png?v=130',import.meta.url).href;};
+const iconCache=new Map();const iconUrl=(id,meta)=>{const i130=icon130(id,meta);if(i130)return i130;if(ICON_FILES.has(id))return new URL('./assets/l1-loot-v124/icon/'+id+'.png?v=124',import.meta.url).href;const k=id+':'+(id==='drink'?(meta?.type|0)%4:0);if(!iconCache.has(k))iconCache.set(k,icon(id,meta));return iconCache.get(k);};
 
 export function createInventory117({onChange=()=>{},toast=()=>{}}={}){
  const slots=Array.from({length:HOT+BAG},()=>null);let sel=0,open=false,drag=null,root=null,bar=null,bag=null,ghost=null;
