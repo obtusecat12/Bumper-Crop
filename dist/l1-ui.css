@@ -56,3 +56,6 @@
 :root[data-ui-level="1"] #menu .rx-pattern{background:#8d9196 url('./assets/ui-v119/escher-basement.png') 0 0/320px 320px repeat}
 :root[data-ui-level="1"] #menu.screen:after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#14191bd8 0%,#14191bb0 38%,#14191b40 70%,#14191b10 100%)}
 :root[data-ui-level="1"] .modal:not(.map-modal):before{background-image:url('./assets/ui-v119/escher-basement.png')}
+
+/* ---- V130-C: 2009 screenshot look for the F map chrome (canvas content gets the full JPEG/565 pass in l1-dash.js) ---- */
+:root[data-ui-level="1"]:not(.l1-era-off) .map-modal .map-header,:root[data-ui-level="1"]:not(.l1-era-off) .map-modal .map-tools,:root[data-ui-level="1"]:not(.l1-era-off) .map-modal .map-footer,:root[data-ui-level="1"]:not(.l1-era-off) .map-modal .map-status{filter:url(#l1-era)}
