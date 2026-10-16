@@ -15,7 +15,9 @@ const IMG={};let imgGen=0,imgStarted=false;
 const SRC={'compass-ring':'ui-v114/compass-ring.webp','gauge-ring':'ui-v114/gauge-ring.webp','almond-icon':'ui-v114/almond-icon.webp',standoff:'ui-v114/standoff.webp',
  leather:'ui-v116/leather.jpg',brushed:'ui-v116/brushed.jpg',dust:'ui-v116/dust.jpg',screw:'ui-v116/screw.webp'};
 function loadImages(){if(imgStarted)return;imgStarted=true;try{for(const f of ['16px Vonwaon16','12px Vonwaon12'])document.fonts.load(f,'理A').then(()=>{imgGen++;});document.fonts.addEventListener('loadingdone',()=>{imgGen++;});}catch{}
- for(const [k,n] of Object.entries(SRC)){const im=new Image();im.decoding='async';im.onload=()=>{imgGen++;};im.src=U(n);IMG[k]=im;}}
+ for(const [k,n] of Object.entries(SRC)){const im=new Image();im.decoding='async';im.onload=()=>{
+  // V130-C: keep a CPU-resident copy so drawing it into the era pass's CPU canvases never waits on the GPU process
+  if(globalThis.__l1Era?.on&&globalThis.__l1Era.cpu){try{const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;c.getContext('2d',{willReadFrequently:true}).drawImage(im,0,0);c.naturalWidth=c.width;c.naturalHeight=c.height;c.complete=true;IMG[k]=c;}catch{}}imgGen++;};im.src=U(n);IMG[k]=im;}}
 const ok=im=>im&&im.complete&&im.naturalWidth>0;
 const TAU=Math.PI*2,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),wrap=a=>((a+Math.PI)%TAU+TAU)%TAU-Math.PI;
 const PX16="Vonwaon16,Vonwaon12,'Microsoft YaHei',monospace",PX12="Vonwaon12,Vonwaon16,'Microsoft YaHei',monospace";
@@ -78,8 +80,10 @@ const wake=()=>{audio();if(AC&&AC.state==='suspended')AC.resume();};addEventList
 //  · and a bilinear upscale back to device pixels — the soft "screenshot shown at the wrong size" blur.
 // ?era=0 disables it (A/B); performance numbers land in globalThis.__l1Era.
 // =====================================================================================================
-const ERA={on:true,f:.86,q:45,stat:{}};try{const p=new URLSearchParams(location.search);if(p.get('era')==='0'||localStorage.getItem('bumpercrop.l1era')==='0')ERA.on=false;if(p.get('eraf'))ERA.f=+p.get('eraf');if(p.get('eraq'))ERA.q=+p.get('eraq');}catch{}
+const ERA={on:true,cpu:false,f:.86,q:45,stat:{}};try{const p=new URLSearchParams(location.search);if(p.get('era')==='0'||localStorage.getItem('bumpercrop.l1era')==='0')ERA.on=false;if(p.get('eraf'))ERA.f=+p.get('eraf');if(p.get('eraq'))ERA.q=+p.get('eraq');if(p.get('eracpu'))ERA.cpu=p.get('eracpu')==='1';}catch{}
 globalThis.__l1Era=ERA;
+const gpu=(w,h)=>{const c=document.createElement('canvas');c.width=Math.max(1,w);c.height=Math.max(1,h);return[c,c.getContext('2d')];};
+const rcv=(w,h)=>ERA.cpu?cpu(w,h):gpu(w,h);
 const cpu=(w,h)=>{const c=document.createElement('canvas');c.width=Math.max(1,w);c.height=Math.max(1,h);return[c,c.getContext('2d',{willReadFrequently:true})];};
 const BAYER=new Float32Array([0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5].map(v=>(v/16-.47)*.62));
 // TN panel tone curve: black floor ≈ 9/255, gamma .93 (mids washed out), white a touch blue
@@ -148,7 +152,7 @@ function upscale(c,img,x,y,w,h){c.save();c.imageSmoothingEnabled=true;c.imageSmo
 function mountEraSvg(){if(document.getElementById('l1-era-svg'))return;const st=(n)=>Array.from({length:n},(_,i)=>(Math.pow(i/(n-1),.95)*.97+.024).toFixed(4)).join(' ');
  const svg=`<svg id="l1-era-svg" width="0" height="0" style="position:absolute;width:0;height:0" aria-hidden="true"><filter id="l1-era" x="-4%" y="-25%" width="108%" height="150%" color-interpolation-filters="sRGB">
 <feGaussianBlur stdDeviation="0.45" result="b"/><feColorMatrix in="b" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" result="r"/><feOffset in="r" dx="0.9" result="r2"/>
-<feColorMatrix in="b" type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0" result="g"/><feColorMatrix in="b" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0" result="bl"/><feOffset in="bl" dx="-0.5" result="b2"/>
+<feColorMatrix in="b" type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0" result="g"/><feColorMatrix in="b" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0" result="bl"/><feOffset in="bl" dx="-0.5" result="b2"/>
 <feBlend in="r2" in2="g" mode="screen" result="rg"/><feBlend in="rg" in2="b2" mode="screen" result="m"/>
 <feComponentTransfer in="m"><feFuncR type="discrete" tableValues="${st(32)}"/><feFuncG type="discrete" tableValues="${st(64)}"/><feFuncB type="discrete" tableValues="${st(32)}"/></feComponentTransfer></filter></svg>`;
  if(ERA.on)document.body.insertAdjacentHTML('beforeend',svg);else document.documentElement.classList.add('l1-era-off');}
@@ -187,7 +191,7 @@ function cap(c,sx,sy,r){c.save();c.shadowColor='#000000a0';c.shadowBlur=r*.7;c.s
  c.strokeStyle='#00000040';c.lineWidth=.8;c.beginPath();c.arc(sx,sy,r+.6,0,TAU);c.stroke();
  c.fillStyle='#ffffffe0';c.beginPath();c.ellipse(sx-r*.45,sy-r*.5,r*.22,r*.1,-.7,0,TAU);c.fill();}
 function navStatic(w,h,k){
- const [back]=cpu(1,1),[front]=cpu(1,1);back.width=front.width=w;back.height=front.height=h;
+ const [back]=rcv(1,1),[front]=rcv(1,1);back.width=front.width=w;back.height=front.height=h;
  const b=back.getContext('2d'),f=front.getContext('2d');for(const c of [b,f])c.setTransform(k,0,0,k,0,0);
  FK=NAVFK/k;const {x,y,w:W,h:Hh,r,t}=SG,ins=17,px=x+ins,py=y+ins,pw=W-ins*2,ph=Hh-ins*2;
  // 1 · shadows: the clear plate throws a pale, wide shadow; the opaque back print a darker, sharper one
@@ -303,9 +307,9 @@ const navEra=eraClient('nav',out=>{const t=navT;if(!t||!isL1()||performance.now(
  t.c.save();t.c.setTransform(1,0,0,1,0,0);t.c.clearRect(t.r.left,t.r.top,t.r.width,t.r.height);upscale(t.c,out,t.r.left,t.r.top,t.r.width,t.r.height);t.c.restore();},56);
 let navAt=0;
 export function paintL1Nav(c,rect,map,yaw,bearing){if(!ERA.on)return paintNavRaw(c,rect,map,yaw,bearing);
- const now=performance.now();if(navEra.out&&now-navAt<eraEvery('nav')){c.save();c.setTransform(1,0,0,1,0,0);upscale(c,navEra.out,rect.left,rect.top,rect.width,rect.height);c.restore();return true;}navAt=now;
+ const now=performance.now();if(navEra.out&&now-navAt<Math.max(100,eraEvery('nav'))){c.save();c.setTransform(1,0,0,1,0,0);upscale(c,navEra.out,rect.left,rect.top,rect.width,rect.height);c.restore();return true;}navAt=now;
  const dpr=Math.min(2,devicePixelRatio||1),f=Math.min(1,ERA.f*1.1)/dpr,w=Math.max(8,Math.round(rect.width*f)),h=Math.max(8,Math.round(rect.height*f));
- if(!navLo||navLo.width!==w||navLo.height!==h){[navLo,navLx]=cpu(w,h);navCache=null;}
+ if(!navLo||navLo.width!==w||navLo.height!==h){[navLo,navLx]=rcv(w,h);navCache=null;}
  navLx.setTransform(1,0,0,1,0,0);navLx.clearRect(0,0,w,h);NAVFK=f;const anim=paintNavRaw(navLx,{left:0,top:0,width:w,height:h},map,yaw,bearing);NAVFK=1;
  navT={c,r:{...rect},cw:c.canvas.width,ch:c.canvas.height,at:performance.now()};navEra.submit(navLo);
  const src=navEra.out&&navEra.out.width===w&&navEra.out.height===h?navEra.out:navLo;c.save();c.setTransform(1,0,0,1,0,0);upscale(c,src,rect.left,rect.top,rect.width,rect.height);c.restore();return anim;}
@@ -382,7 +386,7 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
  function resize(){const r=host.getBoundingClientRect();if(r.width<4)return false;const dpr=Math.min(2,devicePixelRatio||1),k=r.width/DW,key=r.width.toFixed(1)+'/'+dpr;if(key===size)return true;size=key;S.k=k;S.dpr=dpr;
   cvs.width=Math.round(DW*k*dpr);cvs.height=Math.round(DH*k*dpr);
   // V130-C: draw small (≈ .78 of CSS size) on a CPU canvas; the era pipe JPEGs it and upscales it into cvs
-  if(ERA.on){S.rs=ERA.f;[R,rx]=cpu(Math.round(DW*k*S.rs),Math.round(DH*k*S.rs));}else{S.rs=dpr;R=cvs;rx=ctx;}statKey='';return true;}
+  if(ERA.on){S.rs=ERA.f;[R,rx]=rcv(Math.round(DW*k*S.rs),Math.round(DH*k*S.rs));}else{S.rs=dpr;R=cvs;rx=ctx;}statKey='';return true;}
  function readVals(){const st=globalThis.__bcHudState,get=id=>Number(document.getElementById(id)?.getAttribute('aria-valuenow'));
   const v=st?[st.stamina,st.hydration,st.health,st.sanity??get('sanity-meter')]:[get('stamina-meter'),get('hydration-meter'),get('health-meter'),get('sanity-meter')];return v.map(x=>Number.isFinite(Number(x))?Number(x):100);}
  // ---- Dashboard entrance: the whole cluster rises on an under-damped spring, then the needles sweep ----
@@ -409,7 +413,7 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   if(S.pending){S.pending=false;show(true,'enter');}
   stepSpring(dt);acc+=Math.min(dt,.1);if(acc<1/30)return;const step=Math.min(.1,acc);acc=0;simulate(step);
   // V130-C: with the era pass on, repaint at ~15 fps (2009 gadgets were never smooth); slower if the readback is costly
-  if(!ERA.on||now-(S.lastDraw||0)>=eraEvery('dash')){S.lastDraw=now;draw();}}
+  if(!ERA.on||now-(S.lastDraw||0)>=eraEvery('dash')){S.lastDraw=now;const t0=performance.now();draw();tick('dash.draw',t0);}}
  // ---------------------------------------------------------------- simulation
  function simulate(dt){S.t+=dt;const v=readVals(),st=globalThis.__bcHudState;
   for(let i=0;i<4;i++){const t=clamp(v[i],0,100);S.shown[i]+=(t-S.shown[i])*(1-Math.exp(-dt*(i===2?2.2:6)));}
@@ -427,7 +431,7 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   for(const p of r.blips){const crossed=(prev<=p.a&&r.a>=p.a)||(prev>r.a&&(p.a>=prev||p.a<=r.a));if(crossed){p.life=1;p.a+=(Math.random()-.5)*.25*threat;p.d=clamp(p.d+(Math.random()-.55)*.08,.12,.95);}p.life=Math.max(0,p.life-dt*.45);}
   S.bottles=Number(document.getElementById('bottle-count')?.textContent)||0;}
  // ---------------------------------------------------------------- static layers
- function layer(){const [c,g]=ERA.on?cpu(R.width,R.height):(()=>{const c=document.createElement('canvas');c.width=R.width;c.height=R.height;return[c,c.getContext('2d')];})();const s=S.k*S.rs;g.setTransform(s,0,0,s,0,0);return[c,g];}
+ function layer(){const [c,g]=ERA.on?rcv(R.width,R.height):(()=>{const c=document.createElement('canvas');c.width=R.width;c.height=R.height;return[c,c.getContext('2d')];})();const s=S.k*S.rs;g.setTransform(s,0,0,s,0,0);return[c,g];}
  function buildStatic(){FK=1/S.k;const [bc,c]=layer(),[fc,f]=layer();
   // shadows on the scene: wide ambient + tight contact
   c.save();c.shadowColor='#000000a0';c.shadowBlur=22;c.shadowOffsetY=10;housePath(c,0);c.fillStyle='#000';c.fill();c.restore();
