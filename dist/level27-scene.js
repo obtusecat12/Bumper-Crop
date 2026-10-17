@@ -1,9 +1,11 @@
 import * as T from './vendor/three.module.min.js';
-import * as L from './level27-layout.js?v=68';
+import * as L from './level27-layout.js?v=131';
 import {createCreekAuthority} from './level27-creek.js?v=65';
-import {SPRING_SHELL} from './level27-shell-data.js?v=67';
+import {SPRING_SHELL} from './level27-shell-data.js?v=131';
+import {initializeCliff131,cliffTextures131,cliffMaterial131,bakeGeometry131,prepareShell131,buildStair131,buildFlowstone131,buildFallDress131,createMist131} from './level27-cliff131.js?v=131';
+import {LIVE_SPOTS} from './level27-light131.js?v=131';
 import {mergeGeometries,mergeVertices} from './vendor/BufferGeometryUtils.js';
-import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit,inAnnex,ANNEX,streamPath,stairCenter} from './level27-layout.js?v=68';
+import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit,inAnnex,ANNEX,streamPath,stairCenter} from './level27-layout.js?v=131';
 import {springMaterials,springTextures} from './level27-materials.js?v=63';
 
 import {createSpringDynamics} from './spring-dynamics.js?v=63';
@@ -12,15 +14,15 @@ import {createMineLamp,createPrimitiveWashStation} from './spring-props-v63.js?v
 import {paintGeology,configureGeology,naturalTreads,organicStone} from './spring-geology-v63.js?v=67';
 import {createSpringVolume} from './spring-volume-v121.js';
 import {preloadCreek121,createCreek121} from './bath120-creek.js';
-export const preloadLevel27V121=()=>preloadCreek121();
+export const preloadLevel27V121=()=>Promise.all([preloadCreek121(),initializeCliff131()]);
 import {createSpringCascades,createFlowStream} from './spring-cascades-v63.js?v=65';
 import {createSpringNPCs} from './level27-npcs-v69.js';
 const UP=new T.Vector3(0,1,0);
+// V131: the two pool-room lanterns became hidden warm spots (LIVE_SPOTS + baked light);
+// the M.E.G. lanterns on the platform and in the return tunnel stay, dimmer.
 export const SPRING_LIGHTS=[
- {p:[-1.72,2.00,1.16],color:0xffc58f,power:5.8,range:7},
- {p:[5.82,2.18,.72],color:0xffc58f,power:7.8,range:8},
- {p:[-.70,2.77,-1.72],color:0xffc58f,power:4.6,range:7},
- {p:[4.63,3.08,-5.9],color:0xffc58f,power:7.3,range:8}
+ {p:[6.60,2.18,.40],color:0xffbf86,power:2.6,range:5.5},
+ {p:[4.63,3.08,-5.9],color:0xffc58f,power:4.2,range:7}
 ];
 function geoGrid(cols,rows,point,skip=()=>false){const p=[],uv=[],idx=[];for(let j=0;j<=rows;j++)for(let i=0;i<=cols;i++){const q=point(i/cols,j/rows);p.push(...q.slice(0,3));uv.push(...q.slice(3,5));}for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){if(skip((i+.5)/cols,(j+.5)/rows))continue;const a=j*(cols+1)+i,b=a+cols+1;idx.push(a,b,a+1,a+1,b,b+1);}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return g;}
 function box(root,mat,x,y,z,w,h,d,name=''){const geometry=new T.BoxGeometry(w,h,d);if(mat.map){const uv=geometry.attributes.uv;for(let i=0;i<uv.count;i++){const f=Math.floor(i/4);uv.setXY(i,uv.getX(i)*(f<2?d:w)*.72,uv.getY(i)*(f===2||f===3?d:h)*.72);}}const mesh=new T.Mesh(geometry,mat);mesh.position.set(x,y,z);mesh.name=name;mesh.castShadow=mesh.receiveShadow=true;root.add(mesh);return mesh;}
@@ -38,24 +40,34 @@ export function createLevel27(){
  const q=unpack(SPRING_SHELL.vertices,Int16Array),p=new Float32Array(q.length),uv=new Float32Array(q.length/3*2);
  for(let i=0;i<q.length;i++){p[i]=q[i]/SPRING_SHELL.scale;if(i%3===0){uv[i/3*2]=p[i]*.67;uv[i/3*2+1]=q[i+1]/SPRING_SHELL.scale*.67;}}
  const shell=new T.BufferGeometry();shell.setAttribute('position',new T.BufferAttribute(p,3));shell.setAttribute('uv',new T.BufferAttribute(uv,2));shell.setIndex(new T.BufferAttribute(unpack(SPRING_SHELL.indices,Uint32Array),1));const qn=unpack(SPRING_SHELL.normals,Int16Array);shell.setAttribute('normal',new T.Float32BufferAttribute(Array.from(qn,v=>v/16000),3));
- const shellMesh=mesh(shell,mats.rock,'Unified limestone / pool, enlarged dry annex, broad stream tunnel');shellMesh.userData.keepIndexed=true;
+ const ctex=cliffTextures131(),stex=springTextures();Object.assign(ctex,{pebble:stex['riverbed-pebbles'],'pebble-normal':stex['riverbed-pebbles-normal'],'pebble-rough':stex['riverbed-pebbles-roughness']});
+ const m131={rock:cliffMaterial131('umber strata rock',{dry:'strata',wet:'wetmoss',calc:true,scale:.55,gain:1.5},clock),flow:cliffMaterial131('flowstone',{dry:'flow',wet:'flow',scale:.42,wetRough:.20,gain:1.0},clock,{color:0xe6d9c4}),stone:cliffMaterial131('rubble masonry',{dry:'rubble',top:'slab',wet:'wetmoss',scale:1.6,gain:1.35},clock),moss:cliffMaterial131('wet moss',{dry:'wetmoss',scale:1.4,wetRough:.15},clock),floor:cliffMaterial131('platform floor',{dry:'rubble',top:'pebble',wet:'wetmoss',scale:.9,gain:1.4},clock,{color:0x8a7a68})};
+ prepareShell131(shell,unpack(SPRING_SHELL.bake,Uint8Array));
+ const shellMesh=mesh(shell,m131.rock,'Unified limestone / pool, enlarged dry annex, broad stream tunnel');shellMesh.userData.keepIndexed=true;
  // Surveyed continuous dry annex and pool bottom; no overlapping floor plates.
- mesh(geoGrid(160,128,(u,v)=>{const x=-2.7+u*9.3,z=-2.7+v*5.5;return[x,poolFloor(x||.0001,z||.0001),z,x*.67,z*.67];},(u,v)=>{const x=-2.7+u*9.3,z=-2.7+v*5.5;return Math.hypot(x,z)>radialLimit(x,z)+.065&&!inAnnex(x,z);}),mats.bed,'Spring bottom and separate dry rock annex');
+ // V131: pool bottom keeps its V121 material; the enlarged dry platform gets its own baked floor.
+ const inPoolGrid=(x,z)=>Math.hypot(x,z)<=radialLimit(x,z)+.065;
+ mesh(geoGrid(160,128,(u,v)=>{const x=-2.7+u*9.3,z=-2.7+v*5.5;return[x,poolFloor(x||.0001,z||.0001),z,x*.67,z*.67];},(u,v)=>{const x=-2.7+u*9.3,z=-2.7+v*5.5;return !inPoolGrid(x,z);}),mats.bed,'Spring bottom');
+ {const fg=geoGrid(120,84,(u,v)=>{const x=1.6+u*5.6,z=-2.6+v*5.9;return[x,poolFloor(x||.0001,z||.0001)+.004,z,x*.67,z*.67];},(u,v)=>{const x=1.6+u*5.6,z=-2.6+v*5.9;return inPoolGrid(x,z)||!inAnnex(x,z,-.08);}).toNonIndexed();bakeGeometry131(fg,{wet:(q)=>.25+.35*Math.max(0,Math.sin(q[0]*2.3+q[2]*1.7)),cavity:()=>.05,boost:1.15});const fm=new T.Mesh(fg,m131.floor);fm.name='V131 enlarged dry platform floor';fm.castShadow=fm.receiveShadow=true;rockRoot.add(fm);}
  const channel=createCreekAuthority(T,L),wholeStream=channel.points.map(p=>p.toArray());
  // Tunnel floor, channel bed and outlet banks now belong to the single implicit shell.
  box(rockRoot,mats.black,3.0,3.10,-10.50,3.9,3.0,.14,'Dark continuation of return tunnel');
- rockRoot.add(naturalTreads(mats.step));
+ // V131: rubble-masonry stair against the left cliff (replaces the V63 free-standing natural treads).
+ {const g=mergeGeometries(buildStair131());bakeGeometry131(g,{wet:(q,n)=>n[1]>.6?.12:.30,cavity:(q,n)=>n[1]<-.3?.6:.12,boost:1.1});const o=new T.Mesh(g,m131.stone);o.name='V131 rubble masonry stair, wall-hugging';o.castShadow=o.receiveShadow=true;rockRoot.add(o);}
+ {const fs=buildFlowstone131(),uv0=p=>{p.deleteAttribute('uv');p.setAttribute('uv',new T.BufferAttribute(new Float32Array(p.attributes.position.count*2),2));return p;};
+  const g=mergeGeometries(fs.curtains.map(uv0));bakeGeometry131(g,{wet:.55,cavity:()=>.10,boost:.9});const o=new T.Mesh(g,m131.flow);o.name='V131 flowstone curtains';o.castShadow=false;o.receiveShadow=true;rockRoot.add(o);
+  const sg=mergeGeometries(fs.spikes.map(uv0));bakeGeometry131(sg,{wet:.7,calc:.55,cavity:()=>.15,boost:1.0});const so=new T.Mesh(sg,m131.rock);so.name='V131 stalactites and stalagmites';so.receiveShadow=true;rockRoot.add(so);}
  // Rounded flanking fragments seat into the same bed, never cover the pool.
  // V121-bath: the evenly spaced bank cobble rows were replaced by bath120-creek.js natural cobbles.
  for(let i=0;i<0;i++){const t=(i+.35)/54,r=.040+.024*(.5+.5*Math.sin(i*3.7)),c=channel.groundedCobble(t,i%2?1:-1,r,i),stone=organicStone(mats.wetRock,c.position,c.scale,i);const contact=new T.Raycaster(new T.Vector3(c.position[0],c.waterY+.38,c.position[2]),new T.Vector3(0,-1,0)).intersectObject(shellMesh)[0];if(contact)stone.position.y=contact.point.y+r*.61;stone.name='Embedded water-rounded creek cobble';rockRoot.add(stone);}
  const plate=box(rockRoot,plaque('M.E.G. / 27','RETURN  ←  ALONG THE STREAM'),4.76,2.60,-6.45,.025,.31,.88,'Wall-fixed return marker');plate.material.side=T.DoubleSide;const signRay=new T.Raycaster(new T.Vector3(3.7,2.60,-6.45),new T.Vector3(1,0,0));plate.position.x=(signRay.intersectObject(shellMesh)[0]?.point.x??4.9)-.002;
  const wash=createPrimitiveWashStation(T,mats);wash.group.position.set(WASH_BASIN.x,poolFloor(WASH_BASIN.x,WASH_BASIN.z),WASH_BASIN.z);scene.add(wash.group);
  const practicals=[],lampMaterials=new Map();scene.updateMatrixWorld(true);
- for(let i=0;i<SPRING_LIGHTS.length;i++){const l=SPRING_LIGHTS[i],d=i===1||i===3?new T.Vector3(1,0,0):new T.Vector3(l.p[0],0,l.p[2]).normalize(),ray=new T.Raycaster(new T.Vector3(...l.p),d),hit=ray.intersectObject(shellMesh)[0],anchor=hit?.point||new T.Vector3(...l.p).addScaledVector(d,.20),lamp=createMineLamp(T,mats);lamp.group.position.copy(anchor).addScaledVector(d,-.022);lamp.group.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),d.negate());scene.add(lamp.group);lamp.emitter.castShadow=false;lamp.light.color.set(l.color);lamp.light.intensity=l.power;lamp.light.distance=l.range;lamp.light.decay=2;lamp.light.castShadow=i===1||i===2;lamp.light.shadow.mapSize.set(512,512);lamp.light.shadow.normalBias=.015;lamp.light.shadow.bias=-.0008;lamp.light.shadow.radius=3;lamp.group.updateMatrixWorld(true);l.p=lamp.light.getWorldPosition(new T.Vector3()).toArray();practicals.push({light:lamp.light,power:l.power});}
+ for(let i=0;i<SPRING_LIGHTS.length;i++){const l=SPRING_LIGHTS[i],d=new T.Vector3(1,0,0),ray=new T.Raycaster(new T.Vector3(...l.p),d),hit=ray.intersectObject(shellMesh)[0],anchor=hit?.point||new T.Vector3(...l.p).addScaledVector(d,.20),lamp=createMineLamp(T,mats);lamp.group.position.copy(anchor).addScaledVector(d,-.022);lamp.group.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),d.negate());scene.add(lamp.group);lamp.emitter.castShadow=false;lamp.light.color.set(l.color);lamp.light.intensity=l.power;lamp.light.distance=l.range;lamp.light.decay=2;lamp.light.castShadow=false;lamp.light.shadow.mapSize.set(512,512);lamp.light.shadow.normalBias=.015;lamp.light.shadow.bias=-.0008;lamp.light.shadow.radius=3;lamp.group.updateMatrixWorld(true);l.p=lamp.light.getWorldPosition(new T.Vector3()).toArray();practicals.push({light:lamp.light,power:l.power});}
  // Lamps use identical authored finishes. Share those materials before the
  // static geometry batch, so four fixtures do not create four sets of draws.
  scene.traverse(o=>{if(!o.isMesh||o.parent?.name!=='Corroded copper mine lantern')return;const m=o.material,shared=lampMaterials.get(m.name);if(shared&&shared!==m){o.material=shared;m.dispose();}else if(!shared)lampMaterials.set(m.name,m);});
- scene.add(new T.AmbientLight(0xaec8bd,.26));
+ scene.add(new T.AmbientLight(0x7d93a8,.12)); // V131: near-black umber; light comes from the hidden spots
  const dynamics=createSpringDynamics(),tex=springTextures(),footRings=Array.from({length:4},()=>new T.Vector4(0,0,-100,0)),uniforms={clock,dynamicSlope:{value:dynamics.texture},footRings:{value:footRings},ripple:{value:tex['spring-ripples']},caustics:{value:tex['water-caustics']},reflection:{value:null},refraction:{value:null},sceneDepth:{value:null},eye:{value:new T.Vector3()},reflectMatrix:{value:new T.Matrix4()},nearFar:{value:new T.Vector2(.06,40)},ready:{value:0}};
  const waterMat=new T.ShaderMaterial({name:'Mineral spring / planar reflection and depth refraction',uniforms,side:T.DoubleSide,
   vertexShader:`varying vec3 wp;varying vec4 screenP,mirrorP;uniform mat4 reflectMatrix;void main(){vec4 p=modelMatrix*vec4(position,1.);wp=p.xyz;screenP=projectionMatrix*viewMatrix*p;mirrorP=reflectMatrix*p;gl_Position=screenP;}`,
@@ -82,8 +94,15 @@ export function createLevel27(){
  const freefall=channel.fall.map(p=>new T.Vector3(...p)),west=[];let minRadius=100;
  for(let i=0;i<=48;i++){const y=2.10*(1-i/48)+.014,a=3.57,p=wallPoint(a,y),r=Math.min(minRadius,Math.hypot(p[0],p[2])-.035);minRadius=r;west.push(new T.Vector3(Math.cos(a)*r,y,Math.sin(a)*r));}
  const cascade=createSpringCascades(T,{paths:[freefall,west],widths:[.46,.85],textures:tex,waterY:0});const falls=cascade.group;scene.add(falls);const impacts=cascade.impacts;
+ {const pts=channel.points,lp=pts[pts.length-1],pp=pts[pts.length-2],ol=Math.hypot(lp.x-pp.x,lp.z-pp.z),dress=buildFallDress131([lp.x,lp.y,lp.z,(lp.x-pp.x)/ol,(lp.z-pp.z)/ol]);
+  const strip=p=>{p.deleteAttribute('uv');p.setAttribute('uv',new T.BufferAttribute(new Float32Array(p.attributes.position.count*2),2));return p;};
+  const rg=mergeGeometries(dress.rocks.map(strip));bakeGeometry131(rg,{wet:1,cavity:()=>.2,boost:1.1});const ro=new T.Mesh(rg,m131.rock);ro.name='V131 waterfall mouth lip rocks';ro.castShadow=ro.receiveShadow=true;scene.add(ro);
+  const mg=mergeGeometries(dress.moss.map(strip));bakeGeometry131(mg,{wet:.8,cavity:()=>.2,boost:1.1});const mo=new T.Mesh(mg,m131.moss);mo.name='V131 waterfall moss pads';mo.receiveShadow=true;scene.add(mo);}
+ const port131=wallPoint(3.57,2.10),pr131=Math.hypot(port131[0],port131[2]),wfoot=wallPoint(3.57,.05),wr131=Math.hypot(wfoot[0],wfoot[2]),lip131=channel.points[channel.points.length-1];
+ const mist=createMist131([[wfoot[0]*(1-.30/wr131),.16,wfoot[2]*(1-.30/wr131),.85,0],[wfoot[0]*(1-.55/wr131),.28,wfoot[2]*(1-.55/wr131),1.1,0],[.55,.14,-1.40,.75,0],[.62,.30,-1.25,.95,0],[port131[0]*(1-.28/pr131),1.95,port131[2]*(1-.28/pr131),.45,1],[lip131.x+.12,lip131.y-.05,lip131.z+.12,.42,1]]);scene.add(mist.group);
+ const spots131=LIVE_SPOTS.map(l=>{const s=new T.SpotLight(l.color,l.power,l.range,l.angle,l.penumbra,2);s.position.fromArray(l.p);s.target.position.fromArray(l.t);s.castShadow=!!l.shadow;s.shadow.mapSize.set(512,512);s.shadow.bias=-.0008;s.shadow.normalBias=.015;scene.add(s,s.target);return s;});
  const creek=createCreek121(T,{channel,scene,bedAt:(x,z)=>{const s=channel.section(x,z),hit=new T.Raycaster(new T.Vector3(x,s.waterY+.32,z),new T.Vector3(0,-1,0)).intersectObject(shellMesh)[0];return hit?.point.y??channel.bedHeight(s);}});scene.add(creek.group);
- const volume=createSpringVolume(T,{waterY:0,density:1.1,extinction:2.3,wisp:1,belt:1,ambient:1.35,lights:SPRING_LIGHTS,poolPlan:{points:CAVE_PLAN},performanceProfile:{scale:.3,reflectionScale:.2,raySteps:24,reflectionRaySteps:16,simulationHz:24,lightingHz:8,cullVolume:true}});scene.userData.springVolume={compose:(renderer,color,depth,camera,w,h)=>volume.compose(renderer,color,depth,camera,w,h,clock.value)};
+ const volume=createSpringVolume(T,{waterY:0,density:1.1,extinction:2.3,wisp:1,belt:1,ambient:1.35,lights:[...SPRING_LIGHTS,...LIVE_SPOTS.map(l=>({p:l.p,color:l.color,power:l.power*.5,range:l.range}))],poolPlan:{points:CAVE_PLAN},performanceProfile:{scale:.3,reflectionScale:.2,raySteps:24,reflectionRaySteps:16,simulationHz:24,lightingHz:8,cullVolume:true}});scene.userData.springVolume={compose:(renderer,color,depth,camera,w,h)=>volume.compose(renderer,color,depth,camera,w,h,clock.value)};
  // Main water VFX consume the existing pipeline opaque color/depth target.
  // Only the cached planar mirror needs a separate scene capture.
  const reflection=new T.WebGLRenderTarget(384,384,{type:T.HalfFloatType,depthBuffer:true}),mirrorOpaque=new T.WebGLRenderTarget(384,384,{type:T.HalfFloatType,depthBuffer:true});
@@ -99,7 +118,7 @@ export function createLevel27(){
  let stepTravel=0,stepIndex=0,lastTime=0,lastMirror=-Infinity;
  const renderStats={mirrorHz:10,mirrorCaptures:0,mirrorCulls:0,mainSceneRecaptures:0,physicalTransmissionMaterials:0,shadowBakePolicy:'scene entry only',shellTriangles:shell.index.count/3};
  renderStats.volume=volume.diagnostics;scene.userData.renderStats=renderStats;
- function update(t,player){const dt=Math.max(0,Math.min(.06,t-lastTime));lastTime=t;clock.value=t;wash.timeUniform.value=t;npcs.update(t);cascade.update(t,dt);creek.update(t,dt);if(player?.wet){stepTravel+=player.moved;if(stepTravel>.20){stepTravel=0;footRings[stepIndex++%4].set(player.x,player.z,t,1);dynamics.drop(player.x,player.z,.16,.012);}}dynamics.update(dt,impacts.map(p=>[p.x??p[0],p.z??p[2]]));}
+ function update(t,player){const dt=Math.max(0,Math.min(.06,t-lastTime));lastTime=t;clock.value=t;wash.timeUniform.value=t;npcs.update(t);mist.update(t);cascade.update(t,dt);creek.update(t,dt);if(player?.wet){stepTravel+=player.moved;if(stepTravel>.20){stepTravel=0;footRings[stepIndex++%4].set(player.x,player.z,t,1);dynamics.drop(player.x,player.z,.16,.012);}}dynamics.update(dt,impacts.map(p=>[p.x??p[0],p.z??p[2]]));}
  const waterFrustum=new T.Frustum(),viewProjection=new T.Matrix4();
  scene.updateMatrixWorld(true);const vfxBounds=[water,falls,creek.group,wash.water].map(o=>new T.Box3().setFromObject(o));
  scene.userData.prepareMainVfx=camera=>{viewProjection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);waterFrustum.setFromProjectionMatrix(viewProjection);scene.userData.showerWater.active=vfxBounds.some(b=>waterFrustum.intersectsBox(b));};
@@ -122,7 +141,7 @@ export function createLevel27(){
  }
  let sound=null;
  function audio(ctx,master,active,position,yaw){if(!ctx)return;if(!sound){const out=ctx.createGain();out.gain.value=0;out.connect(master);const count=ctx.sampleRate*4,buffer=ctx.createBuffer(1,count,ctx.sampleRate),d=buffer.getChannelData(0);let low=0;for(let i=0;i<count;i++){low=(low+(Math.random()*2-1)*.03)/1.04;d[i]=low*2+(Math.random()*2-1)*.07;}const src=ctx.createBufferSource(),filter=ctx.createBiquadFilter();src.buffer=buffer;src.loop=true;filter.type='lowpass';filter.frequency.value=1650;src.connect(filter);filter.connect(out);const delay=ctx.createDelay(.5),feedback=ctx.createGain();delay.delayTime.value=.145;feedback.gain.value=.29;filter.connect(delay);delay.connect(feedback);feedback.connect(delay);feedback.connect(out);src.start();sound={out,src,filter,delay,feedback};}sound.out.gain.setTargetAtTime(active?.72:0,ctx.currentTime,.35);}
- function dispose(){npcs.dispose();scene.traverse(o=>{o.geometry?.dispose();});for(const m of new Set(Object.values(mats)))m.dispose();waterMat.dispose();reflection.dispose();fallbackCapture.dispose();mirrorOpaque.dispose();copyM.dispose();copyQuad.geometry.dispose();dynamics.dispose();cascade.dispose();creek.dispose();volume.dispose();sound?.src.stop();Object.values(sound||{}).forEach(n=>n.disconnect?.());}
+ function dispose(){npcs.dispose();mist.dispose();scene.traverse(o=>{o.geometry?.dispose();});for(const m of new Set(Object.values(mats)))m.dispose();waterMat.dispose();reflection.dispose();fallbackCapture.dispose();mirrorOpaque.dispose();copyM.dispose();copyQuad.geometry.dispose();dynamics.dispose();cascade.dispose();creek.dispose();volume.dispose();sound?.src.stop();Object.values(sound||{}).forEach(n=>n.disconnect?.());}
  // Static stone and hardware share material batches. Point-light shadow maps
  // are rebuilt on entry, then reused for the two water capture views.
  rockRoot.updateMatrixWorld(true);const groups=new Map();

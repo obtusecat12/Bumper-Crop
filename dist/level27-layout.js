@@ -2,12 +2,16 @@
 // The carved east bank and access tunnel are additional land outside this polygon.
 import {SPRING_OCCUPANTS} from './level27-occupants-v68.js';
 export const CAVE_AREA=18.58, WATER_Y=0, TUNNEL_Y=1.88;
-export const STAIRS={x:3.65,width:1.16,start:-3.10,tread:.30,count:10,rise:.16,base:.28};
+// V131: masonry stair built hard against the left (+x) cliff, descending from the tunnel to the dry platform.
+export const STAIRS={x:4.36,width:1.02,start:-3.10,tread:.30,count:10,rise:.16,base:.28};
+export const CLIFF_Z=-.35;
+export function cliffX(z){return 4.93+.022*Math.sin(z*2.3+.4)+.012*Math.sin(z*7.1);}
 export const DRY_BANK_Y=.28;
 export const DRAIN={x:-1.18,z:2.12,width:.23,height:.18};
-export const WASH_BASIN={x:5.02,z:.76,radius:.65};
+export const WASH_BASIN={x:5.70,z:1.05,radius:.65}; // V131: moved off the new stair foot (was 5.02,.76)
 export const STREAM_X=2.10;
-export const ANNEX={x:4.18,z:.18,rx:2.15,rz:2.62};
+// V131: dry platform enlarged (old rx 2.15 rz 2.62 at 4.18,.18); its -z part is bounded by the stair cliff.
+export const ANNEX={x:4.55,z:.50,rx:2.70,rz:2.85};
 const raw=Array.from({length:96},(_,i)=>{const a=i/96*Math.PI*2,r=1+.043*Math.sin(a*3+.7)+.028*Math.cos(a*7);return[Math.cos(a)*2.43*r,Math.sin(a)*2.5*r];});
 export function polygonArea(p){return Math.abs(p.reduce((s,a,i)=>{const b=p[(i+1)%p.length];return s+a[0]*b[1]-b[0]*a[1];},0))/2;}
 const scale=Math.sqrt(CAVE_AREA/polygonArea(raw));
@@ -16,15 +20,16 @@ export const ARRIVAL={x:3.65,z:-7.4,yaw:Math.PI,pitch:-.10};
 export const CALCITE_OUTCROPS=[];
 export function radialLimit(x,z){const a=(Math.atan2(z,x)+Math.PI*2)%(Math.PI*2),k=a/(Math.PI*2)*CAVE_PLAN.length,i=Math.floor(k),p=CAVE_PLAN[i],q=CAVE_PLAN[(i+1)%CAVE_PLAN.length],dx=Math.cos(a),dz=Math.sin(a),ex=q[0]-p[0],ez=q[1]-p[1];return(p[0]*ez-p[1]*ex)/(dx*ez-dz*ex);}
 export function inTunnel(x,z,margin=0){return x>1.08+margin&&x<4.96-margin&&z>=-10.4+margin&&z<STAIRS.start;}
-export function inAnnex(x,z,margin=0){return Math.hypot((x-ANNEX.x)/(ANNEX.rx-margin),(z-ANNEX.z)/(ANNEX.rz-margin))<1;}
-export function stairCenter(z){const t=Math.max(0,Math.min(1,(z-STAIRS.start)/(STAIRS.count*STAIRS.tread)));return 3.65-.57*t+.11*Math.sin(t*Math.PI*1.4);}
+export function inAnnex(x,z,margin=0){return Math.hypot((x-ANNEX.x)/(ANNEX.rx-margin),(z-ANNEX.z)/(ANNEX.rz-margin))<1&&(z>CLIFF_Z+margin||x<cliffX(z)-margin);}
+export function onStairFootprint(x,z,pad=0){return z>=STAIRS.start-pad&&z<STAIRS.start+STAIRS.count*STAIRS.tread+pad&&Math.abs(x-stairCenter(z))<STAIRS.width/2+pad;}
+export function stairCenter(z){return cliffX(z)-.06-STAIRS.width/2;}
 // Each eroded edge has its own curved plan, shared by visible rock and walking.
 // End landings stay fixed; interior edges wander by centimetres across a tread.
-export function stairBoundary(k,x){const z=STAIRS.start+k*STAIRS.tread;if(k<=0||k>=STAIRS.count)return z;const d=x-stairCenter(z);return z+.065*(Math.sin(d*4.9+k*.83)-Math.sin(k*.83))+.023*(Math.cos(d*10.1+k*1.71)-Math.cos(k*1.71));}
+export function stairBoundary(k,x){const z=STAIRS.start+k*STAIRS.tread;if(k<=0||k>=STAIRS.count)return z;const d=x-stairCenter(z);return z+.018*(Math.sin(d*5.3+k*.83)-Math.sin(k*.83))+.008*(Math.cos(d*11.1+k*1.71)-Math.cos(k*1.71));}
 export function stairLocal(x,z){let i=0;while(i<STAIRS.count-1&&z>=stairBoundary(i+1,x))i++;const a=stairBoundary(i,x),b=stairBoundary(i+1,x);return {i,v:Math.max(0,Math.min(1,(z-a)/(b-a)))};}
-export function treadHeight(i){return STAIRS.base+(STAIRS.count-i)*STAIRS.rise+(i?.022*Math.sin(i*1.9):0);}
+export function treadHeight(i){return STAIRS.base+(STAIRS.count-i)*STAIRS.rise+(i?.008*Math.sin(i*1.9):0);}
 export function stairHeight(z,x=stairCenter(z)){return treadHeight(stairLocal(x,z).i);}
-export function treadRelief(x,z,local=stairLocal(x,z)){const {i,v}=local,d=x-stairCenter(z),u=Math.abs(d)/(STAIRS.width*.5),nose=Math.max(0,(v-.68)/.32),heel=Math.max(0,(.15-v)/.15),flank=Math.max(0,(u-.68)/.32);return .020*Math.sin(d*8+i*.71)*Math.sin(Math.PI*v)+.008*Math.sin(d*21-i*1.7)*Math.sin(Math.PI*v)-.021*u*u-.036*nose*nose-.012*heel*heel-.036*flank*flank*(.6+.4*Math.sin(i*1.2+v*7));}
+export function treadRelief(x,z,local=stairLocal(x,z)){const {i,v}=local,d=x-stairCenter(z);return .004*Math.sin(d*9+i*.71)*Math.sin(Math.PI*v);}
 export function poolFloor(x,z){const r=Math.hypot(x,z),lim=radialLimit(x||.000001,z||.000001),f=r/lim;
  if(f<=1){const apron=Math.max(0,(f-.70)/.30);return -.88+.025*Math.sin(x*3.2)*Math.cos(z*2.7)+.835*Math.pow(apron,2.4);}
  // A narrow eroded shoreline rises OUTSIDE the surveyed water footprint.
@@ -40,7 +45,7 @@ export function springAllowed(x,z){
  if(Math.abs(x-(WASH_BASIN.x-.90))<.64&&Math.abs(z-(WASH_BASIN.z+.65))<.45)return false;
  if(inTunnel(x,z,.25)&&x>2.98&&x<4.57)return true;
  if(Math.abs(x-stairCenter(z))<STAIRS.width/2-.20&&z>=STAIRS.start&&z<STAIRS.start+STAIRS.count*STAIRS.tread)return true;
- if(inAnnex(x,z,.24)&&z>-.15&&x>2.5)return true;
+ if(inAnnex(x,z,.24)&&x>2.3&&!onStairFootprint(x,z))return true;
  if(x>1.5&&Math.abs(z)<.72&&x<3.5)return true;
  const a=(Math.atan2(z,x)+Math.PI*2)%(Math.PI*2),floor=poolFloor(x,z),r=Math.hypot(x,z);
  for(const h of[.20,1.0,1.75]){const p=wallPoint(a,floor+h);if(r>Math.hypot(p[0],p[2])-.21)return false;}return true;
