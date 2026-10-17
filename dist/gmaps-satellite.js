@@ -7,6 +7,7 @@
 import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan,cityDistrict} from './urban-layout.js?v=return-1';
 import {BUILDING_TYPES} from './urban-buildings.js?v=60';
 import {exitPoint} from './exit-route.js?v=60';
+import {paintCanalSat,paintSubwaySat,inCanalWater} from './map131-canal.js?v=131';
 
 const O=cityToWorld(0,0),E=cityToWorld(1,0),CA=E.x-O.x,SA=O.z-E.z;
 const SUN=[-.6,-.8],LEAN=[.18,-.98],SHADOW_K=.55,LEAN_K=.045;
@@ -74,7 +75,9 @@ function render(g,X0,Z0,pm,LW,LH,shapes){
   g.fillStyle=lot;g.fillRect(x+12,z+12,88,88);
   // interior courtyard (34..78 × 36..76)
   const yard=dist==='civic'?'park':dist==='warehouse'?'trucks':u<(dist==='core'?.42:.7)?'parking':u<.86?'plaza':'garden';
-  if(yard==='park'){
+  // V131m: open canal reach replaces the courtyard (map131-canal.js); stair openings of the subway
+  const canalHere=paintCanalSat(g,ix,iz,fine);paintSubwaySat(g,ix,iz);
+  if(canalHere){}else if(yard==='park'){
    g.fillStyle='#667845';g.fillRect(x+30,z+32,52,48);g.fillStyle='#55663a';for(let k=0;k<6;k++){const r=hash(ix,iz,90+k);g.beginPath();g.ellipse(x+34+r*44,z+36+hash(ix,iz,99+k)*40,4+r*7,3+r*5,r*3,0,7);g.fill();}
    g.strokeStyle='#b6aa8c';g.lineWidth=1.6;g.beginPath();g.moveTo(x+30,z+56);g.quadraticCurveTo(x+56,z+46+u*20,x+82,z+56);g.moveTo(x+56,z+32);g.lineTo(x+56,z+80);g.stroke();
    if(u>.55){g.fillStyle='#3c5a63';g.beginPath();g.ellipse(x+56,z+56,6,4.5,0,0,7);g.fill();g.fillStyle='#b9b4a6';g.beginPath();g.arc(x+56,z+56,1.4,0,7);g.fill();}
@@ -111,6 +114,7 @@ function render(g,X0,Z0,pm,LW,LH,shapes){
  }
  // the street trees at offset -9.8 were placed in the road's other half: drop those that sit on asphalt
  for(let i=trees.length-1;i>=0;i--){const[tx,tz]=trees[i],fx=((tx%CITY_BLOCK)+CITY_BLOCK)%CITY_BLOCK,fz=((tz%CITY_BLOCK)+CITY_BLOCK)%CITY_BLOCK;if(Math.min(fx,CITY_BLOCK-fx)<7.6||Math.min(fz,CITY_BLOCK-fz)<7.6)trees.splice(i,1);}
+ for(const L of[trees,cars])for(let i=L.length-1;i>=0;i--)if(inCanalWater(L[i][0],L[i][1]))L.splice(i,1);
  for(const q of shapes)builds.push({b:{...q,type:'',seed:Math.round(q.x*7+q.z*13)},K:mul(W,[Math.cos(q.ry),-Math.sin(q.ry),Math.sin(q.ry),Math.cos(q.ry),q.x,q.z]),hgt:q.h||12});
  // exit route (world coordinates) as a wide asphalt boulevard
  setM(g,W);g.lineJoin='round';g.lineCap='round';const route=[];for(let s=110;s<=430;s+=6){const p=exitPoint(s);route.push([p.x,p.z]);}

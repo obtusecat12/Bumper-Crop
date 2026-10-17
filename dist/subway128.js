@@ -17,6 +17,7 @@ import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {SUB,subwayBlock,subwayStairs} from './subway128-layout.js?v=128';
 import {CANAL} from './canal128-layout.js?v=128';
 import {stationSpec,station129,addSubway129Materials,entrance129,stepKey,shaftKey,signKey,cellUV} from './subway129-styles.js?v=129';
+import {entrance131} from './subway131-entrance.js?v=131';
 const A=new URL('./assets/l11-v128/',import.meta.url).href,B=112,S=SUB;
 function tex(name,srgb=true){const t=new T.TextureLoader().load(A+name+'.webp?v=128');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 const clock={value:0},ca=Math.cos(CITY_ANGLE),sa=Math.sin(CITY_ANGLE);
@@ -168,18 +169,14 @@ export function subwayEntrances(b,plan,lod){
  for(const st of list){const frameZ=st.axis==='z';b.push(0,0,0,frameZ?0:Math.PI/2);const spec=stationSpec(plan.ix,plan.iz,frameZ?0:1),stepK=stepKey(spec)||'s128Steps',shK=shaftKey(spec);
   // in frame: stair across v (local x for west / -z for south), descending along +u
   const sv=frameZ?1:-1,v0=sv>0?S.stairX0:-S.stairX1,v1=sv>0?S.stairX1:-S.stairX0,vc=(v0+v1)/2,u0=frameZ?st.z0:st.x0,u1=u0+S.stairLen,n=Math.round(S.stairLen/S.run),top=.15;
-  for(let k=0;k<n;k++){const y=top-S.rise*(k+1),u=u0+S.run*k;b.box(stepK,vc,(y+S.plat-.2)/2,u+S.run/2,v1-v0,y-S.plat+.2,S.run,0,1.25);}
+  // V131m: steps/cladding/enclosure/lamps/escalator in subway131-entrance.js; here only the walk, the shaft walls and the
+  // underground colliders (two shaft walls). The old far-end cross rail collider sat across the bottom of the stair (air wall).
   b.walk(vc,u0+S.stairLen/2,v1-v0,S.stairLen,(top+S.plat)/2,0,-(top-S.plat)/S.stairLen);(b.stairWalks||(b.stairWalks=[])).push(b.walks.at(-1));
-  // shaft walls: outer full height, inner above the station ceiling; landing apron
-  const vo=sv>0?v1:v0,vi=sv>0?v0:v1;b.box(shK,vo+sv*.3,(S.plat+top)/2,(u0+u1)/2,.6,top-S.plat,S.stairLen,0,1.3);
-  b.box(shK,vi-sv*.3,(S.ceil+top)/2,(u0+u1)/2,.6,top-S.ceil,S.stairLen,0,1.3);
-  b.box(shK,vc,(S.ceil+top)/2-.0,u1+.3,v1-v0+1.2,top-S.ceil,.6,0,1.3);
-  // street railings (three sides, open at the top step) + entrance frame with the station board
-  for(const v of[v0,v1]){b.box('metal',v,top+1.0,(u0+u1)/2,.06,.06,S.stairLen);if(!lod)for(let u=u0;u<=u1+.01;u+=1.5)b.box('metal',v,top+.5,u,.05,1.0,.05);b.solid(v,(u0+u1)/2,.15,S.stairLen);(b.stairSolids||(b.stairSolids=[])).push(b.colliders.at(-1));}
-  b.box('metal',vc,top+1.0,u1,v1-v0,.06,.06);b.solid(vc,u1,v1-v0,.15);b.stairSolids.push(b.colliders.at(-1));
-  for(const v of[v0,v1])b.box('s128Rail',v,top+1.3,u0+.1,.12,2.6,.12);b.box('s128Rail',vc,top+2.6,u0+.1,v1-v0+.12,.14,.14);
-  {const[q0,q1,q2,q3]=cellUV(spec.name);quad(b,signKey(b.mats,spec.sign,spec.lang),[[v1,top+2.0,u0-.02],[v0,top+2.0,u0-.02],[v0,top+2.6,u0-.02],[v1,top+2.6,u0-.02]],[[q0,q1],[q2,q1],[q2,q3],[q0,q3]]);}
-  entrance129(b,spec,{v0,v1,u0,u1,top,lod,sv,ix:plan.ix,iz:plan.iz});
+  const vo=sv>0?v1:v0,vi=sv>0?v0:v1;b.box(shK,vo+sv*.3,(S.plat+top-.45)/2,(u0+u1)/2,.6,top-.45-S.plat,S.stairLen,0,1.3);
+  b.box(shK,vi-sv*.3,(S.ceil+top-.45)/2,(u0+u1)/2,.6,top-.45-S.ceil,S.stairLen,0,1.3);
+  b.box(shK,vc,(S.ceil+top-.45)/2,u1+.9,v1-v0+1.2,top-.45-S.ceil,.6,0,1.3);
+  const ss=b.stairSolids||(b.stairSolids=[]);for(const v of[v0-.075,v1+.075]){b.solid(v,(u0+u1)/2,.15,S.stairLen);ss.push(b.colliders.pop());}
+  entrance131(b,spec,{v0,v1,u0,u1,top,lod,sv,stairSolids:ss,underKey:shK,underStep:stepK,signQuad:(ya,yb,u)=>{const[q0,q1,q2,q3]=cellUV(spec.name);quad(b,signKey(b.mats,spec.sign,spec.lang),[[v1,ya,u],[v0,ya,u],[v0,yb,u],[v1,yb,u]],[[q0,q1],[q2,q1],[q2,q3],[q0,q3]]);}});
   b.pop();}
 }
 // --------------------------------------------------------------------------------------------- floor / collisions while underground

@@ -6,7 +6,8 @@
 import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan,cityDistrict} from './urban-layout.js?v=return-1';
 import {BUILDING_TYPES} from './urban-buildings.js?v=60';
 import {exitPoint} from './exit-route.js?v=60';
-import {paintSatellite} from './gmaps-satellite.js?v=102';
+import {paintSatellite} from './gmaps-satellite.js?v=131';
+import {paintCanalMap} from './map131-canal.js?v=131';
 
 const FONT='Arial, Helvetica, sans-serif',AQUA="'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 // Classic (pre-2013) tile palette. Satellite/Hybrid are a dark aerial look.
@@ -35,6 +36,8 @@ export function gmCityPaint(context,c,w,h,scale,shapes=[],opts={}){
  const quad=(pts,fill,stroke)=>{context.beginPath();pts.forEach((p,k)=>k?context.lineTo(...p):context.moveTo(...p));context.closePath();if(fill){context.fillStyle=fill;context.fill();}if(stroke){context.strokeStyle=stroke;context.lineWidth=1;context.stroke();}};
  // Civic blocks read as parks/campus green, like classic Maps' park polygons.
  if(!photo)for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++){const x=ix*CITY_BLOCK,z=iz*CITY_BLOCK;if(cityDistrict(x+56,z+56)!=='civic')continue;quad([[x+8,z+8],[x+104,z+8],[x+104,z+104],[x+8,z+104]].map(p=>xy(cityToWorld(p[0],p[1]))),P.park,P.parkEdge);}
+ // V131m: canals (water under the roads = bridges), locks, names and subway entrances (map131-canal.js)
+ const toS=(x,z)=>xy(cityToWorld(x,z)),cv={bx,bz,r,scale,P,photo};paintCanalMap(context,toS,{...cv,stage:'water'});
  const line=(a,b)=>{context.beginPath();context.moveTo(...a);context.lineTo(...b);context.stroke();};
  const roads=[];
  for(let i=-r;i<=r;i++)for(const axis of[0,1]){const k=axis?bz+i:bx+i,a=xy(cityToWorld(axis?(bx-r)*CITY_BLOCK:k*CITY_BLOCK,axis?k*CITY_BLOCK:(bz-r)*CITY_BLOCK)),b=xy(cityToWorld(axis?(bx+r+1)*CITY_BLOCK:k*CITY_BLOCK,axis?k*CITY_BLOCK:(bz+r+1)*CITY_BLOCK));roads.push({a,b,axis,k,cls:k%4===0?1:0});}
@@ -47,12 +50,14 @@ export function gmCityPaint(context,c,w,h,scale,shapes=[],opts={}){
  const route=[];for(let s=110;s<=430;s+=8)route.push(xy(exitPoint(s)));
  const hwy=(lw,col)=>{context.strokeStyle=col;context.lineWidth=lw;context.lineJoin='round';for(const s of hw)line(...s);context.beginPath();route.forEach((p,k)=>k?context.lineTo(...p):context.moveTo(...p));context.stroke();};
  const hwW=photo?6:Math.max(4,19*scale);hwy(hwW+2,P.hwyCase);hwy(hwW,P.hwy);
+ paintCanalMap(context,toS,{...cv,stage:'over'});
  // Building footprints (light fill, darker 1px edge) once zoomed in.
  if(scale>.45&&!photo){
   const foot=(q,x,z,ry,bw,bd,toW,fill)=>{const pts=[];for(let k=0;k<4;k++){const u=(k===0||k===3?-1:1)*bw/2,v=(k<2?-1:1)*bd/2;pts.push(xy(toW(x+Math.cos(ry)*u+Math.sin(ry)*v,z-Math.sin(ry)*u+Math.cos(ry)*v)));}quad(pts,fill,scale>.6?P.bldEdge:null);};
   for(const q of shapes)foot(q,q.x,q.z,q.ry,q.w,q.d,(x,z)=>({x,z}),P.bld);
   for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++)for(const b of cityBlockPlan(ix,iz,BUILDING_TYPES).buildings)foot(b,b.x,b.z,b.ry,b.w,b.d,cityToWorld,b.floors>7?P.bldTall:P.bld);
  }
+ paintCanalMap(context,toS,{...cv,stage:'icons'});if(labels)paintCanalMap(context,toS,{...cv,stage:'labels'});
  if(labels){
   context.save();context.font=`bold 11px ${FONT}`;context.textAlign='center';context.textBaseline='middle';context.lineJoin='round';
   for(const q of roads){

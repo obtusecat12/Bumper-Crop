@@ -1,0 +1,3 @@
+Textures in this folder are derived from ambientCG materials (CC0 1.0, https://ambientcg.com):
+Tiles136A, Tiles036, Marble012, Granite001B, Granite002A, Concrete034, PaintedMetal004, Metal029.
+Recoloured, downsampled and quantised for Bumper Crop (V131m).
