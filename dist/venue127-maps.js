@@ -71,7 +71,7 @@ export function createVenueMaps({host=document.body,onClose=()=>{}}={}){
  const root=document.createElement('div');root.className='modal vm-modal';root.id='venue-map';root.hidden=true;root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','Goggle Maps');
  root.innerHTML='<div class="vm-page"></div>';host.appendChild(root);
  const page=root.querySelector('.vm-page');let key='bath',v=VENUES127.bath,view='list',sel=0,saved=new Set(),photo=0,directions=false;
- const head=q=>`<div class="vm-top"><nav><a>Web</a><a>Images</a><a>Videos</a><b>Maps</b><a>News</a><a>Shopping</a><a>Gmail</a><a>more ▾</a></nav><div><a>iGoggle</a> | <a>Search settings</a> | <a class="vm-close" href="#" role="button">Close map (F)</a></div></div>
+ const head=q=>`<div class="vm-top"><nav><a>Web</a><a>Images</a><a>Videos</a><b>Maps</b><a>News</a><a>Shopping</a><a>Gmail</a><a>more ▾</a></nav><div><a>iGoggle</a> | <a>Search settings</a> | <a class="vm-close" href="#" role="button">Close map (M)</a></div></div>
  <div class="vm-head"><div class="vm-brand">${LOGO}<span class="vm-maps">maps</span></div><div class="vm-search"><div class="vm-row"><input type="text" value="${esc(q)}" readonly aria-label="Search Maps"><button type="button" class="vm-btn" data-act="list">Search Maps</button><a class="vm-small">Show search options</a></div><small>e.g., "${esc(v.query)} near ${esc(v.near.split(',')[0])}"</small></div></div>`;
  function list(){
   const rs=v.results;

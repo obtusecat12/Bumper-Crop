@@ -63,7 +63,7 @@ export function paintWin98Compass(c,map,yaw,bearing){
  // spinner field with the bearing (like the "18:10:18" time box) + Map button
  sunken(c,8,250,150,24);c.fillStyle=W98.text;c.font=`16px ${MD}`;c.textAlign='left';c.textBaseline='middle';c.fillText(bearing||'N 000°',14,263);
  const sx=140;button(c,sx,252,16,10);button(c,sx,262,16,10);c.fillStyle=W98.text;for(let k=0;k<3;k++){c.fillRect(sx+8-k,255+k,1+k*2,1);c.fillRect(sx+8-k,268-k,1+k*2,1);}
- button(c,166,250,82,24,'地图(F)',MD);c.strokeStyle=W98.text;c.setLineDash([1,1]);c.strokeRect(170.5,254.5,73,15);c.setLineDash([]);
+ button(c,166,250,82,24,'地图(M)',MD);c.strokeStyle=W98.text;c.setLineDash([1,1]);c.strokeRect(170.5,254.5,73,15);c.setLineDash([]);
  // status bar
  sunken(c,4,279,180,14,W98.face);sunken(c,186,279,66,14,W98.face);c.fillStyle=W98.text;c.font=`12px ${SM}`;c.textAlign='left';c.fillText('LEVEL0.DWG · 1:500',8,287);c.fillText('MODEL',200,287);
  c.restore();
