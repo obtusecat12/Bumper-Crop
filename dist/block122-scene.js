@@ -11,6 +11,8 @@ import {UrbanBatch} from './urban-batch.js?v=60';
 import {CITY_ORIGIN,CITY_ANGLE,CITY_BLOCK,cityToWorld} from './urban-layout.js?v=60';
 import {EXIT_CITY_Y,ease} from './exit-route.js?v=60';
 import {car122} from './hopest122-street.js?v=122';
+import {addShells131Materials,addShells131} from './shells131.js?v=131'; // V131: shells closed / facade retention / fake house
+import {createFill131} from './fill131.js?v=131'; // V131: empty replica lots filled
 const A=new URL('./assets/l11-v122/',import.meta.url).href,A3=new URL('./assets/l11-v123/',import.meta.url).href,Y=EXIT_CITY_Y,BX=CITY_BLOCK,BZ=CITY_BLOCK*2;
 function tex(name,{repeat=false,srgb=true,v3=false}={}){const t=new T.TextureLoader().load(v3?A3+name+'.webp?v=123':A+'b_'+name+'.webp?v=122');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;if(repeat)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 const TILED={b122HotelUp:['hotel_upper',28],b122HotelSide:['hotel_side',12],b122MidA:['midrise_a',16],b122MidB:['midrise_b',14],b122RedTower:['redbrick_tower',18],b122Brick:['brick',3],b122Roof:['roof',6]};
@@ -29,6 +31,7 @@ export function addBlock122Materials(m){
  m.b122Concrete=new T.MeshStandardMaterial({color:0xa9a59a,roughness:.9,vertexColors:true});
  m.c123Navy=new T.MeshStandardMaterial({color:0x1f2c49,roughness:.45,metalness:.35,vertexColors:true});
  m.c123Pole=new T.MeshStandardMaterial({color:0x6e6253,roughness:.95,vertexColors:true});
+ addShells131Materials(m);
  return m;
 }
 // textured quad with explicit uv range; corner order bl, br, tr, tl seen from the front
@@ -104,8 +107,8 @@ export function createBlock122(mats){
   b.cylinder('photoSteel',W/2-6,top+8.5,D/2-6,.06,.06,6,6);
   b.pop();}
  // ---- behind the hotel (block 1,1 north row): two beige mid-rises
- obox(b,101.5-50,200,10,20,0,29.5,0,{front:['b122MidA',10/16,29.5/16],right:['c123MidASide',20/14,29.5/16,.92,27.7,29.5]});
- obox(b,101.5-33.5,200,23,20,0,27.7,0,{front:['b122MidB',23/14,27.7/14],right:['c123MidBSide',20/14,27.7/14,.9]});
+ obox(b,101.5-50,200,10,20,0,29.5,0,{front:['b122MidA',10/16,29.5/16],right:['c123MidASide',20/14,29.5/16,.92,27.7,29.5],back:['s131MidABack',10/16,29.5/16,.9],left:['s131MidALeft',20/16,29.5/16,.93]});
+ obox(b,101.5-33.5,200,23,20,0,27.7,0,{front:['b122MidB',23/14,27.7/14],right:['c123MidBSide',20/14,27.7/14,.9],back:['s131MidBBack',23/14,27.7/14,.88]});
  b.box('b122Stone',101.5-50,29.9,Z(200),10.3,.8,20.3,0,.85);b.box('b122Stone',101.5-33.5,28.1,Z(200),23.3,.8,20.3,0,.85);
  hvac(b,101.5-36,198,28.5,3.2,2,1.6);hvac(b,101.5-28,203,28.5,2.6,1.6,1.3,.4);
  // ---- block (1,1) cross-street row east of the hotel: 3-storey brick behind the bar, 2-storey brown with a rooftop billboard
@@ -118,13 +121,11 @@ export function createBlock122(mats){
  obox(b,138,82,28,36,0,22.6,0,{front:['c123NearN',28/18,22.6/20.4],left:['b122RedTower',36/18,22.6/18],back:['b122Brick',9,7.5,.6],right:['b122Brick',12,7.5,.6]});
  b.box('b122Stone',138,22.85,Z(82),28.3,.5,36.3,0,.7);vbox(b,'photoShade',124.05,124.3,66,98,0,4.2,.8);
  billboard(b,'b122BillA',127.5,158,7.6,8,2.8,-.12);
- obox(b,144.5,246,13,20,0,29.5,0,{front:['c123YellowMain',13/12,29.5/12],left:['c123YellowSide',20/12,29.5/12,.88],right:['c123YellowSide',20/12,29.5/12,.8,0,29.5,.5]});
- obox(b,154,247,6,18,0,24,0,{front:['c123YellowWing',6/9,24/14]},{});
+ obox(b,144.5,246,13,20,0,29.5,0,{front:['c123YellowMain',13/12,29.5/12],left:['c123YellowSide',20/12,29.5/12,.88],right:['c123YellowSide',20/12,29.5/12,.8,0,29.5,.5],back:['s131YellowBack',13/12,29.5/12,.85]});
+ obox(b,154,247,6,18,0,24,0,{front:['c123YellowWing',6/9,24/14],right:['s131FakeSide',18/9,24/12,.9],back:['s131FakeBack',1,4,.88]},{roof:null}); // V131 fake house (shells131.js)
  b.box('b122Stone',144.5,29.9,Z(246),13.3,.8,20.3,0,.82);hvac(b,142.5,250,30.3,3,2,1.5);
- {const gx0=123.5,gx1=146.5,gv0=300,gv1=324,gh=32;
-  obox(b,(gx0+gx1)/2,(gv0+gv1)/2,gx1-gx0,gv1-gv0-.6,0,gh*.62,0,{left:['c123GothicSide',(gv1-gv0)/24,1,.9],right:['b122Brick',8,6,.7],back:['b122Brick',8,6,.7]});
-  wall(b,'b122Gothic',gx0,Z(gv0),gx1,Z(gv0),0,gh); // cut-out front incl. roofline, gables and turret, square to the avenue view
-  vbox(b,'b122Roof',gx0+.3,gx1-.3,gv0+.6,gv1-.6,gh*.62,gh*.65,.8);}
+ // V131: the Gothic hall (cut-out front + box) is now a facade-retention site, built in shells131.js gothicRetention()
+ addShells131(b,{Z,wall,quad,vbox,hvac});
  // chain-link fence + parked car in front of the yellow tower (block 2,1 corner lot)
  for(let x=126;x<152;x+=2.5){b.cylinder('photoSteel',x,.9,Z(220),.03,.03,1.8,5);}b.box('photoSteel',139,1.78,Z(220),26,.04,.04);b.plane('photoShade',139,.9,Z(220),26,1.7,0,0,.35);
  car122(b,'suv',134,Z(215),Math.PI/2+.2,{tone:.85});
@@ -138,7 +139,9 @@ export function createBlock122(mats){
   b.rod('c123Navy',[-.55,deck+1.45,-1.62],[-.55,deck+1.6,-1.62],.012);b.sphere('c123Navy',-.55,deck+1.64,-1.62,.075,.055,.075);b.cylinder('c123Navy',-.55,deck+1.61,-1.62,.07,.07,.03,12);
   b.pop();}
  b.pop();b.pop();
- const object=b.finish('L11 block 122 / Nick\'s Gaslight (ref image-48)');object.add(block125Haze());return{object,colliders:b.colliders,walks:b.walks};
+ const object=b.finish('L11 block 122 / Nick\'s Gaslight (ref image-48)');object.add(block125Haze());
+ const fill=createFill131(mats);object.add(fill.object);
+ return{object,colliders:[...b.colliders,...fill.colliders],walks:[...b.walks,...fill.walks]};
 }
 // F2 photo camera on the guideway, framing image-48 (V123 photogrammetric solve).
 export function block122Waypoint(){const p=cityToWorld(BX+CX,BZ+112);return{...p,label:'图三 · 酒店与 Nick\'s Gaslight',yaw:CITY_ANGLE+CYAW,pitch:.091,eye:EYE,floorY:EYE-1.75,fov:36,referenceAspect:1024/698,range:560,urbanPhoto:true};}
