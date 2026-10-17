@@ -85,7 +85,9 @@ export function mountControls(modal){if(!modal)return;css();const list=modal.que
   map[w.a][w.k]=e.code;save();w.render(msg);},true);}
 }
 // ---- one-time notice of the new layout ----
-export function onboard(){try{if(localStorage.getItem(SEEN))return;localStorage.setItem(SEEN,'1');}catch{return;}css();
+let obT=0;export function onboard(){try{if(localStorage.getItem(SEEN))return;}catch{return;}if(obT)return;
+ obT=setInterval(()=>{const menu=document.getElementById('menu'),load=document.getElementById('loading');if((menu&&!menu.hidden)||(load&&!load.hidden)||document.hidden||document.getElementById('k131-note'))return;clearInterval(obT);obT=0;showNote();},600);}
+function showNote(){try{localStorage.setItem(SEEN,'1');}catch{}css();
  const d=document.createElement('div');d.id='k131-note';
  d.innerHTML='<button class="k131-x" type="button">知道了</button>按键已统一调整：<br><b>E</b> 交互 / 拾取（长按整扎拿走） · <b>F</b> 手电筒 · <b>M</b> 地图 · <b>Tab</b> 背包<br><b>左键</b> 使用手中物品 · <b>右键</b> 检视 · <b>G</b> 丢弃 · <b>H</b> 隐藏仪表<br>旧的 Q / R / L 不再使用。完整列表与改键：<b>F1</b> 或 Esc 菜单「按键说明」。';
  const close=()=>{d.remove();removeEventListener('keydown',k,true);};const k=e=>{if(is(e,'help'))close();};
