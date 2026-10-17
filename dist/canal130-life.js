@@ -10,6 +10,8 @@
 // Textures: tools/canal130_assets.py -> assets/l11-v130 (low-fi 128-512 px, seamless where tiled, luminance normal maps,
 // six-face unwrap strips [+x,-x,+y,-y,+z,-z] for the bin and the planter).
 import * as T from './vendor/three.module.min.js';
+import {shrub131,bed131} from './shrub131.js?v=131';   // V131 cross-card plants
+import {canalKeepOut131,hits131} from './canal131-bridge.js?v=131';   // V131 placement exclusion
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import {urbanHash} from './urban-batch.js?v=69';
 import {CANAL} from './canal128-layout.js?v=128';
@@ -132,7 +134,7 @@ function bench(b,{seed=0}){ // cast iron ends + 5 wood slats (seat + back), face
 }
 function bin(b){ubox(b,'k130Bin',0,.48,0,.5,.96,.42);b.box('k130Iron',0,.98,0,.54,.04,.46);b.box('k130Iron',0,.03,0,.54,.06,.46);b.solid(0,0,.55,.48);}
 function planter(b,{seed=0,w=1.8}){ubox(b,'k130Planter',0,.32,0,w,.64,.8);
- for(let i=0;i<5;i++){const h=urbanHash(seed,i,0x130)%1000/1000;b.sphere('k130Leaf',-w/2+.25+(w-.5)*i/4,.68+h*.18,(h-.5)*.3,.26+h*.12,.22+h*.2,.24);if(h>.6)b.sphere('k130Bloom',-w/2+.3+(w-.5)*i/4,.86+h*.15,(h-.5)*.25,.07,.07,.07);}
+ bed131(b,0,.62,0,w-.2,.6,{seed:seed*7+3,step:.6,kinds:['boxwood','lavender','hosta','hydrangea','euonymus','grass']});   // V131 cross-card plants
  b.solid(0,0,w,.8);
 }
 function bike(b,{c='k130Red',ry=0}){ // leaning on a rack, wheel plane = local yz
@@ -172,7 +174,7 @@ function narrowboat(b,{seed=0,len=17,ry=0}){ // hull + cabin, painted sides (boa
   const pts=s>0?[[xa,ya,z],[xb,ya,z],[xb,yb,z],[xa,yb,z]]:[[xb,ya,z],[xa,ya,z],[xa,yb,z],[xb,yb,z]];quad(b,'k130Boat',pts,s>0?[[u0,va],[u1,va],[u1,vb],[u0,vb]]:[[u1,va],[u0,va],[u0,vb],[u1,vb]],[0,0,s]);}b.box('k130Cream',-.3,h2+.04,0,L-2.9,.08,W*.9);
  b.box('k130Green',L/2-1.8,h1+.2,0,.1,.5,W*.9);b.box('k130Fender',L/2-.02,h1-.2,0,.2,.35,.5);b.box('k130Fender',-L/2,h1-.2,0,.2,.35,.6);
  b.cylinder('k130Black',L/2-4,h2+.45,.35,.08,.08,.8,6);b.cylinder('k130Black',L/2-4,h2+.9,.35,.13,.1,.12,6);
- for(let i=0;i<3;i++){const x=-L/2+3+i*2.2,hh=urbanHash(seed,i,0xb0a)%100;if(hh<70){b.box('k130Rust',x,h2+.16,-.4,.5,.24,.3);b.sphere('k130Leaf',x,h2+.38,-.4,.3,.22,.2);if(hh<35)b.sphere('k130Bloom',x+.1,h2+.5,-.4,.08,.08,.08);}}
+ for(let i=0;i<3;i++){const x=-L/2+3+i*2.2,hh=urbanHash(seed,i,0xb0a)%100;if(hh<70){b.box('k130Rust',x,h2+.16,-.4,.5,.24,.3);shrub131(b,x,h2+.27,-.4,{kinds:hh<35?['lavender','hydrangea']:['hosta','boxwood','grass'],seed:seed*3+i,w:.55});}}
  if(seed%2)b.box('k130Navy',-L/2+5,h2+.2,.4,1.2,.3,.6);   // tarpaulin bundle
  b.box('k130Wood',-L/2+1.6,h2+.12,.5,2.2,.1,.18);              // spare plank on the roof
  for(let k=0;k<4;k++)b.box('k130Fender',-L/2+2+k*(L-4)/3,h0+.75,-W/2-.04,.25,.32,.08);
@@ -189,25 +191,33 @@ function buoy(b,{c='k130Red'}){b.cylinder(c,0,WY+.25,0,.32,.42,.6,8);b.cylinder(
 export function* canal130Life(b,plan,lod){
  addCanal130Materials(b.mats);patchFacades130(b.mats);
  const cn=plan.canal;if(!cn)return;const hs=(i,k)=>urbanHash(plan.ix*7+i,plan.iz*13+k,0x130a);
- const lw=cn.portalW?30:0,le=cn.portalE?112-30:112;
+ const lw=cn.portalW?30:0,le=cn.portalE?112-30:112,em=[];
+ // V131: moorings decided up front against the keep-out list (road bridges, lock gates, each other) so ladders can avoid them
+ const moor=[],moorKO=[];
+ if(!cn.hero){const KO=canalKeepOut131(cn,C),fit=(x,len,z,w)=>{for(const dx of[0,-3,3,-6,6,-9,9]){const xx=x+dx;if(!hits131(KO,xx-len/2,xx+len/2,z-w/2,z+w/2,.4))return xx;}return null;};
+  const nb=hs(4,4)%3;for(let i=0;i<nb;i++){const south=(hs(i,40)%2)===0,len=15+hs(i,43)%6,z=south?C.z0+1.2:C.z1-1.2,x=fit(Math.min(le-12,lw+14+i*((le-lw-28)/Math.max(1,nb))+(hs(i,41)%6)),len,z,2.05);if(x==null)continue;moor.push({k:'boat',x,z,len,south,seed:hs(i,42)});KO.push([x-len/2,x+len/2,z-1.03,z+1.03,'boat']);}
+  if(hs(5,5)%2){const x=fit(lw+(le-lw)*.62,10,C.z1-2.4,4.4);if(x!=null){moor.push({k:'pontoon',x});KO.push([x-5,x+5,C.z1-4.2,C.z1,'pontoon']);}}
+  for(const o of moor)moorKO.push(o.k==='boat'?[o.x-o.len/2,o.x+o.len/2,o.z-1.4,o.z+1.4]:[o.x-5.2,o.x+5.2,C.z1-4.2,C.z1+.5]);}
+ else for(const[x,z,len]of[[206,C.z0+1.2,18],[235,C.z1-1.35,12],[305,C.z1-1.2,16]])moorKO.push([x-plan.x-len/2,x-plan.x+len/2,z-1.5,z+1.5]);
  wallFacing(b,lw,le,WY);if(cn.portalW)wallFacing(b,0,lw,-4.4);if(cn.portalE)wallFacing(b,le,112,-4.4);yield;
  // outfalls + ladders on both walls
- for(const[z,s]of[[C.z0,1],[C.z1,-1]]){for(let k=0;k<3;k++){const x=lw+8+(le-lw-16)*(k+.2+.6*(hs(k,s>0?1:2)%100)/100)/3;outfall(b,x,z,s,WY,hs(k,s+5)%3===0);}
-  for(let x=lw+14+(hs(9,s+9)%8);x<le-6;x+=27)if(!lod)ladder(b,x,z,s,WY);}
+ for(const[z,s]of[[C.z0,1],[C.z1,-1]]){for(let k=0;k<3;k++){const x=lw+8+(le-lw-16)*(k+.2+.6*(hs(k,s>0?1:2)%100)/100)/3;const big=hs(k,s+5)%3===0;outfall(b,x,z,s,WY,big);em.push({k:'drain',x,z,s,big});}
+  for(let x=lw+14+(hs(9,s+9)%8);x<le-6;x+=27)if(!lod&&!hits131(moorKO,x-.4,x+.4,z-.5,z+.5,.3))ladder(b,x,z,s,WY);}   // V131: no ladder behind a moored boat
  yield;if(lod)return;
  // lifebuoys on the promenades (behind the railing), boats + pontoon + buoys on the water
  for(const[z,s]of[[C.z0-.6,-1],[C.z1+.6,1]])for(let x=lw+20+(hs(3,s+3)%10);x<le-8;x+=46)place(b,x,TOP,z,s>0?Math.PI:0,lifebuoy);
  if(!cn.hero){
-  const nb=hs(4,4)%3;for(let i=0;i<nb;i++){const south=(hs(i,40)%2)===0,x=Math.min(le-12,lw+14+i*((le-lw-28)/Math.max(1,nb))+(hs(i,41)%6));place(b,x,0,south?C.z0+1.2:C.z1-1.2,south?0:Math.PI,narrowboat,{seed:hs(i,42),len:15+hs(i,43)%6});}
-  if(hs(5,5)%2){const x=lw+(le-lw)*.62;place(b,x,0,C.z1-1.35,0,pontoon,{len:10});place(b,x+1,0,C.z1-3.4,.08,rowboat);}
-  if(cn.portalE||cn.portalW){const x=cn.portalE?le-9:lw+9;for(const z of[C.z0+6,C.z1-6])place(b,x,0,z,0,buoy,{c:z<C.mid?'k130Red':'k130Green'});}
+  for(const o of moor){if(o.k==='boat'){place(b,o.x,0,o.z,o.south?0:Math.PI,narrowboat,{seed:o.seed,len:o.len});em.push({k:'boat',x:o.x,z:o.z,len:o.len,w:2.05});}
+   else{place(b,o.x,0,C.z1-1.35,0,pontoon,{len:10});place(b,o.x+1,0,C.z1-3.4,.08,rowboat);em.push({k:'pontoon',x:o.x,z:C.z1-1.35,len:10,w:2.4},{k:'boat',x:o.x+1,z:C.z1-3.4,len:3.2,w:1.25,ry:.08});}}
+  if(cn.portalE||cn.portalW){const x=cn.portalE?le-9:lw+9;for(const z of[C.z0+6,C.z1-6]){place(b,x,0,z,0,buoy,{c:z<C.mid?'k130Red':'k130Green'});em.push({k:'buoy',x,z});}}
   // promenade furniture between the V128 trees (x = px0+6+22k) and lamps (x = px0+17+22k)
   const px0=cn.noRoadW?0:12,px1=cn.noRoadE?112:100;
   for(const[edge,s]of[[C.z0,-1],[C.z1,1]]){for(let x=px0+11.5,i=0;x<px1-3;x+=11,i++){const h=hs(i,s+20)%10,z=edge+s*2.6;
    if(h<4){place(b,x,TOP,z,s>0?Math.PI:0,bench,{seed:hs(i,s+21)});if(h<2)place(b,x+1.4,TOP,z-s*.05,0,bin);}
    else if(h<6)place(b,x,TOP,edge+s*3.6,0,planter,{seed:hs(i,s+22)});else if(h<7)place(b,x,TOP,edge+s*3.3,0,bikeRack,{seed:hs(i,s+23),n:3});}yield;}
  }
- if(cn.hero)yield* heroLife(b,plan);
+ if(cn.hero)yield* heroLife(b,plan,em);
+ 
 }
 // --------------------------------------------------------------------------------------------- photo reach (city x, see canal128 HERO)
 // a run of shopfronts on a building face at zf (facade normal dir), between x0..x1 (city x), units ~6-7 m
@@ -230,7 +240,7 @@ function shopRow(b,ox,x0,x1,zf,dir,seed,{fascia=true,awn=true,bladeAt=-1}={}){
 function cornice(b,ox,x0,x1,z0,z1,y,{key='k130Cornice',h=.55,p=.28}={}){
  b.box(key,(x0+x1)/2-ox,y-h/2,z0-p/2,x1-x0+2*p,h,p);b.box(key,(x0+x1)/2-ox,y-h/2,z1+p/2,x1-x0+2*p,h,p);
  b.box(key,x0-ox-p/2,y-h/2,(z0+z1)/2,p,h,z1-z0);b.box(key,x1-ox+p/2,y-h/2,(z0+z1)/2,p,h,z1-z0);}
-function* heroLife(b,plan){
+function* heroLife(b,plan,em=[]){
  const ox=plan.x,bx0=ox,bx1=ox+112,inb=(x0,x1)=>[Math.max(x0,bx0),Math.min(x1,bx1)],ok=([a,c])=>c-a>1;
  // shopfronts: grey slab (face z 32), grey slab + green glass (z 34), glassA podium behind the colonnade (z 31.4), white tower podium (z 84, facing -z)
  for(const[x0,x1,zf,dir,seed,o]of[[124,150,32,1,1,{bladeAt:1}],[258,285,34,1,3,{}],[285,322,34,1,5,{bladeAt:0}],[150,258,31.4,1,0,{fascia:true,awn:false}],[150,214,86.6,-1,2,{}],[253.5,320,86.6,-1,4,{bladeAt:2}]]){
@@ -246,7 +256,7 @@ function* heroLife(b,plan){
   yield;}
  {const[a,c]=inb(150,258);for(let x=Math.ceil(a/2.22)*2.22;x<c;x+=2.22)b.box('k130Alu',x-ox,TOP+9+12,34.12,.07,24,.24);yield;}
  // cafe terrace in front of Cafe Lumen (grey slab 124..150) and the bakery (258..285): tables + umbrellas on the promenade
- for(const[x0,x1,s]of[[126,148,1],[260,283,3]]){const[a,c]=inb(x0,x1);if(c-a<3)continue;let i=0;for(let x=a+1.6;x<c-1;x+=3.1,i++)if(Math.abs(x-Math.round(x/9)*9)>1.5)place(b,x-ox,TOP,i%2?36.9:35.2,0,cafeSet,{seed:s*31+i,umb:i%3!==1});
+ for(const[x0,x1,s]of[[126,142,1],[260,283,3]]){const[a,c]=inb(x0,x1);if(c-a<3)continue;let i=0;for(let x=a+1.6;x<c-1;x+=3.1,i++)if(Math.abs(x-Math.round(x/9)*9)>1.5)place(b,x-ox,TOP,i%2?36.9:35.2,0,cafeSet,{seed:s*31+i,umb:i%3!==1});
   for(const x of[a+.6,c-.6])place(b,x-ox,TOP,34.5,Math.PI/2,planter,{seed:s+x|0,w:1.2});yield;}
  // promenade furniture (south bank: between the V128 tree/lamp rhythm of 9 m; north bank under the 24 m lamps)
  {const[a,c]=inb(150,336);let i=0;for(let x=Math.ceil((a-4.5)/18)*18+4.5;x<c-2;x+=18,i++){if((x>124&&x<150)||(x>258&&x<285))continue;const k=urbanHash(i,x|0,0x5e)%4;
@@ -256,6 +266,6 @@ function* heroLife(b,plan){
  // canal lamps on the north plaza edge + footbridge heads
  {const[a,c]=inb(140,330);for(let x=Math.ceil(a/32)*32+20;x<c;x+=32)place(b,x-ox,TOP+.15,80.6,0,streetLamp130);yield;}
  // boats in the reach: a narrowboat on the south wall, a pontoon with a rowboat on the north wall, buoys toward the lock
- for(const[x,fn,z,ry,args]of[[206,narrowboat,C.z0+1.2,0,{seed:7,len:18}],[235,pontoon,C.z1-1.35,0,{len:12}],[236,rowboat,C.z1-3.5,.1,{}],[318,narrowboat,C.z1-1.2,Math.PI,{seed:8,len:16}],[425,buoy,C.z0+7,0,{c:'k130Red'}],[425,buoy,C.z1-7,0,{c:'k130Green'}]]){
-  if(x>=bx0&&x<bx1){place(b,x-ox,0,z,ry,fn,args);yield;}}
+ for(const[x,fn,z,ry,args]of[[206,narrowboat,C.z0+1.2,0,{seed:7,len:18}],[235,pontoon,C.z1-1.35,0,{len:12}],[236,rowboat,C.z1-3.5,.1,{}],[305,narrowboat,C.z1-1.2,Math.PI,{seed:8,len:16}],[425,buoy,C.z0+7,0,{c:'k130Red'}],[425,buoy,C.z1-7,0,{c:'k130Green'}]]){
+  if(x>=bx0&&x<bx1){place(b,x-ox,0,z,ry,fn,args);em.push(fn===buoy?{k:'buoy',x:x-ox,z}:fn===pontoon?{k:'pontoon',x:x-ox,z,len:args.len,w:2.4}:{k:'boat',x:x-ox,z,len:fn===rowboat?3.2:args.len,w:fn===rowboat?1.25:2.05,ry});yield;}}
 }

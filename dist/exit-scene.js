@@ -19,6 +19,7 @@ import {createUrbanMaterials} from './urban-materials.js?v=60';
 import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=69';
 import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=60';
 import * as P from './urban-props.js?v=60';
+import {shrub131} from './shrub131.js?v=131';   // V131 cross-card shrubs
 import * as S from './urban-smallprops.js?v=60';
 import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=76';
 import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=69';
@@ -34,7 +35,7 @@ const ground=(x,z)=>exitSurface(exitSample(x,z,{}),height(x,z));
 function along(s,d=0){const p=exitPoint(s);return{x:p.x+p.nx*d,z:p.z+p.nz*d,ry:Math.atan2(p.tx,p.tz)};}
 const roadHalf=approachRoadHalf;
 const place=(b,x,y,z,ry,fn,args)=>{b.push(x,y,z,ry);fn(b,args||{});b.pop();};
-function shrub(b,x,y,z,r=.8){b.cylinder('bark',x,y+.22,z,.055,.08,.45,5);for(let k=0;k<7;k++){const a=k*2.4;b.sphere('foliage',x+Math.cos(a)*r*.45,y+.52+(k%2)*.18,z+Math.sin(a)*r*.45,r*.56,.5+r*.20,r*.54,.76+k*.035);}}
+function shrub(b,x,y,z,r=.8){shrub131(b,x,y,z,{kinds:['boxwood','laurel','euonymus','juniper','hydrangea','grass'],seed:(x*7+z*13)|0,w:r*1.9});}   // V131: cross cards, was 7 icospheres
 function planter(b,x,y,z,w=3,d=1.6){b.box('concrete',x,y+.34,z,w,.68,d);b.box('bark',x,y+.685,z,w-.24,.04,d-.24);for(let u=-w/2+.6;u<w/2;u+=1.25)shrub(b,x+u,y+.73,z,.7);b.solid(x,z,w,d);}
 function serviceYard(b,w,d,seed){
  const r=urbanRandom(seed);b.box('asphalt',0,-.025,0,w,.05,d);

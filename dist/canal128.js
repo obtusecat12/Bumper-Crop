@@ -9,7 +9,9 @@ import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import * as P from './urban-props.js?v=60';
 import {CITY_ORIGIN,CITY_ANGLE} from './urban-layout.js?v=60';
 import {CANAL,CANAL_HERO} from './canal128-layout.js?v=128';
-import {canal130Life} from './canal130-life.js?v=130';   // V130-A canal life + fake interiors
+import {canal130Life} from './canal130-life.js?v=131';
+import {footbridge131} from './canal131-bridge.js?v=131';   // V131 footbridge: sett deck, stairs both sides
+import {hedge131} from './shrub131.js?v=131';   // V131 cross-card shrubs (no more icosphere balls)   // V130-A canal life + fake interiors
 const A=new URL('./assets/l11-v128/',import.meta.url).href,B=112,C=CANAL,WY=C.water;
 function tex(name,{srgb=true}={}){const t=new T.TextureLoader().load(A+name+'.webp?v=128');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 // facade tiles in metres [file, tile width, tile height] (floor/bay periods from reps.json)
@@ -75,14 +77,15 @@ function fbox(b,key,x0,x1,y0,y1,z0,z1,ox,oz,{tw,th}={}){
  b.add(g,key,0,0,0);g.dispose();
 }
 function quadGeo(b,key,pts,uvs,nn){const g=new T.BufferGeometry(),p=[],n=[],uv=[];for(const i of[0,1,2,0,2,3]){p.push(...pts[i]);n.push(...nn);uv.push(...uvs[i]);}g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('normal',new T.Float32BufferAttribute(n,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));b.add(g,key,0,0,0);g.dispose();}
-function railing(b,x0,x1,z,y,lod,face=1){
+function railing(b,x0,x1,z,y,lod,face=1,gap=null){
  const L=x1-x0;if(L<=.2)return;b.box('k128Rail',(x0+x1)/2,y+1.08,z,L,.06,.07);if(!lod){b.box('k128Rail',(x0+x1)/2,y+.55,z,L,.035,.035);for(let x=x0;x<=x1+.01;x+=2)b.box('k128Rail',x,y+.55,z,.06,1.1,.06);
   for(let x=x0+1;x<x1;x+=2)for(let k=1;k<6;k++)b.box('k128Rail',x-1+k*.333,y+.55,z,.018,1.0,.018);}
- b.solid((x0+x1)/2,z+face*.05,L,.3);
+ if(gap&&gap[1]>x0&&gap[0]<x1){for(const[u,v]of[[x0,gap[0]],[gap[1],x1]])if(v-u>.05)b.solid((u+v)/2,z+face*.05,v-u,.3);}   // V131: footbridge deck passes over
+ else b.solid((x0+x1)/2,z+face*.05,L,.3);
 }
 function railingZ(b,x,z0,z1,y,lod){const L=z1-z0;if(L<=.2)return;b.box('k128Rail',x,y+1.08,(z0+z1)/2,.07,.06,L);if(!lod){b.box('k128Rail',x,y+.55,(z0+z1)/2,.035,.035,L);for(let z=z0;z<=z1+.01;z+=2)b.box('k128Rail',x,y+.55,z,.06,1.1,.06);}b.solid(x,(z0+z1)/2,.3,L);}
 const place=(b,x,y,z,ry,fn,args)=>{b.push(x,y,z,ry);fn(b,args||{});b.pop();};
-function hedge(b,x0,x1,z,y,d=1.1,h=.75){b.box('k128Conc',(x0+x1)/2,y+.2,z,x1-x0,.4,d+.2);b.box('k128Hedge',(x0+x1)/2,y+.4+h*.4,z,x1-x0-.2,h*.8,d*.85);for(let x=x0+.5,i=0;x<x1-.3;x+=.9,i++)b.sphere('k128Hedge',x,y+.4+h*.78,z+((i*7)%3-1)*.12,.55,.22+.06*(i%3),d*.42);}
+function hedge(b,x0,x1,z,y,d=1.1,h=.75){b.box('k128Conc',(x0+x1)/2,y+.2,z,x1-x0,.4,d+.2);hedge131(b,x0+.1,x1-.1,z,y+.38,{d:d*.9,h:h*1.15,seed:(x0*7+z*3)|0});}   // V131: clipped privet cards on the kerb box
 // ---------------------------------------------------------------- per block
 export function* canalBlockTask(b,plan,lod){
  addCanal128Materials(b.mats);const cn=plan.canal,ex=plan.canalExtra;
@@ -104,7 +107,7 @@ export function* canalBlockTask(b,plan,lod){
  const px0=cn.noRoadW?0:12,px1=cn.noRoadE?B:100;
  for(const[za,zb,edge,s]of[[C.p0,C.z0,C.z0,-1],[C.z1,C.p1,C.z1,1]]){
   b.box('k128Pave',(px0+px1)/2,top/2,(za+zb)/2,px1-px0,top,zb-za);b.walk((px0+px1)/2,(za+zb)/2,px1-px0,zb-za,top);
-  railing(b,px0,px1,edge+s*.12,top,lod,s);yield;
+  railing(b,px0,px1,edge+s*.12,top,lod,s,cn.hero&&plan.x<=CANAL_CAM.x&&CANAL_CAM.x<plan.x+B?[CANAL_CAM.x-plan.x-1.8,CANAL_CAM.x-plan.x+1.8]:null);yield;
   if(!cn.hero){for(let x=px0+6,i=0;x<px1-4;x+=11,i++){const z=edge+s*(zb-za-1.4);if(i%2===0)place(b,x,top,z,0,P.addStreetTree,{seed:plan.seed+i*31+(s>0?7:0),scale:.8});else if(!lod)place(b,x,top,edge+s*.7,s>0?0:Math.PI,P.addStreetLight,{height:5.2,arm:.6});}yield;}
  }
  // crossing roads = bridges: deck soffit + green plate girder facing the canal, girder parapet; portal headwalls
@@ -163,17 +166,14 @@ function* hero(b,plan,lod){
    // shrub hedges along the south edge of the plaza near the bridge (photo: right bank greenery)
    if(c>290)hedge(b,Math.max(a,292)-ox,c-ox,C.p1+.9,top,1.2);}}
  // left promenade: dense trees + lamps (photo: left bank)
- {const a=Math.max(112,bx0),c=Math.min(336,bx1);for(let x=Math.ceil((a+3)/9)*9;x<c-3;x+=9){const i=Math.round(x/9);if(i%3===0||(i%3===2&&x<170))place(b,x-ox,top,C.p0+1.6,0,P.addStreetTree,{seed:4000+i*13,scale:.95+(i%4)*.06});else place(b,x-ox,top,C.z0-.7,Math.PI,P.addStreetLight,{height:5,arm:.5});}
+ {const a=Math.max(112,bx0),c=Math.min(336,bx1);for(let x=Math.ceil((a+3)/9)*9;x<c-3;x+=9){const i=Math.round(x/9);if(Math.abs(x-CANAL_CAM.x)<6.8){if(x>CANAL_CAM.x&&x+4.5>=a&&x+4.5<c)place(b,x+4.5-ox,top,C.p0+1.4,0,P.addStreetTree,{seed:4000+i*13,scale:.95});continue;}if(i%3===0||(i%3===2&&x<170))place(b,x-ox,top,C.p0+1.6,0,P.addStreetTree,{seed:4000+i*13,scale:.95+(i%4)*.06});else place(b,x-ox,top,C.z0-.7,Math.PI,P.addStreetLight,{height:5,arm:.5});}
   // right promenade lamps + low hedges west of the plaza
-  for(let x=Math.ceil((a+5)/24)*24;x<c-3;x+=24)if(!lod)place(b,x-ox,top,C.z1+.7,0,P.addStreetLight,{height:4,arm:.4});
-  if(a<196)hedge(b,a-ox+1,Math.min(c,196)-ox,C.p1-1.4,top,1.1);yield;}
- // footbridge (camera platform) at city x 147.25..150.75
- if(bx0<=CANAL_CAM.x&&CANAL_CAM.x<bx1){const x=CANAL_CAM.x-ox,d=CANAL_CAM.deck,z0=C.p0+3,z1=C.p1-3;
-  for(const xs of[x-1.75,x+1.75])b.box('k128Bridge',xs,d-.5,(z0+z1)/2,.18,1.0,z1-z0);b.box('k128Conc',x,d-.1,(z0+z1)/2,3.5,.2,z1-z0);
-  b.walk(x,(z0+z1)/2,3.5,z1-z0,d);railingZ(b,x-1.7,z0,z1,d,lod);railingZ(b,x+1.7,z0+3,z1-3,d,lod);
-  for(const z of[z0+1.5,z1-1.5]){for(let k=0;k<14;k++){const h=d-.15*k;b.box('k128Steps',x+1.75+.3*k+.15,h/2,z,.3,h,2.6);}
-   b.walk(x+1.75+2.1,z,4.2,2.6,top+(d-top)/2,-(d-top)/4.2,0);}
-  for(const z of[C.z0+.6,C.z1-.6])b.box('k128Conc',x,(WY+d-.2)/2,z,1.2,d-.2-WY,1.2);yield;}
+  for(let x=Math.ceil((a+5)/24)*24;x<c-3;x+=24)if(!lod&&Math.abs(x-CANAL_CAM.x)>=6.8)place(b,x-ox,top,C.z1+.7,0,P.addStreetLight,{height:4,arm:.4});
+  if(a<196){const h0=a+1,h1=Math.min(c,196),g0=CANAL_CAM.x-7,g1=CANAL_CAM.x+7;   // V131: gap for the footbridge stairs
+   if(h1>h0)for(const[u,v]of(g0<h1&&g1>h0?[[h0,Math.min(g0,h1)],[Math.max(g1,h0),h1]]:[[h0,h1]]))if(v-u>1)hedge(b,u-ox,v-ox,C.p1-1.4,top,1.1);}yield;}
+ // footbridge (camera platform) at city x 147.25..150.75 -- V131: rebuilt in canal131-bridge.js (deck reaches 2 m onto each
+ // promenade, stairs on both sides at both ends, sett deck + kerbs, end railings)
+ if(bx0<=CANAL_CAM.x&&CANAL_CAM.x<bx1){yield;footbridge131(b,{x:CANAL_CAM.x-ox,d:CANAL_CAM.deck,z0:C.p0+2,z1:C.p1-2,top,WY,lod,railZ:railingZ,railX:railing,piers:[C.z0+.6,C.z1-.6]});yield;}
  // distant skyline (only in block A's batch; it sits >= 3 blocks east so it never meets the procedural blocks there)
  if(plan.ix===CANAL_HERO.a){const S=[['k128White2',799,824,23,48,62],['k128White2',849,861,67,79,56],['k128White2',769,783,117,131,49],['k128Gray',749,761,-4,8,44],['k128Gray',749,766,8,25,43],['k128Green',709,726,15,32,36],['k128Gray',849,865,49,65,44],['k128White',799,813,77,91,34],['k128Gray',749,771,87,109,25],['k128White2',749,760,104,115,27]];
   S.push(['k128White',709,721,14,54,19],['k128Gray',729,741,-2,13,26],['k128Gray',749,761,54,68,19],['k128White2',769,781,68,88,23],['k128Gray',749,761,97,121,20],['k128White',709,721,117,140,16],['k128Gray',709,721,-22,0,21],['k128White2',789,801,38,64,16]);   // V129: low far band on the horizon (photo y 335..360)

@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.min.js';
+import {bed131} from './shrub131.js?v=131';   // V131 cross-card plants
 
 // All dimensions are metres. The front of a lot is +Z, and every lot is centred.
 // Geometry is emitted into the supplied material batch; there are no Mesh objects
@@ -280,7 +281,7 @@ const builders = {
     at(b,0,0,-d/2+backD/2+.4,0,()=>{shops(b,bw,backD,h,['market','cleaners','pharmacy','photo'],r,lod);lowRoof(b,bw,backD,h,r,lod);});
     at(b,-w/2+sideD/2+.4,0,d*.10,PI/2,()=>{shops(b,sideW,sideD,h,['bakery','travel','photo'],r,lod);equipment(b,sideW,sideD,h,r,lod);});
     b.box('sidewalk',w*.12,.10,d*.1,w*.7,.2,d*.68);b.walk(w*.12,d*.1,w*.7,d*.68,.2);
-    for(const x of [w*.04,w*.31]) {b.box('concrete',x,.39,d*.33,2.5,.78,1.1);b.box('dark',x,.78,d*.33,2.3,.04,.9);b.sphere('foliage',x,.97,d*.33,1.03,.43,.43);}
+    for(const x of [w*.04,w*.31]) {b.box('concrete',x,.39,d*.33,2.5,.78,1.1);b.box('dark',x,.78,d*.33,2.3,.04,.9);bed131(b,x,.79,d*.33,2.2,.8,{seed:(x*17)|0,step:.7,kinds:['boxwood','laurel','euonymus','hydrangea','grass']});}
     return h+4.4;
   },
   clinic({b,w,d,r,lod}) {
@@ -536,7 +537,7 @@ Object.assign(builders, {
     for(let i=0;i<3;i++) {
       const ww=w*[.92,.70,.47][i],dd=d*[.85,.69,.51][i],x=w*[0,.10,.20][i],z=-d*[0,.04,.09][i];
       at(b,x,0,z,0,()=>{windowBand(b,ww,dd,h,f[i],fh,'white',{inset:.48,pier:.19,spacing:4.7,slab:.82,lod});parapet(b,ww,dd,h+f[i]*fh,'white',.38);});h+=f[i]*fh;
-      if(!lod&&i<2){const px=x-ww*.37;for(let q=0;q<3;q++){const pz=z-dd*.26+q*dd*.25;b.box('concrete',px,h+.24,pz,1.7,.48,2);b.sphere('foliage',px,h+.60,pz,.72,.48,.86);}}
+      if(!lod&&i<2){const px=x-ww*.37;for(let q=0;q<3;q++){const pz=z-dd*.26+q*dd*.25;b.box('concrete',px,h+.24,pz,1.7,.48,2);bed131(b,px,h+.48,pz,1.5,1.8,{seed:(q*31+i*7)|0,step:.75,kinds:['juniper','grass','boxwood','lavender']});}}
     }
     at(b,w*.20,0,-d*.09,0,()=>equipment(b,w*.45,d*.49,h+.1,r,lod,.8));
     door(b,-w*.14,d*.425-.36,.2,2.2,2.8,true,lod);b.box('white',-w*.14,3.14,d*.425+.61,Math.min(7,w*.38),.21,1.5);

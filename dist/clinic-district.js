@@ -1,4 +1,5 @@
 import {addClinicStreetlife,PATIO_RECT} from './clinic-streetlife.js?v=60';
+import {hedge131,shrub131} from './shrub131.js?v=131';   // V131 cross-card shrubs
 import {addFountainLiquid,finishFountainLiquid} from './fountain-water-v54.js?v=60';
 import {fountainCenter} from './clinic-district-materials.js?v=60';
 import * as T from './vendor/three.module.min.js';
@@ -59,7 +60,7 @@ export function createClinicDistrict(mats){const center=clinicToWorld(49,46);fou
  for(let k=0;k<64;k++){const a=k*PI/32,c=(k+1)*PI/32,point=(t,r)=>[49+Math.cos(t)*r,.12,46+Math.sin(t)*r],edge=t=>5.22/Math.max(Math.abs(Math.cos(t)),Math.abs(Math.sin(t)));quad(b,'district:pavers',[point(a,5.22),point(c,5.22),point(c,edge(c)),point(a,edge(a))]);}fountain(b,49,46);
  for(let i=0;i<treePositions.length;i++){const[x,z]=treePositions[i];palm(b,x,z,.12,8.1+(i%3)*.75,901+i,1.2,true);}
  for(const[x,z,ry]of[[60.7,37,-PI/2],[60.7,49,-PI/2],[56,55,PI],[58,33,0]])place(b,x,.12,z,ry,P.addBench);
- for(const x of[28.4,70.6])for(const z of[34,56.5]){b.box('photoGranite',x,.32,z,1.35,.60,7.6);b.box('bark',x,.627,z,1.12,.04,7.32);b.solid(x,z,1.35,7.6);for(let k=0;k<9;k++){const q=z-3.2+k*.8;b.sphere('foliage',x,.96,q,.55,.48,.61,.82+(k%3)*.05);for(let j=0;j<2;j++)b.plane('photoLeaf',x,1.05,q,1.1,.80,j*PI/2,0,.92);}}
+ for(const x of[28.4,70.6])for(const z of[34,56.5]){b.box('photoGranite',x,.32,z,1.35,.60,7.6);b.box('bark',x,.627,z,1.12,.04,7.32);b.solid(x,z,1.35,7.6);b.push(x,.64,z,PI/2);hedge131(b,-3.55,3.55,0,0,{d:1.0,h:.62,seed:(x*13+z*7)|0,kind:'privet'});b.pop();for(let k=0;k<4;k++)shrub131(b,x+((k*37)%5-2)*.08,.64,z-2.7+k*1.8,{kinds:['boxwood','euonymus','laurel'],seed:(x*3+k*11)|0,w:.85});}
  for(const[x,z]of[[36,31.8],[62,55.8],[28,60]])place(b,x,x<29?.02:.12,z,0,P.addTrashBin);
  for(const[x,z]of[[29,25],[68,25],[68,61]])place(b,x,.02,z,PI,P.addStreetLight,{height:7.8,arm:1.6});
  for(const x of[44,52])place(b,x,.02,27.3,0,P.addBollard);place(b,28.1,.02,24,PI/2,S.addBikeRack);place(b,42.6,.02,20.5,0,S.addNewspaperBox,{color:'blue',seed:53});

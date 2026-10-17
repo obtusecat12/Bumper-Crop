@@ -2,6 +2,7 @@ import {addPlazaMemory} from './plaza-memory.js?v=60';
 import * as T from './vendor/three.module.min.js';
 import {UrbanBatch} from './urban-batch.js?v=60';
 import * as P from './urban-props.js?v=60';
+import {bed131} from './shrub131.js?v=131';   // V131 cross-card plants
 import * as S from './urban-smallprops.js?v=60';
 import {adFor,adFace} from './advertising-assets.js?v=60';
 import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=60';
@@ -83,7 +84,7 @@ function plazaTable(b){
  for(const x of[-1.13,1.13]){b.cylinder('district:terrazzo',x,.24,0,.23,.28,.48,16);b.cylinder('district:benchWood',x,.52,0,.35,.34,.075,24);b.circle(x,0,.40);}
  b.circle(0,0,.87);
 }
-function lowPlanter(b){b.box('district:terrazzo',0,.30,0,1.14,.60,1.14);b.box('bark',0,.61,0,.95,.025,.95);b.solid(0,0,1.15,1.15);for(const[x,z]of[[-.2,-.2],[.2,.2],[0,-.12]])b.sphere('foliage',x,.83,z,.33,.30,.33);}
+function lowPlanter(b){b.box('district:terrazzo',0,.30,0,1.14,.60,1.14);b.box('bark',0,.61,0,.95,.025,.95);b.solid(0,0,1.15,1.15);bed131(b,0,.62,0,.9,.9,{seed:17,step:.45,scale:1.15,kinds:['boxwood','hosta','lavender','grass']});}
 function serviceTrolley(b){
  for(const x of[-.32,.32])for(const z of[-.43,.43]){b.cylinder('rubber',x,.09,z,.085,.085,.045,10,0,PI/2);b.rod('district:paintMetal',[x,.09,z],[x,.78,z],.027);}
  for(const y of[.24,.77]){b.box('district:paintMetal',0,y,0,.70,.04,.95);for(const x of[-.34,.34])b.box('district:paintMetal',x,y+.06,0,.028,.12,.95);}
