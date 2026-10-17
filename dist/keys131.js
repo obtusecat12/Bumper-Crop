@@ -63,7 +63,7 @@ function css(){if(document.getElementById('k131-css'))return;const s=document.cr
 .k131-kv{display:inline-block;min-width:22px;padding:0 5px;border:1px solid currentColor;border-radius:2px;text-align:center}
 .k131-foot{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:8px}
 .k131-msg{opacity:.8;font-size:14px}
-#k131-note{position:fixed;left:50%;top:14%;transform:translateX(-50%);z-index:60;max-width:min(92vw,620px);background:#141210;color:#f2e6c4;border:2px solid #e2b04a;padding:12px 16px;font-family:Vonwaon16,Vonwaon12,monospace;font-size:16px;line-height:1.5;box-shadow:0 6px 0 rgba(0,0,0,.5);pointer-events:auto}
+#k131-note{position:fixed;left:50%;top:14%;transform:translateX(-50%);z-index:9000;max-width:min(92vw,620px);background:#141210;color:#f2e6c4;border:2px solid #e2b04a;padding:12px 16px;font-family:Vonwaon16,Vonwaon12,monospace;font-size:16px;line-height:1.5;box-shadow:0 6px 0 rgba(0,0,0,.5);pointer-events:auto}
 #k131-note b{color:#e2b04a;font-weight:normal}
 #k131-note .k131-x{float:right;margin-left:12px;font:inherit;cursor:pointer;background:#e2b04a;color:#141210;border:0;padding:0 8px}
 `;document.head.append(s);}
@@ -89,7 +89,7 @@ export function onboard(){try{if(localStorage.getItem(SEEN))return;localStorage.
  const d=document.createElement('div');d.id='k131-note';
  d.innerHTML='<button class="k131-x" type="button">知道了</button>按键已统一调整：<br><b>E</b> 交互 / 拾取（长按整扎拿走） · <b>F</b> 手电筒 · <b>M</b> 地图 · <b>Tab</b> 背包<br><b>左键</b> 使用手中物品 · <b>右键</b> 检视 · <b>G</b> 丢弃 · <b>H</b> 隐藏仪表<br>旧的 Q / R / L 不再使用。完整列表与改键：<b>F1</b> 或 Esc 菜单「按键说明」。';
  const close=()=>{d.remove();removeEventListener('keydown',k,true);};const k=e=>{if(is(e,'help'))close();};
- d.querySelector('.k131-x').onclick=close;addEventListener('keydown',k,true);(document.getElementById('game')||document.body).append(d);setTimeout(close,25000);}
+ d.querySelector('.k131-x').onclick=close;addEventListener('keydown',k,true);document.body.append(d);setTimeout(close,25000);}
 export const keys131={ACTIONS,is,label,canon,fmt,keyName,mountControls,onboard,refresh:refreshAll,get map(){return map;}};
 globalThis.__bcKeys131=keys131;
 if(typeof document!=='undefined'){if(document.readyState==='loading')addEventListener('DOMContentLoaded',watch);else watch();}
