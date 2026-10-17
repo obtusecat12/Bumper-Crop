@@ -318,17 +318,19 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
     if(y.meta.len<=0){const k=inventory.slots.findIndex(s=>s?.id==='yarn');if(k>=0)inventory.take(k);endYarn();toast('一团毛线放完了。');}}}
   fxTick(dt,true);
  }
+ // V131 perf: overlay layers are looked up once and only written when their value changes (was 7 querySelector + 7 style writes every frame)
+ const fxEl={},fxV={};function fxSet(o,c,v){const e=fxEl[c]&&fxEl[c].isConnected?fxEl[c]:(fxEl[c]=o.querySelector('.'+c));if(!e)return;const sv=String(v);if(fxV[c]===sv&&e.style.opacity===sv)return;fxV[c]=sv;e.style.opacity=sv;}
  function fxTick(dt,inL1){const o=ov();
   if(fx.bleed>0){fx.bleed-=dt;state.health=Math.max(1,state.health-dt*.55);}
   if(fx.toxic>0){fx.toxic-=dt;state.sanity=Math.max(0,state.sanity-dt*.25);}
   if(fx.cold>0){fx.cold-=dt;state.stamina=Math.min(state.stamina,8);}
   fx.gasIn=Math.max(0,(fx.gasIn||0)-dt);fx.flash=Math.max(0,fx.flash-dt*1.6);fx.lastHurt=Math.max(0,fx.lastHurt-dt);
-  o.querySelector('.fx-red').style.opacity=String(Math.min(.85,(fx.bleed>0?.25+.2*Math.sin(performance.now()/260):0)+fx.lastHurt));o.querySelector('.fx-cold').style.opacity=String(Math.min(.6,fx.cold/8));
-  fx.drunk=Math.max(0,(fx.drunk||0)-dt);fx.smoke=Math.max(0,(fx.smoke||0)-dt);o.querySelector('.fx-drunk').style.opacity=String(Math.min(.9,fx.drunk/20)*(.75+.25*Math.sin(performance.now()/700)));o.querySelector('.fx-smoke').style.opacity=String(Math.min(.7,fx.smoke/6));
-  o.querySelector('.fx-gas').style.opacity=String(Math.min(.7,fx.gasIn*1.6+(fx.toxic>0?.08:0)));o.querySelector('.fx-flash').style.opacity=String(fx.flash);
+  fxSet(o,'fx-red',Math.min(.85,(fx.bleed>0?.25+.2*Math.sin(performance.now()/260):0)+fx.lastHurt));fxSet(o,'fx-cold',Math.min(.6,fx.cold/8));
+  fx.drunk=Math.max(0,(fx.drunk||0)-dt);fx.smoke=Math.max(0,(fx.smoke||0)-dt);fxSet(o,'fx-drunk',Math.min(.9,fx.drunk/20)*(.75+.25*Math.sin(performance.now()/700)));fxSet(o,'fx-smoke',Math.min(.7,fx.smoke/6));
+  fxSet(o,'fx-gas',Math.min(.7,fx.gasIn*1.6+(fx.toxic>0?.08:0)));fxSet(o,'fx-flash',fx.flash);
   if(inL1){if(fx.match>0){fx.match-=dt;camera.getWorldPosition(v);camera.getWorldDirection(fwd);const fl=.9+.25*Math.sin(performance.now()/47)+.12*Math.sin(performance.now()/13);W().setHandLight(Math.min(1,fx.match/2)*fl*6,v.clone().addScaledVector(fwd,.35).add(new T.Vector3(0,-.15,0)),fwd);}else W().setHandLight(0);}
-  else{if(fx.match>0)fx.match-=dt;const fm=fx.match>0?Math.min(1,fx.match/2)*(.85+.15*Math.sin(performance.now()/47)):0;o.querySelector('.fx-match').style.opacity=String(fm);}
-  if(inL1)o.querySelector('.fx-match').style.opacity='0';else o.classList.remove('fuyou');
+  else{if(fx.match>0)fx.match-=dt;const fm=fx.match>0?Math.min(1,fx.match/2)*(.85+.15*Math.sin(performance.now()/47)):0;fxSet(o,'fx-match',fm);}
+  if(inL1)fxSet(o,'fx-match',0);else o.classList.remove('fuyou');
   // solid nitrogen sublimates in the bag
   n2T-=dt;if(n2T<=0){n2T=2;for(let k=0;k<inventory.slots.length;k++){const s=inventory.slots[k];if(s?.id!=='nitrogen')continue;const m=s.items[0];if(m?.born&&Date.now()-m.born>150000){inventory.take(k);toast('一块固态氮在背包里升华光了。');break;}}}
  }

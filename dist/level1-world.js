@@ -12,18 +12,27 @@ import {l1Rebase,L1_BAY as B,L1_CHUNK as K,L1_H as H,L1_COL,L1_WALL,l1Hash,l1Wal
 const LIGHT_GLSL=`${L1_LAYOUT_GLSL}
 uniform ivec2 l1OB;// floating-origin offset in bays (integer, exact)
 float lh(int x,int z,int s){return l1h(x+l1OB.x,z+l1OB.y,s);}
-bool lwx(int x,int z){return l1wx(x+l1OB.x,z+l1OB.y);}bool lwz(int x,int z){return l1wz(x+l1OB.x,z+l1OB.y);}
-bool lrx(int x,int z){return l1rx(x+l1OB.x,z+l1OB.y);}bool lrz(int x,int z){return l1rz(x+l1OB.x,z+l1OB.y);}
-int lsec(int x,int z){return l1sec(x+l1OB.x,z+l1OB.y);}
-bool lcol(int x,int z){return l1col(x+l1OB.x,z+l1OB.y);}bool ldx(int x,int z){return l1dx(x+l1OB.x,z+l1OB.y);}bool ldz(int x,int z){return l1dz(x+l1OB.x,z+l1OB.y);}
+// V131 perf: every per-bay layout predicate the light loops need is baked on the CPU (same JS layout functions the
+// geometry uses) into a 64x64 RGBA32UI window addressed by global bay & 63; R = flag bits, G/B = raw 24-bit hashes 10/20.
+// Replaces several hundred hash evaluations per fragment with ~40 texel fetches. Bits: 0-2 sector, 3 wx, 4 wz, 5 rx, 6 rz,
+// 7 column, 8 dx, 9 dz, 10 in-cluster, 11-14 h5>.55/.4/.42/.3, 15 h6>.32, 16-17 floor(h11*4), 18 h7>.35, 19 h8>.5, 20 h17>.35, 21 h18>.5
+uniform highp usampler2D l1Lay;
+uvec4 layQ(int x,int z){return texelFetch(l1Lay,(ivec2(x,z)+l1OB)&63,0);}
+uint lay(int x,int z){return layQ(x,z).r;}uint layG(int x,int z){return texelFetch(l1Lay,ivec2(x,z)&63,0).r;}
+bool lb(uint v,int b){return ((v>>uint(b))&1u)!=0u;}
+bool lwx(int x,int z){return lb(lay(x,z),3);}bool lwz(int x,int z){return lb(lay(x,z),4);}
+bool lrx(int x,int z){return lb(lay(x,z),5);}bool lrz(int x,int z){return lb(lay(x,z),6);}
+int lsec(int x,int z){return int(lay(x,z)&7u);}
+bool lcol(int x,int z){return lb(lay(x,z),7);}bool ldx(int x,int z){return lb(lay(x,z),8);}bool ldz(int x,int z){return lb(lay(x,z),9);}
+bool linc(int x,int z){return lb(lay(x,z),10);}
 float l1AmbK=1.0,l1T=0.0;uniform vec4 l1Pt[8];uniform int l1PtN;uniform vec4 l1FlP;uniform vec4 l1FlD;uniform float l1Power;uniform float l1Time;uniform vec3 l1Amb;uniform vec3 l1Lamp;
 float l1fall(vec3 d,float k,float range){float r2=dot(d,d);float c=clamp(1.0-r2/(range*range),0.0,1.0);return c*c/(1.0+r2*k);}
 float l1vis(int fx,int fz,int bx,int bz){int dx=bx-fx,dz=bz-fz;if(dx==0&&dz==0)return 1.0;int xl=max(fx,bx),zl=max(fz,bz);
  bool a=(dx!=0&&lwz(xl,fz))||(dz!=0&&lwx(bx,zl));bool b=(dz!=0&&lwx(fx,zl))||(dx!=0&&lwz(xl,bz));
  if(!a&&!b)return 1.0;if(!a||!b)return .55;return .04;}
 vec3 l1light(vec3 P,vec3 N){
- vec3 Q=P+N*.06;int fx=int(floor(Q.x/L1B)),fz=int(floor(Q.z/L1B));vec3 acc=vec3(0.0);float up=0.0;l1cset(fx+l1OB.x,fz+l1OB.y);
- for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){int bx=fx+i,bz=fz+j;int k=lsec(bx,bz);float hl=lh(bx,bz,5);if(k==0&&hl<=.55||k==2&&hl<=.4||k==3&&hl<=.42||k==4&&hl<=.3)continue;if(l1inc(bx+l1OB.x,bz+l1OB.y))continue;
+ vec3 Q=P+N*.06;int fx=int(floor(Q.x/L1B)),fz=int(floor(Q.z/L1B));vec3 acc=vec3(0.0);float up=0.0;
+ for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){int bx=fx+i,bz=fz+j;uint Lb=lay(bx,bz);int k=int(Lb&7u);if(k==0&&!lb(Lb,11)||k==2&&!lb(Lb,12)||k==3&&!lb(Lb,13)||k==4&&!lb(Lb,14))continue;if(lb(Lb,10))continue;
   // Aquila batten at 3.18 / Gild double battens hung at 4.75 under the open truss / Gothic warm lantern under the crown
   float ly=k==1?4.75:k==2?3.7:k==3?3.84:k==4?3.39:3.18,LI=k==1?4.8:k==2?4.0:k==3?3.5:k==4?3.9:4.3,LR=k==1?19.0:k==2?14.0:k==3?15.0:k==4?13.0:15.0;vec3 LC=k==2?vec3(1.12,.78,.46):k==1?vec3(1.0,1.0,.97):k==3?vec3(.97,1.0,1.03):k==4?vec3(1.06,.97,.82):vec3(1.0);LC=mix(LC,vec3(1.1,.66,.36),l1T)*(1.0-.3*l1T);
   vec3 lp=vec3(float(bx)*L1B+4.0,ly,float(bz)*L1B+4.0);vec3 d=lp-P;vec3 l=normalize(d);
@@ -31,18 +40,18 @@ vec3 l1light(vec3 P,vec3 N){
   float vv=l1vis(fx,fz,bx,bz);acc+=LC*(LI*ndl*lobe*l1fall(d,k==1?.12:.33,LR)*vv);up+=l1fall(d,.2,13.0)*vv;}
  // vertical tubes on columns (nearest corner neighbourhood)
  int cx0=int(floor(Q.x/L1B+.5)),cz0=int(floor(Q.z/L1B+.5));
- for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){int cx=cx0+i,cz=cz0+j;if(!(lcol(cx,cz)&&lh(cx,cz,6)>.32)||lsec(cx,cz)!=0)continue;int f=int(floor(lh(cx,cz,11)*4.0));
+ for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){int cx=cx0+i,cz=cz0+j;uint Lc=lay(cx,cz);if(!(lb(Lc,7)&&lb(Lc,15))||(Lc&7u)!=0u)continue;int f=int((Lc>>16)&3u);
   vec3 dir=f==0?vec3(1,0,0):f==1?vec3(-1,0,0):f==2?vec3(0,0,1):vec3(0,0,-1);vec3 lp=vec3(float(cx)*L1B,2.0,float(cz)*L1B)+dir*.52;vec3 d=lp-P;
   float side=smoothstep(-.05,.25,dot(P-lp+dir*.1,dir)+.0);vec3 l=normalize(d);float ndl=max(dot(N,l),0.0)*.9+.1;
   acc+=(1.0-.5*l1T)*5.2*ndl*side*l1fall(d,.45,13.0);}
  // vertical tubes on walls
  for(int j=0;j<=1;j++)for(int i=-1;i<=1;i++){int ix=fx+i,iz=fz+j;if(lrx(ix,iz)){if(lsec(ix,iz)!=0)continue;float s=lh(0,iz,96)>.5?1.0:-1.0;float x0=float(ix)*L1B;vec3 lp=vec3(clamp(P.x,x0+.5,x0+7.5),clamp(P.y,1.45,2.55),float(iz)*L1B+s*.3);vec3 d=lp-P;float side=smoothstep(.0,.2,(P.z-float(iz)*L1B)*s);vec3 l=normalize(d);acc+=(1.0-.5*l1T)*1.5*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.9,10.0);continue;}
-  if(!(lwx(ix,iz)&&!ldx(ix,iz)&&lh(ix,iz,7)>.35))continue;{int ks=lsec(ix,iz);if(ks!=0&&ks!=2)continue;}float s=lh(ix,iz,8)>.5?1.0:-1.0;
-  vec3 lp=vec3(float(ix)*L1B+4.0+(lh(ix,iz,10)-.5)*4.0,2.0,float(iz)*L1B+s*.3);vec3 d=lp-P;float side=smoothstep(.0,.2,(P.z-float(iz)*L1B)*s);vec3 l=normalize(d);
+  uvec4 Lw=layQ(ix,iz);if(!(lb(Lw.r,3)&&!lb(Lw.r,8)&&lb(Lw.r,18)))continue;{int ks=int(Lw.r&7u);if(ks!=0&&ks!=2)continue;}float s=lb(Lw.r,19)?1.0:-1.0;
+  vec3 lp=vec3(float(ix)*L1B+4.0+(float(Lw.g)/16777216.0-.5)*4.0,2.0,float(iz)*L1B+s*.3);vec3 d=lp-P;float side=smoothstep(.0,.2,(P.z-float(iz)*L1B)*s);vec3 l=normalize(d);
   acc+=(1.0-.5*l1T)*3.1*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.55,11.0);}
  for(int j=-1;j<=1;j++)for(int i=0;i<=1;i++){int ix=fx+i,iz=fz+j;if(lrz(ix,iz)){if(lsec(ix,iz)!=0)continue;float s=lh(ix,0,97)>.5?1.0:-1.0;float z0=float(iz)*L1B;vec3 lp=vec3(float(ix)*L1B+s*.3,clamp(P.y,1.45,2.55),clamp(P.z,z0+.5,z0+7.5));vec3 d=lp-P;float side=smoothstep(.0,.2,(P.x-float(ix)*L1B)*s);vec3 l=normalize(d);acc+=(1.0-.5*l1T)*1.5*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.9,10.0);continue;}
-  if(!(lwz(ix,iz)&&!ldz(ix,iz)&&lh(ix,iz,17)>.35))continue;{int ks=lsec(ix,iz);if(ks!=0&&ks!=2)continue;}float s=lh(ix,iz,18)>.5?1.0:-1.0;
-  vec3 lp=vec3(float(ix)*L1B+s*.3,2.0,float(iz)*L1B+4.0+(lh(ix,iz,20)-.5)*4.0);vec3 d=lp-P;float side=smoothstep(.0,.2,(P.x-float(ix)*L1B)*s);vec3 l=normalize(d);
+  uvec4 Lw=layQ(ix,iz);if(!(lb(Lw.r,4)&&!lb(Lw.r,9)&&lb(Lw.r,20)))continue;{int ks=int(Lw.r&7u);if(ks!=0&&ks!=2)continue;}float s=lb(Lw.r,21)?1.0:-1.0;
+  vec3 lp=vec3(float(ix)*L1B+s*.3,2.0,float(iz)*L1B+4.0+(float(Lw.b)/16777216.0-.5)*4.0);vec3 d=lp-P;float side=smoothstep(.0,.2,(P.x-float(ix)*L1B)*s);vec3 l=normalize(d);
   acc+=(1.0-.5*l1T)*3.1*(max(dot(N,l),0.0)*.9+.1)*side*l1fall(d,.55,11.0);}
  // 小径 lamps: fixed slots re-aimed at the nearest live cluster lamps (no recompiles)
  for(int i=0;i<8;i++){if(i>=l1PtN)break;vec4 L=l1Pt[i];vec3 d=vec3(L.x,2.62,L.z)-P;vec3 l=normalize(d);acc+=vec3(1.0,.86,.66)*L.w*(max(dot(N,l),0.0)*.85+.15)*l1fall(d,.7,6.5);}
@@ -51,7 +60,7 @@ vec3 l1light(vec3 P,vec3 N){
  float hemi=mix(.55,1.0,N.y*.5+.5);
  // ceilings: bounce from the lit floor below (the photo's ceiling reads near-white)
  float cb=max(-N.y,0.0)*(.3*up+.03);vec3 accT=acc;
- if(l1inc(fx+l1OB.x,fz+l1OB.y))hemi*=.6;
+ if(linc(fx,fz))hemi*=.6;
  // V117 hand torch (flashlight117): soft-edged cone, inverse-square falloff, independent of the hall power
  vec3 fl=vec3(0.0);if(l1FlP.w>0.0){vec3 d=l1FlP.xyz-P;float r2=max(dot(d,d),.04);vec3 l=d*inversesqrt(r2);float c=dot(-l,l1FlD.xyz);
   float cone=smoothstep(l1FlD.w,mix(l1FlD.w,1.0,.55),c);float ring=.85+.15*sin(acos(clamp(c,-1.,1.))*38.0);fl=vec3(1.0,.93,.8)*l1FlP.w*cone*ring*(max(dot(N,l),0.0)*.92+.08)/(1.0+r2*.55);}
@@ -104,7 +113,7 @@ void main(){vec3 N=normalize(vN);vec3 alb=vC.rgb;
   alb*=t;}
  vec3 lit=l1light(vW,N)*mix(vec3(1.0),vec3(1.1,.94,.74),ow*.85)*mix(vec3(1.0),vec3(1.05,.96,.82),fw);vec3 col=alb*lit;
 #ifdef L1_FLOOR
- vec2 p=vW.xz;float st=l1fbm(p*.11,176.0);{float pm0=l1fbm(p*.2+vec2(13.7,4.1),320.0)*.78+.1*l1fbm(p*.05,80.0)+.22*l1n(p*.7,vec2(1120.0))+.04*l1n(p*3.0,vec2(4800.0));float ww=smoothstep(.48,.6,pm0)*(1.0-gw)*.7;if(ww>0.0)col=mix(col,texture(l1Atlas,vec3(p*.25,4.0)).rgb*vC.rgb*lit,ww);}float tyre=smoothstep(.7,.0,abs(fract(p.x*.125+.5)-.5)*8.0-1.0);
+ vec2 p=vW.xz;float st=l1fbm(p*.11,176.0);float pm=l1fbm(p*.2+vec2(13.7,4.1),320.0)*.78+.1*l1fbm(p*.05,80.0)+.22*l1n(p*.7,vec2(1120.0))+.04*l1n(p*3.0,vec2(4800.0));/*V131: puddle mask computed once (was evaluated twice)*/{float pm0=pm;float ww=smoothstep(.48,.6,pm0)*(1.0-gw)*.7;if(ww>0.0)col=mix(col,texture(l1Atlas,vec3(p*.25,4.0)).rgb*vC.rgb*lit,ww);}float tyre=smoothstep(.7,.0,abs(fract(p.x*.125+.5)-.5)*8.0-1.0);
  col*=mix(.8,1.06,st)*(1.0-.1*tyre*l1n(p*vec2(.4,3.0),vec2(640.0,4800.0)));
  if(kf==4){vec3 wd=texture(l1Atlas,vec3(p.yx*vec2(.4,.25),35.0)).rgb;col=wd*vec3(.62,.58,.54)*lit*mix(.75,1.08,st)*(1.0-.25*smoothstep(.55,.8,l1fbm(p*.3,480.0)));}
  if(kf==3){col*=1.4*mix(vec3(.86,.84,.8),vec3(1.0),smoothstep(.35,.7,l1fbm(p*.6+3.1,960.0)));col=mix(col,vec3(.42,.4,.37)*lit,.25*smoothstep(.5,.75,l1n(p*1.3,vec2(2080.0))));}
@@ -116,7 +125,7 @@ void main(){vec3 N=normalize(vN);vec3 alb=vC.rgb;
   // Gild: lighter swept slab; Gothic: painted parking bays between the round columns
   col*=(1.0+.25*gw)*(1.0-.35*l1T);vec2 q=p-floor(p/L1B)*L1B;float pl=(1.0-smoothstep(.04,.07,min(abs(q.x-2.67),abs(q.x-5.33))))*step(.6,q.y)*step(q.y,5.2)+(1.0-smoothstep(.04,.07,abs(q.y-5.2)))*step(.3,q.x)*step(q.x,7.7);
   col=mix(col,vec3(.5,.48,.44)*(.55+.45*st)*l1Power,pl*ow*.8*(1.0-fw));}
- float pm=l1fbm(p*.2+vec2(13.7,4.1),320.0)*.78+.1*l1fbm(p*.05,80.0)+.22*l1n(p*.7,vec2(1120.0))+.04*l1n(p*3.0,vec2(4800.0));float dry=(1.0-gw)*(1.0-.75*ow)*(1.0-.8*l1T)*(1.0-rw*.85)*(1.0-fw)*(l1inc(int(floor(p.x/L1B))+l1OB.x,int(floor(p.y/L1B))+l1OB.y)?0.0:1.0);float wet=smoothstep(.5,.62,pm)*dry;float pud=smoothstep(.615,.625,pm)*dry;
+ float dry=(1.0-gw)*(1.0-.75*ow)*(1.0-.8*l1T)*(1.0-rw*.85)*(1.0-fw)*(lb(layG(int(floor(p.x/L1B))+l1OB.x,int(floor(p.y/L1B))+l1OB.y),10)?0.0:1.0);float wet=smoothstep(.5,.62,pm)*dry;float pud=smoothstep(.615,.625,pm)*dry;
  col*=1.0-.5*wet;
  vec2 rip=vec2(l1n(p*3.1+mod(l1Time*.15,4960.0),vec2(4960.0)),l1n(p*3.3-mod(l1Time*.12,5280.0),vec2(5280.0)))-.5;vec4 r=vR;r.xy+=rip*.004*r.w;
  vec3 refl=texture2DProj(l1Mirror,r).rgb;vec3 V=normalize(cameraPosition-vW);float fres=.38+.55*pow(1.0-max(V.y,0.0),3.0);
@@ -147,6 +156,19 @@ scene.background=new T.Color(0x24282b);scene.fog=new T.FogExp2(0x2b3033,.03);
  pending.push(fetch('./assets/level1/atlas-n.webp?v=116').then(r=>r.blob()).then(b=>createImageBitmap(b,{premultiplyAlpha:'none',colorSpaceConversion:'none'})).then(img=>{const c=document.createElement('canvas');c.width=2176;c.height=272;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,0,0);const d=natlas.image.data;for(let l=0;l<8;l++){const px=g.getImageData(l*272+8,8,256,256).data;for(let y=0;y<256;y++)d.set(px.subarray((255-y)*1024,(256-y)*1024),l*262144+y*1024);}natlas.needsUpdate=true;}));
  pending.push(fetch('./assets/level1/atlas.webp?v=116').then(r=>r.blob()).then(b=>createImageBitmap(b,{premultiplyAlpha:'none',colorSpaceConversion:'none'})).then(img=>{const c=document.createElement('canvas');c.width=2176;c.height=Math.ceil(NLAY/8)*272;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,0,0);const d=atlas.image.data;for(let l=0;l<NLAY;l++){const px=g.getImageData((l%8)*272+8,Math.floor(l/8)*272+8,256,256).data;for(let y=0;y<256;y++)d.set(px.subarray((255-y)*1024,(256-y)*1024),l*262144+y*1024);}atlas.needsUpdate=true;}));
  const uniforms={l1FlP:{value:new T.Vector4(0,0,0,0)},l1FlD:{value:new T.Vector4(0,0,-1,.9)},l1Atlas:{value:atlas},l1Norm:{value:natlas},l1NI:{value:NI},l1Floor:{value:tex('floor.webp')},l1Wall:{value:tex('wall.webp')},l1Ceil:{value:tex('ceiling.webp')},l1Power:{value:1},l1Time:{value:0},l1Amb:{value:new T.Vector3(.11,.115,.12)},l1Lamp:{value:new T.Vector3(.95,1.0,1.04)},l1OB:{value:new T.Vector2(0,0)},l1Pt:{value:Array.from({length:8},()=>new T.Vector4(0,0,0,0))},l1PtN:{value:0}};
+ // V131 perf: per-bay layout window for the light shader (see LIGHT_GLSL). Toroidal: texel = global bay & 63, so walking only
+ // refills the strip that scrolled in (64 bays ≈ 1 ms); a teleport refills the whole window once (~30–60 ms).
+ const LAYN=64,layData=new Uint32Array(LAYN*LAYN*4),layTag=new Int32Array(LAYN*LAYN*2).fill(0x7fffffff),F=Math.fround;
+ const layTex=new T.DataTexture(layData,LAYN,LAYN,T.RGBAIntegerFormat,T.UnsignedIntType);Object.assign(layTex,{internalFormat:'RGBA32UI',minFilter:T.NearestFilter,magFilter:T.NearestFilter,generateMipmaps:false,flipY:false,needsUpdate:true});
+ let layCx=null,layCz=null;
+ function layBay(gx,gz){const h=s=>l1Hash(gx,gz,s),h5=h(5);let v=l1Sector(gx,gz);
+  if(l1WallX(gx,gz))v|=8;if(l1WallZ(gx,gz))v|=16;if(l1RunX(gx,gz))v|=32;if(l1RunZ(gx,gz))v|=64;if(l1Column(gx,gz))v|=128;if(l1DoorX(gx,gz))v|=256;if(l1DoorZ(gx,gz))v|=512;if(l1InClu(gx,gz))v|=1024;
+  if(h5>F(.55))v|=1<<11;if(h5>F(.4))v|=1<<12;if(h5>F(.42))v|=1<<13;if(h5>F(.3))v|=1<<14;if(h(6)>F(.32))v|=1<<15;v|=Math.floor(h(11)*4)<<16;if(h(7)>F(.35))v|=1<<18;if(h(8)>F(.5))v|=1<<19;if(h(17)>F(.35))v|=1<<20;if(h(18)>F(.5))v|=1<<21;
+  const i=((gz&63)*LAYN+(gx&63));layData[i*4]=v>>>0;layData[i*4+1]=Math.round(h(10)*16777216);layData[i*4+2]=Math.round(h(20)*16777216);layTag[i*2]=gx;layTag[i*2+1]=gz;}
+ function layUpdate(x,z){const cx=Math.floor(x/B),cz=Math.floor(z/B);if(cx===layCx&&cz===layCz)return 0;layCx=cx;layCz=cz;let n=0;
+  for(let gz=cz-32;gz<cz+32;gz++)for(let gx=cx-32;gx<cx+32;gx++){const i=((gz&63)*LAYN+(gx&63));if(layTag[i*2]===gx&&layTag[i*2+1]===gz)continue;layBay(gx,gz);n++;}
+  if(n)layTex.needsUpdate=true;return n;}
+ uniforms.l1Lay={value:layTex};
  const corridors=createLevel1Corridors(T,renderer,{wall:uniforms.l1Wall.value,floor:uniforms.l1Floor.value,ceil:uniforms.l1Ceil.value});let mode='halls',hallReturn=null;
  const mk=(defines={})=>new T.ShaderMaterial({uniforms:T.UniformsUtils.merge([T.UniformsLib.fog,{}]),vertexShader:VERT,fragmentShader:FRAG,fog:true,defines});
  const mat=mk();Object.assign(mat.uniforms,uniforms);
@@ -478,7 +500,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  function safe(x,z){for(let rr=0;rr<12;rr+=.5)for(let a=0;a<16;a++){const px=x+Math.cos(a/16*Math.PI*2)*rr,pz=z+Math.sin(a/16*Math.PI*2)*rr;if(!blocked(px,pz,.45))return{x:px,z:pz};if(rr===0)break;}return{x,z};}
  // ---- Flickering: all lights die at random, for a random time; exit signs stay ----
  let lampTick=0,flickerStart=0,elapsed=0,nextFlicker=70+Math.random()*120,flickerEnd=-1,power=1,forced=null;
- function update(dt,x,z){elapsed+=dt;if(mode==='halls'&&rebase.update(x,z))uniforms.l1OB.value.set(rebase.o.x/B,rebase.o.z/B);uniforms.l1Time.value=elapsed;if(mode==='halls'){plan(x,z);stepBuild();}
+ function update(dt,x,z){elapsed+=dt;if(mode==='halls')layUpdate(x,z);if(mode==='halls'&&rebase.update(x,z))uniforms.l1OB.value.set(rebase.o.x/B,rebase.o.z/B);uniforms.l1Time.value=elapsed;if(mode==='halls'){plan(x,z);stepBuild();}
   floor.position.set(Math.round(x/B)*B,0,Math.round(z/B)*B);ceiling.position.copy(floor.position);
   let target=1;if(forced!==null)target=forced;else{if(flickerEnd<0&&elapsed>nextFlicker){flickerStart=elapsed;flickerEnd=elapsed+6+Math.random()*16;}if(flickerEnd>0){target=0;if(elapsed<flickerStart+1.1)target=Math.sin(elapsed*47)+Math.sin(elapsed*31)>.4?1:0;if(elapsed>=flickerEnd){flickerEnd=-1;target=1;nextFlicker=elapsed+90+Math.random()*240;}}}
   power+=(target-power)*Math.min(1,dt*(target>power?4:16));uniforms.l1Power.value=power;
@@ -526,7 +548,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  // build a geometry (local frame, origin at 0) out of the world's own primitives and atlas materials
  function kitGeo(fn){const sv=[parts,ox0,oz0];parts=[];ox0=oz0=0;try{fn((...a)=>put(parts,...a),C,{box,cyl,vcyl});const g=parts.length>1?mergeGeometries(parts,false):parts[0];if(parts.length>1)parts.forEach(q=>q.dispose());return g;}finally{[parts,ox0,oz0]=sv;}}
  let hand={i:0,p:new T.Vector3(),d:new T.Vector3(0,0,-1)};
- async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);const g=new T.Group();for(const m of [mat,glowMat,exitMat]){const q=new T.Mesh(col(box.clone(),C.concrete,[1,1,1]),m);q.position.set(camera.position.x,-50,camera.position.z);g.add(q);}g.add(new T.Mesh(haloGeo([[0,-50,0,1,1,1]]),haloMat));scene.add(g);await r.compileAsync(scene,camera);scene.remove(g);g.traverse(o=>o.geometry?.dispose());}
+ async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);layUpdate(camera.position.x,camera.position.z);const g=new T.Group();for(const m of [mat,glowMat,exitMat]){const q=new T.Mesh(col(box.clone(),C.concrete,[1,1,1]),m);q.position.set(camera.position.x,-50,camera.position.z);g.add(q);}g.add(new T.Mesh(haloGeo([[0,-50,0,1,1,1]]),haloMat));scene.add(g);await r.compileAsync(scene,camera);scene.remove(g);g.traverse(o=>o.geometry?.dispose());}
  return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='corridor'?corridors.scene:scene},get mode(){return mode},nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt:()=>H,
   powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA)=>{if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,lockDoorsNear,setMapOverlay:f=>{mapOverlay=f;},kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
 }

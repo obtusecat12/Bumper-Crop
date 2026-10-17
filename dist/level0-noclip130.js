@@ -81,7 +81,11 @@ export function createNoclip130({T,renderer,camera,displayFilter,audio,toast,zer
   const m=new T.Mesh(geo,mat);m.name='noclip130-wall';m.position.set(wall.x+wall.nx*.0015,wall.floor+H/2+.02,wall.z+wall.nz*.0015);m.rotation.y=Math.atan2(wall.nx,wall.nz);m.renderOrder=2;m.frustumCulled=false;
   w.scene.add(m);patch={mesh:m,wall,age:0,burst:0,next:.4};touch=0;startBuzz();return true;}
  function remove(){if(!patch)return;patch.mesh.parent?.remove(patch.mesh);patch.mesh.geometry.dispose();patch.mesh.material.dispose();patch=null;stopBuzz();}
- function force(front=false){const wall=findWall(front)||findWall(!front);if(wall&&spawn(wall)){forced=true;if(!hinted){hinted=true;toast('墙面开始闪烁……走进它。');}return true;}if(front)toast('附近找不到能闪烁的墙。');return false;}
+ // V131: pushing only counts against a real wall face right in front (>=1.2 m wide, full height, within .95 m): never a
+ // column, a crate or furniture, and a push never makes some other wall flicker (user 10-17: touching solid props made the
+ // view jitter and the hand vanish = this noclip firing unexpectedly).
+ let pushT=-1,pushW=null;function pushWall(){const now=performance.now();if(now-pushT<250)return pushW;pushT=now;const wl=findWall(true);pushW=wl&&wl.width>=1.2&&Math.hypot(wl.x-state.x,wl.z-state.z)<Math.max(.95,wl.width/2+.6)&&Math.abs((state.x-wl.x)*wl.nx+(state.z-wl.z)*wl.nz)<.95?wl:null;return pushW;}
+ function force(front=false,strict=false){if(strict){const wl=pushWall();if(wl&&spawn(wl)){forced=true;if(!hinted){hinted=true;toast('墙面开始闪烁……走进它。');}return true;}return false;}const wall=findWall(front)||findWall(!front);if(wall&&spawn(wall)){forced=true;if(!hinted){hinted=true;toast('墙面开始闪烁……走进它。');}return true;}if(front)toast('附近找不到能闪烁的墙。');return false;}
 
  // update() is called by animateZero while playing in Level 0. Returns true when the noclip began.
  function update(dt,{pushing=false,ok=true,moving=0}={}){if(active)return true;
@@ -233,6 +237,6 @@ export function createNoclip130({T,renderer,camera,displayFilter,audio,toast,zer
  function emergeSound(){const c=ctx();if(!c)return;try{snd?.gains?.forEach(g=>g.gain.setTargetAtTime(0,c.currentTime,.25));const t0=c.currentTime,o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(90,t0);o.frequency.exponentialRampToValueAtTime(28,t0+.4);g.gain.setValueAtTime(.35,t0);g.gain.exponentialRampToValueAtTime(.001,t0+.6);o.connect(g);g.connect(out());o.start(t0);o.stop(t0+.7);}catch{}}
  function endSound(){const s=snd;snd=null;if(!s)return;try{s.gains?.forEach(g=>g.gain.setTargetAtTime(0,audio.ctx.currentTime,.2));setTimeout(()=>s.stop.forEach(n=>{try{n.stop();n.disconnect();}catch{}}),900);}catch{}}
 
- const api={update,frame,begin,force,remove,get active(){return active},get flickering(){return !!patch},
-  debug:{pin:v=>{pin=v;},get patch(){return patch},get rush(){return rush},get t(){return t},get wander(){return wander},get threshold(){return threshold},set threshold(v){threshold=v},skip:()=>{skipReq=true;},state:()=>({active,t,loaded,failed,emergeT,patch:!!patch,wander,threshold,rushObjs:rush?rush.objs.length:-1,rushSrc:rush?rush.src:''})}};
+ const api={update,frame,begin,force,remove,pushWall,get active(){return active},get flickering(){return !!patch},
+  debug:{pin:v=>{pin=v;},get world(){return zero();},get patch(){return patch},get rush(){return rush},get t(){return t},get wander(){return wander},get threshold(){return threshold},set threshold(v){threshold=v},skip:()=>{skipReq=true;},state:()=>({active,t,loaded,failed,emergeT,patch:!!patch,wander,threshold,rushObjs:rush?rush.objs.length:-1,rushSrc:rush?rush.src:''})}};
  return api;}

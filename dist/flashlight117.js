@@ -131,14 +131,19 @@ export function createFlashlight117(T){
   renderer.setRenderTarget(vmTarget);renderer.setClearColor(0x000000,0);renderer.clear(true,true,false);renderer.autoClear=false;renderer.render(vmScene,vmCam);
   renderer.setRenderTarget(target);renderer.render(quadScene,quadCam);renderer.autoClear=ab;renderer.setClearColor(oc,oa);renderer.setRenderTarget(old===vmTarget?target:old);}
  const lensP=new T.Vector3(),tq=new T.Quaternion();
- function prepare(sc,camera){if(sc!==scene){lightRig.parent?.remove(lightRig);scene=sc;if(sc)sc.add(lightRig);}
+ // V131: real eye speed (camera travel per second, low-passed) drives the walk bob. The game's velocity keeps its full value
+ // while the body is blocked by a wall/crate/column, so the hand used to bob in place against solid props (read as a twitch).
+ const lastEye=new T.Vector3();let eyeT=-1,eyeSpeed=0;
+ function prepare(sc,camera){{const now=performance.now(),e=camera.getWorldPosition(lensP);if(eyeT>=0){const ddt=Math.max(1e-3,(now-eyeT)/1000),d=Math.hypot(e.x-lastEye.x,e.z-lastEye.z)/ddt;eyeSpeed+=(Math.min(d,8)-eyeSpeed)*Math.min(1,ddt*10);if(d>20)eyeSpeed=0;}lastEye.copy(e);eyeT=now;}if(sc!==scene){lightRig.parent?.remove(lightRig);scene=sc;if(sc)sc.add(lightRig);}
   rig.position.set(0,0,0);rig.quaternion.identity();rig.updateMatrixWorld(true);
   lens.getWorldPosition(lensP).multiplyScalar(.4);torch.getWorldQuaternion(tq);
   camera.updateMatrixWorld();lightRig.position.copy(lensP).applyMatrix4(camera.matrixWorld);if(sc)sc.worldToLocal(lightRig.position);
   lightRig.quaternion.copy(camera.getWorldQuaternion(new T.Quaternion())).multiply(tq);lightRig.updateMatrixWorld(true);fdir.set(0,0,1).applyQuaternion(lightRig.quaternion);}
  const fdir=new T.Vector3(0,0,1);
  function update(dt,{moving=0,running=false,yaw=0,pitch=0,step=0}={}){t+=dt;coneMat.uniforms.uT.value=t;
-  raise+=((equipped?1:0)-raise)*Math.min(1,dt*7);rig.visible=raise>.02;
+  // V131: never pop out — while the L0→L1 noclip plays the hand is lowered out of frame with the same ease as unequipping
+  const eq=equipped&&!globalThis.__bcNoclip?.active;raise+=((eq?1:0)-raise)*Math.min(1,dt*7);rig.visible=raise>.02;
+  moving=Math.min(moving,eyeSpeed/2);
   // walk bob (figure-eight), turn sway lags the view, switch press, flicker on power-up
   const k=moving*(running?1.6:1),ph=step*Math.PI*2;const tx=Math.sin(ph*.5)*.012*k,ty=-Math.abs(Math.cos(ph*.5))*.01*k;
   bob.vx+=((tx-bob.x)*140-bob.vx*18)*dt;bob.x+=bob.vx*dt;bob.vy+=((ty-bob.y)*140-bob.vy*18)*dt;bob.y+=bob.vy*dt;
