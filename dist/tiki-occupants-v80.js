@@ -48,9 +48,11 @@ function plateAndSteak(root,p,m){const g=new T.Group();g.position.fromArray(p);r
 export async function createTikiPeople79(scene,report=()=>{}){
  const root=new T.Group();root.name='Seven individually authored Tiki patrons V79';scene.add(root);const actors=[];const propGroups=[],actions=[];
  const m={glass:material(0x766141,null,{transparent:true,opacity:.78}),clear:material(0xc4dddc,null,{transparent:true,opacity:.36,depthWrite:false}),metal:material(0xd4d7d7,cache.get('props/chrome')),label:material(0xffffff,cache.get('props/rum-label')),green:new T.MeshBasicMaterial({color:0x669e36}),straw:material(0xe0cdb7),menu:material(0xffffff,cache.get('props/menu'),{side:T.DoubleSide}),pad:material(0xffffff,cache.get('props/order-pad')),ink:material(0x383029),plate:material(0xc9c2ad),steak:material(0xffffff,cache.get('props/steak')),peas:material(0x537445)};
+ // V130-E2: hand/service props counted against each NPC's 1500 budget, reserved before the actor (head130 drops a tier to fit)
+ const PROP_TRIS79={bartender:368,barwoman:120,waiter:32,elder:112};
  for(let i=0;i<TIKI_PEOPLE79.length;i++){
   const p=TIKI_PEOPLE79[i],meta=manifest[p.role],textures=Object.fromEntries(['face','face-blink','body','hair','beard'].map(k=>[k==='face-blink'?'faceBlink':k,cache.get(`${p.role}/${k}`)]));
-  const actor=createTikiActor79(T,p.role,textures,{...p,phase:0,skinUV:meta.skinUV,landmarks:meta.landmarks});actor.group.position.set(p.x,0,p.z);actor.group.rotation.y=p.yaw;root.add(actor.group);actors.push(actor);
+  const actor=createTikiActor79(T,p.role,textures,{...p,phase:0,skinUV:meta.skinUV,landmarks:meta.landmarks,triBudget:1500-(PROP_TRIS79[p.role]??0)});actor.group.position.set(p.x,0,p.z);actor.group.rotation.y=p.yaw;root.add(actor.group);actors.push(actor);
   // Hand props inherit the exact posed wrist; service objects use the same pose plan.
   if(p.role==='bartender'){
    const b=bottle(m),s=shaker(m);actor.group.add(b,s);propGroups.push(b,s);

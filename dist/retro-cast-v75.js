@@ -3,7 +3,7 @@
  * Supplied textures remain caller-owned. Body and eye animation sample at 24 Hz (plaid: 30 Hz).
  */
 
-import {buildV75Head130} from './retro-head130-gen.js';
+import {buildV75Head130,fitHead130Budget} from './retro-head130-gen.js';
 
 export const RETRO_ROLES75 = Object.freeze(['homeless','wallman','reader','plaid','receptionist','poolman']);
 export const RETRO_POSE_HZ75 = 24;
@@ -29,7 +29,12 @@ const roleSeed=s=>{let n=175;for(let i=0;i<s.length;i++)n=Math.imul(n^s.charCode
  * @param {object} opts {seatHeight, seed, scale, skinUV, hairUV, castShadow, phase}.
  * @returns {{group,update,dispose,diagnostics,bones,sockets,forceBlink,samplePose,mixer,mesh}}
  */
+// V130-E2: head130 detail drops a tier (ears low/min, lite rear) instead of throwing when the actor would exceed its
+// triangle budget (default 1500; callers with attached props pass opts.triBudget).
 export function createRetroActor75(T, role, textures, opts={}) {
+  return fitHead130Budget(o=>createRetroActor75Raw(T,role,textures,o),opts,opts.triBudget??1500);
+}
+function createRetroActor75Raw(T, role, textures, opts={}) {
   if(!PROFILES[role]) throw new Error('Unknown V75 NPC role: '+role);
   if(!textures?.face || !textures?.body) throw new Error('V75 NPC requires preloaded face and body textures.');
   const profile=PROFILES[role], seed=opts.seed??roleSeed(role), isPool=role==='poolman';

@@ -1,4 +1,4 @@
-import {buildV75Head130} from './retro-head130-gen.js';
+import {buildV75Head130,fitHead130Budget} from './retro-head130-gen.js';
 import {posePlan79} from './tiki-garden-pose-v85.js';
 /* V79: metre-scale, +Z-facing, nineteen-bone Tiki cast; generated UV surfaces and discrete held poses.
  * No renderer, frame scheduler, network request or global event listener lives here.
@@ -23,7 +23,12 @@ const roleSeed=s=>{let n=175;for(let i=0;i<s.length;i++)n=Math.imul(n^s.charCode
  * @param {object} opts {seatHeight, seed, scale, skinUV, hairUV, castShadow, phase}.
  * @returns {{group,update,dispose,diagnostics,bones,sockets,forceBlink,samplePose,mixer,mesh}}
  */
+// V130-E2: head130 detail drops a tier (ears low/min, lite rear) instead of throwing when the actor would exceed its
+// triangle budget (default 1500; callers with attached props pass opts.triBudget).
 export function createTikiActor79(T, role, textures, opts={}) {
+  return fitHead130Budget(o=>createTikiActor79Raw(T,role,textures,o),opts,opts.triBudget??1500);
+}
+function createTikiActor79Raw(T, role, textures, opts={}) {
   if(!PROFILES[role]) throw new Error('Unknown V79 NPC role: '+role);
   if(!textures?.face || !textures?.body) throw new Error('V79 NPC requires preloaded face and body textures.');
   const profile=PROFILES[role], seed=opts.seed??roleSeed(role), isPool=role==='footbath';

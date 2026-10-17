@@ -169,8 +169,13 @@ const earUV=(sd,kind,s,t)=>{const [a0,b0,a1,b1]=HEAD130_EAR[sd][kind],pad=.012;r
  * Modelled ears. emit(a,b,c,uva,uvb,uvc) receives head-local triangles (outward winding).
  * e = {skullX(y,z)→half width, yTop, yBot, zFront, depth, lift?, cup?}
  */
+// V130-E2 ear levels of detail (triangles per ear): full 66 (outer ring -> concha ring -> centre, back, rim),
+// low 24 (6-point outline, no concha ring), min 10 (5-point outline, flat back, no rim). Same UV islands/texture.
+const EAR_LOD130={full:{pts:null,mid:true,rim:true},low:{pts:[0,2,4,6,8,10],mid:false,rim:true},min:{pts:[0,3,5,7,9],mid:false,rim:false}};
+export const HEAD130_EAR_TRIS={full:66,low:24,min:10};
 export function emitEars130(e,emit){
-  const P=HEAD130_EAR_ST,n=P.length,lift=e.lift??.016,cup=e.cup??.006;
+  const L=EAR_LOD130[e.lod]??EAR_LOD130.full;
+  const P=L.pts?L.pts.map(i=>HEAD130_EAR_ST[i]):HEAD130_EAR_ST,n=P.length,lift=e.lift??.016,cup=e.cup??.006;
   const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
   const face=(a,b,c,ua,ub,uc,want)=>{const nn=cross(sub(b,a),sub(c,a));if(nn[0]*want[0]+nn[1]*want[1]+nn[2]*want[2]<0)emit(b,a,c,ub,ua,uc);else emit(a,b,c,ua,ub,uc);};
   for(const [sd,sign] of [['R',-1],['L',1]]){
@@ -182,13 +187,14 @@ export function emitEars130(e,emit){
     const out=[sign,0,.15];
     for(let k=0;k<n;k++){const q=(k+1)%n;
       const ua=earUV(sd,'out',...P[k]),ub=earUV(sd,'out',...P[q]),ma=earUV(sd,'out',M[k].s,M[k].t),mb=earUV(sd,'out',M[q].s,M[q].t),uc=earUV(sd,'out',cs,ct);
-      face(A[k],A[q],M[q].p,ua,ub,mb,out);face(A[k],M[q].p,M[k].p,ua,mb,ma,out);face(M[k].p,M[q].p,C,ma,mb,uc,out);
+      if(L.mid){face(A[k],A[q],M[q].p,ua,ub,mb,out);face(A[k],M[q].p,M[k].p,ua,mb,ma,out);face(M[k].p,M[q].p,C,ma,mb,uc,out);}
+      else face(A[k],A[q],C,ua,ub,uc,out);
       // back of the ear (flush toward the skull) + rim thickness
       const ins=p=>[p[0]-sign*.0045,p[1],p[2]+.0015],Ai=ins(A[k]),Bi=ins(A[q]),Ci=[sign*e.skullX(mix(e.yTop,e.yBot,ct),e.zFront-cs*e.depth)*.97,mix(e.yTop,e.yBot,ct),e.zFront-cs*e.depth];
       const va=earUV(sd,'back',...P[k]),vb=earUV(sd,'back',...P[q]),vc=earUV(sd,'back',cs,ct);
       face(Ai,Bi,Ci,va,vb,vc,[-sign,0,-.4]);
       const mid=[(A[k][0]+A[q][0])/2,(A[k][1]+A[q][1])/2,(A[k][2]+A[q][2])/2],rw=[0,mid[1]-C[1],mid[2]-C[2]];
-      face(A[k],Ai,Bi,ua,ua,ub,rw);face(A[k],Bi,A[q],ua,ub,ub,rw);
+      if(L.rim){face(A[k],Ai,Bi,ua,ua,ub,rw);face(A[k],Bi,A[q],ua,ub,ub,rw);}
     }
   }
 }
@@ -215,16 +221,18 @@ export function buildV75Head130(c){
     hairY:c.hairBottom?(a=>c.hairBottom(a)/top):null,sideburn:c.sideburn,beard:c.beard,nape:c.nape??.6,
     ear:c.ears===false?null:{hTop:earTop/top,hBot:earBot/top,jf0:jfOf(zF),jf1:jfOf(zF-dep)}});
   const quad=(a,b,cc,d,ua,ub,uc,ud)=>{tri(mat,a,b,d,ua,ub,ud,white,Wh,Wh,Wh);tri(mat,b,cc,d,ub,uc,ud,white,Wh,Wh,Wh);};
-  for(let i=0;i<faceRows.length-1;i++)for(let j=0;j<6;j++){
+  // c.rearLod==='lite' (V130-E2): every other rear column (3 quads per row instead of 6), caps follow the same ring
+  const st=c.rearLod==='lite'?2:1,mid=st===2?[4,2]:[5,4,3,2,1];
+  for(let i=0;i<faceRows.length-1;i++)for(let j=0;j<6;j+=st){
     const uv=(r,k)=>bandUV130(k/6,faceRows[r][0]/top);
-    quad(rear[i][j+1],rear[i][j],rear[i+1][j],rear[i+1][j+1],uv(i,j+1),uv(i,j),uv(i+1,j),uv(i+1,j+1));
+    quad(rear[i][j+st],rear[i][j],rear[i+1][j],rear[i+1][j+st],uv(i,j+st),uv(i,j),uv(i+1,j),uv(i+1,j+st));
   }
   for(const r of[0,faceRows.length-1]){
-    const ring=[...front[r],...rear[r].slice(1,6).reverse()],center=[0,headY+faceRows[r][0]*hH,-.012],kind=r===0?'chin':'top';
+    const ring=[...front[r],...mid.map(k=>rear[r][k])],center=[0,headY+faceRows[r][0]*hH,-.012],kind=r===0?'chin':'top';
     const R=Math.max(...ring.map(p=>Math.hypot(p[0],p[2]-center[2])))||1,cu=p=>capUV130(kind,p[0]/R,(p[2]-center[2])/R);
     for(let j=0;j<ring.length;j++){const k=(j+1)%ring.length,[p,q]=r===0?[ring[k],ring[j]]:[ring[j],ring[k]];tri(mat,center,p,q,cu(center),cu(p),cu(q),white,Wh,Wh,Wh);}
   }
-  if(c.ears!==false)emitEars130({skullX,yTop:headY+earTop*hH,yBot:headY+earBot*hH,zFront:zF,depth:dep,lift:.015},(a,b,cc,ua,ub,uc)=>tri(mat,a,b,cc,ua,ub,uc,white,Wh,Wh,Wh));
+  if(c.ears!==false)emitEars130({skullX,yTop:headY+earTop*hH,yBot:headY+earBot*hH,zFront:zF,depth:dep,lift:.015,lod:c.earLod},(a,b,cc,ua,ub,uc)=>tri(mat,a,b,cc,ua,ub,uc,white,Wh,Wh,Wh));
   return tex;
 }
 
@@ -288,4 +296,24 @@ export function retrofitSkinnedHead130(T,face,o){
   const mesh=new T.SkinnedMesh(rg,mat);mesh.name=face.name+' / head130 rear + ears';mesh.bind(face.skeleton,face.bindMatrix);
   face.parent.add(mesh);
   return{mesh,texture:tex,rearTriangles:newP.length/3};
+}
+
+/**
+ * V130-E2 triangle-budget self-check. Head detail tiers from richest to leanest; build(opts) must return an actor with
+ * diagnostics.triangles and dispose(), and may throw its own "budget" error. The first tier whose total (plus
+ * extraTriangles of attached props) fits `budget` wins, so a cast never crashes the game because of its head/ears.
+ */
+export const HEAD130_TIERS=[{},{earLod:'low'},{earLod:'low',rearLod:'lite'},{earLod:'min',rearLod:'lite'},{ears:false,rearLod:'lite'}];
+export function fitHead130Budget(build,opts={},budget=1500,extraTriangles=0){
+  if(opts.head130===false)return build(opts);
+  const user=typeof opts.head130==='object'&&opts.head130?opts.head130:{};
+  let last=null;
+  for(let k=0;k<HEAD130_TIERS.length;k++){
+    const tier=HEAD130_TIERS[k],o={...opts,head130:{...user,...tier}};
+    let a;try{a=build(o);}catch(err){if(!/budget/i.test(String(err?.message))||k===HEAD130_TIERS.length-1)throw err;last=err;continue;}
+    const n=(a.diagnostics?.triangles??0)+extraTriangles;
+    if(n<=budget||k===HEAD130_TIERS.length-1){if(a.diagnostics){a.diagnostics.head130Tier=k;a.diagnostics.head130Budget=budget;}if(k)console.info(`[head130] ${a.diagnostics?.role??''} tier ${k} (${JSON.stringify(tier)}) -> ${n}/${budget} tris`);return a;}
+    a.dispose?.();
+  }
+  throw last??new Error('head130: no tier fits');
 }

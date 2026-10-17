@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {CAMP_ACTORS98,OUTHOUSE98 as H,DINNER98 as D,outhouseSolids98,outhouseFloor98} from './camp-life-plan98.js';
-import {createCampActor98,countTriangles98} from './camp-npc98.js?v=106';
+import {createCampActor98,countTriangles98} from './camp-npc98.js?v=130';
 import {createCampPropKit98} from './camp-life-props98.js';
 import {warmCampTextures98} from './camp-life-materials98.js';
 import {createOutpostTable125} from './outpost125-table.js?v=125b';
@@ -47,6 +47,7 @@ export function createCampLife98({object,interiors:i,renderer,lamps,colliders,ex
   if(phase==='air'){pea.position.copy(start).addScaledVector(velocity,a);pea.position.y-=.5*9.81*a*a;pea.rotation.set(a*6,a*4,0);}else if(phase==='water'){const s=a-D.flight,depth=.015*s+.034*(s-.18*(1-Math.exp(-s/.18)));pea.position.set(end.x+.003*Math.sin(s*5)*Math.exp(-s),end.y-depth,end.z+.002*Math.sin(s*6));if(pea.position.y<D.cup[1]+.027)pea.visible=false;}
   if(previous!=='air'&&phase==='air')launches++;if(previous!=='water'&&phase==='water')sinks++;const splash=a-D.flight;ripple.visible=splash>=0&&splash<.34;ripple.scale.setScalar(.26+Math.max(0,splash)*2);rippleMat.opacity=Math.max(0,.30-splash*.88);lastCycle=cycle;
  }
- const budget=countTriangles98(toilet.group);if(budget>800)throw Error('Toilet NPC exceeds strict 800 triangle budget: '+budget);warmCampTextures98(renderer);
+ toilet.fitBudget?.(900); // V130-E2: user-approved 900 (was 800); the head drops a detail tier instead of crashing
+ const budget=countTriangles98(toilet.group);if(budget>900)console.error('Toilet NPC exceeds strict 900 triangle budget: '+budget);warmCampTextures98(renderer);
  return{actors,outhouse:staticRoot,meal,pea,update,light,diagnostics:()=>({actors:actors.map(a=>a.diagnostics()),pea:{phase,launches,sinks,visible:pea.visible,position:pea.position.toArray(),time:elapsed},outhouseTriangles:budget}),floor:outhouseFloor98};
 }
