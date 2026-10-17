@@ -33,15 +33,15 @@ function tray(w,d,h,faces,inner=kraft()){const g=new T.Group(),t=.004;
 
 export const PACKS={
  six:{id:'almond',n:6,name:'杏仁水 · 六瓶一扎',desc:'整扎拿走会按数量拆进背包。'},
- cantray:{id:'can',n:6,name:'罐头 · 一托六罐',desc:'纸托加收缩膜，同一批次的六个罐头。'},
- blister:{id:'battery',n:4,name:'电池 · 四节吸塑卡',desc:'VOLTAX 碱性电池，四节装在吸塑壳里。'},
- matchbundle:{id:'matches',n:4,name:'火柴 · 一捆四盒',desc:'用麻绳十字捆好的四盒火柴。'},
- gauze:{id:'bandage',n:4,name:'医用纱布 · 一捆四卷',desc:'纸腰封扎着的四卷纱布。'},
- yarnbundle:{id:'yarn',n:3,name:'毛线团 · 一捆三团',desc:'麻绳串起来的三团毛线。'},
+ cantray:{id:'can',n:6,name:'罐头 · 一托六罐',desc:'整扎拿走会按数量拆进背包。'},
+ blister:{id:'battery',n:4,name:'电池 · 四节吸塑卡',desc:'整扎拿走会按数量拆进背包。'},
+ matchbundle:{id:'matches',n:4,name:'火柴 · 一捆四盒',desc:'整扎拿走会按数量拆进背包。'},
+ gauze:{id:'bandage',n:4,name:'医用纱布 · 一捆四卷',desc:'整扎拿走会按数量拆进背包。'},
+ yarnbundle:{id:'yarn',n:3,name:'毛线团 · 一捆三团',desc:'整扎拿走会按数量拆进背包。'},
  // V130-B
- beer6:{id:'beer',n:6,name:'啤酒 · 六罐一扎',desc:'塑料提环套着的六罐啤酒。'},
- cola6:{id:'cola',n:6,name:'可乐 · 六罐一扎',desc:'塑料提环套着的六罐可乐。'},
- cigstack:{id:'cigarettes',n:10,name:'香烟 · 一条十包',desc:'十包同牌子的香烟，用一条多语种免税纸腰封扎着。'},
+ beer6:{id:'beer',n:6,name:'啤酒 · 六罐一扎',desc:'整扎拿走会按数量拆进背包。'},
+ cola6:{id:'cola',n:6,name:'可乐 · 六罐一扎',desc:'整扎拿走会按数量拆进背包。'},
+ cigstack:{id:'cigarettes',n:10,name:'香烟 · 一条十包',desc:'整扎拿走会按数量拆进背包。'},
 };
 // V130-B six-pack ring yoke: one ring per can top, joined by small webs (clear-ish LDPE)
 function yoke(dw,y){const g=new T.Group(),m=M('yoke',()=>new T.MeshStandardMaterial({color:0xe8ece8,transparent:true,opacity:.6,roughness:.25,side:T.DoubleSide,depthWrite:false}));
