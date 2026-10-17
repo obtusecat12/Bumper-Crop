@@ -32,7 +32,7 @@ function tray(w,d,h,faces,inner=kraft()){const g=new T.Group(),t=.004;
  wall(w,faces[0],0,d/2-t/2,0);wall(w,faces[1],0,-d/2+t/2,Math.PI);wall(d,faces[2],w/2-t/2,0,Math.PI/2);wall(d,faces[3],-w/2+t/2,0,-Math.PI/2);return g;}
 
 export const PACKS={
- six:{id:'almond',n:6,name:'杏仁水 · 六瓶一扎',desc:'收缩膜裹着纸托的六瓶装。整扎拿走会按数量拆进背包。'},
+ six:{id:'almond',n:6,name:'杏仁水 · 六瓶一扎',desc:'整扎拿走会按数量拆进背包。'},
  cantray:{id:'can',n:6,name:'罐头 · 一托六罐',desc:'纸托加收缩膜，同一批次的六个罐头。'},
  blister:{id:'battery',n:4,name:'电池 · 四节吸塑卡',desc:'VOLTAX 碱性电池，四节装在吸塑壳里。'},
  matchbundle:{id:'matches',n:4,name:'火柴 · 一捆四盒',desc:'用麻绳十字捆好的四盒火柴。'},

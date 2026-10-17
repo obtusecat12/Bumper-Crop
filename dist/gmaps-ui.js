@@ -136,7 +136,7 @@ export function paintSafariCompass(c,map,yaw,bearing,opts={}){
  // Aqua pill caption
  const py=250,pw=196,ph=26,px=X-pw/2;g=c.createLinearGradient(0,py,0,py+ph);g.addColorStop(0,'#ffffff');g.addColorStop(.5,'#e9ecef');g.addColorStop(.5,'#d8dde2');g.addColorStop(1,'#f4f6f8');
  c.beginPath();c.roundRect?c.roundRect(px,py,pw,ph,13):c.rect(px,py,pw,ph);c.fillStyle=g;c.fill();c.strokeStyle='#7d858c';c.lineWidth=1;c.stroke();
- c.font=`bold 13px ${AQUA}`;c.fillStyle='#1d1d1d';c.textBaseline='middle';c.textAlign='left';c.fillText(bearing,px+14,py+ph/2+1);c.textAlign='right';c.font=`12px ${AQUA}`;c.fillStyle='#0b56c7';c.fillText('F  Map',px+pw-14,py+ph/2+1);
+ c.font=`bold 13px ${AQUA}`;c.fillStyle='#1d1d1d';c.textBaseline='middle';c.textAlign='left';c.fillText(bearing,px+14,py+ph/2+1);c.textAlign='right';c.font=`12px ${AQUA}`;c.fillStyle='#0b56c7';c.fillText('M  Map',px+pw-14,py+ph/2+1);
  c.restore();
 }
 

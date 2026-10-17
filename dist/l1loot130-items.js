@@ -31,10 +31,10 @@ export const LOOT130={
 const BRAND={
  lighter:['FLINTWELL 打火机（美式）','ヒノトリ 打火机（日本）','ИСКРА 打火机（俄罗斯）','FUEGO LOCO 打火机（墨西哥）'],
  sanitizer:['PURE HANDS 免洗洗手液','さらさらハンド 免洗洗手液','ЧИСТЫЕ РУКИ 免洗洗手液','MANOS SANAS 免洗洗手液'],
- beer:['淡啤酒（营地同款蓝罐）','墨西哥啤酒（营地同款金罐）','МЕДВЕДЬ 熊牌啤酒','北星ビール KITABOSHI'],
- cola:['香草可乐（营地同款红罐）','COLA DEL SOL 太阳可乐','КОЛА ВОСТОК 东方可乐'],
+ beer:['淡啤酒（蓝罐）','墨西哥啤酒（金罐）','МЕДВЕДЬ 熊牌啤酒','北星ビール KITABOSHI'],
+ cola:['香草可乐（红罐）','COLA DEL SOL 太阳可乐','КОЛА ВОСТОК 东方可乐'],
  cigarettes:['红白软盒香烟','蓝绿复古香烟','ПОЛЮС 极地牌香烟','山鳩 YAMABATO 香烟'],
- drink:{pet:'杏仁水 · 500 mL 塑料瓶（Level 11 售货机）',can:'杏仁水 · 330 mL 易拉罐（Level 11 售货机）'},
+ drink:{pet:'杏仁水 · 500 mL 塑料瓶',can:'杏仁水 · 330 mL 易拉罐'},
  tumbler:['直身玻璃杯','苏联多棱玻璃杯（гранёный стакан）'],
 };
 export const drinkType=m=>m?.type||(pick(m,2)?'can':'pet');

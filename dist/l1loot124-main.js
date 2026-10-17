@@ -143,9 +143,9 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
  function targetItem(c){if(!c.items.length)return null;camera.getWorldPosition(v);camera.getWorldDirection(fwd);let best=c.items[0],ba=-2;const w=new T.Vector3();
   for(const it of c.items){it.obj.getWorldPosition(w);w.y+=.03;w.sub(v).normalize();const a=w.dot(fwd);if(a>ba){ba=a;best=it;}}return best;}
  const MW={beer6:['罐','扎'],cola6:['罐','扎'],cigstack:['包','条'],six:['瓶','扎'],cantray:['罐','托'],blister:['节','卡'],matchbundle:['盒','捆'],gauze:['卷','捆'],yarnbundle:['团','捆']};
- const QUSE={beer:'Q 喝',cola:'Q 喝',cigarettes:'Q 抽一支',peacetin:'Q 抽一支',tvdinner:'Q 吃',tumbler:'Q 倒杏仁水喝',duck:'Q 捏',cassette:'Q 看标签',floppy:'Q 看标签',motelkey:'Q 看钥匙牌',snowglobe:'Q 摇一摇',teeth:'Q 上发条',pager:'Q 看消息',polaroid:'Q 看照片',can:'Q 吃',peas:'Q 吃',pineapple:'Q 吃',melon:'Q 吃',papaya:'Q 吃',bandage:'Q 包扎',soap:'Q 洗手',sanitizer:'Q 洗手',watch:'Q 看时间',matches:'Q 划一根',lighter:'Q 点火',dynamite:'Q 点燃扔出',squirt:'Q 喷射',berries:'Q 吃下',fuyou:'Q 感知',yarn:'Q 放线',junk:'Q 扔掉',foam:'Q 扔掉',glass:'Q 扔掉',nitrogen:'Q 丢在地上',note:'Q 读'};
- const HAZI={chemical:{kind:'chem',txt:'⚠ 瓶里的液体在晃，瓶口结着白色结晶，闻着刺鼻——别拧开。'},dynamite:{kind:'boom',txt:'⚠ 引信很短，别靠近火源。'},glass:{kind:'glass',txt:'⚠ 边缘锋利，小心划手。'},nitrogen:{kind:'cold',txt:'⚠ 冷得刺手，一直冒着白气。'},berries:{kind:'odd',txt:'它们在盒子里微微发亮。'}};
- const NOTES=['纸条：“别跟着灯管嗡嗡声走。箱子里有水，但别碰贴骷髅的。——K”','纸条：“CRATE 14 — EMPTY. CRATE 15 — DON\'T.” 背面画着一小段走廊和一个叉。'];
+ const QUSE={beer:'左键 喝',cola:'左键 喝',cigarettes:'左键 抽一支',peacetin:'左键 抽一支',tvdinner:'左键 吃',tumbler:'左键 倒杏仁水喝',duck:'左键 捏',cassette:'左键 看标签',floppy:'左键 看标签',motelkey:'左键 看钥匙牌',snowglobe:'左键 摇一摇',teeth:'左键 上发条',pager:'左键 看消息',polaroid:'左键 看照片',can:'左键 吃',peas:'左键 吃',pineapple:'左键 吃',melon:'左键 吃',papaya:'左键 吃',bandage:'左键 包扎',soap:'左键 洗手',sanitizer:'左键 洗手',watch:'左键 看时间',matches:'左键 划一根',lighter:'左键 点火',dynamite:'左键 点燃扔出',squirt:'左键 喷射',berries:'左键 吃下',fuyou:'左键 感知',yarn:'左键 放线',junk:'左键 扔掉',foam:'左键 扔掉',glass:'左键 扔掉',nitrogen:'左键 丢在地上',note:'左键 读'};
+ const HAZI={chemical:{kind:'chem',txt:'⚠ 有毒，别拧开。'},dynamite:{kind:'boom',txt:'⚠ 引信很短，别靠近火源。'},glass:{kind:'glass',txt:'⚠ 边缘锋利，小心划手。'},nitrogen:{kind:'cold',txt:'⚠ 极冷，会慢慢升华。'},berries:{kind:'odd',txt:''}};
+ const NOTES=['纸条：“别跟着灯管嗡嗡声走。箱子里有水，但别碰贴骷髅的。——K”','纸条：“别跟着灯管嗡嗡声走。箱子里有水，但别碰贴骷髅的。——K”'];
  function itemVariant(id,meta){if(id==='almond')return meta?.kind?meta:almondVariant(meta?.id||'l1loot');if(id==='drink')return meta?.kind?meta:{kind:'vending',type:(meta?.v|0)%2?'can':'pet'};if(id==='soy')return {kind:'vending',type:'soy'};
   const name=itemTitle(id,meta)||(LOOT_ITEMS[id]||ITEMS[id])?.name||id,h=HAZI[id];let desc=ITEMS[id]?.desc||'';if(id==='note')desc=NOTES[(meta?.v|0)%2];
   const build=id==='flashlight'?(()=>{if(!FL)return makeLootModel('battery',{});const t=FL.createFlashlight117(T).torch;t.parent?.remove(t);t.position.set(0,0,0);t.rotation.set(0,0,0);return t;}):()=>makeLootModel(id,{...(meta||{})});
@@ -155,15 +155,16 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
  const has=id=>inventory.count(x=>x===id)>0;
  function lockInfo(c){if(c.open||c.lockDone||!c.roll.lock)return null;if(c.roll.lock===1)return has('knife')?{ok:true,txt:'E 用猎刀撬开钉死的木箱'}:has('axe')?{ok:true,txt:'E 用手斧撬开钉死的木箱'}:{ok:false,txt:'木箱被钉死了 · 需要小刀或斧头'};
   return has('axe')?{ok:true,txt:'E 用手斧砸开挂锁'}:{ok:false,txt:'铁皮箱上着挂锁 · 需要斧头'};}
+ function bundleTarget(){if(!kit||state.level!==1||W().mode!=='halls')return false;const c=target();if(!c||!c.open)return false;const it=targetItem(c);return !!(it&&it.members.length>1&&MW[it.pack?.kind]);}
  function prompt(){if(!kit||state.level!==1||W().mode!=='halls')return null;const c=target(),dr=targetDoor();
   if(dr&&(!c||dr.dist<Math.hypot(c.l.x-state.x,c.l.z-state.z)))return has('axe')?'E 用手斧劈开被铁链锁住的门':'门被铁链锁住 · 需要斧头';
   if(!c)return null;let s;
   if(!c.open){const L=lockInfo(c);s=L?L.txt:CARTON.has(c.l.look)?'E 撕开纸箱胶带':TOTE.has(c.l.look)?'E 掀开塑料箱盖':'E 打开板条箱';
    if(c.roll.hazard&&inventory.selected()==='fuyou')s+=' · 福友玉在发烫（'+HAZ_TXT[c.roll.hazard]+'？）';}
   else{const it=targetItem(c),tot=c.items.reduce((a,u)=>a+u.members.length,0);if(!it)s='空箱子';else{const n=it.members.length,w=MW[it.pack?.kind];
-   s=n>1&&w?'E 拿一'+w[0]+LOOT_ITEMS[it.id].name+' · Shift+E 整'+w[1]+'拿走（'+n+' '+w[0]+'）':'E 拿取 '+LOOT_ITEMS[it.id].name;if(tot>n)s+='（箱里还有 '+tot+' 件）';}}
+   s=n>1&&w?'E 拿一'+w[0]+LOOT_ITEMS[it.id].name+' · 长按 E 整'+w[1]+'拿走（'+n+' '+w[0]+'）':'E 拿取 '+LOOT_ITEMS[it.id].name;if(tot>n)s+='（箱里还有 '+tot+' 件）';}}
   return s;}
- function use(){if(!kit||state.level!==1||W().mode!=='halls')return false;const c=target(),dr=targetDoor();
+ function use(opts){if(!kit||state.level!==1||W().mode!=='halls')return false;const c=target(),dr=targetDoor();
   if(dr&&(!c||dr.dist<Math.hypot(c.l.x-state.x,c.l.z-state.z))){if(!has('axe')){toast('门被铁链锁住了，链子穿过两个把手。需要一把斧头。');sfx('tick');return true;}doorMesh(dr.r);breakDoor(dr.r);toast('你抡起手斧朝门板劈下去——');return true;}
   if(!c)return false;
   if(!c.open){const L=lockInfo(c);if(L&&!L.ok){toast(L.txt+'。');sfx('tick');return true;}if(L)c.lockDone=true;openCrate(c);return true;}
@@ -171,75 +172,75 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
   if(c.roll.hazard==='glass'&&rng(c.l.id+':cut'+c.taken.size)()<.45){hurt(9,'碎玻璃');fx.bleed=Math.max(fx.bleed,22);toast('被碎玻璃划破了手——在流血！用纱布包扎。');}
   const takeMeta=m=>{const meta={...m.meta};if(m.id==='berries')Object.assign(meta,{lv:1,x:c.l.x+Math.sin(c.l.ry)*.9,z:c.l.z+Math.cos(c.l.ry)*.9});if(m.id==='nitrogen')meta.born=Date.now();if(m.id==='squirt')meta.ammo=6;if(m.id==='lighter')meta.fuel=100;if(m.id==='matches')meta.left=12;if(m.id==='yarn')meta.len=60;if(m.id==='sanitizer')meta.uses=4;
    if(m.id==='soy')Object.assign(meta,{kind:'vending',type:'soy'});if(m.id==='drink')Object.assign(meta,{kind:'vending',type:meta.type||((meta.v|0)%2?'can':'pet')});if(m.id==='cigarettes')meta.left=20;if(m.id==='peacetin')meta.left=50;return m.id==='almond'?almondVariant(m.meta.id):meta;};
-  // V124c: E takes one item (the top one of a bundle), Shift+E the whole bundle; the bag splits it by stack caps
-  const whole=shiftDown&&it.members.length>1,pick=whole?it.members.slice():[it.members.at(-1)],pv=whole?packVariant(it.pack.kind,pick):null;it.obj.getWorldPosition(wp);
+  // V124c/V131-keys: E takes one item (the top one of a bundle), hold E the whole bundle; the bag splits it by stack caps
+  const whole=!!opts?.whole&&it.members.length>1,pick=whole?it.members.slice():[it.members.at(-1)],pv=whole?packVariant(it.pack.kind,pick):null;it.obj.getWorldPosition(wp);
   let got=0,last=null;for(const m of pick){const meta=takeMeta(m);if(inventory.add(m.id,meta,1))break;got++;last={m,meta};c.taken.add(m.i);const o=it.obj.userData.objs?.get(m.i);if(o&&o!==it.obj){o.getWorldPosition(wp);o.parent?.remove(o);}it.members=it.members.filter(x=>x!==m);}
   if(!got){toast('背包满了，放不下 '+LOOT_ITEMS[it.id].name+'。');return true;}
   for(const w of it.obj.userData.wraps||[])w.visible=false;
   if(!it.members.length){it.obj.parent?.remove(it.obj);c.items=c.items.filter(x=>x!==it);}
   persist(c);audio?.chime?.();const nm=(!whole&&last&&itemTitle(last.m.id,last.meta))||LOOT_ITEMS[it.id].name;
-  toast(whole?(got<pick.length?'背包只装得下 '+got+' 件 '+nm+'，其余留在箱里。':'整'+MW[it.pack.kind][1]+'拿走：'+got+' 件 '+nm+'，已按堆叠上限放进背包。'):'拿到了 '+nm+(it.id==='nitrogen'?'——它在冒白气，会慢慢升华掉。':''));updateHUD();
+  toast(whole?(got<pick.length?'背包只装得下 '+got+' 件 '+nm+'，其余留在箱里。':'整'+MW[it.pack.kind][1]+'拿走：'+got+' 件 '+nm+'，已按堆叠上限放进背包。'):'拿到了 '+nm+(it.id==='nitrogen'?'（会慢慢升华）':'')+'。');updateHUD();
   if(inspect)inspect(whole?pv:itemVariant(last.m.id,last.meta),wp.clone());return true;}
- // ---- using the selected item (Q) ----
+ // ---- using the selected item (left click) ----
  function useSelected(slot){const i=slot??inventory.sel,s=inventory.slots[i],id=s?.id;if(!id)return false;const meta=s.items.at(-1)||{};
   const eat=(txt,o)=>{inventory.take(i);for(const k in o)state[k]=Math.max(0,Math.min(100,state[k]+o[k]));audio?.chime?.();toast(txt);updateHUD();return true;};
   switch(id){
-   case 'can':return eat(has('knife')?'用猎刀撬开罐头，囫囵吃完了。':'没有开罐器，你用牙和指甲硬撬开了它……',{stamina:30,health:has('knife')?8:5,sanity:3});
-   case 'peas':return eat('嚼了一把干豌豆。硬，但能顶饿。',{stamina:8});
-   case 'pineapple':return eat('掰开菠萝，汁水顺着手腕流下来。',{hydration:18,health:6,sanity:6});
-   case 'melon':return eat('哈密瓜很甜，像是刚从酒吧小舟上拿下来的。',{hydration:20,health:5,sanity:5});
-   case 'papaya':return eat('木瓜软糯，有点过熟。',{hydration:14,health:5});
+   case 'can':return eat(has('knife')?'用猎刀开罐，吃完了罐头。':'没有刀，硬撬开罐头吃了（恢复较少）。',{stamina:30,health:has('knife')?8:5,sanity:3});
+   case 'peas':return eat('吃了一把干豌豆。',{stamina:8});
+   case 'pineapple':return eat('吃了菠萝。',{hydration:18,health:6,sanity:6});
+   case 'melon':return eat('吃了哈密瓜。',{hydration:20,health:5,sanity:5});
+   case 'papaya':return eat('吃了木瓜。',{hydration:14,health:5});
    case 'bandage':fx.bleed=0;return eat('用纱布包扎好伤口。',{health:25});
-   case 'soap':fx.toxic=0;return eat('用肥皂把手和脸洗干净了，化学品的刺痛感消退了。',{sanity:4});
-   case 'sanitizer':{fx.toxic=0;meta.uses=(meta.uses??4)-1;if(meta.uses<=0)inventory.take(i);toast('挤了点免洗洗手液。'+(meta.uses>0?'（还能用 '+meta.uses+' 次）':'（用完了）'));state.sanity=Math.min(100,state.sanity+2);updateHUD();return true;}
-   case 'watch':{const t=Math.floor(state.elapsed||0),h=String(Math.floor(t/3600)).padStart(2,'0'),m=String(Math.floor(t/60)%60).padStart(2,'0'),sec=String(t%60).padStart(2,'0');toast('手表：你在后室已经待了 '+h+':'+m+':'+sec+'。表盘上的指针却始终停在 3:17。');return true;}
-   case 'charger':toast('没有手机，墙上的插座也是死的。先留着吧。');return true;
-   case 'battery':toast('手电筒的电量还够。备用电池先收着。');return true;
+   case 'soap':fx.toxic=0;return eat('洗干净了，化学污染已清除。',{sanity:4});
+   case 'sanitizer':{fx.toxic=0;meta.uses=(meta.uses??4)-1;if(meta.uses<=0)inventory.take(i);toast('用了免洗洗手液，化学污染已清除。'+(meta.uses>0?'（还能用 '+meta.uses+' 次）':'（用完了）'));state.sanity=Math.min(100,state.sanity+2);updateHUD();return true;}
+   case 'watch':{const t=Math.floor(state.elapsed||0),h=String(Math.floor(t/3600)).padStart(2,'0'),m=String(Math.floor(t/60)%60).padStart(2,'0'),sec=String(t%60).padStart(2,'0');toast('已探索 '+h+':'+m+':'+sec+'。');return true;}
+   case 'charger':toast('暂时没有用处。');return true;
+   case 'battery':toast('备用电池，暂时用不上。');return true;
    case 'knife':toast('猎刀：靠近钉死的木箱按 E 撬开。');return true;
    case 'axe':toast('手斧：能撬开钉死的木箱，也能砸开铁皮箱的挂锁。');return true;
    case 'junk':case 'foam':inventory.take(i);toast('扔掉了'+LOOT_ITEMS[id].name+'。');return true;
-   case 'chemical':toast('你不打算喝这东西。标签上画着骷髅。');return true;
+   case 'chemical':toast('有毒，不能喝。');return true;
    case 'glass':inventory.take(i);toast('把碎玻璃扔掉了。');return true;
-   case 'nitrogen':inventory.take(i);fx.clouds.push({x:state.x,z:state.z,r:1,t:4,grp:puff(state.x,state.z,0xdfefff,5,.4,.2),kind:'cold-soft'});toast('把氮块丢在地上，它嘶嘶地冒着白雾升华掉了。');return true;
+   case 'nitrogen':inventory.take(i);fx.clouds.push({x:state.x,z:state.z,r:1,t:4,grp:puff(state.x,state.z,0xdfefff,5,.4,.2),kind:'cold-soft'});toast('把氮块丢在地上，它很快升华掉了。');return true;
    case 'matches':case 'lighter':{if(id==='matches'){meta.left=(meta.left??12)-1;if(meta.left<=0)inventory.take(i);}else{meta.fuel=(meta.fuel??100)-12;if(meta.fuel<=0){inventory.take(i);toast('打火机没气了。');return true;}}
-    fx.match=id==='matches'?14:40;fx.matchMax=fx.match;sfx('tick');toast(id==='matches'?'划着了一根火柴。'+(meta.left>0?'（盒里还剩 '+meta.left+' 根）':'（最后一根）'):'咔哒——打火机的火苗跳了起来。');return true;}
-   case 'dynamite':{if(state.level!==1||W()?.mode!=='halls'){toast('这里不是扔炸药的地方。');return true;}if(!has('matches')&&!has('lighter')){toast('需要火柴或打火机才能点燃炸药。');return true;}inventory.take(i);camera.getWorldDirection(fwd);const fl=Math.hypot(fwd.x,fwd.z)||1,x=state.x+fwd.x/fl*3,z=state.z+fwd.z/fl*3;
-    const o=makeLootModel('dynamite',{});o.position.set(x,0,z);scene?.add(o);fx.fuses.push({c:null,obj:o,t:3,x,z,spark:spark(x,.08,z)});sfx('hiss');toast('点燃引信，扔了出去——快躲开！');return true;}
+    fx.match=id==='matches'?14:40;fx.matchMax=fx.match;sfx('tick');toast(id==='matches'?'划着了一根火柴。'+(meta.left>0?'（盒里还剩 '+meta.left+' 根）':'（最后一根）'):'点着了打火机。');return true;}
+   case 'dynamite':{if(state.level!==1||W()?.mode!=='halls'){toast('炸药只能在 Level 1 使用。');return true;}if(!has('matches')&&!has('lighter')){toast('需要火柴或打火机才能点燃炸药。');return true;}inventory.take(i);camera.getWorldDirection(fwd);const fl=Math.hypot(fwd.x,fwd.z)||1,x=state.x+fwd.x/fl*3,z=state.z+fwd.z/fl*3;
+    const o=makeLootModel('dynamite',{});o.position.set(x,0,z);scene?.add(o);fx.fuses.push({c:null,obj:o,t:3,x,z,spark:spark(x,.08,z)});sfx('hiss');toast('点燃引信扔了出去，3 秒后爆炸。');return true;}
    case 'note':toast(NOTES[(meta.v|0)%2]);return true;
    // ---- V130-B loot+ ----
-   case 'beer':fx.drunk=Math.min(60,(fx.drunk||0)+22);return eat(['淡啤酒有点走气了，但是凉的。','墨西哥啤酒，没有青柠，凑合。','熊牌啤酒，麦芽味很冲。','北星ビール，泡沫细得出奇。'][(meta.v|0)%4]+'脑袋轻飘飘的。',{hydration:10,sanity:12,stamina:-6});
-   case 'cola':return eat(['香草可乐，甜得发腻。','COLA DEL SOL：气泡冲上鼻腔。','КОЛА ВОСТОК：有股说不清的草药味。'][(meta.v|0)%3],{hydration:20,stamina:25,sanity:4});
-   case 'cigarettes':case 'peacetin':{if(!has('matches')&&!has('lighter')){toast('没有火。需要火柴或打火机。');return true;}
+   case 'beer':fx.drunk=Math.min(60,(fx.drunk||0)+22);return eat('喝了啤酒，有点头晕。',{hydration:10,sanity:12,stamina:-6});
+   case 'cola':return eat('喝了可乐。',{hydration:20,stamina:25,sanity:4});
+   case 'cigarettes':case 'peacetin':{if(!has('matches')&&!has('lighter')){toast('需要火柴或打火机。');return true;}
     const fire=inventory.slots.findIndex(x=>x?.id==='lighter'),mi=inventory.slots.findIndex(x=>x?.id==='matches');if(fire>=0){const lm=inventory.slots[fire].items.at(-1)||{};lm.fuel=(lm.fuel??100)-3;}else if(mi>=0){const mm=inventory.slots[mi].items.at(-1)||{};mm.left=(mm.left??12)-1;if(mm.left<=0)inventory.take(mi);}
     meta.left=(meta.left??(id==='peacetin'?50:20))-1;if(meta.left<=0)inventory.take(i);fx.smoke=6;sfx('tick');
     for(const[k,d]of Object.entries({sanity:10,health:-2,stamina:-5}))state[k]=Math.max(0,Math.min(100,state[k]+d));updateHUD();
-    toast((id==='peacetin'?'从和平罐里抽出一支无滤嘴的烟点上。':'点了一支烟。')+'灯管的嗡嗡声好像远了一点。（还剩 '+Math.max(0,meta.left)+' 支）');return true;}
-   case 'tvdinner':return eat('没有烤箱。你撕开铝箔，把半冻的炸鸡和土豆泥一点点啃完，甜点那格的樱桃苹果最好吃。',{stamina:45,health:12,sanity:8,hydration:-3});
-   case 'tumbler':{const a=inventory.slots.findIndex(x=>x&&(x.id==='almond'||x.id==='drink'));if(a<0){toast('杯子是空的。背包里有杏仁水时 Q 会倒一杯。');return true;}inventory.take(a);state.bottles=inventory.drinks();
-    for(const[k,d]of Object.entries({hydration:45,stamina:35,sanity:28}))state[k]=Math.min(100,state[k]+d);audio?.chime?.();updateHUD();toast('把杏仁水倒进玻璃杯，慢慢喝完。像在家里一样。');return true;}
-   case 'duck':sfx('tick');state.sanity=Math.min(100,state.sanity+2);updateHUD();toast('吱——橡皮鸭的叫声在空旷的停车场里回荡了很久。');return true;
-   case 'cassette':toast('磁带标签：A 面「LEVEL 1 — DO NOT ERASE」，B 面「録音しないで」。没有录音机可以放。');return true;
-   case 'floppy':toast('软盘标签上用红笔写着「САМОСБОР?? backup 1996」。这里没有电脑。');return true;
-   case 'motelkey':toast('钥匙牌：MOTEL OASIS · ROOM 13 · 丢进任何邮筒即可寄回。后室里会有汽车旅馆吗？');return true;
-   case 'snowglobe':state.sanity=Math.min(100,state.sanity+4);updateHUD();toast('你摇了摇水晶球，雪花落在一根小小的黄色柱子和一只木箱上。底座写着：GREETINGS FROM LEVEL 1。');return true;
-   case 'teeth':sfx('tick');toast('咔哒咔哒咔哒——发条假牙在你手心里走了几步，然后停住，咧着嘴对着你。');return true;
-   case 'pager':{const msgs=['0-0-0-1','1-0-1-7','3-1-7','S.O.S','07734（倒过来看）'];toast('寻呼机屏幕：「'+msgs[Math.floor(Math.random()*msgs.length)]+'」。没有回拨号码。');return true;}
-   case 'polaroid':toast('拍立得照片：一条空荡的停车场走廊，积水倒映着灯管。底边写着「it never ends 03:17」。');return true;
+    toast('点了一支烟。（还剩 '+Math.max(0,meta.left)+' 支）');return true;}
+   case 'tvdinner':return eat('吃了电视晚餐。',{stamina:45,health:12,sanity:8,hydration:-3});
+   case 'tumbler':{const a=inventory.slots.findIndex(x=>x&&(x.id==='almond'||x.id==='drink'));if(a<0){toast('背包里没有杏仁水。');return true;}inventory.take(a);state.bottles=inventory.drinks();
+    for(const[k,d]of Object.entries({hydration:45,stamina:35,sanity:28}))state[k]=Math.min(100,state[k]+d);audio?.chime?.();updateHUD();toast('倒了一杯杏仁水喝完。');return true;}
+   case 'duck':sfx('tick');state.sanity=Math.min(100,state.sanity+2);updateHUD();toast('捏了一下橡皮鸭。');return true;
+   case 'cassette':toast('没有录音机，无法播放。');return true;
+   case 'floppy':toast('没有电脑，无法读取。');return true;
+   case 'motelkey':toast('钥匙牌：MOTEL OASIS · ROOM 13。');return true;
+   case 'snowglobe':state.sanity=Math.min(100,state.sanity+4);updateHUD();toast('摇了摇水晶球。');return true;
+   case 'teeth':sfx('tick');toast('上了发条，假牙走了几步。');return true;
+   case 'pager':{const msgs=['0-0-0-1','1-0-1-7','3-1-7','S.O.S','07734（倒过来看）'];toast('寻呼机：「'+msgs[Math.floor(Math.random()*msgs.length)]+'」');return true;}
+   case 'polaroid':toast('照片上是一条空荡的停车场走廊。');return true;
    case 'squirt':return squirt(i,meta);
    case 'berries':{inventory.take(i);const lv=meta.lv??1;if(lv!==1){toast('浆果的味道变了——什么也没发生。');return true;}fx.flash=.8;
-    if(state.level!==1){toast('你吞下迁跃浆果，眼前的一切被抽离——');enterOne?.(0,{x:meta.x,z:meta.z});return true;}
-    const w=W(),p=w.safe(meta.x??state.x,meta.z??state.z);Object.assign(state,{x:p.x,z:p.z});w.ensure(p.x,p.z);resetCameraRig();toast('迁跃浆果：眼前一花——你回到了第一次发现它们的地方。');return true;}
+    if(state.level!==1){toast('吃下迁跃浆果，传送回 Level 1。');enterOne?.(0,{x:meta.x,z:meta.z});return true;}
+    const w=W(),p=w.safe(meta.x??state.x,meta.z??state.z);Object.assign(state,{x:p.x,z:p.z});w.ensure(p.x,p.z);resetCameraRig();toast('传送回第一次发现浆果的地方。');return true;}
    case 'fuyou':{const hz=near.map(rt).filter(c=>c.roll.hazard&&!c.open&&!c.blown).map(c=>Math.hypot(c.l.x-state.x,c.l.z-state.z)).sort((a,b)=>a-b)[0];
-    toast(hz===undefined||hz>10?'福友玉保持着平静的苔绿色。附近没有察觉到危险。':'福友玉的光越来越亮——大约 '+Math.round(hz)+' 米内有危险的东西。');return true;}
-   case 'yarn':{if(state.level!==1||W()?.mode!=='halls'){toast('毛线留着回 Level 1 再放吧。');return true;}if(fx.yarn){endYarn();toast('剪断了毛线。线还留在地上，可以顺着它走回去。');return true;}fx.yarn={meta,last:{x:state.x,z:state.z},pts:[new T.Vector3(state.x,.02,state.z)],line:null};toast('把毛线头系在这里，开始边走边放线（再按 Q 剪断）。还剩 '+Math.round(meta.len??60)+' 米。');return true;}
+    toast(hz===undefined||hz>10?'10 米内没有危险。':'大约 '+Math.round(hz)+' 米内有危险的箱子。');return true;}
+   case 'yarn':{if(state.level!==1||W()?.mode!=='halls'){toast('毛线只能在 Level 1 使用。');return true;}if(fx.yarn){endYarn();toast('剪断了毛线，线留在地上。');return true;}fx.yarn={meta,last:{x:state.x,z:state.z},pts:[new T.Vector3(state.x,.02,state.z)],line:null};toast('开始放线（再按 左键 剪断）。还剩 '+Math.round(meta.len??60)+' 米。');return true;}
   }
   return false;}
- function squirt(i,meta){if(!(meta.ammo>0)){const a=inventory.slots.findIndex(s=>s?.id==='almond');if(a<0){toast('滋水枪是空的。背包里有杏仁水时会自动灌满。');return true;}inventory.take(a);meta.ammo=8;toast('把一瓶杏仁水灌进了储罐（8 发）。');return true;}
+ function squirt(i,meta){if(!(meta.ammo>0)){const a=inventory.slots.findIndex(s=>s?.id==='almond');if(a<0){toast('滋水枪是空的，背包里也没有杏仁水。');return true;}inventory.take(a);meta.ammo=8;toast('把一瓶杏仁水灌进了储罐（8 发）。');return true;}
   meta.ammo--;camera.getWorldDirection(fwd);sfx('hiss');
-  if(fwd.y>.82){state.hydration=Math.min(100,state.hydration+10);state.sanity=Math.min(100,state.sanity+3);toast('朝嘴里滋了一口杏仁水。滋水枪只对使用者本人网开一面。');updateHUD();return true;}
-  const fl=Math.hypot(fwd.x,fwd.z)||1;let hit=false;for(const f of fx.fuses){const dx=f.x-state.x,dz=f.z-state.z,d=Math.hypot(dx,dz);if(d<5&&(dx*fwd.x+dz*fwd.z)/fl/d>.8){f.dead=true;hit=true;toast('嗤——引信被杏仁水浇灭了。');}}
+  if(fwd.y>.82){state.hydration=Math.min(100,state.hydration+10);state.sanity=Math.min(100,state.sanity+3);toast('喝了一口杏仁水。');updateHUD();return true;}
+  const fl=Math.hypot(fwd.x,fwd.z)||1;let hit=false;for(const f of fx.fuses){const dx=f.x-state.x,dz=f.z-state.z,d=Math.hypot(dx,dz);if(d<5&&(dx*fwd.x+dz*fwd.z)/fl/d>.8){f.dead=true;hit=true;toast('引信被浇灭了。');}}
   for(const c of fx.clouds){const dx=c.x-state.x,dz=c.z-state.z,d=Math.hypot(dx,dz);if(c.kind==='chem'&&d<5){c.t=Math.min(c.t,2.5);hit=true;toast('水雾压住了化学气体。');}}
-  if(!hit)toast('滋——杏仁水喷了出去。（储罐还剩 '+meta.ammo+' 发）');
+  if(!hit)toast('喷出杏仁水。（还剩 '+meta.ammo+' 发）');
   const pts=new T.BufferGeometry(),n=60,arr=new Float32Array(n*3);for(let k=0;k<n;k++){const s=.4+k/n*4,j=(k%3-1)*.03;arr.set([state.x+fwd.x/fl*s+j,1.35+fwd.y*s-s*s*.06+j,state.z+fwd.z/fl*s-j],k*3);}pts.setAttribute('position',new T.BufferAttribute(arr,3));
   const p=new T.Points(pts,new T.PointsMaterial({color:0xd8eef6,size:.09,transparent:true,opacity:.85}));scene?.add(p);fx.clouds.push({x:0,z:0,r:0,t:.7,grp:p,kind:'spray'});return true;}
  // ---- V124b chained store-room doors in the 小径 dead ends (sites: level1-clusters.js → world.lockDoorsNear) ----
@@ -340,5 +341,5 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
  function useInspected(v){if(!v||v.kind!=='object'||v.pack||!v.use)return false;let i=inventory.slots[inventory.sel]?.id===v.id?inventory.sel:inventory.slots.findIndex(x=>x?.id===v.id);if(i<0)return false;
   const before=inventory.count(x=>x===v.id);const r=useSelected(i);return r?{consumed:inventory.count(x=>x===v.id)<before}:false;}
  function inspectSelected(){if(!inspect)return false;const s=inventory.slots[inventory.sel];if(!s)return false;const v=itemVariant(s.id,s.items.at(-1));if(!v)return false;inspect(v,null);return true;}
- return{useInspected,inspectSelected,itemVariant,packVariant,reset:(l)=>{const c=live.get(l.id);if(c)dropContents(c);live.delete(l.id);delete saved[l.id];nearKey='';},force:(l,th)=>{const c=rt(l);c.roll=rollCrate(l,th);return c.roll;},update,prompt,use,useSelected,stats,prewarm,rollCrate,get near(){return near;},live,fx,target,openCrate:(c,f)=>openCrate(c,f),spawnContents,rt,doors,get nearDoors(){return nearDoors;},targetDoor,doorRt,doorMesh,breakDoor,doorBroken,get yarnTrails(){return yarnTrails;},endYarn,mapOverlay,fxTick};
+ return{bundleTarget,useInspected,inspectSelected,itemVariant,packVariant,reset:(l)=>{const c=live.get(l.id);if(c)dropContents(c);live.delete(l.id);delete saved[l.id];nearKey='';},force:(l,th)=>{const c=rt(l);c.roll=rollCrate(l,th);return c.roll;},update,prompt,use,useSelected,stats,prewarm,rollCrate,get near(){return near;},live,fx,target,openCrate:(c,f)=>openCrate(c,f),spawnContents,rt,doors,get nearDoors(){return nearDoors;},targetDoor,doorRt,doorMesh,breakDoor,doorBroken,get yarnTrails(){return yarnTrails;},endYarn,mapOverlay,fxTick};
 }

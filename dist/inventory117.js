@@ -5,49 +5,49 @@
 export const ITEMS={
  almond:{name:'杏仁水',max:4,drink:true,desc:'恢复水分、体力与理智。'},
  drink:{name:'售货机饮料',max:6,drink:true,desc:'售货机里的杏仁水（塑料瓶 / 易拉罐）。'},
- can:{name:'罐头',max:16,desc:'密封的罐头食品。'},
- battery:{name:'电池',max:8,desc:'1.5 V 电池，手电筒用。'},
- flashlight:{name:'手电筒',max:1,desc:'点击开关；装电池延长续航。'},
+ can:{name:'罐头',max:16,desc:'左键 吃：恢复体力。有猎刀恢复更多。'},
+ battery:{name:'电池',max:8,desc:'1.5 V 电池。'},
+ flashlight:{name:'手电筒',max:1,desc:'F 或 左键 开关。'},
  note:{name:'纸条',max:32,desc:'别人留下的字条。'},
- // V124-L1 loot (Level 1 crates). use = what Q does with the selected stack (l1loot124-main.js useSelected)
- soy:{name:'幸运豆奶',max:6,drink:true,desc:'2005 年的幸运豆奶。Q 饮用。'},
- bandage:{name:'医用纱布',max:8,desc:'Q 包扎：止血并恢复 25 生命。'},
- soap:{name:'茉莉香皂',max:4,desc:'Q 洗手洗脸：清除化学污染。'},
- sanitizer:{name:'免洗洗手液',max:2,desc:'Q 使用 4 次，清除化学污染。'},
- charger:{name:'手机充电器',max:1,desc:'没有手机，也没有能用的插座。'},
- matches:{name:'火柴',max:4,desc:'Q 划一根：手边亮起一小团火光。也能点燃炸药。'},
- lighter:{name:'打火机',max:1,desc:'Q 点火：更久的火光。也能点燃炸药。'},
+ // V124-L1 loot (Level 1 crates). use = what left click does with the selected stack (l1loot124-main.js useSelected)
+ soy:{name:'幸运豆奶',max:6,drink:true,desc:'左键 饮用：恢复水分、体力与理智。'},
+ bandage:{name:'医用纱布',max:8,desc:'左键 包扎：止血，恢复 25 生命。'},
+ soap:{name:'茉莉香皂',max:4,desc:'左键 使用：清除化学污染。'},
+ sanitizer:{name:'免洗洗手液',max:2,desc:'左键 使用：清除化学污染，可用 4 次。'},
+ charger:{name:'手机充电器',max:1,desc:'暂时没有用处。'},
+ matches:{name:'火柴',max:4,desc:'左键 划一根：短暂照明。可点燃炸药、香烟。'},
+ lighter:{name:'打火机',max:1,desc:'左键 点火：照明更久。可点燃炸药、香烟。'},
  knife:{name:'猎刀',max:1,desc:'撬开钉死的木箱；吃罐头更方便。'},
  axe:{name:'手斧',max:1,desc:'撬开钉死的木箱，砸开铁皮箱的挂锁。'},
- watch:{name:'旧手表',max:1,desc:'Q 看时间。指针停在 3:17。'},
- yarn:{name:'毛线团',max:8,desc:'Q 开始/剪断放线：沿路留下一条毛线，60 米一团。'},
- junk:{name:'垃圾',max:16,desc:'没什么用。Q 扔掉。'},
- foam:{name:'泡沫颗粒',max:32,desc:'包装泡沫。Q 扔掉。'},
- peas:{name:'干豌豆',max:24,desc:'Q 吃一把：少量体力。'},
- pineapple:{name:'菠萝',max:2,desc:'Q 吃：补水分与生命。'},
- melon:{name:'哈密瓜',max:2,desc:'Q 吃：补水分与生命。'},
- papaya:{name:'木瓜',max:3,desc:'Q 吃：补水分与生命。'},
- fuyou:{name:'福友玉',max:4,desc:'Object 101。握在手中时，附近有危险会发光；Q 感知距离。'},
- squirt:{name:'滋水枪',max:1,desc:'Object 19。Q 喷射杏仁水（自动用背包里的杏仁水装填）；抬头喷可以喝；能浇灭引信、压住毒气。'},
- berries:{name:'迁跃浆果',max:6,desc:'Object 74。Q 食用：传送回第一次发现它们的地方。'},
- chemical:{name:'化学制剂',max:4,desc:'贴着骷髅标签的瓶子。别喝。'},
- dynamite:{name:'炸药',max:4,desc:'有火柴或打火机时 Q 点燃并扔出，3 秒后爆炸，能炸开附近的箱子。'},
- nitrogen:{name:'固态氮块',max:4,desc:'约 2.5 分钟后会升华消失。Q 丢在地上。'},
+ watch:{name:'旧手表',max:1,desc:'左键 查看已探索时长。'},
+ yarn:{name:'毛线团',max:8,desc:'左键 开始 / 剪断放线：沿路留下毛线标记，一团 60 米。'},
+ junk:{name:'垃圾',max:16,desc:'没有用处。左键 扔掉。'},
+ foam:{name:'泡沫颗粒',max:32,desc:'没有用处。左键 扔掉。'},
+ peas:{name:'干豌豆',max:24,desc:'左键 吃：少量体力。'},
+ pineapple:{name:'菠萝',max:2,desc:'左键 吃：恢复水分与生命。'},
+ melon:{name:'哈密瓜',max:2,desc:'左键 吃：恢复水分与生命。'},
+ papaya:{name:'木瓜',max:3,desc:'左键 吃：恢复水分与生命。'},
+ fuyou:{name:'福友玉',max:4,desc:'拿在手中时，附近有危险会发光。左键 查看危险距离。'},
+ squirt:{name:'滋水枪',max:1,desc:'左键 喷射杏仁水，自动用背包里的杏仁水装填。可浇灭引信、压住毒气；朝上喷可以喝。'},
+ berries:{name:'迁跃浆果',max:6,desc:'左键 吃：传送回第一次发现它们的地方。'},
+ chemical:{name:'化学制剂',max:4,desc:'有毒，不能饮用。'},
+ dynamite:{name:'炸药',max:4,desc:'需要火柴或打火机。左键 点燃并扔出，3 秒后爆炸，可炸开附近的箱子。'},
+ nitrogen:{name:'固态氮块',max:4,desc:'约 2.5 分钟后升华消失。左键 丢在地上。'},
  // V130-B loot+ (Level 1 crates). drink = the Level 11 back-court vending almond water (PET / can), as from the machine
- beer:{name:'啤酒',max:6,desc:'罐装啤酒。Q 喝：理智上升，体力略降，会有点晕。'},
- cola:{name:'可乐',max:6,desc:'罐装可乐。Q 喝：补水分和体力。'},
- cigarettes:{name:'香烟',max:10,desc:'一包 20 支。有火柴或打火机时 Q 抽一支：理智上升，伤一点身体。'},
- peacetin:{name:'罐装和平香烟',max:2,desc:'Peace 圆铁罐，50 支装。有火时 Q 抽一支。'},
- tvdinner:{name:'电视晚餐（预制菜）',max:4,desc:'铝托盘冷冻套餐。Q 吃：没有烤箱，只能半冻着吃。'},
- tumbler:{name:'玻璃杯',max:4,desc:'Q 倒一杯杏仁水喝（用背包里的杏仁水）：比对瓶吹更能安神。'},
- duck:{name:'橡皮鸭',max:4,desc:'Q 捏一下。'},
- cassette:{name:'录音磁带',max:8,desc:'没有录音机。标签上有字。'},
- floppy:{name:'软盘',max:10,desc:'1.44 MB。没有电脑。'},
- motelkey:{name:'汽车旅馆钥匙',max:1,desc:'菱形钥匙牌：OASIS 汽车旅馆 13 号房。'},
- snowglobe:{name:'雪花水晶球',max:1,desc:'Q 摇一摇。'},
- teeth:{name:'发条假牙',max:1,desc:'Q 上发条。'},
- pager:{name:'寻呼机',max:1,desc:'Q 看消息。'},
- polaroid:{name:'拍立得照片',max:16,desc:'Q 看照片。'},
+ beer:{name:'啤酒',max:6,desc:'左键 喝：理智上升，体力略降，会头晕。'},
+ cola:{name:'可乐',max:6,desc:'左键 喝：恢复水分与体力。'},
+ cigarettes:{name:'香烟',max:10,desc:'一包 20 支，需要火柴或打火机。左键 抽一支：理智上升，略伤生命。'},
+ peacetin:{name:'罐装和平香烟',max:2,desc:'一罐 50 支，需要火柴或打火机。左键 抽一支：理智上升，略伤生命。'},
+ tvdinner:{name:'电视晚餐（预制菜）',max:4,desc:'左键 吃：恢复体力、生命与理智。'},
+ tumbler:{name:'玻璃杯',max:4,desc:'左键 倒一杯杏仁水喝（消耗背包里的一瓶），理智恢复更多。'},
+ duck:{name:'橡皮鸭',max:4,desc:'左键 捏：少量理智。'},
+ cassette:{name:'录音磁带',max:8,desc:'没有录音机，无法播放。'},
+ floppy:{name:'软盘',max:10,desc:'没有电脑，无法读取。'},
+ motelkey:{name:'汽车旅馆钥匙',max:1,desc:'钥匙牌：OASIS 汽车旅馆 13 号房。'},
+ snowglobe:{name:'雪花水晶球',max:1,desc:'左键 摇一摇：少量理智。'},
+ teeth:{name:'发条假牙',max:1,desc:'左键 上发条。'},
+ pager:{name:'寻呼机',max:1,desc:'左键 看消息。'},
+ polaroid:{name:'拍立得照片',max:16,desc:'左键 看照片。'},
 };
 // V124: every item has its own icon, generated large on its own and reduced to 32 px (assets/l1-loot-v124/icon)
 const ICON_FILES=new Set(['almond','drink','soy','can','battery','flashlight','note','bandage','soap','sanitizer','charger','matches','lighter','knife','axe','watch','yarn','junk','foam','peas','pineapple','melon','papaya','fuyou','squirt','berries','chemical','dynamite','nitrogen']);
@@ -89,7 +89,7 @@ export function createInventory117({onChange=()=>{},toast=()=>{}}={}){
  function cell(i){const s=slots[i],d=document.createElement('div');d.className='inv-slot'+(i===sel&&i<HOT?' sel':'');d.dataset.i=i;
   if(s){d.innerHTML=`<img src="${iconUrl(s.id,s.items[0])}" alt="" draggable="false">${s.items.length>1?`<b>${s.items.length}</b>`:''}`;d.title=ITEMS[s.id]?.name+' · '+s.items.length+'/'+max(s.id);}
   return d;}
- function ensure(){if(root&&root.isConnected)return;root=document.createElement('div');root.className='inv117';root.innerHTML='<div class="inv-bag" hidden><div class="inv-panel"><div class="inv-title">背包 <small>I 关闭 · 拖拽移动 · Shift+点击 快速移动 · 右键拆半</small></div><div class="inv-grid inv-main"></div><div class="inv-sep"></div><div class="inv-grid inv-hot2"></div><div class="inv-info"></div></div></div><div class="inv-bar"></div><div class="inv-name"></div>';
+ function ensure(){if(root&&root.isConnected)return;root=document.createElement('div');root.className='inv117';root.innerHTML='<div class="inv-bag" hidden><div class="inv-panel"><div class="inv-title">背包 <small>Tab 关闭 · 拖拽移动 · Shift+点击 快速移动 · 右键拆半</small></div><div class="inv-grid inv-main"></div><div class="inv-sep"></div><div class="inv-grid inv-hot2"></div><div class="inv-info"></div></div></div><div class="inv-bar"></div><div class="inv-name"></div>';
   (document.getElementById('game')||document.body).append(root);bar=root.querySelector('.inv-bar');bag=root.querySelector('.inv-bag');
   bag.addEventListener('pointerdown',down);bag.addEventListener('pointerover',e=>{const t=e.target.closest?.('.inv-slot'),info=root.querySelector('.inv-info');if(!info)return;const s=t?slots[Number(t.dataset.i)]:null;info.textContent=s?(ITEMS[s.id]?.name||s.id)+' '+s.items.length+'/'+max(s.id)+' · '+(ITEMS[s.id]?.desc||''):'';});bag.addEventListener('contextmenu',e=>e.preventDefault());addEventListener('pointermove',move);addEventListener('pointerup',up);}
  let nameT=0;
@@ -115,7 +115,6 @@ export function createInventory117({onChange=()=>{},toast=()=>{}}={}){
   if(items.length)slots[i]={id:s.id,items};render();onChange();}
  // ---------- input ----------
  function key(e){if(e.repeat)return false;const ae=document.activeElement;if(ae&&/INPUT|SELECT|TEXTAREA/.test(ae.tagName))return false;
-  if(e.code==='KeyI'){setOpen(!open);return true;}
   if(open&&e.code==='Escape'){setOpen(false);return true;}
   const m=/^Digit([1-9])$/.exec(e.code);if(m){select(Number(m[1])-1);return true;}return false;}
  function wheel(dy){select(sel+(dy>0?1:-1));}

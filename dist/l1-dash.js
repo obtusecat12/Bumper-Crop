@@ -214,7 +214,7 @@ function navStatic(w,h,k){
  text(b,'PARKING',px+pw-6,py+10,f12(),'#ffffff',null,'right');text(b,'DIRECTORY',px+pw-6,py+22,f12(),'#bfe3c9',null,'right');
  const fy=py+ph-17;b.fillStyle='#eeefea';b.fillRect(px,fy,pw,17);b.fillStyle='#cfd3cd';b.fillRect(px,fy,pw,1);
  b.fillStyle='#d7261e';b.beginPath();b.arc(px+10,fy+8.5,4.2,0,TAU);b.fill();b.strokeStyle='#fff';b.lineWidth=1.2;b.stroke();
- text(b,'YOU ARE HERE',px+19,fy+9,f12(),'#c3201a',null,'left');text(b,'F 全图',px+pw-6,fy+9,f12(),'#30353b',null,'right');
+ text(b,'YOU ARE HERE',px+19,fy+9,f12(),'#c3201a',null,'left');text(b,'M 全图',px+pw-6,fy+9,f12(),'#30353b',null,'right');
  // ---- front: the acrylic face ----
  f.save();rr(f,x,y,W,Hh,r);f.clip();
  f.strokeStyle='#2f7e6a55';f.lineWidth=1.6;f.strokeRect(px-.8,py-.8,pw+1.6,ph+1.6);f.strokeStyle='#ffffff50';f.lineWidth=.8;f.strokeRect(px+.6,py+.6,pw-1.2,ph-1.2);
@@ -405,8 +405,8 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   const sq=clamp(-s.v*.00035,-.05,.05);cvs.style.transform=`translate3d(0,${(s.y*S.k).toFixed(2)}px,0) scale(${(1-sq*.5).toFixed(4)},${(1+sq).toFixed(4)})`;
   cvs.style.visibility=(!s.on&&s.y>DH+50)?'hidden':'visible';return Math.abs(s.y-(s.on?0:DH+60))>.05||Math.abs(s.v)>.05;}
  const typing=()=>{const ae=document.activeElement;return ae&&/INPUT|SELECT|TEXTAREA/.test(ae.tagName);};
- function onKey(e){if(!isL1()||e.repeat||typing())return;if(e.code==='KeyF'){play('key',1,.96);return;}if(e.code!=='Tab')return;if(document.querySelector('.modal:not([hidden]),dialog[open]'))return;e.preventDefault();play('key');if(visible)hide();else show();}
- function onKeyUp(e){if(!isL1()||typing())return;if(e.code==='Tab'||e.code==='KeyF')play('keyUp',1,e.code==='KeyF'?.96:1);}
+ function onKey(e){if(!isL1()||e.repeat||typing())return;const K=globalThis.__bcKeys131;if(K?K.is(e,'map'):e.code==='KeyM'){play('key',1,.96);return;}if(!(K?K.is(e,'hud'):e.code==='KeyH'))return;if(document.querySelector('.modal:not([hidden]),dialog[open]'))return;e.preventDefault();play('key');if(visible)hide();else show();}
+ function onKeyUp(e){if(!isL1()||typing())return;const K=globalThis.__bcKeys131,mp=K?K.is(e,'map'):e.code==='KeyM';if(mp||(K?K.is(e,'hud'):e.code==='KeyH'))play('keyUp',1,mp?.96:1);}
  addEventListener('keydown',onKey);addEventListener('keyup',onKeyUp);
  function frame(now){raf=requestAnimationFrame(frame);const l1=isL1();if(l1&&!wasL1)S.pending=true;wasL1=l1;if(!l1||document.hidden)return;if(!ensure())return;
   const dt=Math.min(.5,(now-(lastT||now))/1000);lastT=now;if(!host.getClientRects().length)return;if(!resize())return;
