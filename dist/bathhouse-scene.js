@@ -2,7 +2,7 @@ import {createIndoorOccupants75,initializeRetroTextures75} from './retro-occupan
 import {createReceptionAtmosphere73} from './reception-furniture-v73.js';
 import {buildChangingRoom72,CHANGING_POINT_LIGHTS} from './changing-room-v72.js?v=73';
 import {createChangingEffects} from './changing-effects-v72.js';
-import {createChangingMirror73} from './changing-mirror-v73.js';
+import {createChangingMirror73} from './changing-mirror-v73.js?v=133m';
 import {POOL_DOOR} from './bathhouse-plan-v72.js';
 import * as T from './vendor/three.module.min.js';
 import {SPA} from './spa-layout-v66.js';

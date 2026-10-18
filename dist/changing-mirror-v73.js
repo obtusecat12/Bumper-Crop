@@ -9,6 +9,11 @@ export function createChangingMirror73(scene,mirror){
  reflector.position.copy(mirror.position);reflector.quaternion.copy(mirror.quaternion);reflector.updateMatrixWorld(true);
  reflector.camera.layers.set(5);
  const target=reflector.getRenderTarget(),material=mirror.material;
+ // V133-mirror: D3D11/ANGLE (Edge) allows 16 fragment texture units. Bath lights (6 point + 1 spot shadow,
+ // 2 RectArea LTC LUTs, env) + 5 PBR maps + mirrorColor already used 16; the V117/V132 flashlight cookie
+ // (spotLightMap) made it 17, the program failed to link and the mirror was skipped (tile wall showed
+ // through). The near-white metalness/AO maps are folded into constants: 15 units. ?mirror133=0 = old.
+ if(!/[?&]mirror133=0/.test(globalThis.location?.search||'')){material.metalness*=.95;material.metalnessMap=null;material.color.multiplyScalar(.96);material.aoMap=null;material.needsUpdate=true;}
  const frustum=new T.Frustum(),matrix=new T.Matrix4(),bounds=new T.Box3().setFromObject(mirror);
  const u={mirrorColor:{value:target.texture},mirrorMatrix:reflector.material.uniforms.textureMatrix,mirrorReady:{value:0},mirrorTexel:{value:new T.Vector2(1/512,1/256)}};
  const stats={captures:0,skips:0,lastFrame:-1,lastCalls:0,lastTriangles:0,lastCameraPosition:[0,0,0],sameFrame:true,globalClipPlanes:false};
