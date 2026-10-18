@@ -14,8 +14,31 @@ export const BAKE_SPOTS=Object.freeze([
  // V132-L27-redo: niche moved onto the curved stair cliff (wall angle t≈.42 about the stair centre).
  {id:'stair',p:[4.52,2.62,-1.80],t:[3.45,.95,-1.20],c:[1.00,.78,.50],power:5.4,cos0:.25,cos1:.80,range:4.6},
  // Platform flowstone on the enlarged dry annex's far wall.
- {id:'annex',p:[3.80,2.95,-.10],t:[6.75,1.40,2.05],c:[1.00,.86,.64],power:5.6,cos0:.66,cos1:.92,range:6.0}
+ {id:'annex',p:[3.80,2.95,-.10],t:[6.75,1.40,2.05],c:[1.00,.86,.64],power:5.6,cos0:.66,cos1:.92,range:6.0},
+ // V133-L27-fix: daylight falling down the main chimney (pale cool-white shaft onto the pool).
+ {id:'shaft',p:[.18,7.05,.22],t:[.10,0,.30],c:[.86,.93,1.00],power:10.0,cos0:.86,cos1:.97,range:9.5},
+ // warm M.E.G. lanterns on the platform (omni): existing wall lamp by the bather + new far-wall lamp + low lamp by the stair foot
+ {id:'lampA',p:[6.30,2.12,.40],t:[5.6,1.0,.6],c:[1.00,.70,.42],power:2.6,cos0:-1.1,cos1:-1.0,range:5.0},
+ {id:'lampB',p:[4.60,2.10,2.80],t:[4.6,1.0,1.8],c:[1.00,.72,.44],power:2.2,cos0:-1.1,cos1:-1.0,range:4.8},
+ {id:'lampC',p:[3.05,.95,-.05],t:[4.5,.5,.6],c:[1.00,.66,.38],power:1.3,cos0:-1.1,cos1:-1.0,range:3.2},
+ // show-cave uplights hidden behind boulders: wash the terraced vaults
+ {id:'vaultMain',p:[2.05,.55,.75],t:[.10,4.70,.20],c:[1.00,.84,.62],power:4.2,cos0:.45,cos1:.85,range:6.5},
+ {id:'vaultAnnex',p:[3.40,.50,2.55],t:[5.00,4.40,.90],c:[1.00,.82,.58],power:3.4,cos0:.45,cos1:.85,range:6.0},
+ // water bounce: cyan-green light thrown up the pool walls (caustics animate on top in the shader)
+ {id:'water',p:[.05,.06,.10],t:[.05,3.0,.10],c:[.32,.80,.72],power:1.7,cos0:-.15,cos1:.35,range:4.5},
+ // cold blue from fissures
+ {id:'fissA',p:[6.85,1.05,1.75],t:[5.5,1.0,1.0],c:[.30,.55,1.00],power:.9,cos0:-1.1,cos1:-1.0,range:2.8},
+ {id:'fissB',p:[-1.75,1.30,-1.55],t:[0,1,0],c:[.30,.58,1.00],power:.8,cos0:-1.1,cos1:-1.0,range:2.6}
 ]);
+// V133-L27-fix: upward-growing cave roof. Chimneys (stepped, narrowing upward) rise out of the
+// terraced vaults; shared by the offline mesher (air) and the runtime light shaft.
+export const CHIMNEYS133=Object.freeze([
+ {id:'main',x:.18,z:.22,y0:4.35,y1:7.40,r0:.92,r1:.34,m:.10,steps:3,open:true},
+ {id:'west',x:-1.30,z:1.15,y0:4.05,y1:6.20,r0:.52,r1:.20,m:.12,steps:3},
+ {id:'annex',x:5.30,z:1.30,y0:4.15,y1:6.35,r0:.60,r1:.24,m:.12,steps:3},
+ {id:'annexB',x:3.85,z:2.05,y0:3.95,y1:5.45,r0:.42,r1:.18,m:.08,steps:2}
+]);
+export const TOWEL133={x:2.78,z:1.22,yaw:.55};
 // Real-time lights kept for wet highlights / bathers / reflections (2 hidden spots
 // share the 2 shadow casters of the old pool lanterns). Point lanterns: tunnel + annex.
 export const LIVE_SPOTS=Object.freeze([

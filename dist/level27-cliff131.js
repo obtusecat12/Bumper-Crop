@@ -5,8 +5,8 @@
 // flowstone now grows out of the shell itself (calc from flowMain/flowAnnex); curtains/spikes dropped.
 // Water surface, its height and its shader are NOT touched here.
 import * as T from './vendor/three.module.min.js';
-import {STAIRS,stairTB,stairWallR,treadHeight,wallPoint,roofPoint,roofHeight,ANNEX,inAnnex,poolFloor,radialLimit,TUNNEL_Y} from './level27-layout.js?v=132r';
-import {bakeAt,FLOWSTONES,flowMain,flowAnnex} from './level27-light131.js?v=132r';
+import {STAIRS,stairTB,stairWallR,treadHeight,wallPoint,roofPoint,roofHeight,ANNEX,inAnnex,poolFloor,radialLimit,TUNNEL_Y} from './level27-layout.js?v=133';
+import {bakeAt,FLOWSTONES,flowMain,flowAnnex} from './level27-light131.js?v=133';
 const tex={};
 const NAMES=['strata','flow','slab','rubble','wetmoss'];
 export async function initializeCliff131(){
@@ -37,9 +37,11 @@ export function cliffMaterial131(name,opts,clock,extra={}){
   s.fragmentShader=s.fragmentShader.replace('#include <normal_fragment_maps>',`vec3 cn=triN(cDryN,cTopN,cp,vCN);cn=normalize(mix(cn,triN(cWetN,cWetN,vCP*cScale*1.3,vCN),vCW*.7));normal=normalize(mix(normal,mat3(viewMatrix)*cn*faceDirection,.7));`);
   s.fragmentShader=s.fragmentShader.replace('#include <roughnessmap_fragment>',`float roughnessFactor=mix(mix(.62+.35*tri(cDryR,cDryR,cp,vCN).r,.30,vCC*.7),cWetRough,clamp(vCW,0.,1.));`);
   s.fragmentShader=s.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>\ntotalEmissiveRadiance+=diffuseColor.rgb*vBake*2.*cGain;`);
+  // V133: water caustics thrown onto the pool walls (projected from the surface, fade with height, only round the pool)
+  if(opts.caustic133){s.uniforms.cCaus={value:opts.caustic133};s.fragmentShader='uniform sampler2D cCaus;\n'+s.fragmentShader.replace('#include <opaque_fragment>',`{float rr=length(vCP.xz-vec2(.05,.05));float near=1.-smoothstep(2.35,3.05,rr);float hgt=smoothstep(-.05,.10,vCP.y)*(1.-smoothstep(.3,2.3,vCP.y));float face=clamp(dot(vCN,-normalize(vec3(vCP.x,0.,vCP.z)))*1.4+.25,0.,1.);vec2 q=vCP.xz*.62+vec2(0.,vCP.y*.45);float a=texture2D(cCaus,q+vec2(cTime*.021,-cTime*.017)).r,b=texture2D(cCaus,q*1.13+vec2(-cTime*.019,cTime*.023)).r;outgoingLight+=vec3(.10,.24,.21)*pow(min(a,b)*1.35,2.2)*near*hgt*face;}\n#include <opaque_fragment>`);}
   if(opts.caustic)s.fragmentShader=s.fragmentShader.replace('#include <opaque_fragment>',`outgoingLight+=vec3(.03,.07,.05)*smoothstep(.6,.95,sin(vCP.x*7.+cTime*.9)*sin(vCP.z*6.3-cTime*.7))*(1.-smoothstep(-.2,.5,vCP.y));\n#include <opaque_fragment>`);
  };
- m.customProgramCacheKey=()=>'l27-131-'+dry+'-'+wet+'-'+top+'-'+calc+(opts.caustic?'-c':'');
+ m.customProgramCacheKey=()=>'l27-131-'+dry+'-'+wet+'-'+top+'-'+calc+(opts.caustic?'-c':'')+(opts.caustic133?'-c133':'');
  return m;
 }
 // Per-vertex runtime bake (no SDF shadow). Geometry must be in world space.

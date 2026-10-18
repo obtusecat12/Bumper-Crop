@@ -1,6 +1,11 @@
 // Metres. CAVE_PLAN is the WATER surface survey, exactly 18.58 m².
 // The carved east bank and access tunnel are additional land outside this polygon.
 import {SPRING_OCCUPANTS} from './level27-occupants-v68.js';
+import {WALK133} from './level27-walk133.js?v=133';
+import {TOWEL133} from './level27-light131.js?v=133';
+// V133-L27-fix: walk mask baked from the shell's own rock field (every visible wall/overhang collides).
+const W133=WALK133?(()=>{const b=typeof atob==='function'?Uint8Array.from(atob(WALK133.bits),c=>c.charCodeAt(0)):Uint8Array.from(Buffer.from(WALK133.bits,'base64'));return {...WALK133,b};})():null;
+export function walkMask133(x,z){if(!W133)return true;const i=Math.round((x-W133.x0)/W133.h),k=Math.round((z-W133.z0)/W133.h);if(i<0||k<0||i>=W133.nx||k>=W133.nz)return false;const n=k*W133.nx+i;return (W133.b[n>>3]>>(n&7)&1)===1;}
 export const CAVE_AREA=18.58, WATER_Y=0, TUNNEL_Y=1.88;
 // V132-L27-redo: rock stair cut into the cliff. From the tunnel mouth it descends hugging the
 // left (+x) cliff and curves RIGHT along a concave rock wall (arc about C=(cx,cz)); the inner side
@@ -56,6 +61,8 @@ export function poolFloor(x,z){const r=Math.hypot(x,z),lim=radialLimit(x||.00000
  return y;}
 export function springFloor(x,z){if(inTunnel(x,z)&&z<STAIRS.start)return TUNNEL_Y;if(onStairFootprint(x,z,.025)&&z>=STAIRS.start){const l=stairLocal(x,z);return treadHeight(l.i)+treadRelief(x,z,l);}return poolFloor(x,z);}
 export function springAllowed(x,z){
+ if(!walkMask133(x,z))return false;
+ if(Math.hypot(x-TOWEL133.x,z-TOWEL133.z)<.42)return false;
  if(SPRING_OCCUPANTS.some(p=>Math.hypot(x-p.x,z-p.z)<p.radius+.18))return false;
  if(Math.hypot(x-WASH_BASIN.x,z-WASH_BASIN.z)<WASH_BASIN.radius+.19)return false;
  if(Math.abs(x-(WASH_BASIN.x-.90))<.64&&Math.abs(z-(WASH_BASIN.z+.65))<.45)return false;

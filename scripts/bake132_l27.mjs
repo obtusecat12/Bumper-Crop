@@ -10,7 +10,7 @@ const require=createRequire('/workspace/.cache/bake132/');
 const D='/workspace/projects/536c6175-2b91-4d1e-8d3d-28210d8dbdd7/bc/dist/';
 // ---- bake config (edit + re-run to re-bake) ----
 export const CFG={
- spotGain:{hero:2.3,pale:2.1,cascade:1.5,stair:2.4,annex:2.0}, // flowstone spots brighter (user: flowstone not bright enough)
+ spotGain:{hero:2.3,pale:2.1,cascade:1.5,stair:2.4,annex:2.0,shaft:1.6,lampA:1.5,lampB:1.5,lampC:1.3,vaultMain:1.3,vaultAnnex:1.3,water:1.2,fissA:1.2,fissB:1.2}, // V133: + chimney shaft, platform lanterns, vault uplights, water bounce, fissures // flowstone spots brighter (user: flowstone not bright enough)
  lightRadius:.10,shadowSamples:8,giSamples:40,bounces:2,giGain:1.5,
  aoDist:.6,warm:[.085,.060,.040],cool:[.040,.075,.125],
  albedo:{rock:[.15,.105,.068],calc:[.62,.57,.48],stone:[.32,.27,.21],flow:[.70,.65,.56],floor:[.24,.20,.16]},
@@ -20,9 +20,9 @@ const THREE=require('three'),{MeshBVH}=require('three-mesh-bvh');
 async function buildScene(){
  const T=await import(D+'vendor/three.module.min.js');
  const {mergeGeometries}=await import(D+'vendor/BufferGeometryUtils.js');
- const {SPRING_SHELL:S}=await import(D+'level27-shell-data.js?v=132r');
+ const {SPRING_SHELL:S}=await import(D+'level27-shell-data.js?v=133');
  const C=await import(D+'level27-cliff131.js?v=132r');
- const L=await import(D+'level27-layout.js?v=132r');
+ const L=await import(D+'level27-layout.js?v=133');
  const unpack=(s,K)=>{const b=Buffer.from(s,'base64');return new K(b.buffer,b.byteOffset,b.byteLength/K.BYTES_PER_ELEMENT);};
  const q=unpack(S.vertices,Int16Array),p=new Float32Array(q.length);for(let i=0;i<q.length;i++)p[i]=q[i]/S.scale;
  const shell=new T.BufferGeometry();shell.setAttribute('position',new T.BufferAttribute(p,3));shell.setIndex(new T.BufferAttribute(new Uint32Array(unpack(S.indices,Uint32Array)),1));
@@ -89,7 +89,7 @@ async function runPass(sc,spots,mode,E){
 }
 async function main(){
  const t0=Date.now();const meshes=await buildScene(),sc=combine(meshes);
- const {BAKE_SPOTS}=await import(D+'level27-light131.js?v=131');
+ const {BAKE_SPOTS}=await import(D+'level27-light131.js?v=133');
  const spots=BAKE_SPOTS.map(s=>({...s,power:s.power*(CFG.spotGain[s.id]??1)}));
  console.log('verts',sc.nv,'tris',sc.I.length/3,'meshes',meshes.map(m=>m.name+':'+m.g.attributes.position.count).join(' '));
  const dir=await runPass(sc,spots,'direct',null);console.log('direct',((Date.now()-t0)/1e3).toFixed(1)+'s');
