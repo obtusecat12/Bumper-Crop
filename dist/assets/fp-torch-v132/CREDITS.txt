@@ -1,0 +1,8 @@
+First-person flashlight (V132-flashlight)
+
+Model: "Flashlight" by Jarlan Perez
+Source: https://poly.pizza/m/1UrYBPWN1U_
+License: Creative Commons Attribution 3.0 (CC-BY 3.0) https://creativecommons.org/licenses/by/3.0/
+Changes: rescaled/stretched to the game's torch frame, rotated so the switch faces the thumb, inner glass sleeve
+removed, new UV unwrap, new PS1-style texture atlas (atlas.png, painted procedurally at 1024 px, downsampled to
+256 px and quantised to 48 colours; the "NORDLUX" brand is fictional). Built by tools/torch132_assets.py.

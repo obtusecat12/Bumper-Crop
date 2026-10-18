@@ -1,0 +1,3 @@
+"Flashlight" by Jarlan Perez — https://poly.pizza/m/1UrYBPWN1U_ — licensed under CC-BY 3.0
+(https://creativecommons.org/licenses/by/3.0/). Modified (rescale, re-UV, new low-fi texture) for Bumper Crop.
+Used as the first-person flashlight model: dist/assets/fp-torch-v132/ (see CREDITS.txt there).

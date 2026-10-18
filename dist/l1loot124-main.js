@@ -66,7 +66,7 @@ export function rollCrate(l,force,legacy=false){const R=rng(l.id);let theme='sup
 
 export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio,updateHUD=()=>{},enterOne,resetCameraRig=()=>{},inspect=null}){
  let shiftDown=false;addEventListener('keydown',e=>{if(e.key==='Shift')shiftDown=true;});addEventListener('keyup',e=>{if(e.key==='Shift')shiftDown=false;});addEventListener('blur',()=>{shiftDown=false;});
- let FL=null;import('./flashlight117.js?v=119').then(m=>{FL=m;}).catch(()=>{});
+ let FL=null;import('./flashlight117.js?v=132').then(m=>{FL=m;}).catch(()=>{});
  const W=()=>world();let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}');}catch{}
  const save=()=>{try{const k=Object.keys(saved);if(k.length>800)for(const x of k.slice(0,k.length-800))delete saved[x];localStorage.setItem(KEY,JSON.stringify(saved));}catch{}};
  const ready=prepareLootItems();

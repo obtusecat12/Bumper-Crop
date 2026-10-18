@@ -56,6 +56,20 @@ export function createFlashlight117(T){
  const t2=new T.Group();t2.position.z=-.032;t2.rotation.set(0,-.95,0);t1.add(t2);{const m=new T.Mesh(seg(.0085,.02),skin);m.rotation.x=Math.PI/2;m.position.z=-.012;t2.add(m);}
  const nail=new T.Mesh(new T.BoxGeometry(.011,.002,.012),new T.MeshStandardMaterial({color:0xe6b8a2,roughness:.35}));nail.position.set(0,.007,-.018);t2.add(nail);
  hand.position.set(.2,-.21,-.4);hand.rotation.set(-.04,Math.PI+.08,0);
+ // V132-flashlight: the barrel/head/caps/reflector/bulb/switch/lens now come from a Maglite-style CC-BY model ("Flashlight" by
+ // Jarlan Perez, poly.pizza/m/1UrYBPWN1U_, assets/fp-torch-v132/CREDITS.txt), re-UV'd and repainted PS1-style by
+ // tools/torch132_assets.py into this same torch frame (+Z forward, lens at LENS_Z, switch on +Y). lens/btn stay the same
+ // objects (beam origin + thumb press keep working); only their geometry is swapped. ?torch=117 keeps the procedural torch.
+ const torch132=!/[?&]torch=117\b/.test(globalThis.location?.search||'');
+ if(torch132)new GLTFLoader().load('./assets/fp-torch-v132/torch.glb?v=132',g=>{try{
+  const tex=new T.TextureLoader().load('./assets/fp-torch-v132/atlas.png?v=132');tex.colorSpace=T.SRGBColorSpace;tex.flipY=false;tex.magFilter=T.NearestFilter;tex.minFilter=T.NearestMipmapLinearFilter;
+  const X=g.parser.json.extras||{},get=n=>g.scene.getObjectByName(n),bodyM=get('body'),sw=get('switch'),lz=get('lens');
+  for(const o of [...torch.children])if(o!==lens&&o!==btn){torch.remove(o);o.geometry?.dispose();}
+  bodyM.material=new T.MeshStandardMaterial({map:tex,roughness:.45,metalness:.35,emissive:0x0e1013});bodyM.position.set(0,0,0);torch.add(bodyM);
+  btn.geometry.dispose();btn.geometry=sw.geometry;btn.material=new T.MeshStandardMaterial({map:tex,roughness:.85,metalness:0});
+  lens.geometry.dispose();lens.geometry=lz.geometry;lens.position.z=X.LENS_Z??lens.position.z;lensMat.map=tex;lensMat.transparent=true;lensMat.needsUpdate=true;
+  torch.traverse(o=>{if(o.isMesh){o.frustumCulled=false;o.castShadow=o.receiveShadow=false;}});
+ }catch(e){console.warn('torch132 failed, keeping procedural torch',e);}},undefined,e=>console.warn('torch132 load failed',e));
  const armRoot=new T.Group();armRoot.visible=false;rig.add(armRoot);let armsReady=false;const btnN=new T.Vector3(0,1,0);
  // V119 grip (user 14:43: no overhand fist with the torch poking out of the top): the barrel now runs THROUGH the
  // curled fingers (axis = normal of the middle/ring finger curl plane), lens out of the index side, thumb straightened
@@ -153,7 +167,7 @@ export function createFlashlight117(T){
   hand.position.set(.2+bob.x+sway.x*.4,-.21+bob.y+breathe-(1-raise)*.3-press*.004,-.4);hand.rotation.set(-.04-sway.y*.6-press*.05,Math.PI+.08+sway.x*.8,-bob.x*1.4);armRoot.position.set(bob.x+sway.x*.4,bob.y+breathe-(1-raise)*.3-press*.004,0);armRoot.rotation.set(-sway.y*.6-press*.05,sway.x*.8,-bob.x*1.4);
   thumb.children[0].rotation.x=-press*.25;if(btnRest)btn.position.copy(btnRest).addScaledVector(btnN,-press*.002);else btn.position.y=.017-press*.002;
   let I=on&&equipped?1:0;if(flick>0){flick-=dt;I*=flick>.12?(Math.sin(flick*90)>0?.3:1):1;}
-  const lv=level;spot.intensity=I*(lv===10||lv===11?28:46);spot.decay=2;coneMat.uniforms.uI.value=I;cone.visible=I>0;lensMat.color.setScalar(I?1.6:.12);}
+  const lv=level;spot.intensity=I*(lv===10||lv===11?28:46);spot.decay=2;coneMat.uniforms.uI.value=I;cone.visible=I>0;lensMat.color.setScalar(I?1.6:(torch132?.8:.12));lensMat.opacity=torch132&&!I?.35:1;}
  function toggle(){if(!equipped)return;on=!on;press=1;click(on);if(on)flick=.22;}
  function setEquipped(v){if(v===equipped)return;equipped=v;}
  return{rig,prepare,overlay,update,toggle,setEquipped,setLevel(v){level=v;},get on(){return on&&equipped;},get beam(){return{p:lightRig.position,d:fdir,i:coneMat.uniforms.uI.value,cos:Math.cos(.46)};},get equipped(){return equipped;},spot,cone,armRoot,torch};
