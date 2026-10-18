@@ -2,6 +2,7 @@ import {addClinicStreetlife,PATIO_RECT} from './clinic-streetlife.js?v=60';
 import {hedge131,shrub131} from './shrub131.js?v=131';   // V131 cross-card shrubs
 import {addFountainLiquid,finishFountainLiquid} from './fountain-water-v54.js?v=60';
 import {fountainCenter} from './clinic-district-materials.js?v=60';
+import {fountain133,tree133,lamp133,pot133,finishPlaza133} from './palm133-plaza.js?v=133p';   // V133-palm-plaza
 import * as T from './vendor/three.module.min.js';
 import {UrbanBatch,urbanRandom} from './urban-batch.js?v=60';
 import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=60';
@@ -52,12 +53,17 @@ export function createClinicDistrict(mats){const center=clinicToWorld(49,46);fou
  // A 41 × 33 m pedestrian square: fountain, shaded perimeter, two generous axial paths.
  const treePositions=[[31.5,34],[31.5,46],[31.5,58],[65.5,34],[65.5,46],[65.5,58],[40,58],[56,58]];
  const holes=[PATIO_RECT,[43.78,54.22,40.78,51.22],...treePositions.map(([x,z])=>[x-.78,x+.78,z-.78,z+.78])];
- surface(b,'district:pavers',29,70,29,62.1,.12,holes);surface(b,'district:terraceTile',...PATIO_RECT,.12,treePositions.map(([x,z])=>[x-.78,x+.78,z-.78,z+.78]));surface(b,'photoCobble',25.6,29,29,62.1,.02);
+ surface(b,'p133:pavers',29,70,29,62.1,.12,holes);surface(b,'p133:pavers',...PATIO_RECT,.12,treePositions.map(([x,z])=>[x-.78,x+.78,z-.78,z+.78]));surface(b,'photoCobble',25.6,29,29,62.1,.02);
  // Trim follows the real outer perimeter, with 2.8 m ramp openings aligned to paths.
  for(const [a,c]of[[29,46.6],[49.4,70]]){b.box('photoGranite',(a+c)/2,.13,29,c-a,.10,.22);b.box('photoGranite',(a+c)/2,.13,62.1,c-a,.10,.22);}
  for(const z of[29,62.1]){const sign=z===29?1:-1;quad(b,'photoGranite',[[46.6,.02,z-sign*1.5],[49.4,.02,z-sign*1.5],[49.4,.12,z],[46.6,.12,z]]);b.walk(48,z-sign*.75,2.8,1.5,.07,0,sign*.10/1.5);}
  for(const x of[29,70])b.box('photoGranite',x,.10,45.55,.18,.16,33.1);
- for(let k=0;k<64;k++){const a=k*PI/32,c=(k+1)*PI/32,point=(t,r)=>[49+Math.cos(t)*r,.12,46+Math.sin(t)*r],edge=t=>5.22/Math.max(Math.abs(Math.cos(t)),Math.abs(Math.sin(t)));quad(b,'district:pavers',[point(a,5.22),point(c,5.22),point(c,edge(c)),point(a,edge(a))]);}fountain(b,49,46);
+ for(let k=0;k<64;k++){const a=k*PI/32,c=(k+1)*PI/32,point=(t,r)=>[49+Math.cos(t)*r,.12,46+Math.sin(t)*r],edge=t=>5.22/Math.max(Math.abs(Math.cos(t)),Math.abs(Math.sin(t)));quad(b,'p133:pavers',[point(a,5.22),point(c,5.22),point(c,edge(c)),point(a,edge(a))]);}fountain133(b,49,46);
+ // V133: broadleaf tree walls on the side planters + south corners (gaps keep the axes and the west street open), sodium lamp, patio pots.
+ for(const[x,z,o,sd]of[[28.4,31.6,-1,1],[28.4,36.2,-1,2],[28.4,54.0,-1,3],[28.4,59.0,-1,4],[70.6,31.6,1,5],[70.6,36.2,1,6],[70.6,54.6,1,7],[70.6,59.2,1,8]])tree133(b,x,z,{seed:1330+sd,h:5.2+(sd%3)*.5,R:3.8+(sd%2)*.6,out:[o*1.4,0]});
+ for(const[x,sd]of[[34.5,9],[62.5,10]])tree133(b,x,27.3,{seed:1330+sd,h:5.6,R:4.0,out:[0,-1.2]});
+ lamp133(b,29.6,51.6);
+ for(const[x,z,sd]of[[45.2,39.4,1],[45.2,52.6,2],[53.4,39.0,3],[53.4,53.0,4]]){const y=pot133(b,x,z);palm(b,x,z,y,1.75,1400+sd,.5,false);}
  for(let i=0;i<treePositions.length;i++){const[x,z]=treePositions[i];palm(b,x,z,.12,8.1+(i%3)*.75,901+i,1.2,true);}
  for(const[x,z,ry]of[[60.7,37,-PI/2],[60.7,49,-PI/2],[56,55,PI],[58,33,0]])place(b,x,.12,z,ry,P.addBench);
  for(const x of[28.4,70.6])for(const z of[34,56.5]){b.box('photoGranite',x,.32,z,1.35,.60,7.6);b.box('bark',x,.627,z,1.12,.04,7.32);b.solid(x,z,1.35,7.6);b.push(x,.64,z,PI/2);hedge131(b,-3.55,3.55,0,0,{d:1.0,h:.62,seed:(x*13+z*7)|0,kind:'privet'});b.pop();for(let k=0;k<4;k++)shrub131(b,x+((k*37)%5-2)*.08,.64,z-2.7+k*1.8,{kinds:['boxwood','euonymus','laurel'],seed:(x*3+k*11)|0,w:.85});}
@@ -71,5 +77,5 @@ export function createClinicDistrict(mats){const center=clinicToWorld(49,46);fou
  // Back service walk meets the neighboring generated block at city X≈112.
  surface(b,'asphalt',27.6,70,76.3,82.3,.005);surface(b,'photoGranite',27.6,62.4,76.3,77.7,.15);
  addClinicStreetlife(b,{potted});
- b.pop();const object=b.finish('Clinic infill / connected shops and palm fountain square');finishFountainLiquid(object);return{object,walks:b.walks,colliders:b.colliders,buildings:3,shops:8,waypoint:{...clinicToWorld(48,28),label:'Level 11 · 棕榈喷泉广场',yaw:A+PI,pitch:.03}};
+ b.pop();const object=b.finish('Clinic infill / connected shops and palm fountain square');finishFountainLiquid(object);finishPlaza133(object);return{object,walks:b.walks,colliders:b.colliders,buildings:3,shops:8,waypoint:{...clinicToWorld(48,28),label:'Level 11 · 棕榈喷泉广场',yaw:A+PI,pitch:.03}};
 }

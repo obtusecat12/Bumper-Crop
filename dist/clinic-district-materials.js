@@ -1,5 +1,6 @@
 import {addFountainWaterMaterials} from './fountain-water-v54.js?v=60';
 import * as T from './vendor/three.module.min.js';
+import {addPlazaMaterials133,initializePlaza133} from './palm133-plaza.js?v=133p';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 export const DISTRICT_TEXTURES={
  mallMosaic:[512,512,true,'../urban-v58/ceramic-mosaic.webp'],payphoneFace:[256,384,false,'../urban-v58/payphone-face.webp'],mallDirectory:[512,768,false,'../urban-v58/palm-court-directory.webp'],colaMachine:[256,512,false,'../urban-v58/sunset-cola-vending.webp'],
@@ -15,7 +16,7 @@ export const districtTextures={};
 for(const[key,[w,h,repeat]]of Object.entries(DISTRICT_TEXTURES)){const t=new T.DataTexture(new Uint8Array([188,185,170,255]),1,1);t.name='Clinic district / '+key;t.colorSpace=T.SRGBColorSpace;t.flipY=true;t.generateMipmaps=true;t.minFilter=T.LinearMipmapLinearFilter;t.magFilter=T.LinearFilter;t.anisotropy=8;t.wrapS=t.wrapT=repeat?T.RepeatWrapping:T.ClampToEdgeWrapping;t.needsUpdate=true;if(key==='mallMosaic')t.wrapS=t.wrapT=T.MirroredRepeatWrapping;districtTextures[key]=t;}
 let pending;
 async function decode(url,w,h){const r=await fetch(url);if(!r.ok)throw Error('District texture '+url.pathname+': '+r.status);const im=await createImageBitmap(await r.blob()),c=new OffscreenCanvas(w,h),ctx=c.getContext('2d');ctx.drawImage(im,0,0,w,h);im.close();return{data:new Uint8Array(ctx.getImageData(0,0,w,h).data),width:w,height:h};}
-export function initializeDistrictTextures(load=decode){return pending||(pending=Promise.all(Object.entries(DISTRICT_TEXTURES).map(async([key,[w,h,,file]])=>{districtTextures[key].image=await load(new URL('./textures/clinic-v53/'+file,import.meta.url),w,h);districtTextures[key].needsUpdate=true;})).catch(e=>{pending=null;throw e;}));}
+export function initializeDistrictTextures(load=decode){return pending||(pending=Promise.all(Object.entries(DISTRICT_TEXTURES).map(async([key,[w,h,,file]])=>{districtTextures[key].image=await load(new URL('./textures/clinic-v53/'+file,import.meta.url),w,h);districtTextures[key].needsUpdate=true;}).concat([initializePlaza133()])).catch(e=>{pending=null;throw e;}));}
 export const fountainClock={value:0},fountainCenter={value:new T.Vector2()};
 export function addDistrictMaterials(m){
  m.plazaRoof=new T.MeshStandardMaterial({name:"Milky arcade vault / translucent acrylic",color:0xc9d4c9,roughness:.64,metalness:.03,side:T.DoubleSide,vertexColors:true});m.plazaRoof.userData.urbanShared=true;
@@ -23,6 +24,6 @@ export function addDistrictMaterials(m){
  Object.assign(URBAN_TILE_SIZE,{'district:burgundyCanvas':1,'district:yellowLinen':1.4,'district:wicker':.36,'district:terraceTile':2.0,'district:pavers':3,'district:poolTile':1.28,'district:palmBark':1.5,'district:terracotta':.55,'district:benchWood':1.75,'district:paintMetal':.8,'district:terrazzo':1.1,'district:mallMosaic':.72});
  for(const key of ['colaMachine','mallDirectory']){const a=m['district:'+key];a.emissiveMap=districtTextures[key];a.emissive.set(0xffffff);a.emissiveIntensity=key==='colaMachine'?.16:.045;}
  m.plazaShell=m.photoCream.clone();m.plazaShell.side=T.DoubleSide;m.plazaShell.name='Cream enamel acoustic phone hood';m.plazaShell.userData.urbanShared=true;
- addFountainWaterMaterials(m,{clock:fountainClock,center:fountainCenter});
+ addFountainWaterMaterials(m,{clock:fountainClock,center:fountainCenter});addPlazaMaterials133(m,fountainClock);
  return m;
 }

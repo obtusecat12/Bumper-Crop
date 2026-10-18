@@ -906,7 +906,7 @@ const normalFog=new T.Color('#acb6b1'),clearFog=new T.Color('#b4cbd2'),duskFog=n
 let activeReferenceEnvironment=null;
 function weather(dt,renderDt=dt){
  activeReferenceEnvironment=referenceEnvironment(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z,state.level);
- const profile=activeReferenceEnvironment,referenceBlend=profile?.amount||0;if(referenceBlend)rainAmount*=1-referenceBlend;
+ const profile=activeReferenceEnvironment,referenceBlend=profile?.amount||0;if(referenceBlend)rainAmount=Math.max(rainAmount*(1-referenceBlend),profile.rain133||0);/*V133-palm-plaza local drizzle*/
  const mist=weatherState.mist*(1-referenceBlend),clear=weatherState.clear,dusk=weatherState.dusk;
  const coverage=state.level===11?(exitScene.stats.coverage||212):Math.max(.2,coverageRadius*CHUNK+Math.min(state.x,state.z,CHUNK-state.x,CHUNK-state.z)-8);
  const approach=ease(.38,.91,transitionProgress.value);const far=state.level===11?Math.min(coverage,settings.quality==='low'?210:280):Math.min(coverage,((settings.quality==='low'?165:225)-rainAmount*40)*(1-approach)+175*approach);
