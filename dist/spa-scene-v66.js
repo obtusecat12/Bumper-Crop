@@ -8,7 +8,7 @@ import {springTextures} from './level27-materials.js?v=63';
 import {createSpaWater} from './spa-water-v66.js';
 import {createSpaBloom} from './spa-bloom-v65.js';
 import {createSpringVolume} from './spring-volume-v121.js';
-import {createSpaStatues} from './spa-statues-v65.js';
+import {createSpaStatues} from './spa-statues-v133.js?v=133';
 import {createSpaRock} from './spa-rock-v66.js';
 import {createSpaFurniture} from './spa-furniture-v66.js';
 import {createSpaAudio} from './spa-audio-v66.js';

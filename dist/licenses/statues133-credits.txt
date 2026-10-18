@@ -1,0 +1,15 @@
+Bath spa grotto statues (V133-statue) — statue133-data.js / spa-statues-v133.js
+
+1. "Venus de Milo (Aphrodite of Milos)" — 3D scan of plaster cast KAS434/1,
+   The Royal Cast Collection, SMK – National Gallery of Denmark (smkmuseum).
+   License: CC0 1.0 Public Domain Dedication.
+   Source: https://zenodo.org/records/10318081 (Objaverse / Sketchfab mirror)
+
+2. "Venere di Lely British Museum Crouching Aphrodite" by cesarinozollo.
+   License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+   https://creativecommons.org/licenses/by/4.0/
+   Source: https://zenodo.org/records/10291287 (Objaverse / Sketchfab mirror)
+
+Changes for Bumper Crop: both meshes decimated to ~2,600 triangles, rescaled,
+scan texture reduced to a per-vertex grey shade, re-surfaced with the game's
+own marble material.
