@@ -1,5 +1,5 @@
 // V132-bake: offline GI vertex-light baker for L27 (self-written; Blender has no linux-arm64 build for this sandbox).
-// Rebuilds the same static geometry the runtime builds (shell, masonry stair, flowstone curtains, spikes, platform floor),
+// Rebuilds the same static geometry the runtime builds (shell incl. grown flowstone, V132-L27-redo rock stair, platform floor),
 // path-traces direct spot light with soft shadows + 2 diffuse bounces + AO-weighted fill, writes dist/level27-bake132.js.
 // Run: NODE_PATH=/workspace/.cache/bake132/node_modules node tools/bake132_l27.mjs   (deps: three-mesh-bvh MIT, three MIT)
 // Values use the same units as level27-light131 bakeAt (shader: emissive = albedo * bake * 2).
@@ -10,7 +10,7 @@ const require=createRequire('/workspace/.cache/bake132/');
 const D='/workspace/projects/536c6175-2b91-4d1e-8d3d-28210d8dbdd7/bc/dist/';
 // ---- bake config (edit + re-run to re-bake) ----
 export const CFG={
- spotGain:{hero:2.3,pale:2.1,cascade:1.5,stair:1.3,annex:2.0}, // flowstone spots brighter (user: flowstone not bright enough)
+ spotGain:{hero:2.3,pale:2.1,cascade:1.5,stair:2.4,annex:2.0}, // flowstone spots brighter (user: flowstone not bright enough)
  lightRadius:.10,shadowSamples:8,giSamples:40,bounces:2,giGain:1.5,
  aoDist:.6,warm:[.085,.060,.040],cool:[.040,.075,.125],
  albedo:{rock:[.15,.105,.068],calc:[.62,.57,.48],stone:[.32,.27,.21],flow:[.70,.65,.56],floor:[.24,.20,.16]},
@@ -20,17 +20,15 @@ const THREE=require('three'),{MeshBVH}=require('three-mesh-bvh');
 async function buildScene(){
  const T=await import(D+'vendor/three.module.min.js');
  const {mergeGeometries}=await import(D+'vendor/BufferGeometryUtils.js');
- const {SPRING_SHELL:S}=await import(D+'level27-shell-data.js?v=131');
- const C=await import(D+'level27-cliff131.js?v=131');
- const L=await import(D+'level27-layout.js?v=131');
+ const {SPRING_SHELL:S}=await import(D+'level27-shell-data.js?v=132r');
+ const C=await import(D+'level27-cliff131.js?v=132r');
+ const L=await import(D+'level27-layout.js?v=132r');
  const unpack=(s,K)=>{const b=Buffer.from(s,'base64');return new K(b.buffer,b.byteOffset,b.byteLength/K.BYTES_PER_ELEMENT);};
  const q=unpack(S.vertices,Int16Array),p=new Float32Array(q.length);for(let i=0;i<q.length;i++)p[i]=q[i]/S.scale;
  const shell=new T.BufferGeometry();shell.setAttribute('position',new T.BufferAttribute(p,3));shell.setIndex(new T.BufferAttribute(new Uint32Array(unpack(S.indices,Uint32Array)),1));
  const qn=unpack(S.normals,Int16Array);shell.setAttribute('normal',new T.Float32BufferAttribute(Array.from(qn,v=>v/16000),3));
  C.prepareShell131(shell,unpack(S.bake,Uint8Array));
  const stair=mergeGeometries(C.buildStair131());if(!stair.attributes.normal)stair.computeVertexNormals();
- const f=C.buildFlowstone131(),uv0=g=>{g.deleteAttribute('uv');g.setAttribute('uv',new T.BufferAttribute(new Float32Array(g.attributes.position.count*2),2));return g;};
- const curtains=mergeGeometries(f.curtains.map(uv0)),spikes=mergeGeometries(f.spikes.map(uv0));
  // platform floor: same construction as level27-scene.js
  const {poolFloor,radialLimit,inAnnex}=L,inPoolGrid=(x,z)=>Math.hypot(x,z)<=radialLimit(x,z)+.065;
  function geoGrid(cols,rows,point,skip){const p=[],uv=[],idx=[];for(let j=0;j<=rows;j++)for(let i=0;i<=cols;i++){const q=point(i/cols,j/rows);p.push(...q.slice(0,3));uv.push(...q.slice(3,5));}for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){if(skip((i+.5)/cols,(j+.5)/rows))continue;const a=j*(cols+1)+i,b=a+cols+1;idx.push(a,b,a+1,a+1,b,b+1);}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return g;}
@@ -39,9 +37,7 @@ async function buildScene(){
  const A=CFG.albedo,mix=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
  return [
   {name:'shell',g:shell,boost:1,alb:i=>mix(A.rock,A.calc,calcOf(shell).getX(i))},
-  {name:'stair',g:stair,boost:1.1,alb:()=>A.stone},
-  {name:'curtains',g:curtains,boost:.9,alb:()=>A.flow},
-  {name:'spikes',g:spikes,boost:1.0,alb:()=>mix(A.rock,A.calc,.55)},
+  {name:'stair',g:stair,boost:1.0,alb:()=>A.rock},
   {name:'floor',g:floor,boost:1.15,alb:()=>A.floor}
  ];
 }

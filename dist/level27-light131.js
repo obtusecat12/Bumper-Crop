@@ -11,7 +11,8 @@ export const BAKE_SPOTS=Object.freeze([
  // West cascade mouth and its water curtain.
  {id:'cascade',p:[.55,2.70,.10],t:[-2.05,1.55,-.95],c:[1.00,.82,.55],power:4.4,cos0:.74,cos1:.95,range:5.0},
  // Lamp tucked in a niche of the left cliff, washing a few stair treads (photo, lower left).
- {id:'stair',p:[4.80,2.62,-1.55],t:[4.25,.85,-1.10],c:[1.00,.74,.42],power:4.6,cos0:.45,cos1:.84,range:4.2},
+ // V132-L27-redo: niche moved onto the curved stair cliff (wall angle t≈.42 about the stair centre).
+ {id:'stair',p:[4.52,2.62,-1.80],t:[3.45,.95,-1.20],c:[1.00,.78,.50],power:5.4,cos0:.25,cos1:.80,range:4.6},
  // Platform flowstone on the enlarged dry annex's far wall.
  {id:'annex',p:[3.80,2.95,-.10],t:[6.75,1.40,2.05],c:[1.00,.86,.64],power:5.6,cos0:.66,cos1:.92,range:6.0}
 ]);
@@ -52,3 +53,19 @@ export const FLOWSTONES=Object.freeze([
  {id:'west',a:2.45,half:.16,y0:1.30,y1:2.85,depth:.15,folds:4,seed:5},
  {id:'annex',e:.62,half:.30,y0:.62,y1:3.05,depth:.26,folds:8,seed:4}
 ]);
+
+// V132-L27-redo: flowstone is part of the rock shell (the mesher grows the wall by this thickness,
+// smooth-unioned, same material + bake). Rounded wax lobes thickest low down, no cloth fringe.
+const fl_adist=(a,b)=>{let d=(a-b)%(Math.PI*2);if(d>Math.PI)d-=Math.PI*2;if(d<-Math.PI)d+=Math.PI*2;return d;};
+function flowProfile(f,s,y){
+ const v0=(y-f.y0)/(f.y1-f.y0);if(v0<-.25||v0>1.2||Math.abs(s)>1.5)return 0;
+ const v=v0+.07*Math.sin(s*f.folds*1.6+f.seed*2.1)+.03*Math.sin(s*13+f.seed);
+ const hs=.50+.50*sstep(0,.65,1-v),u=Math.abs(s)/hs;
+ const env=(1-sstep(.50,1.0,u))*sstep(-.10,.10,v)*(1-sstep(.82,1.06,v));if(env<=0)return 0;
+ const th=.42+.58*sstep(.05,.50,1-v),rib=.55+.45*Math.pow(Math.abs(Math.cos(s*f.folds*Math.PI*.5+.45*Math.sin(y*2.3+f.seed))),.7);
+ const bulb=.86+.14*Math.sin(y*6.1+s*4.3+f.seed)*Math.sin(y*2.7-s*2.1);
+ return f.depth*.62*env*th*rib*bulb;
+}
+export function flowMain(a,y){let m=0;for(const f of FLOWSTONES)if(f.a!==undefined)m=Math.max(m,flowProfile(f,fl_adist(a,f.a)/f.half,y));return m;}
+// V132-L27-redo: the platform-wall flowstone (the cream blob) is removed outright (fewer, not fake); its spot lights bare rock.
+export function flowAnnex(e,y){return 0;let m=0;for(const f of FLOWSTONES)if(f.e!==undefined)m=Math.max(m,flowProfile(f,fl_adist(e,f.e)/f.half,y));return m;}

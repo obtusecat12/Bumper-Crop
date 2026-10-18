@@ -1,15 +1,15 @@
 import * as T from './vendor/three.module.min.js';
-import * as L from './level27-layout.js?v=131';
+import * as L from './level27-layout.js?v=132r';
 import {createCreekAuthority} from './level27-creek.js?v=65';
-import {SPRING_SHELL} from './level27-shell-data.js?v=131';
-import {initializeCliff131,cliffTextures131,cliffMaterial131,bakeGeometry131,prepareShell131,buildStair131,buildFlowstone131,buildFallDress131,createMist131} from './level27-cliff131.js?v=131';
-import {LIVE_SPOTS} from './level27-light131.js?v=131';
-import {BAKE132} from './level27-bake132.js?v=132';
+import {SPRING_SHELL} from './level27-shell-data.js?v=132r';
+import {initializeCliff131,cliffTextures131,cliffMaterial131,bakeGeometry131,prepareShell131,buildStair131,buildFallDress131,createMist131} from './level27-cliff131.js?v=132r';
+import {LIVE_SPOTS} from './level27-light131.js?v=132r';
+import {BAKE132} from './level27-bake132.js?v=132r';
 // V132-bake: offline GI vertex light (tools/bake132_l27.mjs) replaces the per-vertex spot bake; ?bake=0 = V131 bake.
 const BAKE132_ON=(()=>{try{return new URLSearchParams(location.search).get('bake')!=='0';}catch(e){return true;}})();
 function bake132(name,g){const d=BAKE132_ON&&BAKE132[name];if(!d||d.count!==g.attributes.position.count)return g;const u=Uint8Array.from(atob(d.bake),c=>c.charCodeAt(0)),b=g.attributes.bake.array;for(let i=0;i<b.length;i++)b[i]=u[i]/255;g.attributes.bake.needsUpdate=true;return g;}
 import {mergeGeometries,mergeVertices} from './vendor/BufferGeometryUtils.js';
-import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit,inAnnex,ANNEX,streamPath,stairCenter} from './level27-layout.js?v=131';
+import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit,inAnnex,ANNEX,streamPath,stairCenter} from './level27-layout.js?v=132r';
 import {springMaterials,springTextures} from './level27-materials.js?v=63';
 
 import {createSpringDynamics} from './spring-dynamics.js?v=63';
@@ -56,11 +56,9 @@ export function createLevel27(){
  const channel=createCreekAuthority(T,L),wholeStream=channel.points.map(p=>p.toArray());
  // Tunnel floor, channel bed and outlet banks now belong to the single implicit shell.
  box(rockRoot,mats.black,3.0,3.10,-10.50,3.9,3.0,.14,'Dark continuation of return tunnel');
- // V131: rubble-masonry stair against the left cliff (replaces the V63 free-standing natural treads).
- {const g=mergeGeometries(buildStair131());bakeGeometry131(g,{wet:(q,n)=>n[1]>.6?.12:.30,cavity:(q,n)=>n[1]<-.3?.6:.12,boost:1.1});bake132('stair',g);const o=new T.Mesh(g,m131.stone);o.name='V131 rubble masonry stair, wall-hugging';o.castShadow=o.receiveShadow=true;rockRoot.add(o);}
- {const fs=buildFlowstone131(),uv0=p=>{p.deleteAttribute('uv');p.setAttribute('uv',new T.BufferAttribute(new Float32Array(p.attributes.position.count*2),2));return p;};
-  const g=mergeGeometries(fs.curtains.map(uv0));bakeGeometry131(g,{wet:.55,cavity:()=>.10,boost:.9});bake132('curtains',g);const o=new T.Mesh(g,m131.flow);o.name='V131 flowstone curtains';o.castShadow=false;o.receiveShadow=true;rockRoot.add(o);
-  const sg=mergeGeometries(fs.spikes.map(uv0));bakeGeometry131(sg,{wet:.7,calc:.55,cavity:()=>.15,boost:1.0});bake132('spikes',sg);const so=new T.Mesh(sg,m131.rock);so.name='V131 stalactites and stalagmites';so.receiveShadow=true;rockRoot.add(so);}
+ // V132-L27-redo: rock treads cut from the curved cliff, same rock material + bake as the shell.
+ // (V131 flowstone curtains / stalactites / stalagmites removed: flowstone now grows out of the shell.)
+ {const g=mergeGeometries(buildStair131());bakeGeometry131(g,{wet:(q,n)=>n[1]>.6?.10:.25,cavity:(q,n)=>n[1]<-.3?.6:.12,boost:1.0});bake132('stair',g);const o=new T.Mesh(g,m131.rock);o.name='V132 rock stair cut from the cliff';o.castShadow=o.receiveShadow=true;rockRoot.add(o);}
  // Rounded flanking fragments seat into the same bed, never cover the pool.
  // V121-bath: the evenly spaced bank cobble rows were replaced by bath120-creek.js natural cobbles.
  for(let i=0;i<0;i++){const t=(i+.35)/54,r=.040+.024*(.5+.5*Math.sin(i*3.7)),c=channel.groundedCobble(t,i%2?1:-1,r,i),stone=organicStone(mats.wetRock,c.position,c.scale,i);const contact=new T.Raycaster(new T.Vector3(c.position[0],c.waterY+.38,c.position[2]),new T.Vector3(0,-1,0)).intersectObject(shellMesh)[0];if(contact)stone.position.y=contact.point.y+r*.61;stone.name='Embedded water-rounded creek cobble';rockRoot.add(stone);}

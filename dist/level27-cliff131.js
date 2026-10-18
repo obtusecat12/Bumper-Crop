@@ -1,10 +1,12 @@
 // V131-L27-cliff: show-cave look for Level 27 (reference: files/uploads/image-7e9a87dc2c5b.webp).
 // Dark umber strata shell with baked spot light, cream flowstone curtains, stalactites /
 // stalagmites, a rubble-masonry stair hard against the left cliff, dressed waterfall mouths.
+// V132-L27-redo: stair = rock treads cut from the curved cliff (same rock material + bake);
+// flowstone now grows out of the shell itself (calc from flowMain/flowAnnex); curtains/spikes dropped.
 // Water surface, its height and its shader are NOT touched here.
 import * as T from './vendor/three.module.min.js';
-import {STAIRS,stairCenter,stairBoundary,treadHeight,cliffX,wallPoint,roofPoint,roofHeight,ANNEX,inAnnex,poolFloor,radialLimit,TUNNEL_Y} from './level27-layout.js?v=131';
-import {bakeAt,FLOWSTONES} from './level27-light131.js?v=131';
+import {STAIRS,stairTB,stairWallR,treadHeight,wallPoint,roofPoint,roofHeight,ANNEX,inAnnex,poolFloor,radialLimit,TUNNEL_Y} from './level27-layout.js?v=132r';
+import {bakeAt,FLOWSTONES,flowMain,flowAnnex} from './level27-light131.js?v=132r';
 const tex={};
 const NAMES=['strata','flow','slab','rubble','wetmoss'];
 export async function initializeCliff131(){
@@ -59,78 +61,57 @@ export function prepareShell131(g,bakeBytes){
   const shore=Math.max(0,Math.hypot(x,z)-radialLimit(x||1e-6,z||1e-6)),waterline=(1-sst(.04,.9,y))*(1-sst(.10,.85,shore));
   const seep=.35*sst(.55,.95,Math.sin(x*3.1+z*2.3)*Math.sin(y*1.7-x)*.5+.5);
   w[i]=clamp(Math.max(fall,waterline,seep*sst(.4,1.2,y)));
-  let calc=0;for(const f of FLOWSTONES)if(f.a!==undefined)calc=Math.max(calc,Math.exp(-Math.pow(ad(f.a)/(f.half*1.45),2))*sst(f.y0-.6,f.y0,y)*(1-sst(f.y1+.1,f.y1+.5,y))*.75);
+  // flowstone = shell vertices the mesher grew by flowMain (room walls) / flowAnnex (platform wall)
+  const wp=wallPoint(a,y),wr=Math.hypot(wp[0],wp[2]),rr=Math.hypot(x,z);let calc=0;
+  if(rr>wr-.55&&rr<wr+.25)calc=Math.pow(sst(0,.17,flowMain(a,y)),.8);
+  {const ar=Math.hypot((x-ANNEX.x)/ANNEX.rx,(z-ANNEX.z)/ANNEX.rz);if(ar>.80&&ar<1.12)calc=Math.max(calc,Math.pow(sst(0,.17,flowAnnex(Math.atan2((z-ANNEX.z)/ANNEX.rz,(x-ANNEX.x)/ANNEX.rx),y)),.8));}
+  calc*=.95;
   calc=Math.max(calc,.55*sst(.55,.9,ny)*sst(.6,1.0,y)*(Math.hypot(x,z)<4.2?1:.5)); // calcite crust on ledge tops
   c[i]=clamp(calc);}
  g.setAttribute('bake',new T.BufferAttribute(b,3));g.setAttribute('caveWet',new T.BufferAttribute(w,1));g.setAttribute('calc',new T.BufferAttribute(c,1));return g;
 }
 
-// ---- rubble masonry stair against the left cliff ----
-function stoneBox(parts,x0,x1,y0,y1,z0,z1,seed,{chip=.018,topTilt=.0}={}){
- const g=new T.BoxGeometry(x1-x0,y1-y0,z1-z0,2,2,2),p=g.attributes.position,hx=(x1-x0)/2,hy=(y1-y0)/2,hz=(z1-z0)/2;
- for(let i=0;i<p.count;i++){let x=p.getX(i),y=p.getY(i),z=p.getZ(i);const ex=Math.abs(Math.abs(x)-hx)<1e-5,ey=Math.abs(Math.abs(y)-hy)<1e-5,ez=Math.abs(Math.abs(z)-hz)<1e-5,corner=(ex?1:0)+(ey?1:0)+(ez?1:0);
-  const k=hash(seed*31+Math.round(x*97)+Math.round(y*89)*7+Math.round(z*83)*13);
-  if(corner>=2){const s=chip*(.5+k);x-=Math.sign(x)*s*(ex?1:.3);z-=Math.sign(z)*s*(ez?1:.3);if(y>0)y-=s*.7*(corner===3?1:.5);else y+=s*.2;}
-  if(!(y>0&&ey))y+=(k-.5)*.012*(y<0?1:.4);else y+=topTilt*(x/hx)+(k-.5)*.004;
-  if(!ey){x+=(hash(seed+i*.37)-.5)*.010*(ex?1:0);z+=(hash(seed*3+i*.53)-.5)*.010*(ez?1:0);}
-  p.setXYZ(i,x+(x0+x1)/2,y+(y0+y1)/2,z+(z0+z1)/2);}
- g.computeVertexNormals();parts.push(g.toNonIndexed());
+// ---- V132-L27-redo: rock treads cut from the curved cliff ----
+// One solid rock piece per tread, an annular sector about the stair centre: the inner (void) edge is
+// ragged and chipped, the outer end runs .14 m into the cliff so wall and step read as one rock.
+function treadPiece(k){
+ const S=STAIRS,ta=stairTB(k),tb=stairTB(k+1),nose=k<S.count-1?.030/S.R:0,top=treadHeight(k),bot=top-.26;
+ const NU=9,NV=7,P=[],idx=[],hk=n=>hash(k*37.1+n);
+ const rin=u=>S.R-S.width/2-.015-.045*hk(Math.round(u*NU)*1.7)-.03*Math.sin(u*9+k*2.3);
+ const rout=u=>stairWallR(ta+(tb-ta)*u)+.14;
+ // top grid (u along the tread, v from void edge to cliff), then walls down to bot
+ const pt=(u,v,y)=>{const t=ta+(tb+nose-ta)*u,r=rin(u)+(rout(u)-rin(u))*v;return [S.cx+r*Math.cos(t),y,S.cz+r*Math.sin(t)];};
+ const grid=[];for(let j=0;j<=NV;j++)for(let i=0;i<=NU;i++){const u=i/NU,v=j/NV;
+  const edge=Math.min(u,1-u)*S.R*(tb-ta),inner=v*(S.width+.1);
+  let y=top+.004*Math.sin(u*7+k)*Math.sin(v*5)+(hk(i*3+j*11)-.5)*.006;
+  y-=.028*(1-sst(0,.05,1-u))*(k<S.count-1?1:0)+.022*(1-sst(0,.06,inner))+.012*(1-sst(0,.04,u));
+  grid.push(pt(u,v,y));}
+ const G=(i,j)=>grid[j*(NU+1)+i];
+ const quad=(a,b,c,d)=>{P.push(...a,...b,...c,...a,...c,...d);};
+ for(let j=0;j<NV;j++)for(let i=0;i<NU;i++)quad(G(i,j),G(i,j+1),G(i+1,j+1),G(i+1,j));
+ const down=(p,dy,dx=0,dz=0)=>[p[0]+dx,p[1]-dy,p[2]+dz];
+ // riser (u=1), back (u=0), void edge (v=0); cliff end is buried
+ const drop=j=>bot,chipFace=(p,s)=>{const t=Math.atan2(p[2]-S.cz,p[0]-S.cx);return [p[0]-Math.sin(t)*s*0,p[1],p[2]];};
+ for(let j=0;j<NV;j++){const a=G(NU,j),b=G(NU,j+1),r1=.01+.012*hk(j*5),r2=.01+.012*hk(j*5+5);
+  const na=[a[0],bot,a[2]],nb=[b[0],bot,b[2]],ma=[a[0],a[1]-.09,a[2]],mb=[b[0],b[1]-.09,b[2]];
+  const t=ta+(tb+nose-ta),tx=-Math.sin(t),tz=Math.cos(t);ma[0]-=tx*r1;ma[2]-=tz*r1;mb[0]-=tx*r2;mb[2]-=tz*r2;
+  quad(a,ma,mb,b);quad(ma,na,nb,mb);
+  const c=G(0,j),d=G(0,j+1);quad(d,[d[0],bot,d[2]],[c[0],bot,c[2]],c);}
+ for(let i=0;i<NU;i++){const a=G(i,0),b=G(i+1,0),t1=Math.atan2(a[2]-S.cz,a[0]-S.cx),t2=Math.atan2(b[2]-S.cz,b[0]-S.cx);
+  const ia=.02+.03*hk(i*7+1),ib=.02+.03*hk(i*7+8);
+  const ma=[a[0]+Math.cos(t1)*ia,a[1]-.10-.04*hk(i),a[2]+Math.sin(t1)*ia],mb=[b[0]+Math.cos(t2)*ib,b[1]-.10-.04*hk(i+1),b[2]+Math.sin(t2)*ib];
+  const na=[a[0]+Math.cos(t1)*.07,bot,a[2]+Math.sin(t1)*.07],nb=[b[0]+Math.cos(t2)*.07,bot,b[2]+Math.sin(t2)*.07];
+  quad(a,b,mb,ma);quad(ma,mb,nb,na);}
+ // underside
+ for(let i=0;i<NU;i++){const a=G(i,0),b=G(i+1,0),c=G(i+1,NV),d=G(i,NV),t1=Math.atan2(a[2]-S.cz,a[0]-S.cx),t2=Math.atan2(b[2]-S.cz,b[0]-S.cx);quad([a[0]+Math.cos(t1)*.07,bot,a[2]+Math.sin(t1)*.07],[d[0],bot,d[2]],[c[0],bot,c[2]],[b[0]+Math.cos(t2)*.07,bot,b[2]+Math.sin(t2)*.07]);}
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(P,3));
+ // orient every triangle outward from the tread's centroid
+ const p=g.attributes.position.array;let cx=0,cy=0,cz=0;const n=p.length/3;for(let i=0;i<p.length;i+=3){cx+=p[i];cy+=p[i+1];cz+=p[i+2];}cx/=n;cy/=n;cz/=n;
+ for(let i=0;i<p.length;i+=9){const ax=p[i],ay=p[i+1],az=p[i+2],ux=p[i+3]-ax,uy=p[i+4]-ay,uz=p[i+5]-az,vx=p[i+6]-ax,vy=p[i+7]-ay,vz=p[i+8]-az,nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,mx=(ax+p[i+3]+p[i+6])/3-cx,my=(ay+p[i+4]+p[i+7])/3-cy,mz=(az+p[i+5]+p[i+8])/3-cz;
+  if(nx*mx+ny*my+nz*mz<0)for(let q=0;q<3;q++){const t=p[i+3+q];p[i+3+q]=p[i+6+q];p[i+6+q]=t;}}
+ g.computeVertexNormals();return g;
 }
-export function buildStair131(mat){
- const parts=[],W=STAIRS.width,gap=.006;
- for(let k=0;k<STAIRS.count;k++){
-  const y=treadHeight(k),c=stairCenter(STAIRS.start+(k+.5)*STAIRS.tread),zin=stairBoundary(k,c),zout=stairBoundary(k+1,c),inner=cliffX(zin)+.07;
-  const outer=c-W/2-.03-.07*hash(k*3.1),n=3+(hash(k*7.7)>.5?1:0);let cuts=[outer];for(let i=1;i<n;i++)cuts.push(outer+(inner-outer)*(i/n+(hash(k*5+i)-.5)*.18));cuts.push(inner);
-  for(let i=0;i<n;i++){const nose=k<STAIRS.count-1?.025+.035*hash(k*11+i):.02;stoneBox(parts,cuts[i]+gap,cuts[i+1]-gap,y-.30,y,zin-.012+gap,zout+nose-gap,k*13+i,{chip:.03,topTilt:(hash(k*17+i)-.5)*.006});}
- }
- // Outer retaining wall in irregular courses, stepped under the treads.
- const z0=STAIRS.start,z1=STAIRS.start+STAIRS.count*STAIRS.tread;let course=0;
- for(let yb=.10;yb<TUNNEL_Y-.25;course++){const hgt=.12+.08*hash(course*2.3);let z=z0-.02-.18*hash(course*5.1);
-  while(z<z1){const len=.18+.20*hash(course*13+z*7),za=Math.max(z0,z),zb=Math.min(z1+.03,z+len);const kk=Math.min(STAIRS.count-1,Math.max(0,Math.floor((zb-.001-z0)/STAIRS.tread))),top=treadHeight(kk)-.28;const yt=Math.min(yb+hgt,top);
-   if(yt-yb>.05&&zb-za>.08){const zc=(za+zb)/2,c=stairCenter(zc),out=c-W/2-.02-.05*hash(course*3+z*11),inn=cliffX(zc)+.05;stoneBox(parts,out,inn,yb+gap,yt-gap,za+gap,zb-gap,course*101+Math.round(z*50),{chip:.026});}
-   z+=len;}
-  yb+=hgt;}
- // Low dry-stone parapet on the open (platform) side.
- for(let k=2;k<STAIRS.count-1;k++){const y=treadHeight(k),zin=stairBoundary(k,4),zout=stairBoundary(k+1,4),pieces=2+(hash(k*9.1)>.5?1:0);
-  for(let i=0;i<pieces;i++){const za=zin+(zout-zin)*i/pieces,zb=zin+(zout-zin)*(i+1)/pieces,c=stairCenter((za+zb)/2),out=c-W/2-.05-.03*hash(k+i),h=.15+.09*hash(k*4+i*3);stoneBox(parts,out,out+.21,y-.02,y+h,za+.006,zb+.03,k*57+i,{chip:.03});}}
- return parts;
-}
-
-// ---- flowstone curtains, stalactites, stalagmites ----
-function curtainSurface(f){
- const cols=Math.max(24,Math.round(f.half*120)),rows=34,p=[],uv=[],idx=[];
- const base=(u0,y)=>{const u=.5+(u0-.5)*(.55+.45*Math.min(1,(f.y1-y)/((f.y1-f.y0)*.45)));if(f.a!==undefined){const a=f.a+(u-.5)*2*f.half,q=wallPoint(a,y),r=Math.hypot(q[0],q[2]);return {x:q[0],y,z:q[2],nx:-q[0]/r,nz:-q[2]/r};}
-  const e=f.e+(u-.5)*2*f.half,x=ANNEX.x+ANNEX.rx*1.01*Math.cos(e),z=ANNEX.z+ANNEX.rz*1.01*Math.sin(e),nx=-Math.cos(e)/ANNEX.rx,nz=-Math.sin(e)/ANNEX.rz,l=Math.hypot(nx,nz);return {x,y,z,nx:nx/l,nz:nz/l};};
- const fringe=u=>.10+.32*Math.pow(Math.abs(Math.sin(u*f.folds*Math.PI*1.5+f.seed)),.35)*(.6+.4*hash(Math.floor(u*f.folds*3)+f.seed*9));
- for(let j=0;j<=rows+1;j++)for(let i=0;i<=cols;i++){const u=i/cols,v=Math.min(1,j/rows);
-  const sw=Math.sin(u*Math.PI),yt=f.y1-(f.y1-f.y0)*.38*(1-Math.pow(sw,.8))+.12*Math.sin(u*7.3+f.seed)*sw;
-  const yb=f.y0+fringe(u)*(1-Math.pow(sw,.4)*.5)+(f.y1-f.y0)*.22*(1-Math.pow(sw,.5)),y=yt+(yb-yt)*v,b=base(u,y);
-  const edge=Math.pow(Math.sin(Math.PI*u),.55),fold=Math.pow(Math.abs(Math.sin(u*f.folds*Math.PI+.35*Math.sin(v*5+f.seed))),.45);
-  const lobe=.78+.22*Math.sin(v*9.5+u*f.folds*1.7+f.seed)+.10*Math.sin(v*21-u*13);
-  let t=f.depth*1.35*edge*(.22+.78*Math.pow(v,.6))*(.30+.70*fold)*lobe;
-  if(j>rows)t=0; // closing underside back to the wall
-  const lift=j>rows?.03:0;p.push(b.x+b.nx*t,y+lift,b.z+b.nz*t);uv.push(u*f.half*2.5,y*.6);}
- for(let j=0;j<=rows;j++)for(let i=0;i<cols;i++){const a=j*(cols+1)+i,b=a+cols+1;idx.push(a,b,a+1,a+1,b,b+1);}
- const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return g.toNonIndexed();
-}
-function spike(parts,x,y,z,len,rad,down,seed){
- const seg=5,g=new T.CylinderGeometry(down?rad*.12:rad,down?rad:rad*.18,len,6,seg,false),p=g.attributes.position;
- for(let i=0;i<p.count;i++){const yy=p.getY(i)/len+.5,s=1+.25*Math.sin(yy*9+seed)+.12*Math.sin(i*1.7+seed);p.setXYZ(i,p.getX(i)*s+.02*Math.sin(yy*3+seed)*yy,p.getY(i),p.getZ(i)*s);}
- g.translate(x,down?y-len/2+.02:y+len/2-.02,z);g.computeVertexNormals();parts.push(g.toNonIndexed());
-}
-export function buildFlowstone131(){
- const curtains=[],parts=[];for(const f of FLOWSTONES)curtains.push(curtainSurface(f));
- // Stalactites: fringes under each curtain + scattered along the roof rim and eaves.
- for(const f of FLOWSTONES){const n=Math.round(f.half*26);for(let i=0;i<n;i++){const u=(i+.5)/n,h=hash(f.seed*40+i);if(h<.35)continue;
-   let x,z,nx,nz;if(f.a!==undefined){const a=f.a+(u-.5)*2*f.half,q=wallPoint(a,f.y0+.25),r=Math.hypot(q[0],q[2]);x=q[0];z=q[2];nx=-x/r;nz=-z/r;}else{const e=f.e+(u-.5)*2*f.half;x=ANNEX.x+ANNEX.rx*Math.cos(e);z=ANNEX.z+ANNEX.rz*Math.sin(e);nx=-Math.cos(e);nz=-Math.sin(e);}
-   const off=f.depth*.45*Math.pow(Math.sin(Math.PI*u),.6);spike(parts,x+nx*off,f.y0+.38+.2*h,z+nz*off,.12+.32*h,.025+.03*h,true,i+f.seed);}}
- for(let i=0;i<64;i++){const a=hash(i*3.7)*Math.PI*2,r=.70+.24*hash(i*5.3),q=roofPoint(a,r);if(Math.abs(((a-3.57+Math.PI*3)%(Math.PI*2))-Math.PI)<.25)continue;const len=.07+.34*Math.pow(hash(i*9.1),1.6);spike(parts,q[0],q[1]+.03,q[2],len,.018+.03*hash(i*2.2),true,i);}
- for(let i=0;i<22;i++){const e=hash(i*6.1)*Math.PI*2,rr=.62+.3*hash(i*4.4),x=ANNEX.x+ANNEX.rx*rr*Math.cos(e),z=ANNEX.z+ANNEX.rz*rr*Math.sin(e);if(!inAnnex(x,z))continue;if(x>3.7&&z<.2)continue;const y=3.62+.30*Math.sin(x*1.1+z*.7)-.06;spike(parts,x,y,z,.08+.3*hash(i*8.8),.02+.03*hash(i),true,i+70);}
- // Stalagmites hug the platform wall (outside the walkable band) and a few rocks above the pool rim.
- const mites=[];for(let i=0;i<60&&mites.length<11;i++){const e=hash(i*2.9+.3)*Math.PI*2,rr=.90+.07*hash(i*7.7),x=ANNEX.x+ANNEX.rx*rr*Math.cos(e),z=ANNEX.z+ANNEX.rz*rr*Math.sin(e);if(!inAnnex(x,z,.04)||inAnnex(x,z,.30)||Math.hypot(x,z)<radialLimit(x,z)+.2||(z<.3&&x>3.6))continue;mites.push([x,z]);}
- mites.forEach(([x,z],i)=>{const h=hash(i*7.3),fy=poolFloor(x,z);spike(parts,x,fy,z,.18+.42*h,.05+.05*h,false,i+90);if(h>.4)spike(parts,x+.09,fy,z+.07,.10+.18*h,.035,false,i+120);});
- return {curtains,spikes:parts};
-}
+export function buildStair131(){const parts=[];for(let k=0;k<STAIRS.count;k++)parts.push(treadPiece(k));return parts;}
 
 // ---- dressed waterfall mouths: lip rocks, moss pads, mist ----
 function blob(parts,cx,cy,cz,sx,sy,sz,seed){const g=new T.SphereGeometry(1,12,8),p=g.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),r=1+.13*Math.sin(x*5+y*3+seed)*Math.cos(z*6-y*2+seed)+.05*Math.sin(z*13+x*11);p.setXYZ(i,cx+x*r*sx,cy+y*r*sy,cz+z*r*sz);}g.computeVertexNormals();parts.push(g.toNonIndexed());}
