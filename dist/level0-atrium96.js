@@ -2,6 +2,7 @@ import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {ATRIUM96 as A,atriumLevelY96,topWalls96,inAtrium96} from './level0-atrium-plan96.js';
 import {ATRIUM_LEVELS97,FURNISHINGS97,CROSS_DOOR97} from './level0-atrium-plan97.js';
 import {createWindows96} from './level0-windows96.js';
+import {bakeAtrium133} from './level0-atrium-bake133.js?v=133';
 
 // Open construction sections, never solid balcony fascias. No stairs are generated here.
 export function createAtrium96(T,renderer,scene,shared,props,ceiling){
@@ -290,6 +291,7 @@ export function createAtrium96(T,renderer,scene,shared,props,ceiling){
   put(steel,new T.CylinderGeometry(.071,.071,.005,12),x,y-.736,z);
  }
  for(const p of pools.values()){const geo=mergeGeometries(p.geos,false);p.geos.forEach(g=>g.dispose());const mesh=new T.Mesh(geo,p.mat);mesh.castShadow=p.cast;mesh.receiveShadow=true;root.add(mesh);}
+ bakeAtrium133(root); // V133-bake-L0atrium
  unit.dispose();root.visible=false;
  return{root,windows,ready:Promise.all(pending),materials:{plaster,joist,pink,poolTile,brownDoor,whiteDoor,rug},update(x,z){root.visible=inAtrium96(x,z,70);for(const l of lights)l.visible=inAtrium96(x,z,22);},stats:{...detailStats97,longCablesAdded:12,floorCableLoopsAdded:6,fallenPanelsAdded:24,tiers:A.tiers,detailedTiers:6,walkableTiers:A.tiers,upwardStairs:0,authoredAnomalies:FURNISHINGS97.length,slabs:ATRIUM_LEVELS97.reduce((s,p)=>s+p.floors.length,0),walls:ATRIUM_LEVELS97.reduce((s,p)=>s+p.walls.length,0)}};
 }
