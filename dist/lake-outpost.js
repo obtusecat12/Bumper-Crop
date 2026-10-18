@@ -1,3 +1,4 @@
+import {bakeFixed133} from './city-bake133.js?v=133c'; // V133-bake-city
 import {createCampLife98} from './camp-life98.js?v=106';
 import * as T from './vendor/three.module.min.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
@@ -107,5 +108,6 @@ export function createLakeOutpost(renderer){
  function resolve(position,state){if(state.level!==10)return;const ox=OUTPOST.x-Number(state.cx)*64,oz=OUTPOST.z-Number(state.cz)*64;local.x=position.x-ox;local.z=position.z-oz;if(Math.abs(local.x)>OUTPOST.hx+6||Math.abs(local.z)>OUTPOST.hz+16)return;resolveSolid(local,.26,colliders);for(let n=0;n<2;n++){if(!a.gates[n].userData.isOpen){const p=P.gates[n];resolveSolid(local,.26,[{kind:'obb',x:p[0],z:p[1],hx:2.4,hz:.09,angle:p[2]}]);}}position.x=local.x+ox;position.z=local.z+oz;}
  function floor(wx,wz,base){const shore=life.floor(wx-OUTPOST.x,wz-OUTPOST.z,base-OUTPOST.y)+OUTPOST.y;if(shore>base+.001)return shore;const x=wx-OUTPOST.x-P.container[0],z=wz-OUTPOST.z-P.container[1];if(x> -3.42&&x<3.42&&z> -1.52&&z<1.9)return OUTPOST.y+.25;return base;}
  object.position.set(OUTPOST.x,OUTPOST.y,OUTPOST.z);object.updateMatrixWorld(true);
- return {object,wet,life,update,query,use,resolve,floor,materials:m,structures:a,utilities:u,interiors:i,effects:fx,colliders,lamps,contains:(x,z)=>outpostDistance(x,z)<0};
+ const bake133=bakeFixed133([[object,2.5]],{data:'./outpost-bake133-data.js?v=133c',exportName:'OUTPOST_BAKE133',skip:new Set([...excluded,...a.dynamicRoots])}); // V133-bake-city, ?bake=0 off
+ return {object,bake133,wet,life,update,query,use,resolve,floor,materials:m,structures:a,utilities:u,interiors:i,effects:fx,colliders,lamps,contains:(x,z)=>outpostDistance(x,z)<0};
 }

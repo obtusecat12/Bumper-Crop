@@ -95,10 +95,64 @@ export async function dumpBake133(scene,list,{extraOccluders=true}={}){
   const nt=ix?ix.count:p.count,I=new Uint32Array(nt);for(let t=0;t<nt;t++)I[t]=W.remap[ix?ix.getX(t):t];const b64=a=>{const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength);let s='';for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s);};
   return {P:b64(P),N:b64(N),I:b64(I),count:W.count};}
  for(const {mesh:o,key} of list){const m=o.material,c=m.color?m.color.toArray():[.5,.5,.5],ta=texAvg(m.map)||[1,1,1];const col=o.geometry.attributes.color&&m.vertexColors;
-  meshes.push({key,albedo:c.map((x,i)=>x*ta[i]),side:m.side,...geoOut(o,true)});}
+  let vc=[1,1,1];if(col){const ca=o.geometry.attributes.color,s=[0,0,0],st=Math.max(1,Math.floor(ca.count/512));let k=0;for(let i=0;i<ca.count;i+=st){s[0]+=ca.getX(i);s[1]+=ca.getY(i);s[2]+=ca.getZ(i);k++;}vc=s.map(x=>x/k);} // V133-bake-city: batched meshes keep their colour per vertex
+  meshes.push({key,albedo:c.map((x,i)=>x*ta[i]*vc[i]),side:m.side,...geoOut(o,true)});}
  scene.traverse(o=>{if(!o.isMesh||inList.has(o)||o.isSkinnedMesh||!o.visible)return;const m=Array.isArray(o.material)?o.material[0]:o.material;if(!m||m.transparent&&m.opacity<.95)return;if(o.isInstancedMesh)return;if(!o.geometry?.attributes?.position)return;let vis=true;o.traverseAncestors(a=>{if(!a.visible)vis=false;});if(!vis)return;occ.push({name:o.name,...geoOut(o)});});
  const lights=[];scene.traverse(o=>{if(o.isPointLight||o.isSpotLight){const p=new T.Vector3();o.getWorldPosition(p);const L={type:o.type,name:o.name,p:p.toArray(),c:o.color.toArray(),i:o.intensity,d:o.distance,decay:o.decay};if(o.isSpotLight){const t=new T.Vector3();o.target.getWorldPosition(t);Object.assign(L,{t:t.toArray(),angle:o.angle,pen:o.penumbra});}lights.push(L);}
   if(o.isAmbientLight||o.isHemisphereLight)lights.push({type:o.type,c:o.color.toArray(),i:o.intensity});
   if(o.isRectAreaLight){const p=new T.Vector3();o.getWorldPosition(p);const d=new T.Vector3(0,0,-1).applyQuaternion(o.getWorldQuaternion(new T.Quaternion()));lights.push({type:o.type,name:o.name,p:p.toArray(),n:d.toArray(),c:o.color.toArray(),i:o.intensity,w:o.width,h:o.height});}});
  return {meshes,occ,lights};
+}
+
+// ---- V133-bake-city: fixed OUTDOOR scenes (L10 lake outpost, L11 fixed city fabric) ----
+// Outdoor patch: weather owns sky and sun, so the bake only scales the realtime ambient/hemisphere/IBL term:
+// f = max(floor, AO*keep + B*gain), B = relative bounce (tools/bake133_sky.mjs). Direct sun/lamps stay realtime.
+// Build time (sync, cheap): pick meshes, clone+patch materials, add a NEUTRAL attribute (rgb 0, a 1 → f = keep = 1),
+// so the level's fog/shadow/finish passes register the patched materials as usual. Later (async, time-sliced):
+// subdivide, key, fetch data, fill. Swapping geometry never touches material registration.
+export const BAKE133_SKY_SCALE=2.0;
+function patchSky(src,U){
+ const m=src.clone();m.name=src.name+' / bake133s';const prev=src.onBeforeCompile,prevKey=src.customProgramCacheKey;
+ m.onBeforeCompile=(sh,r)=>{if(prev!==T.Material.prototype.onBeforeCompile)prev.call(m,sh,r);
+  sh.uniforms.bake133Gain=U.gain;sh.uniforms.bake133Keep=U.keep;sh.uniforms.bake133Floor=U.floor;
+  sh.vertexShader='attribute vec4 bake133;\nvarying vec4 vBake133;\n'+sh.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n\tvBake133 = bake133;');
+  sh.fragmentShader='varying vec4 vBake133;\nuniform float bake133Gain;\nuniform float bake133Keep;\nuniform float bake133Floor;\n'+sh.fragmentShader.replace('#include <lights_fragment_maps>',`#include <lights_fragment_maps>
+	{ float bkAO = vBake133.a; vec3 bkF = max( vec3( bake133Floor ), vec3( bkAO * bake133Keep ) + vBake133.rgb * vBake133.rgb * ${BAKE133_SKY_SCALE.toFixed(2)} * bake133Gain );
+	#if defined( RE_IndirectDiffuse )
+		irradiance *= bkF;
+		#if defined( STANDARD )
+		iblIrradiance *= bkF;
+		#endif
+	#endif
+	#if defined( RE_IndirectSpecular )
+		radiance *= mix( 1.0, bkAO, 0.6 );
+	#endif
+	}`);};
+ m.customProgramCacheKey=()=>'bake133s|'+(prevKey!==T.Material.prototype.customProgramCacheKey?prevKey.call(src):'');
+ return m;
+}
+function neutral(g){const n=g.attributes.position.count,u=new Uint8Array(n*4);for(let i=3;i<u.length;i+=4)u[i]=255;g.setAttribute('bake133',new T.BufferAttribute(u,4,true));}
+// roots: [[object3D, L], ...] (L = subdivision edge length in m for that root)
+export function prepareSky133(roots,{filter=null,gain=.6,keep=1,floor=.22}={}){
+ const U={gain:{value:gain},keep:{value:keep},floor:{value:floor}},mats=new Map(),list=[];
+ for(const [r,L] of roots){if(!r)continue;r.traverse(o=>{if(!bakeable(o)||(filter&&!filter(o)))return;neutral(o.geometry);
+  let m=mats.get(o.material);if(!m){m=patchSky(o.material,U);mats.set(o.material,m);}o.material=m;list.push({mesh:o,L,key:null});});}
+ return {list,uniforms:U,materials:mats.size,hit:0,miss:0,verts:0,keyed:false,filled:false};
+}
+const slice=async(t,budget)=>{if(performance.now()-t.v>budget){await new Promise(r=>setTimeout(r,0));t.v=performance.now();}};
+// subdivide + key (identical in the dump page and in game: same list order, same code)
+export async function keySky133(prep,{budget=8}={}){
+ const seen=new Map(),t={v:performance.now()};
+ for(const e of prep.list){const o=e.mesh;o.updateMatrixWorld(true);const g=o.geometry;g.deleteAttribute('bake133');const g2=subdivide133(g,o.matrixWorld,e.L);if(g2!==g){o.geometry=g2;g.dispose();}neutral(o.geometry);
+  const base=(o.name||o.parent?.name||'mesh')+'|'+o.geometry.attributes.position.count,k=seen.get(base)||0;seen.set(base,k+1);e.key=base+'|'+k;await slice(t,budget);}
+ prep.keyed=true;return prep;
+}
+// data value: base64 of u8 per welded vertex, 4 bytes (rgb bounce, a AO) or 2 bytes (bounce luminance, AO)
+export async function fillBake133(prep,data,{budget=6}={}){
+ const t={v:performance.now()};
+ for(const {mesh,key} of prep.list){const b=data[key],a=mesh.geometry.attributes.bake133;if(!b||!a){prep.miss++;continue;}
+  const n=a.count,{remap,count}=weld133(mesh.geometry),bin=atob(b),S=bin.length===count*2?2:bin.length===count*4?4:0;if(!S){prep.miss++;continue;}
+  const u=a.array;for(let i=0;i<n;i++){const j=remap[i]*S;if(S===4){u[i*4]=bin.charCodeAt(j);u[i*4+1]=bin.charCodeAt(j+1);u[i*4+2]=bin.charCodeAt(j+2);u[i*4+3]=bin.charCodeAt(j+3);}else{const e=bin.charCodeAt(j);u[i*4]=u[i*4+1]=u[i*4+2]=e;u[i*4+3]=bin.charCodeAt(j+1);}}
+  a.needsUpdate=true;prep.hit++;prep.verts+=n;await slice(t,budget);}
+ prep.filled=true;return prep;
 }
