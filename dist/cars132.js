@@ -2,7 +2,7 @@
 // tools/cars132_assets.py (real dimensions, nose +Z, wheels on y=0). Each model keeps its own 128 px paint bitmaps.
 // parkCar132() drops one into an UrbanBatch (merged, with an OBB collider); car132Mesh() makes a free mesh for traffic.
 import * as T from './vendor/three.module.min.js';
-import {CARS132} from './cars132-data.js?v=132t';
+import {CARS132} from './cars132-data.js?v=133c';
 const BASE=new URL('./assets/l11-v132t/',import.meta.url).href;
 const bytes=s=>{const bin=atob(s),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u.buffer;};
 export const CAR132=Object.fromEntries(CARS132.map(c=>[c.id,c]));
@@ -19,9 +19,12 @@ export function car132Material(paint,batch=false){const k=paint+(batch?'|b':'');
  const m=new T.MeshStandardMaterial({map:tex(paint),roughness:.55,metalness:.08,vertexColors:batch});m.name='V132 car '+paint;MAT.set(k,m);return m;}
 const hash=(a,b=0)=>{let h=Math.imul((a|0)^0x9e3779b9,0x85ebca6b)^Math.imul(b|0,0xc2b2ae35);h^=h>>>15;h=Math.imul(h,0x2c1b3c6d);h^=h>>>12;return(h>>>0)/4294967296;};
 // Pick a model + paint from a seed. kinds limits the model ids (e.g. a former SUV slot stays tall).
-export function pickCar132(seed,kinds=null){const ids=kinds||['sedan','saloon','hatch','wagon','minivan','sedan','saloon','hatch','wagon','taxi','van'];
+// V133-cars2: police (Car 05 police/LA paint) and the 1920s Car 07 join the default pool; the burned-out Car 06 ('wreck')
+// only ever turns up parked (parkCar132 swaps ~1 in 40 parked slots for it unless opts.wreck===0), never in traffic.
+export const CAR132_POOL=['sedan','saloon','hatch','wagon','minivan','sedan','saloon','hatch','wagon','taxi','van','police','vintage'];
+export function pickCar132(seed,kinds=null){const ids=kinds||CAR132_POOL;
  const id=ids[Math.floor(hash(seed,17)*ids.length)%ids.length],c=CAR132[id];return{id,paint:c.tex[Math.floor(hash(seed,31)*c.tex.length)%c.tex.length],car:c};}
-export function parkCar132(b,seed,{x=0,y=.02,z=0,ry=0,tone=1,kinds=null}={}){
- const{id,paint,car}=pickCar132(seed,kinds),key='car132:'+paint;if(!b.mats[key])b.mats[key]=car132Material(paint,true);
+export function parkCar132(b,seed,{x=0,y=.02,z=0,ry=0,tone=1,kinds=null,wreck=.025}={}){
+ const{id,paint,car}=hash(seed,53)<wreck?pickCar132(seed,['wreck']):pickCar132(seed,kinds),key='car132:'+paint;if(!b.mats[key])b.mats[key]=car132Material(paint,true);
  b.push(x,y,z,ry);b.add(car132Geometry(id),key,0,0,0,1,1,1,0,0,0,tone);b.solid(0,0,car.W*.9,car.L*.97);b.pop();return car;}
 export function car132Mesh(id,paint){const m=new T.Mesh(car132Geometry(id),car132Material(paint));m.name='car132 '+id+' '+paint;m.castShadow=true;m.receiveShadow=true;return m;}

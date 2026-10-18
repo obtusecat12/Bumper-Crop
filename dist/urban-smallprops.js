@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three.module.min.js';
-import { parkCar132 } from './cars132.js?v=132t';
+import { parkCar132 } from './cars132.js?v=133c';
 import {ST132_ON} from './street132-props.js?v=132';
 
 // Additional 1970–1990 street furniture. Metres, ground origin, +Z front.

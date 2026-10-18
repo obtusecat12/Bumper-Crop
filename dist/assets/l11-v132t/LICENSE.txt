@@ -1,2 +1,3 @@
 Car models and textures: "PSX Style Cars" by GGBotNet (ggbot.net), CC0 1.0 Universal.
-https://opengameart.org/content/psx-style-cars  — textures re-quantised to 64 colours for Bumper Crop.
+https://opengameart.org/content/psx-style-cars  /  https://ggbot.itch.io/psx-style-cars (police, 1920s and burned-out cars added in V133-cars2)
+— textures re-quantised to 64 colours for Bumper Crop.
