@@ -1,5 +1,6 @@
 import * as THREE from './vendor/three.module.min.js';
-import {bed131} from './shrub131.js?v=131';   // V131 cross-card plants
+import {bed131} from './shrub131.js?v=131';
+import {withWalls132} from './street132-walls.js?v=132'; // V132-street per-building CC0 wall textures   // V131 cross-card plants
 
 // All dimensions are metres. The front of a lot is +Z, and every lot is centred.
 // Geometry is emitted into the supplied material batch; there are no Mesh objects
@@ -676,7 +677,7 @@ export function addBuilding(batch, spec = {}) {
   const n=clamp(Math.round(Number(spec.floors)||12),8,30),lod=spec.lod?1:0;
   const r=random(spec.seed??1);
   // Low buildings include a conservative envelope for their seeded roof plant.
-  const height=builders[type]({b:batch,w,d,n,r,lod})+(BUILDING_TYPES.indexOf(type)<18?1:0);
+  const height=withWalls132(batch,spec.seed,()=>builders[type]({b:batch,w,d,n,r,lod}))+(BUILDING_TYPES.indexOf(type)<18?1:0);
   return {height,type};
 }
 

@@ -17,10 +17,10 @@ import {exitPoint,exitSample,exitSurface,ease,EXIT_CITY_Y} from './exit-route.js
 import {height} from './world.js?v=60';
 import {createUrbanMaterials} from './urban-materials.js?v=60';
 import {UrbanBatch,urbanRandom,resolveUrban,urbanWalkHeight} from './urban-batch.js?v=69';
-import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=60';
-import * as P from './urban-props.js?v=60';
+import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=132st';
+import * as P from './urban-props.js?v=132st';
 import {shrub131} from './shrub131.js?v=131';   // V131 cross-card shrubs
-import * as S from './urban-smallprops.js?v=60';
+import * as S from './urban-smallprops.js?v=132st';
 import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=76';
 import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=69';
 import {addReferenceMaterials} from './reference-materials.js?v=60';

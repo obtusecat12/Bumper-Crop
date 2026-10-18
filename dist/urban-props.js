@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.min.js';
+import * as ST from './street132-props.js?v=132';
 
 // Municipal street furniture, in metres. All origins rest on y=0; +z is front.
 // Parts are handed to the host batch builder, so a street of these has no
@@ -129,6 +130,7 @@ export function addStreetTree(b, { seed = 1, scale = 1 } = {}) {
 }
 
 export function addHydrant(b) {
+  if (ST.ST132_ON) return ST.hydrant132(b); // V132-street CC0 asset
   b.cylinder('metal', 0, .035, 0, .19, .19, .07, 12, 0, 0, .65);
   b.cylinder('yellow', 0, .10, 0, .145, .155, .07, 12, 0, 0, .79);
   b.cylinder('yellow', 0, .365, 0, .113, .137, .47, 12, 0, 0, .93);
@@ -152,6 +154,7 @@ export function addHydrant(b) {
 }
 
 export function addStreetLight(b, { height = 9, arm = 3 } = {}) {
+  if (ST.ST132_ON && height <= 5) return ST.lantern132(b, { height }); // V132-street CC0 asset
   b.box('metal', 0, .035, 0, .36, .07, .36, 0, .65);
   for (const x of [-.125, .125]) for (const z of [-.125, .125]) bolt(b, x, .08, z, .024);
   b.cylinder('metal', 0, .20, 0, .132, .17, .28, 10, 0, 0, .69);
@@ -226,6 +229,7 @@ export function addTrafficSignal(b, { arm = 15, street = 'hope' } = {}) {
 }
 
 export function addUtilityCabinet(b, { variant = 0 } = {}) {
+  if (ST.ST132_ON) return ST.ubox132(b, { variant }); // V132-street CC0 asset
   const green = variant % 2 === 1, w = green ? .76 : .58, h = green ? 1.32 : 1.08, d = green ? .43 : .36;
   const key = green ? (b.mats?.['district:paintMetal']?'district:paintMetal':'green') : 'stucco', tone = green ? .95 : .90;
   b.box('concrete', 0, .055, 0, w + .13, .11, d + .13, 0, .80);
@@ -248,6 +252,7 @@ export function addUtilityCabinet(b, { variant = 0 } = {}) {
 }
 
 export function addTrashBin(b) {
+  if (ST.ST132_ON) return ST.trashcan132(b); // V132-street CC0 asset
   const iron=b.mats?.['district:paintMetal']?'district:paintMetal':'metal';
   b.cylinder('dark', 0, .08, 0, .245, .258, .12, 12, 0, 0, .70);
   // Recessed liner and crumpled bag tops are visible through the open rim.

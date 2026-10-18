@@ -4,7 +4,7 @@
 // info-window vitals card. All CSS lives in gmaps-ui.css under
 // :root[data-ui-level="11"], so other levels never see any of it.
 import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan,cityDistrict} from './urban-layout.js?v=return-1';
-import {BUILDING_TYPES} from './urban-buildings.js?v=60';
+import {BUILDING_TYPES} from './urban-buildings.js?v=132st';
 import {exitPoint} from './exit-route.js?v=60';
 import {paintSatellite} from './gmaps-satellite.js?v=131';
 import {paintCanalMap} from './map131-canal.js?v=131';

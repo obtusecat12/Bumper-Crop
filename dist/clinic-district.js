@@ -7,10 +7,10 @@ import {UrbanBatch,urbanRandom} from './urban-batch.js?v=60';
 import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=60';
 import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=60';
 import {subtractRectangles} from './urban-ground-ownership.js?v=60';
-import {addRoofEquipment} from './urban-buildings.js?v=60';
+import {addRoofEquipment} from './urban-buildings.js?v=132st';
 import {windowCatalog} from './urban-assets.js?v=60';
-import * as P from './urban-props.js?v=60';
-import * as S from './urban-smallprops.js?v=60';
+import * as P from './urban-props.js?v=132st';
+import * as S from './urban-smallprops.js?v=132st';
 const cp=exitPoint(282),A=Math.atan2(cp.nx,cp.nz),Y=EXIT_CITY_Y,PI=Math.PI;
 const place=(b,x,y,z,ry,fn,args={})=>{b.push(x,y,z,ry);fn(b,args);b.pop();};
 function surface(b,key,x0,x1,z0,z1,y,holes=[]){for(const[a,c,u,v]of subtractRectangles(x0,x1,z0,z1,holes)){b.box(key,(a+c)/2,y-.06,(u+v)/2,c-a,.12,v-u);b.walk((a+c)/2,(u+v)/2,c-a,v-u,y);}}

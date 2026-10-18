@@ -1,0 +1,6 @@
+V132-street assets — all CC0 1.0 (public domain), reduced to PS1 low-fi.
+Models (Poly Haven, https://polyhaven.com/models, CC0): fire_hydrant, metal_trash_can, street_lamp_01, utility_box_01, utility_box_02
+  -> merged + meshoptimizer-simplified, geometry embedded in dist/street132-props.js; diffuse -> hydrant/trashcan/lamp/ubox1/ubox2.webp (128 px, 5-bit).
+Textures (ambientCG, https://ambientcg.com, CC0): Plaster001, Plaster003, Plaster007, PaintedPlaster017, PaintedMetal004, PaintedMetal006, PaintedMetal013, Metal029
+  -> wall*.webp (+ -n normal maps), luminance-recoloured, 128 px 5-bit.
+Build scripts: tools/street132_assets.mjs, tools/street132_walls.py.

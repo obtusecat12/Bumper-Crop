@@ -6,7 +6,7 @@ const mapCreek=createCreekAuthority(T,L),streamPath=()=>mapCreek.spine.map(p=>[p
 import {CAVE_PLAN,ANNEX,STAIRS,stairCenter,stairBoundary} from './level27-layout.js?v=64';
 import {exitPoint} from './exit-route.js?v=60';
 import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.js?v=return-1';
-import {BUILDING_TYPES} from './urban-buildings.js?v=60';
+import {BUILDING_TYPES} from './urban-buildings.js?v=132st';
 import {paintCompass} from './retro-instruments.js?v=60';
 import {createMapAtlas} from './map-atlas.js?v=99';
 import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=127';

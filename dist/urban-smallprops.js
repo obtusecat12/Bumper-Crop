@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.min.js';
+import {ST132_ON} from './street132-props.js?v=132';
 
 // Additional 1970–1990 street furniture. Metres, ground origin, +Z front.
 // All geometry goes through UrbanBatch; no meshes, textures or materials are
@@ -384,6 +385,7 @@ function warningMark(b, x, y, z, size) {
 export function addUtilityDetails(b, {
   seed = 1, width = .58, height = 1.08, depth = .36, baseY = .16
 } = {}) {
+  if (ST132_ON) return; // V132-street: the CC0 utility boxes carry their own details
   const rng = random(seed), front = depth / 2 + .023;
   warningMark(b, -width * .035, baseY + height * .81, front, Math.min(.17, width * .29));
   b.box('metal', width * .31, baseY + height * .48, front + .015,

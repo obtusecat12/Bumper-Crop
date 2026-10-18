@@ -1,9 +1,9 @@
 import {addPlazaMemory} from './plaza-memory.js?v=60';
 import * as T from './vendor/three.module.min.js';
 import {UrbanBatch} from './urban-batch.js?v=60';
-import * as P from './urban-props.js?v=60';
+import * as P from './urban-props.js?v=132st';
 import {bed131} from './shrub131.js?v=131';   // V131 cross-card plants
-import * as S from './urban-smallprops.js?v=60';
+import * as S from './urban-smallprops.js?v=132st';
 import {adFor,adFace} from './advertising-assets.js?v=60';
 import {posterStand,monumentSign,poleSign,googieSign} from './advertising-structures.js?v=60';
 const PI=Math.PI;

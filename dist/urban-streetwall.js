@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
 import {urbanRandom} from './urban-batch.js?v=69';
 import {WINDOW_COUNT} from './urban-assets.js?v=60';
-import {addRoofEquipment,addFireEscape,addRoofLetters} from './urban-buildings.js?v=60';
+import {addRoofEquipment,addFireEscape,addRoofLetters} from './urban-buildings.js?v=132st';
 import {FacadeLayout} from './facade-layout.js?v=60';
 import {adFor,adFace,AD_CATALOG} from './advertising-assets.js?v=60';
 import {lightbox,bladeSign,buildingRoofAd,wallBanner} from './advertising-structures.js?v=60';

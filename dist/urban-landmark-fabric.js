@@ -6,8 +6,8 @@ import {EXIT_CITY_Y,exitPoint} from './exit-route.js?v=60';
 import {CITY_ORIGIN,CITY_ANGLE,cityToWorld} from './urban-layout.js?v=60';
 import {CLINIC_ORIGIN,clinicToWorld} from './reference-scenes.js?v=60';
 import {subtractConvex,TRANSITION_TERRAIN_QUADS,APPROACH_GROUND_QUADS} from './urban-ground-ownership.js?v=60';
-import * as P from './urban-props.js?v=60';
-import * as S from './urban-smallprops.js?v=60';
+import * as P from './urban-props.js?v=132st';
+import * as S from './urban-smallprops.js?v=132st';
 const PI=Math.PI,Y=EXIT_CITY_Y,cp=exitPoint(282),CLINIC_ANGLE=Math.atan2(cp.nx,cp.nz);
 const frames={city:{...CITY_ORIGIN,ry:CITY_ANGLE,toWorld:cityToWorld},clinic:{...CLINIC_ORIGIN,ry:CLINIC_ANGLE,toWorld:clinicToWorld}};
 export const LANDMARK_FABRIC_PARCELS=[

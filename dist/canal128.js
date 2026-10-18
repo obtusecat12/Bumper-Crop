@@ -6,7 +6,7 @@
 // Textures: art-l11v128/k128_* (each generated large on its own) -> tools/canal128_assets.py -> assets/l11-v128.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import * as P from './urban-props.js?v=60';
+import * as P from './urban-props.js?v=132st';
 import {CITY_ORIGIN,CITY_ANGLE} from './urban-layout.js?v=60';
 import {CANAL,CANAL_HERO} from './canal128-layout.js?v=128';
 import {canal130Life} from './canal130-life.js?v=131w';

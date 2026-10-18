@@ -3,8 +3,8 @@ import {poleSign,monumentSign,posterStand,googieSign} from './advertising-struct
 import {TRANSITION_TERRAIN_QUADS,FABRIC_GROUND_POLYGON,HOPE_GROUND_RECTS,subtractRectangles,subtractConvex,APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,DISTRICT_GROUND_POLYGONS} from './urban-ground-ownership.js?v=60';
 import * as T from './vendor/three.module.min.js';
 import {urbanRandom} from './urban-batch.js?v=69';
-import * as P from './urban-props.js?v=60';
-import * as S from './urban-smallprops.js?v=60';
+import * as P from './urban-props.js?v=132st';
+import * as S from './urban-smallprops.js?v=132st';
 import {CITY_BLOCK as B,CITY_ROAD_HALF as R,CITY_SIDEWALK as W,worldToCity} from './urban-layout.js?v=60';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {canalBlockTask} from './canal128.js?v=131w';
@@ -22,8 +22,8 @@ export function pavement(b,x,z,w,d,top=.15){b.box('sidewalk',x,top/2,z,w,top,d);
 // UVs, top 3 mm proud of the pavement so the two never z-fight (the old kerb top was coplanar with the sidewalk box).
 const K131=new URL('./assets/l11-v131m/',import.meta.url).href;
 function kerbMats(m){if(m.kerb131)return;const ld=new T.TextureLoader(),tx=(n,s=true)=>{const t=ld.load(K131+n+'.webp?v=131');if(s)t.colorSpace=T.SRGBColorSpace;t.wrapS=t.wrapT=T.RepeatWrapping;t.anisotropy=4;return t;};
- m.kerb131=new T.MeshStandardMaterial({map:tx('kerb'),normalMap:tx('kerb-n',false),roughness:.85,vertexColors:true,side:T.DoubleSide});m.kerb131.name='V131 kerb granite';
- m.pave131=new T.MeshStandardMaterial({map:tx('pave_slab'),normalMap:tx('pave_slab-n',false),roughness:.93,vertexColors:true});m.pave131.name='V131 sidewalk slabs';}
+ m.kerb131=new T.MeshStandardMaterial({map:tx('kerb'),normalMap:tx('kerb-n',false),roughness:.85,vertexColors:true,side:T.DoubleSide});m.kerb131.name='V131 kerb granite';m.kerb131.polygonOffset=true;m.kerb131.polygonOffsetFactor=-2;m.kerb131.polygonOffsetUnits=-3;
+ m.pave131=new T.MeshStandardMaterial({map:tx('pave_slab'),normalMap:tx('pave_slab-n',false),roughness:.93,vertexColors:true});m.pave131.name='V131 sidewalk slabs';m.pave131.polygonOffset=true;m.pave131.polygonOffsetFactor=-1;m.pave131.polygonOffsetUnits=-1;/* V132-street: depth bias vs the body box 6 mm below + kerb 3 mm above (grazing-angle z-fight at distance) */}
 export function curb(b,x,z,length,ry=0,height=.15,along0=null){kerbMats(b.mats);b.push(x,0,z,ry);const a=-length/2,c=length/2,h=height+.003,q=[[0,0],[0,h-.04],[.04,h],[.24,h],[.24,0]],K=.725,o=along0===null?a:along0-x,ua=(a-o)/K,uc=(c-o)/K;
  let acc=0;for(let i=0;i<4;i++){const d=Math.hypot(q[i+1][0]-q[i][0],q[i+1][1]-q[i][1]);const va=acc/.6,vc=(acc+d)/.6;acc+=d;
   const P=[[a,q[i][1],q[i][0]],[a,q[i+1][1],q[i+1][0]],[c,q[i+1][1],q[i+1][0]],[c,q[i][1],q[i][0]]],U=[[ua,va],[ua,vc],[uc,vc],[uc,va]];
@@ -37,7 +37,7 @@ function slabs(b,x0,x1,z0,z1,top=.15){kerbMats(b.mats);if(x1-x0<.01||z1-z0<.01)r
  const g=new T.BufferGeometry(),P=[[x0,top,z0],[x0,top,z1],[x1,top,z1],[x1,top,z0]],U=[[ua,va],[ua,vc],[uc,vc],[uc,va]],p=[],u=[];for(const j of[0,1,2,0,2,3]){p.push(...P[j]);u.push(...U[j]);}
  g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(u,2));g.computeVertexNormals();if(g.attributes.normal.getY(0)<0){const A=g.attributes.position,B=g.attributes.uv;for(let j=0;j<A.count;j+=3){const v=[A.getX(j+1),A.getY(j+1),A.getZ(j+1)],w=[B.getX(j+1),B.getY(j+1)];A.setXYZ(j+1,A.getX(j+2),A.getY(j+2),A.getZ(j+2));B.setXY(j+1,B.getX(j+2),B.getY(j+2));A.setXYZ(j+2,...v);B.setXY(j+2,...w);}g.computeVertexNormals();}
  b.add(g,'pave131',0,0,0);g.dispose();const w0=Math.abs(z0-R-.24)<1e-6?R:z0;b.walk((x0+x1)/2,(w0+z1)/2,x1-x0,z1-w0,top);}
-function ramp(b,x,z,w,d,ry){b.push(x,0,z,ry);face(b,'sidewalk',[[-w/2,0,-d/2],[-w/2,.15,d/2],[w/2,.15,d/2],[w/2,0,-d/2]]);b.walk(0,0,w,d,.075,0,.15/d);for(let j=0;j<4;j++)for(let i=0;i<8;i++)b.cylinder('yellow',-w*.40+i*w*.114,.034+j*.014,-d*.34+j*.4,.025,.025,.009,6);b.pop();}
+function ramp(b,x,z,w,d,ry){b.push(x,0,z,ry);face(b,'sidewalk',[[-w/2,0,-d/2],[-w/2,.15,d/2],[w/2,.15,d/2],[w/2,0,-d/2]]);b.walk(0,0,w,d,.075,0,.15/d);for(let j=0;j<4;j++)for(let i=0;i<8;i++)b.cylinder('yellow',-w*.40+i*w*.114,.038+j*.014,-d*.34+j*.4,.025,.025,.016,6);b.pop();}
 export function roadHeight(x,z){const near=v=>Math.min(((v%B)+B)%B,B-((v%B)+B)%B),d=Math.min(near(x),near(z));return d<=R?.045*(1-d/R):0;}
 function roadHalf(b,ry){b.push(0,0,0,ry);face(b,'asphalt',[[0,.045,R],[0,.045,B-R],[R,0,B-R],[R,0,R]]);b.pop();}
 function roads(b,cn){

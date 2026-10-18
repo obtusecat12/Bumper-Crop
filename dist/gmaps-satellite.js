@@ -5,7 +5,7 @@
 // real 8x8 DCT JPEG round trip (4:2:0 chroma). The raster is anchored to a world grid
 // so the block artifacts do not swim while panning, cached, and bilinearly upscaled.
 import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan,cityDistrict} from './urban-layout.js?v=return-1';
-import {BUILDING_TYPES} from './urban-buildings.js?v=60';
+import {BUILDING_TYPES} from './urban-buildings.js?v=132st';
 import {exitPoint} from './exit-route.js?v=60';
 import {paintCanalSat,paintSubwaySat,inCanalWater} from './map131-canal.js?v=131';
 
