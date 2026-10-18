@@ -17,10 +17,11 @@ import {createLevel0DetailAssets} from './level0-ceiling-details.js';
 import {createLevel0Props} from './level0-props.js';
 import {RectAreaLightUniformsLib} from './vendor/RectAreaLightUniformsLib.js';
 import {createSpawnBake132} from './level0-bake132.js?v=132';
+import {createPitBake133} from './level0-bake133-pit.js?v=133';
 export function createLevel0World(T,renderer){
  RectAreaLightUniformsLib.init();
  const scene=new T.Scene();scene.userData.noAtmosphere=true;scene.userData.antialiasSamples=4;scene.userData.springVolume=createLevel0Occlusion94();scene.background=new T.Color(0x686752);scene.fog=new T.FogExp2(0x99977f,.016);
- const group=new T.Group();group.name='Level 0 · 阈界';scene.add(group);scene.add(createSpawnBake132(T));
+ const group=new T.Group();group.name='Level 0 · 阈界';scene.add(group);scene.add(createSpawnBake132(T));scene.add(createPitBake133(T));
  const field=createLevel0LightField(T,7*K),{mats,uniforms,ready}=createL0Materials(T,renderer,field.uniforms),assets=createLevel0DetailAssets(T),props={...createLevel0Props(T),...createKaneProps(T),...createFurniture93(T),...createFurniture94(T)},box=new T.BoxGeometry(1,1,1),plane=new T.PlaneGeometry(1,1),floorPlane=plane.clone().rotateX(-Math.PI/2),tmp=new T.Object3D();
  const ceiling95=createCeiling95(T);Object.assign(props,createFurniture95(T,props));
  const manila=createManilaField96(T,renderer,scene);
