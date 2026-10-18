@@ -130,7 +130,11 @@ export function createFlashlight117(T){
  // fresh depth buffer and a camera with a 1 cm near plane, so they never sink into walls. Lighting is a per-level
  // ambient matched to each level's look. The world light (spot + cone) starts on the eye→lens ray at 40 % of the lens
  // distance: on screen it still leaves the lens, but it can never poke through a wall the player is touching.
- const vmScene=new T.Scene();vmScene.add(rig);const vmCam=new T.PerspectiveCamera(70,1,.01,6);
+ // V133-arms: the viewmodel is a pure screen layer. Its camera has a FIXED 72° FOV (the game default) and never follows the
+// world camera's FOV: zoom (Z / right mouse, up to 4.5x), focus breathing near walls and the noclip FOV kick used to scale
+// the hand/torch every frame, which read as the arm flying about whenever the player touched something. ?vmfov=world = old.
+const VM_FOV=72,VM_FOLLOW=new URLSearchParams(globalThis.location?.search||'').get('vmfov')==='world';
+const vmScene=new T.Scene();vmScene.add(rig);const vmCam=new T.PerspectiveCamera(VM_FOV,1,.01,6);
  const hemi=new T.HemisphereLight(0xfff2c8,0x5a4c2a,1.6),key=new T.DirectionalLight(0xfff4dc,.9);key.position.set(-.4,1,.6);vmScene.add(hemi,key);
  // V119b: the world pipeline leaves the frame display-encoded, so the viewmodel is encoded too (it was composited linear → dark red-orange skin); ambient retuned for that
  const LOOK={0:[0xfff6e0,0x8a7c58,1.5,.85],1:[0xdfe4e6,0x5a5e60,.9,.5],10:[0xfff8ec,0x8a8070,1.3,.8],11:[0xf2f4f8,0x6a6e74,1.2,.7]};
@@ -139,7 +143,7 @@ export function createFlashlight117(T){
  const quad=new T.Mesh(new T.PlaneGeometry(2,2),quadMat);quad.frustumCulled=false;const quadScene=new T.Scene();quadScene.add(quad);const quadCam=new T.OrthographicCamera(-1,1,1,-1,0,1);
  function overlay(renderer,target,view,w,h){if(!rig.visible||!view)return;
   if(!vmTarget||vmTarget.width!==w||vmTarget.height!==h){vmTarget?.dispose();vmTarget=new T.WebGLRenderTarget(w,h,{depthBuffer:true,minFilter:T.NearestFilter,magFilter:T.NearestFilter});vmTarget.texture.colorSpace=target?.texture?.colorSpace??T.NoColorSpace;quadMat.uniforms.map.value=vmTarget.texture;}
-  vmCam.fov=view.fov||70;vmCam.aspect=view.aspect||w/h;vmCam.updateProjectionMatrix();
+  vmCam.fov=VM_FOLLOW?(view.fov||70):VM_FOV;vmCam.aspect=w/h;vmCam.updateProjectionMatrix();
   const L=LOOK[level]||LOOK[0];hemi.color.setHex(L[0]);hemi.groundColor.setHex(L[1]);hemi.intensity=L[2];key.intensity=L[3];
   const old=renderer.getRenderTarget(),oc=renderer.getClearColor(new T.Color()),oa=renderer.getClearAlpha(),ab=renderer.autoClear;
   renderer.setRenderTarget(vmTarget);renderer.setClearColor(0x000000,0);renderer.clear(true,true,false);renderer.autoClear=false;renderer.render(vmScene,vmCam);
@@ -147,8 +151,12 @@ export function createFlashlight117(T){
  const lensP=new T.Vector3(),tq=new T.Quaternion();
  // V131: real eye speed (camera travel per second, low-passed) drives the walk bob. The game's velocity keeps its full value
  // while the body is blocked by a wall/crate/column, so the hand used to bob in place against solid props (read as a twitch).
- const lastEye=new T.Vector3();let eyeT=-1,eyeSpeed=0;
- function prepare(sc,camera){{const now=performance.now(),e=camera.getWorldPosition(lensP);if(eyeT>=0){const ddt=Math.max(1e-3,(now-eyeT)/1000),d=Math.hypot(e.x-lastEye.x,e.z-lastEye.z)/ddt;eyeSpeed+=(Math.min(d,8)-eyeSpeed)*Math.min(1,ddt*10);if(d>20)eyeSpeed=0;}lastEye.copy(e);eyeT=now;}if(sc!==scene){lightRig.parent?.remove(lightRig);scene=sc;if(sc)sc.add(lightRig);}
+ // V133-arms: speed is net travel over a 0.25 s window, so collision push-back jitter (in/out against a wall or crate)
+// cancels out instead of kicking the bob; jumps > 20 m/s (teleport, level change, noclip push) reset the history.
+const eyeHist=[];let eyeSpeed=0,eyeT=-1;
+ function prepare(sc,camera){{const now=performance.now(),e=camera.getWorldPosition(lensP),ddt=eyeT<0?0:Math.max(1e-3,(now-eyeT)/1000);eyeT=now;const last=eyeHist[eyeHist.length-1];
+  if(last&&Math.hypot(e.x-last.x,e.z-last.z)/ddt>20)eyeHist.length=0;eyeHist.push({x:e.x,z:e.z,t:now});while(eyeHist.length>2&&now-eyeHist[1].t>250)eyeHist.shift();
+  const o=eyeHist[0],span=(now-o.t)/1000,d=span>.05?Math.min(8,Math.hypot(e.x-o.x,e.z-o.z)/span):0;eyeSpeed+=(d-eyeSpeed)*Math.min(1,ddt*6);}if(sc!==scene){lightRig.parent?.remove(lightRig);scene=sc;if(sc)sc.add(lightRig);}
   rig.position.set(0,0,0);rig.quaternion.identity();rig.updateMatrixWorld(true);
   lens.getWorldPosition(lensP).multiplyScalar(.4);torch.getWorldQuaternion(tq);
   camera.updateMatrixWorld();lightRig.position.copy(lensP).applyMatrix4(camera.matrixWorld);if(sc)sc.worldToLocal(lightRig.position);
@@ -161,8 +169,8 @@ export function createFlashlight117(T){
   // walk bob (figure-eight), turn sway lags the view, switch press, flicker on power-up
   const k=moving*(running?1.6:1),ph=step*Math.PI*2;const tx=Math.sin(ph*.5)*.012*k,ty=-Math.abs(Math.cos(ph*.5))*.01*k;
   bob.vx+=((tx-bob.x)*140-bob.vx*18)*dt;bob.x+=bob.vx*dt;bob.vy+=((ty-bob.y)*140-bob.vy*18)*dt;bob.y+=bob.vy*dt;
-  if(lastYaw!==null){let dy=yaw-lastYaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));sway.x+=(dy*.35-sway.x)*Math.min(1,dt*8);sway.y+=((pitch-lastPitch)*.35-sway.y)*Math.min(1,dt*8);}lastYaw=yaw;lastPitch=pitch;
-  sway.x*=Math.exp(-dt*6);sway.y*=Math.exp(-dt*6);press=Math.max(0,press-dt*5);
+  if(lastYaw!==null){let dy=yaw-lastYaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));if(Math.abs(dy)>.5||Math.abs(pitch-lastPitch)>.5){dy=0;lastPitch=pitch;}/* V133: snap turns (respawn, level load) don't fling the arm */sway.x+=(dy*.35-sway.x)*Math.min(1,dt*8);sway.y+=((pitch-lastPitch)*.35-sway.y)*Math.min(1,dt*8);}lastYaw=yaw;lastPitch=pitch;
+  sway.x*=Math.exp(-dt*6);sway.y*=Math.exp(-dt*6);sway.x=T.MathUtils.clamp(sway.x,-.06,.06);sway.y=T.MathUtils.clamp(sway.y,-.05,.05);bob.x=T.MathUtils.clamp(bob.x,-.02,.02);bob.y=T.MathUtils.clamp(bob.y,-.02,.01);press=Math.max(0,press-dt*5);
   const breathe=Math.sin(t*1.7)*.0025;
   hand.position.set(.2+bob.x+sway.x*.4,-.21+bob.y+breathe-(1-raise)*.3-press*.004,-.4);hand.rotation.set(-.04-sway.y*.6-press*.05,Math.PI+.08+sway.x*.8,-bob.x*1.4);armRoot.position.set(bob.x+sway.x*.4,bob.y+breathe-(1-raise)*.3-press*.004,0);armRoot.rotation.set(-sway.y*.6-press*.05,sway.x*.8,-bob.x*1.4);
   thumb.children[0].rotation.x=-press*.25;if(btnRest)btn.position.copy(btnRest).addScaledVector(btnN,-press*.002);else btn.position.y=.017-press*.002;

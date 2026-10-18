@@ -101,7 +101,7 @@ import {createNavigationMap} from './map-ui.js?v=127';
 import {drawAsciiTitle} from './ascii-title.js?v=116';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=117';
 import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
-import {createInventory117} from './inventory117.js?v=124';import {createL1Loot124} from './l1loot124-main.js?v=124';import {createPerf131} from './perf131.js?v=131';import {createFlashlight117} from './flashlight117.js?v=132';import {createIntro120} from './intro120.js?v=120';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=119'; // V117 shared inventory
+import {createInventory117} from './inventory117.js?v=124';import {createL1Loot124} from './l1loot124-main.js?v=124';import {createPerf131} from './perf131.js?v=131';import {createFlashlight117} from './flashlight117.js?v=133';import {createIntro120} from './intro120.js?v=120';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=119'; // V117 shared inventory
 import {createLevel1World} from './level1-world.js?v=117'; // V107 Level 1
 
 await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
