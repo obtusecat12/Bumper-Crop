@@ -7,8 +7,9 @@ import {makeFloorCans,initializeCanTextures} from './canned-food.js?v=60';
 import {makeAlmondBottle,almondVariant} from './almond-water-assets.js?v=60';
 import {createVendingDrink} from './vending-drinks-v70.js';
 import {vendingDrinkTextures} from './vending-materials-v70.js';
-import {B130,LOOT130,itemTitle,prepare130} from './l1loot130-items.js?v=130';
-export {itemTitle};
+import {B130,LOOT130,itemTitle as itemTitle130,prepare130} from './l1loot130-items.js?v=130';
+import {fl2Loot,fl2Name,prepareFL2} from './torch132b.js?v=132b';
+export const itemTitle=(id,m)=>(id==='flashlight'&&fl2Name(m))||itemTitle130(id,m);// V132-flashlight2
 
 const A='./assets/l1-loot-v124/';
 const loader=new T.TextureLoader(),texCache=new Map();
@@ -48,7 +49,7 @@ export const LOOT_ITEMS={
  pineapple:{name:'菠萝',size:.3},melon:{name:'哈密瓜',size:.2},papaya:{name:'木瓜',size:.22},
  fuyou:{name:'福友玉',size:.09},squirt:{name:'滋水枪',size:.36},berries:{name:'迁跃浆果',size:.12},
  chemical:{name:'化学制剂',size:.18},dynamite:{name:'炸药',size:.2},nitrogen:{name:'固态氮块',size:.12},glass:{name:'碎玻璃',size:.15},
- note:{name:'纸条',size:.13},
+ note:{name:'纸条',size:.13},flashlight:{name:'手电筒',size:.3},
  ...LOOT130,// V130-B loot+ (l1loot130-items.js)
 };
 
@@ -119,9 +120,9 @@ const B={
   for(let i=0;i<5;i++){const g=new T.BufferGeometry(),a=i*1.7+(m?.v|0),r=.06+(i%3)*.03;g.setAttribute('position',new T.Float32BufferAttribute([0,0,0,Math.cos(a)*r,0,Math.sin(a)*r,Math.cos(a+.7)*r*.7,0,Math.sin(a+.7)*r*.7],3));
    g.setAttribute('uv',new T.Float32BufferAttribute([0,0,1,0,.5,1],2));g.computeVertexNormals();o.add(mesh(g,mm,(i%3-1)*.05,.004+i*.006,((i*2)%3-1)*.04,.1*i,0,.15*(i%2)));}return o;},
 };
-Object.assign(B,B130);// V130-B: new items + rebuilt lighter / sanitizer override the V124 ones
+Object.assign(B,B130);B.flashlight=m=>fl2Loot(m);// V132-flashlight2: AcchiHaven torches (torch132b.js)// V130-B: new items + rebuilt lighter / sanitizer override the V124 ones
 export function makeLootModel(id,meta){const f=B[id];const o=f?f(meta):grp(mesh(new T.BoxGeometry(.08,.08,.08),M('fallback',()=>std(null,{color:0x888888}))));o.userData.lootId=id;return o;}
-export async function prepareLootItems(){await Promise.all([initializeCanTextures().catch(()=>{}),prepare130()]);}
+export async function prepareLootItems(){await Promise.all([initializeCanTextures().catch(()=>{}),prepare130(),prepareFL2()]);}
 // ---- fill surfaces: seamless texture on an undulating low-poly bed (foam peanuts / peas / straw / shards) ----
 export function makeFill(kind,w,d,seed){const nx=7,nz=6,g=new T.PlaneGeometry(w,d,nx,nz);g.rotateX(-Math.PI/2);const p=g.attributes.position,uv=g.attributes.uv;
  for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i),edge=Math.min(w/2-Math.abs(x),d/2-Math.abs(z));const h=(Math.sin(x*17+seed)*Math.cos(z*13+seed*1.7)+Math.sin((x+z)*23+seed*.3)*.5)*.018*Math.min(1,edge/.06)+(edge<.02?.012:0);p.setY(i,h);

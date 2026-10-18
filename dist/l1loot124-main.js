@@ -5,9 +5,9 @@
 // open crates near the player get item meshes. Opened / taken state persists in localStorage.
 import * as T from './vendor/three.module.min.js';
 import {l1Hash} from './level1-layout.js?v=113';
-import {LOOT_ITEMS,makeLootModel,makeFill,prepareLootItems,itemTitle} from './l1loot124-items.js?v=130';
+import {LOOT_ITEMS,makeLootModel,makeFill,prepareLootItems,itemTitle} from './l1loot124-items.js?v=132b';
 import {almondVariant} from './almond-water-assets.js?v=60';
-import {makeBundle,packCrate,PACKS} from './l1loot124-pack.js?v=130';import {ITEMS} from './inventory117.js?v=124';
+import {makeBundle,packCrate,PACKS} from './l1loot124-pack.js?v=130';import {ITEMS} from './inventory117.js?v=132b';import {fl2Of,fl2Var,fl2Mesh} from './torch132b.js?v=132b';
 const CSS=`.l1loot-fx{position:absolute;inset:0;pointer-events:none;z-index:30}.l1loot-fx i{position:absolute;inset:0;opacity:0;transition:opacity .15s}
 .l1loot-fx .fx-red{background:radial-gradient(ellipse at center,transparent 45%,rgba(150,0,0,.85) 100%)}.l1loot-fx .fx-cold{background:radial-gradient(ellipse at center,transparent 40%,rgba(200,230,255,.9) 100%);backdrop-filter:saturate(.4)}
 .l1loot-fx .fx-gas{background:radial-gradient(ellipse at center,rgba(170,200,60,.25) 0%,rgba(120,150,20,.75) 100%)}.l1loot-fx .fx-flash{background:#fff3d0;transition:none}.l1loot-fx .fx-match{background:radial-gradient(ellipse 55% 60% at 62% 100%,rgba(255,190,90,.55) 0%,rgba(255,150,60,.18) 45%,transparent 75%);mix-blend-mode:screen}
@@ -60,13 +60,15 @@ export function rollCrate(l,force,legacy=false){const R=rng(l.id);let theme='sup
  if(!legacy){const Q=rng(l.id+':v130');for(const[id,a,b]of(EX130[theme]||[])){const n=a+Math.floor(Q()*(b-a+1));for(let i=0;i<n;i++)items.push({id,meta:{v:Math.floor(Q()*4),id:l.id+':x'+items.length}});}
   const grow2=(id,n,kind,p)=>{let ix=idx(id);if(!ix.length||Q()>=p||ix.some(i=>packs.some(k=>k.idx.includes(i))))return;const v=items[ix[0]].meta.v;while(ix.length<n){items.push({id,meta:{v,id:l.id+':q'+items.length}});ix=idx(id);}for(const i of ix)items[i].meta.v=v;packs.push({kind,idx:ix.slice(0,n)});};
   grow2('beer',6,'beer6',theme==='bar'?.55:.25);grow2('cola',6,'cola6',.35);grow2('cigarettes',10,'cigstack',theme==='bar'?.4:.12);}
+ // V132-flashlight2: now and then an extra AcchiHaven flashlight (own rng, so every other roll is unchanged)
+ {const F=rng(l.id+':fl2'),p={tools:.3,household:.12,junk:.08,supplies:.06,odd:.15,oddities:.15}[theme]||0;if(F()<p)items.push({id:'flashlight',meta:{fl:1+Math.floor(F()*3),v:F()<.5?1:2,id:l.id+':fl2'}});}
  const TIDY={supplies:.85,pantry:.9,produce:.55,household:.4,tools:.25,junk:.06,foam:.1,peas:.1,odd:.3,chem:.65,boom:.7,glass:.15,nitro:.5,bar:.5,frozen:.92,oddities:.12};
  const mode=P()<(TIDY[theme]??.4)?'tidy':'messy';
  return{theme,items,fill:th.fill,full:!!th.full,hazard:th.hazard||null,lock,packs,mode,legacy};}
 
 export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio,updateHUD=()=>{},enterOne,resetCameraRig=()=>{},inspect=null}){
  let shiftDown=false;addEventListener('keydown',e=>{if(e.key==='Shift')shiftDown=true;});addEventListener('keyup',e=>{if(e.key==='Shift')shiftDown=false;});addEventListener('blur',()=>{shiftDown=false;});
- let FL=null;import('./flashlight117.js?v=132').then(m=>{FL=m;}).catch(()=>{});
+ let FL=null;import('./flashlight117.js?v=134').then(m=>{FL=m;}).catch(()=>{});
  const W=()=>world();let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}');}catch{}
  const save=()=>{try{const k=Object.keys(saved);if(k.length>800)for(const x of k.slice(0,k.length-800))delete saved[x];localStorage.setItem(KEY,JSON.stringify(saved));}catch{}};
  const ready=prepareLootItems();
@@ -148,7 +150,7 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
  const NOTES=['纸条：“别跟着灯管嗡嗡声走。箱子里有水，但别碰贴骷髅的。——K”','纸条：“别跟着灯管嗡嗡声走。箱子里有水，但别碰贴骷髅的。——K”'];
  function itemVariant(id,meta){if(id==='almond')return meta?.kind?meta:almondVariant(meta?.id||'l1loot');if(id==='drink')return meta?.kind?meta:{kind:'vending',type:(meta?.v|0)%2?'can':'pet'};if(id==='soy')return {kind:'vending',type:'soy'};
   const name=itemTitle(id,meta)||(LOOT_ITEMS[id]||ITEMS[id])?.name||id,h=HAZI[id];let desc=ITEMS[id]?.desc||'';if(id==='note')desc=NOTES[(meta?.v|0)%2];
-  const build=id==='flashlight'?(()=>{if(!FL)return makeLootModel('battery',{});const t=FL.createFlashlight117(T).torch;t.parent?.remove(t);t.position.set(0,0,0);t.rotation.set(0,0,0);return t;}):()=>makeLootModel(id,{...(meta||{})});
+  const build=id==='flashlight'?(()=>{if(fl2Of(meta))return fl2Mesh(fl2Of(meta),fl2Var(meta),0x101010);if(!FL)return makeLootModel('battery',{});const t=FL.createFlashlight117(T).torch;t.parent?.remove(t);t.position.set(0,0,0);t.rotation.set(0,0,0);return t;}):()=>makeLootModel(id,{...(meta||{})});
   return {kind:'object',id,name,desc,use:QUSE[id]||'',hazard:h?.kind||null,warn:h?.txt||'',build};}
  function packVariant(kind,members){const P=PACKS[kind];const ms=members.map((m,k)=>({...m,k}));return {kind:'object',id:P.id,pack:kind,name:P.name+(members.length<P.n?'（剩 '+members.length+'）':''),desc:P.desc,use:'',hazard:null,warn:'',build:()=>makeBundle(kind,ms,true)};}
  const wp=new T.Vector3();

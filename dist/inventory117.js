@@ -2,6 +2,7 @@
 // A stack holds an array of per-unit meta objects (e.g. an almond-water variant), so pickups keep their identity.
 // Keys: 1–9 / mouse wheel select the hotbar slot, I opens the backpack; in the backpack drag & drop to move / swap /
 // merge, Shift+click quick-moves between hotbar and backpack, right-drag... (kept simple: right click splits half).
+import {fl2Of,fl2Var,fl2Name} from './torch132b.js?v=132b';
 export const ITEMS={
  almond:{name:'杏仁水',max:4,drink:true,desc:'恢复水分、体力与理智。'},
  drink:{name:'售货机饮料',max:6,drink:true,desc:'售货机里的杏仁水（塑料瓶 / 易拉罐）。'},
@@ -67,8 +68,10 @@ function icon(id,meta){const c=document.createElement('canvas');c.width=c.height
 // V130-B: icons rendered from the real 3D models in the showcase rig (one per brand variant), 32 px, quantized
 const ICON130={lighter:4,sanitizer:4,beer:4,cola:3,cigarettes:4,tumbler:2,drink:2,peacetin:1,tvdinner:1,duck:1,cassette:1,floppy:1,motelkey:1,snowglobe:1,teeth:1,pager:1,polaroid:1};
 const icon130=(id,meta)=>{const n=ICON130[id];if(!n)return null;if(id==='drink'&&!(meta?.kind==='vending'&&(meta.type==='pet'||meta.type==='can')))return null;const v=id==='drink'?(meta.type==='can'?1:0):((meta?.v|0)%n+n)%n;return new URL('./assets/l1-loot-v130/icon/'+id+(n>1?'_'+v:'')+'.png?v=130',import.meta.url).href;};
-const iconCache=new Map();const iconUrl=(id,meta)=>{const i130=icon130(id,meta);if(i130)return i130;if(ICON_FILES.has(id))return new URL('./assets/l1-loot-v124/icon/'+id+'.png?v=124',import.meta.url).href;const k=id+':'+(id==='drink'?(meta?.type|0)%4:0);if(!iconCache.has(k))iconCache.set(k,icon(id,meta));return iconCache.get(k);};
+const iconCache=new Map();const iconUrl=(id,meta)=>{if(id==='flashlight'&&fl2Of(meta))return new URL('./assets/fp-torch-v132b/icon/f'+fl2Of(meta)+'v'+fl2Var(meta)+'.png?v=132b',import.meta.url).href;const i130=icon130(id,meta);if(i130)return i130;if(ICON_FILES.has(id))return new URL('./assets/l1-loot-v124/icon/'+id+'.png?v=124',import.meta.url).href;const k=id+':'+(id==='drink'?(meta?.type|0)%4:0);if(!iconCache.has(k))iconCache.set(k,icon(id,meta));return iconCache.get(k);};
 
+// V132-flashlight2: a stack's display name (AcchiHaven flashlights carry their own name in meta)
+const nameOf=s=>(s.id==='flashlight'&&fl2Name(s.items.at(-1)))||ITEMS[s.id]?.name||s.id;
 export function createInventory117({onChange=()=>{},toast=()=>{}}={}){
  const slots=Array.from({length:HOT+BAG},()=>null);let sel=0,open=false,drag=null,root=null,bar=null,bag=null,ghost=null;
  const max=id=>ITEMS[id]?.max??64;
@@ -87,15 +90,15 @@ export function createInventory117({onChange=()=>{},toast=()=>{}}={}){
  function select(i){sel=((i%HOT)+HOT)%HOT;render();onChange();}
  // ---------- DOM ----------
  function cell(i){const s=slots[i],d=document.createElement('div');d.className='inv-slot'+(i===sel&&i<HOT?' sel':'');d.dataset.i=i;
-  if(s){d.innerHTML=`<img src="${iconUrl(s.id,s.items[0])}" alt="" draggable="false">${s.items.length>1?`<b>${s.items.length}</b>`:''}`;d.title=ITEMS[s.id]?.name+' · '+s.items.length+'/'+max(s.id);}
+  if(s){d.innerHTML=`<img src="${iconUrl(s.id,s.items[0])}" alt="" draggable="false">${s.items.length>1?`<b>${s.items.length}</b>`:''}`;d.title=nameOf(s)+' · '+s.items.length+'/'+max(s.id);}
   return d;}
  function ensure(){if(root&&root.isConnected)return;root=document.createElement('div');root.className='inv117';root.innerHTML='<div class="inv-bag" hidden><div class="inv-panel"><div class="inv-title">背包 <small>Tab 关闭 · 拖拽移动 · Shift+点击 快速移动 · 右键拆半</small></div><div class="inv-grid inv-main"></div><div class="inv-sep"></div><div class="inv-grid inv-hot2"></div><div class="inv-info"></div></div></div><div class="inv-bar"></div><div class="inv-name"></div>';
   (document.getElementById('game')||document.body).append(root);bar=root.querySelector('.inv-bar');bag=root.querySelector('.inv-bag');
-  bag.addEventListener('pointerdown',down);bag.addEventListener('pointerover',e=>{const t=e.target.closest?.('.inv-slot'),info=root.querySelector('.inv-info');if(!info)return;const s=t?slots[Number(t.dataset.i)]:null;info.textContent=s?(ITEMS[s.id]?.name||s.id)+' '+s.items.length+'/'+max(s.id)+' · '+(ITEMS[s.id]?.desc||''):'';});bag.addEventListener('contextmenu',e=>e.preventDefault());addEventListener('pointermove',move);addEventListener('pointerup',up);}
+  bag.addEventListener('pointerdown',down);bag.addEventListener('pointerover',e=>{const t=e.target.closest?.('.inv-slot'),info=root.querySelector('.inv-info');if(!info)return;const s=t?slots[Number(t.dataset.i)]:null;info.textContent=s?nameOf(s)+' '+s.items.length+'/'+max(s.id)+' · '+(ITEMS[s.id]?.desc||''):'';});bag.addEventListener('contextmenu',e=>e.preventDefault());addEventListener('pointermove',move);addEventListener('pointerup',up);}
  let nameT=0;
  function render(){ensure();bar.replaceChildren(...Array.from({length:HOT},(_,i)=>cell(i)));
   if(open){root.querySelector('.inv-main').replaceChildren(...Array.from({length:BAG},(_,k)=>cell(HOT+k)));root.querySelector('.inv-hot2').replaceChildren(...Array.from({length:HOT},(_,i)=>cell(i)));}
-  const n=root.querySelector('.inv-name'),s=slots[sel];n.textContent=s?ITEMS[s.id]?.name+(s.items.length>1?' ×'+s.items.length:''):'';n.classList.remove('show');void n.offsetWidth;if(s){n.classList.add('show');clearTimeout(nameT);nameT=setTimeout(()=>n.classList.remove('show'),1600);}}
+  const n=root.querySelector('.inv-name'),s=slots[sel];n.textContent=s?nameOf(s)+(s.items.length>1?' ×'+s.items.length:''):'';n.classList.remove('show');void n.offsetWidth;if(s){n.classList.add('show');clearTimeout(nameT);nameT=setTimeout(()=>n.classList.remove('show'),1600);}}
  function setOpen(v){ensure();open=v;bag.hidden=!v;root.classList.toggle('open',v);if(v)render();else cancelDrag();}
  function slotAt(e){const t=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('.inv-slot');return t&&bag.contains(t)?Number(t.dataset.i):-1;}
  function down(e){const i=slotAt(e);if(i<0||!slots[i])return;e.preventDefault();

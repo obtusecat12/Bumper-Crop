@@ -1,0 +1,7 @@
+PSX Style FlashLights — by AcchiHaven
+https://acchihaven.itch.io/psx-style-flashlights
+
+FlashLight_001.glb / FlashLight_002.glb / FlashLight_003.glb and FlashLight_<n>_v1.png / _v2.png
+(Texture/Variation1 and Variation2) are the pack's original files, unmodified.
+Used in Bumper Crop with the author's pack as extra pickup flashlights (torch132b.js).
+Thanks to AcchiHaven.

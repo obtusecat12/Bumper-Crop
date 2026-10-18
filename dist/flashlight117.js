@@ -5,6 +5,7 @@
 // (prepare(scene) is called right before each render), and is never removed — only its intensity changes, so toggling
 // never triggers a shader recompile. Shadows are off (the cost of a moving shadow map was not worth it here).
 import {GLTFLoader} from './vendor/GLTFLoader.js';
+import {fl2Mesh,loadFL2,FL2} from './torch132b.js?v=132b';
 // V117b: the hand is now the CC0 "PSX First Person Arms" by Drillimpact (assets/fp-arms-v117/CREDITS.txt). Its knife_idle
 // fist is baked once on the CPU into a static mesh (no skinning at runtime: cheaper, and SwiftShader loses the context on
 // skinned draws), the left arm is dropped, and the torch is parented to the hand.R bone frame so the fingers wrap it.
@@ -64,8 +65,8 @@ export function createFlashlight117(T){
  if(torch132)new GLTFLoader().load('./assets/fp-torch-v132/torch.glb?v=132',g=>{try{
   const tex=new T.TextureLoader().load('./assets/fp-torch-v132/atlas.png?v=132');tex.colorSpace=T.SRGBColorSpace;tex.flipY=false;tex.magFilter=T.NearestFilter;tex.minFilter=T.NearestMipmapLinearFilter;
   const X=g.parser.json.extras||{},get=n=>g.scene.getObjectByName(n),bodyM=get('body'),sw=get('switch'),lz=get('lens');
-  for(const o of [...torch.children])if(o!==lens&&o!==btn){torch.remove(o);o.geometry?.dispose();}
-  bodyM.material=new T.MeshStandardMaterial({map:tex,roughness:.45,metalness:.35,emissive:0x0e1013});bodyM.position.set(0,0,0);torch.add(bodyM);
+  for(const o of [...torch.children])if(o!==lens&&o!==btn&&!o.userData.keep){torch.remove(o);o.geometry?.dispose();}
+  bodyM.material=new T.MeshStandardMaterial({map:tex,roughness:.45,metalness:.35,emissive:0x0e1013});bodyM.position.set(0,0,0);torch.add(bodyM);if(model)bodyM.visible=btn.visible=false;
   btn.geometry.dispose();btn.geometry=sw.geometry;btn.material=new T.MeshStandardMaterial({map:tex,roughness:.85,metalness:0});
   lens.geometry.dispose();lens.geometry=lz.geometry;lens.position.z=X.LENS_Z??lens.position.z;lensMat.map=tex;lensMat.transparent=true;lensMat.needsUpdate=true;
   torch.traverse(o=>{if(o.isMesh){o.frustumCulled=false;o.castShadow=o.receiveShadow=false;}});
@@ -162,7 +163,7 @@ const eyeHist=[];let eyeSpeed=0,eyeT=-1;
   camera.updateMatrixWorld();lightRig.position.copy(lensP).applyMatrix4(camera.matrixWorld);if(sc)sc.worldToLocal(lightRig.position);
   lightRig.quaternion.copy(camera.getWorldQuaternion(new T.Quaternion())).multiply(tq);lightRig.updateMatrixWorld(true);fdir.set(0,0,1).applyQuaternion(lightRig.quaternion);}
  const fdir=new T.Vector3(0,0,1);
- function update(dt,{moving=0,running=false,yaw=0,pitch=0,step=0}={}){t+=dt;coneMat.uniforms.uT.value=t;
+ function update(dt,{moving=0,running=false,yaw=0,pitch=0,step=0}={}){t+=dt;syncModel();coneMat.uniforms.uT.value=t;
   // V131: never pop out — while the L0→L1 noclip plays the hand is lowered out of frame with the same ease as unequipping
   const eq=equipped&&!globalThis.__bcNoclip?.active;raise+=((eq?1:0)-raise)*Math.min(1,dt*7);rig.visible=raise>.02;
   moving=Math.min(moving,eyeSpeed/2);
@@ -178,5 +179,14 @@ const eyeHist=[];let eyeSpeed=0,eyeT=-1;
   const lv=level;spot.intensity=I*(lv===10||lv===11?28:46);spot.decay=2;coneMat.uniforms.uI.value=I;cone.visible=I>0;lensMat.color.setScalar(I?1.6:(torch132?.8:.12));lensMat.opacity=torch132&&!I?.35:1;}
  function toggle(){if(!equipped)return;on=!on;press=1;click(on);if(on)flick=.22;}
  function setEquipped(v){if(v===equipped)return;equipped=v;}
- return{rig,prepare,overlay,update,toggle,setEquipped,setLevel(v){level=v;},get on(){return on&&equipped;},get beam(){return{p:lightRig.position,d:fdir,i:coneMat.uniforms.uI.value,cos:Math.cos(.46)};},get equipped(){return equipped;},spot,cone,armRoot,torch};
+ // V132-flashlight2: the held model follows the selected flashlight stack's meta ({fl:1..3,v:1|2} = AcchiHaven torches,
+ // torch132b.js); the Jarlan torch's own meshes are hidden, lens (beam origin + glow disc) moves to the new lens centre
+ let model=0,lensBase=null;const alt=new T.Group();alt.userData.keep=true;torch.add(alt);
+ function setModel(meta){const n=FL2[meta?.fl|0]?meta.fl|0:0,v=(meta?.v|0)===2?2:1,key=n?n+':'+v:0;if(key===model)return;model=key;
+  if(!lensBase)lensBase={p:lens.position.clone(),s:lens.scale.clone()};alt.clear();
+  for(const o of torch.children)if(o!==alt&&o!==lens)o.visible=!n;
+  if(!n){lens.position.copy(lensBase.p);lens.scale.copy(lensBase.s);return;}
+  alt.add(fl2Mesh(n,v,0x181818));loadFL2(n).then(r=>{if(model!==key)return;const L=FL2[n].lens;lens.position.set(L[0],L[1],L[2]+.0015);lens.geometry.computeBoundingSphere();const r0=lens.geometry.boundingSphere?.radius||.0225;lens.scale.setScalar(r.lensR/r0);}).catch(()=>{});}
+ function syncModel(){const inv=globalThis.__bcInventory,s=inv?.slots?.[inv.sel];if(s&&s.id==='flashlight')setModel(s.items.at(-1));}
+ return{rig,prepare,overlay,update,toggle,setEquipped,setModel,setLevel(v){level=v;},get on(){return on&&equipped;},get beam(){return{p:lightRig.position,d:fdir,i:coneMat.uniforms.uI.value,cos:Math.cos(.46)};},get equipped(){return equipped;},spot,cone,armRoot,torch};
 }

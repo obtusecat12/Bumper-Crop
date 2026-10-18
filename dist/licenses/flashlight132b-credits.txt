@@ -1,0 +1,3 @@
+"PSX Style FlashLights" by AcchiHaven — https://acchihaven.itch.io/psx-style-flashlights
+Used (original models + original textures, unmodified) as the extra pickup flashlights: dist/assets/fp-torch-v132b/ (see CREDITS.txt there).
+Redistribution in this repository confirmed OK by the project owner (2026-10-18).

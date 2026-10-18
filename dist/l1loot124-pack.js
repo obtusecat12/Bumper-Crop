@@ -4,7 +4,7 @@
 // on each other). Collision is a conservative height field over each item's rotated bounding box, so nothing
 // interpenetrates. Packaging art: art-l1loot124c/ (each generated alone) -> tools/l1loot124c_assets.py -> assets/l1-loot-v124/pk.
 import * as T from './vendor/three.module.min.js';
-import {makeLootModel} from './l1loot124-items.js?v=130';
+import {makeLootModel} from './l1loot124-items.js?v=132b';
 
 const A='./assets/l1-loot-v124/pk/';const loader=new T.TextureLoader(),texC=new Map(),matC=new Map();
 function tex(n,rep=false){if(texC.has(n))return texC.get(n);const t=loader.load(new URL(A+n+'.webp?v=124c',import.meta.url).href);t.colorSpace=T.SRGBColorSpace;t.wrapS=t.wrapT=rep?T.RepeatWrapping:T.ClampToEdgeWrapping;t.magFilter=T.NearestFilter;t.anisotropy=2;texC.set(n,t);return t;}
