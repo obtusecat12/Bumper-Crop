@@ -38,7 +38,7 @@ import {inSpaWater} from './spa-layout-v66.js';
 import {createShowerAudio} from './bath-v62-audio.js?v=62';
 import {initializeCanTextures} from './canned-food.js?v=60';
 import {initializeSpringTextures} from './level27-materials.js?v=63';
-const lazy121=f=>{let p=null;return()=>p||(p=f().catch(e=>{p=null;throw e;}));};const loadL27Scene121=lazy121(()=>import('./level27-scene.js?v=69').then(async m=>{await m.preloadLevel27V121();return m;})); // V121-bath: 4.6 MB shell data off the boot path
+const lazy121=f=>{let p=null;return()=>p||(p=f().catch(e=>{p=null;throw e;}));};const loadL27Scene121=lazy121(()=>import('./level27-scene.js?v=132').then(async m=>{await m.preloadLevel27V121();return m;})); // V121-bath: 4.6 MB shell data off the boot path
 import {initializeSpringNPCs} from './level27-npcs-v69.js';
 import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=68';
 import {nearBathEntrance} from './level27-entry.js?v=75';

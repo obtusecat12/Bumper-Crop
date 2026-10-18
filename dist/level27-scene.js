@@ -4,6 +4,10 @@ import {createCreekAuthority} from './level27-creek.js?v=65';
 import {SPRING_SHELL} from './level27-shell-data.js?v=131';
 import {initializeCliff131,cliffTextures131,cliffMaterial131,bakeGeometry131,prepareShell131,buildStair131,buildFlowstone131,buildFallDress131,createMist131} from './level27-cliff131.js?v=131';
 import {LIVE_SPOTS} from './level27-light131.js?v=131';
+import {BAKE132} from './level27-bake132.js?v=132';
+// V132-bake: offline GI vertex light (tools/bake132_l27.mjs) replaces the per-vertex spot bake; ?bake=0 = V131 bake.
+const BAKE132_ON=(()=>{try{return new URLSearchParams(location.search).get('bake')!=='0';}catch(e){return true;}})();
+function bake132(name,g){const d=BAKE132_ON&&BAKE132[name];if(!d||d.count!==g.attributes.position.count)return g;const u=Uint8Array.from(atob(d.bake),c=>c.charCodeAt(0)),b=g.attributes.bake.array;for(let i=0;i<b.length;i++)b[i]=u[i]/255;g.attributes.bake.needsUpdate=true;return g;}
 import {mergeGeometries,mergeVertices} from './vendor/BufferGeometryUtils.js';
 import {CAVE_PLAN,CALCITE_OUTCROPS,STAIRS,TUNNEL_Y,poolFloor,wallPoint,roofHeight,roofPoint,cascadePath,STREAM_X,WASH_BASIN,radialLimit,inAnnex,ANNEX,streamPath,stairCenter} from './level27-layout.js?v=131';
 import {springMaterials,springTextures} from './level27-materials.js?v=63';
@@ -41,22 +45,22 @@ export function createLevel27(){
  for(let i=0;i<q.length;i++){p[i]=q[i]/SPRING_SHELL.scale;if(i%3===0){uv[i/3*2]=p[i]*.67;uv[i/3*2+1]=q[i+1]/SPRING_SHELL.scale*.67;}}
  const shell=new T.BufferGeometry();shell.setAttribute('position',new T.BufferAttribute(p,3));shell.setAttribute('uv',new T.BufferAttribute(uv,2));shell.setIndex(new T.BufferAttribute(unpack(SPRING_SHELL.indices,Uint32Array),1));const qn=unpack(SPRING_SHELL.normals,Int16Array);shell.setAttribute('normal',new T.Float32BufferAttribute(Array.from(qn,v=>v/16000),3));
  const ctex=cliffTextures131(),stex=springTextures();Object.assign(ctex,{pebble:stex['riverbed-pebbles'],'pebble-normal':stex['riverbed-pebbles-normal'],'pebble-rough':stex['riverbed-pebbles-roughness']});
- const m131={rock:cliffMaterial131('umber strata rock',{dry:'strata',wet:'wetmoss',calc:true,scale:.55,gain:1.5},clock),flow:cliffMaterial131('flowstone',{dry:'flow',wet:'flow',scale:.42,wetRough:.20,gain:1.0},clock,{color:0xe6d9c4}),stone:cliffMaterial131('rubble masonry',{dry:'rubble',top:'slab',wet:'wetmoss',scale:1.6,gain:1.35},clock),moss:cliffMaterial131('wet moss',{dry:'wetmoss',scale:1.4,wetRough:.15},clock),floor:cliffMaterial131('platform floor',{dry:'rubble',top:'pebble',wet:'wetmoss',scale:.9,gain:1.4},clock,{color:0x8a7a68})};
- prepareShell131(shell,unpack(SPRING_SHELL.bake,Uint8Array));
+ const m131={rock:cliffMaterial131('umber strata rock',{dry:'strata',wet:'wetmoss',calc:true,scale:.55,gain:1.5},clock),flow:cliffMaterial131('flowstone',{dry:'flow',wet:'flow',scale:.42,wetRough:.20,gain:1.0},clock,{color:BAKE132_ON?0xf4eddf:0xe6d9c4}),stone:cliffMaterial131('rubble masonry',{dry:'rubble',top:'slab',wet:'wetmoss',scale:1.6,gain:1.35},clock),moss:cliffMaterial131('wet moss',{dry:'wetmoss',scale:1.4,wetRough:.15},clock),floor:cliffMaterial131('platform floor',{dry:'rubble',top:'pebble',wet:'wetmoss',scale:.9,gain:1.4},clock,{color:0x8a7a68})};
+ prepareShell131(shell,unpack(SPRING_SHELL.bake,Uint8Array));bake132('shell',shell);
  const shellMesh=mesh(shell,m131.rock,'Unified limestone / pool, enlarged dry annex, broad stream tunnel');shellMesh.userData.keepIndexed=true;
  // Surveyed continuous dry annex and pool bottom; no overlapping floor plates.
  // V131: pool bottom keeps its V121 material; the enlarged dry platform gets its own baked floor.
  const inPoolGrid=(x,z)=>Math.hypot(x,z)<=radialLimit(x,z)+.065;
  mesh(geoGrid(160,128,(u,v)=>{const x=-2.7+u*9.3,z=-2.7+v*5.5;return[x,poolFloor(x||.0001,z||.0001),z,x*.67,z*.67];},(u,v)=>{const x=-2.7+u*9.3,z=-2.7+v*5.5;return !inPoolGrid(x,z);}),mats.bed,'Spring bottom');
- {const fg=geoGrid(120,84,(u,v)=>{const x=1.6+u*5.6,z=-2.6+v*5.9;return[x,poolFloor(x||.0001,z||.0001)+.004,z,x*.67,z*.67];},(u,v)=>{const x=1.6+u*5.6,z=-2.6+v*5.9;return inPoolGrid(x,z)||!inAnnex(x,z,-.08);}).toNonIndexed();bakeGeometry131(fg,{wet:(q)=>.25+.35*Math.max(0,Math.sin(q[0]*2.3+q[2]*1.7)),cavity:()=>.05,boost:1.15});const fm=new T.Mesh(fg,m131.floor);fm.name='V131 enlarged dry platform floor';fm.castShadow=fm.receiveShadow=true;rockRoot.add(fm);}
+ {const fg=geoGrid(120,84,(u,v)=>{const x=1.6+u*5.6,z=-2.6+v*5.9;return[x,poolFloor(x||.0001,z||.0001)+.004,z,x*.67,z*.67];},(u,v)=>{const x=1.6+u*5.6,z=-2.6+v*5.9;return inPoolGrid(x,z)||!inAnnex(x,z,-.08);}).toNonIndexed();bakeGeometry131(fg,{wet:(q)=>.25+.35*Math.max(0,Math.sin(q[0]*2.3+q[2]*1.7)),cavity:()=>.05,boost:1.15});bake132('floor',fg);const fm=new T.Mesh(fg,m131.floor);fm.name='V131 enlarged dry platform floor';fm.castShadow=fm.receiveShadow=true;rockRoot.add(fm);}
  const channel=createCreekAuthority(T,L),wholeStream=channel.points.map(p=>p.toArray());
  // Tunnel floor, channel bed and outlet banks now belong to the single implicit shell.
  box(rockRoot,mats.black,3.0,3.10,-10.50,3.9,3.0,.14,'Dark continuation of return tunnel');
  // V131: rubble-masonry stair against the left cliff (replaces the V63 free-standing natural treads).
- {const g=mergeGeometries(buildStair131());bakeGeometry131(g,{wet:(q,n)=>n[1]>.6?.12:.30,cavity:(q,n)=>n[1]<-.3?.6:.12,boost:1.1});const o=new T.Mesh(g,m131.stone);o.name='V131 rubble masonry stair, wall-hugging';o.castShadow=o.receiveShadow=true;rockRoot.add(o);}
+ {const g=mergeGeometries(buildStair131());bakeGeometry131(g,{wet:(q,n)=>n[1]>.6?.12:.30,cavity:(q,n)=>n[1]<-.3?.6:.12,boost:1.1});bake132('stair',g);const o=new T.Mesh(g,m131.stone);o.name='V131 rubble masonry stair, wall-hugging';o.castShadow=o.receiveShadow=true;rockRoot.add(o);}
  {const fs=buildFlowstone131(),uv0=p=>{p.deleteAttribute('uv');p.setAttribute('uv',new T.BufferAttribute(new Float32Array(p.attributes.position.count*2),2));return p;};
-  const g=mergeGeometries(fs.curtains.map(uv0));bakeGeometry131(g,{wet:.55,cavity:()=>.10,boost:.9});const o=new T.Mesh(g,m131.flow);o.name='V131 flowstone curtains';o.castShadow=false;o.receiveShadow=true;rockRoot.add(o);
-  const sg=mergeGeometries(fs.spikes.map(uv0));bakeGeometry131(sg,{wet:.7,calc:.55,cavity:()=>.15,boost:1.0});const so=new T.Mesh(sg,m131.rock);so.name='V131 stalactites and stalagmites';so.receiveShadow=true;rockRoot.add(so);}
+  const g=mergeGeometries(fs.curtains.map(uv0));bakeGeometry131(g,{wet:.55,cavity:()=>.10,boost:.9});bake132('curtains',g);const o=new T.Mesh(g,m131.flow);o.name='V131 flowstone curtains';o.castShadow=false;o.receiveShadow=true;rockRoot.add(o);
+  const sg=mergeGeometries(fs.spikes.map(uv0));bakeGeometry131(sg,{wet:.7,calc:.55,cavity:()=>.15,boost:1.0});bake132('spikes',sg);const so=new T.Mesh(sg,m131.rock);so.name='V131 stalactites and stalagmites';so.receiveShadow=true;rockRoot.add(so);}
  // Rounded flanking fragments seat into the same bed, never cover the pool.
  // V121-bath: the evenly spaced bank cobble rows were replaced by bath120-creek.js natural cobbles.
  for(let i=0;i<0;i++){const t=(i+.35)/54,r=.040+.024*(.5+.5*Math.sin(i*3.7)),c=channel.groundedCobble(t,i%2?1:-1,r,i),stone=organicStone(mats.wetRock,c.position,c.scale,i);const contact=new T.Raycaster(new T.Vector3(c.position[0],c.waterY+.38,c.position[2]),new T.Vector3(0,-1,0)).intersectObject(shellMesh)[0];if(contact)stone.position.y=contact.point.y+r*.61;stone.name='Embedded water-rounded creek cobble';rockRoot.add(stone);}
