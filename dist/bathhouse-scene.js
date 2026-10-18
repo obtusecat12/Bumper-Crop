@@ -15,6 +15,8 @@ import {showerMaterials} from './bath-v62-materials.js?v=62';
 import {bathRefitMaterials} from './bath-v61-materials.js?v=61';
 import {foldedTowel,propMesh,propRod} from './bathing-props.js?v=60';
 import {preloadSpa121,restyleSpa121} from './bath120-spa.js';
+import {bake133Enabled,collectBake133,applyBake133} from './venue133-bake.js?v=133b';
+let BAKE133_DATA=null; // V133-bake-bath: baked indirect light + AO (tools/bake133_venue.mjs), loaded in prepareBathhouse; ?bake=0 off
 export const BATH_LIGHTS=[{p:[0,2.50,-3.90],color:0xf1f3ec,power:19,range:10},{p:[0,2.29,10],color:0xffd398,power:26,range:9},{p:[-6.4,2.67,-3.6],color:0xe3efe9,power:11,range:8},{p:[-3.0,2.55,-1.2],color:0xe8e6dc,power:3.5,range:5,shadow:false}];
 export function bathLabel(text,sub=''){const c=document.createElement('canvas');c.width=768;c.height=256;const g=c.getContext('2d');g.fillStyle='#d9dbcd';g.fillRect(0,0,c.width,c.height);g.fillStyle='#294a47';g.textAlign='center';g.font='bold 62px sans-serif';g.fillText(text,384,108,728);g.font='25px sans-serif';g.fillText(sub,384,178,710);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return new T.MeshStandardMaterial({name:text,map:t,roughness:.8});}
 export function* buildBathhouseSteps(){
@@ -86,9 +88,10 @@ export function* buildBathhouseSteps(){
  function focusDistance(camera,max){const d=new T.Vector3();camera.getWorldDirection(d);for(let t=.25;t<max;t+=.18){const x=camera.position.x+d.x*t,y=camera.position.y+d.y*t,z=camera.position.z+d.z*t,spaZone=x>4.1&&z<5,ceiling=spaZone?3.2:z>6.4?3.05:2.88;if(y<-.99||y>ceiling||z<(spaZone?SPA.z0:-7)||x>(z>6.4?4.9:SPA.x1)||x< -8.35||z>13.77)return t;}return max;}
 
  function dispose(){spa121.dispose();occupants.dispose();receptionAtmosphere.dispose();spa.dispose();refit.dispose();changing.dispose();changingFX.dispose();changingMirror.dispose();const materials=new Set();scene.traverse(o=>{o.geometry?.dispose();if(o.material)materials.add(o.material);});materials.forEach(m=>m.dispose());}
- return{scene,presets,streams,occupants,spa,changing,receptionAtmosphere,mirror:changingMirror,update,prepareEnvironment,beforeRender,focusDistance,dispose,get active(){return active;},set active(v){active=v;}};
+ let bake133=null;if(BAKE133_DATA&&bake133Enabled()){bake133=applyBake133(collectBake133(scene),BAKE133_DATA,{gain:1.4,keep:.25});scene.userData.bake133=bake133;}
+ return{scene,presets,streams,occupants,spa,bake133,changing,receptionAtmosphere,mirror:changingMirror,update,prepareEnvironment,beforeRender,focusDistance,dispose,get active(){return active;},set active(v){active=v;}};
 }
 
 export function createBathhouse(){const builder=buildBathhouseSteps();let step;while(!(step=builder.next()).done){}return step.value;}
-export async function prepareBathhouse(report=()=>{}){await Promise.all([initializeRetroTextures75(),preloadSpa121()]);const builder=buildBathhouseSteps();let step;while(!(step=builder.next()).done){report(step.value.progress,step.value.label);await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));}return step.value;}
+export async function prepareBathhouse(report=()=>{}){await Promise.all([initializeRetroTextures75(),preloadSpa121(),bake133Enabled()&&!BAKE133_DATA?import('./bath-bake133-data.js?v=133b').then(m=>{BAKE133_DATA=m.BATH_BAKE133;}).catch(e=>console.warn('bath bake133 missing',e)):null]);const builder=buildBathhouseSteps();let step;while(!(step=builder.next()).done){report(step.value.progress,step.value.label);await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));}return step.value;}
 export const ALL_BATH_LIGHTS=[...BATH_LIGHTS,...SPA_LIGHTS,...CHANGING_POINT_LIGHTS];

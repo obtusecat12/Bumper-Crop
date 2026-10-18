@@ -17,7 +17,7 @@ import {RETURN_LENGTH,RETURN_MOUTH,returnPoint,returnSample,returnFloor,worldToR
 import {initializeTikiExterior80} from './tiki-additions-materials-v80.js';
 import {availableTikiSeat80} from './tiki-plan-v80.js';
 import {initializeTikiTextures} from './tiki-materials-v76.js';
-import {prepareTikiRoom,warmTikiRoom} from './tiki-room-garden-v81.js';
+import {prepareTikiRoom,warmTikiRoom} from './tiki-room-garden-v81.js?v=133b';
 import {GARDEN81,nearGardenDoor81,atGardenReturn81,resolveGarden81} from './tiki-garden-plan-v86.js';
 import {nearTikiDoor,TIKI_ARRIVAL,atTikiExit,resolveTiki} from './tiki-plan-v80.js';
 import {cityMapWorld,findCityLanding,cityLocalPose,createCityTransit} from './city-teleport-v76.js';
@@ -43,7 +43,7 @@ import {initializeSpringNPCs} from './level27-npcs-v69.js';
 import {SpringSession,springFloor,resolveSpring,springCanExit,inPool} from './level27-layout.js?v=133';
 import {nearBathEntrance} from './level27-entry.js?v=75';
 import {initializeBathTextures} from './bath-textures.js?v=62';
-const loadBathScene121=lazy121(()=>import('./bathhouse-scene.js?v=133m')); // V121-bath: prefetched at the bath door
+const loadBathScene121=lazy121(()=>import('./bathhouse-scene.js?v=133b')); // V121-bath: prefetched at the bath door
 import {BATH_ARRIVAL,bathFloor,resolveBath,bathShowerAt,bathUnderShower} from './bathhouse-layout.js?v=75';
 import {initializeAdvertising} from './advertising-assets.js?v=60';
 import {initializeDistrictTextures} from './clinic-district-materials.js?v=60';
