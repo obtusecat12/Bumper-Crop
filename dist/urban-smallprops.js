@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.min.js';
+import { parkCar132 } from './cars132.js?v=132t';
 import {ST132_ON} from './street132-props.js?v=132';
 
 // Additional 1970–1990 street furniture. Metres, ground origin, +Z front.
@@ -262,7 +263,9 @@ function carGlass(b, side) {
  * Seed chooses subdued existing paint, rectangular/twin-round lamps and vinyl
  * roof. No occupants, wheels touching y=0, no animation or per-car material.
  */
-export function addParkedSedan(b, { seed = 1 } = {}) {
+// V132-traffic: parked cars are the CC0 PSX car set now (cars132.js); the procedural sedan stays as addParkedSedanV1.
+export function addParkedSedan(b, { seed = 1 } = {}) { parkCar132(b, seed, { y: 0 }); }
+export function addParkedSedanV1(b, { seed = 1 } = {}) {
   const rng = random(seed), options = [['white', .75], ['red', .70], ['blue', .51], ['green', .90], ['yellow', .54]];
   const [paint, baseTone] = options[(seed >>> 0) % options.length];
   const tone = baseTone * (.96 + rng() * .06), vinyl = (seed >>> 0) % 3 === 0;

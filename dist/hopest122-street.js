@@ -2,6 +2,7 @@
 // Authored in the un-mirrored Hope frame like reference-scenes.js; photoHandedness mirrors x afterwards.
 // Textures: art-l11v122/h122_*.png (each generated large on its own) -> tools/hopest122_assets.py -> assets/l11-v122.
 import * as T from './vendor/three.module.min.js';
+import {parkCar132} from './cars132.js?v=132t';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import {urbanRandom} from './urban-batch.js?v=60';
 import {H122_CARS} from './hopest122-atlas.js?v=122';
@@ -32,7 +33,9 @@ function face(b,key,c,r,u,rect,flip=false,tone=1){
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p.flat(),3));g.setAttribute('uv',new T.Float32BufferAttribute([u0,y,u1,y,u1,y+h,u0,y+h],2));g.setIndex([0,1,2,0,2,3]);g.computeVertexNormals();b.add(g,key,0,0,0,1,1,1,0,0,0,tone);g.dispose();
 }
 // Parked car: cut-out side/front/rear/top photo planes around a dark core (PS1 billboard-box car).
-export function car122(b,kind,x,z,ry=0,{tone=1}={}){
+// V132-traffic: the photo-card cars are replaced by the CC0 PSX car set (cars132.js); SUV slots stay tall. Old body = car122V1.
+export function car122(b,kind,x,z,ry=0,{tone=1}={}){parkCar132(b,Math.round(x*7.3+z*13.1)+(kind==='suv'?5:0),{x,z,ry,tone,kinds:kind==='suv'?['minivan','wagon','van']:['sedan','saloon','hatch','wagon','taxi']});}
+export function car122V1(b,kind,x,z,ry=0,{tone=1}={}){
  const C=H122_CARS[kind],R=C.rects,key='h122Car_'+kind,L=kind==='suv'?4.6:4.8,W=kind==='suv'?1.86:1.80;
  const H=L/C.aspect.side,HF=W/C.aspect.front*1.02,HR=W/C.aspect.rear*1.02;
  b.push(x,.02,z,ry);

@@ -186,6 +186,8 @@ const hoodGeometry = () => cached('signal-hood', () => {
   g.setIndex(indices); g.computeVertexNormals(); return g;
 });
 function trafficHead(b, x, y, z) {
+  // V132-traffic: record the three lens centres (world) so traffic132 can light them by the hashed phase.
+  { const q = [0, 1, 2].map(i => b.point(x, y + .335 - i * .335, z + .161)); (b.signals132 ||= []).push({ p: q.map(v => [v.x, v.y, v.z]), wx: q[0].x, wz: q[0].z, ry: b.frame.ry }); }
   b.add(roundedBoxGeometry(.40, 1.065, .23, .065), 'dark', x, y, z, 1, 1, 1, 0, 0, 0, .69);
   b.box('yellow', x, y, z - .125, .46, 1.14, .038, 0, .69);
   for (let i = 0; i < 3; i++) {

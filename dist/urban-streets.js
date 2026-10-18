@@ -98,6 +98,8 @@ export function* addBlockStreetsTask(b,plan,lod){
  // Curb cuts slope into the crossing, instead of sticking a white edge onto asphalt.
  for(const edge of[0,B])for(const q of[15,97]){if(joinsLandmark&&edge===0&&q===15)continue;const sign=edge===0?1:-1;if(!(cn&&((q===15&&cn.noRoadW)||(q===97&&cn.noRoadE))))ramp(b,q,edge+sign*(R+W/2),2.0,W,edge===0?0:PI);if(xr(edge))ramp(b,edge+sign*(R+W/2),q,2.0,W,edge===0?PI/2:-PI/2);yield;}
  if(xr(0))place(b,9.2,.15,16,PI,P.addTrafficSignal,{arm:10.8,street:plan.iz%3?'olive':'hope'});yield;if(xr(B))place(b,102.8,.15,96,0,P.addTrafficSignal,{arm:10.8,street:plan.ix%2?'grand':'hope'});yield;
+ // V132-traffic: E-W approaches get their own far-side signal masts (the N-S ones above only face N-S traffic).
+ if(xr(0))place(b,18,.15,B-9.2,-PI/2,P.addTrafficSignal,{arm:10.8,street:plan.ix%2?'grand':'hope'});yield;if(xr(B))place(b,B-18,.15,9.2,PI/2,P.addTrafficSignal,{arm:10.8,street:plan.iz%3?'olive':'hope'});yield;
  for(const[x,z]of[[3.6,42],[78,108.6]])if(x>12||xr(0))place(b,x,roadHeight(x,z)+.008,z,0,P.addManhole);
  subwayEntrances(b,plan,lod);yield;
  if(cn||plan.canalExtra){yield* canalBlockTask(b,plan,lod);if(cn){b.pop();return;}}
