@@ -90,7 +90,7 @@ export function createLakeOutpost(renderer){
  u.generator.add(fx.smoke);fx.smoke.position.copy(u.anchors.exhaust);fx.setWind(.55,.18);fx.setSmokeOpacity(.072);
  if(i.steamPoints[0])i.steamPoints[0].add(fx.steam);fx.steam.scale.setScalar(.65);
  // Replace the simple authoring flame meshes with the shared layered shader.
- for(const root of i.dynamicRoots){if(root.name==='moving flame cluster'){root.visible=false;const flame=fx.createFire({scale:root.parent.parent===i.restProps?.42:.34,intensity:1.1,lightDistance:3,embers:false});flame.position.copy(root.position);root.parent.add(flame);excluded.add(flame);}}
+ for(const root of i.dynamicRoots){if(root.name==='moving flame cluster'){root.visible=false;const flame=fx.createFire({scale:root.parent.parent===i.restProps?.42:.34,intensity:1.1,lightDistance:3,embers:false,cards:root.parent.parent===i.restProps?1:3});flame.position.copy(root.position);root.parent.add(flame);excluded.add(flame);}}
  const barrelFire=fx.createFire({scale:.62,intensity:2.4,lightDistance:5});barrelFire.position.set(0,.80,0);i.restProps.add(barrelFire);excluded.add(barrelFire);
  object.add(wet.group);excluded.add(wet.group);excluded.add(fx.smoke);excluded.add(fx.steam);
  const groundAt=(x,z)=>{const wx=OUTPOST.x+x,wz=OUTPOST.z+z,cx=Math.floor(wx/64),cz=Math.floor(wz/64);return surfaceHeight(wx-cx*64,wz-cz*64,field(BigInt(cx),BigInt(cz),OUTPOST.seed,false))-OUTPOST.y;};
@@ -108,6 +108,6 @@ export function createLakeOutpost(renderer){
  function resolve(position,state){if(state.level!==10)return;const ox=OUTPOST.x-Number(state.cx)*64,oz=OUTPOST.z-Number(state.cz)*64;local.x=position.x-ox;local.z=position.z-oz;if(Math.abs(local.x)>OUTPOST.hx+6||Math.abs(local.z)>OUTPOST.hz+16)return;resolveSolid(local,.26,colliders);for(let n=0;n<2;n++){if(!a.gates[n].userData.isOpen){const p=P.gates[n];resolveSolid(local,.26,[{kind:'obb',x:p[0],z:p[1],hx:2.4,hz:.09,angle:p[2]}]);}}position.x=local.x+ox;position.z=local.z+oz;}
  function floor(wx,wz,base){const shore=life.floor(wx-OUTPOST.x,wz-OUTPOST.z,base-OUTPOST.y)+OUTPOST.y;if(shore>base+.001)return shore;const x=wx-OUTPOST.x-P.container[0],z=wz-OUTPOST.z-P.container[1];if(x> -3.42&&x<3.42&&z> -1.52&&z<1.9)return OUTPOST.y+.25;return base;}
  object.position.set(OUTPOST.x,OUTPOST.y,OUTPOST.z);object.updateMatrixWorld(true);
- const bake133=bakeFixed133([[object,2.5]],{data:'./outpost-bake133-data.js?v=133c',exportName:'OUTPOST_BAKE133',skip:new Set([...excluded,...a.dynamicRoots])}); // V133-bake-city, ?bake=0 off
+ const bake133=bakeFixed133([[object,2.5]],{data:'./outpost-bake133-data.js?v=133f',exportName:'OUTPOST_BAKE133',skip:new Set([...excluded,...a.dynamicRoots]),fine:[[life.outhouse,.3]]}); // V133-L10-fire: outhouse + crate table finer // V133-bake-city, ?bake=0 off
  return {object,bake133,wet,life,update,query,use,resolve,floor,materials:m,structures:a,utilities:u,interiors:i,effects:fx,colliders,lamps,contains:(x,z)=>outpostDistance(x,z)<0};
 }

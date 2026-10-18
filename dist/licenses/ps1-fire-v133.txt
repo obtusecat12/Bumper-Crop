@@ -1,0 +1,4 @@
+PS1 Fire — Limphands — https://limphands.itch.io/ps1-fire
+Licence: CC0 1.0 (public domain), as stated on the itch.io page ("CC0, in the public domain! So you don't need to give credit").
+Used in assets/fire-v133/ps1-fire-v133.webp: the original 132-frame 256x256 "Fire Spritesheet.png", frames cropped to x 64..224
+and the last 12 frames cross-faded into the first 12 so the 120-frame loop has no jump (tools: bc/scripts/fire133_atlas.py).

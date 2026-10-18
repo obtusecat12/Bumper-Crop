@@ -375,6 +375,55 @@ export function createCampEffects(THREE, renderer, texture) {
 
   createSteam({ group: steam });
 
+  // V133-L10-fire: 120-frame loop (assets/fire-v133, built by tools/fire133_atlas.py; last 12 source frames are
+  // cross-faded into the first 12 so the wrap does not jump). ?fire=old keeps the V9x shader tongues.
+  const sprite133 = !(typeof location !== 'undefined' && /[?&]fire=old\b/.test(location.search));
+  let fireAtlas133 = null, fireGeo133 = null;
+  function fireSprite133(uTime, offset = 0) {
+    if (!fireAtlas133) {
+      fireAtlas133 = new THREE.TextureLoader().load(new URL('./assets/fire-v133/ps1-fire-v133.webp', import.meta.url).href);
+      fireAtlas133.magFilter = fireAtlas133.minFilter = THREE.NearestFilter; fireAtlas133.generateMipmaps = false;
+      fireAtlas133.colorSpace = THREE.SRGBColorSpace; fireAtlas133.flipY = false; ownedTextures.push(fireAtlas133);
+      fireGeo133 = new THREE.PlaneGeometry(.8, 1.28); fireGeo133.translate(0, .64 - .03, 0); geometries.push(fireGeo133);
+    }
+    const material = new THREE.ShaderMaterial({
+      uniforms: uniforms({ uMap: { value: fireAtlas133 }, uOff: { value: offset } }), fog: true, transparent: false, depthWrite: true, side: THREE.DoubleSide, toneMapped: false,
+      vertexShader: `
+        varying vec2 vUv;
+        #include <fog_pars_vertex>
+        void main(){
+          vUv=vec2(uv.x,1.0-uv.y);
+          vec4 c=modelViewMatrix*vec4(0.0,0.0,0.0,1.0);
+          float s=length(modelViewMatrix[0].xyz);
+          vec3 up=normalize(mat3(viewMatrix)*vec3(0.0,1.0,0.0));
+          vec3 right=normalize(cross(up,normalize(-c.xyz)));
+          vec4 mvPosition=vec4(c.xyz+right*position.x*s+up*position.y*s,1.0);
+          gl_Position=projectionMatrix*mvPosition;
+          #include <fog_vertex>
+        }`,
+      fragmentShader: `
+        varying vec2 vUv;
+        uniform float uTime,uOff;
+        uniform sampler2D uMap;
+        #include <fog_pars_fragment>
+        void main(){
+          float f=mod(floor((uTime+uOff)*30.0),120.0);
+          vec2 cell=vec2(mod(f,12.0),floor(f/12.0));
+          vec4 t=texture2D(uMap,(cell+clamp(vUv,.002,.998))/vec2(12.0,10.0));
+          if(t.a<.5)discard;
+          gl_FragColor=vec4(t.rgb*1.08,1.0);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+          #include <fog_fragment>
+        }`,
+    });
+    material.uniforms.uTime = uTime; // shared with the instance so update() drives the frame
+    materials.push(material);
+    const card = new THREE.Mesh(fireGeo133, material);
+    card.name = 'ps1-fire-v133 flame card'; card.frustumCulled = false; card.renderOrder = 6;
+    return card;
+  }
+
   function createFire(options = {}) {
     if (typeof options === 'number') options = { scale: options };
     const group = new THREE.Group();
@@ -424,6 +473,12 @@ export function createCampEffects(THREE, renderer, texture) {
           #include <fog_fragment>
         }`,
     });
+    if (sprite133) {
+      // V133-L10-fire: PS1 Fire (Limphands, CC0) flip-book on one upright camera-facing card, point sampled.
+      const spread = options.cards ?? 1; // a wood fire = several tongues spread over the grate, each on its own frame offset
+      const at = [[0, 0, 0], [.27, -.04, -.1], [-.24, -.06, .16], [.05, -.05, .3]];
+      for (let k = 0; k < Math.min(spread, at.length); k++) { const c = fireSprite133(material.uniforms.uTime, k * 1.37); c.position.set(...at[k]); if (k) c.scale.setScalar(.82 - k * .06); group.add(c); }
+    } else {
     const plane = new THREE.PlaneGeometry(.83, 1.28, 1, 8);
     plane.translate(0, .64, 0);
     geometries.push(plane);
@@ -433,6 +488,7 @@ export function createCampEffects(THREE, renderer, texture) {
       flame.scale.set(1 - i * .07, 1 - i * .09, 1);
       flame.renderOrder = 6;
       group.add(flame);
+    }
     }
     let light = null;
     const baseIntensity = options.intensity ?? 1.7;
@@ -479,7 +535,7 @@ export function createCampEffects(THREE, renderer, texture) {
       group.add(sparks);
     }
     fireInstances.push({ group, material, sparkMaterial, light, baseIntensity, phase });
-    group.userData.effectType = 'crossed-shader-flames';
+    group.userData.effectType = sprite133 ? 'ps1-fire-v133-flipbook' : 'crossed-shader-flames';
     return group;
   }
 
