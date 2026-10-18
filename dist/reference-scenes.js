@@ -7,7 +7,7 @@ import * as P from './urban-props.js?v=60';
 import {addBuilding} from './urban-buildings.js?v=60';
 import {addHope118,addHope118Materials} from './hopest118-build.js?v=118d';
 import {createHope118People} from './hopest118-people.js?v=118d';
-import {canal128Weather,canal128Env,canal128Waypoint} from './canal128.js?v=128';
+import {canal128Weather,canal128Env,canal128Waypoint} from './canal128.js?v=131w';
 import {createBlock122,addBlock122Materials,block122Waypoint,block122Weather,BLOCK122_SUN} from './block122-scene.js?v=125';
 import {addHope122Materials,H122_LETTER_KEYS,ficus122,ribTower122,distant122,car122} from './hopest122-street.js?v=122';
 const Y=EXIT_CITY_Y,UP=new T.Vector3(0,1,0),plane=new T.PlaneGeometry(1,1);

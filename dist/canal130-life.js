@@ -12,6 +12,7 @@
 import * as T from './vendor/three.module.min.js';
 import {shrub131,bed131} from './shrub131.js?v=131';   // V131 cross-card plants
 import {canalKeepOut131,hits131} from './canal131-bridge.js?v=131';   // V131 placement exclusion
+import {canal131Emitters,canal131Wall} from './canal131-water.js?v=131';   // V131 ripple sources + wall caustics
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import {urbanHash} from './urban-batch.js?v=69';
 import {CANAL} from './canal128-layout.js?v=128';
@@ -87,7 +88,7 @@ export function addCanal130Materials(m){
  m.k130Umb=std('umb',{ns:.3,x:{side:T.DoubleSide}});
  m.k130Cornice=std('cornice',{ns:1});URBAN_TILE_SIZE.k130Cornice=2.2;
  m.k130Spandrel=std('spandrel',{ns:.7,r:.6,mt:.15});URBAN_TILE_SIZE.k130Spandrel=3;
- m.k130Embank=std('embank',{ns:1});
+ m.k130Embank=canal131Wall(std('embank',{ns:1}));
  m.k130Outfall=std('outfall',{ns:1});
  m.k130Boat=std('boat',{ns:.8,r:.7});
  m.k130Bin=std('bin',{ns:.8,r:.6,mt:.2});m.k130Planter=std('planter',{ns:1});
@@ -203,7 +204,7 @@ export function* canal130Life(b,plan,lod){
  // outfalls + ladders on both walls
  for(const[z,s]of[[C.z0,1],[C.z1,-1]]){for(let k=0;k<3;k++){const x=lw+8+(le-lw-16)*(k+.2+.6*(hs(k,s>0?1:2)%100)/100)/3;const big=hs(k,s+5)%3===0;outfall(b,x,z,s,WY,big);em.push({k:'drain',x,z,s,big});}
   for(let x=lw+14+(hs(9,s+9)%8);x<le-6;x+=27)if(!lod&&!hits131(moorKO,x-.4,x+.4,z-.5,z+.5,.3))ladder(b,x,z,s,WY);}   // V131: no ladder behind a moored boat
- yield;if(lod)return;
+ canal131Emitters(plan,em);yield;if(lod)return;
  // lifebuoys on the promenades (behind the railing), boats + pontoon + buoys on the water
  for(const[z,s]of[[C.z0-.6,-1],[C.z1+.6,1]])for(let x=lw+20+(hs(3,s+3)%10);x<le-8;x+=46)place(b,x,TOP,z,s>0?Math.PI:0,lifebuoy);
  if(!cn.hero){
@@ -217,7 +218,7 @@ export function* canal130Life(b,plan,lod){
    else if(h<6)place(b,x,TOP,edge+s*3.6,0,planter,{seed:hs(i,s+22)});else if(h<7)place(b,x,TOP,edge+s*3.3,0,bikeRack,{seed:hs(i,s+23),n:3});}yield;}
  }
  if(cn.hero)yield* heroLife(b,plan,em);
- 
+ canal131Emitters(plan,em);
 }
 // --------------------------------------------------------------------------------------------- photo reach (city x, see canal128 HERO)
 // a run of shopfronts on a building face at zf (facade normal dir), between x0..x1 (city x), units ~6-7 m

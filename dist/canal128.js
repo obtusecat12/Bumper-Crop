@@ -9,9 +9,10 @@ import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import * as P from './urban-props.js?v=60';
 import {CITY_ORIGIN,CITY_ANGLE} from './urban-layout.js?v=60';
 import {CANAL,CANAL_HERO} from './canal128-layout.js?v=128';
-import {canal130Life} from './canal130-life.js?v=131';
+import {canal130Life} from './canal130-life.js?v=131w';
 import {footbridge131} from './canal131-bridge.js?v=131';   // V131 footbridge: sett deck, stairs both sides
 import {hedge131} from './shrub131.js?v=131';   // V131 cross-card shrubs (no more icosphere balls)   // V130-A canal life + fake interiors
+import {canal131Water,canal131Wall} from './canal131-water.js?v=131';   // V131 Clearwater port (FFT waves, ripples, caustics)
 const A=new URL('./assets/l11-v128/',import.meta.url).href,B=112,C=CANAL,WY=C.water;
 function tex(name,{srgb=true}={}){const t=new T.TextureLoader().load(A+name+'.webp?v=128');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 // facade tiles in metres [file, tile width, tile height] (floor/bay periods from reps.json)
@@ -28,7 +29,7 @@ export function addCanal128Materials(m){
  m.k128Foam=new T.MeshBasicMaterial({color:0xc9d0cf,vertexColors:true,transparent:true,opacity:.82});
  m.k128Hedge=new T.MeshStandardMaterial({color:0x3f5d33,roughness:.95,vertexColors:true});
  m.k128Skyline=new T.MeshStandardMaterial({color:0xc9ced3,roughness:.8,vertexColors:true});
- m.k128Water=waterMaterial(m.k128GlassA.map,m.k128White.map);
+ m.k128Water=canal131Water(waterMaterial(m.k128GlassA.map,m.k128White.map),m.k128Wall.map);canal131Wall(m.k128Wall);   // V131 (falls back to the V128 shading)
  return m;
 }
 // Dark still water. Reflection is analytic: the reflected view ray is traced against the two embankment walls and the two
