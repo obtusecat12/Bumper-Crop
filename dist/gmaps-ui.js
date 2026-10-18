@@ -8,6 +8,7 @@ import {BUILDING_TYPES} from './urban-buildings.js?v=60';
 import {exitPoint} from './exit-route.js?v=60';
 import {paintSatellite} from './gmaps-satellite.js?v=131';
 import {paintCanalMap} from './map131-canal.js?v=131';
+import {gmCtlHTML} from './gm-ctl132.js?v=132';
 
 const FONT='Arial, Helvetica, sans-serif',AQUA="'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 // Classic (pre-2013) tile palette. Satellite/Hybrid are a dark aerial look.
@@ -147,7 +148,6 @@ export function paintSafariCompass(c,map,yaw,bearing,opts={}){
 
 // ---------- Full-map chrome ----------
 const LOGO='<span class="gm-wordmark" aria-label="Goggle"><i style="color:#1c4fd6">G</i><i style="color:#d8291d">o</i><i style="color:#f1b51c">g</i><i style="color:#1c4fd6">g</i><i style="color:#16943a">l</i><i style="color:#d8291d">e</i></span>';
-const ARROW=d=>`<svg viewBox="0 0 12 12" aria-hidden="true"><path d="${d}" fill="none" stroke="#5578c5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 export function mountGmapsChrome(modal,{invalidate:inv}={}){
  if(inv)invalidate=inv;
  const panel=modal.querySelector('.map-panel'),surface=modal.querySelector('.map-surface'),canvas=modal.querySelector('.map-canvas');
@@ -158,8 +158,7 @@ export function mountGmapsChrome(modal,{invalidate:inv}={}){
  <div class="gm-hint"><b>Tips</b><br>Drag the map to pan · scroll to zoom<br>Click any street to travel there</div>
  <div class="gm-legend"><b>Legend</b><span><i style="background:#f9b235;border-color:#d48a2a"></i>Boulevard / exit route</span><span><i style="background:#ffe168;border-color:#e3b24a"></i>Arterial (every 4th street)</span><span><i style="background:#fff;border-color:#c9c2b3"></i>Street</span><span><i style="background:#c8deb5;border-color:#b5d29f"></i>Civic park / campus</span><span><i style="background:#e8e4dc;border-color:#cbc4b6"></i>Building</span></div>
  <p class="gm-put">Put <a>your business on Goggle Maps</a></p></aside>`);
- surface.insertAdjacentHTML('beforeend',`<div class="gm-ctl" aria-label="Pan and zoom"><div class="gm-pan"><button class="gm-pan-n" data-pan="ArrowUp" aria-label="Pan up">${ARROW('M2.5 8 L6 4 L9.5 8')}</button><button class="gm-pan-w" data-pan="ArrowLeft" aria-label="Pan left">${ARROW('M8 2.5 L4 6 L8 9.5')}</button><button class="gm-pan-c" data-gm="center" aria-label="Return to my location"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M4 8V4.5a1 1 0 0 1 2 0V7V3a1 1 0 0 1 2 0v4V3.5a1 1 0 0 1 2 0V8V5.5a1 1 0 0 1 2 0V9c0 2.5-1.6 4-4 4H7.5C5.8 13 5 12 4 10.6L2.4 8.3a1 1 0 0 1 1.6-1z" fill="#fff" stroke="#5578c5" stroke-width="1"/></svg></button><button class="gm-pan-e" data-pan="ArrowRight" aria-label="Pan right">${ARROW('M4 2.5 L8 6 L4 9.5')}</button><button class="gm-pan-s" data-pan="ArrowDown" aria-label="Pan down">${ARROW('M2.5 4 L6 8 L9.5 4')}</button></div>
- <div class="gm-peg" aria-hidden="true"></div><div class="gm-zoom"><button class="gm-zbtn" data-gm="in" aria-label="Zoom in">+</button><div class="gm-track"><span class="gm-ticks"></span><span class="gm-thumb"></span></div><button class="gm-zbtn" data-gm="out" aria-label="Zoom out">−</button></div></div>
+ surface.insertAdjacentHTML('beforeend',`${gmCtlHTML()}
  <div class="gm-types" role="group" aria-label="Map type"><button data-type="map" class="on">Map</button><button data-type="satellite">Satellite</button><button data-type="hybrid">Hybrid</button></div>
  <div class="gm-foot"><span class="gm-logo-small">${LOGO}</span><div class="gm-scale"><span class="gm-ft">200 ft</span><span class="gm-m">50 m</span><i class="gm-bar-ft"></i><i class="gm-bar-m"></i></div></div>
  <div class="gm-copy">©2009 Goggle - Map data ©2009 Tele Atlas, M.E.G. - <a>Terms of Use</a></div>`);

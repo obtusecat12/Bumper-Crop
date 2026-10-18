@@ -52,17 +52,30 @@
 .vm-norev{color:#666;font-size:12px}
 .vm-mapwrap{position:relative;min-height:300px;overflow:hidden;border-left:1px solid #979797}
 .vm-map{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer}
-.vm-ctl{position:absolute;left:10px;top:10px;width:60px;pointer-events:none}
-.vm-pan{display:grid;grid-template-columns:20px 20px 20px;grid-template-rows:20px 20px 20px;gap:0;width:60px}
-.vm-pan b{display:flex;align-items:center;justify-content:center;font-size:9px;color:#5578c5;background:#fff;border:1px solid #9aa9c8;border-radius:50%;width:19px;height:19px}
-.vm-pan b:nth-child(1){grid-column:2}.vm-pan b:nth-child(2){grid-column:1;grid-row:2}.vm-pan b.c{grid-column:2;grid-row:2;font-size:10px}.vm-pan b:nth-child(4){grid-column:3;grid-row:2}.vm-pan b:nth-child(5){grid-column:2;grid-row:3}
-.vm-zoom{display:flex;flex-direction:column;align-items:center;margin:6px 0 0 20px;width:20px}
-.vm-zoom b{width:19px;height:19px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #9aa9c8;color:#5578c5;font-size:15px}
-.vm-zoom span{position:relative;width:19px;height:96px;background:repeating-linear-gradient(#fff 0 7px,#9aa9c8 7px 8px);border-left:1px solid #9aa9c8;border-right:1px solid #9aa9c8}
-.vm-zoom i{position:absolute;left:-2px;right:-2px;top:58%;height:9px;background:linear-gradient(#fff,#cfd8ea);border:1px solid #6680b0}
-.vm-types{position:absolute;right:8px;top:8px;display:flex;gap:2px}
-#venue-map .vm-types button{font:12px Arial;padding:2px 8px;background:#fff;color:#000;border:1px solid #888;box-shadow:inset 0 -1px 0 #ccc;cursor:default}
-#venue-map .vm-types button.on{font-weight:bold;box-shadow:inset 0 0 0 1px #6c9df2}
+/* V132-venuemap: same 2009 pan disc + Pegman + zoom slider + map-type buttons as the L11 main map (copied from gmaps-ui.css, scoped) */
+#venue-map .gm-ctl{display:block;position:absolute;left:9px;top:9px;width:60px;z-index:4;user-select:none}
+#venue-map .gm-pan{position:relative;width:58px;height:58px;border-radius:50%!important;background:radial-gradient(circle at 50% 35%,#fff,#f4f6fb 60%,#dfe5f2);box-shadow:0 0 0 1px #9eb2d8,1px 2px 3px #0005}
+#venue-map .gm-pan button{position:absolute;min-height:0!important;width:18px;height:18px;padding:0!important;display:grid;place-items:center;border:0!important;background:none!important;box-shadow:none!important;cursor:pointer}
+#venue-map .gm-pan button svg{width:12px;height:12px}
+#venue-map .gm-pan button:hover svg path{stroke:#1c45a8}
+#venue-map .gm-pan-n{left:20px;top:2px}#venue-map .gm-pan-s{left:20px;bottom:2px}#venue-map .gm-pan-w{left:2px;top:20px}#venue-map .gm-pan-e{right:2px;top:20px}
+#venue-map .gm-pan .gm-pan-c{left:19px;top:19px;width:20px;height:20px}
+#venue-map .gm-pan-c svg{width:15px!important;height:15px!important}
+#venue-map .gm-peg{width:16px;height:24px;margin:8px auto 2px;background:radial-gradient(circle at 50% 22%,#f4c430 0 4px,transparent 4.5px),linear-gradient(#0000 9px,#e7a812 9px 18px,#0000 18px) 50% 0/10px 100% no-repeat,linear-gradient(#0000 17px,#c48a0c 17px) 50% 0/6px 100% no-repeat;filter:drop-shadow(0 0 1px #6b4a00) drop-shadow(1px 1px 1px #0004)}
+#venue-map .gm-zoom{display:flex;flex-direction:column;align-items:center}
+#venue-map .gm-zbtn{width:19px;height:19px;min-height:0!important;padding:0!important;display:grid;place-items:center;font:bold 15px/1 Arial,sans-serif!important;color:#5578c5!important;background:linear-gradient(#fff,#e9eef8)!important;border:1px solid #9eb2d8!important;border-radius:3px!important;box-shadow:1px 1px 2px #0003!important;cursor:pointer}
+#venue-map .gm-track{position:relative;width:19px;height:118px;margin:2px 0;cursor:pointer}
+#venue-map .gm-track:before{content:'';position:absolute;left:8px;top:0;bottom:0;width:3px;background:#fff;box-shadow:0 0 0 1px #9eb2d8,1px 1px 2px #0003}
+#venue-map .gm-ticks{position:absolute;inset:4px 0;display:flex;flex-direction:column;justify-content:space-between}
+#venue-map .gm-ticks i{display:block;width:9px;height:1px;margin-left:5px;background:#9eb2d8}
+#venue-map .gm-thumb{position:absolute;left:1px;top:50%;width:17px;height:8px;margin-top:-4px;background:linear-gradient(#fff,#dfe6f4);border:1px solid #6d8bc6;border-radius:3px;box-shadow:inset 0 3px 0 -2px #fff,1px 1px 2px #0004}
+#venue-map .gm-thumb:after{content:'';position:absolute;left:4px;right:4px;top:3px;height:1px;background:#6d8bc6}
+#venue-map .gm-types{display:flex;position:absolute;right:8px;top:8px;z-index:4;gap:2px}
+#venue-map .gm-types button{min-height:0!important;height:20px;min-width:66px;padding:0 8px!important;font:13px/18px Arial,sans-serif!important;color:#000!important;background:linear-gradient(#fff 50%,#f0f0f0)!important;border:1px solid #000!important;border-radius:0!important;box-shadow:inset 0 0 0 1px #fff,1px 1px 2px #0004!important;cursor:pointer}
+#venue-map .gm-types button.on{font-weight:bold!important;border-width:1px!important;box-shadow:inset 0 0 0 1px #6c9df2,inset 1px 1px 0 2px #c3d9ff,1px 1px 2px #0004!important}
+#venue-map .gm-ctl{z-index:3}#venue-map .gm-types{z-index:3}
+#venue-map .vm-map{image-rendering:auto}
+@media(max-height:560px){#venue-map .gm-track{height:70px}#venue-map .gm-peg{display:none}}
 .vm-iw{position:absolute;max-width:290px;min-width:220px;padding:9px 11px 8px;background:#fff;border:1px solid #ababab;border-radius:8px;box-shadow:4px 4px 8px #0004;font-size:12px}
 .vm-iw img{float:right;width:76px;height:57px;object-fit:cover;margin:2px 0 4px 8px;border:1px solid #ccc}
 .vm-iw-x{position:absolute;right:6px;top:4px;width:12px;height:12px;border:1px solid #888;font-size:11px;line-height:10px;text-align:center;color:#555}

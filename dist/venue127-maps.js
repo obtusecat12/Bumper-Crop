@@ -4,6 +4,7 @@
 // Mounted as a normal .modal (#venue-map) so main.js openModal/closeModal and
 // Escape handling apply unchanged.
 import {VENUES127,venuePhoto127 as P} from './venue127-data.js?v=127';
+import {gmCtlHTML} from './gm-ctl132.js?v=132';
 
 const LOGO='<span class="vm-wordmark" aria-label="Goggle"><i style="color:#1c4fd6">G</i><i style="color:#d8291d">o</i><i style="color:#f1b51c">g</i><i style="color:#1c4fd6">g</i><i style="color:#16943a">l</i><i style="color:#d8291d">e</i></span>';
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -53,13 +54,16 @@ function pin(c,x,y,letter,active){
  c.beginPath();c.moveTo(0,0);c.bezierCurveTo(-3,-8,-9,-12,-9,-20);c.arc(0,-20,9,Math.PI,0);c.bezierCurveTo(9,-12,3,-8,0,0);c.closePath();c.fillStyle=g;c.fill();c.strokeStyle=active?'#7a5a06':'#8e1308';c.lineWidth=1;c.stroke();
  c.fillStyle=active?'#3a2a00':'#fff';c.font='bold 11px Arial';c.textAlign='center';c.textBaseline='middle';c.fillText(letter,0,-20);c.restore();
 }
-function paintMap(canvas,v,sel,single=-1){
+// V132-venuemap: list map has a view {z,cx,cy}: zoom step z (x1.25 each) around normalized centre.
+const ZSTEP=1.25,ZMAX=6;
+function viewXf(w,h,view){const s=ZSTEP**(view?.z||0),W=w*s,H=h*s;const hx=.5/s,hy=.5/s;const cx=Math.max(hx,Math.min(1-hx,view?.cx??.5)),cy=Math.max(hy,Math.min(1-hy,view?.cy??.5));if(view){view.cx=cx;view.cy=cy;}return {W,H,tx:w/2-cx*W,ty:h/2-cy*H};}
+function paintMap(canvas,v,sel,single=-1,view=null){
  const r=canvas.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),w=Math.max(50,Math.round(r.width)),h=Math.max(50,Math.round(r.height));
  if(canvas.width!==w*dpr||canvas.height!==h*dpr){canvas.width=w*dpr;canvas.height=h*dpr;}
  const c=canvas.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);const seed=v===VENUES127.tiki?1:v===VENUES127.garden?2:0;
  const paint=v.map==='cave'?paintCave:paintCity,list=single>=0?[single]:v.results.map((_,i)=>i);
  // single-pin small map: paint a 2x area and pan so that pin sits near the centre
- let W=w,H=h,tx=0,ty=0;
+ let {W,H,tx,ty}=viewXf(w,h,view);
  if(single>=0){const q=v.results[single].pin;W=w*2;H=h*2;tx=Math.max(w-W,Math.min(0,w/2-q[0]*W));ty=Math.max(h-H,Math.min(0,h*.58-q[1]*H));}
  c.save();c.translate(tx,ty);paint(c,W,H,v,sel,seed);c.restore();
  for(const i of list.filter(i=>i!==sel).concat(list.includes(sel)?[sel]:[])){const q=v.results[i];pin(c,tx+q.pin[0]*W,ty+q.pin[1]*H+10,LET[i],i===sel);}
@@ -80,19 +84,36 @@ export function createVenueMaps({host=document.body,onClose=()=>{}}={}){
   <div class="vm-ad"><span>Sponsored Link</span><a>${esc(v.ad.title)}</a><div class="vm-green">${esc(v.ad.url)}</div><div>${esc(v.ad.text)}</div></div>
   ${rs.map((r,i)=>`<div class="vm-res${i===sel?' sel':''}" data-i="${i}"><span class="vm-pin${i===sel?' sel':''}">${LET[i]}</span><div><a class="vm-title" data-open="${i}">${esc(r.name)}</a>${r.photos.length?`<img class="vm-thumb" src="${P(r.photos[0])}" alt="">`:''}<div class="vm-rate">${stars(r.stars)}${r.reviews?` <a data-open="${i}" data-tab="rev">${r.reviews} reviews</a>`:''}</div><div class="vm-addr">${esc(r.addr)}</div><div class="vm-phone">${esc(r.phone)}</div><div class="vm-snip">${esc(r.snippet)}</div><div class="vm-links"><a data-open="${i}" data-dir="1">Directions</a> - <a data-open="${i}">more info »</a></div></div></div>`).join('')}
   <div class="vm-pager">Result Page: <b>1</b> <a>2</a> <a>3</a> <a>4</a> <a>Next</a></div><p class="vm-put">Put <a>your business on Goggle Maps</a></p></aside>
-  <div class="vm-mapwrap"><canvas class="vm-map"></canvas>${ctl()}<div class="vm-types"><button class="${v.map==='cave'?'':'on'}">Map</button><button>Satellite</button><button class="${v.map==='cave'?'on':''}">${v.map==='cave'?'Terrain':'Hybrid'}</button></div><div class="vm-iw" hidden></div></div></div>
+  <div class="vm-mapwrap"><canvas class="vm-map"></canvas>${gmCtlHTML()}<div class="gm-types vm-types"><button class="${v.map==='cave'?'':'on'}">Map</button><button>Satellite</button><button class="${v.map==='cave'?'on':''}">${v.map==='cave'?'Terrain':'Hybrid'}</button></div><div class="vm-iw" hidden></div></div></div>
   <div class="vm-foot">©2009 Goggle - <a>Terms of Use</a> - <a>Privacy Policy</a> - <a>Help</a> · Map data ©2009 ${v.map==='cave'?'M.E.G. Survey':'Tele Atlas, M.E.G.'}</div>`;
-  const cv=page.querySelector('.vm-map');requestAnimationFrame(()=>{paintMap(cv,v,sel);balloon();});
-  cv.addEventListener('click',e=>{const r=cv.getBoundingClientRect();let best=-1,bd=24;v.results.forEach((q,i)=>{const d=Math.hypot(e.clientX-r.left-q.pin[0]*r.width,e.clientY-r.top-(q.pin[1]*r.height-10));if(d<bd){bd=d;best=i;}});if(best>=0){sel=best;list();}});
-  page.querySelectorAll('.vm-res').forEach(el=>el.addEventListener('mouseenter',()=>{const i=+el.dataset.i;if(i===sel)return;sel=i;page.querySelectorAll('.vm-res').forEach(x=>{x.classList.toggle('sel',+x.dataset.i===sel);x.querySelector('.vm-pin').classList.toggle('sel',+x.dataset.i===sel);});paintMap(cv,v,sel);balloon();}));
+  const cv=page.querySelector('.vm-map');requestAnimationFrame(()=>{paintMap(cv,v,sel,-1,mv);balloon();ctlSync();});
+  wireCtl(cv);
+  cv.addEventListener('click',e=>{const r=cv.getBoundingClientRect(),X=viewXf(r.width,r.height,mv);let best=-1,bd=24;v.results.forEach((q,i)=>{const d=Math.hypot(e.clientX-r.left-(X.tx+q.pin[0]*X.W),e.clientY-r.top-(X.ty+q.pin[1]*X.H-10));if(d<bd){bd=d;best=i;}});if(best>=0){sel=best;list();}});
+  page.querySelectorAll('.vm-res').forEach(el=>el.addEventListener('mouseenter',()=>{const i=+el.dataset.i;if(i===sel)return;sel=i;page.querySelectorAll('.vm-res').forEach(x=>{x.classList.toggle('sel',+x.dataset.i===sel);x.querySelector('.vm-pin').classList.toggle('sel',+x.dataset.i===sel);});paintMap(cv,v,sel,-1,mv);balloon();}));
  }
  function balloon(){
-  const iw=page.querySelector('.vm-iw'),cv=page.querySelector('.vm-map');if(!iw||!cv)return;const r=v.results[sel],w=cv.clientWidth,h=cv.clientHeight;
+  const iw=page.querySelector('.vm-iw'),cv=page.querySelector('.vm-map');if(!iw||!cv)return;const r=v.results[sel],w=cv.clientWidth,h=cv.clientHeight,X=viewXf(w,h,mv),px=(X.tx+r.pin[0]*X.W)/w,py=(X.ty+r.pin[1]*X.H)/h;
+  if(px<0||px>1||py<0||py>1){iw.hidden=true;return;}
   iw.hidden=false;iw.innerHTML=`<span class="vm-iw-x">×</span><a class="vm-title" data-open="${sel}">${esc(r.name)}</a><div class="vm-rate">${stars(r.stars)} ${r.reviews?`<a data-open="${sel}">${r.reviews} reviews</a>`:''}</div>${r.photos.length?`<img src="${P(r.photos[0])}" alt="">`:''}<div class="vm-addr">${esc(r.addr)}</div><div>${esc(r.phone)}</div><div class="vm-links"><a data-open="${sel}" data-dir="1">Directions</a> - <a data-open="${sel}">Search nearby</a> - <a data-open="${sel}">more info »</a></div><i class="vm-iw-tail"></i>`;
-  const bw=iw.offsetWidth,bh=iw.offsetHeight;let x=r.pin[0]*w-34,y=r.pin[1]*h-30-bh-14;x=Math.max(6,Math.min(w-bw-6,x));if(y<6)y=r.pin[1]*h+18;iw.style.left=x+'px';iw.style.top=y+'px';
-  iw.querySelector('.vm-iw-tail').style.left=Math.max(14,Math.min(bw-30,r.pin[0]*w-x-6))+'px';iw.classList.toggle('below',y>r.pin[1]*h);
+  const bw=iw.offsetWidth,bh=iw.offsetHeight;let x=px*w-34,y=py*h-30-bh-14;x=Math.max(6,Math.min(w-bw-6,x));if(y<6)y=py*h+18;iw.style.left=x+'px';iw.style.top=y+'px';
+  iw.querySelector('.vm-iw-tail').style.left=Math.max(14,Math.min(bw-30,px*w-x-6))+'px';iw.classList.toggle('below',y>py*h);
  }
- const ctl=()=>`<div class="vm-ctl" aria-hidden="true"><div class="vm-pan"><b>▲</b><b>◀</b><b class="c">●</b><b>▶</b><b>▼</b></div><div class="vm-zoom"><b>+</b><span><i></i></span><b>−</b></div></div>`;
+ const mv={z:0,cx:.5,cy:.5};
+ function redraw(){const cv=page.querySelector('.vm-map');if(!cv)return;paintMap(cv,v,sel,-1,mv);balloon();ctlSync();}
+ function ctlSync(){const t=page.querySelector('.gm-thumb');if(t)t.style.top=`${(1-mv.z/ZMAX)*100}%`;}
+ function zoomTo(z){mv.z=Math.max(0,Math.min(ZMAX,z));redraw();}
+ function wireCtl(cv){
+  const q=s=>page.querySelector(s),step=()=>.22/ZSTEP**mv.z;
+  q('.gm-ticks').innerHTML='<i></i>'.repeat(ZMAX+1);
+  const D={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]};
+  page.querySelectorAll('.gm-ctl [data-pan]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();const d=D[b.dataset.pan];mv.cx+=d[0]*step();mv.cy+=d[1]*step();redraw();}));
+  q('.gm-ctl [data-gm="center"]').addEventListener('click',e=>{e.preventDefault();const p=v.results[sel].pin;mv.cx=p[0];mv.cy=p[1];redraw();});
+  q('.gm-ctl [data-gm="in"]').addEventListener('click',e=>{e.preventDefault();zoomTo(mv.z+1);});
+  q('.gm-ctl [data-gm="out"]').addEventListener('click',e=>{e.preventDefault();zoomTo(mv.z-1);});
+  const tr=q('.gm-track');tr.addEventListener('click',e=>{const r=tr.getBoundingClientRect();zoomTo(Math.round((1-Math.max(0,Math.min(1,(e.clientY-r.top)/r.height)))*ZMAX));});
+  cv.addEventListener('wheel',e=>{e.preventDefault();zoomTo(mv.z+(e.deltaY<0?1:-1));},{passive:false});
+  page.querySelectorAll('.vm-types button').forEach(b=>b.addEventListener('click',()=>{page.querySelectorAll('.vm-types button').forEach(x=>x.classList.toggle('on',x===b));}));
+ }
  function place(){
   const r=v.results[sel];photo=Math.min(photo,Math.max(0,r.photos.length-1));
   const total=r.bars.reduce((a,b)=>a+b,0)||1;
@@ -126,7 +147,7 @@ export function createVenueMaps({host=document.body,onClose=()=>{}}={}){
  });
  window.addEventListener('resize',()=>{if(!root.hidden)render();});
  return {root,
-  open(k){key=VENUES127[k]?k:'bath';v=VENUES127[key];view='list';sel=0;photo=0;directions=false;render();},
+  open(k){key=VENUES127[k]?k:'bath';v=VENUES127[key];view='list';sel=0;photo=0;directions=false;mv.z=0;mv.cx=mv.cy=.5;render();},
   showPlace(i){sel=i;photo=0;view='place';render();},
   get venue(){return key;},get view(){return view;}};
 }
