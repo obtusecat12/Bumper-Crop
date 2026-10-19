@@ -10,14 +10,18 @@
 // same block always brings back the same people.
 // ④-2 (135y): bodies ~400-444 tris with cloth uv (metres); clothing = cloth135.png pattern atlas (12 tiles: R shading, G
 // accent mask) dyed per person with two colours in the body shader; 24 faces; rigid props from the bin (backpack, satchel,
-// 3 shopping bags, phone, cap, beanie) each riding its baked bone matrix (props135.png). Population: the SoHo street fair blocks (-2,0) (-2,1), walking strip
+// 3 shopping bags, phone, cap, beanie) each riding its baked bone matrix (props135.png).
+// ④-2b (135z, user 10-20 06:26: use the Hope St kiosk / createRetroActor75 look): the dyed pattern atlas is gone; bodies wear
+// V75-style photographic garment panels (garments135.png from scripts/crowd135/garments135.py: per top/coat a front, back
+// and sleeve cell, per bottom one cell) through V75-layout uvs baked by bodies135.py (split vertices + map[] onto the baked
+// stream); each person = seed -> top/coat + bottom + recolour (hue / tint / value per garment kind). Heads stay head130. Population: the SoHo street fair blocks (-2,0) (-2,1), walking strip
 // |x| < 3.3 between the stall rows, z 21..91 in each block frame (road centre x = 0). ?crowd=0 turns it off.
 import * as T from './vendor/three.module.min.js';
 import {retrofitSkinnedHead130} from './retro-head130-gen.js';
 import {cityToWorld,CITY_ANGLE} from './urban-layout.js?v=return-1';
 import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
-const A=new URL('./assets/crowd135/',import.meta.url).href,V='135y';
+const A=new URL('./assets/crowd135/',import.meta.url).href,V='135z';
 const OFF=typeof location!=='undefined'&&/[?&]crowd=0\b/.test(location.search);
 export const CROWD135_FACES={
  m1:{g:'m',hairY:a=>Math.cos(a)<-.2?.34:.62},m2:{g:'m',hairY:a=>Math.cos(a)<-.2?.4:.66,beard:.22,nape:.3},m3:{g:'m',hairY:a=>Math.cos(a)<-.2?.36:.62,hairColor:0xb9b6ae},
@@ -30,20 +34,22 @@ export const CROWD135_FACES={
  c3:{g:'c',long:1,hairY:a=>.06},c4:{g:'c',hairY:a=>Math.cos(a)<-.2?.34:.6},c5:{g:'c',long:1,hairY:a=>.06},c6:{g:'c',hairY:a=>Math.cos(a)<-.2?.34:.62}};
 const FACE_BY_TYPE={man:['m1','m2','m3','m4','m5','m6','m7','m8','m9'],woman:['f1','f2','f3','f4','f5','f6','f7','f8','f9'],
  heavy:['m1','m2','m3','m5','m6','m7','f1','f2','f5','f9'],child:['c1','c2','c3','c4','c5','c6']},GIRLS=['c2','c3','c5'];
-// clothing atlas (textures135.py): tile index -> pattern; weights per garment slot; dyes A (base) / B (accent, the mask's dark part)
-const TILE=['plain','jersey','breton','gingham','tartan','denim','herringbone','floral','polka','corduroy','camo','tropical'];
-const TWO=new Set([2,3,4,7,8,10,11]);
-const W_TOP=[[0,.3],[1,.14],[2,.08],[3,.1],[4,.08],[7,.08],[8,.06],[10,.04],[11,.06],[5,.06]],W_BOT=[[0,.25],[5,.45],[9,.15],[6,.08],[10,.07]],
- W_SKIRT=[[0,.35],[5,.15],[4,.2],[7,.15],[8,.15]],W_COAT=[[0,.4],[6,.3],[4,.12],[9,.12],[10,.06]];
-const LIGHT=[0xe8e4d8,0xf2efe6,0xc9ced6,0xbcd0e2,0xe9c9cf,0xd9cf9e,0xd6dccb],DARK=[0x1f2a44,0x8c2a2a,0x1b1b1d,0x2a4d2f,0x5e2236,0xb98a24,0x2d6b6b,0x3f5f8a];
-const DENIM=[0x4a6a96,0x2f4a6e,0x23344e,0x6c8ab0,0x2b2b30],CORD=[0x8a6a44,0xb59a6a,0x5a4a34,0x56603a,0x7b2e3a],
- CAMO=[[0xb8ae86,0x4f5536],[0x9a9a8a,0x3a3c40],[0xc2a77a,0x6b5536]];
+// garments135.png: 64² cells, 8 per row (garments135.py order). kind -> first cell; tops/coats use 3 cells (front, back, sleeve).
+const GW=512,GH=320,G135={tee:0,breton:3,chambray:6,floral:9,hoodie:12,knit:15,leather:18,trench:21,wool:24,jeans:27,blackjeans:28,chinos:29,greytrousers:30,tartanskirt:31,navyskirt:32};
+const W_TOPS=[['tee',.22],['breton',.1],['chambray',.12],['floral',.12],['hoodie',.18],['knit',.14],['leather',.12]],W_COATS=[['trench',.55],['wool',.45]],
+ W_TROUS=[['jeans',.4],['blackjeans',.2],['chinos',.22],['greytrousers',.18]],W_SKIRTS=[['tartanskirt',.45],['navyskirt',.55]];
+// recolour per garment kind: tints (multiply, may exceed 1 to lift grey cloth), hue offsets (radians, YIQ rotation), value jitter
+const TINT_TEE=[[1,1,1],[1,1,1],[.95,.32,.3],[.28,.38,.62],[.2,.2,.22],[1,.82,.3],[.45,.68,.45],[.9,.62,.72],[.55,.75,.95]],
+ TINT_HOOD=[[1,1,1],[1,1,1],[.55,.62,1.15],[1.25,.55,.55],[.42,.42,.45],[.6,.95,.65],[1.45,1.4,1.3],[1.3,.95,.6]],
+ TINT_WOOL=[[1,1,1],[1,1,1],[.95,1,1.5],[1.5,1.15,.85],[1.7,1.7,1.7]],TINT_GREY=[[1,1,1],[.62,.72,1.15],[1.05,.88,.72],[.55,.55,.58],[1.2,1.2,1.15]];
+function recol(kind,u){const r=k=>u(k),pk=(L,k)=>L[Math.floor(r(k)*L.length)],v=.88+r(3)*.24;
+ switch(kind){case'tee':return{t:pk(TINT_TEE,1),h:0,v};case'hoodie':return{t:pk(TINT_HOOD,1),h:0,v};
+  case'breton':return{t:[1,1,1],h:pk([0,0,2.6,3.5,-1.2],1),v};case'chambray':return{t:[1,1,1],h:(r(1)-.5)*.6,v};
+  case'floral':case'knit':case'tartanskirt':return{t:[1,1,1],h:r(1)*6.283,v};case'navyskirt':return{t:[1,1,1],h:pk([0,0,2.2,3.4,-1.6],1),v};
+  case'chinos':return{t:[1,1,1],h:(r(1)-.5)*1.2,v};case'trench':return{t:[1,1,1],h:(r(1)-.5)*.45,v};case'wool':return{t:pk(TINT_WOOL,1),h:0,v};case'greytrousers':return{t:pk(TINT_GREY,1),h:0,v};
+  default:return{t:[1,1,1],h:0,v};}}
 const PROP_TINT=[0xffffff,0xffffff,0x6f8bc0,0xc06a6a,0x5a5a62,0x7d9a62,0xe0c060];
-const TOP=[0x1f2a44,0x1b1b1d,0x6b6e72,0xd9d6cc,0x9b2b2b,0x56603a,0xc79a2e,0x3f5f8a,0x5e2236,0xd28a9c,0x2d6b6b,0xe8e4d8,0x8a8f96,0x2a4d2f];
-const BOTTOM=[0x2f4a6e,0x23344e,0x1c1c1e,0xb5a27c,0x5a5d61,0x3b3f46,0x6f5a44,0x41536b];
 const SHOE=[0xe6e4de,0x1a1a1a,0x5b3b26,0x6d6f72,0x2b2b2f,0x8a6a4a];
-const COAT=[0xa77c4f,0x1d1d1f,0x3a3c40,0x22304a,0x4f5536,0x6e2a2a,0x8c8478];
-const SKIRT=[0x1c1c1e,0x7b2e3a,0x2f4a6e,0xc9b48a,0x3d5a4a,0x6a4f7d];
 const h32=(a,b=0)=>{let h=Math.imul(a|0,0x27d4eb2d)^Math.imul(b|0,0x165667b1);h^=h>>>15;h=Math.imul(h,0x85ebca6b);h^=h>>>13;h=Math.imul(h,0xc2b2ae35);return(h^(h>>>16))>>>0;};
 const r01=(a,b)=>h32(a,b)/4294967296;
 let libP=null;
@@ -54,20 +60,23 @@ export function loadCrowd135(){return libP??=(async()=>{
  const loader=new T.TextureLoader(),faces={};
  await Promise.all(Object.keys(CROWD135_FACES).map(async k=>{const t=await loader.loadAsync(A+'face_'+k+'.png?v='+V);t.colorSpace=T.SRGBColorSpace;t.flipY=false;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;faces[k]=t;}));
  const tl=async(f,srgb)=>{const t=await loader.loadAsync(A+f+'?v='+V);t.colorSpace=srgb?T.SRGBColorSpace:T.NoColorSpace;t.flipY=false;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;t.needsUpdate=true;return t;};
- const[cloth,props]=await Promise.all([tl('cloth135.png',false),tl('props135.png',true)]);
+ const[garm,props]=await Promise.all([tl('garments135.png',true),tl('props135.png',true)]);
  const skin={},hair={};for(const[k,t]of Object.entries(faces)){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(t.image,0,0);
   const med=(x,y,w,h)=>{const d=g.getImageData(x,y,w,h).data,ch=[[],[],[]];for(let i=0;i<d.length;i+=4)for(let j=0;j<3;j++)ch[j].push(d[i+j]);return ch.map(a=>a.sort((p,q)=>p-q)[a.length>>1]);};
   const sk=[...med(28,72,12,14),...med(88,72,12,14)],s3=[0,1,2].map(j=>(sk[j]+sk[j+3])/2);skin[k]=new T.Color().setRGB(s3[0]/255,s3[1]/255,s3[2]/255,T.SRGBColorSpace);
   const hc=CROWD135_FACES[k].long?med(1,50,8,40):med(44,0,40,5);hair[k]=CROWD135_FACES[k].bald?skin[k].getHex(T.SRGBColorSpace):(hc[0]<<16)|(hc[1]<<8)|hc[2];}
- const bodies=meta.bodies.map(b=>({...b,idx:new T.BufferAttribute(view(Uint16Array,b.index),1),reg:view(Uint8Array,b.region),P:view(Int16Array,b.pos),N:view(Int8Array,b.nrm),UV:new T.BufferAttribute(view(Float32Array,b.uv),2)}));
- // body shader: two per-vertex dyes + pattern tile offset; the pattern repeats every 0.40 x 0.80 m inside its 64x128 tile
+ const bodies=meta.bodies.map(b=>({...b,idx:new T.BufferAttribute(view(Uint16Array,b.index),1),map:view(Uint16Array,b.map),slot:view(Uint8Array,b.slot),P:view(Int16Array,b.pos),N:view(Int8Array,b.nrm),UV:new T.BufferAttribute(view(Float32Array,b.uv75),2)}));
+ // body shader (135z): garment cell (flat per vertex, -1 = plain colour) + V75 uv inside the 64² cell; recolour = YIQ hue
+ // rotation, value and tint per slot (flat attributes so the zero-height waist/torso seam band never blends two cells)
  const mat=new T.MeshLambertMaterial();mat.name='crowd135 body';
- mat.onBeforeCompile=sh=>{sh.uniforms.clothMap={value:cloth};
-  sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nattribute vec3 cA;attribute vec3 cB;attribute vec2 cuv;attribute vec2 ctile;varying vec3 vCA;varying vec3 vCB;varying vec2 vCuv;varying vec2 vTile;')
+ mat.onBeforeCompile=sh=>{sh.uniforms.garmMap={value:garm};
+  sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nattribute vec3 cA;attribute vec3 cB;attribute vec2 cuv;attribute vec2 ctile;flat varying vec3 vCA;flat varying vec3 vCB;varying vec2 vCuv;flat varying vec2 vTile;')
    .replace('#include <begin_vertex>','#include <begin_vertex>\nvCA=cA;vCB=cB;vCuv=cuv;vTile=ctile;');
-  sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nuniform sampler2D clothMap;varying vec3 vCA;varying vec3 vCB;varying vec2 vCuv;varying vec2 vTile;')
-   .replace('#include <map_fragment>','vec2 ctu=vTile+(fract(vCuv*vec2(2.5,1.25))*vec2(62.,126.)+1.)/vec2(256.,384.);vec4 ctx=texture2D(clothMap,ctu);diffuseColor.rgb*=mix(vCA,vCB,ctx.g)*ctx.r;');};
- mat.customProgramCacheKey=()=>'crowd135y';
+  sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nuniform sampler2D garmMap;flat varying vec3 vCA;flat varying vec3 vCB;varying vec2 vCuv;flat varying vec2 vTile;')
+   .replace('#include <map_fragment>',`if(vTile.x<0.)diffuseColor.rgb*=vCA;else{vec3 c=texture2D(garmMap,vTile+(clamp(vCuv,0.,1.)*62.+1.)/vec2(${GW}.,${GH}.)).rgb;
+ vec3 q=mat3(.299,.596,.211,.587,-.274,-.523,.114,-.322,.312)*c;float cs=cos(vCB.x),sn=sin(vCB.x);q.yz=mat2(cs,sn,-sn,cs)*q.yz;
+ diffuseColor.rgb*=max(mat3(1.,1.,1.,.956,-.272,-1.106,.621,-.647,1.703)*q,0.)*vCB.z*vCA;}`);};
+ mat.customProgramCacheKey=()=>'crowd135z';
  const propMats={};const propMat=tint=>propMats[tint]??=Object.assign(new T.MeshLambertMaterial({map:props,color:tint}),{name:'crowd135 prop'});
  const acc={};for(const[type,H]of Object.entries(meta.heads)){acc[type]={};for(const[n,a]of Object.entries(H.acc||{})){const g=new T.BufferGeometry();
   g.setAttribute('position',new T.BufferAttribute(view(Float32Array,a.pos),3));g.setAttribute('normal',new T.BufferAttribute(view(Float32Array,a.nrm),3));g.setAttribute('uv',new T.BufferAttribute(view(Float32Array,a.uv),2));
@@ -95,18 +104,15 @@ export function createPerson135(lib,seed,opts={}){
  const type=opts.type??types[ti],sil=opts.sil??['short','coat','skirt'][Math.floor(r01(seed,2)*3)];
  const B=lib.bodies.find(b=>b.type===type&&b.sil===sil),fl=type==='child'&&sil==='skirt'?GIRLS:FACE_BY_TYPE[type],fk=opts.face??fl[Math.floor(r01(seed,3)*fl.length)];
  const pick=(L,k)=>L[Math.floor(r01(seed,k)*L.length)];
- const wpick=(Wl,k)=>{let u=r01(seed,k);for(const[i,w]of Wl){if(u<w)return i;u-=w;}return Wl[0][0];};
- // garment slot -> [tile, dyeA, dyeB]
- function garment(Wl,k,base){const t=opts.tiles?.[k]??wpick(Wl,k);let a=base,b=pick(DARK,k+1);
-  if(TWO.has(t)){a=pick(LIGHT,k+2);if(t===10)[a,b]=pick(CAMO,k+3);}
-  else if(t===5)a=pick(DENIM,k+2);else if(t===9)a=pick(CORD,k+2);
-  return[t,new T.Color(a),new T.Color(b)];}
- const skirtish=sil==='skirt'&&type!=='man'&&type!=='heavy';
- const gTop=garment(W_TOP,40,pick(TOP,4)),gBot=garment(skirtish?W_SKIRT:W_BOT,44,skirtish?pick(SKIRT,5):pick(BOTTOM,5)),gCoat=garment(W_COAT,48,pick(COAT,7));
- const plain=c=>[0,c,c],sk=lib.skin[fk].clone();
- const G=[plain(sk),gTop,gBot,plain(new T.Color(pick(SHOE,6))),gCoat,plain(new T.Color(pick(TOP,8)))];
- const nv=B.verts,g=new T.BufferGeometry(),pos=new Float32Array(nv*3),nrm=new Float32Array(nv*3),ca=new Float32Array(nv*3),cb=new Float32Array(nv*3),ct=new Float32Array(nv*2),S=lib.meta.posScale;
- for(let i=0;i<nv;i++){const[t,a,b]=G[B.reg[i]];ca[i*3]=a.r;ca[i*3+1]=a.g;ca[i*3+2]=a.b;cb[i*3]=b.r;cb[i*3+1]=b.g;cb[i*3+2]=b.b;ct[i*2]=(t%4)*.25;ct[i*2+1]=Math.floor(t/4)/3;}
+ const wpick=(Wl,k,ok=()=>true)=>{for(let tr=0;tr<6;tr++){let u=r01(seed,k+tr*7);for(const[n,w]of Wl){if(u<w){if(ok(n))return n;break;}u-=w;}}return Wl[0][0];};
+ const skirtish=sil==='skirt'&&type!=='man'&&type!=='heavy',fem=type==='woman'||GIRLS.includes(fk);
+ const top=opts.top??(sil==='coat'?wpick(W_COATS,40):wpick(W_TOPS,40,n=>n!=='floral'||fem)),bot=opts.bot??(skirtish?wpick(W_SKIRTS,44):wpick(W_TROUS,44));
+ const rT=recol(top,k=>r01(seed,50+k)),rB=recol(bot,k=>r01(seed,60+k)),sk=lib.skin[fk].clone(),shoe=new T.Color(pick(SHOE,6));
+ const cell=c=>[(c%8)*64/GW,Math.floor(c/8)*64/GH],t0=G135[top],b0=G135[bot];
+ // slot: 0 skin, 1 top front, 2 top back, 3 sleeve, 4 bottom, 5 shoe -> [tile|null, tint rgb, hue, value]
+ const SL=[[null,[sk.r,sk.g,sk.b]],[cell(t0),rT.t,rT.h,rT.v],[cell(t0+1),rT.t,rT.h,rT.v],[cell(t0+2),rT.t,rT.h,rT.v],[cell(b0),rB.t,rB.h,rB.v],[null,[shoe.r,shoe.g,shoe.b]]];
+ const nv=B.split,nb=B.verts,g=new T.BufferGeometry(),pos=new Float32Array(nv*3),nrm=new Float32Array(nv*3),ca=new Float32Array(nv*3),cb=new Float32Array(nv*3),ct=new Float32Array(nv*2),S=lib.meta.posScale,MP=B.map;
+ for(let i=0;i<nv;i++){const[tile,t,h=0,v=1]=SL[B.slot[i]];ca.set(t,i*3);cb[i*3]=h;cb[i*3+1]=1;cb[i*3+2]=v;ct[i*2]=tile?tile[0]:-1;ct[i*2+1]=tile?tile[1]:-1;}
  g.setAttribute('position',new T.BufferAttribute(pos,3).setUsage(T.DynamicDrawUsage));g.setAttribute('normal',new T.BufferAttribute(nrm,3).setUsage(T.DynamicDrawUsage));
  g.setAttribute('cA',new T.BufferAttribute(ca,3));g.setAttribute('cB',new T.BufferAttribute(cb,3));g.setAttribute('ctile',new T.BufferAttribute(ct,2));g.setAttribute('cuv',B.UV);g.setIndex(B.idx);
  const H=lib.head(type,fk),object=new T.Group(),body=new T.Mesh(g,lib.mat),head=new T.Group();
@@ -122,13 +128,13 @@ export function createPerson135(lib,seed,opts={}){
   const pm=new T.Mesh(a.geo,lib.propMat(tint));pm.matrixAutoUpdate=false;pm.frustumCulled=false;pm.name='crowd135 '+n;object.add(pm);props.push([pm,a.mats]);ptris+=a.tris;}
  const setM=(o,M,k)=>{const e=o.matrix.elements;e[0]=M[k];e[1]=M[k+1];e[2]=M[k+2];e[3]=0;e[4]=M[k+3];e[5]=M[k+4];e[6]=M[k+5];e[7]=0;e[8]=M[k+6];e[9]=M[k+7];e[10]=M[k+8];e[11]=0;e[12]=M[k+9];e[13]=M[k+10];e[14]=M[k+11];e[15]=1;o.matrixWorldNeedsUpdate=true;};
  let last=-1;
- function frame(f){if(f===last)return;last=f;const o=f*nv*3;for(let i=0;i<nv*3;i++){pos[i]=B.P[o+i]*S;nrm[i]=B.N[o+i]/127;}
+ function frame(f){if(f===last)return;last=f;const o=f*nb*3;for(let i=0,j=0;i<nv;i++,j+=3){const k=o+MP[i]*3;pos[j]=B.P[k]*S;pos[j+1]=B.P[k+1]*S;pos[j+2]=B.P[k+2]*S;nrm[j]=B.N[k]/127;nrm[j+1]=B.N[k+1]/127;nrm[j+2]=B.N[k+2]/127;}
   g.attributes.position.needsUpdate=true;g.attributes.normal.needsUpdate=true;
   const M=H.mats,k=f*12,e=_m.elements;e[0]=M[k];e[1]=M[k+1];e[2]=M[k+2];e[3]=0;e[4]=M[k+3];e[5]=M[k+4];e[6]=M[k+5];e[7]=0;e[8]=M[k+6];e[9]=M[k+7];e[10]=M[k+8];e[11]=0;e[12]=M[k+9];e[13]=M[k+10];e[14]=M[k+11];e[15]=1;
   head.matrix.copy(_m);head.matrixWorldNeedsUpdate=true;for(const[pm,PM]of props)setM(pm,PM,k);}
  function update(t,clip='walk',rate=1){const C=lib.clips[clip],f=C.start+(Math.floor(t*24*rate)%C.frames+C.frames)%C.frames;frame(f);}
  update(r01(seed,9)*4);
- return{object,update,type,sil,face:fk,props:want,tiles:[gTop[0],gBot[0],gCoat[0]],tris:B.tris+H.tris+ptris,dispose(){g.dispose();}};
+ return{object,update,type,sil,face:fk,props:want,top,bot,tris:B.tris+H.tris+ptris,dispose(){g.dispose();}};
 }
 
 // the fair population of one block: walkers on lanes between the stall rows + a few browsers standing at the stalls

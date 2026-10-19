@@ -48,14 +48,15 @@ TAIL = {'hips': 'spine', 'spine': 'chest', 'chest': 'neck', 'neck': 'head', 'cla
 class Mesh:
   # uv (④-2): cloth coordinates in metres, u = arc length from the front centre line mirrored left/right (no wrap seam),
   # v = height; the runtime shader repeats a 0.40 x 0.80 m pattern tile with fract() inside the cloth atlas.
-  def __init__(s): s.v = []; s.w = []; s.r = []; s.f = []; s.uv = []
+  def __init__(s): s.v = []; s.w = []; s.r = []; s.f = []; s.uv = []; s.part = []; s.ang = []; s.pm = {}
+  def tag(s, reg, a): s.part.append(s.pm.get(reg, 'plain')); s.ang.append(a)
   def ring(s, c, rx, rz, n, w, reg, a0=0., squash=None):
     out = []
     for k in range(n):
       a = a0 + 2 * math.pi * k / n
       x = math.sin(a) * rx; z = math.cos(a) * rz
       if squash: x, z = squash(a, x, z)
-      s.v.append((c[0] + x, c[1], c[2] + z)); s.w.append(w); s.r.append(reg); out.append(len(s.v) - 1)
+      s.v.append((c[0] + x, c[1], c[2] + z)); s.w.append(w); s.r.append(reg); out.append(len(s.v) - 1); s.tag(reg, a)
       am = (a % (2 * math.pi)); am = min(am, 2 * math.pi - am); s.uv.append((am * (rx + rz) / 2, c[1]))
     return out
   def bridge(s, A, B):
@@ -64,7 +65,7 @@ class Mesh:
       a, b, c, d = A[k], A[(k + 1) % n], B[(k + 1) % n], B[k]
       s.f.append((a, b, c)); s.f.append((a, c, d))
   def cap(s, R, c, w, reg, up):
-    s.v.append(c); s.w.append(w); s.r.append(reg); s.uv.append((0., c[1])); ci = len(s.v) - 1; n = len(R)
+    s.v.append(c); s.w.append(w); s.r.append(reg); s.uv.append((0., c[1])); ci = len(s.v) - 1; n = len(R); s.part.append(s.part[R[0]]); s.ang.append(0.)
     for k in range(n):
       a, b = R[k], R[(k + 1) % n]
       s.f.append((ci, a, b) if up else (ci, b, a))
@@ -73,7 +74,7 @@ class Mesh:
     for dy in (-1, 1):
       k = taper if dy > 0 else 1
       for dx, dz in ((-1, 1), (1, 1), (1, -1), (-1, -1)):
-        s.v.append((x + dx * sx / 2 * k, y + dy * sy / 2, z + dz * sz / 2 * k)); s.w.append(w); s.r.append(reg); P.append(len(s.v) - 1)
+        s.v.append((x + dx * sx / 2 * k, y + dy * sy / 2, z + dz * sz / 2 * k)); s.w.append(w); s.r.append(reg); P.append(len(s.v) - 1); s.part.append('plain'); s.ang.append(0.)
         s.uv.append(((dx + 1) * sx / 2 + (dz + 1) * sz / 4, y + dy * sy / 2))
     b0, t0 = P[:4], P[4:]
     s.bridge(b0, t0); s.f += [(b0[0], b0[2], b0[1]), (b0[0], b0[3], b0[2]), (t0[0], t0[1], t0[2]), (t0[0], t0[2], t0[3])]
@@ -110,12 +111,14 @@ def body(tname, sil):
   if coat:   # coat body continues the torso line down over the hips
     T[0] = tor(.885, .17 * t['hip'] * g, .12 * g, W('hips', 1), top); T[1] = tor(.97, .172 * t['hip'] * g, .118 * g, W('hips', 1), top)
     T[2] = T[3]
+  m.pm = {top: 'torso', 'bottom': 'waist'}
   Rt = tube(m, [q[:4] + (q[4],) for q in T], NT, top, capA=not (coat or skirtish))
+  m.pm = {}
   # neck (skin) and collar
   tube(m, [((0, 1.47 * s, -.005), .055, .05, W('neck', .5, 'chest', .5), 'skin'), ((0, 1.545 * s, -.008), .05, .047, W('neck', .3, 'head', .7), 'skin')], 6, 'skin')
   # ---- skirt / coat skirt: cone from the hips to the knee, weighted to hips + thighs by side
   if coat or skirtish:
-    kn = .50 if coat else (.56 if tname == 'woman' else .52)
+    kn = .50 if coat else (.56 if tname == 'woman' else .52); m.hem = kn
     def sq(a, x, z): return x, z
     rings = [((0, .97 * s, 0), .172 * t['hip'] * g, .118 * g), ((0, .76 * s, 0), .19 * t['hip'] * g, .135 * g), ((0, kn * s, 0), .215 * t['hip'] * g, .155 * g)]
     reg = top if coat else 'bottom'
@@ -126,7 +129,7 @@ def body(tname, sil):
         a = 2 * math.pi * k / NS; x = math.sin(a) * rx; z = math.cos(a) * rz
         side = 'L' if x > 0 else 'R'; f = min(1, abs(x) / rx * 1.4)
         w = W('hips', 1) if i == 0 else W('thigh' + side, .55 * f + (.25 if i == 2 else 0), 'hips', 1 - .55 * f - (.25 if i == 2 else 0))
-        m.v.append((c[0] + x, c[1], c[2] + z)); m.w.append(w); m.r.append(reg); ids.append(len(m.v) - 1)
+        m.v.append((c[0] + x, c[1], c[2] + z)); m.w.append(w); m.r.append(reg); ids.append(len(m.v) - 1); m.part.append('coattail' if coat else 'skirt'); m.ang.append(a)
         am = min(a, 2 * math.pi - a); m.uv.append((am * (rx + rz) / 2, c[1]))
       R.append(ids)
     for i in range(2): m.bridge(R[i], R[i + 1])
@@ -135,7 +138,7 @@ def body(tname, sil):
   # ---- legs (6 sides): thigh, knee, ankle; shoe box
   for side, sg in (('L', 1), ('R', -1)):
     x = P('thigh' + side)[0]; th = P('thigh' + side); kn = P('shin' + side); an = P('foot' + side)
-    legreg_up = 'bottom'; legreg_lo = 'skin' if (skirtish or shorts) else 'bottom'
+    legreg_up = 'bottom'; legreg_lo = 'skin' if (skirtish or shorts) else 'bottom'; m.pm = {'bottom': 'leg' + side}
     rT = .088 * g * t['hip'] ** .5; rK = .058 * g ** .7; rA = .04 * g ** .5
     if shorts:
       tube(m, [((x, th[1], 0), rT, rT * .95, W('thigh' + side, 1)), ((x, (th[1] + kn[1]) / 2 - .03 * s, .005), rT * .92, rT * .9, W('thigh' + side, 1))], NL, 'bottom', a0=math.pi / NL)
@@ -155,7 +158,7 @@ def body(tname, sil):
   for side, sg in (('L', 1), ('R', -1)):
     ua = P('upperArm' + side); fa = P('foreArm' + side); hd = P('hand' + side)
     rS = .058 * g ** .6; rE = .044 * g ** .6; rW = .034 * g ** .4
-    sleeve_full = coat or (tname in ('man', 'heavy') and sil == 'short' and False)
+    sleeve_full = coat or (tname in ('man', 'heavy') and sil == 'short' and False); m.pm = {top: 'arm' + side}
     sh = ((ua[0] - sg * .01, ua[1] - .01, 0), rS, rS * .95, W('upperArm' + side, .8, 'clavicle' + side, .2))
     el = ((fa[0], fa[1], -.005), rE, rE, W('upperArm' + side, .5, 'foreArm' + side, .5))
     mid = ((ua[0] * .5 + fa[0] * .5, (ua[1] + fa[1]) / 2 - .02, 0), rS * .93, rS * .9, W('upperArm' + side, 1))
@@ -166,6 +169,8 @@ def body(tname, sil):
       tube(m, [sh, mid], NL, top)
       tube(m, [(mid[0], mid[1] * .82, mid[2] * .82, mid[3]), el, wr], NL, 'skin')
     m.box((hd[0], hd[1] - .075 * s ** .5, .005), .045 * g ** .3, .15 * s ** .5, .07, W('hand' + side, 1), 'skin', taper=.8)
+  m.pm = {}; m.sk = (s, coat, skirtish, getattr(m, 'hem', None))
+  assert len(m.part) == len(m.v) == len(m.ang)
   return m, B
 
 def head_mesh(tname):
@@ -389,6 +394,33 @@ def key_clips(rig, tname):
     for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT'
   return spans
 
+# ---- ④-2b V75-style uv: per face corner, welded back into split vertices (the Blender mesh stays unsplit so baked normals
+# stay smooth; the export carries map[] = split vertex -> baked vertex). Image coords (u right, v down) inside a 64² garment
+# cell of garments135.png. slot: 0 skin, 1 top front, 2 top back, 3 sleeve, 4 bottom, 5 shoe.
+def split75(m):
+  s, coat, skirtish, hem = m.sk
+  yT = 1.485 * s; yB = (hem * s) if coat else 1.06 * s
+  def cuv(i, front):
+    p = m.part[i]; a = m.ang[i]; y = m.v[i][1]; sn = math.sin(a); cl = lambda q: min(1., max(0., q))
+    if p in ('torso', 'coattail'): return (1 if front else 2, (.5 + .47 * sn) if front else (.5 - .47 * sn), cl((yT - y) / (yT - yB) * .97))
+    if p == 'skirt': return (4, .5 + .48 * sn, cl((.97 * s - y) / ((.97 - hem) * s)))
+    if p == 'waist':
+      if skirtish: return (4, .5 + .48 * sn, cl((.97 * s - y) / ((.97 - hem) * s)))
+      return (4, .5 + .475 * sn, cl((1.06 * s - y) / (.985 * s)))
+    if p in ('legL', 'legR'): return (4, (.75 if p == 'legL' else .25) + .23 * sn, cl((1.06 * s - y) / (.985 * s)))
+    if p in ('armL', 'armR'): return (3, .5 + .45 * sn, cl((1.45 * s - y) / (.57 * s)))
+    return (5 if m.r[i] == 'shoe' else 0, 0., 0.)
+  keys = {}; mp = []; uv = []; sl = []; F = []
+  for f in m.f:
+    front = sum(math.cos(m.ang[i]) for i in f) >= 0
+    nf = []
+    for i in f:
+      q = cuv(i, front); k = (i, q[0], round(q[1], 4), round(q[2], 4))
+      if k not in keys: keys[k] = len(mp); mp.append(i); sl.append(q[0]); uv.append((q[1], q[2]))
+      nf.append(keys[k])
+    F.append(tuple(nf))
+  return mp, uv, sl, F
+
 rigs = {}; heads = {}; bodies = []; accs = {}
 for tname in TYPES:
   rig = make_armature(tname); rigs[tname] = (rig, key_clips(rig, tname))
@@ -406,7 +438,7 @@ for tname in TYPES:
   accs[tname] = accessories(tname, [x[3] for x in bodies if x[0] == tname], B)
 
 dg = bpy.context.evaluated_depsgraph_get()
-blobs = bytearray(); meta = {'version': '135y', 'fps': 24, 'clips': {}, 'bodies': [], 'heads': {}, 'posScale': 1 / 8192, 'regions': REG}
+blobs = bytearray(); meta = {'version': '135z', 'fps': 24, 'clips': {}, 'bodies': [], 'heads': {}, 'posScale': 1 / 8192, 'regions': REG}
 def put(b):
   global blobs
   while len(blobs) % 4: blobs.append(0)
@@ -425,13 +457,14 @@ for tname, sil, ob, m in bodies:
       x, y, z = B2G(v.co); pos += struct.pack('<3h', *[max(-32767, min(32767, round(c * 8192))) for c in (x, y, z)])
       nx, ny, nz = B2G(v.normal); nrm += struct.pack('<3b', *[max(-127, min(127, round(c * 127))) for c in (nx, ny, nz)])
     ev.to_mesh_clear()
-  idx = struct.pack(f'<{len(m.f)*3}H', *[i for f in m.f for i in f])
+  mp, uv75, sl75, F75 = split75(m)
+  idx = struct.pack(f'<{len(F75)*3}H', *[i for f in F75 for i in f])
   ys = [v[1] for v in m.v]
   meta['bodies'].append({'type': tname, 'sil': sil, 'verts': nv, 'tris': len(m.f), 'height': max(ys), 'index': put(idx),
-                         'region': put(bytes(REG[r] for r in m.r)), 'pos': put(bytes(pos)), 'nrm': put(bytes(nrm)),
-                         'uv': put(struct.pack(f'<{nv*2}f', *[c for u in m.uv for c in u]))})
+                         'pos': put(bytes(pos)), 'nrm': put(bytes(nrm)), 'split': len(mp), 'map': put(struct.pack(f'<{len(mp)}H', *mp)),
+                         'slot': put(bytes(sl75)), 'uv75': put(struct.pack(f'<{len(mp)*2}f', *[c for u in uv75 for c in u]))})
   assert len(m.uv) == nv
-  print('body', tname, sil, nv, 'verts', len(m.f), 'tris')
+  print('body', tname, sil, nv, 'verts', len(mp), 'split', len(m.f), 'tris')
 for tname, (V, UV, F) in heads.items():
   rig, spans = rigs[tname]; BM = {b: bytearray() for b in ('head', 'spine', 'chest', 'hips', 'handL', 'handR')}
   for name, f in frames:
