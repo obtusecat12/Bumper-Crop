@@ -7,14 +7,17 @@
 // Off with ?bake=0 (nothing touched).
 import {bake133Enabled,prepareSky133,keySky133,fillBake133} from './venue133-bake.js?v=133c';
 const MOVING=/water|glass|flame|fire|smoke|steam|spray|flag|cloth|garment|laundry|rain|fountain|jet|door|gate|leaf|leaves|foliage|blade|wheel|fan|traffic|signal|glow|halo|beam/i;
-export function bakeFixed133(roots,{data,exportName,skip=null,delay=2500,gain=.8,keep=1,floor=.38,fine=null}={}){
+export function bakeFixed133(roots,{data,exportName,skip=null,delay=2500,gain=.8,keep=1,floor=.38,fine=null,over=null}={}){
  if(!bake133Enabled())return null;
  const filter=o=>{if(MOVING.test(o.name||'')||MOVING.test(o.material?.name||''))return false;for(let p=o;p;p=p.parent){if(p.userData?.campDynamic||p.userData?.noBake133)return false;if(skip&&skip.has(p))return false;}return true;};
  const prep=prepareSky133(roots,{filter,gain,keep,floor});prep.name=exportName;
  // V133-L10-fire: fine=[[subRoot,L]] re-subdivides meshes under a small sub-root (outhouse, table props) to a finer edge length.
  if(fine)for(const e of prep.list)for(let p=e.mesh;p;p=p.parent){const f=fine.find(q=>q[0]===p);if(f){e.L=Math.min(e.L,f[1]);break;}}
  prep.ready=new Promise(r=>setTimeout(r,delay)).then(async()=>{const t0=performance.now();await keySky133(prep);prep.keyMs=performance.now()-t0;
-  if(globalThis.__bake133NoData)return prep;const m=await import(data);await fillBake133(prep,m[exportName]);
+  if(globalThis.__bake133NoData)return prep;const m=await import(data);let D=m[exportName];
+  // V135-capital: over=[url,exportName] = Blender Cycles cell bakes (bc/scripts/bake135) that replace the node bake per mesh key; ?bake135=0 = node bake only
+  if(over&&!/[?&]bake135=0\b/.test(globalThis.location?.search||'')){try{const o=(await import(over[0]))[over[1]];D=Object.assign({},D,o);prep.over=Object.keys(o).length;}catch(e){console.warn('[bake135] cells not applied',e);}}
+  await fillBake133(prep,D);
   console.info('[bake133]',exportName,prep.hit,'baked',prep.miss,'missed',Math.round(prep.keyMs)+' ms keying');return prep;})
   .catch(e=>{console.warn('[bake133] '+exportName+' not applied',e);return prep;});
  return prep;
