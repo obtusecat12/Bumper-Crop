@@ -6,13 +6,19 @@ import {createGardenSprinklers85} from './tiki-garden-sprinklers-v86.js';
 import * as T from './vendor/three.module.min.js';
 import {RectAreaLightUniformsLib} from './vendor/RectAreaLightUniformsLib.js';
 import {preloadGarden81,gardenMaterials81} from './tiki-garden-materials-v86.js';
-import {createGardenArchitecture81,createSandal81,GARDEN_FIXTURES81} from './tiki-garden-mesh-v86.js';
+import {createGardenArchitecture81,createSandal81,GARDEN_FIXTURES81} from './tiki-garden-mesh-v86.js?v=134b';
 import {createGardenWater81} from './tiki-garden-water-v85.js';
 import {createGardenEffects81} from './tiki-garden-effects-v86.js';
 import {GARDEN81} from './tiki-garden-plan-v86.js';
 import {preloadFountain118e,createFountain118e} from './tiki-garden-fountain-v118e.js';
 import {compileBathBatches74,prepareStaticProbe74} from './bath-preparation-v74.js';
 import {nextPaint} from './bath-loading-v72.js';
+import {bake133Enabled,collectBake133} from './venue133-bake.js?v=133b';
+import {applyBake134} from './venue134-bake.js?v=134a';
+const GARDEN_BAKE134_GAIN=1.0;
+// Thin dense meshes (ceiling T rails, bamboo poles, fountain gravel) are baked at their own vertices (L 1.6); the rest at 0.3 m. Dump and runtime must use this same collector.
+const COARSE134=/(ceilingTrim|bamboo|washed-up gravel)$/;
+export function collectGarden134(scene){return[...collectBake133(scene,{L:1.6,filter:o=>COARSE134.test(o.name)}),...collectBake133(scene,{L:.3,filter:o=>!COARSE134.test(o.name)})];}
 function lighting(scene){RectAreaLightUniformsLib.init();const points=[],areas=[];
  scene.add(new T.HemisphereLight(0xcbdcde,0x726b5a,.34));
  for(const [i,[x,z]]of GARDEN_FIXTURES81.entries()){const l=new T.RectAreaLight(i%3===0?0xd8e4dc:0xd3e6ed,i%3===1?14.0:19.0,1.14,.525);l.position.set(x,GARDEN81.ceiling-.035,z);l.lookAt(x,0,z);scene.add(l);areas.push(l);}
@@ -43,15 +49,16 @@ export async function prepareGarden81(report=()=>{}){
  cocktail.materials.forEach((v,i)=>m['cocktail'+i]=v);Object.entries(vending.mats).forEach(([k,v])=>m['vending'+k]=v);
  for(const [type,a]of Object.entries(vending.prototypes))a.group.traverse(o=>{if(o.isMesh)m['drink'+type+o.id]=o.material;});
  const allTextures=[...new Set([...fountain.textures,...textures,...people.textures,...gardenDrinkTextures85(),...Object.values(m).flatMap(a=>[a.map,a.normalMap,a.roughnessMap,a.emissiveMap].filter(Boolean))])];
+ scene.updateMatrixWorld(true);let bake134=null;if(bake133Enabled()){try{const {GARDEN_BAKE134}=await import('./garden-bake134-data.js?v=134b');bake134=applyBake134(collectGarden134(scene),GARDEN_BAKE134,{gain:GARDEN_BAKE134_GAIN,direct:0,spec:1});}catch(e){console.warn('garden bake134',e);}} // V134-blender-water-room: Blender Cycles full lighting bake (dim, cyan pool glow, coloured path lamps); ?bake=0 = old realtime rig
  scene.userData.prepareMainVfx=camera=>optics.setCamera(camera);scene.userData.showerWater=optics;scene.userData.springVolume=effects;scene.updateMatrixWorld(true);report(1,'室内水景已就绪');
- const room={scene,object,sandal,mats:m,optics,fountain,effects,lights,people,vending,sprinklers,cocktail,textures:allTextures,warmed:false,probe:null,stats:{...object.userData.cityStats,newSourceImages:18,runtimeTextureFiles:allTextures.length,...effects.stats},
+ const room={scene,object,bake134,sandal,mats:m,optics,fountain,effects,lights,people,vending,sprinklers,cocktail,textures:allTextures,warmed:false,probe:null,stats:{...object.userData.cityStats,newSourceImages:18,runtimeTextureFiles:allTextures.length,...effects.stats},
   update(t,dt=0,playing=true,camera=null){people.update(t);fountain.update(t,camera,playing,lights.fountain);sprinklers.update(t);vending.tick(dt,null,playing,camera);const p=sandal.userData.base;sandal.position.set(p.x+Math.sin(t*.105)*.065,p.y+Math.sin(t*.37)*.003,p.z+Math.sin(t*.083)*.052);sandal.rotation.set(Math.sin(t*.31)*.018,-.55+Math.sin(t*.07)*.07,Math.cos(t*.29)*.018);optics.update(t);effects.setTime(t);},
   dispose(){fountain.dispose();people.dispose();vending.dispose();sprinklers.dispose();cocktail.dispose();optics.dispose();effects.dispose();object.traverse(o=>o.geometry?.dispose());sandal.traverse(o=>o.geometry?.dispose());for(const mat of new Set(Object.values(m)))mat.dispose();room.probe?.dispose();lights.shadow.shadow?.dispose();lights.portal.shadow?.dispose();scene.clear();}
  };return room;
 }
 export async function warmGarden81(room,renderer,camera,report=()=>{},renderFrame){if(room.warmed)return;let i=0;
  let budget=performance.now();for(const t of room.textures){renderer.initTexture(t);report(.24*++i/room.textures.length,'正在上传水景贴图');if(performance.now()-budget>10){await nextPaint();budget=performance.now();}}await nextPaint();
- const receivers=Object.values(room.mats).filter(m=>m.isMeshStandardMaterial);room.probe=await prepareStaticProbe74(room.scene,renderer,[0,1.55,4.8],receivers,p=>report(.24+p*.15,'正在准备湿岩与灯具反光'));receivers.forEach(m=>m.envMapIntensity=m===room.mats.wall||m===room.mats.lava?.06:m===room.mats.boulder?.26:m===room.mats.ceiling?.12:.26);
+ const receivers=Object.values(room.mats).filter(m=>m.isMeshStandardMaterial);room.probe=await prepareStaticProbe74(room.scene,renderer,[0,1.55,4.8],receivers,p=>report(.24+p*.15,'正在准备湿岩与灯具反光'));const env=m=>m===room.mats.wall||m===room.mats.lava?.06:m===room.mats.boulder?.26:m===room.mats.ceiling?.12:.26;receivers.forEach(m=>m.envMapIntensity=env(m));for(const [src,c] of room.bake134?.pairs||[])if(src.envMap||receivers.includes(src)){c.envMap=src.envMap;c.envMapIntensity=env(src);c.needsUpdate=true;}
  const rt=new T.WebGLRenderTarget(96,64,{type:T.HalfFloatType}),previous=renderer.getRenderTarget();try{renderer.setRenderTarget(rt);await compileBathBatches74(room.scene,renderer,camera,p=>report(.39+p*.48,'正在逐批预热水景材质'));room.scene.updateMatrixWorld(true);renderer.shadowMap.needsUpdate=true;renderer.render(room.scene,camera);await nextPaint();renderer.setRenderTarget(previous);
   room.optics.setCamera(camera);room.optics.prepare(renderer);report(.93,'正在映出球灯与稻草伞');await nextPaint();renderFrame?.();await nextPaint();room.warmed=true;report(1,'正在打开水景室的门');
  }finally{renderer.setRenderTarget(previous);rt.dispose();}

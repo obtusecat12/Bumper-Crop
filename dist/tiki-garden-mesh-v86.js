@@ -90,7 +90,7 @@ function lightsAndPlants(k){
  const plants=[['fern',-5.75,2.12,2.24,1.72,.11,.3],['fern',-5.58,-2.91,1.76,1.14,.12,.5],['fern',.99,-1.32,1.15,.77,.1,.8],['fern',.7,-4.48,1.5,.96,.12,.3],['fern',-3.43,-6.10,1.35,.85,.07,1.],['fern',6.66,.37,1.32,1.04,.05,.3],['fern',6.02,-6.35,1.80,1.27,.05,.4],['flowers',-5.20,3.64,1.27,1.13,.13,1.2],['flowers',.12,3.65,1.37,1.16,.16,.1],['flowers',-4.46,-4.71,1.32,1.14,.10,.6],['flowers',.26,-5.94,1.08,.9,.13,.8],['flowers',6.13,2.54,.85,.72,.07,.2],['fern',-6.84,-8.55,1.85,1.32,.07,.6],['flowers',3.66,-6.36,1.21,.92,.06,.3]];
  for(const args of plants)plant(k,...args);
  GARDEN81.globes.forEach((p,i)=>{const key='globe'+i;makesphereMaterial(k,key,p.color);const support=p.y-p.r-.07;k.cyl('dark',p.x,support*.5,p.z,.041,.052,support,10);k.cyl('dark',p.x,p.y-p.r-.046,p.z,p.r*.55,p.r*.69,.095,16);k.sphere(key,p.x,p.y,p.z,p.r);});
- const colors=[0xea4638,0x4476ed,0xffd263,0x69dda2];
+ const colors=[0xea4638,0x4476ed,0xff8a2a,0x69dda2]; // V134: red/blue/orange/green path lamps (was amber)
  for(let i=0;i<18;i++){const x=-7.0+i*.82,z=-8.23+.34*Math.sin(i*.57),key='pathLamp'+i%4;if(!k.m[key])makesphereMaterial(k,key,colors[i%4]);
   k.cyl('grid',x,.265,z,.016,.021,.53,10);k.cyl('dark',x,.018,z,.065,.082,.036,12);
   k.add(new T.SphereGeometry(.122,16,9,0,TAU,0,Math.PI/2),key,x,.43,z);k.cyl('grid',x,.431,z,.129,.123,.027,16);

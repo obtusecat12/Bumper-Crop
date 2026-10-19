@@ -1,5 +1,5 @@
 (async()=>{const T=window.T,s=__room.scene;s.traverse(o=>{if(o.isSkinnedMesh||o.isPoints)o.userData.__skip=1;});
-const L=__B.collectBake133(s,{L:.3});const inList=new Set(L.map(e=>e.mesh));
+const L=(window.__collect||(s=>__B.collectBake133(s,{L:.3})))(s);const inList=new Set(L.map(e=>e.mesh));
 const avg=new Map();function texAvg(t){if(!t||!t.image)return null;if(avg.has(t))return avg.get(t);let r=null;try{const c=document.createElement('canvas');c.width=c.height=16;const g=c.getContext('2d');g.drawImage(t.image,0,0,16,16);const d=g.getImageData(0,0,16,16).data;let q=[0,0,0];for(let i=0;i<d.length;i+=4)for(let k=0;k<3;k++)q[k]+=d[i+k];r=q.map(x=>{const v=x/256/255;return t.colorSpace===T.SRGBColorSpace?Math.pow(v,2.2):v;});}catch(e){}avg.set(t,r);return r;}
 const b64=a=>{const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength);let q='';for(let i=0;i<u.length;i+=32768)q+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(q);};
 function geo(o,weld){const g=o.geometry,p=g.attributes.position,n=g.attributes.normal,ix=g.index;const W=weld?__B.weld133(g):{remap:Uint32Array.from({length:p.count},(_,i)=>i),count:p.count};const P=new Float32Array(W.count*3),N=new Float32Array(W.count*3),v=new T.Vector3(),nm=new T.Matrix3().getNormalMatrix(o.matrixWorld);
