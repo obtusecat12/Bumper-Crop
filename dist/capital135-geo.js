@@ -30,11 +30,12 @@ function make(n,buf,base,mats,st){let o;
 async function fetchPack(url){const r=await fetch(url);if(!r.ok)throw Error('capital135 geo '+url+' '+r.status);
  return new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();}
 // G = CAPITAL135_GEO, shells = {name: Group}, returns Promise<stats>; meshes are attached to the shells, nothing else is touched.
-export async function loadCapitalGeo135(G,{base,mats,shells,isDisposed=()=>false,warm=()=>{}}){
+export async function loadCapitalGeo135(G,{base,mats,shells,isDisposed=()=>false,warm=()=>{},pre=()=>{}}){
  const t0=performance.now(),st={meshes:0,verts:0,bytes:0,missing:[],ms:0,fetchMs:0};addShrub131Materials(mats);warm(); // lazily created shared materials (shrubs, kerb131, st132 boxes) must exist before meshes bind them
- const bufs=await Promise.all(G.order.map(k=>fetchPack(base+G.roots[k].f)));st.fetchMs=Math.round(performance.now()-t0);
+ const P=Promise.all(G.order.map(k=>fetchPack(base+G.roots[k].f)));const t1=performance.now();pre();st.preMs=Math.round(performance.now()-t1); // ②c-2b-2b: deferred roots build while the packs download
+ const bufs=await P;st.fetchMs=Math.round(performance.now()-t0);
  if(isDisposed())return st;
  G.order.forEach((k,i)=>{const buf=bufs[i],len=new DataView(buf).getUint32(0,true),tree=JSON.parse(new TextDecoder().decode(new Uint8Array(buf,4,len))),off=4+len+((4-(4+len)%4)%4);st.bytes+=buf.byteLength;
   const sh=shells[k];for(const c of tree.c||[])sh.add(make(c,buf,off,mats,st));sh.updateMatrixWorld(true);});
  st.ms=Math.round(performance.now()-t0);if(st.missing.length)console.warn('[capital135] geo missing materials',[...new Set(st.missing)]);
- console.info('[capital135] geo packs',st.meshes,'meshes',st.verts,'verts',(st.bytes/1048576).toFixed(1)+' MB in',st.ms,'ms (fetch '+st.fetchMs+')');return st;}
+ console.info('[capital135] geo packs',st.meshes,'meshes',st.verts,'verts',(st.bytes/1048576).toFixed(1)+' MB in',st.ms,'ms (fetch '+st.fetchMs+', deferred roots '+st.preMs+')');return st;}
