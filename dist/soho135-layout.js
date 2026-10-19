@@ -30,3 +30,14 @@ export function soho135Filter(result){
  const s=SIDES[result.ix+','+result.iz];if(!s)return result;const x=result.x;
  result.buildings=result.buildings.filter(q=>s.face==='w'?!(q.ry===-Math.PI/2||((q.ry===0||q.ry===Math.PI)&&q.x-q.w/2<x+FRONT0+.5)):!(q.ry===Math.PI/2||((q.ry===0||q.ry===Math.PI)&&q.x+q.w/2>x+FRONT1-.5)));
  result.buildings.push(...soho135Lots(result.ix,result.iz).lots);result.soho135=s.key;return result;}
+// ③-3b focal spire tower closing the north end of the SoHo vista. The plan's spot (x -224, z ~620) is the road + the canal
+// bridge, and in game it is never on screen from SoHo: L11 fog ends ~280 m out and blocks stream only +-2 rows (224 m). So the
+// tower takes the nearest lot that terminates the street within that range: the west BACK-row lot of block (-2,2)
+// (x -212..~-190, z 300..324, ~90-300 m from the fair), loaded (lod 1) whenever the player is anywhere in SoHo. Its two
+// road-edge side lots in front (z 260..300) are capped to 6 storeys so the street sees the tower over them (cap, not remove).
+// Built by soho135-spire.js (generated faces art-v135spire).
+export function spire135Filter(result){
+ if(result.ix!==-2||result.iz!==2)return result;const x=result.x;
+ for(const q of result.buildings)if(q.ry===-Math.PI/2)q.floors=Math.min(q.floors,6);
+ const i=result.buildings.findIndex(q=>q.ry===0&&q.x-q.w/2<x+12.5);
+ if(i>=0){const q=result.buildings[i];result.buildings[i]={...q,type:'spire135',spire135:true,floors:30};}return result;}

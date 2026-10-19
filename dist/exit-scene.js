@@ -13,8 +13,9 @@ import {addDistrictMaterials,fountainClock,fountainCenter} from './clinic-distri
 import {plaza133} from './palm133-plaza.js?v=133p';
 import {CAPITAL135_GEO} from './capital135/geo/index.js?v=135g'; // V135 ②c-2b-2 cooked batch roots (shell + stream)
 import {geo135Enabled,shell135,loadCapitalGeo135} from './capital135-geo.js?v=135h';
-import {soho135BuildingTask} from './soho135-street.js?v=135u'; // V135-capital ③ SoHo street frontage
+import {soho135BuildingTask} from './soho135-street.js?v=135v'; // V135-capital ③ SoHo street frontage
 import {soho135FairTask} from './soho135-fair.js?v=135t'; // V135-capital ③-2 SoHo street fair (closed road x=-224)
+import {spire135Task} from './soho135-spire.js?v=135v'; // ③-3b SoHo focal spire tower
 import {CAPITAL135_LAZY} from './capital135/geo/lazy.js?v=135h'; // V135 ②c-2b-2b deferred roots (photo landmarks, milling mouth)
 import {ubox132} from './street132-props.js?v=132';
 import {createClinicDistrict} from './clinic-district.js?v=60';
@@ -114,7 +115,7 @@ function referenceGround(mats){
 function* buildBlock(mats,plan,lod){
  const b=new UrbanBatch(mats);try{b.push(CITY_ORIGIN.x,0,CITY_ORIGIN.z,CITY_ANGLE);yield* addBlockStreetsTask(b,plan,lod);
  if(plan.soho135==='a'||plan.soho135==='b'){b.push(plan.x,Y,plan.z);yield* soho135FairTask(b,plan,lod);b.pop();}
- for(const spec of plan.buildings){b.push(spec.x,Y+.15,spec.z,spec.ry);if(spec.soho135)yield* soho135BuildingTask(b,spec,lod);else yield* addStreetwallBuildingTask(b,{...spec,lod});if(spec.infill){b.box('sidewalk',0,-.075,spec.d/2+1.8,spec.w,.15,3.6);b.walk(0,spec.d/2+1.8,spec.w,3.6,0);b.push(0,-.15,0);curb(b,0,spec.d/2+3.6,spec.w,Math.PI,.15);b.pop();if(spec.seed%3===0)place(b,0,0,spec.d/2+2.85,0,P.addStreetTree,{seed:spec.seed,scale:.68});else if(spec.seed%3===1)place(b,0,0,spec.d/2+2.85,0,P.addHydrant);else place(b,0,0,spec.d/2+2.85,0,P.addStreetLight,{height:7.4,arm:1.5});}b.pop();yield;}
+ for(const spec of plan.buildings){b.push(spec.x,Y+.15,spec.z,spec.ry);if(spec.soho135)yield* soho135BuildingTask(b,spec,lod);else if(spec.spire135)yield* spire135Task(b,spec,lod);else yield* addStreetwallBuildingTask(b,{...spec,lod});if(spec.infill){b.box('sidewalk',0,-.075,spec.d/2+1.8,spec.w,.15,3.6);b.walk(0,spec.d/2+1.8,spec.w,3.6,0);b.push(0,-.15,0);curb(b,0,spec.d/2+3.6,spec.w,Math.PI,.15);b.pop();if(spec.seed%3===0)place(b,0,0,spec.d/2+2.85,0,P.addStreetTree,{seed:spec.seed,scale:.68});else if(spec.seed%3===1)place(b,0,0,spec.d/2+2.85,0,P.addHydrant);else place(b,0,0,spec.d/2+2.85,0,P.addStreetLight,{height:7.4,arm:1.5});}b.pop();yield;}
 
  b.pop();const object=yield* b.finishTask('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district);const sub=plan.reserved?null:yield* subwayBlockTask(mats,plan,lod);return{object,colliders:b.colliders,walks:b.walks,plan,lod,sub,stairWalks:b.stairWalks||[],stairSolids:b.stairSolids||[],signals132:b.signals132||[]};}finally{b.discard();}
 }

@@ -4,7 +4,7 @@
 // railings, stair flights, drop ladder) on most. Built inside the procedural block's UrbanBatch (merged per material), so the
 // SoHo frontage streams, LODs and unloads with its block. lod 1 = body + facade + cornice only.
 import * as T from './vendor/three.module.min.js';
-import {SOHO135} from './soho135-layout.js?v=135s';
+import {SOHO135} from './soho135-layout.js?v=135v';
 const A=new URL('./assets/l11-v135s/',import.meta.url).href;
 function tex(name,srgb=true){const t=new T.TextureLoader().load(A+name+'.webp?v=135s');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;t.generateMipmaps=true;return t;}
 export function addSoho135Materials(m){
