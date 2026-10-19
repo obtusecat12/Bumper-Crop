@@ -13,7 +13,7 @@ import {addDistrictMaterials,fountainClock,fountainCenter} from './clinic-distri
 import {plaza133} from './palm133-plaza.js?v=133p';
 import {CAPITAL135_GEO} from './capital135/geo/index.js?v=135g'; // V135 ②c-2b-2 cooked batch roots (shell + stream)
 import {geo135Enabled,shell135,loadCapitalGeo135} from './capital135-geo.js?v=135h';
-import {soho135BuildingTask} from './soho135-street.js?v=135s'; // V135-capital ③ SoHo street frontage
+import {soho135BuildingTask} from './soho135-street.js?v=135u'; // V135-capital ③ SoHo street frontage
 import {soho135FairTask} from './soho135-fair.js?v=135t'; // V135-capital ③-2 SoHo street fair (closed road x=-224)
 import {CAPITAL135_LAZY} from './capital135/geo/lazy.js?v=135h'; // V135 ②c-2b-2b deferred roots (photo landmarks, milling mouth)
 import {ubox132} from './street132-props.js?v=132';

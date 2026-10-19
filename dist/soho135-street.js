@@ -10,12 +10,19 @@ function tex(name,srgb=true){const t=new T.TextureLoader().load(A+name+'.webp?v=
 export function addSoho135Materials(m){
  if(m.soho135a)return m;
  for(const s of'abcd')m['soho135'+s]=new T.MeshStandardMaterial({map:tex('facade_'+s),normalMap:tex('facade_'+s+'-n',false),normalScale:new T.Vector2(.8,.8),roughness:.84,vertexColors:true});
+ // ③-3 corner side returns: one generated elevation per corner building (tools/soho135_side_assets.py -> side.webp, 8 cells)
+ m.soho135side=new T.MeshStandardMaterial({map:tex('side'),normalMap:tex('side-n',false),normalScale:new T.Vector2(.8,.8),roughness:.86,vertexColors:true});
  m.soho135Iron=new T.MeshStandardMaterial({color:0x232527,roughness:.55,metalness:.35,vertexColors:true});
  m.soho135Tank=new T.MeshStandardMaterial({color:0x6f5b45,roughness:.92,vertexColors:true});
  m.soho135Roof=new T.MeshStandardMaterial({color:0x4a4846,roughness:.97,vertexColors:true});
  return m;
 }
 const unit=new T.BoxGeometry(1,1,1);
+// atlas order of side.webp (lot = side key + facade index); the wrap-around bay is on the image's left = street edge
+const SIDE135=['a3','a4','b0','b3','c4','c2','d1','d3'];
+// which local x end of a lot is an exposed corner (-1/+1) or 0: first lot of the run (z0+12) is the block's south end, last (z0+100) north
+function cornerSide(spec){const S=spec.soho135,a=spec.z-spec.w/2-Math.floor((spec.z)/112)*112,b=spec.z+spec.w/2-Math.floor((spec.z)/112)*112;
+ const south=Math.abs(a-12)<.05,north=Math.abs(b-100)<.05;if(!south&&!north)return 0;return (south?-1:1)*(S.flip?-1:1);}
 // quad in the batch's local frame with explicit uv rect; p = 4 corners (bl, br, tr, tl), normal n
 function quad(b,key,p,uv,n,tone=1){const g=new T.BufferGeometry(),[u0,v0,u1,v1]=uv,ix=[0,1,2,0,2,3],U=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]],pos=[],tx=[],nr=[];
  for(const i of ix){pos.push(...p[i]);tx.push(...U[i]);nr.push(...n);}
@@ -53,6 +60,10 @@ export function* soho135BuildingTask(b,spec,lod){
  // the generated elevation, full height, 1 cm proud of the body
  quad(b,key,[[-w/2,0,zf],[w/2,0,zf],[w/2,H,zf],[-w/2,H,zf]],[u0,0,u1,1],[0,0,1]);
  // projecting cornice: top 4 % of the elevation, 0.75 m out; sheet-metal cap
+ const cs=cornerSide(spec),ci=SIDE135.indexOf(S.side+S.i);
+ if(cs&&ci>=0){const x=cs*(w/2-.005),zb=-d/2,su0=ci/SIDE135.length+.5/2048,su1=(ci+1)/SIDE135.length-.5/2048;
+  if(cs<0)quad(b,'soho135side',[[x,0,zb],[x,0,zf],[x,H,zf],[x,H,zb]],[su1,0,su0,1],[-1,0,0]);
+  else quad(b,'soho135side',[[x,0,zf],[x,0,zb],[x,H,zb],[x,H,zf]],[su0,0,su1,1],[1,0,0]);}
  const ch=Math.max(.9,H*.035);uvBox(b,key,0,H-ch/2,zf+.38,w+.1,ch,.76,[u0,.962,u1,.995]);b.box('soho135Iron',0,H+.03,zf+.35,w+.16,.06,.84,0,.8);
  b.solid(0,-.06,w,d);yield;
  if(lod)return;
