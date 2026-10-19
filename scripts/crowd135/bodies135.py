@@ -5,6 +5,8 @@
 # weights, keys ONE shared walk cycle (24 frames, 1 s at 24 Hz) and one idle loop (12 frames) as Blender actions, and
 # evaluates the armature-deformed meshes frame by frame through the depsgraph. Output OUT_DIR/crowd135.bin:
 #   [u32 json length][json][binary blocks]; json lists every block's byte offset (see JS reader dist/crowd135.js).
+# ④-2 (135y): ~550-tri bodies (12/14/8-sided rings), per-vertex cloth uv in metres, baked matrices for spine/chest/hips/
+# handL/handR besides the head, and rigid accessories per body type (backpack, satchel, 3 shopping bags, phone, cap, beanie).
 # The head is NOT in the body stream: each body type gets one front-UV'd head (face photo planar projection, a nose
 # vertex at u .5) in bind pose plus the head bone's deformation matrix per frame; the runtime turns it into a whole
 # head with retro-head130-gen retrofitSkinnedHead130 (generated rear band + modelled ears, no painted ears).
@@ -23,6 +25,7 @@ TYPES = {
  'child': dict(h=.72, sh=.80, hip=.88, g=.86, belly=1.05, head=.90, chest=.92),
 }
 SILS = ['short', 'coat', 'skirt']   # 'skirt' = skirt for woman/child, shorts for man/heavy
+NT, NS, NL = 12, 14, 8   # ④-2 ring sides: torso, skirt/coat tail, limbs (④-1 was 8 / 10 / 6)
 REG = {'skin': 0, 'top': 1, 'bottom': 2, 'shoe': 3, 'coat': 4, 'trim': 5}
 
 def bones_for(t):
@@ -43,7 +46,9 @@ TAIL = {'hips': 'spine', 'spine': 'chest', 'chest': 'neck', 'neck': 'head', 'cla
         'shinL': 'footL', 'shinR': 'footR'}
 
 class Mesh:
-  def __init__(s): s.v = []; s.w = []; s.r = []; s.f = []
+  # uv (④-2): cloth coordinates in metres, u = arc length from the front centre line mirrored left/right (no wrap seam),
+  # v = height; the runtime shader repeats a 0.40 x 0.80 m pattern tile with fract() inside the cloth atlas.
+  def __init__(s): s.v = []; s.w = []; s.r = []; s.f = []; s.uv = []
   def ring(s, c, rx, rz, n, w, reg, a0=0., squash=None):
     out = []
     for k in range(n):
@@ -51,6 +56,7 @@ class Mesh:
       x = math.sin(a) * rx; z = math.cos(a) * rz
       if squash: x, z = squash(a, x, z)
       s.v.append((c[0] + x, c[1], c[2] + z)); s.w.append(w); s.r.append(reg); out.append(len(s.v) - 1)
+      am = (a % (2 * math.pi)); am = min(am, 2 * math.pi - am); s.uv.append((am * (rx + rz) / 2, c[1]))
     return out
   def bridge(s, A, B):
     n = len(A)
@@ -58,7 +64,7 @@ class Mesh:
       a, b, c, d = A[k], A[(k + 1) % n], B[(k + 1) % n], B[k]
       s.f.append((a, b, c)); s.f.append((a, c, d))
   def cap(s, R, c, w, reg, up):
-    s.v.append(c); s.w.append(w); s.r.append(reg); ci = len(s.v) - 1; n = len(R)
+    s.v.append(c); s.w.append(w); s.r.append(reg); s.uv.append((0., c[1])); ci = len(s.v) - 1; n = len(R)
     for k in range(n):
       a, b = R[k], R[(k + 1) % n]
       s.f.append((ci, a, b) if up else (ci, b, a))
@@ -68,6 +74,7 @@ class Mesh:
       k = taper if dy > 0 else 1
       for dx, dz in ((-1, 1), (1, 1), (1, -1), (-1, -1)):
         s.v.append((x + dx * sx / 2 * k, y + dy * sy / 2, z + dz * sz / 2 * k)); s.w.append(w); s.r.append(reg); P.append(len(s.v) - 1)
+        s.uv.append(((dx + 1) * sx / 2 + (dz + 1) * sz / 4, y + dy * sy / 2))
     b0, t0 = P[:4], P[4:]
     s.bridge(b0, t0); s.f += [(b0[0], b0[2], b0[1]), (b0[0], b0[3], b0[2]), (t0[0], t0[1], t0[2]), (t0[0], t0[2], t0[3])]
 
@@ -103,7 +110,7 @@ def body(tname, sil):
   if coat:   # coat body continues the torso line down over the hips
     T[0] = tor(.885, .17 * t['hip'] * g, .12 * g, W('hips', 1), top); T[1] = tor(.97, .172 * t['hip'] * g, .118 * g, W('hips', 1), top)
     T[2] = T[3]
-  Rt = tube(m, [q[:4] + (q[4],) for q in T], 8, top, capA=not (coat or skirtish))
+  Rt = tube(m, [q[:4] + (q[4],) for q in T], NT, top, capA=not (coat or skirtish))
   # neck (skin) and collar
   tube(m, [((0, 1.47 * s, -.005), .055, .05, W('neck', .5, 'chest', .5), 'skin'), ((0, 1.545 * s, -.008), .05, .047, W('neck', .3, 'head', .7), 'skin')], 6, 'skin')
   # ---- skirt / coat skirt: cone from the hips to the knee, weighted to hips + thighs by side
@@ -115,11 +122,12 @@ def body(tname, sil):
     R = []
     for i, (c, rx, rz) in enumerate(rings):
       ids = []
-      for k in range(10):
-        a = 2 * math.pi * k / 10; x = math.sin(a) * rx; z = math.cos(a) * rz
+      for k in range(NS):
+        a = 2 * math.pi * k / NS; x = math.sin(a) * rx; z = math.cos(a) * rz
         side = 'L' if x > 0 else 'R'; f = min(1, abs(x) / rx * 1.4)
         w = W('hips', 1) if i == 0 else W('thigh' + side, .55 * f + (.25 if i == 2 else 0), 'hips', 1 - .55 * f - (.25 if i == 2 else 0))
         m.v.append((c[0] + x, c[1], c[2] + z)); m.w.append(w); m.r.append(reg); ids.append(len(m.v) - 1)
+        am = min(a, 2 * math.pi - a); m.uv.append((am * (rx + rz) / 2, c[1]))
       R.append(ids)
     for i in range(2): m.bridge(R[i], R[i + 1])
     if coat:   # hem trim
@@ -130,17 +138,17 @@ def body(tname, sil):
     legreg_up = 'bottom'; legreg_lo = 'skin' if (skirtish or shorts) else 'bottom'
     rT = .088 * g * t['hip'] ** .5; rK = .058 * g ** .7; rA = .04 * g ** .5
     if shorts:
-      tube(m, [((x, th[1], 0), rT, rT * .95, W('thigh' + side, 1)), ((x, (th[1] + kn[1]) / 2 - .03 * s, .005), rT * .92, rT * .9, W('thigh' + side, 1))], 6, 'bottom', a0=math.pi / 6)
+      tube(m, [((x, th[1], 0), rT, rT * .95, W('thigh' + side, 1)), ((x, (th[1] + kn[1]) / 2 - .03 * s, .005), rT * .92, rT * .9, W('thigh' + side, 1))], NL, 'bottom', a0=math.pi / NL)
       tube(m, [((x, (th[1] + kn[1]) / 2 - .03 * s, .005), rT * .7, rT * .68, W('thigh' + side, 1)), ((x, kn[1], .01), rK, rK, W('thigh' + side, .5, 'shin' + side, .5)),
-               ((x, an[1] + .03, -.005), rA, rA, W('shin' + side, 1))], 6, 'skin', a0=math.pi / 6)
+               ((x, an[1] + .03, -.005), rA, rA, W('shin' + side, 1))], NL, 'skin', a0=math.pi / NL)
     else:
       top_y = th[1]
       if skirtish:   # bare/tights legs start inside the skirt
         tube(m, [((x * .9, .80 * s, 0), rT * .85, rT * .8, W('thigh' + side, 1)), ((x, kn[1], .01), rK, rK, W('thigh' + side, .5, 'shin' + side, .5)),
-                 ((x, an[1] + .03, -.005), rA, rA, W('shin' + side, 1))], 6, 'skin', a0=math.pi / 6)
+                 ((x, an[1] + .03, -.005), rA, rA, W('shin' + side, 1))], NL, 'skin', a0=math.pi / NL)
       else:
         tube(m, [((x, top_y, 0), rT, rT * .95, W('thigh' + side, 1)), ((x, kn[1], .01), rK, rK, W('thigh' + side, .5, 'shin' + side, .5)),
-                 ((x, an[1] + .045, -.005), rA * 1.15, rA * 1.15, W('shin' + side, 1))], 6, 'bottom', a0=math.pi / 6)
+                 ((x, an[1] + .045, -.005), rA * 1.15, rA * 1.15, W('shin' + side, 1))], NL, 'bottom', a0=math.pi / NL)
     # shoe: tapered box, heel at the ankle, toe forward
     fl = .25 * (s ** .8); m.box((x, .045, .045 * s), .095 * g ** .3, .09, fl, W('foot' + side, 1), 'shoe', taper=.85)
   # ---- arms (6 sides): shoulder, elbow, wrist; hand box
@@ -153,10 +161,10 @@ def body(tname, sil):
     mid = ((ua[0] * .5 + fa[0] * .5, (ua[1] + fa[1]) / 2 - .02, 0), rS * .93, rS * .9, W('upperArm' + side, 1))
     wr = ((hd[0], hd[1] + .01, 0), rW, rW, W('foreArm' + side, 1))
     if coat or sil == 'skirt' and tname == 'child':
-      tube(m, [sh, mid, el, wr], 6, top)
+      tube(m, [sh, mid, el, wr], NL, top)
     else:   # short sleeve: cloth to mid upper arm, skin below
-      tube(m, [sh, mid], 6, top)
-      tube(m, [(mid[0], mid[1] * .82, mid[2] * .82, mid[3]), el, wr], 6, 'skin')
+      tube(m, [sh, mid], NL, top)
+      tube(m, [(mid[0], mid[1] * .82, mid[2] * .82, mid[3]), el, wr], NL, 'skin')
     m.box((hd[0], hd[1] - .075 * s ** .5, .005), .045 * g ** .3, .15 * s ** .5, .07, W('hand' + side, 1), 'skin', taper=.8)
   return m, B
 
@@ -187,6 +195,123 @@ def head_mesh(tname):
       a, b = ring[j], ring[(j + 1) % 8]
       F.append((ci, a, b) if top else (ci, b, a))
   return V, UV, F
+
+
+# ---------------- ④-2 accessories: rigid props riding one baked bone each (per body type, bind pose, game frame).
+# Texture = assets/crowd135/props135.png, 4x2 cells of 64x64 (textures135.py order); uv v runs down the image (flipY=false).
+PROP_CELL = {'backpack': 0, 'satchel': 1, 'bag_kraft': 2, 'bag_white': 3, 'tote': 4, 'cap': 5, 'beanie': 6, 'phone': 7}
+class Acc:
+  def __init__(s, cell): s.cell = cell; s.p = []; s.uv = []
+  def U(s, u, v): c = s.cell; return ((c % 4 + u) / 4, (c // 4 + v) / 2)
+  def tri(s, a, b, c, ua, ub, uc): s.p += [a, b, c]; s.uv += [s.U(*ua), s.U(*ub), s.U(*uc)]
+  def quad(s, a, b, c, d, r):
+    """a b c d counter-clockwise seen from outside: a = bottom-left, b = bottom-right, c = top-right, d = top-left of the image rect r"""
+    u0, v0, u1, v1 = r; s.tri(a, b, c, (u0, v1), (u1, v1), (u1, v0)); s.tri(a, c, d, (u0, v1), (u1, v0), (u0, v0))
+  def box(s, c, sx, sy, sz, F, taper=1., top=True):
+    x, y, z = c; hx, hy, hz = sx / 2, sy / 2, sz / 2; tx, tz = hx * taper, hz * taper
+    P = lambda i, j, k, up: (x + i * (tx if up else hx), y + (hy if up else -hy), z + k * (tz if up else hz))
+    # corners: (sign x, up?, sign z)
+    q = lambda a, b, c_, d, f: s.quad(P(*a), P(*b), P(*c_), P(*d), F[f])
+    q((-1, 0, 1, 0), (1, 0, 1, 0), (1, 0, 1, 1), (-1, 0, 1, 1), '+z') if False else None
+    s.quad(P(-1, 0, 1, 0), P(1, 0, 1, 0), P(1, 0, 1, 1), P(-1, 0, 1, 1), F['+z'])     # +z face, image right -> +x
+    s.quad(P(1, 0, -1, 0), P(-1, 0, -1, 0), P(-1, 0, -1, 1), P(1, 0, -1, 1), F['-z'])  # -z face, image right -> -x
+    s.quad(P(1, 0, 1, 0), P(1, 0, -1, 0), P(1, 0, -1, 1), P(1, 0, 1, 1), F['+x'])     # +x face, image right -> -z
+    s.quad(P(-1, 0, -1, 0), P(-1, 0, 1, 0), P(-1, 0, 1, 1), P(-1, 0, -1, 1), F['-x'])  # -x face, image right -> +z
+    if top: s.quad(P(-1, 0, 1, 1), P(1, 0, 1, 1), P(1, 0, -1, 1), P(-1, 0, -1, 1), F['top'])
+    s.quad(P(-1, 0, -1, 0), P(1, 0, -1, 0), P(1, 0, 1, 0), P(-1, 0, 1, 0), F['bot'])
+  def strip(s, pts, out, w, r):
+    """flat band along pts (list of points), width w, 'out' = function point -> outward normal"""
+    for i in range(len(pts) - 1):
+      a = Vector(pts[i]); b = Vector(pts[i + 1]); d = (b - a).normalized()
+      na = Vector(out(pts[i])); nb = Vector(out(pts[i + 1]))
+      sa = d.cross(na).normalized() * w / 2; sb = d.cross(nb).normalized() * w / 2
+      s.quad(tuple(a - sa), tuple(a + sa), tuple(b + sb), tuple(b - sb), r)
+
+def extent(meshes, y0, y1, axis, sign, regs=('top', 'coat', 'bottom')):
+  best = 0.
+  for m in meshes:
+    for v, r in zip(m.v, m.r):
+      if y0 <= v[1] <= y1 and r in regs: best = max(best, sign * v[axis])
+  return best
+
+def accessories(tname, meshes, B):
+  t = TYPES[tname]; s = t['h']; k = t['head']; sc = .8 if tname == 'child' else 1.; out = {}
+  P = lambda n: B[n][1]
+  # backpack on the chest bone, flat against the back
+  ch = P('chest')[1]; yb = ch - .08 * s; bh = .38 * sc; bw = .28 * sc; bd = .13 * sc
+  back = extent(meshes, yb - bh / 2, yb + bh / 2, 2, -1) + .006
+  A = Acc(PROP_CELL['backpack']); side = (.04, .35, .12, .65); topr = (.3, .03, .7, .1)
+  A.box((0, yb, -back - bd / 2), bw, bh, bd, {'-z': (0, 0, 1, 1), '+z': side, '+x': side, '-x': side, 'top': topr, 'bot': side}, taper=.86)
+  fz = extent(meshes, 1.2 * s, 1.36 * s, 2, 1) + .008
+  for sg in (1, -1):
+    sx = sg * .085 * t['sh']
+    pts = [(sx * 1.1, yb + bh / 2 - .02, -back - .01), (sx, P('chest')[1] + .155 * s, -.07), (sx * 1.05, P('chest')[1] + .17 * s, .0), (sx * 1.15, P('chest')[1] + .12 * s, fz * .8), (sx * 1.25, ch - .05 * s, fz)]
+    A.strip(pts, lambda q: (0, .6, 0) if abs(q[2]) < .03 else (0, 0, 1 if q[2] > 0 else -1), .045 * sc, side)
+  out['backpack'] = ('chest', A)
+  # crossbody satchel on the spine bone: bag at the right hip (-x), strap over the left shoulder
+  A = Acc(PROP_CELL['satchel']); yh = .99 * s; sh_, sw, sd = .2 * sc, .28 * sc, .07 * sc
+  hx = extent(meshes, yh - sh_ / 2, yh + sh_ / 2, 0, -1) + .008
+  edge = (.03, .3, .09, .6)
+  A.box((-hx - sd / 2, yh, .03), sd, sh_, sw, {'-x': (0, 0, 1, 1), '+x': edge, '+z': edge, '-z': edge, 'top': (.3, .02, .7, .08), 'bot': edge})
+  fz2 = lambda y: extent(meshes, y - .05, y + .05, 2, 1) + .01
+  bz2 = lambda y: extent(meshes, y - .05, y + .05, 2, -1) + .01
+  shy = P('chest')[1] + .16 * s; shx = .1 * t['sh']
+  front = [(-hx - .01, yh + sh_ / 2, .03), (-hx * .55, yh + .16 * s, fz2(yh + .16 * s)), (-.02, 1.2 * s, fz2(1.2 * s)), (shx * .6, 1.36 * s, fz2(1.36 * s) * .9), (shx, shy, .0)]
+  backp = [(shx, shy, .0), (shx * .6, 1.36 * s, -bz2(1.36 * s) * .9), (-.02, 1.2 * s, -bz2(1.2 * s)), (-hx * .55, yh + .16 * s, -bz2(yh + .16 * s)), (-hx - .01, yh + sh_ / 2, .0)]
+  out_n = lambda q: (q[0] * .3, .5 if abs(q[2]) < .04 else 0, 1 if q[2] > 0 else -1)
+  A.strip(front, out_n, .035 * sc, edge); A.strip(backp, out_n, .035 * sc, edge)
+  out['satchel'] = ('spine', A)
+  # shopping bags in the right hand: handles from the grip, bag body hanging beside the leg, print on both faces
+  hd = P('handR'); grip = hd[1] - .11 * s ** .5
+  for name, (bt, bhh, bww, hl) in {'bag_kraft': (.11, .32, .26, .1), 'bag_white': (.1, .27, .32, .09), 'tote': (.035, .34, .32, .2)}.items():
+    A = Acc(PROP_CELL[name]); bt *= sc; bhh *= sc; bww *= sc; hl *= sc
+    ytop = grip - hl; yc = ytop - bhh / 2
+    xb = max(abs(hd[0]), extent(meshes, yc - bhh / 2, ytop, 0, -1) + bt / 2 + .015)
+    gus = (.02, .4, .07, .7)
+    A.box((-xb, yc, .0), bt, bhh, bww, {'-x': (0, 0, 1, 1), '+x': (0, 0, 1, 1), '+z': gus, '-z': gus, 'top': gus, 'bot': gus})
+    for zz in (-bww * .22, bww * .22):   # two handles, each a thin inverted V from the bag rim to the grip
+      pts = [(-xb, ytop, zz), (-xb + (xb - abs(hd[0])) * .5, (ytop + grip) / 2 + .02 * sc, zz * .5), (-abs(hd[0]), grip, .0)]
+      A.strip(pts, lambda q: (-1, 0, 0), .014, gus)
+    out[name] = ('handR', A)
+  # phone in the left hand, back facing out
+  hl_ = P('handL'); A = Acc(PROP_CELL['phone'])
+  A.box((hl_[0] + .005, hl_[1] - .11 * s ** .5, .045), .072 * sc, .15 * sc, .009, {'+z': (0, 0, 1, 1), '-z': (.3, .5, .7, .9), '+x': (.0, .4, .05, .6), '-x': (.0, .4, .05, .6), 'top': (.0, .4, .05, .6), 'bot': (.0, .4, .05, .6)})
+  out['phone'] = ('handL', A)
+  # hats on the head bone: dome over the head130 crown (+ hair band margin), cap brim / beanie cuff
+  y0 = 1.525 * s; Hh = .245 * k; zc = .012 * k
+  def dome(A, rings, apex, uvf, n=10):
+    R = []
+    for hf, rx, rz in rings:
+      R.append([(math.sin(2 * math.pi * j / n) * rx, y0 + hf * Hh, math.cos(2 * math.pi * j / n) * rz + zc) for j in range(n)])
+    top = (0, y0 + apex * Hh, zc)
+    for i in range(len(R) - 1):
+      for j in range(n):
+        a, b, c_, d = R[i][j], R[i][(j + 1) % n], R[i + 1][(j + 1) % n], R[i + 1][j]
+        A.tri(a, c_, b, uvf(a), uvf(c_), uvf(b)); A.tri(a, d, c_, uvf(a), uvf(d), uvf(c_))
+    for j in range(n):
+      a, b = R[-1][j], R[-1][(j + 1) % n]; A.tri(a, top, b, uvf(a), uvf(top), uvf(b))
+    return R
+  m_ = .014 * k
+  A = Acc(PROP_CELL['cap'])
+  rings = [(.64, .081 * k + m_, .099 * k + m_), (.8, .075 * k + m_, .092 * k + m_), (.93, .052 * k + m_, .066 * k + m_)]
+  def capuv(q):
+    if q[2] > zc - .01: return (min(1, max(0, .5 + q[0] / (2 * (.081 * k + m_) * 1.05))), min(1, max(0, 1 - (q[1] - y0 - .64 * Hh) / (.4 * Hh))))
+    return (.12, .5)
+  R = dome(A, rings, 1.02, capuv)
+  n = len(R[0]); ring0 = R[0]
+  for j in list(range(n - 3, n)) + list(range(0, 3)):   # brim over the front 6 segments
+    a = ring0[j]; b = ring0[(j + 1) % n]
+    ext = lambda q, f: (q[0] * 1.15, q[1] - .012 * k, q[2] + (q[2] - zc) * .9 * f)
+    a2 = ext(a, 1); b2 = ext(b, 1)
+    A.quad(a, b, b2, a2, (.2, .9, .8, .98)); A.quad(a2, b2, b, a, (.2, .9, .8, .98))
+  out['cap'] = ('head', A)
+  A = Acc(PROP_CELL['beanie']); mb = .018 * k
+  rings = [(.6, .082 * k + mb, .1 * k + mb), (.68, .083 * k + mb, .101 * k + mb), (.68, .079 * k + m_, .097 * k + m_), (.84, .07 * k + m_, .087 * k + m_), (.97, .044 * k + m_, .056 * k + m_)]
+  def beuv(q):
+    a = math.atan2(q[0], q[2] - zc); return (abs(a) / math.pi, min(1, max(0, 1 - (q[1] - y0 - .6 * Hh) / (.48 * Hh))))
+  dome(A, rings, 1.06, beuv)
+  out['beanie'] = ('head', A)
+  return out
 
 # ---------------- Blender scene
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -264,7 +389,7 @@ def key_clips(rig, tname):
     for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT'
   return spans
 
-rigs = {}; heads = {}; bodies = []
+rigs = {}; heads = {}; bodies = []; accs = {}
 for tname in TYPES:
   rig = make_armature(tname); rigs[tname] = (rig, key_clips(rig, tname))
   for sil in SILS:
@@ -278,9 +403,10 @@ for tname in TYPES:
     mod = ob.modifiers.new('rig', 'ARMATURE'); mod.object = rig; ob.parent = rig
     bodies.append((tname, sil, ob, m))
   heads[tname] = head_mesh(tname)
+  accs[tname] = accessories(tname, [x[3] for x in bodies if x[0] == tname], B)
 
 dg = bpy.context.evaluated_depsgraph_get()
-blobs = bytearray(); meta = {'version': '135x', 'fps': 24, 'clips': {}, 'bodies': [], 'heads': {}, 'posScale': 1 / 8192, 'regions': REG}
+blobs = bytearray(); meta = {'version': '135y', 'fps': 24, 'clips': {}, 'bodies': [], 'heads': {}, 'posScale': 1 / 8192, 'regions': REG}
 def put(b):
   global blobs
   while len(blobs) % 4: blobs.append(0)
@@ -302,20 +428,33 @@ for tname, sil, ob, m in bodies:
   idx = struct.pack(f'<{len(m.f)*3}H', *[i for f in m.f for i in f])
   ys = [v[1] for v in m.v]
   meta['bodies'].append({'type': tname, 'sil': sil, 'verts': nv, 'tris': len(m.f), 'height': max(ys), 'index': put(idx),
-                         'region': put(bytes(REG[r] for r in m.r)), 'pos': put(bytes(pos)), 'nrm': put(bytes(nrm))})
+                         'region': put(bytes(REG[r] for r in m.r)), 'pos': put(bytes(pos)), 'nrm': put(bytes(nrm)),
+                         'uv': put(struct.pack(f'<{nv*2}f', *[c for u in m.uv for c in u]))})
+  assert len(m.uv) == nv
   print('body', tname, sil, nv, 'verts', len(m.f), 'tris')
 for tname, (V, UV, F) in heads.items():
-  rig, spans = rigs[tname]; pb = rig.pose.bones['head']; mats = bytearray()
+  rig, spans = rigs[tname]; BM = {b: bytearray() for b in ('head', 'spine', 'chest', 'hips', 'handL', 'handR')}
   for name, f in frames:
     scn.frame_set(spans[name][0] + f); bpy.context.view_layer.update()
-    D = rig.matrix_world @ pb.matrix @ pb.bone.matrix_local.inverted()
-    # convert the Blender-space deformation matrix to the game frame: G = C^-1 D C, C maps game->blender
-    C = Matrix(((1, 0, 0, 0), (0, 0, -1, 0), (0, 1, 0, 0), (0, 0, 0, 1)))
-    Gm = C.inverted() @ D @ C
-    mats += struct.pack('<12f', *[Gm[r][c] for c in range(4) for r in range(3)])
+    for bn, mats_b in BM.items():
+      pb = rig.pose.bones[bn]
+      D = rig.matrix_world @ pb.matrix @ pb.bone.matrix_local.inverted()
+      # convert the Blender-space deformation matrix to the game frame: G = C^-1 D C, C maps game->blender
+      C = Matrix(((1, 0, 0, 0), (0, 0, -1, 0), (0, 1, 0, 0), (0, 0, 0, 1)))
+      Gm = C.inverted() @ D @ C
+      mats_b += struct.pack('<12f', *[Gm[r][c] for c in range(4) for r in range(3)])
+  mats = BM['head']
   meta['heads'][tname] = {'verts': len(V), 'tris': len(F), 'pos': put(struct.pack(f'<{len(V)*3}f', *[c for v in V for c in v])),
                           'uv': put(struct.pack(f'<{len(UV)*2}f', *[c for u in UV for c in u])), 'index': put(struct.pack(f'<{len(F)*3}H', *[i for f in F for i in f])),
-                          'mat': put(bytes(mats))}
+                          'mat': put(bytes(mats)), 'bones': {b: put(bytes(v)) for b, v in BM.items() if b != 'head'}}
+  ac = {}
+  for an, (bone, A) in accs[tname].items():
+    nn = []
+    for i in range(0, len(A.p), 3):
+      a, b, c = (Vector(A.p[i + j]) for j in range(3)); nv_ = (b - a).cross(c - a); nv_ = nv_.normalized() if nv_.length > 1e-9 else Vector((0, 1, 0)); nn += [nv_] * 3
+    ac[an] = {'bone': bone, 'verts': len(A.p), 'pos': put(struct.pack(f'<{len(A.p)*3}f', *[c for p_ in A.p for c in p_])),
+              'nrm': put(struct.pack(f'<{len(nn)*3}f', *[c for p_ in nn for c in p_])), 'uv': put(struct.pack(f'<{len(A.uv)*2}f', *[c for u in A.uv for c in u]))}
+  meta['heads'][tname]['acc'] = ac
 J = json.dumps(meta, separators=(',', ':')).encode()
 pad = (4 - (len(J) + 4) % 4) % 4; J += b' ' * pad
 with open(OUT + '/crowd135.bin', 'wb') as fh: fh.write(struct.pack('<I', len(J))); fh.write(J); fh.write(blobs)

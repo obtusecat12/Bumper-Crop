@@ -38,7 +38,7 @@ import {canalBlock,CANAL} from './canal128-layout.js?v=128';
 import {subwayBlockTask,subwayFloor,subwayState} from './subway128.js?v=128';
 import {subwayStairs} from './subway128-layout.js?v=128';
 import {createTraffic132} from './traffic132.js?v=135t';
-import {createCrowd135} from './crowd135.js?v=135x'; // V135-capital ④-1 SoHo fair pedestrians
+import {createCrowd135} from './crowd135.js?v=135y'; // V135-capital ④-1/④-2 SoHo fair pedestrians
 import {bakeFixed133} from './city-bake133.js?v=135g'; // V133-bake-city
 import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=return-1';
 const B=CITY_BLOCK,Y=EXIT_CITY_Y;
