@@ -17,7 +17,7 @@ import {RETURN_LENGTH,RETURN_MOUTH,returnPoint,returnSample,returnFloor,worldToR
 import {initializeTikiExterior80} from './tiki-additions-materials-v80.js';
 import {availableTikiSeat80} from './tiki-plan-v80.js';
 import {initializeTikiTextures} from './tiki-materials-v76.js';
-import {prepareTikiRoom,warmTikiRoom} from './tiki-room-garden-v81.js?v=133b';
+import {prepareTikiRoom,warmTikiRoom} from './tiki-room-garden-v81.js?v=134a';
 import {GARDEN81,nearGardenDoor81,atGardenReturn81,resolveGarden81} from './tiki-garden-plan-v86.js';
 import {nearTikiDoor,TIKI_ARRIVAL,atTikiExit,resolveTiki} from './tiki-plan-v80.js';
 import {cityMapWorld,findCityLanding,cityLocalPose,createCityTransit} from './city-teleport-v76.js';
