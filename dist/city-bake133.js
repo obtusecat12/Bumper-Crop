@@ -7,18 +7,24 @@
 // Off with ?bake=0 (nothing touched).
 import {bake133Enabled,prepareSky133,keySky133,fillBake133} from './venue133-bake.js?v=133c';
 const MOVING=/water|glass|flame|fire|smoke|steam|spray|flag|cloth|garment|laundry|rain|fountain|jet|door|gate|leaf|leaves|foliage|blade|wheel|fan|traffic|signal|glow|halo|beam/i;
-export function bakeFixed133(roots,{data,exportName,skip=null,delay=2500,gain=.8,keep=1,floor=.38,fine=null,over=null,stream=null}={}){
+export function bakeFixed133(roots,{data,exportName,skip=null,delay=2500,gain=.8,keep=1,floor=.38,fine=null,over=null,stream=null,hold=false}={}){
  if(!bake133Enabled())return null;
  const filter=o=>{if(MOVING.test(o.name||'')||MOVING.test(o.material?.name||''))return false;for(let p=o;p;p=p.parent){if(p.userData?.campDynamic||p.userData?.noBake133)return false;if(skip&&skip.has(p))return false;}return true;};
  const prep=prepareSky133(roots,{filter,gain,keep,floor});prep.name=exportName;
+ // V135 ②c-2b-2: hold=true → roots may still be empty shells; nothing is keyed until prep.addLate(objs) prepares the cooked
+ // geometry (same patched materials) and restores the exact original list order (= same bake keys as an eager build).
+ let release=()=>{};prep.hold=!!hold;prep.holdP=hold?new Promise(r=>release=r):Promise.resolve();
+ prep.addLate=objs=>{const late=prepareSky133(roots.filter(([r])=>objs.includes(r)),{filter,gain,keep,floor,share:prep});
+  const order=new Map();let i=0;for(const[r]of roots)r?.traverse(o=>order.set(o,i++));prep.list=[...prep.list,...late.list].sort((a,b)=>order.get(a.mesh)-order.get(b.mesh));
+  prep.materials=prep._mats?.size??prep.materials;prep.hold=false;release();};
  // V133-L10-fire: fine=[[subRoot,L]] re-subdivides meshes under a small sub-root (outhouse, table props) to a finer edge length.
  if(fine)for(const e of prep.list)for(let p=e.mesh;p;p=p.parent){const f=fine.find(q=>q[0]===p);if(f){e.L=Math.min(e.L,f[1]);break;}}
  // V135-capital ②c: stream={index:[url,exportName],base,worldToCity} = per-cell lazy capital bake (capital135-stream.js); nothing is
  // keyed or fetched until the owner calls prep.tick(wx,wz) near the capital. ?bake135=0 = old eager node bake.
  if(stream&&!/[?&]bake135=0\b/.test(globalThis.location?.search||'')){let s=null,loading=false;
-  prep.tick=(wx,wz)=>{if(s){s.tick(wx,wz);return;}if(loading)return;loading=true;Promise.all([import(stream.index[0]),import('./capital135-stream.js?v=135d')]).then(([m,cs])=>{s=cs.createCapitalStream(prep,{index:m[stream.index[1]],base:stream.base,worldToCity:stream.worldToCity});prep.stream=s;}).catch(e=>console.warn('[capital135] stream off',e));};
+  prep.tick=(wx,wz)=>{if(s){s.tick(wx,wz);return;}if(loading||prep.hold)return;loading=true;Promise.all([import(stream.index[0]),import('./capital135-stream.js?v=135d')]).then(([m,cs])=>{s=cs.createCapitalStream(prep,{index:m[stream.index[1]],base:stream.base,worldToCity:stream.worldToCity});prep.stream=s;}).catch(e=>console.warn('[capital135] stream off',e));};
   return prep;}
- prep.ready=new Promise(r=>setTimeout(r,delay)).then(async()=>{const t0=performance.now();await keySky133(prep);prep.keyMs=performance.now()-t0;
+ prep.ready=new Promise(r=>setTimeout(r,delay)).then(()=>prep.holdP).then(async()=>{const t0=performance.now();await keySky133(prep);prep.keyMs=performance.now()-t0;
   if(globalThis.__bake133NoData)return prep;const m=await import(data);let D=m[exportName];
   // V135-capital: over=[url,exportName] = Blender Cycles cell bakes (bc/scripts/bake135) that replace the node bake per mesh key; ?bake135=0 = node bake only
   if(over&&!/[?&]bake135=0\b/.test(globalThis.location?.search||'')){try{const o=(await import(over[0]))[over[1]];D=Object.assign({},D,o);prep.over=Object.keys(o).length;}catch(e){console.warn('[bake135] cells not applied',e);}}

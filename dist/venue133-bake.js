@@ -133,11 +133,11 @@ function patchSky(src,U){
 }
 function neutral(g){const n=g.attributes.position.count,u=new Uint8Array(n*4);for(let i=3;i<u.length;i+=4)u[i]=255;g.setAttribute('bake133',new T.BufferAttribute(u,4,true));}
 // roots: [[object3D, L], ...] (L = subdivision edge length in m for that root)
-export function prepareSky133(roots,{filter=null,gain=.6,keep=1,floor=.22}={}){
- const U={gain:{value:gain},keep:{value:keep},floor:{value:floor}},mats=new Map(),list=[];
+export function prepareSky133(roots,{filter=null,gain=.6,keep=1,floor=.22,share=null}={}){ // share = an earlier prep: reuse its uniforms + patched materials (V135 late roots)
+ const U=share?.uniforms||{gain:{value:gain},keep:{value:keep},floor:{value:floor}},mats=share?._mats||new Map(),list=[];
  for(const [r,L] of roots){if(!r)continue;r.traverse(o=>{if(!bakeable(o)||(filter&&!filter(o)))return;neutral(o.geometry);
   let m=mats.get(o.material);if(!m){m=patchSky(o.material,U);mats.set(o.material,m);}o.material=m;list.push({mesh:o,L,key:null});});}
- return {list,uniforms:U,materials:mats.size,hit:0,miss:0,verts:0,keyed:false,filled:false};
+ return {list,uniforms:U,materials:mats.size,hit:0,miss:0,verts:0,keyed:false,filled:false,_mats:mats};
 }
 const slice=async(t,budget)=>{if(performance.now()-t.v>budget){await new Promise(r=>setTimeout(r,0));t.v=performance.now();}};
 // subdivide + key (identical in the dump page and in game: same list order, same code)
