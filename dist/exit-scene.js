@@ -16,6 +16,7 @@ import {geo135Enabled,shell135,loadCapitalGeo135} from './capital135-geo.js?v=13
 import {soho135BuildingTask} from './soho135-street.js?v=135v'; // V135-capital ③ SoHo street frontage
 import {soho135FairTask} from './soho135-fair.js?v=135t'; // V135-capital ③-2 SoHo street fair (closed road x=-224)
 import {spire135Task} from './soho135-spire.js?v=135v'; // ③-3b SoHo focal spire tower
+import {sohoBake135} from './soho135-bake.js?v=135w'; // ③-3c per-block Blender bake of the streamed SoHo blocks
 import {CAPITAL135_LAZY} from './capital135/geo/lazy.js?v=135h'; // V135 ②c-2b-2b deferred roots (photo landmarks, milling mouth)
 import {ubox132} from './street132-props.js?v=132';
 import {createClinicDistrict} from './clinic-district.js?v=60';
@@ -146,7 +147,7 @@ export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
  const stats={mode:'10',blocks:0,buildings:approach.records.length+district.buildings+fabric.buildings,typologies:BUILDING_TYPES.length,triangles:0,draws:0,pending:0,district:'transition'};
  let city=false,origin='',wantedKey='',queue=[],job=null,disposed=false;
  function recount(){stats.blocks=blocks.size;stats.buildings=approach.records.length+district.buildings+fabric.buildings;stats.triangles=2;stats.draws=1;for(const g of[tiki.object,bath.object,approach.object,approach.early,references.object,joinedGround.object,district.object,fabric.object,fabricGround.object,backcourt.object,residue.object,...Array.from(blocks.values(),v=>v.object)]){const q=g.userData.cityStats||{triangles:0,draws:0};stats.triangles+=q.triangles;stats.draws+=q.draws;}for(const v of blocks.values())stats.buildings+=v.plan.buildings.length;stats.pending=queue.length+Number(!!job);}
- function commitBlock(v,key){blocks.set(key,v);root.add(v.object);onAdd(v.object);if(v.sub){root.add(v.sub.object);v.sub.object.updateMatrix();v.sub.object.matrixAutoUpdate=false;v.sub.object.updateMatrixWorld(true);}v.object.updateMatrix();v.object.matrixAutoUpdate=false;v.object.updateMatrixWorld(true);recount();}
+ function commitBlock(v,key){blocks.set(key,v);root.add(v.object);onAdd(v.object);sohoBake135(v,key,bake133);if(v.sub){root.add(v.sub.object);v.sub.object.updateMatrix();v.sub.object.matrixAutoUpdate=false;v.sub.object.updateMatrixWorld(true);}v.object.updateMatrix();v.object.matrixAutoUpdate=false;v.object.updateMatrixWorld(true);recount();}
  function removeBlock(key){const v=blocks.get(key);if(!v)return;if(v.sub){v.sub.object.removeFromParent();v.sub.object.traverse(m=>m.geometry?.dispose());}onRemove(v.object);v.object.removeFromParent();v.object.traverse(m=>m.geometry?.dispose());blocks.delete(key);}
  function requestAround(wx,wz,force=false){
   const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B),key=ix+','+iz+','+city;if(key===wantedKey&&!force)return;wantedKey=key;const gp=cityToWorld((ix+.5)*B,(iz+.5)*B);cityGround.position.set(gp.x,Y-.065,gp.z);cityGround.updateMatrix();groundPos.value.set(gp.x,gp.z);{let n=0;for(let dz=-2;dz<=2;dz++)for(let dx=-2;dx<=2;dx++){const c=canalBlock(ix+dx,iz+dz);if(c&&n<40)canalRects[n++].set((ix+dx)*B,(iz+dz)*B+CANAL.z0,(ix+dx+1)*B,(iz+dz)*B+CANAL.z1);for(const q of subwayStairs(ix+dx,iz+dz))if(n<40)canalRects[n++].set((ix+dx)*B+q.x0,(iz+dz)*B+q.z0,(ix+dx)*B+q.x1,(iz+dz)*B+q.z1);}for(;n<40;n++)canalRects[n].set(0,0,0,0);}
