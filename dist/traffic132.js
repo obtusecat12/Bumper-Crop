@@ -4,10 +4,10 @@
 // Collision: each car is an OBB solid fed to exit-scene resolve(). Off with ?traffic=0.
 import * as T from './vendor/three.module.min.js';
 import {cityToWorld,worldToCity,CITY_ANGLE} from './urban-layout.js?v=return-1';
-import {roadHeight} from './urban-streets.js?v=69';
+import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {car132Mesh,pickCar132} from './cars132.js?v=133c';
-import {T132,step132,trySpawn132,cull132,signal132,hash132} from './traffic132-core.js?v=132t';
+import {T132,step132,trySpawn132,cull132,signal132,hash132} from './traffic132-core.js?v=135t';
 const OFF=typeof location!=='undefined'&&/[?&]traffic=0\b/.test(location.search);
 const LIT={r:new T.Color(1,.025,.012),y:new T.Color(1,.42,.02),g:new T.Color(.03,1,.32)},DIM=[new T.Color(.045,.012,.01),new T.Color(.045,.032,.008),new T.Color(.008,.035,.02)];
 export function createTraffic132({blocks}){

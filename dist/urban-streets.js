@@ -48,7 +48,7 @@ function roads(b,cn){
  for(const x of[0,B])for(const z of[0,B]){const sx=x===0?1:-1,sz=z===0?1:-1;face(b,'asphalt',[[x,.045,z],[x,.045,z+sz*R],[x+sx*R,0,z+sz*R],[x+sx*R,.045,z]]);}
 }
 function corner(b,x,z,ry){b.push(x,0,z,ry);face(b,'sidewalk',[[0,.15,W],[W,.15,0],[W,.15,W],[0,.15,W]]);b.walk(W*.70,W*.70,W*.60,W*.60,.15);curb(b,W/2,W/2,W*Math.SQRT2,PI/4);b.pop();}
-function* frontageTask(b,seed,lod,ry,portal,exclude,canalSpan,hole){
+function* frontageTask(b,seed,lod,ry,portal,exclude,canalSpan,hole,noPark){
  const inHole=x=>hole&&x>hole[0]-1.2&&x<hole[1]+1.2;
  b.push(56,0,56,ry);b.push(-56,0,-56);
  for(let[a,c]of(portal?[[12,14],[16,53],[59,96],[98,100]]:[[12,14],[16,96],[98,100]])){if(exclude){if(a>=exclude[0]&&c<=exclude[1])continue;if(a<exclude[0]&&c>exclude[0])c=exclude[0];else if(a<exclude[1]&&c>exclude[1])a=exclude[1];}if(hole&&a<hole[1]&&c>hole[0]){for(const[e,f]of[[a,Math.max(a,hole[0])],[Math.min(c,hole[1]),c]])if(f-e>.01)slabs(b,e,f,R+.24,R+W);const e=Math.max(a,hole[0]),f=Math.min(c,hole[1]);slabs(b,e,f,R+.24,SUB.stairX0);slabs(b,e,f,SUB.stairX1,R+W);}else slabs(b,a,c,R+.24,R+W);curb(b,(a+c)/2,R,c-a,0,.15,14);yield;}
@@ -72,7 +72,7 @@ function* frontageTask(b,seed,lod,ry,portal,exclude,canalSpan,hole){
   if(seed%3!==0&&!inHole(44))place(b,44,.15,R+1.0,PI,P.addParkingMeter);if(!inHole(72))place(b,72,.15,R+1.0,PI,P.addParkingMeter);
   if(!inHole(23))place(b,23,.15,R+.58,PI,P.addStreetSign,{kind:seed%3?'restrict':'speed'});
   if(portal)for(const x of[52.5,59.5])place(b,x,.15,10.7,0,P.addBollard);
-  if(seed%3===0)place(b,70,.05,5.85,PI/2,S.addParkedSedan,{seed});yield;
+  if(seed%3===0&&!noPark)place(b,70,.05,5.85,PI/2,S.addParkedSedan,{seed});yield;
  }
  place(b,29,.022,R-.31,0,P.addStormDrain);place(b,92,.022,R-.31,0,P.addStormDrain);
  for(let k=0;k<5;k++){const x=20+r()*74,z=1+r()*5.7;let prev=[x,roadHeight(x,z)+.012,z];for(let j=0;j<5;j++){const next=[prev[0]+.3+r()*.55,roadHeight(prev[0],prev[2])+.012,prev[2]+(r()-.5)*.4];b.rod('rubber',prev,next,.015);prev=next;}}
@@ -88,7 +88,7 @@ export function* addBlockStreetsTask(b,plan,lod){
  const holeFor=side=>{for(const q of stairs){if(side===1&&q.axis==='z')return[B-q.z1,B-q.z0];if(side===0&&q.axis==='x')return[q.x0,q.x1];}return null;};
  roads(b,cn);yield;
  // Sidewalk ring surrounds occupied lots, with six-metre rear-access portals.
- const joinsLandmark=plan.ix===0&&plan.iz===4;for(let side=0;side<4;side++){if(cn&&((side===1&&cn.noRoadW)||(side===3&&cn.noRoadE)))continue;yield* frontageTask(b,plan.seed+side*29,lod,side*PI/2,side%2===0,joinsLandmark?(side===0?[0,33]:side===1?[76,112]:null):null,cn&&side%2===1,holeFor(side));}
+ const joinsLandmark=plan.ix===0&&plan.iz===4;for(let side=0;side<4;side++){if(cn&&((side===1&&cn.noRoadW)||(side===3&&cn.noRoadE)))continue;yield* frontageTask(b,plan.seed+side*29,lod,side*PI/2,side%2===0,joinsLandmark?(side===0?[0,33]:side===1?[76,112]:null):null,cn&&side%2===1,holeFor(side),plan.soho135&&side===('ab'.includes(plan.soho135)?1:3));}
  for(const[x,z,ry]of[[R,R,0],[B-R,R,-PI/2],[B-R,B-R,PI],[R,B-R,PI/2]]){if(joinsLandmark&&x===R&&z===R)continue;if(cn&&((x===R&&cn.noRoadW)||(x===B-R&&cn.noRoadE)))continue;corner(b,x,z,ry);yield;}
  // Four lanes total: 3.15 m travel lanes with narrow parking/curb space.
  const xr=e=>!(cn&&((e===0&&cn.noRoadW)||(e===B&&cn.noRoadE)));

@@ -9,7 +9,9 @@ const{B,LANE,BOX}=T132;
 export const hash132=(a,b=0,c=0)=>{let h=Math.imul(a|0,0x27d4eb2d)^Math.imul(b|0,0x165667b1)^Math.imul(c|0,0x9e3779b1);h^=h>>>15;h=Math.imul(h,0x85ebca6b);h^=h>>>13;h=Math.imul(h,0xc2b2ae35);h^=h>>>16;return(h>>>0)/4294967296;};
 // Authored / reserved blocks keep their own streets (urban-layout cityBlockPlan); open canal blocks lose their N-S roads.
 export const reserved132=(ix,iz)=>(ix===1&&iz===2)||((ix===-1||ix===0)&&iz>=-3&&iz<4);
-const segZ=(k,j)=>!reserved132(k-1,j)&&!reserved132(k,j)&&!canalBlock(k-1,j)&&!canalBlock(k,j);   // road x=k*B, z in [j*B,(j+1)*B]
+// V135-capital ③-2: the SoHo street fair closes road x=-224 for z 0..224 (soho135-fair.js sawhorses).
+export const closed135=(k,j)=>k===-2&&(j===0||j===1);
+const segZ=(k,j)=>!closed135(k,j)&&!reserved132(k-1,j)&&!reserved132(k,j)&&!canalBlock(k-1,j)&&!canalBlock(k,j);   // road x=k*B, z in [j*B,(j+1)*B]
 const segX=(k,j)=>!reserved132(k,j-1)&&!reserved132(k,j);                                           // road z=j*B, x in [k*B,(k+1)*B]
 // Can a car leave node (k,j) heading h ([hx,hz] unit axis vector)?
 export function exitOK(k,j,h){return h[1]>0?segZ(k,j):h[1]<0?segZ(k,j-1):h[0]>0?segX(k,j):segX(k-1,j);}
