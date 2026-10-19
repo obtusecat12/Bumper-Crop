@@ -21,8 +21,9 @@ import {retrofitSkinnedHead130} from './retro-head130-gen.js';
 import {cityToWorld,CITY_ANGLE} from './urban-layout.js?v=return-1';
 import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
-const A=new URL('./assets/crowd135/',import.meta.url).href,V='135z';
-const OFF=typeof location!=='undefined'&&/[?&]crowd=0\b/.test(location.search);
+import {createTierB135,createTierC135,bRecord135,PROPS135} from './crowd135-far.js?v=135l';
+const A=new URL('./assets/crowd135/',import.meta.url).href,V='135z',VS='135l';
+const OFF=typeof location!=='undefined'&&/[?&]crowd=0\b/.test(location.search),NOLOD=typeof location!=='undefined'&&/[?&]crowdlod=0\b/.test(location.search);
 export const CROWD135_FACES={
  m1:{g:'m',hairY:a=>Math.cos(a)<-.2?.34:.62},m2:{g:'m',hairY:a=>Math.cos(a)<-.2?.4:.66,beard:.22,nape:.3},m3:{g:'m',hairY:a=>Math.cos(a)<-.2?.36:.62,hairColor:0xb9b6ae},
  f1:{g:'f',long:1,hairY:a=>.04},f2:{g:'f',hairY:a=>Math.cos(a)<-.2?.36:.6},f3:{g:'f',long:1,hairY:a=>.06},
@@ -94,20 +95,50 @@ export function loadCrowd135(){return libP??=(async()=>{
    makeMaterial:tex=>{tex.minFilter=tex.magFilter=T.NearestFilter;tex.generateMipmaps=false;return Object.assign(new T.MeshLambertMaterial({map:tex}),{name:'crowd135 head130 '+key});}});
   const strip=geo=>{geo.deleteAttribute('skinIndex');geo.deleteAttribute('skinWeight');if(!geo.attributes.normal)geo.computeVertexNormals();return geo;};
   return heads[key]={front:strip(sk.geometry),frontMat:fm,rear:strip(r.mesh.geometry),rearMat:r.mesh.material,tris:sk.geometry.attributes.position.count/3+r.rearTriangles,mats:view(Float32Array,H.mat)};}
- return{meta,bodies,faces,skin,mat,head,acc,propMat,clips:meta.clips};
+ // ④-3 extras for tiers B/C: one head geometry per type, the head atlas (front + head130 rear per type/face key), garment
+ // cell means (linear) for the sprite colours, the baked sprite sheet (absent while it is being baked)
+ const EARF={man:'m1',woman:'f2',heavy:'m1',child:'c1'},headGeo=type=>head(type,EARF[type]);
+ const AW=1024,AH=1152,ad=new Uint8Array(AW*AH*4),atlas=new T.DataTexture(ad,AW,AH,T.RGBAFormat);atlas.colorSpace=T.SRGBColorSpace;atlas.flipY=false;atlas.minFilter=atlas.magFilter=T.NearestFilter;atlas.generateMipmaps=false;atlas.needsUpdate=true;
+ const tiles={};let ntile=0;
+ function headTile(type,fk){const key=type+'/'+fk;if(tiles[key]!==undefined)return tiles[key];const ti=tiles[key]=ntile++,H=head(type,fk);
+  const put=(t,src,top)=>{const x0=(t%8)*128,y0=Math.floor(t/8)*128;for(let r=0;r<128;r++)ad.set(src.subarray(r*512,r*512+512),((y0+r)*AW+x0)*4);};
+  const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');g.drawImage(faces[fk].image,0,0,128,128);put(ti*2,new Uint8Array(g.getImageData(0,0,128,128).data.buffer));
+  put(ti*2+1,H.rearMat.map.image.data);atlas.needsUpdate=true;return ti;}
+ const gm=new Float32Array(40*3);{const c=document.createElement('canvas');c.width=GW;c.height=GH;const g=c.getContext('2d');g.drawImage(garm.image,0,0);const d=g.getImageData(0,0,GW,GH).data,lin=v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;};
+  for(let ci=0;ci<40;ci++){const x0=(ci%8)*64+1,y0=Math.floor(ci/8)*64+1;let r=0,gg=0,b=0;for(let y=0;y<62;y++)for(let x=0;x<62;x++){const i=((y0+y)*GW+x0+x)*4;r+=lin(d[i]);gg+=lin(d[i+1]);b+=lin(d[i+2]);}gm.set([r/3844,gg/3844,b/3844],ci*3);}}
+ let sprites=null;try{sprites=await loader.loadAsync(A+'sprites135.png?v='+VS);sprites.colorSpace=T.NoColorSpace;sprites.flipY=false;sprites.minFilter=sprites.magFilter=T.NearestFilter;sprites.generateMipmaps=false;sprites.needsUpdate=true;}catch(e){console.warn('[crowd135] no sprite sheet',e);}
+ const uniformsB={garmMap:{value:garm},headAtlas:{value:atlas},propMap:{value:props},headAtlasSize:{value:new T.Vector2(AW,AH)}};
+ return{meta,bodies,faces,skin,hair,mat,head,acc,propMat,clips:meta.clips,view,headGeo,headTile,atlas,gm,sprites,uniformsB};
 })();}
 
 const _m=new T.Matrix4(),_c=new T.Color();
 // one pedestrian: seed -> look; update(t, clip) steps the baked pose at 24 Hz
-export function createPerson135(lib,seed,opts={}){
+// seed -> look (shared by tier A meshes and the tier B/C instance records)
+export function look135(lib,seed,opts={}){
  const types=['man','woman','heavy','child'],tw=[.36,.36,.14,.14];let u=r01(seed,1),ti=0;while(ti<3&&u>tw[ti]){u-=tw[ti];ti++;}
  const type=opts.type??types[ti],sil=opts.sil??['short','coat','skirt'][Math.floor(r01(seed,2)*3)];
- const B=lib.bodies.find(b=>b.type===type&&b.sil===sil),fl=type==='child'&&sil==='skirt'?GIRLS:FACE_BY_TYPE[type],fk=opts.face??fl[Math.floor(r01(seed,3)*fl.length)];
+ const bi=lib.bodies.findIndex(b=>b.type===type&&b.sil===sil),B=lib.bodies[bi],fl=type==='child'&&sil==='skirt'?GIRLS:FACE_BY_TYPE[type],fk=opts.face??fl[Math.floor(r01(seed,3)*fl.length)];
  const pick=(L,k)=>L[Math.floor(r01(seed,k)*L.length)];
  const wpick=(Wl,k,ok=()=>true)=>{for(let tr=0;tr<6;tr++){let u=r01(seed,k+tr*7);for(const[n,w]of Wl){if(u<w){if(ok(n))return n;break;}u-=w;}}return Wl[0][0];};
  const skirtish=sil==='skirt'&&type!=='man'&&type!=='heavy',fem=type==='woman'||GIRLS.includes(fk);
  const top=opts.top??(sil==='coat'?wpick(W_COATS,40):wpick(W_TOPS,40,n=>n!=='floral'||fem)),bot=opts.bot??(skirtish?wpick(W_SKIRTS,44):wpick(W_TROUS,44));
  const rT=recol(top,k=>r01(seed,50+k)),rB=recol(bot,k=>r01(seed,60+k)),sk=lib.skin[fk].clone(),shoe=new T.Color(pick(SHOE,6));
+ const AC=lib.acc[type]||{},props=opts.props??(()=>{const L=[],ra=r01(seed,30);
+  if(ra<.2)L.push('backpack');else if(ra<.32&&type!=='child')L.push('satchel');
+  if(r01(seed,31)<(opts.stand?.45:.28))L.push(['bag_kraft','bag_white','tote'][Math.floor(r01(seed,34)*3)]);
+  if(type!=='child'&&r01(seed,32)<.18)L.push('phone');
+  if(!CROWD135_FACES[fk].scarf&&r01(seed,33)<.22)L.push(r01(seed,35)<.6?'cap':'beanie');return L;})();
+ const propTint=n=>n==='backpack'||n==='cap'?pick(PROP_TINT,36+n.length):0xffffff;
+ const propMask=props.reduce((m,n)=>AC[n]?m|(1<<PROPS135.indexOf(n)):m,0);
+ return{seed,type,sil,bi,B,fk,top,bot,rT,rB,sk,shoe,props,propTint,propMask,t0:G135[top],b0:G135[bot],ears:!CROWD135_FACES[fk].long,
+  tintA:new T.Color(propTint('backpack')),tintB:new T.Color(propTint('cap')),hairC:new T.Color(CROWD135_FACES[fk].hairColor??lib.hair[fk])};}
+// tier C record: [body, frame col, skin, top, bottom, shoe, hair] with the garment cell means recoloured like the shader does
+function rec135(m,ci,n,r){const c=[0,0,0];for(let k=0;k<n;k++)for(let j=0;j<3;j++)c[j]+=m[(ci+k)*3+j]/n;
+ const y=.299*c[0]+.587*c[1]+.114*c[2],i=.596*c[0]-.274*c[1]-.322*c[2],q=.211*c[0]-.523*c[1]+.312*c[2],cs=Math.cos(r.h),sn=Math.sin(r.h),i2=cs*i-sn*q,q2=sn*i+cs*q;
+ return[y+.956*i2+.621*q2,y-.272*i2-.647*q2,y-1.106*i2+1.703*q2].map((v,j)=>Math.max(v,0)*r.v*r.t[j]);}
+export function cRecord135(lib,L){return new Float32Array([L.bi,0,L.sk.r,L.sk.g,L.sk.b,...rec135(lib.gm,L.t0,3,L.rT),...rec135(lib.gm,L.b0,1,L.rB),L.shoe.r,L.shoe.g,L.shoe.b,L.hairC.r,L.hairC.g,L.hairC.b]);}
+export function createPerson135(lib,seed,opts={}){
+ const L=opts.look??look135(lib,seed,opts),{type,sil,B,fk,top,bot,rT,rB,sk,shoe}=L,want=L.props,pick=(Q,k)=>Q[Math.floor(r01(seed,k)*Q.length)];
  const cell=c=>[(c%8)*64/GW,Math.floor(c/8)*64/GH],t0=G135[top],b0=G135[bot];
  // slot: 0 skin, 1 top front, 2 top back, 3 sleeve, 4 bottom, 5 shoe -> [tile|null, tint rgb, hue, value]
  const SL=[[null,[sk.r,sk.g,sk.b]],[cell(t0),rT.t,rT.h,rT.v],[cell(t0+1),rT.t,rT.h,rT.v],[cell(t0+2),rT.t,rT.h,rT.v],[cell(b0),rB.t,rB.h,rB.v],[null,[shoe.r,shoe.g,shoe.b]]];
@@ -119,12 +150,8 @@ export function createPerson135(lib,seed,opts={}){
  object.name='crowd135 '+type+'/'+sil+'/'+fk;body.frustumCulled=false;head.matrixAutoUpdate=false;
  head.add(new T.Mesh(H.front,H.frontMat),new T.Mesh(H.rear,H.rearMat));object.add(body,head);
  // props: seed picks; each prop rides its baked bone matrix
- const AC=lib.acc[type]||{},props=[],want=opts.props??(()=>{const L=[],ra=r01(seed,30);
-  if(ra<.2)L.push('backpack');else if(ra<.32&&type!=='child')L.push('satchel');
-  if(r01(seed,31)<(opts.stand?.45:.28))L.push(['bag_kraft','bag_white','tote'][Math.floor(r01(seed,34)*3)]);
-  if(type!=='child'&&r01(seed,32)<.18)L.push('phone');
-  if(!CROWD135_FACES[fk].scarf&&r01(seed,33)<.22)L.push(r01(seed,35)<.6?'cap':'beanie');return L;})();
- let ptris=0;for(const n of want){const a=AC[n];if(!a)continue;const tint=n==='backpack'||n==='cap'?pick(PROP_TINT,36+n.length):0xffffff;
+ const AC=lib.acc[type]||{},props=[];
+ let ptris=0;for(const n of want){const a=AC[n];if(!a)continue;const tint=L.propTint(n);
   const pm=new T.Mesh(a.geo,lib.propMat(tint));pm.matrixAutoUpdate=false;pm.frustumCulled=false;pm.name='crowd135 '+n;object.add(pm);props.push([pm,a.mats]);ptris+=a.tris;}
  const setM=(o,M,k)=>{const e=o.matrix.elements;e[0]=M[k];e[1]=M[k+1];e[2]=M[k+2];e[3]=0;e[4]=M[k+3];e[5]=M[k+4];e[6]=M[k+5];e[7]=0;e[8]=M[k+6];e[9]=M[k+7];e[10]=M[k+8];e[11]=0;e[12]=M[k+9];e[13]=M[k+10];e[14]=M[k+11];e[15]=1;o.matrixWorldNeedsUpdate=true;};
  let last=-1;
@@ -145,27 +172,39 @@ function planBlock(key,n){const kh=h32(key.length*977,[...key].reduce((a,c)=>a*3
    out.push({seed:s,stand:true,x,z,h:east?Math.PI/2:-Math.PI/2+0,rate:1});continue;}
   const dir=r01(s,10)<.5?1:-1;out.push({seed:s,lane:(dir>0?-.4:.4)-dir*(.5+r01(s,11)*2.3),dir,z:Z0+r01(s,12)*(Z1-Z0),speed:1.05+r01(s,13)*.45,phase:r01(s,14)*3,turn:0});}
  return out;}
+// ④-3 tiers: A (CPU meshes) < 12 m, B (VAT instancing) < 45 m, C (sprites) < 150 m, with 1–2 m hysteresis; ?crowdlod=0 = A only (old)
+const TA=[11,13],TB=[44,47],TC=150,_mw=new T.Matrix4(),_w={};
+const frameOf=(lib,t,clip,rate)=>{const C=lib.clips[clip];return C.start+(Math.floor(t*24*rate)%C.frames+C.frames)%C.frames;};
 export function createCrowd135({blocks,perBlock=36}){
- const object=new T.Group();object.name='V135 crowd';const solids=[];let lib=null,loading=false,last=0;const pops=new Map(),w={};
- function ensure(key,v){let P=pops.get(key);if(P)return P;P={key,plan:v.plan,group:new T.Group(),people:[]};P.group.name='crowd135 '+key;
-  for(const q of planBlock(key,perBlock)){const p=createPerson135(lib,q.seed,{stand:q.stand});P.people.push({q,p});P.group.add(p.object);}object.add(P.group);pops.set(key,P);return P;}
- function drop(key){const P=pops.get(key);if(!P)return;for(const{p}of P.people)p.dispose();P.group.removeFromParent();pops.delete(key);}
- function place(P,e,lx,lz,h,px,pz,t){const cx=P.plan.x+lx,cz=P.plan.z+lz;cityToWorld(cx,cz,w);const o=e.p.object;o.position.set(w.x,Y+roadHeight(cx,cz)+.004,w.z);o.rotation.set(0,CITY_ANGLE+h,0);
-  const d=Math.hypot(cx-px,cz-pz);o.visible=d<110;return d;}
- function step(t,dt,px,pz,frameN){solids.length=0;
-  for(const P of pops.values())for(const e of P.people){const q=e.q;let d;
-   if(q.stand){d=place(P,e,q.x,q.z,q.h,px,pz,t);if(d<110&&(d<40||frameN%3===0))e.p.update(t+q.seed%7,'idle',1);}
+ const object=new T.Group();object.name='V135 crowd';const solids=[];let lib=null,loading=false,last=0,tb=null,tc=null;const pops=new Map(),w={};
+ const stats={a:0,b:0,c:0,trisB:0,draws:0};
+ function tiers(){if(tb||!lib||NOLOD)return;tb=createTierB135(lib,lib.uniformsB);object.add(tb.group);if(lib.sprites){tc=createTierC135(lib.sprites);object.add(tc.group);}}
+ function ensure(key,v){let P=pops.get(key);if(P)return P;tiers();P={key,plan:v.plan,group:new T.Group(),people:[]};P.group.name='crowd135 '+key;
+  for(const q of planBlock(key,perBlock)){const L=look135(lib,q.seed,{stand:q.stand}),e={q,L,tier:-1,p:null};
+   if(!NOLOD){e.rB=bRecord135(L,lib.headTile(L.type,L.fk));e.rC=cRecord135(lib,L);}P.people.push(e);}
+  object.add(P.group);pops.set(key,P);return P;}
+ function drop(key){const P=pops.get(key);if(!P)return;for(const e of P.people)e.p?.dispose();P.group.removeFromParent();pops.delete(key);}
+ function step(t,dt,px,pz,frameN){solids.length=0;stats.a=stats.b=stats.c=0;tb?.begin();tc?.begin();
+  for(const P of pops.values())for(const e of P.people){const q=e.q;let lx,lz,h,tt,clip,rate;
+   if(q.stand){lx=q.x;lz=q.z;h=q.h;tt=t+q.seed%7;clip='idle';rate=1;}
    else{if(q.turn>0){q.turn-=dt;if(q.turn<=0){q.dir=-q.dir;q.lane=-q.lane+(r01(q.seed,q.z|0)-.5)*.6;q.lane=Math.max(-3.1,Math.min(3.1,q.lane));}}
     else{q.z+=q.dir*q.speed*dt;if(q.z>Z1||q.z<Z0){q.z=Math.max(Z0,Math.min(Z1,q.z));q.turn=.7+r01(q.seed,5)*.8;}}
-    d=place(P,e,q.lane,q.z,q.dir>0?0:Math.PI,px,pz,t);
-    if(d<110&&(d<40||frameN%3===0))e.p.update(t+q.phase,q.turn>0?'idle':'walk',q.speed/1.38);}
-   if(d<6){const o=e.p.object;solids.push({kind:'obb',x:o.position.x,z:o.position.z,w:.5,d:.4,ry:o.rotation.y});}}}
+    lx=q.lane;lz=q.z;h=q.dir>0?0:Math.PI;tt=t+q.phase;clip=q.turn>0?'idle':'walk';rate=q.speed/1.38;}
+   const cx=P.plan.x+lx,cz=P.plan.z+lz,d=Math.hypot(cx-px,cz-pz);cityToWorld(cx,cz,w);const y=Y+roadHeight(cx,cz)+.004,yaw=CITY_ANGLE+h;
+   const pt=e.tier,tier=NOLOD?(d<110?0:3):d<(pt===0?TA[1]:TA[0])?0:d<(pt===0||pt===1?TB[1]:TB[0])?1:d<TC?2:3;e.tier=tier;
+   if(tier===0){if(!e.p){e.p=createPerson135(lib,q.seed,{stand:q.stand,look:e.L});P.group.add(e.p.object);}
+    const o=e.p.object;o.position.set(w.x,y,w.z);o.rotation.set(0,yaw,0);if(NOLOD&&d>=40&&frameN%3)void 0;else e.p.update(tt,clip,rate);stats.a++;}
+   else{if(e.p){e.p.object.removeFromParent();e.p.dispose();e.p=null;}
+    if(tier<3){_mw.makeRotationY(yaw).setPosition(w.x,y,w.z);const f=frameOf(lib,tt,clip,rate);
+     if(tier===1){tb.push(e.L.bi,_mw,e.rB,f);stats.b++;}else if(tc){tc.push(_mw,e.rC,clip==='idle'?8:Math.floor((f-lib.clips.walk.start)/3));stats.c++;}}}
+   if(d<6)solids.push({kind:'obb',x:w.x,z:w.z,w:.5,d:.4,ry:yaw});}
+  stats.trisB=tb?tb.end():0;tc?.end();stats.draws=(tb?tb.draws:0)+(tc&&stats.c?1:0);}
  let frameN=0;
  function update(wx,wz,active,pc){object.visible=active&&!OFF;if(!object.visible){solids.length=0;return;}
   const want=[];for(const[k,v]of blocks())if(v.plan?.soho135==='a'||v.plan?.soho135==='b')if(v.lod===0||v.lod===undefined)want.push([k,v]);
   if(!lib){if(want.length&&!loading){loading=true;loadCrowd135().then(l=>{lib=l;}).catch(e=>console.warn('[crowd135]',e));}return;}
   const keep=new Set(want.map(x=>x[0]));for(const k of[...pops.keys()])if(!keep.has(k))drop(k);for(const[k,v]of want)ensure(k,v);
   const now=performance.now()*.001,dt=Math.min(.1,last?now-last:0);last=now;frameN++;step(now,dt,pc.x,pc.z,frameN);}
- function dispose(){for(const k of[...pops.keys()])drop(k);object.removeFromParent();}
- return{object,update,solids,dispose,step:(t,dt,px,pz)=>step(t,dt,px,pz,frameN++),ensure:(k,v)=>lib&&ensure(k,v),setLib:l=>{lib=l;},get pops(){return pops;}};
+ function dispose(){for(const k of[...pops.keys()])drop(k);tb?.dispose();tc?.dispose();object.removeFromParent();}
+ return{object,update,solids,dispose,stats,step:(t,dt,px,pz)=>step(t,dt,px,pz,frameN++),ensure:(k,v)=>lib&&ensure(k,v),setLib:l=>{lib=l;},get pops(){return pops;}};
 }
