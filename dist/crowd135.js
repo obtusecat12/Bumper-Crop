@@ -28,13 +28,14 @@ import {hairSet137,HAIR137_FACE,HAIR137_STYLES,HAIR137_HIDES_EARS} from './crowd
 import {cityToWorld,CITY_ANGLE} from './urban-layout.js?v=return-1';
 import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
-import {createTierB135,createTierC135,bRecord135,PROPS135} from './crowd135-far.js?v=137d';
-const A=new URL('./assets/crowd135/',import.meta.url).href,V='137e',VS='137c';
+import {createTierB135,createTierC135,bRecord135,PROPS135} from './crowd135-far.js?v=137f';
+const A=new URL('./assets/crowd135/',import.meta.url).href,V='137e',VS='137f';
 const Q=typeof location!=='undefined'?location.search:'',OFF=/[?&]crowd=0\b/.test(Q),NOLOD=/[?&]crowdlod=0\b/.test(Q),LO=/[?&]crowd=lo\b/.test(Q),WANTA=/[?&]crowdA=1\b/.test(Q);
 // ④-5 (135n) population + budget: fair blocks a/b 140 people, sidewalk blocks c/d (east frontage, -3,0 / -3,1) 60; ?crowd=lo
 // = 45 %, shorter tiers. Tier A (CPU meshes, 3–5 draws a person) is off by default: tier B draws the same baked frames,
 // garments and head130 heads from 0 m in one draw per body; ?crowdA=1 brings back A < 12 m (capped to the nearest 6).
-export const CROWD135_BUDGET=LO?{fair:63,side:27,bMax:80,bFar:26,cFar:100,a:0}:{fair:140,side:60,bMax:170,bFar:45,cFar:150,a:WANTA?6:0};
+// V137 Q5: bMax 170 -> 110 (lo 80 -> 55): Q1b bodies + one hair shell are ~2200 tris per tier-B person; keeps tier B <= ~235k tris
+export const CROWD135_BUDGET=LO?{fair:63,side:27,bMax:55,bFar:26,cFar:100,a:0}:{fair:140,side:60,bMax:110,bFar:45,cFar:150,a:WANTA?6:0};
 export const CROWD135_FACES={
  m1:{g:'m',hairY:a=>Math.cos(a)<-.2?.34:.62},m2:{g:'m',hairY:a=>Math.cos(a)<-.2?.4:.66,beard:.22,nape:.3},m3:{g:'m',hairY:a=>Math.cos(a)<-.2?.36:.62,hairColor:0xb9b6ae},
  f1:{g:'f',long:1,hairY:a=>.04},f2:{g:'f',hairY:a=>Math.cos(a)<-.2?.36:.6},f3:{g:'f',long:1,hairY:a=>.06},
@@ -161,7 +162,15 @@ export function look135(lib,seed,opts={}){
 function rec135(m,ci,n,r){const c=[0,0,0];for(let k=0;k<n;k++)for(let j=0;j<3;j++)c[j]+=m[(ci+k)*3+j]/n;
  const y=.299*c[0]+.587*c[1]+.114*c[2],i=.596*c[0]-.274*c[1]-.322*c[2],q=.211*c[0]-.523*c[1]+.312*c[2],cs=Math.cos(r.h),sn=Math.sin(r.h),i2=cs*i-sn*q,q2=sn*i+cs*q;
  return[y+.956*i2+.621*q2,y-.272*i2-.647*q2,y-1.106*i2+1.703*q2].map((v,j)=>Math.max(v,0)*r.v*r.t[j]);}
-export function cRecord135(lib,L){return new Float32Array([L.bi,0,L.sk.r,L.sk.g,L.sk.b,...rec135(lib.gm,L.t0,3,L.rT),...rec135(lib.gm,L.b0,1,L.rB),L.shoe.r,L.shoe.g,L.shoe.b,L.hairC.r,L.hairC.g,L.hairC.b]);}
+// V137 Q5 (137f): sprite rows = (body, hair style) pairs that can occur — every style of the body's face list, plus the thin
+// crop worn under a cap/beanie, plus -1 (no hair mesh: headscarf). Same order in scripts/crowd135/sprites135-bake.js.
+export function sprRows137(lib){if(lib._sprRows)return lib._sprRows;const rows=[],ix={};
+ lib.bodies.forEach((B,bi)=>{const fl=B.type==='child'&&B.sil==='skirt'?GIRLS:FACE_BY_TYPE[B.type],by=new Map();
+  for(const fk of fl){const st=HAIR137_FACE[fk]??null,hx=st?HAIR137_STYLES.indexOf(st):-1;if(!by.has(hx))by.set(hx,fk);}
+  const cr=HAIR137_STYLES.indexOf('crop');if(!by.has(cr)){const f=fl.find(k=>HAIR137_FACE[k]);if(f)by.set(cr,f);}
+  [...by.keys()].sort((a,b)=>a-b).forEach(hx=>{ix[bi*16+hx+1]=rows.length;rows.push({bi,hx,fk:by.get(hx)});});});
+ lib._sprRow=(bi,hx)=>ix[bi*16+hx+1]??ix[bi*16+1]??rows.findIndex(r=>r.bi===bi);return lib._sprRows=rows;}
+export function cRecord135(lib,L){sprRows137(lib);return new Float32Array([lib._sprRow(L.bi,L.hairIx??-1),0,L.sk.r,L.sk.g,L.sk.b,...rec135(lib.gm,L.t0,3,L.rT),...rec135(lib.gm,L.b0,1,L.rB),L.shoe.r,L.shoe.g,L.shoe.b,L.hairC.r,L.hairC.g,L.hairC.b]);}
 export function createPerson135(lib,seed,opts={}){
  const L=opts.look??look135(lib,seed,opts),{type,sil,B,fk,top,bot,rT,rB,sk,shoe}=L,want=L.props,pick=(Q,k)=>Q[Math.floor(r01(seed,k)*Q.length)];
  const cell=c=>[(c%8)*64/GW,Math.floor(c/8)*64/GH],t0=G135[top],b0=G135[bot];

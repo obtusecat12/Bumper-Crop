@@ -7,7 +7,7 @@
 //   generated head130 rears come from one head atlas (three 128² tiles per type/face key: front, rear, front blink (V137 Q3),
 //   filled when a block's people spawn). iMisc.w = head tile + 0.5 while that instance's eyes are shut (push(..., blink)).
 // C (45–150 m): one InstancedMesh of camera-facing quads for everyone. assets/crowd135/sprites135.png is baked offline from
-//   tier B by scripts/crowd135/sprites135-bake.js (12 bodies x 8 directions x 9 frames, 24x48 px cells): R = shading, G = slot
+//   tier B by scripts/crowd135/sprites135-bake.js (rows = body x hair style pairs, crowd135.js sprRows137; 8 directions x 9 frames, 24x48 px cells): R = shading, G = slot
 //   (skin / top / bottom / shoe / hair), B = detail; the person's own colours (cell averages of its garments after the same
 //   recolour, skin, hair, shoes) are instance attributes, so a person keeps its colours from A to C.
 import * as T from './vendor/three.module.min.js';
@@ -58,7 +58,7 @@ function patchB(mat,u){mat.onBeforeCompile=sh=>{Object.assign(sh.uniforms,u);
  mat.customProgramCacheKey=()=>'crowd135-vat';return mat;}
 
 // per-body VAT + per-type bone texture + merged geometry
-function buildBody(lib,bi){const B=lib.bodies[bi],S=lib.meta.posScale,nb=B.verts,F=B.P.length/(nb*3),MP=B.map,nv=B.split;
+function buildBody(lib,bi,withHair=true){const B=lib.bodies[bi],S=lib.meta.posScale,nb=B.verts,F=B.P.length/(nb*3),MP=B.map,nv=B.split;
  const vd=new Float32Array(nb*2*F*4);for(let f=0;f<F;f++)for(let i=0;i<nb;i++){const k=(f*nb+i)*3,a=(f*nb*2+i)*4,b=(f*nb*2+nb+i)*4;
   vd[a]=B.P[k]*S;vd[a+1]=B.P[k+1]*S;vd[a+2]=B.P[k+2]*S;vd[b]=B.N[k]/127;vd[b+1]=B.N[k+1]/127;vd[b+2]=B.N[k+2]/127;}
  const vat=new T.DataTexture(vd,nb*2,F,T.RGBAFormat,T.FloatType);vat.minFilter=vat.magFilter=T.NearestFilter;vat.needsUpdate=true;
@@ -71,7 +71,7 @@ function buildBody(lib,bi){const B=lib.bodies[bi],S=lib.meta.posScale,nb=B.verts
  const H=lib.headGeo(B.type);add(H.front,0,1,0);
  const ru=H.rear.attributes.uv,ear=i=>{const t=i-i%3;return ru.getY(t)<.285&&ru.getY(t+1)<.285&&ru.getY(t+2)<.285?3:2;};add(H.rear,0,2,0,ear);
  const AC=lib.acc[B.type]||{};PROPS135.forEach((n,k)=>{const a=AC[n];if(a)add(a.geo,BONES.indexOf(lib.meta.heads[B.type].acc[n].bone),4+k,n==='backpack'?1:n==='cap'?2:0);});
- lib.hairGeo(B.type).forEach((hg,s)=>{if(hg)add(hg,0,12+s,0);});
+ if(withHair)lib.hairGeo(B.type).forEach((hg,s)=>{if(hg)add(hg,0,12+s,0);});
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(P,3));g.setAttribute('normal',new T.Float32BufferAttribute(N,3));
  g.setAttribute('cuv',new T.Float32BufferAttribute(U,2));g.setAttribute('cinfo',new T.Float32BufferAttribute(C,3));g.setIndex(I);
  return{g,vat,nb,F,tris:I.length/3};}
@@ -87,22 +87,35 @@ const pack=c=>Math.round(Math.min(1,c.r)*255)*65536+Math.round(Math.min(1,c.g)*2
 export function bRecord135(L,headTile){const r=new Float32Array(26);
  r.set([L.t0,L.b0,(L.hairIx??-1)+1,L.hairC?pack(L.hairC):0, ...L.rT.t,L.rT.h, ...L.rB.t,L.rB.h, L.rT.v,L.rB.v,0,headTile, L.sk.r,L.sk.g,L.sk.b,L.ears?1:0, L.shoe.r,L.shoe.g,L.shoe.b,L.propMask, pack(L.tintA),pack(L.tintB)]);return r;}
 
-export function createTierB135(lib,uniforms){const group=new T.Group();group.name='crowd135 tier B';const bodies=[];
- const tex={},mats=[];
- function body(bi){if(bodies[bi])return bodies[bi];const b=buildBody(lib,bi),type=lib.bodies[bi].type;tex[type]??=boneTex(lib,type);
+// V137 Q5 (137f): hair is no longer merged into the body geometry (all 8 shells were submitted for every instance, 2138 of
+// 4074 tris); each (type, style) pair that is on screen gets its own small InstancedMesh fed with the same instance record.
+function hairGeo135(lib,type,s){const hg=lib.hairGeo(type)[s];if(!hg)return null;const p=hg.attributes.position,n=hg.attributes.normal,u=hg.attributes.uv,P=[],N=[],U=[],C=[],I=[];
+ for(let i=0;i<p.count;i++){P.push(p.getX(i),p.getY(i),p.getZ(i));N.push(n.getX(i),n.getY(i),n.getZ(i));U.push(u.getX(i),u.getY(i));C.push(0,12+s,0);}
+ if(hg.index)for(let i=0;i<hg.index.count;i++)I.push(hg.index.array[i]);else for(let i=0;i<p.count;i++)I.push(i);
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(P,3));g.setAttribute('normal',new T.Float32BufferAttribute(N,3));
+ g.setAttribute('cuv',new T.Float32BufferAttribute(U,2));g.setAttribute('cinfo',new T.Float32BufferAttribute(C,3));g.setIndex(I);return{g,tris:I.length/3};}
+export function createTierB135(lib,uniforms){const group=new T.Group();group.name='crowd135 tier B';const bodies=[],hairs={};
+ const tex={},mats=[],hmats={},dummy=new T.DataTexture(new Float32Array(4),1,1,T.RGBAFormat,T.FloatType);dummy.needsUpdate=true;
+ const mkInst=(o,geo,mat,cap,name)=>{const at=instAttrs(geo,cap),mesh=new T.InstancedMesh(geo,mat,cap);mesh.frustumCulled=false;mesh.count=0;mesh.name=name;return{mesh,at,cap};};
+ const grower=(o,geo,mat,name)=>()=>{const c=o.cap*2,old=Object.fromEntries(IATTR135.map(([n])=>[n,o.at[n].array])),om=o.mesh.instanceMatrix.array;group.remove(o.mesh);o.mesh.dispose();Object.assign(o,mkInst(o,geo,mat,c,name));for(const[n]of IATTR135)o.at[n].array.set(old[n]);o.mesh.instanceMatrix.array.set(om);group.add(o.mesh);};
+ function body(bi){if(bodies[bi])return bodies[bi];const b=buildBody(lib,bi,false),type=lib.bodies[bi].type;tex[type]??=boneTex(lib,type);
   const m=patchB(Object.assign(new T.MeshLambertMaterial(),{name:'crowd135 B'}),{...uniforms,vatTex:{value:b.vat},boneTex:{value:tex[type]},vatNB:{value:b.nb}});mats.push(m);
-  const mk=cap=>{const at=instAttrs(b.g,cap),mesh=new T.InstancedMesh(b.g,m,cap);mesh.frustumCulled=false;mesh.count=0;mesh.name='crowd135 B '+lib.bodies[bi].type+'/'+lib.bodies[bi].sil;return{mesh,at,cap};};
-  const o={b,...mk(cap0),n:0,grow(){const c=o.cap*2,old=Object.fromEntries(IATTR135.map(([n])=>[n,o.at[n].array])),om=o.mesh.instanceMatrix.array;group.remove(o.mesh);o.mesh.dispose();Object.assign(o,mk(c));for(const[n]of IATTR135)o.at[n].array.set(old[n]);o.mesh.instanceMatrix.array.set(om);group.add(o.mesh);}};group.add(o.mesh);return bodies[bi]=o;}
- function begin(){for(const o of bodies)if(o)o.n=0;}
+  const name='crowd135 B '+type+'/'+lib.bodies[bi].sil,o={b,n:0};Object.assign(o,mkInst(o,b.g,m,cap0,name));o.grow=grower(o,b.g,m,name);group.add(o.mesh);return bodies[bi]=o;}
+ function hair(type,s){const k=type+s;if(k in hairs)return hairs[k];const hb=hairGeo135(lib,type,s);if(!hb)return hairs[k]=null;tex[type]??=boneTex(lib,type);
+  const m=hmats[type]??=patchB(Object.assign(new T.MeshLambertMaterial(),{name:'crowd137 B hair'}),{...uniforms,vatTex:{value:dummy},boneTex:{value:tex[type]},vatNB:{value:0}});
+  const name='crowd137 B hair '+type+'/'+s,o={b:hb,n:0};Object.assign(o,mkInst(o,hb.g,m,16,name));o.grow=grower(o,hb.g,m,name);group.add(o.mesh);return hairs[k]=o;}
+ const all=()=>[...bodies.filter(Boolean),...Object.values(hairs).filter(Boolean)];
+ function begin(){for(const o of all())o.n=0;}
+ const put=(o,m,r,blink)=>{if(o.n>=o.cap)o.grow();const i=o.n++;o.mesh.setMatrixAt(i,m);let k=0;
+  for(const[n,s]of IATTR135){o.at[n].array.set(r.subarray(k,k+s),i*s);k+=s;}if(blink)o.at.iMisc.array[i*4+3]+=.5;};
  // add one instance: world matrix m (Matrix4), record r (bRecord135), frame f, blink = eyes shut this frame
- function push(bi,m,r,f,blink=false){const o=body(bi);if(o.n>=o.cap)o.grow();const i=o.n++;o.mesh.setMatrixAt(i,m);r[14]=f;let k=0;
-  for(const[n,s]of IATTR135){o.at[n].array.set(r.subarray(k,k+s),i*s);k+=s;}if(blink)o.at.iMisc.array[i*4+3]+=.5;}
- function end(){let tris=0;for(const o of bodies)if(o){o.mesh.count=o.n;if(o.n){o.mesh.instanceMatrix.needsUpdate=true;for(const[n]of IATTR135)o.at[n].needsUpdate=true;}tris+=o.n*o.b.tris;}return tris;}
- function dispose(){for(const o of bodies)if(o){o.mesh.dispose();o.b.g.dispose();o.b.vat.dispose();}for(const t of Object.values(tex))t.dispose();for(const m of mats)m.dispose();group.removeFromParent();}
- return{group,body,begin,push,end,dispose,get draws(){return bodies.filter(o=>o&&o.n).length;}};}
+ function push(bi,m,r,f,blink=false){r[14]=f;put(body(bi),m,r,blink);if(r[2]>.5){const h=hair(lib.bodies[bi].type,Math.round(r[2])-1);if(h)put(h,m,r,false);}}
+ function end(){let tris=0;for(const o of all()){o.mesh.count=o.n;if(o.n){o.mesh.instanceMatrix.needsUpdate=true;for(const[n]of IATTR135)o.at[n].needsUpdate=true;}tris+=o.n*o.b.tris;}return tris;}
+ function dispose(){for(const o of all()){o.mesh.dispose();o.b.g.dispose();}for(const o of bodies)if(o)o.b.vat.dispose();for(const t of Object.values(tex))t.dispose();dummy.dispose();for(const m of [...mats,...Object.values(hmats)])m.dispose();group.removeFromParent();}
+ return{group,body,begin,push,end,dispose,get draws(){return all().filter(o=>o.n).length;}};}
 
 // ---- tier C: sprite impostors
-export function createTierC135(sprites){const S=SPR135,W=S.cw*S.cols,H=S.ch*12;
+export function createTierC135(sprites){const S=SPR135,W=S.cw*S.cols,H=sprites?.image?.height||S.ch*12;   // V137 Q5: rows = (body, hair) pairs
  const g0=new T.PlaneGeometry(S.w,S.h);g0.translate(0,S.h/2,0);const g=new T.BufferGeometry();g.index=g0.index;g.setAttribute('position',g0.attributes.position);g.setAttribute('uv',g0.attributes.uv);g.setAttribute('normal',g0.attributes.normal);
  const A=[['sC',2],['sSkin',3],['sTop',3],['sBot',3],['sShoe',3],['sHair',3]];
  const mat=new T.MeshLambertMaterial({alphaTest:.5});mat.name='crowd135 C';
