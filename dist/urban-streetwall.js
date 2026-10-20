@@ -3,6 +3,7 @@ import {urbanRandom} from './urban-batch.js?v=69';
 import {WINDOW_COUNT} from './urban-assets.js?v=60';
 import {addRoofEquipment,addFireEscape,addRoofLetters} from './urban-buildings.js?v=132st';
 import {FacadeLayout} from './facade-layout.js?v=60';
+import {retail138Plan,retail138Body,retail138Task} from './retail138-shell.js?v=138a'; // V138 walk-in stores
 import {adFor,adFace,AD_CATALOG} from './advertising-assets.js?v=60';
 import {lightbox,bladeSign,buildingRoofAd,wallBanner} from './advertising-structures.js?v=60';
 const PI=Math.PI;
@@ -23,12 +24,14 @@ function airConditioner(b,x,y,z){b.box('metal',x,y,z+.38,.82,.52,.58);for(let k=
 /** Full-footprint party-wall building. Openings and fixtures share one elevation plan. */
 export function* addStreetwallBuildingTask(b,spec){
  const{w,d,seed=1,lod=0}=spec,r=urbanRandom(seed),style=(seed>>>0)%36,low=spec.floors<4,n=Math.max(1,spec.floors|0),walkup=spec.type==='brick_walkup',parking=spec.type==='parking_garage',glassTower=/international|glass|postmodern|tower/.test(spec.type)&&!walkup,fh=walkup?3.05:low?3.5:3.42,ground=4.30,h=ground+Math.max(0,n-1)*fh,z=d/2;
- const front=new FacadeLayout(w,h),hero=!!spec.heroWall,hasEscape=!lod&&(walkup||(!low&&style%6===0)),rearBanner=n>=7&&!hasEscape&&style%4===0,arcade=!low&&(style%5===0||spec.type==='office_podium');
+ const front=new FacadeLayout(w,h),hero=!!spec.heroWall,hasEscape=!lod&&(walkup||(!low&&style%6===0)),rearBanner=n>=7&&!hasEscape&&style%4===0,arcade=!spec.retail138&&!low&&(style%5===0||spec.type==='office_podium');
  const wall=walkup?(style%2?'brickRed':'brickOchre'):low?['stucco','travertine','brickOchre','cinder','sandstone','brickRed'][style%6]:['concrete','ribbed','travertine','sandstone','stucco'][style%5],trim=style%3?'concrete':'travertine';
- if(arcade){b.box(wall,0,(h+ground)/2,0,w,h-ground,d);b.box(wall,0,ground/2,-.85,w,ground,d-1.70);b.solid(0,-.83,w,d-1.66);b.box('sidewalk',0,.075,z-.76,w,.15,1.62);b.walk(0,z-.76,w,1.62,.15);}else{b.box(wall,0,h/2,0,w,h,d);b.solid(0,0,w,d);b.box(trim,0,.13,z,w,.26,.34);}b.box(trim,0,ground-.12,z+.08,w,.24,.26);
+ const bays=Math.max(2,Math.round(w/(4+(style%4)*.48))),bay=w/bays,RP=spec.retail138&&!hero?retail138Plan(spec,w,d,bay,bays):null;
+ if(RP){retail138Body(b,RP,{w,d,h,ground,wall});for(const[a,c]of[[-w/2,RP.x0],[RP.x1,w/2]])if(c-a>.02)b.box(trim,(a+c)/2,.13,z,c-a,.26,.34);front.reserve('retail138',(RP.x0+RP.x1)/2,2.4,RP.x1-RP.x0+.2,ground);}
+ else if(arcade){b.box(wall,0,(h+ground)/2,0,w,h-ground,d);b.box(wall,0,ground/2,-.85,w,ground,d-1.70);b.solid(0,-.83,w,d-1.66);b.box('sidewalk',0,.075,z-.76,w,.15,1.62);b.walk(0,z-.76,w,1.62,.15);}else{b.box(wall,0,h/2,0,w,h,d);b.solid(0,0,w,d);b.box(trim,0,.13,z,w,.26,.34);}b.box(trim,0,ground-.12,z+.08,w,.24,.26);
  front.reserve('floor-beam',0,ground-.12,w,.24,.02);
- const bays=Math.max(2,Math.round(w/(4+(style%4)*.48))),bay=w/bays;
- if(!spec.skipStorefront)for(let i=0;i<bays;i++){const x=-w/2+bay*(i+.5);shopBay(b,x,z+.02-(arcade?1.7:0),bay-.24,seed*31+i*17,style+i,front);b.box(wall,x-bay/2+.1,1.98,z+.07,arcade?.42:.2,3.95,arcade?.55:.38);if(arcade)b.solid(x-bay/2+.1,z+.07,.42,.55);yield;}
+ if(RP)yield* retail138Task(b,RP,{w,d,ground,lod});
+ if(!spec.skipStorefront)for(let i=0;i<bays;i++){if(RP&&i>=RP.i0&&i<RP.i1)continue;const x=-w/2+bay*(i+.5);shopBay(b,x,z+.02-(arcade?1.7:0),bay-.24,seed*31+i*17,style+i,front);b.box(wall,x-bay/2+.1,1.98,z+.07,arcade?.42:.2,3.95,arcade?.55:.38);if(arcade)b.solid(x-bay/2+.1,z+.07,.42,.55);yield;}
  if(!spec.skipStorefront)b.box(wall,w/2-.1,1.98,z+.07,.2,3.95,.38);
  const upperWindows=[];
  if(hero){const ww=Math.min(w-1.7,(h-7)/3),hh=ww*3;wallBanner(b,AD_CATALOG[119],0,5.5+hh/2,z+.08,ww,hh);front.reserve('hero-wallscape',0,5.5+hh/2,ww+.6,hh+.5);}

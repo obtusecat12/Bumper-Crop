@@ -30,7 +30,7 @@ import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=132st';
 import * as P from './urban-props.js?v=132st';
 import {shrub131} from './shrub131.js?v=131';   // V131 cross-card shrubs
 import * as S from './urban-smallprops.js?v=132st';
-import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=76';
+import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=138a';
 import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=135t';
 import {addReferenceMaterials} from './reference-materials.js?v=60';
 import {createReferenceScenes,referenceWaypoint,clinicToWorld} from './reference-scenes.js?v=60';
@@ -40,7 +40,7 @@ import {subwayStairs} from './subway128-layout.js?v=128';
 import {createTraffic132} from './traffic132.js?v=135t';
 import {createCrowd135} from './crowd135.js?v=137f'; // V135-capital ④-1/④-2/④-2b SoHo fair pedestrians
 import {bakeFixed133} from './city-bake133.js?v=135g'; // V133-bake-city
-import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=return-1';
+import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=138a';
 const B=CITY_BLOCK,Y=EXIT_CITY_Y;
 const fashionEye=clinicToWorld(69,50),fashionAim=clinicToWorld(88,64.75),fashionWaypoint={...fashionEye,label:'Level 11 · ECHO 服装广告',yaw:Math.atan2(fashionEye.x-fashionAim.x,fashionEye.z-fashionAim.z),pitch:.62};
 const ground=(x,z)=>exitSurface(exitSample(x,z,{}),height(x,z));
