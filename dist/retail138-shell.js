@@ -9,7 +9,7 @@
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import {retail138LayoutFill} from './retail138-grid.js?v=138f';
-import {retail138BakeMark,retail138BakeDefaults,retail138Bake,r138GridPlane} from './retail138-bake.js?v=138f'; // R5 per-store light bake // R4 Layout A/B grid generator over the R2/R3 module libraries
+import {retail138BakeMark,retail138BakeDefaults,retail138Bake,r138GridPlane} from './retail138-bake.js?v=138g'; // R5 per-store light bake // R4 Layout A/B grid generator over the R2/R3 module libraries
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138a',PI=Math.PI;
 function tex(name,srgb=true,rep=true){const t=new T.TextureLoader().load(A+name+'.webp?v='+V);if(srgb)t.colorSpace=T.SRGBColorSpace;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;t.anisotropy=4;t.magFilter=T.NearestFilter;return t;}
 // interior finishes glow a little from their own albedo: the cavity sits in the sun's shadow and has no real lamps until the R5 bake
@@ -26,6 +26,10 @@ export function addRetail138Materials(m){
  m.r138alu=new T.MeshStandardMaterial({color:0xa7aaa6,roughness:.42,metalness:.55,vertexColors:true});
  m.r138dark=new T.MeshStandardMaterial({color:0x2a2b2c,roughness:.8,vertexColors:true});
  m.r138lamp=new T.MeshStandardMaterial({color:0xf4f6ee,emissive:0xf1f4e6,emissiveIntensity:1.05,roughness:.5,vertexColors:true});
+ // R5c: dead troffers (no emission, baked like any surface) + one flickering tube bank per few markets
+ m.r138lampOff=new T.MeshStandardMaterial({color:0xb4b7b0,roughness:.55,vertexColors:true});
+ m.r138lampFlk=new T.MeshStandardMaterial({color:0xf4f6ee,emissive:0xe9f0e4,emissiveIntensity:.9,roughness:.5,vertexColors:true});
+ {const f=m.r138lampFlk;let t=0;setInterval(()=>{t++;const q=Math.sin(t*.37)*Math.sin(t*.13+1.7);f.emissiveIntensity=q>.82?.12:q>.55&&(t&1)?.35:.9;},70);}
  m.r138door=new T.MeshStandardMaterial({color:0x6d7470,roughness:.62,metalness:.25,vertexColors:true});
  m.r138awnR=new T.MeshStandardMaterial({color:0x9b2420,roughness:.9,side:T.DoubleSide,vertexColors:true});
  m.r138awnG=new T.MeshStandardMaterial({color:0x1f5a3a,roughness:.9,side:T.DoubleSide,vertexColors:true});
@@ -69,7 +73,10 @@ export function* retail138Task(b,P,{w,d,ground,lod}){
  b.box('r138lamp',sx,2.4,zb+.07,.34,.14,.05,0,.9);
  yield;
  // ---- lights ----
- if(market){for(let z=zb+1.6;z<zf-1.2;z+=2.44)for(let x=x0+1.6;x<x1-1.0;x+=3.0){b.box('r138alu',x,C-.012,z,.66,.02,1.26);b.box('r138lamp',x,C-.024,z,.56,.012,1.16);}}
+ if(market){let n=0,flk=(h>>>9)%3===0?(h>>>13)%7:-1;for(let z=zb+1.6;z<zf-1.2;z+=2.44)for(let x=x0+1.6;x<x1-1.0;x+=3.0,n++){
+   // R5c: ~1 in 4 troffers dead (hashed per fixture), at most one flickering → patchy ceiling instead of an even white grid
+   let q=Math.imul(h^Math.imul(n+1,0x9e3779b1),0x85ebca6b)>>>0;q^=q>>>15;const off=q%100<24&&z<zf-3.2,lk=n===flk&&!off?'r138lampFlk':off?'r138lampOff':'r138lamp';
+   b.box('r138alu',x,C-.012,z,.66,.02,1.26);b.box(lk,x,C-.024,z,.56,.012,1.16);}}
  else{for(let z=zb+1.3;z<zf-.9;z+=2.1){const x=cx+(((h>>>3)+Math.round(z))%2?.6:-.6);b.box('r138alu',x,C-.04,z,.12,.06,1.25);b.cylinder('r138lamp',x,C-.08,z,.024,.024,1.2,6,PI/2);}}
  yield;
  // ---- storefront (exterior face at z = zf) ----

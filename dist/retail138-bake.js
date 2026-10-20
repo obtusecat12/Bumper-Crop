@@ -17,9 +17,9 @@ export const R138_BAKE=!/[?&]r138bake=0\b/.test(Q);
 const DBG=/[?&]r138bake=dbg\b/.test(Q);
 const DEFAULT=.78;
 // emitter materials: [r,g,b] linear colour, strength (per m² of face or per m of strip), kind
-const EM={r138lamp:[[1,.97,.9],6,'a'],r138laneLight:[[1,1,.95],6,'a'],r138ledW:[[.9,.96,1],1.1,'l'],r138ledA:[[1,.66,.3],1.0,'l'],
+const EM={r138lamp:[[1,.97,.9],6,'a'],r138lampFlk:[[1,.97,.9],3.6,'a'],r138laneLight:[[1,1,.95],6,'a'],r138ledW:[[.9,.96,1],1.1,'l'],r138ledA:[[1,.66,.3],1.0,'l'],
  r138tubeP:[[1,.16,.55],3.8,'l'],r138tubeB:[[.16,.6,1],3.8,'l'],r138tubeG:[[.3,1,.36],3.4,'l'],r138neon:[null,12.0,'a'],
- r138scan:[[1,.12,.06],2,'a'],r138screen:[[.25,.5,1],3,'a'],r138coolIn:[[.75,.86,.95],1.1,'a']};
+ r138scan:[[1,.12,.06],2,'a'],r138screen:[[.25,.5,1],3,'a'],r138coolIn:[[.7,.86,1],1.8,'a']};
 // neon atlas 2×4 cells (retail138-bodega NEON138): open, coldBeer, lotto, cerveza, atm, cigars, vape, 24hrs
 const NEONC=[[1,.18,.12],[.15,.55,1],[.3,1,.3],[1,.5,.12],[.25,1,.45],[1,.62,.2],[.75,.25,1],[1,.2,.3]];
 const CLEAR=/^r138(glass|coolGlass|lexan|glassTop|fog|basket|wire)$/;
@@ -69,7 +69,7 @@ export function* retail138Bake(b,mark,P,{d}){
    // facing: mean normal (zero for closed boxes = omni); thin lamp panels near the ceiling face down
    const nr=g.attributes.normal;let fx=0,fy=0,fz=0;if(nr){for(let i=0;i<n;i++){fx+=nr.getX(i);fy+=nr.getY(i);fz+=nr.getZ(i);}const q=nL(fx/n,fy/n,fz/n,[0,0,0]);fx=q[0];fy=q[1];fz=q[2];}
    const ex=a1-a0,ey=y1-y0,ez=b1-b0,dims=[ex,ey,ez].sort((p,q)=>q-p),len=Math.max(.05,dims[0]);
-   if(key==='r138lamp'&&y1>C-.12&&ey<.06){fx=0;fy=-1;fz=0;}
+   if((key==='r138lamp'||key==='r138lampFlk')&&y1>C-.12&&ey<.06){fx=0;fy=-1;fz=0;}
    const fl=Math.hypot(fx,fy,fz);if(fl<.3){fx=fy=fz=0;}else{fx/=fl;fy/=fl;fz/=fl;}
    let amount=E[2]==='l'?len:Math.max(.0025,dims[0]*dims[1])*E[1];if(E[2]==='l')amount*=E[1];
    if(key==='r138lamp'&&dims[1]<.07)amount=len*(y1>C-.15?2.8:.6); // bare ceiling tubes vs cooler header / door LED strips
@@ -118,7 +118,7 @@ export function* retail138Bake(b,mark,P,{d}){
      const nd=nv3[0]*lx+nv3[1]*ly+nv3[2]*lz;if(nd<=0)continue;const ce=(e.fx||e.fy||e.fz)?Math.max(0,-(e.fx*lx+e.fy*ly+e.fz*lz)):1;if(ce<=0)continue;
      if(!vis(px,py,pz,e))continue;const fall=Math.max(0,1-d2/e.R2);const k=nd*ce*fall/(d2+.35);R+=e.r*k;Gc+=e.g*k;B+=e.b*k;}
     // filmic-ish shoulder so pools under troffers do not clip
-    const EXP=P.market?.8:.72,ca=.25+.75*a*a,sh=x=>{x*=EXP*ca;return 1.5*x/(x+.8);};r=[sh(R),sh(Gc),sh(B)];cache.set(ck,r);}else hit++;
+    const EXP=P.market?.64:.72,ca=.25+.75*a*a,sh=x=>{x*=EXP*ca;return 1.5*x/(x+.8);};r=[sh(R),sh(Gc),sh(B)];cache.set(ck,r);}else hit++;
    A[i*3]=r[0];A[i*3+1]=r[1];A[i*3+2]=r[2];
    if((nv&255)===0&&performance.now()-tick>6){yield;tick=performance.now();}}
  }
