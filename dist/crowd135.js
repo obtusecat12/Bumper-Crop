@@ -1,4 +1,5 @@
 // V135-capital ④-1 crowd (notes/plan-v135-capital.md §3/§4): first visible stage of the pedestrian pipeline.
+// V137 Q1 (10-20): the bin is now built by bc/scripts/crowd137/bodies137.py (continuous skinned bodies from the CC0 Wobble Blocks PS2 base, see licenses/crowd137-credits.txt); same 135z data layout.
 // Assets: assets/crowd135/crowd135.bin from bc/scripts/crowd135/bodies135.py (Blender 5.1: 12 PS1 bodies = 4 body types x
 // 3 silhouettes on one 19-bone V75 hierarchy, one shared walk cycle 24 f + idle 12 f, armature-deformed per frame in
 // Blender and stored as int16 positions + int8 normals) and 8 generated front faces assets/crowd135/face_<k>.png (128²,
@@ -24,7 +25,7 @@ import {cityToWorld,CITY_ANGLE} from './urban-layout.js?v=return-1';
 import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {createTierB135,createTierC135,bRecord135,PROPS135} from './crowd135-far.js?v=135l';
-const A=new URL('./assets/crowd135/',import.meta.url).href,V='135z',VS='135l';
+const A=new URL('./assets/crowd135/',import.meta.url).href,V='137a',VS='137a';
 const Q=typeof location!=='undefined'?location.search:'',OFF=/[?&]crowd=0\b/.test(Q),NOLOD=/[?&]crowdlod=0\b/.test(Q),LO=/[?&]crowd=lo\b/.test(Q),WANTA=/[?&]crowdA=1\b/.test(Q);
 // ④-5 (135n) population + budget: fair blocks a/b 140 people, sidewalk blocks c/d (east frontage, -3,0 / -3,1) 60; ?crowd=lo
 // = 45 %, shorter tiers. Tier A (CPU meshes, 3–5 draws a person) is off by default: tier B draws the same baked frames,

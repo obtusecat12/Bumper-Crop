@@ -1,0 +1,7 @@
+Crowd bodies (V137, assets/crowd135/crowd135.bin) are derived from:
+  "PS2 Styled Characters" (PS2CharacterBase Masc / Femme) by Wobble Blocks — CC0 1.0
+  https://opengameart.org/content/ps2-styled-characters
+  (author's note: "CC0 but do feel free to tag us on socials @WobbleBlocks")
+Changes: heads/hair/eyes removed (replaced by retro-head130 heads), arms lowered, re-skinned to the Bumper Crop 19-bone rig,
+per-type girth, garment shells (coat tails, skirts, sleeve hems) added, re-UV'd to the crowd135 garment atlas; built by
+bc/scripts/crowd137/extract137.py + bodies137.py (Blender 5.1).
