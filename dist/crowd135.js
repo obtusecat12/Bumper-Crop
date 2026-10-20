@@ -14,7 +14,7 @@
 // ④-2b (135z, user 10-20 06:26: use the Hope St kiosk / createRetroActor75 look): the dyed pattern atlas is gone; bodies wear
 // V75-style photographic garment panels (garments135.png from scripts/crowd135/garments135.py: per top/coat a front, back
 // and sleeve cell, per bottom one cell) through V75-layout uvs baked by bodies135.py (split vertices + map[] onto the baked
-// stream); each person = seed -> top/coat + bottom + recolour (hue / tint / value per garment kind). Heads stay head130. Population: the SoHo street fair blocks (-2,0) (-2,1), walking strip
+// stream); each person = seed -> top/coat + bottom + recolour (hue / tint / value per garment kind). Heads stay head130. Population (④-5): fair blocks (-2,0) (-2,1) + east-frontage sidewalk blocks (-3,0) (-3,1), walking strip
 // |x| < 3.3 between the stall rows, z 21..91 in each block frame (road centre x = 0). ?crowd=0 turns it off.
 // ④-4 (135m): movement comes from crowd135-sim-core.js (flow fields, lanes, avoidance, stall queues, red-light waits) run
 // in crowd135-sim-worker.js; this file only reads the newest state. ?crowdsim=main runs the sim on the main thread.
@@ -25,7 +25,11 @@ import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {createTierB135,createTierC135,bRecord135,PROPS135} from './crowd135-far.js?v=135l';
 const A=new URL('./assets/crowd135/',import.meta.url).href,V='135z',VS='135l';
-const OFF=typeof location!=='undefined'&&/[?&]crowd=0\b/.test(location.search),NOLOD=typeof location!=='undefined'&&/[?&]crowdlod=0\b/.test(location.search);
+const Q=typeof location!=='undefined'?location.search:'',OFF=/[?&]crowd=0\b/.test(Q),NOLOD=/[?&]crowdlod=0\b/.test(Q),LO=/[?&]crowd=lo\b/.test(Q),WANTA=/[?&]crowdA=1\b/.test(Q);
+// ④-5 (135n) population + budget: fair blocks a/b 140 people, sidewalk blocks c/d (east frontage, -3,0 / -3,1) 60; ?crowd=lo
+// = 45 %, shorter tiers. Tier A (CPU meshes, 3–5 draws a person) is off by default: tier B draws the same baked frames,
+// garments and head130 heads from 0 m in one draw per body; ?crowdA=1 brings back A < 12 m (capped to the nearest 6).
+export const CROWD135_BUDGET=LO?{fair:63,side:27,bMax:80,bFar:26,cFar:100,a:0}:{fair:140,side:60,bMax:170,bFar:45,cFar:150,a:WANTA?6:0};
 export const CROWD135_FACES={
  m1:{g:'m',hairY:a=>Math.cos(a)<-.2?.34:.62},m2:{g:'m',hairY:a=>Math.cos(a)<-.2?.4:.66,beard:.22,nape:.3},m3:{g:'m',hairY:a=>Math.cos(a)<-.2?.36:.62,hairColor:0xb9b6ae},
  f1:{g:'f',long:1,hairY:a=>.04},f2:{g:'f',hairY:a=>Math.cos(a)<-.2?.36:.6},f3:{g:'f',long:1,hairY:a=>.06},
@@ -174,7 +178,15 @@ const Z0=21,Z1=91,STALLS={east:[32,50,68,86],west:[26,44,62,80]};
 const FH=(a,b=0)=>{let h=Math.imul(a|0,0x27d4eb2d)^Math.imul(b|0,0x165667b1);h^=h>>>15;h=Math.imul(h,0x85ebca6b);h^=h>>>13;return(h>>>0)/4294967296;};
 function stalls135(plan){const seed=(plan.seed>>>0)||1,out=[];const sl=[...STALLS.east.map(z=>[1,z]),...STALLS.west.map(z=>[-1,z])];
  sl.forEach(([sx,z],n)=>{const cz=plan.z+z+(FH(seed,n)-.5)*2;out.push({x:plan.x+sx*5.45,z:cz,qx:plan.x+sx*3.45,qz:cz,fx:sx,dq:n%2?-1:1});});return out;}
+// ④-5: the east-frontage blocks c/d (plan.x = -336, the road is their +x edge) bring sidewalk people only: i%3 = 2 window
+// shoppers standing at their shopfronts (lx -11.4, facing the building), the rest walkers on either sidewalk.
+function planSide(kh,n,plan){const out=[],j=Math.round(plan.z/112),rx=plan.x+112,oz=plan.z;
+ for(let i=0;i<n;i++){const s=h32(kh,i+1);
+  if(i%3===2){out.push({seed:s,stand:true,kind:'stand',x:rx-11.35-r01(s,23)*.3,z:oz+13+r01(s,21)*86,h:-Math.PI/2+(r01(s,22)-.5)*.5,j});continue;}
+  const dir=r01(s,10)<.5?1:-1,side=r01(s,15)<.62?-1:1;out.push({seed:s,kind:'walk',x:rx+side*(10.1-dir*.5),z:oz+12+r01(s,12)*88,dir,lane:.3+r01(s,11)*.45,speed:1.05+r01(s,13)*.45,phase:r01(s,14)*3,j});}
+ return out;}
 function planBlock(key,n,plan){const kh=h32(key.length*977,[...key].reduce((a,c)=>a*31+c.charCodeAt(0),7)),out=[],j=plan?Math.round(plan.z/112):0,ox=plan?.x??0,oz=plan?.z??0;
+ if(plan&&(plan.soho135==='c'||plan.soho135==='d'))return planSide(kh,n,plan);
  for(let i=0;i<n;i++){const s=h32(kh,i+1),k=i%6;
   if(k===5){const east=r01(s,20)<.5,L=east?STALLS.east:STALLS.west,z=L[Math.floor(r01(s,21)*4)]+(r01(s,22)-.5)*1.8,x=(east?1:-1)*(3.25+r01(s,23)*.35);
    out.push({seed:s,stand:true,kind:'stand',x:ox+x,z:oz+z,h:east?Math.PI/2:-Math.PI/2,j});continue;}
@@ -204,33 +216,39 @@ function simHost135(){const SYNC=typeof Worker==='undefined'||(typeof location!=
 const TA=[11,13],TB=[44,47],TC=150,_mw=new T.Matrix4(),_w={};
 const frameOf=(lib,t,clip,rate)=>{const C=lib.clips[clip];return C.start+(Math.floor(t*24*rate)%C.frames+C.frames)%C.frames;};
 let NID=1;
-export function createCrowd135({blocks,perBlock=36}){
+export function createCrowd135({blocks,perBlock}){const BG=CROWD135_BUDGET;
  const object=new T.Group();object.name='V135 crowd';const solids=[];let lib=null,loading=false,last=0,tb=null,tc=null,sim=null,lpx=null,lpz=0;const pops=new Map(),w={};
- const stats={a:0,b:0,c:0,trisB:0,draws:0,simMs:0,simMode:'',active:0};
+ const stats={a:0,b:0,c:0,n:0,trisA:0,trisB:0,tris:0,draws:0,drawsA:0,simMs:0,simMode:'',active:0,mainMs:0,bR:BG.bFar};let bR=BG.bFar;
  function tiers(){if(tb||!lib||NOLOD)return;tb=createTierB135(lib,lib.uniformsB);object.add(tb.group);if(lib.sprites){tc=createTierC135(lib.sprites);object.add(tc.group);}}
- function ensure(key,v){let P=pops.get(key);if(P)return P;tiers();sim??=simHost135();P={key,plan:v.plan,group:new T.Group(),people:[]};P.group.name='crowd135 '+key;
-  const list=[];for(const q of planBlock(key,perBlock,v.plan)){q.id=NID++;list.push(q);const L=look135(lib,q.seed,{stand:q.stand}),e={q,L,tier:-1,p:null};
+ function ensure(key,v){let P=pops.get(key);if(P)return P;tiers();sim??=simHost135();P={key,plan:v.plan,group:new T.Group(),people:[]};const side=v.plan.soho135==='c'||v.plan.soho135==='d',nP=perBlock??(side?BG.side:BG.fair);P.group.name='crowd135 '+key;
+  const list=[];for(const q of planBlock(key,nP,v.plan)){q.id=NID++;list.push(q);const L=look135(lib,q.seed,{stand:q.stand}),e={q,L,tier:-1,p:null};
    if(!NOLOD){e.rB=bRecord135(L,lib.headTile(L.type,L.fk));e.rC=cRecord135(lib,L);}P.people.push(e);}
   sim.add(key,list,stalls135(v.plan));object.add(P.group);pops.set(key,P);return P;}
  function drop(key){const P=pops.get(key);if(!P)return;for(const e of P.people){e.p?.dispose();sim?.state.delete(e.q.id);}sim?.drop(key);P.group.removeFromParent();pops.delete(key);}
- function step(t,dt,px,pz,frameN){solids.length=0;stats.a=stats.b=stats.c=0;tb?.begin();tc?.begin();
+ function step(t,dt,px,pz,frameN){const m0=performance.now();solids.length=0;stats.a=stats.b=stats.c=stats.n=stats.trisA=stats.drawsA=0;tb?.begin();tc?.begin();const nA=NOLOD?1e9:BG.a;
+  // nearest-N cap for tier A from last frame's distances (no sort when A is off)
+  if(nA&&nA<1e9){const L=[];for(const P of pops.values())for(const e of P.people){e.okA=false;if((e.d??1e9)<TA[1])L.push(e);}L.sort((a,b)=>a.d-b.d);for(let i=0;i<Math.min(nA,L.length);i++)L[i].okA=true;}
   const pvx=lpx===null||dt<=0?0:(px-lpx)/dt,pvz=lpx===null||dt<=0?0:(pz-lpz)/dt;lpx=px;lpz=pz;
   sim?.step(t,dt,px,pz,Math.max(-8,Math.min(8,pvx)),Math.max(-8,Math.min(8,pvz)));
   for(const P of pops.values())for(const e of P.people){const q=e.q,S=sim?.state.get(q.id);
    const cx=S?S[0]:q.x,cz=S?S[1]:q.z,h=S?S[2]:(q.h??(q.dir>0?0:Math.PI)),clip=(S?S[3]:q.stand?1:0)>.5?'idle':'walk',tt=S?S[4]:t+(q.phase||0),rate=1;
    const d=Math.hypot(cx-px,cz-pz);cityToWorld(cx,cz,w);const y=Y+roadHeight(cx,cz)+.004,yaw=CITY_ANGLE+h;
-   const pt=e.tier,tier=NOLOD?(d<110?0:3):d<(pt===0?TA[1]:TA[0])?0:d<(pt===0||pt===1?TB[1]:TB[0])?1:d<TC?2:3;e.tier=tier;
+   const pt=e.tier;const tier=NOLOD?(d<110?0:3):(nA>=1e9||e.okA)&&d<(pt===0?TA[1]:TA[0])?0:d<(pt<=1?bR+2:bR)?1:d<BG.cFar?2:3;
+   e.d=d;e.tier=tier;stats.n++;
    if(tier===0){if(!e.p){e.p=createPerson135(lib,q.seed,{stand:q.stand,look:e.L});P.group.add(e.p.object);}
-    const o=e.p.object;o.position.set(w.x,y,w.z);o.rotation.set(0,yaw,0);e.p.update(tt,clip,rate);stats.a++;}
+    const o=e.p.object;o.position.set(w.x,y,w.z);o.rotation.set(0,yaw,0);e.p.update(tt,clip,rate);stats.a++;stats.trisA+=e.p.tris;stats.drawsA+=3+e.p.props.length;}
    else{if(e.p){e.p.object.removeFromParent();e.p.dispose();e.p=null;}
     if(tier<3){_mw.makeRotationY(yaw).setPosition(w.x,y,w.z);const f=frameOf(lib,tt,clip,rate);
      if(tier===1){tb.push(e.L.bi,_mw,e.rB,f);stats.b++;}else if(tc){tc.push(_mw,e.rC,clip==='idle'?8:Math.floor((f-lib.clips.walk.start)/3));stats.c++;}}}
    if(d<6)solids.push({kind:'obb',x:w.x,z:w.z,w:.5,d:.4,ry:yaw});}
-  stats.trisB=tb?tb.end():0;tc?.end();stats.draws=(tb?tb.draws:0)+(tc&&stats.c?1:0);
+  stats.trisB=tb?tb.end():0;const trisC=tc?tc.end():0;stats.draws=(tb?tb.draws:0)+(tc&&stats.c?1:0)+stats.drawsA;stats.tris=stats.trisA+stats.trisB+trisC;
+  // B radius adapts so B never holds more than bMax people (dense fair seen from inside): shrink fast, grow back slowly
+  if(!NOLOD){if(stats.b>BG.bMax)bR=Math.max(14,bR-2);else if(stats.b<BG.bMax*.85&&bR<BG.bFar)bR=Math.min(BG.bFar,bR+.25);stats.bR=bR;}
+  stats.mainMs=+(performance.now()-m0).toFixed(3);
   if(sim){stats.simMs=+sim.info.ms.toFixed(3);stats.simMode=sim.info.mode;stats.active=sim.info.active;}}
  let frameN=0;
  function update(wx,wz,active,pc){object.visible=active&&!OFF;if(!object.visible){solids.length=0;return;}
-  const want=[];for(const[k,v]of blocks())if(v.plan?.soho135==='a'||v.plan?.soho135==='b')if(v.lod===0||v.lod===undefined)want.push([k,v]);
+  const want=[];for(const[k,v]of blocks()){const sk=v.plan?.soho135;if(sk==='a'||sk==='b'||sk==='c'||sk==='d')if(v.lod===0||v.lod===undefined)want.push([k,v]);}
   if(!lib){if(want.length&&!loading){loading=true;loadCrowd135().then(l=>{lib=l;}).catch(e=>console.warn('[crowd135]',e));}return;}
   const keep=new Set(want.map(x=>x[0]));for(const k of[...pops.keys()])if(!keep.has(k))drop(k);for(const[k,v]of want)ensure(k,v);
   const now=performance.now()*.001,dt=Math.min(.1,last?now-last:0);last=now;frameN++;step(now,dt,pc.x,pc.z,frameN);}
