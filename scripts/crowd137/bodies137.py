@@ -195,30 +195,37 @@ def add_tail(m, tname, kind):
   m.extra.append((first, kind))
 
 def head_mesh(tname):
-  """Head in bind pose (game frame), 8 sides x 9 rings, front planar UV for the face photo: u = .5 + x/(2W) (image-left =
-  character's right = -x), v = (y - y0) / (y1 - y0) with y0 the chin and y1 just under the crown (photo crop)."""
+  """V137 Q2: head in bind pose (game frame), 12 sides x 11 rings (was 8 x 9): jaw narrower at the front, flatter cheeks,
+  fuller back of the skull, chin/nose/brow; same outer size as before so caps/beanies and the head130 band keep fitting.
+  Front planar UV for the face photo: u = .5 + x/(2W) (image-left = character's right = -x), v = 1 - hf/.93 (photo crop).
+  The modelled neck of the body (extract137b.py) reaches up inside the lowest rings, so there is no gap under the jaw."""
   t = TYPES[tname]; s = t['h']; k = t['head']; y0 = 1.525 * s; Hh = .245 * k
-  prof = [(0, .030, .040), (.06, .062, .072), (.16, .073, .088), (.30, .078, .095), (.45, .080, .098), (.60, .081, .099), (.75, .079, .097), (.88, .066, .084), (.97, .040, .052)]
+  # (hf, rx, rz front, rz back)
+  prof = [(0, .026, .044, .018), (.05, .048, .064, .036), (.14, .064, .080, .062), (.26, .073, .090, .084), (.38, .078, .094, .095),
+          (.50, .080, .097, .099), (.62, .081, .096, .101), (.74, .079, .091, .098), (.85, .070, .079, .087), (.93, .053, .059, .065), (.985, .027, .030, .034)]
   V = []; UV = []; F = []; R = []
-  W = .080 * k
-  for hf, rx, rz in prof:
+  W = .080 * k; NS = 12
+  for hf, rx, rzf, rzb in prof:
     ids = []
-    for j in range(8):
-      a = 2 * math.pi * j / 8; x = math.sin(a) * rx * k; z = math.cos(a) * rz * k + .012 * k
-      if j == 0 and .40 < hf < .50: z += .02 * k   # nose
+    for j in range(NS):
+      a = 2 * math.pi * j / NS; ca = math.cos(a)
+      jaw = 1 - .22 * max(0., ca) ** 2 * max(0., (.3 - hf) / .3)          # narrower chin/jaw at the front
+      x = math.sin(a) * rx * k * jaw; z = ca * (rzf if ca > 0 else rzb) * k + .012 * k
+      if j == 0 and .36 < hf < .52: z += .018 * k                           # nose
+      if j in (NS - 1, 0, 1) and .6 < hf < .64: z += .004 * k               # brow
       if j == 0 and hf < .1: z -= .004
       y = y0 + hf * Hh
-      V.append((x, y, z)); UV.append((min(1, max(0, .5 + x / (2 * W))), 1 - min(1, max(0, hf / .93)))); ids.append(len(V) - 1)   # glTF-style v (image row from top), face texture flipY=false
+      V.append((x, y, z)); UV.append((min(1, max(0, .5 + x / (2 * W))), 1 - min(1, max(0, hf / .93)))); ids.append(len(V) - 1)
     R.append(ids)
   for i in range(len(R) - 1):
     A, Bb = R[i], R[i + 1]
-    for j in range(8):
-      a, b, c, d = A[j], A[(j + 1) % 8], Bb[(j + 1) % 8], Bb[j]
+    for j in range(NS):
+      a, b, c, d = A[j], A[(j + 1) % NS], Bb[(j + 1) % NS], Bb[j]
       F.append((a, b, c)); F.append((a, c, d))
   for ring, top in ((R[0], False), (R[-1], True)):
-    cy = V[ring[0]][1] + (.01 * k if top else -.004); V.append((0, cy, .012 * k)); UV.append((.5, 0. if top else 1.)); ci = len(V) - 1
-    for j in range(8):
-      a, b = ring[j], ring[(j + 1) % 8]
+    cy = V[ring[0]][1] + (.01 * k if top else -.004); V.append((0, cy, .012 * k if top else .02 * k)); UV.append((.5, 0. if top else 1.)); ci = len(V) - 1
+    for j in range(NS):
+      a, b = ring[j], ring[(j + 1) % NS]
       F.append((ci, a, b) if top else (ci, b, a))
   return V, UV, F
 

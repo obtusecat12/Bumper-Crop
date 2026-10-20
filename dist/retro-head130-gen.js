@@ -267,6 +267,12 @@ export function retrofitSkinnedHead130(T,face,o){
   const ev=o.earV??[.35,.59],eyT=yOfV(ev[0]),eyB=yOfV(ev[1]);
   const zF=(o.earZ??-.05)*R,dep=(o.earDepth??.40)*R;
   const skullX=(y,z)=>{let best=0;for(const q of L)if(Math.abs(q[1]-y)<H*.05&&Math.abs(q[2]-z)<R*.18)best=Math.max(best,Math.abs(q[0]));return best||R*.9;};
+  // o.skullFit (V137 Q2 crowd): coarse ring heads have no vertex within H*.05 of the ear rows, which made skullX fall back
+  // to R*.9 (ears floating ~3 cm off the skull); interpolate the skull half-width between the rings below and above instead
+  const skullX2=(y,z)=>{let lo=null,hi=null;for(const q of L){if(Math.abs(q[2]-z)>R*.3)continue;const d=q[1]-y,w=Math.abs(q[0]);
+    if(d<=0&&(!lo||d>lo.d||(Math.abs(d-lo.d)<1e-5&&w>lo.w)))lo={d,w};if(d>=0&&(!hi||d<hi.d||(Math.abs(d-hi.d)<1e-5&&w>hi.w)))hi={d,w};}
+    if(!lo||!hi)return(lo||hi||{w:R*.9}).w;const t=hi.d-lo.d<1e-6?0:-lo.d/(hi.d-lo.d);return lo.w+(hi.w-lo.w)*t;};
+  const skullXf=o.skullFit?skullX2:skullX;
   // ear shadow position in band coordinates: angle of the ear centre past phi0
   const jfE=z=>clamp((Math.acos(clamp(z/R,-1,1))-phi0)/(2*Math.PI-2*phi0),0,1);
   const tex=bakeHead130(T,{face:o.faceTexture??face.material.map,hair:o.hairTexture===null?null:(o.hairTexture??o.faceTexture??face.material.map),hairColor:o.hairColor,hairRect:o.hairRect,hairTint:o.hairTint,seed:o.seed??69,
@@ -280,7 +286,7 @@ export function retrofitSkinnedHead130(T,face,o){
     if(ps>phi0&&ps<2*Math.PI-phi0){for(let k=0;k<3;k++){const q=L[t+k];newP.push(V(t+k).toArray());newU.push(bandUV130(clamp((psiOf(q)-phi0)/(2*Math.PI-2*phi0),0,1),hOf(q[1])));}}
     else for(let k=0;k<3;k++){keepP.push(...V(t+k).toArray());keepU.push(U.getX(t+k),U.getY(t+k));if(N0)keepN.push(N0.getX(t+k),N0.getY(t+k),N0.getZ(t+k));}
   }
-  if(o.ears!==false)emitEars130({skullX,yTop:eyT,yBot:eyB,zFront:zF,depth:dep,lift:.016*R/.085,cup:.006*R/.085},(p1,p2,p3,u1,u2,u3)=>{
+  if(o.ears!==false)emitEars130({skullX:skullXf,yTop:eyT,yBot:eyB,zFront:zF,depth:dep,lift:(o.earLift??.016)*R/.085,cup:(o.earCup??.006)*R/.085},(p1,p2,p3,u1,u2,u3)=>{
     // emitEars130 works in a frame where +x is the character's left; map it onto this head's frame
     for(const [q,u] of [[p1,u1],[p2,u2],[p3,u3]]){newP.push(toMesh(q).toArray());newU.push(u);}});
   const fg=new T.BufferGeometry();fg.setAttribute('position',new T.Float32BufferAttribute(keepP,3));fg.setAttribute('uv',new T.Float32BufferAttribute(keepU,2));if(keepN.length)fg.setAttribute('normal',new T.Float32BufferAttribute(keepN,3));else fg.computeVertexNormals();

@@ -20,12 +20,13 @@
 // ④-4 (135m): movement comes from crowd135-sim-core.js (flow fields, lanes, avoidance, stall queues, red-light waits) run
 // in crowd135-sim-worker.js; this file only reads the newest state. ?crowdsim=main runs the sim on the main thread.
 import * as T from './vendor/three.module.min.js';
-import {retrofitSkinnedHead130} from './retro-head130-gen.js';
+import {retrofitSkinnedHead130} from './retro-head130-gen.js?v=137c';
+import {hairSet137,HAIR137_FACE,HAIR137_STYLES,HAIR137_HIDES_EARS} from './crowd137-hair.js?v=137c';
 import {cityToWorld,CITY_ANGLE} from './urban-layout.js?v=return-1';
 import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
-import {createTierB135,createTierC135,bRecord135,PROPS135} from './crowd135-far.js?v=135l';
-const A=new URL('./assets/crowd135/',import.meta.url).href,V='137b',VS='137b';
+import {createTierB135,createTierC135,bRecord135,PROPS135} from './crowd135-far.js?v=137c';
+const A=new URL('./assets/crowd135/',import.meta.url).href,V='137c',VS='137c';
 const Q=typeof location!=='undefined'?location.search:'',OFF=/[?&]crowd=0\b/.test(Q),NOLOD=/[?&]crowdlod=0\b/.test(Q),LO=/[?&]crowd=lo\b/.test(Q),WANTA=/[?&]crowdA=1\b/.test(Q);
 // ④-5 (135n) population + budget: fair blocks a/b 140 people, sidewalk blocks c/d (east frontage, -3,0 / -3,1) 60; ?crowd=lo
 // = 45 %, shorter tiers. Tier A (CPU meshes, 3–5 draws a person) is off by default: tier B draws the same baked frames,
@@ -68,7 +69,7 @@ export function loadCrowd135(){return libP??=(async()=>{
  const loader=new T.TextureLoader(),faces={};
  await Promise.all(Object.keys(CROWD135_FACES).map(async k=>{const t=await loader.loadAsync(A+'face_'+k+'.png?v='+V);t.colorSpace=T.SRGBColorSpace;t.flipY=false;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;faces[k]=t;}));
  const tl=async(f,srgb)=>{const t=await loader.loadAsync(A+f+'?v='+V);t.colorSpace=srgb?T.SRGBColorSpace:T.NoColorSpace;t.flipY=false;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;t.needsUpdate=true;return t;};
- const[garm,props]=await Promise.all([tl('garments135.png',true),tl('props135.png',true)]);
+ const[garm,props,hairTex]=await Promise.all([tl('garments135.png',true),tl('props135.png',true),tl('hair137.png',false)]);hairTex.wrapS=hairTex.wrapT=T.RepeatWrapping;hairTex.needsUpdate=true;
  const skin={},hair={};for(const[k,t]of Object.entries(faces)){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(t.image,0,0);
   const med=(x,y,w,h)=>{const d=g.getImageData(x,y,w,h).data,ch=[[],[],[]];for(let i=0;i<d.length;i+=4)for(let j=0;j<3;j++)ch[j].push(d[i+j]);return ch.map(a=>a.sort((p,q)=>p-q)[a.length>>1]);};
   const sk=[...med(28,72,12,14),...med(88,72,12,14)],s3=[0,1,2].map(j=>(sk[j]+sk[j+3])/2);skin[k]=new T.Color().setRGB(s3[0]/255,s3[1]/255,s3[2]/255,T.SRGBColorSpace);
@@ -97,8 +98,8 @@ export function loadCrowd135(){return libP??=(async()=>{
   flat.setAttribute('skinIndex',new T.Uint16BufferAttribute(new Uint16Array(c*4),4));flat.setAttribute('skinWeight',new T.Float32BufferAttribute(new Float32Array(c*4).map((_,i)=>i%4?0:1),4));
   const fm=headMats['f:'+fk]??=Object.assign(new T.MeshLambertMaterial({map:faces[fk]}),{name:'crowd135 face '+fk});
   const bone=new T.Bone();bone.name='head';const holder=new T.Group();holder.add(bone);const sk=new T.SkinnedMesh(flat,fm);holder.add(sk);sk.bind(new T.Skeleton([bone]));
-  const F=CROWD135_FACES[fk],r=retrofitSkinnedHead130(T,sk,{phi0:100,cheek:[.22,.56,.32,.68],hairTexture:null,hairY:F.hairY,hairColor:F.hairColor??hair[fk],
-   ears:F.long?false:undefined,earV:[.36,.58],earZ:-.12,beard:F.beard,nape:F.nape,seed:h32(type.length,fk.charCodeAt(0)*31+fk.charCodeAt(1)),
+  const F=CROWD135_FACES[fk],r=retrofitSkinnedHead130(T,sk,{phi0:62,cheek:[.22,.56,.32,.68],hairTexture:null,hairY:F.hairY,hairColor:F.hairColor??hair[fk],
+   ears:F.long||HAIR137_HIDES_EARS(HAIR137_FACE[fk])?false:undefined,earV:[.40,.565],earZ:-.12,earDepth:.30,earLift:.009,earCup:.004,skullFit:true,beard:F.beard,nape:F.nape,seed:h32(type.length,fk.charCodeAt(0)*31+fk.charCodeAt(1)),
    makeMaterial:tex=>{tex.minFilter=tex.magFilter=T.NearestFilter;tex.generateMipmaps=false;return Object.assign(new T.MeshLambertMaterial({map:tex}),{name:'crowd135 head130 '+key});}});
   const strip=geo=>{geo.deleteAttribute('skinIndex');geo.deleteAttribute('skinWeight');if(!geo.attributes.normal)geo.computeVertexNormals();return geo;};
   return heads[key]={front:strip(sk.geometry),frontMat:fm,rear:strip(r.mesh.geometry),rearMat:r.mesh.material,tris:sk.geometry.attributes.position.count/3+r.rearTriangles,mats:view(Float32Array,H.mat)};}
@@ -114,8 +115,11 @@ export function loadCrowd135(){return libP??=(async()=>{
  const gm=new Float32Array(40*3);{const c=document.createElement('canvas');c.width=GW;c.height=GH;const g=c.getContext('2d');g.drawImage(garm.image,0,0);const d=g.getImageData(0,0,GW,GH).data,lin=v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;};
   for(let ci=0;ci<40;ci++){const x0=(ci%8)*64+1,y0=Math.floor(ci/8)*64+1;let r=0,gg=0,b=0;for(let y=0;y<62;y++)for(let x=0;x<62;x++){const i=((y0+y)*GW+x0+x)*4;r+=lin(d[i]);gg+=lin(d[i+1]);b+=lin(d[i+2]);}gm.set([r/3844,gg/3844,b/3844],ci*3);}}
  let sprites=null;try{sprites=await loader.loadAsync(A+'sprites135.png?v='+VS);sprites.colorSpace=T.NoColorSpace;sprites.flipY=false;sprites.minFilter=sprites.magFilter=T.NearestFilter;sprites.generateMipmaps=false;sprites.needsUpdate=true;}catch(e){console.warn('[crowd135] no sprite sheet',e);}
- const uniformsB={garmMap:{value:garm},headAtlas:{value:atlas},propMap:{value:props},headAtlasSize:{value:new T.Vector2(AW,AH)}};
- return{meta,bodies,faces,skin,hair,mat,head,acc,propMat,clips:meta.clips,view,headGeo,headTile,atlas,gm,sprites,uniformsB};
+ const uniformsB={garmMap:{value:garm},headAtlas:{value:atlas},propMap:{value:props},hairMap:{value:hairTex},headAtlasSize:{value:new T.Vector2(AW,AH)}};
+ // V137 Q2: modelled hair styles per body type, fitted to that type's head (crowd137-hair.js); tier A material per colour
+ const hairG={},hairMats={},hairGeo=type=>hairG[type]??=(()=>{const H=headGeo(type);return hairSet137(T,H.front,H.rear);})();
+ const hairMat=hex=>hairMats[hex]??=Object.assign(new T.MeshLambertMaterial({map:hairTex,color:new T.Color(hex).multiplyScalar(2)}),{name:'crowd137 hair'});
+ return{meta,bodies,faces,skin,hair,mat,head,acc,propMat,clips:meta.clips,view,headGeo,headTile,atlas,gm,sprites,uniformsB,hairTex,hairGeo,hairMat};
 })();}
 
 const _m=new T.Matrix4(),_c=new T.Color();
@@ -137,8 +141,12 @@ export function look135(lib,seed,opts={}){
   if(!CROWD135_FACES[fk].scarf&&r01(seed,33)<.22)L.push(r01(seed,35)<.6?'cap':'beanie');return L;})();
  const propTint=n=>n==='backpack'||n==='cap'?pick(PROP_TINT,36+n.length):0xffffff;
  const propMask=props.reduce((m,n)=>AC[n]?m|(1<<PROPS135.indexOf(n)):m,0);
- return{seed,type,sil,bi,B,fk,top,bot,rT,rB,sk,shoe,props,propTint,propMask,t0:G135[top],b0:G135[bot],ears:!CROWD135_FACES[fk].long,
-  tintA:new T.Color(propTint('backpack')),tintB:new T.Color(propTint('cap')),hairC:new T.Color(CROWD135_FACES[fk].hairColor??lib.hair[fk])};}
+ // V137 Q2 hair: style from the face; under a cap/beanie only the thin crop shell (fits under the hat margin); bald fringe greyish
+ const hat=props.includes('cap')||props.includes('beanie'),hs0=HAIR137_FACE[fk]??null,hairStyle=hs0&&hat?'crop':hs0,hairIx=hairStyle?HAIR137_STYLES.indexOf(hairStyle):-1;
+ const hairC=new T.Color(hs0==='bald'?0x8a8176:CROWD135_FACES[fk].hairColor??lib.hair[fk]);
+ {const l=.2126*hairC.r+.7152*hairC.g+.0722*hairC.b;if(l<.012)hairC.lerp(new T.Color(0x2e2924),.55);}   // near-black hair keeps some strand read
+ return{seed,type,sil,bi,B,fk,top,bot,rT,rB,sk,shoe,props,propTint,propMask,t0:G135[top],b0:G135[bot],ears:!CROWD135_FACES[fk].long&&!HAIR137_HIDES_EARS(hs0),
+  tintA:new T.Color(propTint('backpack')),tintB:new T.Color(propTint('cap')),hairC,hairStyle,hairIx};}
 // tier C record: [body, frame col, skin, top, bottom, shoe, hair] with the garment cell means recoloured like the shader does
 function rec135(m,ci,n,r){const c=[0,0,0];for(let k=0;k<n;k++)for(let j=0;j<3;j++)c[j]+=m[(ci+k)*3+j]/n;
  const y=.299*c[0]+.587*c[1]+.114*c[2],i=.596*c[0]-.274*c[1]-.322*c[2],q=.211*c[0]-.523*c[1]+.312*c[2],cs=Math.cos(r.h),sn=Math.sin(r.h),i2=cs*i-sn*q,q2=sn*i+cs*q;
@@ -156,6 +164,7 @@ export function createPerson135(lib,seed,opts={}){
  const H=lib.head(type,fk),object=new T.Group(),body=new T.Mesh(g,lib.mat),head=new T.Group();
  object.name='crowd135 '+type+'/'+sil+'/'+fk;body.frustumCulled=false;head.matrixAutoUpdate=false;
  head.add(new T.Mesh(H.front,H.frontMat),new T.Mesh(H.rear,H.rearMat));object.add(body,head);
+ let htris=0;if(L.hairIx>=0){const hg=lib.hairGeo(type)[L.hairIx];head.add(new T.Mesh(hg,lib.hairMat(L.hairC.getHex())));htris=hg.index.count/3;}
  // props: seed picks; each prop rides its baked bone matrix
  const AC=lib.acc[type]||{},props=[];
  let ptris=0;for(const n of want){const a=AC[n];if(!a)continue;const tint=L.propTint(n);
@@ -168,7 +177,7 @@ export function createPerson135(lib,seed,opts={}){
   head.matrix.copy(_m);head.matrixWorldNeedsUpdate=true;for(const[pm,PM]of props)setM(pm,PM,k);}
  function update(t,clip='walk',rate=1){const C=lib.clips[clip],f=C.start+(Math.floor(t*24*rate)%C.frames+C.frames)%C.frames;frame(f);}
  update(r01(seed,9)*4);
- return{object,update,type,sil,face:fk,props:want,top,bot,tris:B.tris+H.tris+ptris,dispose(){g.dispose();}};
+ return{object,update,type,sil,face:fk,props:want,top,bot,tris:B.tris+H.tris+ptris+htris,dispose(){g.dispose();}};
 }
 
 // the fair population of one block (④-4, 135m): agent specs for crowd135-sim-core in city coords. Slot i%6: 5 = browser
