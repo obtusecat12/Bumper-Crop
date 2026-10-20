@@ -15,9 +15,9 @@
 // Module library: retail138-market.js (R2) + retail138-bodega.js (R3). Frame: building centre, +z street, store floor
 // x0..x1 × (d/2−sd)..d/2. Debug: window.__r138 collects per-store {kind,lay,variant,items,dropped}.
 import {GOODS138,gondola138,endcap138,reachIn138,multideck138,chest138,checkout138,impulse138,promo138,baskets138,carts138,
- produceBin138,vegRack138,aisleSign138,addRetail138Market,caseBox138,retail138MarketFill} from './retail138-market.js?v=138d';
+ produceBin138,vegRack138,aisleSign138,addRetail138Market,caseBox138,retail138MarketFill} from './retail138-market.js?v=138f';
 import {NEON138,liquorWall138,beerCave138,smokeCounter138,humidor138,cashier138,neonSign138,neonTube138,addRetail138Bodega,
- retail138BodegaFill} from './retail138-bodega.js?v=138d';
+ retail138BodegaFill} from './retail138-bodega.js?v=138f';
 const PI=Math.PI,RAD=.27,G=.1;
 function rng(seed){let s=(seed>>>0)||1;return()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%100000)/100000;};}
 function stack138(b,seed,{w=.55,d=.4,n=2}){const r=rng(seed);let y=0;for(let i=0;i<n;i++){const hh=.24+r()*.14;caseBox138(b,r,(r()-.5)*.04,y,(r()-.5)*.04,w-i*.03,hh,d-i*.02,(r()-.5)*.12);y+=hh;}b.solid(0,0,w,d);}
@@ -193,8 +193,14 @@ function planBodega(S,lay,r){
  if(A){variant=(h>>>22)%2?'snake':'zig';
   variant=mazeA(S,R,variant!=='snake',{h:1.95,aisle:.95,aBack:1.0,aFront:1.1,variant,sign:false,capCat:GOODS138.candy,cats:i=>i%2?[GOODS138.dry,GOODS138.candy]:[GOODS138.candy,GOODS138.dry]},r);}
  else{variant='arena';
-  arenaB(S,R,true,{cw:1.0,clMin:1.7,clMax:3.0,aisle:1.1,lowH:1.4,gcat:GOODS138.dry.concat(GOODS138.candy),capCat:GOODS138.candy,
-   pick:(r,front,i,j)=>front?(r()<.5?'promo':'chest'):'gond'},r);}
+  const nIs=arenaB(S,R,true,{cw:1.0,clMin:1.7,clMax:3.2,aisle:1.0,lowH:1.55,gcat:GOODS138.dry.concat(GOODS138.candy),capCat:GOODS138.candy,
+   pick:(r,front,i,j,nr)=>front&&nr>1?(r()<.25?'promo':r()<.4?'chest':'gond'):'gond'},r);
+  // R5b: narrow B bodegas read empty → floor case stacks + an impulse rack along the island aisles (optional pieces;
+  // the walk check drops any that cut a fixture off)
+  for(let z=R.z0+.5,k=0;z<R.z1-.4;z+=.85,k++)for(const sd of[0,1]){if(r()<.45)continue;const x=sd?R.x1-.32:R.x0+.32;
+   if(k%3===1&&r()<.5)S.add('impulse',h^(k*71+sd),{w:.7,h:1.1},x,z,sd?-PI/2:PI/2,{drop:true});
+   else S.add('stack',h^(k*53+sd*7),{w:.5+r()*.1,d:.38,n:1+((r()*3)|0)},x,z,(r()-.5)*.3,{drop:true});}
+  if(nIs<3){const[x,z]=[(R.x0+R.x1)/2,R.z1-.35];S.add('promo',h^991,{},x,z,0,{drop:true});}}
  // window neon facing the street
  const wx=doorRight?Math.max(x0+.8,P.doorX-1.7):Math.min(x1-.8,P.doorX+1.7);
  S.deco(b=>{b.push(wx,1.85,zf-.22,0);neonSign138(b,(h>>>5)%3===0?NEON138.hrs24:NEON138.open,{w:.8,chainTo:C-1.85});b.pop();

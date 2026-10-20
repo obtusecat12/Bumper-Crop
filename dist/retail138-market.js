@@ -7,6 +7,7 @@
 // mullions, belts, wire carts, baskets) with colliders.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
+import {r138GridPlane} from './retail138-bake.js?v=138f';
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138b',PI=Math.PI;
 export const GOODS138={dry:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],cool:[20,21,22,23],dairy:[24,25,26,27],frozen:[28,29,30,31],candy:[32,33,34,35,36]};
 const GROWS=19,GCOLS=2;
@@ -64,6 +65,12 @@ export function gondola138(b,seed,{len,h=1.95,double=true,cats=[GOODS138.dry,GOO
  b.box('r138gond',0,h+.01,double?0:.025,len+.04,.03,.09);
  // end panels close the run ends (otherwise the dark goods bodies show end-on)
  for(const s of[-1,1]){b.box('r138gond',s*(len/2+.012),h/2-.02,double?0:D/2,.024,h-.04,D);b.box('r138dark',s*(len/2+.012),.075,double?0:D/2,.03,.15,D+.01);}
+ // R5b: end-panel skin tessellated (20 cm) so the bake can grade it (floor AO, lamp falloff), plus a hanging clip strip of
+ // snacks on island ends (real gondola heads carry them)
+ for(const s of[-1,1]){const ex=s*(len/2+.026),zc=double?0:D/2;r138GridPlane(b,'r138gond',0,ex,h/2+.06,zc,D-.02,h-.2,s*PI/2,0,.2);
+  if(double&&r()<.7){const cz=zc+(r()-.5)*.3,n=4+((r()*3)|0),cat=pick(r,[GOODS138.candy,GOODS138.dry.slice(0,8)]),top=1.55;
+   b.box('r138steel',ex+s*.008,top-n*.11,cz,.006,n*.22+.04,.035);b.box('r138steel',ex+s*.012,top+.02,cz,.02,.03,.06);
+   for(let k=0;k<n;k++){const slot=pick(r,cat);facing(b,'r138goods',slot,r()*.85,.06,ex+s*(.018+k%2*.004),top-.08-k*.21,cz+(k%2?.01:-.01),.13,.18,s*PI/2);}}}
  for(const side of double?[1,-1]:[1]){
   b.push(0,0,0,side>0?0:PI);const z0=.05,dep=D/2-.03;
   b.box('r138dark',0,.075,z0+dep-.01,len,.15,.02);b.box('r138gond',0,.15,z0+dep/2,len,.012,dep);
