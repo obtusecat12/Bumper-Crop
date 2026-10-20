@@ -11,6 +11,16 @@ function trefoil(n,r,d,off=0,rot=0){const out=[];for(let i=0;i<n;i++){const f=i/
   for(let k=0;k<3;k++){const a=rot+Math.PI/2+k*Math.PI*2/3,cx=Math.cos(a)*d,cz=Math.sin(a)*d,b=dx*cx+dz*cz,c=cx*cx+cz*cz-r*r,disc=b*b-c;if(disc>=0)best=Math.max(best,b+Math.sqrt(disc));}
   out.push([dx*(best+off),dz*(best+off)]);}return out;}
 export const COLS136=[...[40,140,220,320].map(g=>{const f=g*Math.PI/180,k=1.24/Math.sqrt(Math.cos(f)**2/A**2+Math.sin(f)**2/B**2);return{x:CX+Math.cos(f)*k,z:CZ+Math.sin(f)*k,rot:f};}),{x:24.2,z:-7,rot:.3},{x:24.2,z:7,rot:-.3}];
+// ---- stage 2: cylindrical acrylic aquarium on an octagonal dark-wood base + lounge furniture groups ----
+export const AQ136={x:5.6,z:-2.4,r:.78,base:.95,top:3.55,water:3.3,bR:1.0};
+// groups: [cx,cz,floorY,kind,layout]; kind rattan|fabric; layout 4 = four chairs round a table, 2 = pair facing across, 2s = pair side by side facing +x
+export const FURN136=[[25.6,-2.7,0,'rattan',4],[25.6,3.4,0,'fabric',4],[21.4,-10.2,0,'rattan','2s'],[21.4,10,0,'fabric','2s'],[3.6,-9.6,0,'fabric',2],
+ [26.4,-9.8,5.85,'rattan',2],[26.4,9.4,5.85,'fabric',2],[9.6,-10.6,5.85,'rattan','2s']];
+function furnLayout136(){const out=[];for(const[cx,cz,y,kind,lay]of FURN136){out.push({t:'table',x:cx,z:cz,y,yaw:0,kind});
+  const at=(dx,dz)=>({t:'chair',x:cx+dx,z:cz+dz,y,yaw:Math.atan2(-dx,-dz),kind});
+  if(lay===4)out.push(at(0,-1.12),at(0,1.12),at(-1.12,0),at(1.12,0));else if(lay===2)out.push(at(-1.1,0),at(1.1,0));else out.push(at(-.95,-.55),at(-.95,.55));}
+ return out;}
+export const OBST136=[{x:AQ136.x,z:AQ136.z,y:0,r:AQ136.bR+.12},...furnLayout136().map(f=>({x:f.x,z:f.z,y:f.y,r:f.t==='table'?.5:.46}))];
 const COL_R=.44,COL_D=.5,COL_RAD=COL_R+COL_D+.02;
 function ellipseR(f,k=1){return k/Math.sqrt(Math.cos(f)**2/A**2+Math.sin(f)**2/B**2);}
 function ellK(x,z){return Math.hypot((x-CX)/A,(z-CZ)/B);}
@@ -98,16 +108,52 @@ export function buildLobby136(){
  lights.push({kind:'AREA',p:[X1-.3,(F2+CEIL)/2,0],dir:[-1,0,0],w:2*Z1,h:CEIL-F2,c:[1,.88,.78],power:3600});
  lights.push({kind:'AREA',p:[X0+.4,1.7,0],dir:[1,0,0],w:7,h:3.2,c:[.9,.94,1],power:500});
  for(let x=3.5;x<AN.x1;x+=4.6){const z=(Z1+AN.z1)/2;rect('lamp','y',CEIL-.005,x-.14,x+.14,z-.14,z+.14,-1,1,null,1);lights.push({kind:'POINT',p:[x,CEIL-.6,z],c:[1,.86,.66],power:60,radius:.12});}
+
+ // ===== stage 2 =====
+ // oriented box (local half extents, yaw about +y; local +z = front)
+ const obox=(k,cx,cy,cz,hx,hy,hz,yaw,tile=1,faces='xXyYzZ',lx=0,lz=0)=>{const c=Math.cos(yaw),s=Math.sin(yaw),W=(x,y,z)=>[cx+(x+lx)*c+(z+lz)*s,cy+y,cz-(x+lx)*s+(z+lz)*c],R=(x,y,z)=>[x*c+z*s,y,-x*s+z*c];
+  const quad=(n,o,a,b,ea,eb)=>{const nw=R(...n);const ns=seg(2*ea,.6),nt=seg(2*eb,.6);patch(k,ns,nt,(u,v)=>{const pa=(u*2-1)*ea,pb=(v*2-1)*eb,l=[o[0]+a[0]*pa+b[0]*pb,o[1]+a[1]*pa+b[1]*pb,o[2]+a[2]*pa+b[2]*pb];return{p:W(...l),n:nw,u:[(pa+ea)/tile,(pb+eb)/tile]};});};
+  if(faces.includes('x'))quad([-1,0,0],[-hx,0,0],[0,0,1],[0,1,0],hz,hy);if(faces.includes('X'))quad([1,0,0],[hx,0,0],[0,0,1],[0,1,0],hz,hy);
+  if(faces.includes('y'))quad([0,-1,0],[0,-hy,0],[1,0,0],[0,0,1],hx,hz);if(faces.includes('Y'))quad([0,1,0],[0,hy,0],[1,0,0],[0,0,1],hx,hz);
+  if(faces.includes('z'))quad([0,0,-1],[0,0,-hz],[1,0,0],[0,1,0],hx,hy);if(faces.includes('Z'))quad([0,0,1],[0,0,hz],[1,0,0],[0,1,0],hx,hy);};
+ // vertical prism / cylinder side (n sides), optional lids
+ const prism=(k,cx,cz,r,y0,y1,n,rot=0,tile=1,inward=false,smooth=false)=>{const sg=inward?-1:1;
+  if(!smooth){for(let i=0;i<n;i++){const f0=rot+i/n*Math.PI*2,f1=rot+(i+1)/n*Math.PI*2,fm=(f0+f1)/2,nn=[Math.cos(fm)*sg,0,Math.sin(fm)*sg],w=2*r*Math.sin(Math.PI/n);   // flat facets
+    const ids=[[f0,y0,0],[f1,y0,w],[f1,y1,w],[f0,y1,0]].map(([f,y,u])=>vert(k,[cx+Math.cos(f)*r,y,cz+Math.sin(f)*r],nn,[u/tile,(y-y0)/tile]));tri(k,ids[0],ids[1],ids[2]);tri(k,ids[0],ids[2],ids[3]);}return;}
+  const id=[];for(let i=0;i<=n;i++){const f=rot+i/n*Math.PI*2,L=i*2*r*Math.sin(Math.PI/n);for(const y of[y0,y1])id.push(vert(k,[cx+Math.cos(f)*r,y,cz+Math.sin(f)*r],[Math.cos(f)*sg,0,Math.sin(f)*sg],[L/tile,y/tile]));}
+  for(let i=0;i<n;i++){const a=id[i*2],b=id[i*2+1],c=id[i*2+3],d=id[i*2+2];tri(k,a,d,c);tri(k,a,c,b);}};
+ const lidN=(k,cx,cz,r0,r1,y,sg,n,rot=0,tile=1)=>{const o=[],ii=[];for(let i=0;i<n;i++){const f=rot+i/n*Math.PI*2;o.push(vert(k,[cx+Math.cos(f)*r1,y,cz+Math.sin(f)*r1],[0,sg,0],[Math.cos(f)*r1/tile,Math.sin(f)*r1/tile]));
+   ii.push(r0>0?vert(k,[cx+Math.cos(f)*r0,y,cz+Math.sin(f)*r0],[0,sg,0],[Math.cos(f)*r0/tile,Math.sin(f)*r0/tile]):null);}
+  const c0=r0>0?null:vert(k,[cx,y,cz],[0,sg,0],[0,0]);for(let i=0;i<n;i++){const j=(i+1)%n;if(c0!==null)tri(k,c0,o[i],o[j]);else{tri(k,ii[i],o[i],o[j]);tri(k,ii[i],o[j],ii[j]);}}};
+ // ---- aquarium: octagonal walnut cabinet (plinth, panel body, top moulding) + acrylic cylinder + gravel bed ----
+ {const {x,z,r,base,top,bR}=AQ136,rot=Math.PI/8;
+  prism('wood',x,z,bR-.05,0,.12,8,rot,1);lidN('wood',x,z,bR-.05,bR,.12,1,8,rot);
+  prism('wood',x,z,bR,.12,base-.1,8,rot,1);prism('wood',x,z,bR+.06,base-.1,base,8,rot,1);
+  lidN('wood',x,z,bR,bR+.06,base-.1,-1,8,rot);lidN('wood',x,z,r+.02,bR+.06,base,1,8,rot);
+  lidN('gravel',x,z,0,r+.02,base+.005,1,40,0,.6);
+  prism('acrylic',x,z,r+.015,base,top,48,0,4,false,true);prism('acrylic',x,z,r,base,top,48,0,4,true,true);lidN('acrylic',x,z,r,r+.015,top,1,48);
+  lights.push({kind:'POINT',p:[x,top-.15,z],c:[.75,.9,1],power:30,radius:.3});}
+ // ---- lounge furniture ----
+ for(const f of furnLayout136()){const {x,z,y,yaw}=f;
+  if(f.t==='table'){obox('wood',x,y+.4,z,.46,.035,.46,0,1);obox('wood',x,y+.33,z,.41,.035,.41,0,1,'xXzZy');
+   for(const[a,b]of[[-1,-1],[1,-1],[1,1],[-1,1]])obox('wood',x,y+.15,z,.03,.15,.03,0,1,'xXzZ',a*.37,b*.37);continue;}
+  const fr=f.kind==='rattan'?'rattan':'fabric',cu='fabric';
+  if(f.kind==='rattan'){obox(fr,x,y+.06,z,.4,.06,.38,yaw,.5,'xXzZ');obox(fr,x,y+.27,z,.4,.15,.38,yaw,.5,'xXzZY');}
+  else{for(const[a,b]of[[-1,-1],[1,-1],[1,1],[-1,1]])obox('wood',x,y+.06,z,.03,.06,.03,yaw,1,'xXzZ',a*.35,b*.33);obox(fr,x,y+.27,z,.4,.15,.38,yaw,.5,'xXzZYy');}
+  for(const sx of[-1,1])obox(fr,x,y+.52,z,.07,.1,.38,yaw,.5,'xXyYzZ',sx*.33,0);
+  obox(fr,x,y+.6,z,.4,.33,.07,yaw,.5,'xXyYzZ',0,-.31);
+  obox(cu,x,y+.48,z,.26,.06,.3,yaw,.6,'xXzZY',0,.05);obox(cu,x,y+.68,z,.26,.19,.06,yaw,.6,'xXzZY',0,-.19);}
  { const s=parts.sky;for(let i=0;i<s.P.length/3;i++){s.U[i*2]=(s.P[i*3+2]+60)/120;s.U[i*2+1]=(s.P[i*3+1]+14)/48;} }
  return{parts,lights};
 }
 // ---- walking: surfaces at heights, pick the one within a step of the current height ----
 const inRect=(x,z,x0,x1,z0,z1)=>x>x0&&x<x1&&z>z0&&z<z1;
 const COLS_HIT=(x,z,r)=>COLS136.some(c=>Math.hypot(x-c.x,z-c.z)<COL_RAD+.18+r);
+const OB_HIT=(x,z,y)=>OBST136.some(o=>o.y===y&&Math.hypot(x-o.x,z-o.z)<o.r+.22);
 export function surfaces136(x,z){const out=[],m=.32,col=COLS_HIT(x,z,0);
- if(!col&&(inRect(x,z,X0+m,X1-m,Z0+m,Z1-m)||inRect(x,z,AN.x0+m,AN.foot,Z1-m-.01,AN.z1-m)||(x>X0-.6&&x<X0+m+.01&&Math.abs(z)<L136.DOOR.z-.3)))out.push(0);
+ if(!col&&!OB_HIT(x,z,0)&&(inRect(x,z,X0+m,X1-m,Z0+m,Z1-m)||inRect(x,z,AN.x0+m,AN.foot,Z1-m-.01,AN.z1-m)||(x>X0-.6&&x<X0+m+.01&&Math.abs(z)<L136.DOOR.z-.3)))out.push(0);
  if(inRect(x,z,AN.foot-.02,AN.top+.02,Z1+.05,AN.z1-m))out.push(Math.max(0,Math.min(F2,(x-AN.foot)/(AN.top-AN.foot)*F2)));
- if(!col&&((inRect(x,z,X0+m,X1-m,Z0+m,Z1-m)&&ellK(x,z)>1.1)||inRect(x,z,AN.top-.02,AN.x1-m,Z1-m-.01,AN.z1-m)))out.push(F2);
+ if(!col&&!OB_HIT(x,z,F2)&&((inRect(x,z,X0+m,X1-m,Z0+m,Z1-m)&&ellK(x,z)>1.1)||inRect(x,z,AN.top-.02,AN.x1-m,Z1-m-.01,AN.z1-m)))out.push(F2);
  return out;}
 export function floorAt136(x,z,h){let best=null,d=.55;for(const s of surfaces136(x,z)){const e=Math.abs(s-h);if(e<d){d=e;best=s;}}return best;}
 export function resolve136(st,next){const h=st.floor136??0;
