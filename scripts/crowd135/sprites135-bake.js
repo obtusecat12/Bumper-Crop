@@ -5,7 +5,7 @@
 // local yaw k*45° (0 = in front of the person, +z), frameCol 0..7 = walk frames 0,3,..21, 8 = idle frame 0.
 // R = shade (fixed view-space light), G = slot*32+16 (0 skin 1 top 2 bottom 3 shoe 4 hair), B = detail/2 (head texel luminance vs
 // the slot colour; 1 elsewhere). Heads use one representative face per body for the skin/hair split; colours come per person.
-(async()=>{const T=window.T,renderer=window.renderer,C=window.C;const F=await import('./crowd135-far.js?v=137c');
+(async()=>{const T=window.T,renderer=window.renderer,C=window.C;const F=await import('./crowd135-far.js?v=137d');
 const lib=await C.loadCrowd135();const S=F.SPR135,SS=3,W=S.cw*S.cols,H=S.ch*12,RW=W*SS,RH=H*SS;
 const rt=new T.WebGLRenderTarget(RW,RH,{type:T.UnsignedByteType,depthBuffer:true});rt.texture.minFilter=rt.texture.magFilter=T.NearestFilter;
 const REP={man:'m1',woman:'f2',heavy:'m6',child:'c1'};

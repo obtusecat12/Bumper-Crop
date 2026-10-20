@@ -4,7 +4,8 @@
 //   body type (row = frame, 3 texels per bone); the vertex shader reads the instance's frame. Head front + head130 rear band +
 //   ears + all 8 props are merged into each body geometry; ears (long-hair faces) and props not worn collapse per instance.
 //   Clothing = the same garments135 cells / V75 uv / YIQ hue + tint + value as tier A, carried as instance attributes; faces and
-//   generated head130 rears come from one head atlas (two 128² tiles per type/face key, filled when a block's people spawn).
+//   generated head130 rears come from one head atlas (three 128² tiles per type/face key: front, rear, front blink (V137 Q3),
+//   filled when a block's people spawn). iMisc.w = head tile + 0.5 while that instance's eyes are shut (push(..., blink)).
 // C (45–150 m): one InstancedMesh of camera-facing quads for everyone. assets/crowd135/sprites135.png is baked offline from
 //   tier B by scripts/crowd135/sprites135-bake.js (12 bodies x 8 directions x 9 frames, 24x48 px cells): R = shading, G = slot
 //   (skin / top / bottom / shoe / hair), B = detail; the person's own colours (cell averages of its garments after the same
@@ -35,7 +36,7 @@ void vat135(){int fr=int(iMisc.z+.5),part=int(cinfo.y+.5);
   if(s==0)vCA=iSkin.rgb;else if(s==5)vCA=iShoe.rgb;
   else if(s==4){vCA=iBotC.rgb;vCB=vec3(iBotC.w,1.,iMisc.y);vTile=cell135(iCells.y);}
   else{vCA=iTopC.rgb;vCB=vec3(iTopC.w,1.,iMisc.x);vTile=cell135(iCells.x+float(s-1));}}
- else if(part<4){vMode=1.;float t=iMisc.w*2.+(part==1?0.:1.);vTile=vec2(mod(t,8.),floor(t/8.))*128.;vCA=vec3(1.);}
+ else if(part<4){vMode=1.;float hw=floor(iMisc.w+.01),t=hw*3.+(part==1?(iMisc.w-hw>.25?2.:0.):1.);vTile=vec2(mod(t,8.),floor(t/8.))*128.;vCA=vec3(1.);}
  else if(part>=12){vMode=3.;vSlot=4.;vCA=unpack135(iCells.w);}
  else{vMode=2.;int tk=int(cinfo.z+.5);vCA=tk==1?unpack135(iProp.x):tk==2?unpack135(iProp.y):vec3(1.);}}
 `;
@@ -93,9 +94,9 @@ export function createTierB135(lib,uniforms){const group=new T.Group();group.nam
   const mk=cap=>{const at=instAttrs(b.g,cap),mesh=new T.InstancedMesh(b.g,m,cap);mesh.frustumCulled=false;mesh.count=0;mesh.name='crowd135 B '+lib.bodies[bi].type+'/'+lib.bodies[bi].sil;return{mesh,at,cap};};
   const o={b,...mk(cap0),n:0,grow(){const c=o.cap*2,old=Object.fromEntries(IATTR135.map(([n])=>[n,o.at[n].array])),om=o.mesh.instanceMatrix.array;group.remove(o.mesh);o.mesh.dispose();Object.assign(o,mk(c));for(const[n]of IATTR135)o.at[n].array.set(old[n]);o.mesh.instanceMatrix.array.set(om);group.add(o.mesh);}};group.add(o.mesh);return bodies[bi]=o;}
  function begin(){for(const o of bodies)if(o)o.n=0;}
- // add one instance: world matrix m (Matrix4), record r (bRecord135), frame f
- function push(bi,m,r,f){const o=body(bi);if(o.n>=o.cap)o.grow();const i=o.n++;o.mesh.setMatrixAt(i,m);r[14]=f;let k=0;
-  for(const[n,s]of IATTR135){o.at[n].array.set(r.subarray(k,k+s),i*s);k+=s;}}
+ // add one instance: world matrix m (Matrix4), record r (bRecord135), frame f, blink = eyes shut this frame
+ function push(bi,m,r,f,blink=false){const o=body(bi);if(o.n>=o.cap)o.grow();const i=o.n++;o.mesh.setMatrixAt(i,m);r[14]=f;let k=0;
+  for(const[n,s]of IATTR135){o.at[n].array.set(r.subarray(k,k+s),i*s);k+=s;}if(blink)o.at.iMisc.array[i*4+3]+=.5;}
  function end(){let tris=0;for(const o of bodies)if(o){o.mesh.count=o.n;if(o.n){o.mesh.instanceMatrix.needsUpdate=true;for(const[n]of IATTR135)o.at[n].needsUpdate=true;}tris+=o.n*o.b.tris;}return tris;}
  function dispose(){for(const o of bodies)if(o){o.mesh.dispose();o.b.g.dispose();o.b.vat.dispose();}for(const t of Object.values(tex))t.dispose();for(const m of mats)m.dispose();group.removeFromParent();}
  return{group,body,begin,push,end,dispose,get draws(){return bodies.filter(o=>o&&o.n).length;}};}
