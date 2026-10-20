@@ -8,7 +8,8 @@
 // Textures: bc/tools/retail138_assets.py (art-v138retail generated large → PS1 crush). lod 1 = shell + front only.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {retail138LayoutFill} from './retail138-grid.js?v=138d'; // R4 Layout A/B grid generator over the R2/R3 module libraries
+import {retail138LayoutFill} from './retail138-grid.js?v=138d';
+import {retail138BakeMark,retail138BakeDefaults,retail138Bake,r138GridPlane} from './retail138-bake.js?v=138e'; // R5 per-store light bake // R4 Layout A/B grid generator over the R2/R3 module libraries
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138a',PI=Math.PI;
 function tex(name,srgb=true,rep=true){const t=new T.TextureLoader().load(A+name+'.webp?v='+V);if(srgb)t.colorSpace=T.SRGBColorSpace;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;t.anisotropy=4;t.magFilter=T.NearestFilter;return t;}
 // interior finishes glow a little from their own albedo: the cavity sits in the sun's shadow and has no real lamps until the R5 bake
@@ -41,8 +42,8 @@ export function retail138Plan(spec,w,d,bay,bays){
  return{kind:R.kind,market,h,i0,i1:i0+k,x0,x1,sd,C,doorX:(x0+x1)/2+dx,doorW,sign:(market?0:4)+(h>>>18)%4};
 }
 // inward-facing interior quad helpers (PlaneGeometry faces +z)
-function wallX(b,key,x,z0,z1,y0,y1,face,tone=1){b.plane(key,x,(y0+y1)/2,(z0+z1)/2,z1-z0,y1-y0,face>0?PI/2:-PI/2,0,tone);}
-function wallZ(b,key,z,x0,x1,y0,y1,face,tone=1){b.plane(key,(x0+x1)/2,(y0+y1)/2,z,x1-x0,y1-y0,face>0?0:PI,0,tone);}
+function wallX(b,key,x,z0,z1,y0,y1,face){r138GridPlane(b,key,URBAN_TILE_SIZE[key],x,(y0+y1)/2,(z0+z1)/2,z1-z0,y1-y0,face>0?PI/2:-PI/2,0,.45);}
+function wallZ(b,key,z,x0,x1,y0,y1,face){r138GridPlane(b,key,URBAN_TILE_SIZE[key],(x0+x1)/2,(y0+y1)/2,z,x1-x0,y1-y0,face>0?0:PI,0,.45);}
 /** Replaces the body box + solid of the streetwall building (non-arcade). wall = exterior material key. */
 export function retail138Body(b,P,{w,d,h,ground,wall}){
  const zf=d/2,zb=zf-P.sd,{x0,x1}=P,cx=(x0+x1)/2,sw=x1-x0;
@@ -55,12 +56,12 @@ export function retail138Body(b,P,{w,d,h,ground,wall}){
 }
 /** Storefront + interior finishes. Called after retail138Body, frame = building centre at sidewalk level, +z = street. */
 export function* retail138Task(b,P,{w,d,ground,lod}){
- addRetail138Materials(b.mats);
+ addRetail138Materials(b.mats);const mark=retail138BakeMark(b);
  const zf=d/2,zb=zf-P.sd,{x0,x1,C,market}=P,cx=(x0+x1)/2,sw=x1-x0,h=P.h;
  const FL=market?'r138floorM':'r138floorB',WL=market?'r138wallM':'r138wallB';
  // ---- interior finishes ----
- b.plane(FL,cx,.006,(zb+zf)/2,sw,P.sd,0,-PI/2);b.walk(cx,(zb+zf)/2,sw,P.sd,0);
- b.plane('r138ceil',cx,C-.006,(zb+zf)/2,sw,P.sd,0,PI/2);
+ r138GridPlane(b,FL,URBAN_TILE_SIZE[FL],cx,.006,(zb+zf)/2,sw,P.sd,0,-PI/2,lod?99:.3);b.walk(cx,(zb+zf)/2,sw,P.sd,0);
+ r138GridPlane(b,'r138ceil',URBAN_TILE_SIZE.r138ceil,cx,C-.006,(zb+zf)/2,sw,P.sd,0,PI/2,lod?99:.5);
  wallX(b,WL,x0+.006,zb,zf-.2,0,C,1);wallX(b,WL,x1-.006,zb,zf-.2,0,C,-1);wallZ(b,WL,zb+.006,x0,x1,0,C,1);
  for(const[x,f]of[[x0+.02,1],[x1-.02,-1]])b.box('r138dark',x,.05,(zb+zf)/2-.1,.03,.1,P.sd-.2);b.box('r138dark',cx,.05,zb+.02,sw,.1,.03);
  // staff door (back wall) + exit sign
@@ -98,7 +99,8 @@ export function* retail138Task(b,P,{w,d,ground,lod}){
   // cart corral stub + mat at the door
   b.box('r138dark',P.doorX,.008,zf-.9,P.doorW+.4,.012,1.2);
  }
- if(lod)return;
- yield;
- if(!(typeof location!=='undefined'&&/[?&]r138fill=0/.test(location.search)))yield* retail138LayoutFill(b,P,{d});
+ if(!lod){yield;
+  if(!(typeof location!=='undefined'&&/[?&]r138fill=0/.test(location.search)))yield* retail138LayoutFill(b,P,{d});}
+ retail138BakeDefaults(b,mark,P,{d});
+ if(!lod){yield;yield* retail138Bake(b,mark,P,{d});}
 }
