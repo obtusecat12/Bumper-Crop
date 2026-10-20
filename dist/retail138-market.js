@@ -50,6 +50,7 @@ function goodsRun(b,r,key,cat,x0,x1,y,zFront,depth,h){
   facing(b,key,slot,u0,uw,(a+c)/2,y+hh/2,zFront-dz+.001,w-.012,hh);}
 }
 function priceLip(b,r,x0,x1,y,z){const w=x1-x0;uvPlane(b,'r138price',r()*4,0,r()*4+w/2.4,1,(x0+x1)/2,y,z,w,.045);b.box('r138gond',(x0+x1)/2,y-.035,z-.01,w,.025,.02);}
+export function caseBox138(b,r,x,y,z,w,h,d,ry=0){caseBox(b,r,x,y,z,w,h,d,ry);}
 function caseBox(b,r,x,y,z,w,h,d,ry=0){
  b.push(x,y,z,ry);b.box('r138kraft',0,h/2,0,w-.004,h,d-.004);
  const c=(r()*4)|0,v0=1-(c+1)/4,v1=1-c/4;uvPlane(b,'r138case',0,v0,1,v1,0,h/2,d/2,w,h);uvPlane(b,'r138case',0,v0,.6,v1,w/2,h/2,0,d,h,PI/2);b.pop();

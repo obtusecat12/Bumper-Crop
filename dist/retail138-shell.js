@@ -8,8 +8,7 @@
 // Textures: bc/tools/retail138_assets.py (art-v138retail generated large → PS1 crush). lod 1 = shell + front only.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {retail138MarketFill} from './retail138-market.js?v=138b'; // R2 fixtures (provisional fill until the R4 layouts)
-import {retail138BodegaFill} from './retail138-bodega.js?v=138c'; // R3 bodega fixtures (provisional fill)
+import {retail138LayoutFill} from './retail138-grid.js?v=138d'; // R4 Layout A/B grid generator over the R2/R3 module libraries
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138a',PI=Math.PI;
 function tex(name,srgb=true,rep=true){const t=new T.TextureLoader().load(A+name+'.webp?v='+V);if(srgb)t.colorSpace=T.SRGBColorSpace;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;t.anisotropy=4;t.magFilter=T.NearestFilter;return t;}
 // interior finishes glow a little from their own albedo: the cavity sits in the sun's shadow and has no real lamps until the R5 bake
@@ -101,5 +100,5 @@ export function* retail138Task(b,P,{w,d,ground,lod}){
  }
  if(lod)return;
  yield;
- if(!(typeof location!=='undefined'&&/[?&]r138fill=0/.test(location.search)))yield* (market?retail138MarketFill(b,P,{d}):retail138BodegaFill(b,P,{d}));
+ if(!(typeof location!=='undefined'&&/[?&]r138fill=0/.test(location.search)))yield* retail138LayoutFill(b,P,{d});
 }
