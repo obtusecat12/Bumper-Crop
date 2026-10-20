@@ -425,6 +425,7 @@ def key_clips(rig, tname):
 
 # ---- V75-style uv per face corner (same slots as bodies135 split75: 0 skin, 1 top front, 2 top back, 3 sleeve, 4 bottom,
 # 5 shoe), welded into split vertices + map[] onto the baked (unsplit, smooth-normal) vertices.
+TORSO_W = float(__import__('os').environ.get('TORSO_W', '.15'))
 def split137(m):
   K = m.sk; s = K['s']; coat = K['coat']; skirtish = K['skirtish']; shorts = K['shorts']; hem = K['hem']; B = K['B']
   yT = 1.485 * s; yB = (hem * s) if coat else m.hemY
@@ -440,6 +441,10 @@ def split137(m):
     if dom == 'hand': return 'skin', dom
     if dom == 'foot' or (dom == 'shin' and lo < m.shoeY): return 'shoe', dom
     if dom == 'head' or (hi > m.collarY and abs(cx) < .1 * s and dom in ('neck', 'chest', 'clavicle', 'spine')): return 'skin', dom
+    if dom == 'upperArm' and not m.ftag.get(fi):
+      # Q4: chest-side faces under the armpit carry blended chest/arm weights -> torso uv (they showed the sleeve panel)
+      tw = min(sum(x for n, x in m.w[i] if BONECLS(n) in ('chest', 'spine', 'clavicle', 'hips', 'neck')) / max(1e-6, sum(x for n, x in m.w[i])) for i in f)
+      if tw > TORSO_W and abs(cx) < abs(B['upperArmL'][1][0]): dom = 'chest'
     if dom in ('upperArm', 'foreArm'):
       armw = min(sum(x for n, x in m.w[i] if BONECLS(n) in ('upperArm', 'foreArm', 'hand')) / max(1e-6, sum(x for n, x in m.w[i])) for i in f)
       if not (coat or (sil_child_long(m))) and lo < m.cutY and armw > .8: return 'skin', dom
