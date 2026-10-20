@@ -1,7 +1,10 @@
-Crowd bodies (V137, assets/crowd135/crowd135.bin) are derived from:
-  "PS2 Styled Characters" (PS2CharacterBase Masc / Femme) by Wobble Blocks — CC0 1.0
-  https://opengameart.org/content/ps2-styled-characters
-  (author's note: "CC0 but do feel free to tag us on socials @WobbleBlocks")
-Changes: heads/hair/eyes removed (replaced by retro-head130 heads), arms lowered, re-skinned to the Bumper Crop 19-bone rig,
-per-type girth, garment shells (coat tails, skirts, sleeve hems) added, re-UV'd to the crowd135 garment atlas; built by
-bc/scripts/crowd137/extract137.py + bodies137.py (Blender 5.1).
+Crowd bodies (V137 Q1b, assets/crowd135/crowd135.bin) are derived from:
+  "free psx and n64 male base mesh" (psx_male_base_mesh.glb) by orange juice games — CC0 1.0 Universal
+  https://orange-juice-games.itch.io/psx-and-n64-male-base-mesh
+Changes: head removed at the jaw (replaced by retro-head130 heads), modelled neck kept and extended into the head, arms lowered,
+legs lengthened 6 %, uv seams welded, one Catmull-Clark level, edge loops at garment cut lines, re-skinned to the Bumper Crop
+19-bone rig, female / child / heavy shapes derived from it, per-type girth and shoulder width, garment shells (coat tails, skirts,
+sleeve hems) added, re-UV'd to the crowd135 garment atlas; built by bc/scripts/crowd137/extract137b.py + bodies137.py (Blender 5.1).
+
+Earlier V137 Q1 used "PS2 Styled Characters" by Wobble Blocks (CC0 1.0, https://opengameart.org/content/ps2-styled-characters);
+that base is no longer used in the shipped bodies (bc/scripts/crowd137/extract137.py kept for reference).

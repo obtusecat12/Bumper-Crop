@@ -1,4 +1,4 @@
-# V137 Q1 crowd bodies (notes/spec-1020-crowd-quality.md). Run with Blender 5.1 (arm64):
+# V137 Q1/Q1b crowd bodies (Q1b 10-20: base = orange juice games CC0 PSX base via extract137b.py, modelled neck) (notes/spec-1020-crowd-quality.md). Run with Blender 5.1 (arm64):
 #   blender -b -P bc/scripts/crowd137/bodies137.py -- OUT_DIR BASE_JSON
 # Same output contract as crowd135/bodies135.py (crowd135.bin, version 135z layout: baked walk/idle frames, split V75 uv,
 # head bind meshes + bone matrices, accessories) but the 12 bodies are no longer separate tubes: each one is derived from a
@@ -23,15 +23,21 @@ TYPES = {
 }
 # per-bone girth (perpendicular scale about the bone segment, blended by skin weights). belly = extra forward push on spine.
 GIRTH = {
- 'man':   dict(upperArm=1.18, clavicle=1.08, chest=1.06, foreArm=1.10, neck=1.06),
- 'woman': dict(),
+ 'man':   dict(upperArm=1.10, clavicle=1.10, chest=1.12, spine=1.08, foreArm=1.06, neck=1.06, thigh=1.05),
+ 'woman': dict(upperArm=.92, foreArm=.92, neck=.92),
  'heavy': dict(hips=1.22, spine=1.46, chest=1.18, clavicle=1.10, upperArm=1.22, foreArm=1.12, thigh=1.24, shin=1.10, neck=1.16, belly=1.25),
  'child': dict(hips=1.08, spine=1.12, chest=1.10, upperArm=1.12, foreArm=1.08, thigh=1.12, shin=1.08, neck=1.0),
 }
+SHW = {'man': .016, 'heavy': .024, 'woman': -.004, 'child': 0.}   # Q1b shoulder width: arms shifted out (joints too)
+ARMF = {'clavicle': .5, 'upperArm': 1., 'foreArm': 1., 'hand': 1.}
+tname_of = lambda t: next(k for k, v in TYPES.items() if v is t)
+BONECLS = lambda n: n.rstrip('LR')
 SILS = ['short', 'coat', 'skirt']   # 'skirt' = skirt for woman/child, shorts for man/heavy
 NS = 14
 REG = {'skin': 0, 'top': 1, 'bottom': 2, 'shoe': 3, 'coat': 4, 'trim': 5}
 J0 = BASE['joints']
+# Q1b landmarks of the base (orange juice games CC0 base, extract137b.py): thigh joint, knee, chest/shoulder line
+HIP = J0['thighL'][1]; KNEE = J0['shinL'][1]
 CHILD = {'hips': 'spine', 'spine': 'chest', 'chest': 'neck', 'neck': 'head'}
 for s_ in 'LR': CHILD.update({'clavicle' + s_: 'upperArm' + s_, 'upperArm' + s_: 'foreArm' + s_, 'foreArm' + s_: 'hand' + s_, 'thigh' + s_: 'shin' + s_, 'shin' + s_: 'foot' + s_})
 
@@ -40,7 +46,10 @@ def bones_for(t):
   PAR = {'hips': None, 'spine': 'hips', 'chest': 'spine', 'neck': 'chest', 'head': 'neck'}
   for s_ in 'LR': PAR.update({'clavicle' + s_: 'chest', 'upperArm' + s_: 'clavicle' + s_, 'foreArm' + s_: 'upperArm' + s_, 'hand' + s_: 'foreArm' + s_,
                               'thigh' + s_: 'hips', 'shin' + s_: 'thigh' + s_, 'foot' + s_: 'shin' + s_})
-  for n, par in PAR.items(): p = J0[n]; B[n] = (par, (p[0] * s, p[1] * s, p[2] * s))
+  dx = SHW.get(tname_of(t), 0.)
+  for n, par in PAR.items():
+    p = J0[n]; f = ARMF.get(BONECLS(n), 0.) * dx * (1 if p[0] > 0 else -1)
+    B[n] = (par, ((p[0] + f) * s, p[1] * s, p[2] * s))
   return B
 
 TAIL = {'hips': 'spine', 'spine': 'chest', 'chest': 'neck', 'neck': 'head', 'clavicleL': 'upperArmL', 'clavicleR': 'upperArmR',
@@ -73,18 +82,19 @@ def body(tname, sil):
   G = dict(GIRTH[tname]); belly = G.pop('belly', 1.)
   if coat:
     for k in ('hips', 'spine', 'chest', 'clavicle', 'upperArm', 'foreArm'): G[k] = G.get(k, 1.) * (1.07 if k != 'foreArm' else 1.05)
-  m = Body(); kneeY = J0['shinL'][1]; midThigh = (J0['thighL'][1] + kneeY) / 2 - .03
+  m = Body(); m.yb = []; kneeY = J0['shinL'][1]; midThigh = (J0['thighL'][1] + kneeY) / 2 - .03
   for p, w in zip(V0, W0):
     q = Vector((0, 0, 0)); tot = 0.
     for n, x in w.items():
       c = closest(p, n); k = G.get(BONECLS(n), 1.)
       if BONECLS(n) in ('thigh', 'shin'):
-        if skirtish and (BONECLS(n) == 'shin' or p.y < J0['hipsL' if False else 'hips'][1] - .12): k *= .86   # bare legs, slimmer than trousers
+        if skirtish and (BONECLS(n) == 'shin' or p.y < HIP - .05): k *= .86   # bare legs, slimmer than trousers
         if shorts and p.y < midThigh: k *= .88
       off = p - c
       if BONECLS(n) == 'spine' and off.z > 0: off = Vector((off.x, off.y, off.z * belly))
       q += x * (c + off * k); tot += x
-    q /= tot; m.v.append(tuple(q * s)); m.w.append(list(w.items()))
+    q /= tot; af = sum(x * ARMF.get(BONECLS(n), 0.) for n, x in w.items()) / tot; q.x += af * SHW.get(tname, 0.) * (1 if q.x > 0 else -1)
+    m.v.append(tuple(q * s)); m.w.append(list(w.items())); m.yb.append(p.y * s)
   m.f = [tuple(f) for f in F0]
   # garment region per vertex (accessory extents) and per face (uv slot), in the base frame scaled by s
   m.v0 = len(m.v)
@@ -96,27 +106,31 @@ def body(tname, sil):
     return best[1]
   m.dom = [BONECLS(max(w, key=lambda x: x[1])[0]) for w in m.w]
   TOR = ('hips', 'spine', 'chest')
-  m.hemY = pick((1.03 if t['src'] == 'Masc' else 1.04) * s, lambda i: m.dom[i] in TOR and abs(m.v[i][0]) < .2 * s)
+  m.hemY = pick((HIP + .07) * s, lambda i: m.dom[i] in TOR and abs(m.v[i][0]) < .2 * s)
   m.collarY = pick(1.465 * s, lambda i: m.dom[i] in ('neck', 'chest') and abs(m.v[i][0]) < .1 * s, .04 * s)
   m.shoeY = pick(.085 * s, lambda i: m.dom[i] in ('shin', 'foot'), .04 * s)
   m.cutY = pick(J0['upperArmL'][1] * s - .17 * s, lambda i: m.dom[i] in ('upperArm', 'foreArm'), .05 * s)
   m.midY = pick(midThigh * s, lambda i: m.dom[i] in ('thigh',), .05 * s)
+  CU = BASE.get('cuts')
+  if CU:   # Q1b: the base has edge loops exactly at the cut lines; classify by the undeformed (base) height
+    m.hemY = CU['hem'] * s; m.cutY = CU['sleeve'] * s + 1e-4; m.midY = CU['mid'] * s + 1e-4
   print('CUTS', tname, sil, 'hem %.3f collar %.3f shoe %.3f sleeve %.3f thigh %.3f' % (m.hemY, m.collarY, m.shoeY, m.cutY, m.midY))
   m.dom = [BONECLS(max(w, key=lambda x: x[1])[0]) for w in m.w]
   m.sk = dict(s=s, coat=coat, skirtish=skirtish, shorts=shorts, hem=None, B=B, mid=midThigh * s)
   m.r = []
   for i, (p, w) in enumerate(zip(m.v, m.w)):
     dom = m.dom[i]
-    m.r.append('skin' if dom == 'hand' else 'shoe' if dom == 'foot' else 'bottom' if dom in ('thigh', 'shin') or p[1] < m.hemY else 'top')
+    m.r.append('skin' if dom in ('hand', 'head') else 'shoe' if dom == 'foot' else 'bottom' if dom in ('thigh', 'shin') or p[1] < m.hemY else 'top')
   m.extra = []   # (first vertex, kind) of welded-on garment shells
   m.ftag = {}    # face index -> uv kind for added shells
   long_sleeve = coat or (sil == 'skirt' and tname == 'child')
   if not long_sleeve:
-    for side in 'LR': add_lip(m, lambda i, sd=side: m.dom[i] in ('upperArm', 'foreArm') and (m.v[i][0] > 0) == (sd == 'L'), m.cutY, -1,
+    for side in 'LR': add_lip(m, lambda i, sd=side: m.dom[i] in ('upperArm', 'foreArm') and (m.v[i][0] > 0) == (sd == 'L'), m.cutY - 3e-4, -1,
                               lambda p, sd=side: closest(Vector(p) / s, 'upperArm' + sd) * s, .007 * s, .016 * s, 'sleeve')
   if coat or skirtish: add_tail(m, tname, 'coat' if coat else 'skirt')
   return m, B
 
+YB = lambda m, i: m.yb[i] if i < len(m.yb) else m.v[i][1]
 def add_lip(m, ok, cutY, up, centre, dout, dy, kind):
   """cloth thickness at a garment edge: the vertex loop on the cloth side of cutY (up=-1: cloth above the cut, edge faces
   down) is duplicated, pushed outward by dout and past the cut by dy, and bridged to it -> a visible rolled edge."""
@@ -124,7 +138,7 @@ def add_lip(m, ok, cutY, up, centre, dout, dy, kind):
   for f in m.f[:]:
     for a, b in ((f[0], f[1]), (f[1], f[2]), (f[2], f[0])):
       if not (ok(a) and ok(b)): continue
-      ya, yb = m.v[a][1], m.v[b][1]
+      ya, yb = YB(m, a), YB(m, b)
       cloth = (lambda y: y > cutY) if up < 0 else (lambda y: y < cutY)
       if cloth(ya) != cloth(yb): ring.add(a if cloth(ya) else b)
   if len(ring) < 4: print('LIP skip', kind, len(ring)); return
@@ -157,9 +171,9 @@ def add_tail(m, tname, kind):
       if y0 <= p[1] <= y1: rx = max(rx, abs(p[0])); rz = max(rz, p[2]); rzb = max(rzb, -p[2])
     return rx, rz, rzb
   rx0, rz0, rzb0 = ext(top - .06 * s, top + .02 * s)
-  rx1, rz1, rzb1 = ext(.62 * s, top)   # whole span under the tail (buttocks are wider than the thighs)
+  rx1, rz1, rzb1 = ext((KNEE + .09) * s, top)   # whole span under the tail (buttocks are wider than the thighs)
   rx0, rz0, rzb0 = max(rx0, rx1), max(rz0, rz1), max(rzb0, rzb1) + .008
-  kn = (.50 if kind == 'coat' else (.56 if tname == 'woman' else .52)) * s; m.sk['hem'] = kn / s
+  kn = (KNEE + (-.064 if kind == 'coat' else (0 if tname == 'woman' else -.044))) * s; m.sk['hem'] = kn / s
   rings = [(top, rx0 + .025, rz0 + .015, rzb0 + .015, 0), ((top + kn) / 2 + .02 * s, rx1 + .03, rz1 + .03, rzb1 + .03, 1),
            (kn, rx1 + .05, rz1 + .05, rzb1 + .05, 2), (kn + .025 * s, rx1 + .038, rz1 + .038, rzb1 + .038, 3)]
   R = []; first = len(m.v)
@@ -250,24 +264,24 @@ def accessories(tname, meshes, B):
   t = TYPES[tname]; s = t['h']; k = t['head']; sc = .8 if tname == 'child' else 1.; out = {}
   P = lambda n: B[n][1]
   # backpack on the chest bone, flat against the back
-  ch = P('chest')[1]; yb = ch - .08 * s; bh = .38 * sc; bw = .28 * sc; bd = .13 * sc
+  ch = P('upperArmL')[1] - .092 * s; yb = ch - .08 * s; bh = .38 * sc; bw = .28 * sc; bd = .13 * sc
   back = extent(meshes, yb - bh / 2, yb + bh / 2, 2, -1) + .006
   A = Acc(PROP_CELL['backpack']); side = (.04, .35, .12, .65); topr = (.3, .03, .7, .1)
   A.box((0, yb, -back - bd / 2), bw, bh, bd, {'-z': (0, 0, 1, 1), '+z': side, '+x': side, '-x': side, 'top': topr, 'bot': side}, taper=.86)
   fz = extent(meshes, 1.2 * s, 1.36 * s, 2, 1) + .008
   for sg in (1, -1):
     sx = sg * .085 * t['sh']
-    pts = [(sx * 1.1, yb + bh / 2 - .02, -back - .01), (sx, P('chest')[1] + .155 * s, -.07), (sx * 1.05, P('chest')[1] + .17 * s, .0), (sx * 1.15, P('chest')[1] + .12 * s, fz * .8), (sx * 1.25, ch - .05 * s, fz)]
+    pts = [(sx * 1.1, yb + bh / 2 - .02, -back - .01), (sx, ch + .155 * s, -.07), (sx * 1.05, ch + .17 * s, .0), (sx * 1.15, ch + .12 * s, fz * .8), (sx * 1.25, ch - .05 * s, fz)]
     A.strip(pts, lambda q: (0, .6, 0) if abs(q[2]) < .03 else (0, 0, 1 if q[2] > 0 else -1), .045 * sc, side)
   out['backpack'] = ('chest', A)
   # crossbody satchel on the spine bone: bag at the right hip (-x), strap over the left shoulder
-  A = Acc(PROP_CELL['satchel']); yh = .99 * s; sh_, sw, sd = .2 * sc, .28 * sc, .07 * sc
+  A = Acc(PROP_CELL['satchel']); yh = (HIP + .06) * s; sh_, sw, sd = .2 * sc, .28 * sc, .07 * sc
   hx = extent(meshes, yh - sh_ / 2, yh + sh_ / 2, 0, -1) + .008
   edge = (.03, .3, .09, .6)
   A.box((-hx - sd / 2, yh, .03), sd, sh_, sw, {'-x': (0, 0, 1, 1), '+x': edge, '+z': edge, '-z': edge, 'top': (.3, .02, .7, .08), 'bot': edge})
   fz2 = lambda y: extent(meshes, y - .05, y + .05, 2, 1) + .01
   bz2 = lambda y: extent(meshes, y - .05, y + .05, 2, -1) + .01
-  shy = P('chest')[1] + .16 * s; shx = .1 * t['sh']
+  shy = ch + .16 * s; shx = .1 * t['sh']
   front = [(-hx - .01, yh + sh_ / 2, .03), (-hx * .55, yh + .16 * s, fz2(yh + .16 * s)), (-.02, 1.2 * s, fz2(1.2 * s)), (shx * .6, 1.36 * s, fz2(1.36 * s) * .9), (shx, shy, .0)]
   backp = [(shx, shy, .0), (shx * .6, 1.36 * s, -bz2(1.36 * s) * .9), (-.02, 1.2 * s, -bz2(1.2 * s)), (-hx * .55, yh + .16 * s, -bz2(yh + .16 * s)), (-hx - .01, yh + sh_ / 2, .0)]
   out_n = lambda q: (q[0] * .3, .5 if abs(q[2]) < .04 else 0, 1 if q[2] > 0 else -1)
@@ -415,12 +429,13 @@ def split137(m):
     for i in f:
       for n, x in m.w[i]: acc[BONECLS(n)] = acc.get(BONECLS(n), 0) + x
     dom = max(acc, key=acc.get); cy = sum(m.v[i][1] for i in f) / 3; cx = sum(m.v[i][0] for i in f) / 3
-    lo = max(m.v[i][1] for i in f); hi = min(m.v[i][1] for i in f)   # all verts below lo / above hi
+    lo = max(YB(m, i) for i in f); hi = min(YB(m, i) for i in f)   # all verts below lo / above hi
     if dom == 'hand': return 'skin', dom
     if dom == 'foot' or (dom == 'shin' and lo < m.shoeY): return 'shoe', dom
-    if hi > m.collarY and abs(cx) < .1 * s and dom in ('neck', 'chest', 'clavicle', 'spine'): return 'skin', dom
+    if dom == 'head' or (hi > m.collarY and abs(cx) < .1 * s and dom in ('neck', 'chest', 'clavicle', 'spine')): return 'skin', dom
     if dom in ('upperArm', 'foreArm'):
-      if not (coat or (sil_child_long(m))) and lo < m.cutY: return 'skin', dom
+      armw = min(sum(x for n, x in m.w[i] if BONECLS(n) in ('upperArm', 'foreArm', 'hand')) / max(1e-6, sum(x for n, x in m.w[i])) for i in f)
+      if not (coat or (sil_child_long(m))) and lo < m.cutY and armw > .8: return 'skin', dom
       return 'sleeve', dom
     if dom in ('thigh', 'shin'):
       if skirtish: return ('waist' if hi > (hem + .1) * s else 'skin'), dom   # under the skirt: shorts/tights, not skin
@@ -436,10 +451,10 @@ def split137(m):
     if kind == 'skirt':
       a = math.atan2(x, z); return (4, .5 + .48 * math.sin(a), cl((m.hemY + .01 * s - y) / (m.hemY + .01 * s - hem * s)))
     if kind == 'waist':
-      a = math.atan2(x, z); return (4, .5 + .475 * math.sin(a), cl((1.06 * s - y) / (.985 * s)))
+      a = math.atan2(x, z); return (4, .5 + .475 * math.sin(a), cl(((HIP + .1) * s - y) / ((HIP + .025) * s)))
     if kind == 'leg':
       side = 'L' if x > 0 else 'R'; c = closest(Vector(p) / s, 'thigh' + side if y > B['shinL'][1][1] else 'shin' + side) * s
-      a = math.atan2(x - c.x, z - c.z); return (4, (.75 if side == 'L' else .25) + .23 * math.sin(a), cl((1.06 * s - y) / (.985 * s)))
+      a = math.atan2(x - c.x, z - c.z); return (4, (.75 if side == 'L' else .25) + .23 * math.sin(a), cl(((HIP + .1) * s - y) / ((HIP + .025) * s)))
     if kind == 'sleeve':
       side = 'L' if x > 0 else 'R'; c = closest(Vector(p) / s, 'upperArm' + side if y > B['foreArmL'][1][1] else 'foreArm' + side) * s
       a = math.atan2((x - c.x) * (1 if side == 'L' else -1), z - c.z); return (3, .5 + .45 * math.sin(a), cl((yS - y) / (yS - yW)))
