@@ -8,7 +8,7 @@
 // scratch-off dispenser, top-row liquor. Neon signs are emissive tube cells (neon.webp, 8 signs) + coloured tube strips.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140a';
+import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140b';
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138c',PI=Math.PI;
 function tex(name,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v='+V);t.colorSpace=T.SRGBColorSpace;t.wrapS=t.wrapT=rep?T.RepeatWrapping:T.ClampToEdgeWrapping;t.anisotropy=4;t.magFilter=T.NearestFilter;return t;}
 function glowM(name,glow,o={}){const m=tex(name,o.rep);return new T.MeshStandardMaterial({map:m,emissive:0xffffff,emissiveMap:m,emissiveIntensity:glow,roughness:o.rough??.7,vertexColors:true,...(o.side?{side:o.side}:{})});}

@@ -37,11 +37,27 @@ ITEMS = {
  'pasta':  dict(kind='box', file='box_pasta', h=.19, d=.045, rough=.7, metal=0),
  'pizza':  dict(kind='box', file='box_frozen', h=.29, d=.045, rough=.55, metal=0),
  'milk':   dict(kind='carton', file='carton_milk', h=.165, d=.096, rough=.5, metal=0),
+ # P1b (10-22): cool / dairy / frozen variety
+ 'energy': dict(kind='can', file='can_energy', r=.0265, body=.128, rough=.3, metal=.6),
+ 'sparkling': dict(kind='can', file='can_sparkling', r=.033, body=.102, rough=.32, metal=.55),
+ 'tea':    dict(kind='pet', file='pet_tea', r=.033, body=.08, rough=.28, metal=0, liquid=(214, 136, 64), cap=(236, 236, 230)),
+ 'sport':  dict(kind='pet', file='pet_sport', r=.034, body=.085, rough=.28, metal=0, liquid=(40, 120, 230), cap=(22, 60, 160)),
+ 'juice':  dict(kind='carton', file='carton_juice', h=.2, d=.07, rough=.5, metal=0),
+ 'butter': dict(kind='box', file='box_butter', h=.075, d=.035, rough=.4, metal=.35),
+ 'cheese': dict(kind='box', file='box_cheese', h=.15, d=.03, rough=.3, metal=0),
+ 'cream':  dict(kind='cup', file='cup_cream', r=.046, body=.05, rough=.42, metal=0),
+ 'icecream': dict(kind='cup', file='cup_icecream', r=.048, body=.09, rough=.5, metal=0),
+ 'frozenveg': dict(kind='bag', file='bag_frozenveg', h=.27, rough=.34, metal=0),
+ 'fish':   dict(kind='box', file='box_fish', h=.13, d=.04, rough=.55, metal=0),
+ 'dinner': dict(kind='box', file='box_dinner', h=.165, d=.04, rough=.55, metal=0),
  'detergent': dict(kind='jug', file='jug_detergent', h=.15, d=.12, rough=.38, metal=0, body=(28, 150, 160), cap=(240, 120, 30)),
 }
+# PRE: absolute px bbox applied before crop_print (sheets with a vignetted background / caption under the print)
+PRE = {'juice': (580, 55, 828, 715), 'cheese': (459, 76, 923, 705), 'frozenveg': (471, 48, 938, 748), 'sparkling': (122, 117, 1519, 611)}
 MANUAL = {'lime': (.005, .235, .995, .765), 'cereal1': (.175, .04, .995, .995)}
 CATS = {'dry': ['cereal1', 'cereal2', 'crackers', 'pasta', 'chips1', 'chips2', 'shrimp', 'beans', 'salsa', 'detergent'],
-        'cool': ['cola', 'lime', 'water', 'orange'], 'dairy': ['milk', 'yogurt'], 'frozen': ['pizza'],
+        'cool': ['cola', 'lime', 'water', 'orange', 'energy', 'sparkling', 'tea', 'sport'],
+        'dairy': ['milk', 'yogurt', 'juice', 'butter', 'cheese', 'cream'], 'frozen': ['pizza', 'icecream', 'frozenveg', 'fish', 'dinner'],
         'candy': ['candy', 'shrimp', 'chips1']}
 
 
@@ -203,7 +219,10 @@ cells = []  # (key, rgb Image, rough(0-1 array or float), metal, height-map kind
 meta = {}
 for key, it in ITEMS.items():
     k = it['kind']
-    art = crop_print(load(it['file']), k in ('can', 'tin', 'pet', 'jar', 'cup', 'bar'))
+    src = load(it['file'])
+    if key in PRE:
+        src = src.crop(PRE[key])
+    art = crop_print(src, k in ('can', 'tin', 'pet', 'jar', 'cup', 'bar'))
     if key in MANUAL:  # prints whose generated sheet kept a card / print marks around them
         f = MANUAL[key]
         art = art.crop((int(f[0] * art.width), int(f[1] * art.height), int(f[2] * art.width), int(f[3] * art.height)))

@@ -8,7 +8,8 @@
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import {r138GridPlane} from './retail138-bake.js?v=140a';
-import {goodsRun140,catKey140,product140} from './retail140-goods.js?v=140a'; // V140 P1 real-shape goods
+import {goodsRun140,catKey140,product140,chestFill140} from './retail140-goods.js?v=140b';
+import {pile140,PRODUCE140} from './retail140-produce.js?v=140b'; // V140 P1b real fruit & veg // V140 P1 real-shape goods
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138b',PI=Math.PI;
 export const GOODS138={dry:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],cool:[20,21,22,23],dairy:[24,25,26,27],frozen:[28,29,30,31],candy:[32,33,34,35,36]};
@@ -129,11 +130,15 @@ export function multideck138(b,seed,{len=2.5,h=2.0,cat=GOODS138.dairy}){
 }
 // ---- 14. chest freezer (island or Layout B centre run) ----
 export function chest138(b,seed,{len=2.0,D=.92}){
- const r=rng(seed),h=.86;b.box('r138coolW',0,h/2-.02,0,len,h-.04,D);b.box('r138dark',0,.07,0,len+.01,.14,D+.01);
- b.box('r138steel',0,h-.02,0,len+.02,.04,D+.02);b.box('r138dark',0,.62,D/2+.006,len,.06,.01);b.box('r138dark',0,.62,-D/2-.006,len,.06,.01);
+ const r=rng(seed),h=.86,wt=.05,hw=h-.36;b.box('r138dark',0,.07,0,len+.01,.14,D+.01);
+ // V140 P1b: hollow tub (base + four insulated walls + rim strips) so the well's contents show through the lids
+ b.box('r138coolW',0,hw/2,0,len,hw,D);
+ for(const s of[-1,1]){b.box('r138coolW',0,hw+(h-.04-hw)/2,s*(D/2-wt/2),len,h-.04-hw,wt);b.box('r138coolW',s*(len/2-wt/2),hw+(h-.04-hw)/2,0,wt,h-.04-hw,D-2*wt);
+  b.box('r138steel',0,h-.02,s*(D/2-wt/2+.005),len+.02,.04,wt+.01);b.box('r138steel',s*(len/2-wt/2+.005),h-.02,0,wt+.01,.04,D-2*wt);}b.box('r138dark',0,.62,D/2+.006,len,.06,.01);b.box('r138dark',0,.62,-D/2-.006,len,.06,.01);
  // cavity contents: chest top view, random window so no two freezers match, then two sliding lids
  const uw=Math.min(1,len/2.6),u0=r()*(1-uw),vw=Math.min(1,D/1.9),v0=r()*(1-vw);
- uvPlane(b,'r138chest',u0,v0,u0+uw,v0+vw,0,h-.1,0,len-.1,D-.1,0,-PI/2);
+ if(R140)chestFill140(b,r,len-2*wt-.01,D-2*wt-.01,hw,h-.08);// real frozen packs in the well
+ else uvPlane(b,'r138chest',u0,v0,u0+uw,v0+vw,0,h-.1,0,len-2*wt,D-2*wt,0,-PI/2);
  for(const s of[-1,1]){b.plane('r138coolGlass',s*len/4+s*.02,h+.005+(s>0?.012:0),0,len/2+.04,D-.08,0,-PI/2);b.box('r138steel',s*len/4,h+.012+(s>0?.012:0),0,len/2,.01,.03);}
  b.solid(0,0,len+.04,D+.04);
 }
@@ -206,9 +211,11 @@ export function produceBin138(b,seed,{len=1.6,D=1.1}){
  for(const s of[-1,1]){b.box('r138wood',s*len/2,(hf+hb)/2-.05,0,.05,hb+.05,D);}
  b.box('r138wood',0,hf/2,D/2-.03,len,hf,.06);b.box('r138wood',0,hb/2,-D/2+.03,len,hb,.06);
  const tilt=Math.atan2(hb-hf,D),sl=Math.hypot(D,hb-hf)-.1,uw=Math.min(1,len/2.2),u0=r()*(1-uw),vw=Math.min(1,sl/1.5),v0=r()*(1-vw);
- uvPlane(b,'r138fruit',u0,v0,u0+uw,v0+vw,0,(hf+hb)/2+.04,0,len-.08,sl,0,-PI/2+tilt);
+ if(R140){const yc=(hf+hb)/2+.02,ch=Math.cos(tilt)*sl/2,sh=Math.sin(tilt)*sl/2;b.plane('r138goodsT',0,yc,0,len-.08,sl,0,-PI/2+tilt);
+  pile140(b,r,PRODUCE140.fruit,-len/2+.05,len/2-.05,ch,yc-sh,-ch,yc+sh,{sections:len>1.3?2:1});}
+ else{uvPlane(b,'r138fruit',u0,v0,u0+uw,v0+vw,0,(hf+hb)/2+.04,0,len-.08,sl,0,-PI/2+tilt);
  // a few loose fruit on the front lip so the pile has a silhouette
- for(let i=0;i<9;i++){const x=-len/2+.12+r()*(len-.24);b.sphere(r()<.5?'r138red':'r138orangeF',x,hf+.07+r()*.03,D/2-.1-r()*.12,.045,.042,.045);}
+ for(let i=0;i<9;i++){const x=-len/2+.12+r()*(len-.24);b.sphere(r()<.5?'r138red':'r138orangeF',x,hf+.07+r()*.03,D/2-.1-r()*.12,.045,.042,.045);}}
  b.box('r138dark',0,hf-.08,D/2+.004,len*.5,.12,.01);uvPlane(b,'r138price',r(),0,r()+.25,1,0,hf-.08,D/2+.011,len*.48,.1);
  b.solid(0,0,len+.06,D+.04);
 }
@@ -216,8 +223,11 @@ export function vegRack138(b,seed,{len=2.4,h=2.1}){
  const r=rng(seed),D=1.0;b.box('r138green',-len/2+.03,h/2,D/2,.06,h,D);b.box('r138green',len/2-.03,h/2,D/2,.06,h,D);
  b.box('r138steel',0,h/2+.4,.03,len,h-.8,.04);b.box('r138green',0,h-.1,.25,len,.2,.5);b.box('r138lamp',0,h-.205,.35,len-.2,.01,.06);
  b.box('r138green',0,.3,D/2,len,.6,D-.1);
+ const vk=PRODUCE140.veg.slice();for(let i=vk.length-1;i>0;i--){const j=(r()*(i+1))|0;[vk[i],vk[j]]=[vk[j],vk[i]];}// six kinds over three tiers, no repeats
  for(let k=0;k<3;k++){const y=.62+k*.3,z=D-.12-k*.28,dep=.42,uw=Math.min(1,len/2.6),u0=r()*(1-uw),v0=k/3;
-  uvPlane(b,'r138veg',u0,v0,u0+uw,v0+.33,0,y+.06,z-dep/2,len-.14,dep,0,-PI/2+.42);b.box('r138green',0,y-.04,z-dep/2,len-.12,.04,dep);b.box('r138dark',0,y,z+.01,len-.12,.08,.02);}
+  if(R140){const yc=y+.02,ch=Math.cos(.42)*dep/2,sh=Math.sin(.42)*dep/2,zc=z-dep/2;b.plane('r138green',0,yc,zc,len-.14,dep,0,-PI/2+.42);
+   pile140(b,r,[vk[2*k],vk[2*k+1]],-len/2+.08,len/2-.08,zc+ch,yc-sh,zc-ch,yc+sh,{sections:2,shuffle:false});}
+  else uvPlane(b,'r138veg',u0,v0,u0+uw,v0+.33,0,y+.06,z-dep/2,len-.14,dep,0,-PI/2+.42);b.box('r138green',0,y-.04,z-dep/2,len-.12,.04,dep);b.box('r138dark',0,y,z+.01,len-.12,.08,.02);}
  b.rod('r138steel',[-len/2+.08,1.48,.5],[len/2-.08,1.48,.5],.012);for(let i=0;i<8;i++)b.box('r138dark',-len/2+.2+i*(len-.4)/7,1.465,.5,.02,.03,.02);
  b.solid(0,D/2,len,D);
 }

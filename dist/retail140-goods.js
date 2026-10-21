@@ -7,8 +7,8 @@
 // (art-v140retail/p1); baseColor + roughness/metalness (G/B) + normal. Geometry takes the art's aspect (no stretching).
 // Products are built per shelf run straight into one merged geometry (one b.add per run) so a store stays cheap to build.
 import * as T from './vendor/three.module.min.js';
-import {UV140,ITEM140,CAT140} from './retail140-goods-uv.js?v=140a';
-const A=new URL('./assets/l11-v140/',import.meta.url).href,V='140a',PI=Math.PI;
+import {UV140,ITEM140,CAT140} from './retail140-goods-uv.js?v=140b';
+const A=new URL('./assets/l11-v140/',import.meta.url).href,V='140b',PI=Math.PI;
 function tex(name,srgb){const t=new T.TextureLoader().load(A+name+'.webp?v='+V);if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;return t;}
 export function addRetail140Goods(m){
  if(m.r138p140)return m;
@@ -68,9 +68,9 @@ function pillow(a,w,h,puff,fr,bk,nu=4,nv=6,crimp=.07){
 }
 function build(key){
  const it=ITEM140[key],a=new Acc(),k=it.kind,L=R(key+':label');
- if(k==='can'){const r=it.r,b0=.008,b1=b0+it.lh,M=sub(R(key+':lid'),.02,.45,.08,.55);
-  lathe(a,[[.026,0,M,0,1],[r,b0,L,0,1],[r,b1,M,0,1],[.027,.1225]],6);
-  disc(a,.027,.1215,R(key+':lid'),6);return a.done(2*r,2*r,.1225);}
+ if(k==='can'){const r=it.r,b0=.008,b1=b0+it.lh,M=sub(R(key+':lid'),.02,.45,.08,.55),rn=Math.min(.027,r*.84),H=b1+.0125;// slim cans get a narrower neck
+  lathe(a,[[r*.79,0,M,0,1],[r,b0,L,0,1],[r,b1,M,0,1],[rn,H]],6);
+  disc(a,rn,H-.001,R(key+':lid'),6);return a.done(2*r,2*r,H);}
  if(k==='tin'){const r=it.r,b0=.005,b1=b0+it.lh,H=b1+.005,B=R(key+':band');
   lathe(a,[[r-.002,0,B,0,.2],[r,b0,L,0,1],[r,b1,B,0,.2],[r-.002,H]],7);disc(a,r-.002,H-.0005,R(key+':lid'),7);return a.done(2*r,2*r,H);}
  if(k==='pet'){const r=it.r,lh=it.lh,y0=.045,y1=y0+lh,Bd=R(key+':body'),Cs=R(key+':capside');
@@ -111,6 +111,13 @@ function build(key){
  throw Error('r140 kind '+k);
 }
 const TPL=new Map();const tpl=k=>{if(!TPL.has(k))TPL.set(k,build(k));return TPL.get(k);};
+/** the same product lying on its back, front art facing up (+y), bottom toward −z (chest freezers, dump bins).
+ *  Round things (cans, cups, tubs) stay upright: tubs sit lid-up in a freezer. */
+const FLAT=new Map();
+function tplFlat(k){if(FLAT.has(k))return FLAT.get(k);const t=tpl(k);if(STACK.has(ITEM140[k].kind)){FLAT.set(k,t);return t;}
+ const p=new Float32Array(t.p.length),n=new Float32Array(t.n.length),d2=t.d/2;
+ for(let i=0;i<t.p.length;i+=3){const y=t.p[i+1],z=t.p[i+2];p[i]=t.p[i];p[i+1]=z+d2;p[i+2]=-y+t.h/2;const ny=t.n[i+1],nz=t.n[i+2];n[i]=t.n[i];n[i+1]=nz;n[i+2]=-ny;}
+ const f={p,n,u:t.u,w:t.w,d:t.h,h:t.d};FLAT.set(k,f);return f;}
 // ---------------- runs ----------------
 class Run{constructor(){this.p=[];this.n=[];this.u=[];}
  put(t,x,y,z,ry=0,s=1){const c=Math.cos(ry),sn=Math.sin(ry),P=t.p,N=t.n,U=t.u;
@@ -144,4 +151,18 @@ export function goodsRun140(b,r,cat,x0,x1,y,zFront,depth,h,{cold=false,filler=tr
 /** a single product (clip strips, counters) */
 export function product140(b,sku,x,y,z,ry=0,{cold=false,s=1}={}){addRetail140Goods(b.mats);const run=new Run();run.put(tpl(sku),x,y,z,ry,s);run.flush(b,cold?'r138p140c':'r138p140');}
 export function size140(sku){return tpl(sku);}
+/** chest-freezer cavity (V140 P1b): real frozen packs lying flat in SKU blocks across the well, two or three layers deep,
+ *  tubs upright between them, the top layer picked over (gaps, a few packs askew). Local frame: well centred on x/z, floor y. */
+export function chestFill140(b,r,len,D,y,top){
+ addRetail140Goods(b.mats);const run=new Run(),list=CAT140.frozen.slice();let x=-len/2+.01;
+ while(x<len/2-.06){const sku=list[(r()*list.length)|0],t=tplFlat(sku),n=1+((r()*3)|0),round=STACK.has(ITEM140[sku].kind);
+  // a block = one SKU, n columns along x, filled front to back across the well
+  for(let c=0;c<n&&x+t.w<=len/2-.005;c++){const cx=x+t.w/2;
+   for(let z=-D/2+.01;z+t.d<=D/2-.005;z+=t.d+.006){let lay=Math.max(1,Math.floor((top-y)/(t.h+.003)));
+    for(let k=0;k<lay;k++){const last=k===lay-1;if(last&&r()<.3)break;
+     const ry=last?(r()-.5)*(round?2:.5):(r()-.5)*.05;run.put(t,cx+(last?(r()-.5)*.02:0),y+k*(t.h+.003),z+t.d/2+(last?(r()-.5)*.02:0),ry);}}
+   x+=t.w+.006;}
+  x+=.01;}
+ run.flush(b,'r138p140c');
+}
 export function tris140(){const o={};for(const k of Object.keys(ITEM140))o[k]=tpl(k).p.length/9;return o;}
