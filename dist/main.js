@@ -52,7 +52,7 @@ import {initializeExitTextures} from './exit-textures.js?v=60';
 import {initializeReferenceTextures} from './reference-materials.js?v=60';
 import {initializeUrbanAssets} from './urban-assets.js?v=60';
 import {referenceEnvironment} from './reference-scenes.js?v=60';
-import {createExitScene} from './exit-scene.js?v=140h';
+import {createExitScene} from './exit-scene.js?v=140i';import {update140,take140,name140,hint140} from './retail140-pick.js?v=140i'; // V140 P6
 import {ExitAudio} from './exit-audio.js?v=60';
 import {initializeAlmondTextures,hydrateAlmondPickups,releaseAlmondBottle,almondVariant} from './almond-water-assets.js?v=60';
 import {createRuralPowerNetwork} from './rural-power-render.js?v=60';
@@ -799,6 +799,7 @@ function use(){
   else {const seat=availableTikiSeat80(state.x,state.z,state.yaw);if(!seat)return;tikiSeat=seat;Object.assign(state,{x:seat.x,z:seat.z,yaw:seat.yaw,pitch:-.06});toast('已坐下。E 起身。');}
   state.velocity.set(0,0,0);state.jump=state.vy=0;keys.clear();joy.x=joy.z=0;interaction=null;lookInput.reset(performance.now());cameraRig.resume();return;
  }
+ if(interaction?.kind==='retail-pick'){const p=interaction.p;interaction=null;const nm=name140(p);if(inventory.add(p.id,{v:p.v})>0){toast('背包满了，放不下'+nm+'。');return;}const wp=take140(p);audio.chime();toast('已拾取 '+nm+'。');try{const v=loot124().itemVariant(p.id,{v:p.v});if(v&&wp)waterInspection.begin(v,wp,camera);}catch{}state.bottles=waterInventory.length;updateHUD();return;} // V140 P6
  if(interaction?.kind==='atm-door'){void enterAtm136();return;}
  if(interaction?.kind==='tiki-door'){void enterTiki();return;}
  if(interaction?.kind==='bath-door'){enterBath();return;}
@@ -890,6 +891,7 @@ function move(dt){const c=currentChunk(),inWheat=contactWheat(c,state.x,state.z)
  for(let i=0;i<rig.contacts;i++)audio.footstep(!!inWheat,water);
  audio.update(moving,inWheat,rainAmount);hadMovement=moving;
 }
+const pick140Eye=new T.Vector3(),pick140Dir=new T.Vector3();
 function scanInteraction(){
  interaction=null;
 
@@ -898,6 +900,7 @@ function scanInteraction(){
  if(inspectionPrompt.classList.contains('inspection'))inspectionPrompt.classList.remove('inspection');crosshair.hidden=false;
  if(state.level===11&&!bathhouse.active){
   if(nearAtmDoor136(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z)){interaction={kind:'atm-door'};inspectionPrompt.hidden=false;inspectionPrompt.textContent='E 推开玻璃门 · Hope St 大堂';return;}
+  if(!tikiActive&&!atmActive){camera.getWorldPosition(pick140Eye);camera.getWorldDirection(pick140Dir);pick140Eye.x+=Number(state.cx)*64;pick140Eye.z+=Number(state.cz)*64;const p=update140(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z,pick140Eye,pick140Dir);if(p){interaction={kind:'retail-pick',p};inspectionPrompt.hidden=false;const t=hint140(p);if(inspectionPrompt.textContent!==t)inspectionPrompt.textContent=t;return;}} // V140 P6 store goods
   if(nearTikiDoor(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z)){interaction={kind:'tiki-door'};inspectionPrompt.hidden=false;inspectionPrompt.textContent='E 推开竹木门 · Lantern Reef 酒吧餐厅';return;}
   if(nearBathEntrance(Number(state.cx)*64+state.x,Number(state.cz)*64+state.z)){interaction={kind:'bath-door'};loadBathScene121().then(()=>loadL27Scene121()).catch(()=>{});inspectionPrompt.hidden=false;inspectionPrompt.textContent='E 推开玻璃门 · 进入浴室';return;}
   const nearby=exitScene.backcourt.query(camera);if(nearby){interaction=nearby;inspectionPrompt.hidden=false;inspectionPrompt.textContent=nearby.kind==='vending-machine'?'E 按售货键 · 随机饮料':'E 拾取 '+nearby.name;return;}

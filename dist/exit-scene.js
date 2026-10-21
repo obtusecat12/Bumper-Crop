@@ -1,5 +1,6 @@
 import {createMillingMouth} from './milling-return-scene.js';
 import {returnWaypoint,worldToReturn,returnSample,returnFloor} from './milling-return-layout.js';
+import {register140,unregister140} from './retail140-pick.js?v=140i'; // V140 P6 pickable store goods
 import {setInfillObstacles} from './urban-infill-return.js';
 import {attachTikiPaving80} from './tiki-paving-v80.js';
 import {createTikiFacade} from './tiki-facade-v80.js';
@@ -30,7 +31,7 @@ import {BUILDING_TYPES,addBuilding} from './urban-buildings.js?v=132st';
 import * as P from './urban-props.js?v=132st';
 import {shrub131} from './shrub131.js?v=131';   // V131 cross-card shrubs
 import * as S from './urban-smallprops.js?v=132st';
-import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=140h';
+import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=140i';
 import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=135t';
 import {addReferenceMaterials} from './reference-materials.js?v=60';
 import {createReferenceScenes,referenceWaypoint,clinicToWorld} from './reference-scenes.js?v=60';
@@ -119,7 +120,7 @@ function* buildBlock(mats,plan,lod){
  if(plan.soho135==='a'||plan.soho135==='b'){b.push(plan.x,Y,plan.z);yield* soho135FairTask(b,plan,lod);b.pop();}
  for(const spec of plan.buildings){b.push(spec.x,Y+.15,spec.z,spec.ry);if(spec.soho135)yield* soho135BuildingTask(b,spec,lod);else if(spec.spire135)yield* spire135Task(b,spec,lod);else yield* addStreetwallBuildingTask(b,{...spec,lod});if(spec.infill){b.box('sidewalk',0,-.075,spec.d/2+1.8,spec.w,.15,3.6);b.walk(0,spec.d/2+1.8,spec.w,3.6,0);b.push(0,-.15,0);curb(b,0,spec.d/2+3.6,spec.w,Math.PI,.15);b.pop();if(spec.seed%3===0)place(b,0,0,spec.d/2+2.85,0,P.addStreetTree,{seed:spec.seed,scale:.68});else if(spec.seed%3===1)place(b,0,0,spec.d/2+2.85,0,P.addHydrant);else place(b,0,0,spec.d/2+2.85,0,P.addStreetLight,{height:7.4,arm:1.5});}b.pop();yield;}
 
- b.pop();const object=yield* b.finishTask('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district);const sub=plan.reserved?null:yield* subwayBlockTask(mats,plan,lod);return{object,colliders:b.colliders,walks:b.walks,plan,lod,sub,stairWalks:b.stairWalks||[],stairSolids:b.stairSolids||[],signals132:b.signals132||[]};}finally{b.discard();}
+ b.pop();const object=yield* b.finishTask('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district);const sub=plan.reserved?null:yield* subwayBlockTask(mats,plan,lod);return{object,colliders:b.colliders,walks:b.walks,plan,lod,sub,stairWalks:b.stairWalks||[],stairSolids:b.stairSolids||[],signals132:b.signals132||[],picks140:b.picks140||[]};}finally{b.discard();}
 }
 export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
  // V135-capital ②c-2b-2 "shell + stream": the six fixed batch roots are empty shells at boot (their colliders/walks/records come
@@ -149,8 +150,8 @@ export function createExitScene({onAdd=()=>{},onRemove=()=>{}}={}){
  const stats={mode:'10',blocks:0,buildings:approach.records.length+district.buildings+fabric.buildings,typologies:BUILDING_TYPES.length,triangles:0,draws:0,pending:0,district:'transition'};
  let city=false,origin='',wantedKey='',queue=[],job=null,disposed=false;
  function recount(){stats.blocks=blocks.size;stats.buildings=approach.records.length+district.buildings+fabric.buildings;stats.triangles=2;stats.draws=1;for(const g of[tiki.object,bath.object,approach.object,approach.early,references.object,joinedGround.object,district.object,fabric.object,fabricGround.object,backcourt.object,residue.object,...Array.from(blocks.values(),v=>v.object)]){const q=g.userData.cityStats||{triangles:0,draws:0};stats.triangles+=q.triangles;stats.draws+=q.draws;}for(const v of blocks.values())stats.buildings+=v.plan.buildings.length;stats.pending=queue.length+Number(!!job);}
- function commitBlock(v,key){blocks.set(key,v);root.add(v.object);onAdd(v.object);sohoBake135(v,key,bake133);if(v.sub){root.add(v.sub.object);v.sub.object.updateMatrix();v.sub.object.matrixAutoUpdate=false;v.sub.object.updateMatrixWorld(true);}v.object.updateMatrix();v.object.matrixAutoUpdate=false;v.object.updateMatrixWorld(true);recount();}
- function removeBlock(key){const v=blocks.get(key);if(!v)return;if(v.sub){v.sub.object.removeFromParent();v.sub.object.traverse(m=>m.geometry?.dispose());}onRemove(v.object);v.object.removeFromParent();v.object.traverse(m=>m.geometry?.dispose());blocks.delete(key);}
+ function commitBlock(v,key){blocks.set(key,v);root.add(v.object);onAdd(v.object);register140(key,v.object,v.picks140);sohoBake135(v,key,bake133);if(v.sub){root.add(v.sub.object);v.sub.object.updateMatrix();v.sub.object.matrixAutoUpdate=false;v.sub.object.updateMatrixWorld(true);}v.object.updateMatrix();v.object.matrixAutoUpdate=false;v.object.updateMatrixWorld(true);recount();}
+ function removeBlock(key){const v=blocks.get(key);if(!v)return;unregister140(key);if(v.sub){v.sub.object.removeFromParent();v.sub.object.traverse(m=>m.geometry?.dispose());}onRemove(v.object);v.object.removeFromParent();v.object.traverse(m=>m.geometry?.dispose());blocks.delete(key);}
  function requestAround(wx,wz,force=false){
   const p=worldToCity(wx,wz),ix=Math.floor(p.x/B),iz=Math.floor(p.z/B),key=ix+','+iz+','+city;if(key===wantedKey&&!force)return;wantedKey=key;const gp=cityToWorld((ix+.5)*B,(iz+.5)*B);cityGround.position.set(gp.x,Y-.065,gp.z);cityGround.updateMatrix();groundPos.value.set(gp.x,gp.z);{let n=0;for(let dz=-2;dz<=2;dz++)for(let dx=-2;dx<=2;dx++){const c=canalBlock(ix+dx,iz+dz);if(c&&n<40)canalRects[n++].set((ix+dx)*B,(iz+dz)*B+CANAL.z0,(ix+dx+1)*B,(iz+dz)*B+CANAL.z1);for(const q of subwayStairs(ix+dx,iz+dz))if(n<40)canalRects[n++].set((ix+dx)*B+q.x0,(iz+dz)*B+q.z0,(ix+dx)*B+q.x1,(iz+dz)*B+q.z1);}for(;n<40;n++)canalRects[n].set(0,0,0,0);}
   const wanted=new Set(),next=[];

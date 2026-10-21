@@ -14,7 +14,7 @@ import {case140,promo140,baskets140,carts140,checkoutParts140,priceCard140} from
 import {addGlass140,glassPane140,GLASS140} from './retail140-glass.js?v=140e'; // V140 P2 physical cooler glass
 import {meatCase140,MEAT140} from './retail140-meat.js?v=140f'; // V140 P3 open-air meat / fish case
 import {rollerStand140,ROLL140} from './retail140-roller.js?v=140g'; // V140 P4 roller grill next to lane 1
-import {popcornCart140,POP140} from './retail140-popcorn.js?v=140h'; // V140 P5 popcorn machine cart at another lane
+import {popcornCart140,POP140} from './retail140-popcorn.js?v=140h';import {pick140} from './retail140-pick.js?v=140i'; // V140 P5 popcorn machine cart at another lane
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138b',PI=Math.PI;
 export const GOODS138={dry:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],cool:[20,21,22,23],dairy:[24,25,26,27],frozen:[28,29,30,31],candy:[32,33,34,35,36]};
@@ -146,6 +146,7 @@ export function chest138(b,seed,{len=2.0,D=.92}){
  // cavity contents: chest top view, random window so no two freezers match, then two sliding lids
  const uw=Math.min(1,len/2.6),u0=r()*(1-uw),vw=Math.min(1,D/1.9),v0=r()*(1-vw);
  if(R140)chestFill140(b,r,len-2*wt-.01,D-2*wt-.01,hw,h-.08);// real frozen packs in the well
+ if(R140){const n=1+((seed>>>5)&1);for(let i=0;i<n;i++){const q=Math.imul(seed^(i+1)*0x9e3779b1,0x85ebca6b)>>>0;pick140(b,'tvdinner',(i?.28:-.3)*(len/2-.2)+((q%100)/100-.5)*.2,h-.084,((q>>>8)%100/100-.5)*.3,((q>>>16)%100/100-.5)*.6,q);}}// V140 P6: loose TV dinners on top of the packs, E to take
  else uvPlane(b,'r138chest',u0,v0,u0+uw,v0+vw,0,h-.1,0,len-2*wt,D-2*wt,0,-PI/2);
  for(const s of[-1,1]){b.plane('r138coolGlass',s*len/4+s*.02,h+.005+(s>0?.012:0),0,len/2+.04,D-.08,0,-PI/2);b.box('r138steel',s*len/4,h+.012+(s>0?.012:0),0,len/2,.01,.03);}
  b.solid(0,0,len+.04,D+.04);
@@ -186,6 +187,8 @@ export function impulse138(b,seed,{w=.9,h=1.45}){
  const r=rng(seed);for(const s of[-1,1])b.box('r138dark',s*w/2,h/2,.15,.03,h,.3);b.box('r138dark',0,h-.02,.15,w,.04,.3);b.box('r138dark',0,.06,.15,w,.12,.32);
  for(let k=0;k<5;k++){const y=.2+k*.25,slot=GOODS138.candy[(k+(seed>>>3))%5],uw=w/2.4*1.6;
   b.box('r138dark',0,y,.16,w,.01,.28);if(R140)goodsRun(b,r,'r138goods',GOODS138.candy,-w/2+.02,w/2-.02,y+.005,.29,.26,.22);else facing(b,'r138goods',slot,r()*(1-uw),uw,0,y+.1,.27,w-.04,.2,0,-.25);b.box('r138dark',0,y+.03,.3,w,.012,.012);}
+ {const L=['cigarettes','lighter','cola','beer','peacetin','cigarettes'],i0=(seed>>>4)%L.length,i1=(i0+1+(seed>>>9)%(L.length-1))%L.length;// V140 P6: two loose goods on the rack top
+  pick140(b,L[i0],-w/4,h,.13,((seed>>>12)%7-3)*.1,seed>>>2);if(L[i1]!==L[i0])pick140(b,L[i1],w/4,h,.15,((seed>>>15)%7-3)*.12,seed>>>6);}
  b.solid(0,.15,w+.04,.32);
 }
 // ---- 11. cardboard promo display: standee + case pallet / dump bin, faces +z ----
