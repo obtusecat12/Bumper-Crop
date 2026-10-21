@@ -8,7 +8,7 @@
 // scratch-off dispenser, top-row liquor. Neon signs are emissive tube cells (neon.webp, 8 signs) + coloured tube strips.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140e';
+import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140f';
 import {caveShelf140,caveFloor140,BEER140,cigWall140,lottoDisp140,vapeShelf140,pipes140,papers140,cigarShelves140,hookah140} from './retail140-bodega.js?v=140d'; // V140 P1c real-shape smoke-shop props
 import {addGlass140,glassPane140,GLASS140} from './retail140-glass.js?v=140e'; // V140 P2 physical beer-cave glass
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));

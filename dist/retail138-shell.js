@@ -8,7 +8,7 @@
 // Textures: bc/tools/retail138_assets.py (art-v138retail generated large → PS1 crush). lod 1 = shell + front only.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {retail138LayoutFill} from './retail138-grid.js?v=140e';
+import {retail138LayoutFill} from './retail138-grid.js?v=140f';
 import {retail138BakeMark,retail138BakeDefaults,retail138Bake,r138GridPlane} from './retail138-bake.js?v=140e'; // R5 per-store light bake // R4 Layout A/B grid generator over the R2/R3 module libraries
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138a',PI=Math.PI;
 function tex(name,srgb=true,rep=true){const t=new T.TextureLoader().load(A+name+'.webp?v='+V);if(srgb)t.colorSpace=T.SRGBColorSpace;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;t.anisotropy=4;t.magFilter=T.NearestFilter;return t;}

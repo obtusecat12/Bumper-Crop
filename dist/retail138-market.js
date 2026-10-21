@@ -12,6 +12,7 @@ import {goodsRun140,catKey140,product140,chestFill140} from './retail140-goods.j
 import {pile140,PRODUCE140} from './retail140-produce.js?v=140b';
 import {case140,promo140,baskets140,carts140,checkoutParts140,priceCard140} from './retail140-fixtures.js?v=140d'; // V140 P1b-2 real-shape fixtures // V140 P1b real fruit & veg // V140 P1 real-shape goods
 import {addGlass140,glassPane140,GLASS140} from './retail140-glass.js?v=140e'; // V140 P2 physical cooler glass
+import {meatCase140,MEAT140} from './retail140-meat.js?v=140f'; // V140 P3 open-air meat / fish case
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138b',PI=Math.PI;
 export const GOODS138={dry:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],cool:[20,21,22,23],dairy:[24,25,26,27],frozen:[28,29,30,31],candy:[32,33,34,35,36]};
@@ -134,6 +135,7 @@ export function multideck138(b,seed,{len=2.5,h=2.0,cat=GOODS138.dairy}){
 }
 // ---- 14. chest freezer (island or Layout B centre run) ----
 export function chest138(b,seed,{len=2.0,D=.92}){
+ if(R140&&MEAT140&&((seed>>>3)%3)===0){meatCase140(b,seed,{len,D,fish:((seed>>>7)&3)===0});return;}// V140 P3: every third chest slot is an open-air butcher / fish case
  const r=rng(seed),h=.86,wt=.05,hw=h-.36;b.box('r138dark',0,.07,0,len+.01,.14,D+.01);
  // V140 P1b: hollow tub (base + four insulated walls + rim strips) so the well's contents show through the lids
  b.box('r138coolW',0,hw/2,0,len,hw,D);
