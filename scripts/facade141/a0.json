@@ -1,0 +1,18 @@
+{
+ "_": "V141 F1 SoHo facade a0 (Meridian Shoes, cream cast iron). Blueprint = art-v141/a0_front.png (soho135_assets crop of art-v135soho/soho_a0.png, 750x1358 px). All coordinates in photo px (x right, y DOWN from the image top). Lot size from soho135Lots: w 14.73547690684608 m, H 26.681528035226194 m.",
+ "photo": "art-v141/a0_front.png", "px": [750, 1358], "w": 14.73547690684608, "H": 26.681528035226194,
+ "iron": [0.79, 0.77, 0.73],
+ "cols": [[83,166],[210,293],[338,420],[465,548],[592,674]],
+ "floors": [[215,250,328],[400,425,525],[597,622,742],[812,842,990]],
+ "colonettes": [62,186,314,442,571,692],
+ "belts": [[328,350,0.2],[525,548,0.2],[742,762,0.2],[990,1012,0.22]],
+ "piers": [[0,50],[700,750]], "pierTop": 150, "pierOut": 0.14,
+ "crown": [0,60,0.8], "modillion": [60,100,0.5], "frieze": [100,150,0.12],
+ "consoles": [30,178,312,442,575,720],
+ "shopCornice": [1012,1040,0.32],
+ "sign": [55,700,1040,1088,0.06],
+ "groundCols": [184,314,442,571],
+ "shop": [[70,170],[198,300],[456,556],[585,690]], "shopY": [1095,1300], "shopD": 0.35,
+ "door": [328,428,1100,1345], "doorD": 0.9,
+ "glassD": 0.26, "winD": 0.28
+}
