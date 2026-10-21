@@ -10,6 +10,7 @@ import {GEO as A0} from './soho141-a0.js?v=141a';
 import {GEO as A1} from './soho141-a1.js?v=141b';import {GEO as A2} from './soho141-a2.js?v=141b';import {GEO as A3} from './soho141-a3.js?v=141b';import {GEO as A4} from './soho141-a4.js?v=141b';
 import {GEO as B0} from './soho141-b0.js?v=141c';import {GEO as B1} from './soho141-b1.js?v=141c';import {GEO as B2} from './soho141-b2.js?v=141c';import {GEO as B3} from './soho141-b3.js?v=141c';
 import {GEO as C0} from './soho141-c0.js?v=141d';import {GEO as C1} from './soho141-c1.js?v=141d';import {GEO as C2} from './soho141-c2.js?v=141d';import {GEO as C3} from './soho141-c3.js?v=141d';import {GEO as C4} from './soho141-c4.js?v=141d';
+import {GEO as D0} from './soho141-d0.js?v=141e';import {GEO as D1} from './soho141-d1.js?v=141e';import {GEO as D2} from './soho141-d2.js?v=141e';import {GEO as D3} from './soho141-d3.js?v=141e';import {GEO as D4} from './soho141-d4.js?v=141e';
 const A=new URL('./assets/l11-v141/',import.meta.url).href;
 // per facade: baked low-poly + blueprint px grid (photo 750 x 1358 px) for the separate fire escape / awnings
 export const SOHO141={
@@ -29,7 +30,13 @@ export const SOHO141={
  c1:{geo:C1,px:[750,1336],fe:{x0:189,x1:534,levels:[920,650,390]}},
  c2:{geo:C2,px:[750,1358]},
  c3:{geo:C3,px:[828,1239],fe:{x0:316,x1:556,levels:[958,775,605,435,277]}},
- c4:{geo:C4,px:[750,1358],fe:{x0:227,x1:572,levels:[1000,735,470]}}};
+ c4:{geo:C4,px:[750,1358],fe:{x0:227,x1:572,levels:[1000,735,470]}},
+ // V141 F2d block -3,1 (east face; d3 had no fire escape in the flat version, but its café photo has three striped awnings)
+ d0:{geo:D0,px:[828,1222],fe:{x0:120,x1:454,levels:[852,598,352]}},
+ d1:{geo:D1,px:[750,1358],fe:{x0:117,x1:462,levels:[918,640,372]}},
+ d2:{geo:D2,px:[828,1247],fe:{x0:167,x1:455,levels:[922,724,532,340]}},
+ d3:{geo:D3,px:[828,1247],awn:{bays:[[15,325],[350,488],[512,822]],top:975}},
+ d4:{geo:D4,px:[750,1339],fe:{x0:170,x1:480,levels:[928,675,465,288]}}};
 export function soho141On(){return !/[?&]fac141=0\b/.test(globalThis.location?.search||'');}
 function tex(name,srgb=true,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v=141b');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 export function addSoho141Materials(m,key){
