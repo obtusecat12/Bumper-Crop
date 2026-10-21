@@ -8,10 +8,11 @@
 // scratch-off dispenser, top-row liquor. Neon signs are emissive tube cells (neon.webp, 8 signs) + coloured tube strips.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140g';
+import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140h';
 import {caveShelf140,caveFloor140,BEER140,cigWall140,lottoDisp140,vapeShelf140,pipes140,papers140,cigarShelves140,hookah140} from './retail140-bodega.js?v=140d'; // V140 P1c real-shape smoke-shop props
 import {addGlass140,glassPane140,GLASS140} from './retail140-glass.js?v=140e'; // V140 P2 physical beer-cave glass
 import {rollerStand140,ROLL140} from './retail140-roller.js?v=140g'; // V140 P4 roller grill by the counter
+import {popcornCart140,POP140} from './retail140-popcorn.js?v=140h'; // V140 P5 popcorn machine cart
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138c',PI=Math.PI;
 function tex(name,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v='+V);t.colorSpace=T.SRGBColorSpace;t.wrapS=t.wrapT=rep?T.RepeatWrapping:T.ClampToEdgeWrapping;t.anisotropy=4;t.magFilter=T.NearestFilter;return t;}
@@ -198,6 +199,7 @@ export function* retail138BodegaFill(b,P,{d}){
  // impulse racks against the counter front + lotto neon over the window
  b.push(wallC+face*(deep+.01),0,bz-bLen/2+.6,ryW);impulse138(b,P.h^13,{w:.8,h:1.0});b.pop();
  if(ROLL140&&bLen>=2.6){b.push(wallC+face*(deep+.01),0,bz+bLen/2-.62,ryW);rollerStand140(b,P.h^0x5a17,{w:.9,d:.48});b.pop();}// V140 P4: hot dog roller grill on its stand at the other end of the counter front
+ if(POP140&&zf-(bz+bLen/2)>=1.15){b.push(wallC+face*.04,0,zf-.68,ryW);popcornCart140(b,P.h^0x9c0,{w:.8,d:.5});b.pop();}// V140 P5: popcorn machine cart against the counter wall between the booth and the storefront
  b.push(wallC+face*(deep-.04),2.55,bz+.3,ryW);neonSign138(b,(P.h>>>7)%2?NEON138.lotto:NEON138.atm,{w:.8,chainTo:C-2.55});b.pop();
  neonTube138(b,'r138tubeP',[wallC+face*(deep-.02),C-.05,bz-bLen/2],[wallC+face*(deep-.02),C-.05,bz+bLen/2]);
  yield;

@@ -14,6 +14,7 @@ import {case140,promo140,baskets140,carts140,checkoutParts140,priceCard140} from
 import {addGlass140,glassPane140,GLASS140} from './retail140-glass.js?v=140e'; // V140 P2 physical cooler glass
 import {meatCase140,MEAT140} from './retail140-meat.js?v=140f'; // V140 P3 open-air meat / fish case
 import {rollerStand140,ROLL140} from './retail140-roller.js?v=140g'; // V140 P4 roller grill next to lane 1
+import {popcornCart140,POP140} from './retail140-popcorn.js?v=140h'; // V140 P5 popcorn machine cart at another lane
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138b',PI=Math.PI;
 export const GOODS138={dry:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],cool:[20,21,22,23],dairy:[24,25,26,27],frozen:[28,29,30,31],candy:[32,33,34,35,36]};
@@ -150,7 +151,7 @@ export function chest138(b,seed,{len=2.0,D=.92}){
  b.solid(0,0,len+.04,D+.04);
 }
 // ---- 7–10. checkout: belt, scanner, POS, bagging, impulse rack. Belt along +x (load end at −x), shopper on +z ----
-export function checkout138(b,seed,{lane=1,roll=false}){
+export function checkout138(b,seed,{lane=1,roll=false,pop=false}){
  const r=rng(seed),hh=.86,dz=.62;
  b.box('r138coolW',-.6,hh/2-.03,0,2.2,hh-.06,dz);b.box('r138dark',-.6,.05,0,2.2,.1,dz+.01);// belt cabinet
  if(R140){b.box('r138steel',.75,hh/2-.03,0,.5,hh-.06,dz);b.box('r138coolW',1.45,hh/2-.08,0,.9,hh-.16,dz);b.box('r138steel',1.45,hh-.15,0,.9,.02,dz);b.cylinder('r138steel',1.45,hh+.25,0,.02,.02,.5,6);b.box('r138steel',1.45,hh+.5,0,.6,.02,.02);
@@ -173,7 +174,9 @@ export function checkout138(b,seed,{lane=1,roll=false}){
  b.cylinder('r138steel',-1.62,1.2,-.22,.03,.03,2.4,6);b.cylinder('r138laneLight',-1.62,2.46,-.22,.11,.11,.16,10);b.cylinder('r138red',-1.62,2.56,-.22,.115,.115,.04,10);
  // impulse rack bolted to the belt cabinet's shopper side, facing the queue lane
  b.push(-1.15,0,dz/2+.01,0);impulse138(b,seed^0x9e37,{w:.85,h:1.35});b.pop();
- if(R140&&ROLL140&&roll){b.push(1.35,0,dz/2+.02,0);rollerStand140(b,seed^0x5a17,{w:.85,d:.46});b.pop();}// V140 P4: hot dog roller grill by the bagging end, facing the queue aisle (only on a lane whose aisle side is another lane)
+ if(R140&&ROLL140&&roll){b.push(1.35,0,dz/2+.02,0);rollerStand140(b,seed^0x5a17,{w:.85,d:.46});b.pop();}
+ if(R140&&POP140&&pop&&!roll){b.push(1.3,0,dz/2+.02,0);popcornCart140(b,seed^0x9c0,{w:.8,d:.5});b.pop();}// V140 P5: popcorn cart by the bagging end of the next lane (never the roller-grill lane)
+ // (V140 P4: hot dog roller grill by the bagging end, facing the queue aisle (only on a lane whose aisle side is another lane)
  // gum / mints counter rack on the scanner's shopper side
  b.push(.1,hh-.1,dz/2+.08,0);for(let k=0;k<2;k++){b.box('r138dark',0,.04+k*.16,0,.5,.01,.12);if(R140)goodsRun(b,r,'r138goods',GOODS138.candy,-.24,.24,.045+k*.16,.06,.1,.14);else facing(b,'r138goods',pick(r,GOODS138.candy),r()*.7,.21,0,.1+k*.16,.065,.48,.12);}b.pop();
  b.solid(-.2,0,3.6,dz+.04);b.solid(.35,-.5,.6,.4);
@@ -280,7 +283,7 @@ export function* retail138MarketFill(b,P,{d}){
  // front: checkout lanes on the side away from the door, produce bin + promo + baskets/carts by the door
  const doorLeft=P.doorX<(x0+x1)/2,lanes=[];const span=doorLeft?[P.doorX+1.6,x1-.6]:[x0+.6,P.doorX-1.6];
  for(let x=span[1]-.55;x>span[0]+.3&&lanes.length<3;x-=2.3)lanes.push(doorLeft?x:span[0]+(span[1]-x));
- lanes.forEach((x,i)=>{b.push(x,0,zf-2.7,-PI/2);checkout138(b,P.h^(31+i),{lane:i+1,roll:i===(doorLeft?0:1)});b.pop();});
+ lanes.forEach((x,i)=>{b.push(x,0,zf-2.7,-PI/2);checkout138(b,P.h^(31+i),{lane:i+1,roll:i===(doorLeft?0:1),pop:i===(doorLeft?1:2)});b.pop();});
  const fx=doorLeft?Math.max(x0+1.2,P.doorX-2.2):Math.min(x1-1.2,P.doorX+2.2);
  b.push(fx,0,zf-1.2,PI);carts138(b,P.h^37,{n:2+(P.h>>>11)%3});b.pop();
  b.push(P.doorX+(doorLeft?1.4:-1.4),0,zf-.7,0);baskets138(b,P.h^41,{n:5+(P.h>>>13)%4});b.pop();
