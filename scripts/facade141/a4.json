@@ -1,0 +1,18 @@
+{"_":"V141 F2 a4 (Vinyl Fortuna, dark green cast iron, round-arch bays with keystones between flat pilasters, 3 upper floors). Blueprint art-v141/a4_front.png 828x1237 px; lot w 17.85912184419424 m, H 26.681528035226194 m.",
+ "photo":"art-v141/a4_front.png","px":[828,1237],"w":17.85912184419424,"H":26.681528035226194,
+ "iron":[0.27,0.30,0.25],
+ "cols":[[85,157],[198,270],[377,450],[558,630],[672,745]],
+ "floors":[[178,215,305],[402,440,558],[655,693,840]],
+ "colonettes":[63,177,293,355,473,537,652,767],"colType":"flat","colW":0.18,"colY":[[200,305],[425,560],[675,840]],
+ "belts":[[305,345,0.18],[560,600,0.18],[840,880,0.2]],
+ "piers":[[8,50],[778,820]],"pierTop":120,"pierOut":0.14,"pierBot":1237,"pierPanels":[230,480,730,1060],
+ "crown":[0,25,0.8],"crownSteps":[[18,25,0.6],[0,18,0.8]],"modillion":[25,50,0.45],"frieze":[50,120,0.1],
+ "modil":{"x0":40,"x1":800,"step":46,"hw":8,"y0":28,"y1":48},
+ "consoles":[28,312,518,800],"consoleY":[30,130],"consoleHW":15,"loCrownY":25,
+ "shopCornice":[880,895,0.3],
+ "sign":[55,775,895,960,0.06],
+ "groundCols":[40,345,495,790],"groundType":"flat","groundY":[965,1200],"groundR":0.2,
+ "shop":[[60,185],[190,345],[505,645],[650,770]],"shopY":[970,1185],"shopD":0.35,
+ "door":[350,500,985,1225],"doorD":0.9,"plinthY":1215,
+ "glassD":0.26,"winD":0.28
+}

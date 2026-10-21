@@ -7,12 +7,18 @@
 // Built into the block's UrbanBatch by soho135-street.js. Off: ?fac141=0 (old flat photo quad).
 import * as T from './vendor/three.module.min.js';
 import {GEO as A0} from './soho141-a0.js?v=141a';
+import {GEO as A1} from './soho141-a1.js?v=141b';import {GEO as A2} from './soho141-a2.js?v=141b';import {GEO as A3} from './soho141-a3.js?v=141b';import {GEO as A4} from './soho141-a4.js?v=141b';
 const A=new URL('./assets/l11-v141/',import.meta.url).href;
 // per facade: baked low-poly + blueprint px grid (photo 750 x 1358 px) for the separate fire escape / awnings
 export const SOHO141={
- a0:{geo:A0,px:[750,1358],fe:{x0:74,x1:298,levels:[990,742,525,328]},awn:{bays:[[70,170],[198,300],[456,556],[585,690]],top:1095}}};
+ a0:{geo:A0,px:[750,1358],fe:{x0:74,x1:298,levels:[990,742,525,328]},awn:{bays:[[70,170],[198,300],[456,556],[585,690]],top:1095}},
+ // V141 F2: no awnings in these photos; fire escapes where the old flat version had one, on the photo's floor lines
+ a1:{geo:A1,px:[876,1172]},
+ a2:{geo:A2,px:[750,1314],fe:{x0:175,x1:375,levels:[1050,845,650,460,290]}},
+ a3:{geo:A3,px:[750,1358],fe:{x0:190,x1:420,levels:[920,650,397]}},
+ a4:{geo:A4,px:[828,1237],fe:{x0:185,x1:462,levels:[840,560,305]}}};
 export function soho141On(){return !/[?&]fac141=0\b/.test(globalThis.location?.search||'');}
-function tex(name,srgb=true,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v=141a');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
+function tex(name,srgb=true,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v=141b');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 export function addSoho141Materials(m,key){
  if(!m['soho141'+key])m['soho141'+key]=new T.MeshStandardMaterial({map:tex(key+'-alb'),normalMap:tex(key+'-nrm',false),roughnessMap:tex(key+'-orm',false),roughness:1,metalness:0,vertexColors:true});
  if(m.soho141Iron)return m;
@@ -57,5 +63,5 @@ export function soho141Build(b,spec,lod,fkey){const F=SOHO141[fkey],w=spec.w,H=s
  addSoho141Materials(b.mats,fkey);const X=p=>p/PW*w-w/2,Y=p=>(PH-p)/PH*H;
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(F.geo.pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(F.geo.uv,2));g.setAttribute('normal',new T.Float32BufferAttribute(F.geo.nrm,3));
  b.add(g,'soho141'+fkey,0,0,zf);g.dispose();
- if(lod)return;fireEscape141(b,F.fe,X,Y,zf);awnings141(b,F.awn,X,Y,zf);
+ if(lod)return;if(F.fe)fireEscape141(b,F.fe,X,Y,zf);if(F.awn)awnings141(b,F.awn,X,Y,zf);
 }

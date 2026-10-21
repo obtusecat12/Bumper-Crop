@@ -1,0 +1,18 @@
+{"_":"V141 F2 a1 (Lumiere Optique, pale grey cast iron, segmental-arch bays between fluted pilasters, 3 upper floors). Blueprint art-v141/a1_front.png 876x1172 px; lot w 19.94284179327767 m, H 26.681528035226194 m.",
+ "photo":"art-v141/a1_front.png","px":[876,1172],"w":19.94284179327767,"H":26.681528035226194,
+ "iron":[0.66,0.67,0.68],
+ "cols":[[95,185],[243,333],[393,483],[543,633],[692,782]],
+ "floors":[[162,180,300],[385,402,548],[612,630,805]],
+ "colonettes":[68,212,362,512,662,808],"colType":"flat","colW":0.22,"colY":[[180,298],[403,548],[650,805]],
+ "belts":[[300,330,0.18],[550,580,0.18],[808,840,0.2]],
+ "piers":[[12,62],[815,866]],"pierTop":100,"pierOut":0.14,"pierBot":1172,"pierPanels":[210,450,700,1000],
+ "crown":[0,30,0.8],"crownSteps":[[20,30,0.65],[0,20,0.8]],"modillion":[30,75,0.5],"frieze":[75,130,0.12],
+ "modil":{"x0":80,"x1":800,"step":51,"hw":8,"y0":35,"y1":70},
+ "consoles":[35,222,652,840],"consoleY":[30,125],"consoleHW":16,"loCrownY":30,
+ "shopCornice":[840,852,0.3],
+ "sign":[70,805,852,895,0.05],
+ "groundCols":[215,363,513,663],"groundType":"flat","groundY":[905,1150],"groundR":0.22,
+ "shop":[[92,200],[235,348],[530,647],[680,795]],"shopY":[915,1100],"shopD":0.35,
+ "door":[383,495,960,1150],"doorD":0.9,"plinthY":1150,
+ "glassD":0.26,"winD":0.28
+}

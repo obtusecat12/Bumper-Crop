@@ -39,14 +39,26 @@ class M:
 def arch(x0,x1,ys,ya,n=12):
  """segmental arch from (x0,ys) over the apex (xc,ya) to (x1,ys); metres"""
  hw=(x1-x0)/2;rise=max(1e-3,ya-ys);R=(hw*hw+rise*rise)/(2*rise);cx=(x0+x1)/2;cy=ya-R;a0=math.atan2(ys-cy,x0-cx);a1=math.atan2(ys-cy,x1-cx)
+ if a0<a1:a0+=2*math.pi   # rise > half-width (stilted round arch): go over the top, not under
  return [(cx+R*math.cos(a0+(a1-a0)*i/n),cy+R*math.sin(a0+(a1-a0)*i/n)) for i in range(n+1)],(cx,cy,R)
 
+# ---------------- blueprint normalisation (V141 F2: generic building types; a0 = defaults) ----------------
+G=lambda k,d:S.get(k,d)
+def FL(f):
+ """floor entry: legacy [ytop, yspring, ybottom] or {y:[...], cols, shape arch|rect, hood arch|cornice|none, ped:[col idx], sill}"""
+ if isinstance(f,list):f={'y':f}
+ o={'cols':S['cols'],'shape':G('shape','arch'),'hood':G('hood','arch'),'ped':[],'sill':G('sill',False),'mull':G('mull',True)};o.update(f);return o
+FLOORS=[FL(f) for f in S['floors']]
+HOOD=G('hoodPx',{'gap':4,'h':16,'ext':10,'out':.16,'cap':6,'brk':0,'brkW':10,'pedH':40})
+SILL=G('sillPx',{'h':10,'ext':8,'out':.12})
+DOORS=S['doors'] if 'doors' in S else [S['door']]
 # ---------------- holes shared by high + low ----------------
 holes=[]   # (x0,x1,yb,yt,depth,kind,extra)
-for (ya_,ys_,yb_) in S['floors']:
- for (c0,c1) in S['cols']:holes.append((X(c0),X(c1),Y(yb_),Y(ya_),S['glassD'],'win',Y(ys_)))
-for (c0,c1) in S['shop']:holes.append((X(c0),X(c1),Y(S['shopY'][1]),Y(S['shopY'][0]),S['shopD'],'shop',None))
-d=S['door'];holes.append((X(d[0]),X(d[1]),Y(d[3]),Y(d[2]),S['doorD'],'door',None))
+for fl in FLOORS:
+ ya_,ys_,yb_=fl['y']
+ for (c0,c1) in fl['cols']:holes.append((X(c0),X(c1),Y(yb_),Y(ya_),S['glassD'],'win' if fl['shape']=='arch' else 'rwin',Y(ys_),fl))
+for (c0,c1) in S['shop']:holes.append((X(c0),X(c1),Y(S['shopY'][1]),Y(S['shopY'][0]),S['shopD'],'shop',None,None))
+for d in DOORS:holes.append((X(d[0]),X(d[1]),Y(d[3]),Y(d[2]),S['doorD'],'door',None,None))
 YF=Y(S['frieze'][1]);SC=S['shopCornice']
 
 def wall_grid(m,tag,bands):
@@ -67,73 +79,107 @@ def rect_recess(m,h,tag,backtag):
  m.quad((x1,yb,-D),(x1,yb,0),(x1,yt,0),(x1,yt,-D),tag)     # right reveal (normal -x)
  m.quad((x0,yb,-D),(x0,yb,0),(x1,yb,0),(x1,yb,-D),tag)     # sill (normal +y)
  m.quad((x0,yt,0),(x0,yt,-D),(x1,yt,-D),(x1,yt,0),tag)     # soffit (normal -y)
+def prism(m,x0,x1,yb,yp,z0,z1,tag):
+ """triangular pediment: base yb, apex yp at the centre"""
+ xc=(x0+x1)/2
+ m.poly([(x0,yb,z1),(x1,yb,z1),(xc,yp,z1)],tag)
+ m.quad((x0,yb,z0),(x0,yb,z1),(xc,yp,z1),(xc,yp,z0),tag);m.quad((xc,yp,z0),(xc,yp,z1),(x1,yb,z1),(x1,yb,z0),tag)
+ m.quad((x0,yb,z0),(x1,yb,z0),(x1,yb,z1),(x0,yb,z1),tag)
+PX=W/PW   # metres per photo px
 
 # ---------------- HIGH ----------------
 hi=M();Ysc=Y(SC[1]);Ysc1=Y(SC[0])
 wall_grid(hi,'wall',[])
 for h in holes:
- x0,x1,yb,yt,D,kind,ys=h
- if kind!='win':rect_recess(hi,h,'wall','glass' if kind=='shop' else 'wall');continue
- pts,(acx,acy,R)=arch(x0,x1,ys,yt)
- # spandrel fans (front plane) filling the rect corners above the arch
- L=[p for p in pts if p[0]<=acx+1e-6];Rr=[p for p in pts if p[0]>=acx-1e-6]
- for i in range(len(L)-1):hi.poly([(x0,yt,0),(L[i][0],L[i][1],0),(L[i+1][0],L[i+1][1],0)],'wall')
- for i in range(len(Rr)-1):hi.poly([(x1,yt,0),(Rr[i][0],Rr[i][1],0),(Rr[i+1][0],Rr[i+1][1],0)],'wall')
- # arch reveal strip + straight reveals + sill
- for i in range(len(pts)-1):a,b=pts[i],pts[i+1];hi.quad((a[0],a[1],0),(a[0],a[1],-D),(b[0],b[1],-D),(b[0],b[1],0),'wall')
- hi.quad((x0,yb,0),(x0,yb,-D),(x0,ys,-D),(x0,ys,0),'wall');hi.quad((x1,yb,-D),(x1,yb,0),(x1,ys,0),(x1,ys,-D),'wall')
- hi.quad((x0,yb,-D),(x0,yb,0),(x1,yb,0),(x1,yb,-D),'wall')
- # glass (rect + arch) at the back of the reveal
- hi.poly([(x0,yb,-D),(x1,yb,-D)]+[(p[0],p[1],-D) for p in reversed(pts)],'glass')
- # sash frames (perimeter stiles, bottom rail, meeting rail, centre mullion)
+ x0,x1,yb,yt,D,kind,ys,fl=h
+ if kind in('shop','door'):rect_recess(hi,h,'wall','glass' if kind=='shop' else 'wall');continue
  fw=.07;zz=(-D,-D+.05)
- hi.box(x0,x0+fw,yb,ys,*zz,'wall');hi.box(x1-fw,x1,yb,ys,*zz,'wall');hi.box(x0,x1,yb,yb+.09,*zz,'wall')
- ym=yb+(ys-yb)*.52;hi.box(x0,x1,ym-.04,ym+.04,*zz,'wall');xc=(x0+x1)/2;hi.box(xc-.03,xc+.03,yb,ys+(yt-ys)*.6,*zz,'wall')
- # arch hood: ring band outside the arch, 0.15 wide, 0.1 out, keystone
- o=[(acx+(p[0]-acx)*(R+.15)/R,acy+(p[1]-acy)*(R+.15)/R) for p in pts]
- for i in range(len(pts)-1):
-  a,b,c,dd=pts[i],pts[i+1],o[i+1],o[i]
-  hi.quad((b[0],b[1],.1),(c[0],c[1],.1),(dd[0],dd[1],.1),(a[0],a[1],.1),'wall')      # front
-  hi.quad((c[0],c[1],.1),(c[0],c[1],0),(dd[0],dd[1],0),(dd[0],dd[1],.1),'wall')      # outer edge
-  hi.quad((b[0],b[1],0),(b[0],b[1],.1),(a[0],a[1],.1),(a[0],a[1],0),'wall')          # inner edge (soffit of the hood)
- hi.box(acx-.12,acx+.12,yt-.05,yt+.32,0,.16,'wall')
-# colonettes + capitals + bases per upper floor
-belts=S['belts']
-for fi,(ya_,ys_,yb_) in enumerate(S['floors']):
- y0=Y(belts[fi][0]);y1=Y(ys_+20)
+ if kind=='rwin':
+  rect_recess(hi,h,'wall','glass')
+  hi.box(x0,x0+fw,yb,yt,*zz,'wall');hi.box(x1-fw,x1,yb,yt,*zz,'wall');hi.box(x0,x1,yb,yb+.09,*zz,'wall');hi.box(x0,x1,yt-.08,yt,*zz,'wall')
+  ym=yb+(yt-yb)*.5;hi.box(x0,x1,ym-.04,ym+.04,*zz,'wall')
+  if fl['mull']:xc=(x0+x1)/2;hi.box(xc-.03,xc+.03,yb,yt,*zz,'wall')
+ else:
+  pts,(acx,acy,R)=arch(x0,x1,ys,yt)
+  # spandrel fans (front plane) filling the rect corners above the arch
+  L=[p for p in pts if p[0]<=acx+1e-6];Rr=[p for p in pts if p[0]>=acx-1e-6]
+  for i in range(len(L)-1):hi.poly([(x0,yt,0),(L[i][0],L[i][1],0),(L[i+1][0],L[i+1][1],0)],'wall')
+  for i in range(len(Rr)-1):hi.poly([(x1,yt,0),(Rr[i][0],Rr[i][1],0),(Rr[i+1][0],Rr[i+1][1],0)],'wall')
+  for i in range(len(pts)-1):a,b=pts[i],pts[i+1];hi.quad((a[0],a[1],0),(a[0],a[1],-D),(b[0],b[1],-D),(b[0],b[1],0),'wall')
+  hi.quad((x0,yb,0),(x0,yb,-D),(x0,ys,-D),(x0,ys,0),'wall');hi.quad((x1,yb,-D),(x1,yb,0),(x1,ys,0),(x1,ys,-D),'wall')
+  hi.quad((x0,yb,-D),(x0,yb,0),(x1,yb,0),(x1,yb,-D),'wall')
+  hi.poly([(x0,yb,-D),(x1,yb,-D)]+[(p[0],p[1],-D) for p in reversed(pts)],'glass')
+  hi.box(x0,x0+fw,yb,ys,*zz,'wall');hi.box(x1-fw,x1,yb,ys,*zz,'wall');hi.box(x0,x1,yb,yb+.09,*zz,'wall')
+  ym=yb+(ys-yb)*.52;hi.box(x0,x1,ym-.04,ym+.04,*zz,'wall')
+  if fl['mull']:xc=(x0+x1)/2;hi.box(xc-.03,xc+.03,yb,ys+(yt-ys)*.6,*zz,'wall')
+  if fl['hood']=='arch':
+   o=[(acx+(p[0]-acx)*(R+.15)/R,acy+(p[1]-acy)*(R+.15)/R) for p in pts]
+   for i in range(len(pts)-1):
+    a,b,c,dd=pts[i],pts[i+1],o[i+1],o[i]
+    hi.quad((b[0],b[1],.1),(c[0],c[1],.1),(dd[0],dd[1],.1),(a[0],a[1],.1),'wall')
+    hi.quad((c[0],c[1],.1),(c[0],c[1],0),(dd[0],dd[1],0),(dd[0],dd[1],.1),'wall')
+    hi.quad((b[0],b[1],0),(b[0],b[1],.1),(a[0],a[1],.1),(a[0],a[1],0),'wall')
+   hi.box(acx-.12,acx+.12,yt-.05,yt+.32,0,.16,'wall')
+ # flat cornice hood (+ cap, brackets, optional triangular pediment) over the window
+ if fl['hood']=='cornice':
+  e=HOOD['ext']*PX;yh0=yt+HOOD['gap']*PX;yh1=yh0+HOOD['h']*PX;o=HOOD['out']
+  hi.box(x0-e,x1+e,yh0,yh1,0,o,'wall');hi.box(x0-e-.04,x1+e+.04,yh1,yh1+HOOD['cap']*PX,0,o+.05,'wall')
+  if HOOD['brk']:
+   bw=HOOD['brkW']*PX
+   for bx in (x0-e,x1+e-bw):hi.box(bx,bx+bw,yh0-HOOD['brk']*PX,yh0,0,o*.9,'wall')
+  ci=[i for i,c in enumerate(fl['cols']) if abs(X(c[0])-x0)<1e-6]
+  if ci and ci[0] in fl['ped']:prism(hi,x0-e-.04,x1+e+.04,yh1+HOOD['cap']*PX,yh1+HOOD['cap']*PX+HOOD['pedH']*PX,0,o+.03,'wall')
+ if fl['sill']:
+  e=SILL['ext']*PX;hi.box(x0-e,x1+e,yb-SILL['h']*PX,yb,0,SILL['out'],'wall')
+# colonettes / pilasters + capitals + bases per upper floor
+belts=S['belts'];COLY=G('colY',None);CT=G('colType','round');CW=G('colW',.2)
+for fi,fl in enumerate(FLOORS):
+ if COLY:y0,y1=Y(COLY[fi][1]),Y(COLY[fi][0])
+ else:
+  if fi>=len(belts):continue
+  y0=Y(belts[fi][0]);y1=Y(fl['y'][1]+20)
  for cxp in S['colonettes']:
-  cx=X(cxp);hi.cyl(cx,.04,.2,y0+.25,y1,'wall')
-  hi.box(cx-.32,cx+.32,y1,y1+.5,0,.34,'wall');hi.box(cx-.27,cx+.27,y0,y0+.25,0,.3,'wall')
+  cx=X(cxp)
+  if CT=='round':hi.cyl(cx,.04,CW,y0+.25,y1,'wall')
+  else:hi.box(cx-CW,cx+CW,y0+.25,y1,0,.12,'wall')
+  hi.box(cx-CW-.12,cx+CW+.12,y1,y1+.5,0,.34 if CT=='round' else .22,'wall');hi.box(cx-CW-.07,cx+CW+.07,y0,y0+.25,0,.3 if CT=='round' else .18,'wall')
 for (b0,b1,out) in belts:
  hi.box(-W/2,W/2,Y(b1),Y(b0),0,out,'wall');hi.box(-W/2,W/2,Y(b0)-.06,Y(b0),0,out+.06,'wall')   # belt + drip lip
 for (p0,p1) in S['piers']:
- hi.box(X(p0),X(p1),Y(PH),Y(S['pierTop']),0,S['pierOut'],'wall')
- for y in (Y(400),Y(600),Y(820)):hi.box(X(p0)+.15,X(p1)-.15,y-.6,y+.6,S['pierOut'],S['pierOut']+.05,'wall')  # raised panels
+ hi.box(X(p0),X(p1),Y(G('pierBot',PH)),Y(S['pierTop']),0,S['pierOut'],'wall')
+ for y in G('pierPanels',[400,600,820]):hi.box(X(p0)+.15,X(p1)-.15,Y(y)-.6,Y(y)+.6,S['pierOut'],S['pierOut']+.05,'wall')  # raised panels
 # cornice: frieze, modillion fascia + modillions, consoles, stepped crown
 hi.box(-W/2,W/2,Y(S['frieze'][1]),Y(S['frieze'][0]),0,S['frieze'][2],'wall')
 hi.box(-W/2,W/2,Y(S['modillion'][1]),Y(S['modillion'][0]),0,.22,'wall')
-x=20
-while x<735:
- hi.box(X(x-6),X(x+6),Y(98),Y(62),.22,S['modillion'][2],'wall');x+=34
-for c in S['consoles']:hi.box(X(c-14),X(c+14),Y(165),Y(56),0,.58,'wall')
-hi.box(-W/2,W/2,Y(60),Y(45),0,.65,'wall');hi.box(-W/2-.02,W/2+.02,Y(45),H,0,S['crown'][2],'wall')
+MD=G('modil',{'x0':20,'x1':735,'step':34,'hw':6,'y0':62,'y1':98})
+x=MD['x0']
+while x<MD['x1']:
+ hi.box(X(x-MD['hw']),X(x+MD['hw']),Y(MD['y1']),Y(MD['y0']),.22,S['modillion'][2],'wall');x+=MD['step']
+CY=G('consoleY',[56,165]);CH=G('consoleHW',14)
+for c in S['consoles']:hi.box(X(c-CH),X(c+CH),Y(CY[1]),Y(CY[0]),0,.58,'wall')
+for (y0,y1,out) in G('crownSteps',[[45,60,.65],[0,45,S['crown'][2]]]):hi.box(-W/2-(.02 if y0==0 else 0),W/2+(.02 if y0==0 else 0),Y(y1),Y(y0) if y0>0 else H,0,out,'wall')
 # storefront
 hi.box(-W/2,W/2,Ysc,Ysc1,0,SC[2],'wall')
-sg=S['sign'];hi.box(X(sg[0]),X(sg[1]),Y(sg[3]),Y(sg[2]),0,sg[4],'wall')
+if S.get('sign'):sg=S['sign'];hi.box(X(sg[0]),X(sg[1]),Y(sg[3]),Y(sg[2]),0,sg[4],'wall')
+GY=G('groundY',[1100,1345]);GT=G('groundType','round');GR=G('groundR',.26)
 for c in S['groundCols']:
- cx=X(c);hi.cyl(cx,.06,.26,Y(1345),Y(1100),'wall');hi.box(cx-.36,cx+.36,Y(1110),Y(1088),0,.4,'wall');hi.box(cx-.33,cx+.33,Y(1345),Y(1328),0,.36,'wall')
-hi.box(-W/2,W/2,0,Y(1345),0,.06,'wall')
+ cx=X(c)
+ if GT=='round':hi.cyl(cx,.06,GR,Y(GY[1]),Y(GY[0]),'wall')
+ else:hi.box(cx-GR,cx+GR,Y(GY[1]),Y(GY[0]),0,.16,'wall')
+ hi.box(cx-GR-.1,cx+GR+.1,Y(GY[0]+10),Y(GY[0]-12),0,.4,'wall');hi.box(cx-GR-.07,cx+GR+.07,Y(GY[1]),Y(GY[1]-17),0,.36,'wall')
+hi.box(-W/2,W/2,0,Y(G('plinthY',1345)),0,.06,'wall')
+for (x0,x1,yt,yb,z0,z1) in G('boxes',[]):hi.box(X(x0),X(x1),Y(yb),Y(yt),z0,z1,'wall')   # extra relief, photo px
 
 # ---------------- LOW ----------------
 lo=M()
 wall_grid(lo,'front',[(Ysc,Ysc1)])
 for h in holes:rect_recess(lo,h,'side','front')
-Y60=Y(60)
+Y60=Y(G('loCrownY',60))
 lo.box(-W/2,W/2,Ysc,Ysc1,0,SC[2],'box')          # shop cornice
-lo.box(-W/2,W/2,YF,Y60,0,.3,'box',skip=('top',))  # frieze+modillion block
+lo.box(-W/2,W/2,YF,Y60,0,G('loFriezeOut',.3),'box',skip=('top',))  # frieze+modillion block
 # crown: front/top/ends + bottom split (the part in front of the lower block)
 lo.box(-W/2,W/2,Y60,H,0,S['crown'][2],'box',skip=('bottom',))
-lo.quad((-W/2,Y60,.3),(W/2,Y60,.3),(W/2,Y60,S['crown'][2]),(-W/2,Y60,S['crown'][2]),'box')
+lo.quad((-W/2,Y60,G('loFriezeOut',.3)),(W/2,Y60,G('loFriezeOut',.3)),(W/2,Y60,S['crown'][2]),(-W/2,Y60,S['crown'][2]),'box')
 
 # ---------------- to Blender ----------------
 B=lambda p:(p[0],-p[2],p[1])   # runtime local (x, y up, z out) -> Blender (x, -z, y)
@@ -166,7 +212,7 @@ def photo_mat(name,rough,dark=1.0):
  else:nt.links.new(t.outputs[0],p.inputs['Base Color'])
  p.inputs['Roughness'].default_value=rough;return mt
 mPhoto=photo_mat('photo',.78);mGlass=photo_mat('glass',.1)
-mIron,nt,p=principled('iron')   # painted cast iron: cream paint, fine orange-peel + chipped, grime in noise
+mIron,nt,p=principled('iron')   # side/return faces; S['iron'] = paint or brick colour   # painted cast iron: cream paint, fine orange-peel + chipped, grime in noise
 tc=nt.nodes.new('ShaderNodeTexCoord');n1=nt.nodes.new('ShaderNodeTexNoise');n1.inputs['Scale'].default_value=9;n1.inputs['Detail'].default_value=6
 nt.links.new(tc.outputs['Object'],n1.inputs['Vector'])
 ramp=nt.nodes.new('ShaderNodeValToRGB');ramp.color_ramp.elements[0].position=.35;ramp.color_ramp.elements[0].color=(*[c*.78 for c in S['iron']],1)
