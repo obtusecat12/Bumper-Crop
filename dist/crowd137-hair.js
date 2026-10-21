@@ -68,9 +68,14 @@ export function buildHair137(T,geos,style){const S=STY[style];if(!S)return null;
  for(let i=0;i<=NP;i++){const ph=phis[i],e0=fit.elOfH(ph,S.line(ph)),col=[];
   for(let j=0;j<=R;j++){const el=j===R?89.5*D2R:e0+(89.5*D2R-e0)*(1-Math.cos(j/R*Math.PI/2)),p=fit.at(ph,el,tOf(ph,el,i%NP,j));col.push(vtx(p,i/NP*US,vOf(p)));}
   G.push({ph,e0,col});}
- for(let i=0;i<NP;i++)for(let j=0;j<R;j++)quad(G[i].col[j],G[i+1].col[j],G[i+1].col[j+1],G[i].col[j+1]);
  // hairline lip (thickness): outer hairline edge back to just above the scalp
  const inCurt=ph=>S.curtain&&Math.cos(ph)<Math.cos(S.curtain.from*D2R);
+ // V139 H4b: curtain hangs from the widest cap row jm; cap quads under it (inside the curtain) between two
+ // curtain columns get their own vertices: they face downward and, shared, darkened the cap row above the curtain (back dark spots); they borrow the jm vertex normal
+ const JM=G.map(g=>{let jm=0,wm=-1;for(let j=0;j<R-1;j++){const q=g.col[j];const w=Math.hypot(P[q*3]-C[0],P[q*3+2]-C[2]);if(w>wm+1e-5){wm=w;jm=j;}}return jm;});
+ const cIn=i=>inCurt(phis[i]);
+ for(let i=0;i<NP;i++)for(let j=0;j<R;j++){const q4=[G[i].col[j],G[i+1].col[j],G[i+1].col[j+1],G[i].col[j+1]];
+  if(cIn(i)&&cIn(i+1)&&j<Math.min(JM[i],JM[i+1]))q4.forEach((q,n)=>{const ci=n===1||n===2?i+1:i;q4[n]=vtx(P.slice(q*3,q*3+3),U[q*2],U[q*2+1]);LIPN.push([q4[n],G[ci].col[JM[ci]]]);});quad(...q4);}
  for(let i=0;i<NP;i++){const a=G[i],b=G[i+1];if(inCurt(a.ph)&&inCurt(b.ph))continue;const ia=vtx(fit.at(a.ph,a.e0,.0015*k),i/NP*US,vOf(P.slice(a.col[0]*3,a.col[0]*3+3))+.04),ib=vtx(fit.at(b.ph,b.e0,.0015*k),(i+1)/NP*US,vOf(P.slice(b.col[0]*3,b.col[0]*3+3))+.04);
   // V139 H4: own copies of the hairline row + the cap's outward normal on the whole lip (radial / shared normals
   // tilted it downward and it rendered as a black slash along the hairline)
@@ -79,13 +84,13 @@ export function buildHair137(T,geos,style){const S=STY[style];if(!S)return null;
  if(S.curtain){const cu=S.curtain,NC=4,IN=.007*k,cols=[];
   for(let i=0;i<=NP;i++){const ph=phis[i];if(!(Math.cos(ph)<Math.cos(cu.from*D2R)))continue;
    // hang from the widest cap row (the skull bulges above the hairline; starting lower left a dark overhang seam)
-   let jm=0,wm=-1;for(let j=0;j<R-1;j++){const q=G[i].col[j];const w=Math.hypot(P[q*3]-C[0],P[q*3+2]-C[2]);if(w>wm+1e-5){wm=w;jm=j;}}
-   const b0=P.slice(G[i].col[jm]*3,G[i].col[jm]*3+3),sn=Math.sin(ph),cs=Math.cos(ph),r0=Math.hypot(b0[0]-C[0],b0[2]-C[2]),yEnd=y0+cu.end(ph)*H;
-   const out=[G[i].col[jm]],inn=[];
+   const jm=JM[i],cq=G[i].col[jm];
+   const b0=P.slice(cq*3,cq*3+3),sn=Math.sin(ph),cs=Math.cos(ph),r0=Math.hypot(b0[0]-C[0],b0[2]-C[2]),yEnd=y0+cu.end(ph)*H;
+   const out=[vtx(b0,U[cq*2],U[cq*2+1])],inn=[];// own top vertex: shared with the cap its normal mixed in the cap's
    for(let j=0;j<=NC;j++){const y=b0[1]+(yEnd-b0[1])*j/NC,f=j/NC;let r=j===0?r0:Math.max(r0+cu.flare*k*f,fit.radH(ph,y)+S.t*k,r0*.92);
     const p=[C[0]+sn*r,y,C[2]+cs*r],q=[C[0]+sn*(r-IN),y,C[2]+cs*(r-IN)],u=i/NP*US;
     if(j>0)out.push(vtx(p,u,vOf(p)));inn.push(vtx(q,u,vOf(q)));}
-   cols.push({i,out,inn});}
+   cols.push({i,out,inn,jm});}
   for(let c=0;c+1<cols.length;c++){const a=cols[c],b=cols[c+1];if(b.i!==a.i+1)continue;
    for(let j=0;j<NC;j++){quad(a.out[j],b.out[j],b.out[j+1],a.out[j+1]);quad(b.inn[j],a.inn[j],a.inn[j+1],b.inn[j+1]);}
    const ao=P.slice(a.out[NC]*3,a.out[NC]*3+3),bo=P.slice(b.out[NC]*3,b.out[NC]*3+3);   // bottom lip
@@ -93,7 +98,13 @@ export function buildHair137(T,geos,style){const S=STY[style];if(!S)return null;
   // side lips where the curtain starts/ends (wrap column NP duplicates column 0 and is not an edge)
   const edge=[cols[0],cols[cols.length-1]];for(const[e,s]of[[edge[0],1],[edge[1],-1]])for(let j=0;j<NC;j++){
    const cp=q=>vtx(P.slice(q*3,q*3+3),U[q*2],U[q*2+1]);// own vertices: shared ones would drag the sheet normals sideways (dark pinch)
-   const o0=cp(e.out[j]),o1=cp(e.out[j+1]),n0=cp(e.inn[j]),n1=cp(e.inn[j+1]);if(s>0)quad(n0,o0,o1,n1);else quad(o0,n0,n1,o1);}}
+   const o0=cp(e.out[j]),o1=cp(e.out[j+1]),n0=cp(e.inn[j]),n1=cp(e.inn[j+1]);if(s>0)quad(n0,o0,o1,n1);else quad(o0,n0,n1,o1);
+   {const p0=cp(e.out[j]),p1=cp(e.out[j+1]),m0=cp(e.inn[j]),m1=cp(e.inn[j+1]);if(s>0)quad(p0,m0,m1,p1);else quad(m0,p0,p1,m1);}}// V139 H4b: back winding too (seen edge-on from the front it was culled = temple speck)
+  // V139 H4b: close the temple pocket in front of the side lip: the hairline of the neighbouring (non-curtain) column sits higher
+  // than the curtain top and the long-hair head has its ear cut out, so the background showed through (light specks at the temple)
+  const cp=q=>vtx(P.slice(q*3,q*3+3),U[q*2],U[q*2+1]);
+  for(const[e,nb]of[[edge[0],edge[0].i-1],[edge[1],edge[1].i+1]]){const g=G[(nb+NP)%NP],pa=fit.at(g.ph,g.e0,.0015*k),u=U[g.col[0]*2],v=U[g.col[0]*2+1];
+   for(let j=0;j<2;j++)for(const w of[0,1]){const A=vtx(pa,u,v),B=cp(e.inn[j]),Cc=cp(e.inn[j+1]),O=cp(e.out[j]);w?I.push(A,B,Cc,A,O,B):I.push(A,Cc,B,A,B,O);}}}
  if(S.tail){// ponytail: tapered 6-sided tube from the back of the crown, hanging down behind the neck
   const ph=Math.PI,el=fit.elOfH(ph,.62),b=fit.at(ph,el,S.t*k),path=[[0,0,-.004],[0,-.03,-.03],[0,-.07,-.04],[0,-.11,-.036],[0,-.145,-.026]].map(d=>[b[0]+d[0]*k,b[1]+d[1]*k,b[2]+d[2]*k]),rad=[.026,.03,.026,.019,.01].map(r=>r*k),N=6,rings=[];
   path.forEach((c,j)=>{const ring=[];for(let n=0;n<=N;n++){const a=n/N*2*Math.PI,p=[c[0]+Math.cos(a)*rad[j],c[1],c[2]+Math.sin(a)*rad[j]*.8];ring.push(vtx(p,n/N*2,j*.5));}rings.push(ring);});

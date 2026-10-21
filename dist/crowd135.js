@@ -29,12 +29,12 @@
 // own head in tier A and to one representative head per type in tier B / the sprite bake. f8 headscarf: the body's neck skin
 // (cinfo slot 6 in tier B) takes the scarf colour.
 import * as T from './vendor/three.module.min.js';
-import {buildHair137,HAIR137_FACE,HAIR137_STYLES,HAIR137_HIDES_EARS} from './crowd137-hair.js?v=139i';
+import {buildHair137,HAIR137_FACE,HAIR137_STYLES,HAIR137_HIDES_EARS} from './crowd137-hair.js?v=139j';
 import {cityToWorld,CITY_ANGLE} from './urban-layout.js?v=return-1';
 import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {createTierB135,createTierC135,bRecord135,PROPS135,neckMask139} from './crowd135-far.js?v=139h';
-const A=new URL('./assets/crowd135/',import.meta.url).href,A139=new URL('./assets/crowd139/',import.meta.url).href,V='137e',VS='139i',V139='139i';
+const A=new URL('./assets/crowd135/',import.meta.url).href,A139=new URL('./assets/crowd139/',import.meta.url).href,V='137e',VS='139j',V139='139i';
 const Q=typeof location!=='undefined'?location.search:'',OFF=/[?&]crowd=0\b/.test(Q),NOLOD=/[?&]crowdlod=0\b/.test(Q),LO=/[?&]crowd=lo\b/.test(Q),WANTA=/[?&]crowdA=1\b/.test(Q);
 // ④-5 (135n) population + budget: fair blocks a/b 140 people, sidewalk blocks c/d (east frontage, -3,0 / -3,1) 60; ?crowd=lo
 // = 45 %, shorter tiers. Tier A (CPU meshes, 3–5 draws a person) is off by default: tier B draws the same baked frames,
