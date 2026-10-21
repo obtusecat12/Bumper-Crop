@@ -23,7 +23,7 @@ export function addRetail140Fixtures(m){
  return m;
 }
 const rng=seed=>{let s=(seed>>>0)||1;return()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%100000)/100000;};};
-const sub=(rc,s0,t0,s1,t1)=>[rc[0]+(rc[2]-rc[0])*s0,rc[1]+(rc[3]-rc[1])*t0,rc[0]+(rc[2]-rc[0])*s1,rc[1]+(rc[3]-rc[1])*t1];
+export const sub=(rc,s0,t0,s1,t1)=>[rc[0]+(rc[2]-rc[0])*s0,rc[1]+(rc[3]-rc[1])*t0,rc[0]+(rc[2]-rc[0])*s1,rc[1]+(rc[3]-rc[1])*t1];
 /** cell rect cropped (centred, or at offset o 0..1) to a face of aspect w/h, so no print is ever stretched */
 function fit(name,asp,o=.5){const rc=UVX140[name],A0=ASPX140[name];if(asp<A0){const f=asp/A0,s=(1-f)*o;return sub(rc,s,0,s+f,1);}const f=A0/asp,t=(1-f)*o;return sub(rc,0,t,1,t+f);}
 const cell=(c,asp)=>Array.isArray(c)?c:asp?fit(c,asp):UVX140[c];
@@ -31,7 +31,9 @@ const nrmz=v=>{const l=Math.hypot(v[0],v[1],v[2])||1;return[v[0]/l,v[1]/l,v[2]/l
 const crs=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
 const dif=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
 /** accumulator with a local frame (x,y,z,ry) like UrbanBatch.push; flushes straight into one merged part per key */
-class Acc{constructor(){this.p=[];this.n=[];this.u=[];this.f=[0,0,0,0];this.st=[];}
+export class Acc{constructor(U=UVX140,AS=ASPX140,mk=addRetail140Fixtures){this.p=[];this.n=[];this.u=[];this.f=[0,0,0,0];this.st=[];this.U=U;this.AS=AS;this.mk=mk;}
+ fit(name,asp,o=.5){const rc=this.U[name],A0=this.AS[name];if(asp<A0){const f=asp/A0,s=(1-f)*o;return sub(rc,s,0,s+f,1);}const f=A0/asp,t=(1-f)*o;return sub(rc,0,t,1,t+f);}
+ cell(c,asp){return Array.isArray(c)?c:asp?this.fit(c,asp):this.U[c];}
  push(x,y,z,ry=0){this.st.push(this.f);const[fx,fy,fz,fr]=this.f,c=Math.cos(fr),s=Math.sin(fr);this.f=[fx+c*x+s*z,fy+y,fz-s*x+c*z,fr+ry];}
  pop(){this.f=this.st.pop();}
  v(p,n,u){const[fx,fy,fz,fr]=this.f,c=Math.cos(fr),s=Math.sin(fr);this.p.push(fx+c*p[0]+s*p[2],fy+p[1],fz-s*p[0]+c*p[2]);this.n.push(c*n[0]+s*n[2],n[1],-s*n[0]+c*n[2]);this.u.push(u[0],u[1]);}
@@ -41,7 +43,7 @@ class Acc{constructor(){this.p=[];this.n=[];this.u=[];this.f=[0,0,0,0];this.st=[
  dquad(P,rc){this.quad(P,rc);this.quad([P[1],P[0],P[3],P[2]],[rc[2],rc[1],rc[0],rc[3]]);}// two-sided
  /** box: faces {f,b,l,r,t,d} = cell name (cropped to the face's aspect) or uv rect; missing = skipped */
  box(cx,cy,cz,w,h,d,o){if(o.seg&&w>o.seg*1.2){const n=Math.ceil(w/o.seg),sw=w/n;for(let i=0;i<n;i++){const q={...o,seg:0};if(i)delete q.l;if(i<n-1)delete q.r;this.box(cx-w/2+sw*(i+.5),cy,cz,sw,h,d,q);}return;}
-  const x0=cx-w/2,x1=cx+w/2,y0=cy,y1=cy+h,z0=cz-d/2,z1=cz+d/2,F=(k,a)=>o[k]?cell(o[k],a):null;
+  const x0=cx-w/2,x1=cx+w/2,y0=cy,y1=cy+h,z0=cz-d/2,z1=cz+d/2,F=(k,a)=>o[k]?this.cell(o[k],a):null;
   let c;if(c=F('f',w/h))this.quad([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],c);
   if(c=F('b',w/h))this.quad([[x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0]],c);
   if(c=F('r',d/h))this.quad([[x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1]],c);
@@ -49,17 +51,17 @@ class Acc{constructor(){this.p=[];this.n=[];this.u=[];this.f=[0,0,0,0];this.st=[
   if(c=F('t',w/d))this.quad([[x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0]],c);
   if(c=F('d',w/d))this.quad([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],c);}
  /** prism tube a→b, radius r, n sides, smooth normals */
- tube(a,b,r,n,name){const w=nrmz(dif(b,a));const t=Math.abs(w[1])<.9?[0,1,0]:[1,0,0];const u=nrmz(crs(t,w)),v=crs(w,u),rc=UVX140[name];
+ tube(a,b,r,n,name){const w=nrmz(dif(b,a));const t=Math.abs(w[1])<.9?[0,1,0]:[1,0,0];const u=nrmz(crs(t,w)),v=crs(w,u),rc=this.U[name];
   for(let i=0;i<n;i++){const f0=i/n*2*PI,f1=(i+1)/n*2*PI,o0=[0,1,2].map(k=>Math.cos(f0)*u[k]+Math.sin(f0)*v[k]),o1=[0,1,2].map(k=>Math.cos(f1)*u[k]+Math.sin(f1)*v[k]);
    const P=(q,o)=>[q[0]+o[0]*r,q[1]+o[1]*r,q[2]+o[2]*r];this.quad([P(a,o0),P(a,o1),P(b,o1),P(b,o0)],sub(rc,i/n,0,(i+1)/n,1),[o0,o1,o1,o0]);}}
  line(pts,r,n,name){for(let i=0;i<pts.length-1;i++)this.tube(pts[i],pts[i+1],r,n,name);}
  /** surface of revolution about axis w through c: prof [[radius,height]...], N segments, caps when radius 0 */
- rev(c,w,prof,N,name){const t=Math.abs(w[1])<.9?[0,1,0]:[1,0,0];const u=nrmz(crs(t,w)),v=crs(w,u),rc=UVX140[name];
+ rev(c,w,prof,N,name){const t=Math.abs(w[1])<.9?[0,1,0]:[1,0,0];const u=nrmz(crs(t,w)),v=crs(w,u),rc=this.U[name];
   for(let i=0;i<prof.length-1;i++){const[r0,h0]=prof[i],[r1,h1]=prof[i+1],dr=r1-r0,dh=h1-h0,l=Math.hypot(dr,dh)||1;
    for(let j=0;j<N;j++){const f0=j/N*2*PI,f1=(j+1)/N*2*PI,R=f=>[0,1,2].map(k=>Math.cos(f)*u[k]+Math.sin(f)*v[k]);const q0=R(f0),q1=R(f1);
     const P=(r,h,q)=>[0,1,2].map(k=>c[k]+q[k]*r+w[k]*h),Nn=q=>nrmz([0,1,2].map(k=>q[k]*dh/l-w[k]*dr/l));
     this.quad([P(r0,h0,q0),P(r0,h0,q1),P(r1,h1,q1),P(r1,h1,q0)],sub(rc,j/N,i/(prof.length-1),(j+1)/N,(i+1)/(prof.length-1)),[Nn(q0),Nn(q1),Nn(q1),Nn(q0)]);}}}
- flush(b,key){if(!this.p.length)return;addRetail140Fixtures(b.mats);const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(this.p,3));
+ flush(b,key){if(!this.p.length)return;this.mk(b.mats);const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(this.p,3));
   g.setAttribute('normal',new T.Float32BufferAttribute(this.n,3));g.setAttribute('uv',new T.Float32BufferAttribute(this.u,2));b.add(g,key,0,0,0);g.dispose();this.p=[];this.n=[];this.u=[];}}
 const CASES=['cola','cereal','water','chips'],CASE_SKU={cola:'cola',cereal:'cereal1',water:'water',chips:'chips1'};
 function caseInto(a,r,x,y,z,w,h,d,ry,k){k=k||CASES[(r()*4)|0];a.push(x,y,z,ry);const o=r();

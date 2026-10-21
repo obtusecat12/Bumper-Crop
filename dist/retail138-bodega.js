@@ -8,7 +8,9 @@
 // scratch-off dispenser, top-row liquor. Neon signs are emissive tube cells (neon.webp, 8 signs) + coloured tube strips.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140c';
+import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140d';
+import {caveShelf140,caveFloor140,BEER140,cigWall140,lottoDisp140,vapeShelf140,pipes140,papers140,cigarShelves140,hookah140} from './retail140-bodega.js?v=140d'; // V140 P1c real-shape smoke-shop props
+const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138c',PI=Math.PI;
 function tex(name,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v='+V);t.colorSpace=T.SRGBColorSpace;t.wrapS=t.wrapT=rep?T.RepeatWrapping:T.ClampToEdgeWrapping;t.anisotropy=4;t.magFilter=T.NearestFilter;return t;}
 function glowM(name,glow,o={}){const m=tex(name,o.rep);return new T.MeshStandardMaterial({map:m,emissive:0xffffff,emissiveMap:m,emissiveIntensity:glow,roughness:o.rough??.7,vertexColors:true,...(o.side?{side:o.side}:{})});}
@@ -65,6 +67,7 @@ export function liquorWall138(b,seed,{len,C=3.15,y0=1.05,depth=.34}){
   b.box('r138ledA',0,y+pitch-.06,.03,len-.08,.01,.012);// backlight bar
   for(let i=0;i<bays;i++){const a=-len/2+i*bl+.04,c=a+bl-.08;
    if(ri<3){let x=a+.03;const s=.95+r()*.12;while(x<c-.04){if(r()<.08){x+=.08;continue;}const zz=depth*.55+(r()-.5)*.04;x+=bottle(b,r,x,y+.006,zz,s*(ri===0?1.08:1))/2;x+=.035+r()*.015;}}
+   else if(R140){let x=a+.03;const s=1.1+r()*.15;while(x<c-.05){const zz=depth*.55+(r()-.5)*.04;x+=bottle(b,r,x,y+.006,zz,s)/2;x+=.03+r()*.015;}}// V140: real bottles to the top
    else band(b,r,'r138liquor',(ri+i)%2,2,(bl/len)*.5+.15,(a+c)/2,y+.17,depth*.55,c-a,.34);}
  });
  b.solid(0,depth/2,len,depth);
@@ -78,8 +81,9 @@ export function beerCave138(b,seed,{len,C=3.15,depth=1.0}){
  for(let i=0;i<n;i++){const cx=-L/2+.05+dw*(i+.5);
   // wire shelves: 4 rows of 12/24-pack cases (photo bands), floor stack of real case boxes
   for(let k=0;k<4;k++){const y=.42+k*.42;b.box('r138steel',cx,y-.012,zf*.45,dw-.04,.012,zf*.8);b.box('r138steel',cx,y+.03,zf*.85,dw-.04,.006,.006);
-   band(b,r,'r138beer',(k+i+(seed>>>4))%4,4,(dw/2.6),cx,y+.19,zf*.72,dw-.05,.36);b.box('r138goodsT',cx,y+.18,zf*.4,dw-.06,.34,zf*.6);}
-  for(let j=0;j<2;j++){const ww=dw*.46;b.box('r138kraft',cx+(j-.5)*ww,.2,zf*.6,ww-.02,.24,.4);band(b,r,'r138beer',(i+j)%4,4,.12,cx+(j-.5)*ww,.2,zf*.6+.201,ww-.03,.22);}
+   if(R140)caveShelf140(b,r,BEER140[(k+i+(seed>>>4))%3],cx,y,dw-.06,zf*.85,zf*.78,.38);
+   else{band(b,r,'r138beer',(k+i+(seed>>>4))%4,4,(dw/2.6),cx,y+.19,zf*.72,dw-.05,.36);b.box('r138goodsT',cx,y+.18,zf*.4,dw-.06,.34,zf*.6);}}
+  if(R140)caveFloor140(b,r,cx,dw-.06,zf*.82);else for(let j=0;j<2;j++){const ww=dw*.46;b.box('r138kraft',cx+(j-.5)*ww,.2,zf*.6,ww-.02,.24,.4);band(b,r,'r138beer',(i+j)%4,4,.12,cx+(j-.5)*ww,.2,zf*.6+.201,ww-.03,.22);}
   // door: frame, heated glass + condensation, long pull handle, kick plate
   for(const s of[-1,1])b.box('r138alu',cx+s*(dw/2-.025),h/2,zf+.02,.05,h,.06);b.box('r138alu',cx,h-.03,zf+.02,dw,.06,.06);b.box('r138alu',cx,.06,zf+.02,dw,.12,.06);
   b.plane('r138coolGlass',cx,h/2+.03,zf+.015,dw-.06,h-.18);b.plane('r138fog',cx,h/2+.03,zf+.03,dw-.06,h-.18);
@@ -105,14 +109,17 @@ export function smokeCounter138(b,seed,{len=1.8,h=1.0,D=.6}){
  for(const s of[-1,1])b.box('r138alu',s*len/2,h-.01,D/2,.03,.03,D);
  // two shelves: vapes on the upper glass shelf, glass pipes on the floor of the case
  for(let i=0;i<secs;i++){const cx=-len/2+(i+.5)*sl;
-  b.box('r138glassTop',cx,.56,D/2,sl-.04,.01,D-.06);const u=r()*.62;uvPlane(b,'r138vape',u,0,u+.38,1,cx,.75,D*.45,sl-.06,.34,0,-.35);
+  b.box('r138glassTop',cx,.56,D/2,sl-.04,.01,D-.06);
+  if(R140){vapeShelf140(b,r,cx-(sl-.04)/2,cx+(sl-.04)/2,.565,D-.04,D-.08);pipes140(b,r,cx-sl/2+.02,cx+sl/2-.02,.16,D*.5);continue;}
+  const u=r()*.62;uvPlane(b,'r138vape',u,0,u+.38,1,cx,.75,D*.45,sl-.06,.34,0,-.35);
   const u2=r()*.55;uvPlane(b,'r138pipes',u2,0,u2+.45,1,cx,.31,D*.45,sl-.06,.3,0,-.5);}
  b.box('r138ledW',0,h-.04,D/2,len-.08,.01,.02);
  b.plane('r138glassTop',0,h,D/2,len,D,0,-PI/2);b.plane('r138glassTop',0,(h+.16)/2,D,len,h-.16);
  b.plane('r138glassTop',-len/2,(h+.16)/2,D/2,D,h-.16,-PI/2);b.plane('r138glassTop',len/2,(h+.16)/2,D/2,D,h-.16,PI/2);
  // on top: rolling-paper / lighter / cigarillo rack at the back, a couple of hookahs
- b.push(-len/2+.45,h,.14,0);b.box('r138dark',0,.15,0,.8,.3,.22);{const u=r()*.35;uvPlane(b,'r138papers',u,0,u+.6,1,0,.17,.112,.78,.3,0,-.2);}b.pop();
- for(let i=0;i<Math.min(3,Math.floor(len/.6));i++)hookah(b,r,len/2-.2-i*.3,h,.17,1+(r()-.5)*.3);
+ if(R140){papers140(b,r,-len/2+.36,h+.005,.16);const pe=-len/2+.36+.41;for(let i=0;i<Math.min(3,Math.floor(len/.6));i++){const hx=len/2-.2-i*.3;if(hx-.14>pe)hookah140(b,r,hx,h,.2,1+(r()-.5)*.25);}}
+ else{b.push(-len/2+.45,h,.14,0);b.box('r138dark',0,.15,0,.8,.3,.22);{const u=r()*.35;uvPlane(b,'r138papers',u,0,u+.6,1,0,.17,.112,.78,.3,0,-.2);}b.pop();
+ for(let i=0;i<Math.min(3,Math.floor(len/.6));i++)hookah(b,r,len/2-.2-i*.3,h,.17,1+(r()-.5)*.3);}
  b.solid(0,D/2,len+.04,D);
 }
 // ---- 18. cigar humidor: walnut-oak cabinet with glazed doors, cedar shelves of boxes, hygrometer ----
@@ -120,7 +127,8 @@ export function humidor138(b,seed,{w=1.3,h=1.95,D=.55}){
  const r=rng(seed);b.box('r138oak',0,h/2,.02,w,h,.04);for(const s of[-1,1])b.box('r138oak',s*(w/2-.03),h/2,D/2,.06,h,D);
  b.box('r138oak',0,h-.06,D/2,w,.12,D);b.box('r138oak',0,.09,D/2,w,.18,D);b.box('r138oak',0,h+.03,D/2+.01,w+.06,.06,D+.04);
  // inside: four cedar shelves; the photo carries the boxes, the slats + glow sell the depth
- b.plane('r138cigars',0,(h+.18)/2-.05,.05,w-.12,h-.36);for(let k=1;k<4;k++)b.box('r138wood',0,.18+k*(h-.36)/4,D*.45,w-.12,.02,D*.8);
+ if(R140){b.plane('r138wood',0,(h+.18)/2-.05,.05,w-.12,h-.36);const sh=(h-.36)/4;cigarShelves140(b,r,w-.14,[0,1,2,3].map(k=>.18+k*sh+(k?.01:0)),D*.45);}
+ else b.plane('r138cigars',0,(h+.18)/2-.05,.05,w-.12,h-.36);for(let k=1;k<4;k++)b.box('r138wood',0,.18+k*(h-.36)/4,D*.45,w-.12,.02,D*.8);
  b.box('r138ledA',0,h-.13,D*.7,w-.16,.01,.02);
  for(const s of[-1,1]){const dx=s*w/4;b.box('r138oak',dx+s*(w/4-.03),h/2,D-.01,.05,h-.3,.03);b.box('r138oak',dx-s*(w/4-.03),h/2,D-.01,.05,h-.3,.03);b.plane('r138lexan',dx,h/2,D,w/2-.08,h-.36);
   b.box('r138brass',dx-s*(w/4-.07),h/2,D+.02,.015,.18,.015);}
@@ -153,8 +161,10 @@ export function cashier138(b,seed,{len=3.2,deep=1.7,C=3.15,bars=false,register=t
   b.box('r138dark',.75,hh+.05,deep-.3,.1,.1,.16);b.cylinder('r138dark',-.1,.38,deep-.95,.025,.025,.76,6);b.cylinder('r138oak',-.1,.78,deep-.95,.18,.18,.05,8);}
  // power wall on the booth's back wall: cigarettes above a low back counter, lotto dispenser over it
  b.box('r138oak',0,.45,.25,len-.1,.9,.5);b.box('r138dark',0,.91,.25,len-.08,.02,.52);
- const pw=Math.min(len-.2,2.6);b.box('r138dark',0,1.68,.06,pw+.08,1.36,.12);band(b,r,'r138cig',0,1,pw/2.4*.9,0,1.68,.125,pw,1.3);
- b.box('r138dark',0,2.55,.1,pw*.8,.32,.2);{const u=r()*.25;uvPlane(b,'r138lotto',u,0,u+.75,1,0,2.55,.205,pw*.78,.3);}
+ const pw=Math.min(len-.2,2.6);b.box('r138dark',0,1.68,.06,pw+.08,1.36,.12);
+ if(R140){cigWall140(b,r,pw,1.03,2.33,.152);lottoDisp140(b,r,pw*.78,2.71,.205);}
+ else{band(b,r,'r138cig',0,1,pw/2.4*.9,0,1.68,.125,pw,1.3);
+ b.box('r138dark',0,2.55,.1,pw*.8,.32,.2);{const u=r()*.25;uvPlane(b,'r138lotto',u,0,u+.75,1,0,2.55,.205,pw*.78,.3);}}
  b.solid(0,deep/2,len+.12,deep);
 }
 // ---- 20. neon: one tube sign cell (NEON138) on a clear acrylic back with hang chains; and bare coloured tube runs ----

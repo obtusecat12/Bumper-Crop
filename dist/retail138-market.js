@@ -10,7 +10,7 @@ import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import {r138GridPlane} from './retail138-bake.js?v=140a';
 import {goodsRun140,catKey140,product140,chestFill140} from './retail140-goods.js?v=140b';
 import {pile140,PRODUCE140} from './retail140-produce.js?v=140b';
-import {case140,promo140,baskets140,carts140,checkoutParts140,priceCard140} from './retail140-fixtures.js?v=140c'; // V140 P1b-2 real-shape fixtures // V140 P1b real fruit & veg // V140 P1 real-shape goods
+import {case140,promo140,baskets140,carts140,checkoutParts140,priceCard140} from './retail140-fixtures.js?v=140d'; // V140 P1b-2 real-shape fixtures // V140 P1b real fruit & veg // V140 P1 real-shape goods
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138b',PI=Math.PI;
 export const GOODS138={dry:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],cool:[20,21,22,23],dairy:[24,25,26,27],frozen:[28,29,30,31],candy:[32,33,34,35,36]};
