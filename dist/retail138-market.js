@@ -7,7 +7,9 @@
 // mullions, belts, wire carts, baskets) with colliders.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {r138GridPlane} from './retail138-bake.js?v=138f';
+import {r138GridPlane} from './retail138-bake.js?v=140a';
+import {goodsRun140,catKey140,product140} from './retail140-goods.js?v=140a'; // V140 P1 real-shape goods
+const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138b',PI=Math.PI;
 export const GOODS138={dry:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],cool:[20,21,22,23],dairy:[24,25,26,27],frozen:[28,29,30,31],candy:[32,33,34,35,36]};
 const GROWS=19,GCOLS=2;
@@ -44,6 +46,7 @@ function uvPlane(b,key,u0,v0,u1,v1,x,y,z,w,h,ry=0,rx=0){const g=new T.PlaneGeome
 const pick=(r,a)=>a[(r()*a.length)|0];
 /** a run of product on one deck: box body (dark top/sides) + photo face; sometimes a sold-out gap. */
 function goodsRun(b,r,key,cat,x0,x1,y,zFront,depth,h){
+ if(R140){goodsRun140(b,r,catKey140(cat,GOODS138),x0,x1,y,zFront,depth,h,{cold:key==='r138goodsCold'});return;}
  const runs=[];if(r()<.16&&x1-x0>.7){const g0=x0+(x1-x0)*(.2+r()*.5),gw=.14+r()*.22;runs.push([x0,g0],[g0+gw,x1]);}else runs.push([x0,x1]);
  const slot=pick(r,cat);
  for(const[a,c]of runs){const w=c-a;if(w<.06)continue;const hh=h*(.82+r()*.18),dz=r()*.035,uw=w/2.4,u0=r()*(1-Math.min(1,uw));
@@ -70,7 +73,7 @@ export function gondola138(b,seed,{len,h=1.95,double=true,cats=[GOODS138.dry,GOO
  for(const s of[-1,1]){const ex=s*(len/2+.026),zc=double?0:D/2;r138GridPlane(b,'r138gond',0,ex,h/2+.06,zc,D-.02,h-.2,s*PI/2,0,.2);
   if(double&&r()<.7){const cz=zc+(r()-.5)*.3,n=4+((r()*3)|0),cat=pick(r,[GOODS138.candy,GOODS138.dry.slice(0,8)]),top=1.55;
    b.box('r138steel',ex+s*.008,top-n*.11,cz,.006,n*.22+.04,.035);b.box('r138steel',ex+s*.012,top+.02,cz,.02,.03,.06);
-   for(let k=0;k<n;k++){const slot=pick(r,cat);facing(b,'r138goods',slot,r()*.85,.06,ex+s*(.018+k%2*.004),top-.08-k*.21,cz+(k%2?.01:-.01),.13,.18,s*PI/2);}}}
+   for(let k=0;k<n;k++){if(R140){product140(b,'candy',ex+s*(.012+k%2*.004),top-.13-k*.21,cz+(k%2?.01:-.01),s*PI/2);continue;}const slot=pick(r,cat);facing(b,'r138goods',slot,r()*.85,.06,ex+s*(.018+k%2*.004),top-.08-k*.21,cz+(k%2?.01:-.01),.13,.18,s*PI/2);}}}
  for(const side of double?[1,-1]:[1]){
   b.push(0,0,0,side>0?0:PI);const z0=.05,dep=D/2-.03;
   b.box('r138dark',0,.075,z0+dep-.01,len,.15,.02);b.box('r138gond',0,.15,z0+dep/2,len,.012,dep);
@@ -98,6 +101,7 @@ export function reachIn138(b,seed,{doors=4,h=2.25,cat=GOODS138.cool,frozen=false
  b.plane('r138coolIn',0,h/2,.03,len-.1,h-.4);
  for(let i=0;i<doors;i++){const cx=-len/2+.05+dw*(i+.5);
   for(let k=0;k<4;k++){const y=.28+k*.44,ph=.38;b.box('r138coolW',cx,y-.01,zf*.5,dw-.02,.012,zf-.2);b.box('r138steel',cx,y+.005,zf-.12,dw-.02,.01,.01);
+   if(R140){goodsRun(b,r,'r138goodsCold',cat,cx-dw/2+.03,cx+dw/2-.03,y,zf-.13,zf-.2,ph);continue;}
    const slot=pick(r,cat),uw=(dw-.04)/2.4;facing(b,'r138goodsCold',slot,r()*(1-uw),uw,cx,y+ph/2,zf-.14,dw-.04,ph);b.box('r138goodsT',cx,y+ph/2,zf*.45-.07,dw-.05,ph*.95,zf*.6);}
   // door: frame + heated glass + vertical bar handle
   for(const s of[-1,1])b.box('r138cool',cx+s*(dw/2-.02),h/2-.04,zf+.02,.04,h-.4,.04);
@@ -120,7 +124,7 @@ export function multideck138(b,seed,{len=2.5,h=2.0,cat=GOODS138.dairy}){
   b.box('r138lamp',0,y+.28,zf-.04,len-.16,.01,.02);
   for(let i=0;i<mods;i++){const a=-len/2+.06+i*ml,c=a+ml-(i===mods-1?.12:0);goodsRun(b,r,'r138goodsCold',cat,a+.01,c-.01,y,zf-.01,Math.min(dep-.02,.4),.28);}}
  // bottom well: yogurt / cheese lying flat (top view of the dairy strip, tilted toward the shopper)
- for(let i=0;i<mods;i++){const a=-len/2+.06+i*ml,w=ml-.14,uw=w/2.4;facing(b,'r138goodsCold',pick(r,cat),r()*(1-uw),uw,a+ml/2-.03,.495,D*.55,w,D-.42,0,-PI/2+.35);}
+ for(let i=0;i<mods;i++){const a=-len/2+.06+i*ml,w=ml-.14,uw=w/2.4;if(R140){for(const zz of[D-.14,D-.42])goodsRun(b,r,'r138goodsCold',GOODS138.dairy,a+.02,a+ml-.1,.48,zz,.28,.16);continue;}facing(b,'r138goodsCold',pick(r,cat),r()*(1-uw),uw,a+ml/2-.03,.495,D*.55,w,D-.42,0,-PI/2+.35);}
  b.solid(0,D/2,len,D);
 }
 // ---- 14. chest freezer (island or Layout B centre run) ----
@@ -155,14 +159,14 @@ export function checkout138(b,seed,{lane=1}){
  // impulse rack bolted to the belt cabinet's shopper side, facing the queue lane
  b.push(-1.15,0,dz/2+.01,0);impulse138(b,seed^0x9e37,{w:.85,h:1.35});b.pop();
  // gum / mints counter rack on the scanner's shopper side
- b.push(.1,hh-.1,dz/2+.08,0);for(let k=0;k<2;k++){b.box('r138dark',0,.04+k*.16,0,.5,.01,.12);facing(b,'r138goods',pick(r,GOODS138.candy),r()*.7,.21,0,.1+k*.16,.065,.48,.12);}b.pop();
+ b.push(.1,hh-.1,dz/2+.08,0);for(let k=0;k<2;k++){b.box('r138dark',0,.04+k*.16,0,.5,.01,.12);if(R140)goodsRun(b,r,'r138goods',GOODS138.candy,-.24,.24,.045+k*.16,.06,.1,.14);else facing(b,'r138goods',pick(r,GOODS138.candy),r()*.7,.21,0,.1+k*.16,.065,.48,.12);}b.pop();
  b.solid(-.2,0,3.6,dz+.04);b.solid(.35,-.5,.6,.4);
 }
 /** impulse candy rack: 5 tilted wire tiers of candy facings, faces +z. */
 export function impulse138(b,seed,{w=.9,h=1.45}){
  const r=rng(seed);for(const s of[-1,1])b.box('r138dark',s*w/2,h/2,.15,.03,h,.3);b.box('r138dark',0,h-.02,.15,w,.04,.3);b.box('r138dark',0,.06,.15,w,.12,.32);
  for(let k=0;k<5;k++){const y=.2+k*.25,slot=GOODS138.candy[(k+(seed>>>3))%5],uw=w/2.4*1.6;
-  b.box('r138dark',0,y,.16,w,.01,.28);facing(b,'r138goods',slot,r()*(1-uw),uw,0,y+.1,.27,w-.04,.2,0,-.25);b.box('r138dark',0,y+.03,.3,w,.012,.012);}
+  b.box('r138dark',0,y,.16,w,.01,.28);if(R140)goodsRun(b,r,'r138goods',GOODS138.candy,-w/2+.02,w/2-.02,y+.005,.29,.26,.22);else facing(b,'r138goods',slot,r()*(1-uw),uw,0,y+.1,.27,w-.04,.2,0,-.25);b.box('r138dark',0,y+.03,.3,w,.012,.012);}
  b.solid(0,.15,w+.04,.32);
 }
 // ---- 11. cardboard promo display: standee + case pallet / dump bin, faces +z ----

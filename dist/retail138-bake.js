@@ -104,10 +104,10 @@ export function* retail138Bake(b,mark,P,{d}){
  const ao=(px,py,pz,nx,nz)=>{let o=0,w=0;for(const[dx,dz]of DIR){const fw=nx*dx+nz*dz;if(fw<-.35)continue;const ww=.6+.4*Math.max(0,fw);for(const r of RD){const hh=hAt(px+dx*r,pz+dz*r)-py;o+=ww*Math.max(0,Math.min(1,hh/(r*1.4)));w+=ww;}}return w?Math.max(.12,1-1.05*o/w):1;};
  const cache=new Map();let nv=0,hit=0;const pv=[0,0,0],nv3=[0,0,0];
  for(const{key,g}of parts){
-  if(key in EM)continue;const p=g.attributes.position,nr=g.attributes.normal,A=g.attributes.bake138.array,n=p.count;
+  if(key in EM)continue;const qz=key.startsWith('r138p140')?12.5:25;/* V140 goods: 8 cm cache cells */const p=g.attributes.position,nr=g.attributes.normal,A=g.attributes.bake138.array,n=p.count;
   for(let i=0;i<n;i++){if(A[i*3]<0)continue;nv++;
    toL(p.getX(i),p.getY(i),p.getZ(i),pv);if(nr)nL(nr.getX(i),nr.getY(i),nr.getZ(i),nv3);else{nv3[0]=0;nv3[1]=1;nv3[2]=0;}
-   const ck=Math.round(pv[0]*25)+','+Math.round(pv[1]*25)+','+Math.round(pv[2]*25)+','+Math.round(nv3[0]*2)+','+Math.round(nv3[1]*2)+','+Math.round(nv3[2]*2);
+   const ck=((Math.round(pv[0]*qz)+2048)*4096+(Math.round(pv[1]*qz)+2048))*4096*125+((Math.round(pv[2]*qz)+2048)*125+(Math.round(nv3[0]*2)+2)*25+(Math.round(nv3[1]*2)+2)*5+Math.round(nv3[2]*2)+2)+(qz<20?1e15:0);
    let r=cache.get(ck);
    if(!r){const px=pv[0]+nv3[0]*.03,py=pv[1]+nv3[1]*.03,pz=pv[2]+nv3[2]*.03;
     const ceil=pv[1]>C-.1&&nv3[1]<-.7,dk=deckOcc(px,py,pz,nv3[0],nv3[2]),a=ao(px,py,pz,nv3[0],nv3[2])*dk,up=.5+.5*nv3[1];
