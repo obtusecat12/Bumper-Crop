@@ -8,6 +8,7 @@
 import * as T from './vendor/three.module.min.js';
 import {GEO as A0} from './soho141-a0.js?v=141a';
 import {GEO as A1} from './soho141-a1.js?v=141b';import {GEO as A2} from './soho141-a2.js?v=141b';import {GEO as A3} from './soho141-a3.js?v=141b';import {GEO as A4} from './soho141-a4.js?v=141b';
+import {GEO as B0} from './soho141-b0.js?v=141c';import {GEO as B1} from './soho141-b1.js?v=141c';import {GEO as B2} from './soho141-b2.js?v=141c';import {GEO as B3} from './soho141-b3.js?v=141c';
 const A=new URL('./assets/l11-v141/',import.meta.url).href;
 // per facade: baked low-poly + blueprint px grid (photo 750 x 1358 px) for the separate fire escape / awnings
 export const SOHO141={
@@ -16,7 +17,12 @@ export const SOHO141={
  a1:{geo:A1,px:[876,1172]},
  a2:{geo:A2,px:[750,1314],fe:{x0:175,x1:375,levels:[1050,845,650,460,290]}},
  a3:{geo:A3,px:[750,1358],fe:{x0:190,x1:420,levels:[920,650,397]}},
- a4:{geo:A4,px:[828,1237],fe:{x0:185,x1:462,levels:[840,560,305]}}};
+ a4:{geo:A4,px:[828,1237],fe:{x0:185,x1:462,levels:[840,560,305]}},
+ // V141 F2b block -2,1 (b2 had no fire escape in the flat version)
+ b0:{geo:B0,px:[906,1117],fe:{x0:60,x1:355,levels:[800,600,407,228]}},
+ b1:{geo:B1,px:[828,1247],fe:{x0:50,x1:390,levels:[928,702,492,290]}},
+ b2:{geo:B2,px:[828,1205]},
+ b3:{geo:B3,px:[750,1333],fe:{x0:190,x1:420,levels:[1046,862,712,545,355]}}};
 export function soho141On(){return !/[?&]fac141=0\b/.test(globalThis.location?.search||'');}
 function tex(name,srgb=true,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v=141b');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 export function addSoho141Materials(m,key){

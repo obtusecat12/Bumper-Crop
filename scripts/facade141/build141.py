@@ -134,7 +134,9 @@ for h in holes:
 # colonettes / pilasters + capitals + bases per upper floor
 belts=S['belts'];COLY=G('colY',None);CT=G('colType','round');CW=G('colW',.2)
 for fi,fl in enumerate(FLOORS):
- if COLY:y0,y1=Y(COLY[fi][1]),Y(COLY[fi][0])
+ if COLY:
+  if COLY[fi] is None:continue   # V141 F2b: giant-order columns span two floors -> skip the second
+  y0,y1=Y(COLY[fi][1]),Y(COLY[fi][0])
  else:
   if fi>=len(belts):continue
   y0=Y(belts[fi][0]);y1=Y(fl['y'][1]+20)
