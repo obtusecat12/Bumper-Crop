@@ -9,7 +9,8 @@ import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
 import {r138GridPlane} from './retail138-bake.js?v=140a';
 import {goodsRun140,catKey140,product140,chestFill140} from './retail140-goods.js?v=140b';
-import {pile140,PRODUCE140} from './retail140-produce.js?v=140b'; // V140 P1b real fruit & veg // V140 P1 real-shape goods
+import {pile140,PRODUCE140} from './retail140-produce.js?v=140b';
+import {case140,promo140,baskets140,carts140,checkoutParts140,priceCard140} from './retail140-fixtures.js?v=140c'; // V140 P1b-2 real-shape fixtures // V140 P1b real fruit & veg // V140 P1 real-shape goods
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138b',PI=Math.PI;
 export const GOODS138={dry:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],cool:[20,21,22,23],dairy:[24,25,26,27],frozen:[28,29,30,31],candy:[32,33,34,35,36]};
@@ -57,6 +58,7 @@ function goodsRun(b,r,key,cat,x0,x1,y,zFront,depth,h){
 function priceLip(b,r,x0,x1,y,z){const w=x1-x0;uvPlane(b,'r138price',r()*4,0,r()*4+w/2.4,1,(x0+x1)/2,y,z,w,.045);b.box('r138gond',(x0+x1)/2,y-.035,z-.01,w,.025,.02);}
 export function caseBox138(b,r,x,y,z,w,h,d,ry=0){caseBox(b,r,x,y,z,w,h,d,ry);}
 function caseBox(b,r,x,y,z,w,h,d,ry=0){
+ if(R140){case140(b,r,x,y,z,w,h,d,ry);return;}
  b.push(x,y,z,ry);b.box('r138kraft',0,h/2,0,w-.004,h,d-.004);
  const c=(r()*4)|0,v0=1-(c+1)/4,v1=1-c/4;uvPlane(b,'r138case',0,v0,1,v1,0,h/2,d/2,w,h);uvPlane(b,'r138case',0,v0,.6,v1,w/2,h/2,0,d,h,PI/2);b.pop();
 }
@@ -146,6 +148,8 @@ export function chest138(b,seed,{len=2.0,D=.92}){
 export function checkout138(b,seed,{lane=1}){
  const r=rng(seed),hh=.86,dz=.62;
  b.box('r138coolW',-.6,hh/2-.03,0,2.2,hh-.06,dz);b.box('r138dark',-.6,.05,0,2.2,.1,dz+.01);// belt cabinet
+ if(R140){b.box('r138steel',.75,hh/2-.03,0,.5,hh-.06,dz);b.box('r138coolW',1.45,hh/2-.08,0,.9,hh-.16,dz);b.box('r138steel',1.45,hh-.15,0,.9,.02,dz);b.cylinder('r138steel',1.45,hh+.25,0,.02,.02,.5,6);b.box('r138steel',1.45,hh+.5,0,.6,.02,.02);
+  checkoutParts140(b,seed^0x51,hh,dz);}else{
  b.plane('r138belt',-.75,hh+.002,0,1.8,dz-.16,0,-PI/2);for(const s of[-1,1])b.box('r138steel',-.6,hh+.02,s*(dz/2-.04),2.2,.04,.05);
  b.box('r138steel',-1.66,hh,0,.08,.05,dz-.12);b.box('r138dark',-.3,hh+.035,.05,.4,.05,.05);// belt end roller, divider stick
  // scanner bed + tower
@@ -159,6 +163,7 @@ export function checkout138(b,seed,{lane=1}){
  b.box('r138dark',.35,hh-.02,-.48,.42,.05,.18);b.box('r138dark',.35,hh-.16,-.47,.44,.16,.42);b.box('r138steel',.35,hh-.16,-.69,.4,.12,.01);
  b.box('r138dark',-.05,hh+.08,-.42,.16,.12,.18);b.box('r138coolW',-.05,hh+.145,-.42,.1,.01,.12);
  b.cylinder('r138dark',.55,hh+.14,.36,.015,.015,.28,6);b.box('r138dark',.55,hh+.3,.36,.12,.18,.06,-.3);b.plane('r138screen',.55+.017,hh+.33,.392,.08,.06,-.3);
+ }
  // lane light pole at the load end
  b.cylinder('r138steel',-1.62,1.2,-.22,.03,.03,2.4,6);b.cylinder('r138laneLight',-1.62,2.46,-.22,.11,.11,.16,10);b.cylinder('r138red',-1.62,2.56,-.22,.115,.115,.04,10);
  // impulse rack bolted to the belt cabinet's shopper side, facing the queue lane
@@ -177,6 +182,7 @@ export function impulse138(b,seed,{w=.9,h=1.45}){
 // ---- 11. cardboard promo display: standee + case pallet / dump bin, faces +z ----
 export function promo138(b,seed,{}){
  const r=rng(seed),k=r()<.5?1:2,key='r138promo'+k,h=k===1?1.55:1.3,w=k===1?.84:.86;
+ if(R140){promo140(b,seed);const y=.56;b.box('r138kraft',0,y+h/2,-.4,w,h,.015);uvPlane(b,key,0,0,1,1,0,y+h/2,-.39,w-.02,h-.02);b.box('r138kraft',0,y-.2,-.4,.06,.4,.06);b.solid(0,0,1.08,.88);return;}
  b.box('r138kraft',0,.11,0,1.0,.22,.8);b.box('r138wood',0,.06,0,1.05,.12,.85);// pallet + case tier
  for(let i=0;i<2;i++)for(let j=0;j<2;j++)caseBox(b,r,-.24+i*.48,.22,-.18+j*.36,.46,.3,.34,(r()-.5)*.08);
  caseBox(b,r,0,.52,0,.5,.28,.36,(r()-.5)*.3);
@@ -185,6 +191,7 @@ export function promo138(b,seed,{}){
 }
 // ---- 12. shopping baskets (stack on a stand) and nested carts ----
 export function baskets138(b,seed,{n=6}){
+ if(R140){baskets140(b,seed,{n});return;}
  const r=rng(seed),bw=.44,bd=.3,bh=.22;b.box('r138dark',0,.03,0,bw+.06,.06,bd+.06);
  for(let i=0;i<n;i++){const y=.06+i*.065,dx=(r()-.5)*.02,ry=(r()-.5)*.08;b.push(dx,y,0,ry);
   b.plane('r138basket',0,bh/2,bd/2,bw,bh);b.plane('r138basket',0,bh/2,-bd/2,bw,bh,PI);b.plane('r138basket',bw/2,bh/2,0,bd,bh,PI/2);b.plane('r138basket',-bw/2,bh/2,0,bd,bh,-PI/2);b.plane('r138basket',0,.004,0,bw,bd,0,-PI/2);
@@ -204,7 +211,7 @@ function cart(b){
  b.plane('r138wire',-.02,.16,0,L-.2,.4,0,-PI/2);
  for(const[x,z]of[[-L/2+.05,-.24],[-L/2+.05,.24],[L/2-.12,-.2],[L/2-.12,.2]]){b.cylinder('r138rubber',x,.05,z,.05,.05,.03,8,PI/2);b.box('r138dark',x,.1,z,.03,.05,.04);}
 }
-export function carts138(b,seed,{n=3}){const r=rng(seed);for(let i=0;i<n;i++){b.push(i*.26,0,(r()-.5)*.03,(r()-.5)*.04);cart(b);b.pop();}b.solid((n-1)*.13,0,1.0+(n-1)*.26,.62);}
+export function carts138(b,seed,{n=3}){if(R140){carts140(b,seed,{n});return;}const r=rng(seed);for(let i=0;i<n;i++){b.push(i*.26,0,(r()-.5)*.03,(r()-.5)*.04);cart(b);b.pop();}b.solid((n-1)*.13,0,1.0+(n-1)*.26,.62);}
 // ---- 13. produce: tilted wooden display bin (fruit) and misted veg rack against a wall ----
 export function produceBin138(b,seed,{len=1.6,D=1.1}){
  const r=rng(seed),hf=.72,hb=1.0;b.box('r138wood',0,.36,0,len,.72,D*.8);
@@ -216,7 +223,8 @@ export function produceBin138(b,seed,{len=1.6,D=1.1}){
  else{uvPlane(b,'r138fruit',u0,v0,u0+uw,v0+vw,0,(hf+hb)/2+.04,0,len-.08,sl,0,-PI/2+tilt);
  // a few loose fruit on the front lip so the pile has a silhouette
  for(let i=0;i<9;i++){const x=-len/2+.12+r()*(len-.24);b.sphere(r()<.5?'r138red':'r138orangeF',x,hf+.07+r()*.03,D/2-.1-r()*.12,.045,.042,.045);}}
- b.box('r138dark',0,hf-.08,D/2+.004,len*.5,.12,.01);uvPlane(b,'r138price',r(),0,r()+.25,1,0,hf-.08,D/2+.011,len*.48,.1);
+ if(R140){b.box('r138dark',0,hf-.08,D/2+.004,.43,.12,.01);priceCard140(b,r,0,hf-.13,D/2+.011,.4);}
+ else{b.box('r138dark',0,hf-.08,D/2+.004,len*.5,.12,.01);uvPlane(b,'r138price',r(),0,r()+.25,1,0,hf-.08,D/2+.011,len*.48,.1);}
  b.solid(0,0,len+.06,D+.04);
 }
 export function vegRack138(b,seed,{len=2.4,h=2.1}){
