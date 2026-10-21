@@ -37,17 +37,17 @@ function headFit(geos){const T=[];let y0=1e9,y1=-1e9,sx=0,sz=0,n=0,zmin=1e9,zmax
 // hairline as head fraction: front F, sides S (above the ear), back B; phi 0 = face (+z)
 const hl=(F,S,B,e=1.6)=>ph=>{const c=Math.cos(ph);return c>0?S+(F-S)*c**e:S+(B-S)*(-c)**1.1;};
 const STY={
- crop:{line:hl(.80,.64,.34),t:.010,top:.003},
- side:{line:ph=>hl(Math.sin(ph)>0?.83:.78,.64,.34)(ph),t:.013,top:.009,lean:.006},
+ crop:{line:hl(.80,.64,.34),t:.007,top:.002},
+ side:{line:ph=>hl(Math.sin(ph)>0?.83:.78,.64,.34)(ph),t:.010,top:.006,lean:.005},
  curly:{line:hl(.79,.64,.36),t:.019,top:.008,noise:.006,curly:1},
  bald:{band:[hl(0,.42,.32),hl(0,.60,.56)],from:58,t:.004},
- bob:{line:hl(.83,.52,.36,4),t:.015,top:.006,curtain:{from:58,end:ph=>Math.abs(Math.cos(ph))<.35?.13:.03,flare:.012}},
- long:{line:hl(.85,.52,.40,4),t:.013,top:.005,curtain:{from:62,end:ph=>Math.cos(ph)>-.4?-.12:-.42,flare:.016}},
+ bob:{line:hl(.83,.52,.36,2.2),t:.015,top:.006,curtain:{from:58,end:ph=>Math.abs(Math.cos(ph))<.35?.13:.03,flare:.012}},
+ long:{line:hl(.85,.52,.40,2.2),t:.013,top:.005,curtain:{from:62,end:ph=>Math.cos(ph)>-.4?-.12:-.42,flare:.016}},
  pony:{line:hl(.81,.60,.30),t:.009,top:.002,tail:1},
  bun:{line:hl(.81,.60,.30),t:.009,top:.002,bun:1}};
 
 export function buildHair137(T,geos,style){const S=STY[style];if(!S)return null;const fit=headFit(geos),{C,H,y0}=fit,k=H/.245;
- const P=[],U=[],I=[],LIP=[];const US=S.curly?10:4,VS=S.curly?.09:.32;
+ const P=[],U=[],I=[],LIP=[],LIPN=[];const US=S.curly?10:4,VS=S.curly?.09:.32;
  const vtx=(p,u,v)=>{P.push(...p);U.push(u,v);return P.length/3-1;};
  const quad=(a,b,c,d)=>{I.push(a,b,c,a,c,d);};
  const yTop=fit.y1+.01;const vOf=p=>(yTop-p[1])/VS;
@@ -72,7 +72,10 @@ export function buildHair137(T,geos,style){const S=STY[style];if(!S)return null;
  // hairline lip (thickness): outer hairline edge back to just above the scalp
  const inCurt=ph=>S.curtain&&Math.cos(ph)<Math.cos(S.curtain.from*D2R);
  for(let i=0;i<NP;i++){const a=G[i],b=G[i+1];if(inCurt(a.ph)&&inCurt(b.ph))continue;const ia=vtx(fit.at(a.ph,a.e0,.0015*k),i/NP*US,vOf(P.slice(a.col[0]*3,a.col[0]*3+3))+.04),ib=vtx(fit.at(b.ph,b.e0,.0015*k),(i+1)/NP*US,vOf(P.slice(b.col[0]*3,b.col[0]*3+3))+.04);
-  quad(ia,ib,b.col[0],a.col[0]);LIP.push(ia,ib);}
+  // V139 H4: own copies of the hairline row + the cap's outward normal on the whole lip (radial / shared normals
+  // tilted it downward and it rendered as a black slash along the hairline)
+  const ca=vtx(P.slice(a.col[0]*3,a.col[0]*3+3),U[a.col[0]*2],U[a.col[0]*2+1]),cb=vtx(P.slice(b.col[0]*3,b.col[0]*3+3),U[b.col[0]*2],U[b.col[0]*2+1]);
+  quad(ia,ib,cb,ca);LIPN.push([ia,a.col[0]],[ca,a.col[0]],[ib,b.col[0]],[cb,b.col[0]]);}
  if(S.curtain){const cu=S.curtain,NC=4,IN=.007*k,cols=[];
   for(let i=0;i<=NP;i++){const ph=phis[i];if(!(Math.cos(ph)<Math.cos(cu.from*D2R)))continue;
    // hang from the widest cap row (the skull bulges above the hairline; starting lower left a dark overhang seam)
@@ -103,9 +106,10 @@ export function buildHair137(T,geos,style){const S=STY[style];if(!S)return null;
   for(let j=0;j<=NR;j++){const t=-Math.PI/2+j/NR*Math.PI,row=[];for(let n=0;n<=NS;n++){const a=n/NS*2*Math.PI;
    const p=[b[0]+Math.cos(a)*Math.cos(t)*r,b[1]+Math.sin(t)*r*.85,b[2]+Math.sin(a)*Math.cos(t)*r*.8+d[2]*.006*k];row.push(vtx(p,n/NS*3,j*.6));}rows.push(row);}
   for(let j=0;j<NR;j++)for(let n=0;n<NS;n++)quad(rows[j][n],rows[j+1][n],rows[j+1][n+1],rows[j][n+1]);}
- return finish(T,P,U,I,LIP,C);}
-function finish(T,P,U,I,LIP=[],C=null){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(P,3));g.setAttribute('uv',new T.Float32BufferAttribute(U,2));g.setIndex(I);
- g.computeVertexNormals();if(C&&LIP.length){const n=g.attributes.normal;for(const i of LIP){const x=P[i*3]-C[0],y=P[i*3+1]-C[1],z=P[i*3+2]-C[2],l=Math.hypot(x,y,z)||1;n.setXYZ(i,x/l,y/l,z/l);}}return g;}
+ return finish(T,P,U,I,LIP,C,LIPN);}
+function finish(T,P,U,I,LIP=[],C=null,LIPN=[]){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(P,3));g.setAttribute('uv',new T.Float32BufferAttribute(U,2));g.setIndex(I);
+ g.computeVertexNormals();if(C&&LIP.length){const n=g.attributes.normal;for(const i of LIP){const x=P[i*3]-C[0],y=P[i*3+1]-C[1],z=P[i*3+2]-C[2],l=Math.hypot(x,y,z)||1;n.setXYZ(i,x/l,y/l,z/l);}}
+ if(LIPN.length){const n=g.attributes.normal;for(const[i,s]of LIPN)n.setXYZ(i,n.getX(s),n.getY(s),n.getZ(s));}return g;}
 // all styles for one head (front + rear geometry of the type's head, ears skipped by their uv rows like crowd135-far)
 export function hairSet137(T,front,rear){const ru=rear.attributes.uv,ear=i=>ru.getY(i)<.285&&ru.getY(i+1)<.285&&ru.getY(i+2)<.285;
  const geos=[[front,null],[rear,ear]];return HAIR137_STYLES.map(s=>buildHair137(T,geos,s));}

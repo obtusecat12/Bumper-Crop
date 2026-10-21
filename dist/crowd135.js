@@ -29,12 +29,12 @@
 // own head in tier A and to one representative head per type in tier B / the sprite bake. f8 headscarf: the body's neck skin
 // (cinfo slot 6 in tier B) takes the scarf colour.
 import * as T from './vendor/three.module.min.js';
-import {buildHair137,HAIR137_FACE,HAIR137_STYLES,HAIR137_HIDES_EARS} from './crowd137-hair.js?v=137c';
+import {buildHair137,HAIR137_FACE,HAIR137_STYLES,HAIR137_HIDES_EARS} from './crowd137-hair.js?v=139i';
 import {cityToWorld,CITY_ANGLE} from './urban-layout.js?v=return-1';
 import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {createTierB135,createTierC135,bRecord135,PROPS135,neckMask139} from './crowd135-far.js?v=139h';
-const A=new URL('./assets/crowd135/',import.meta.url).href,A139=new URL('./assets/crowd139/',import.meta.url).href,V='137e',VS='139h',V139='139h';
+const A=new URL('./assets/crowd135/',import.meta.url).href,A139=new URL('./assets/crowd139/',import.meta.url).href,V='137e',VS='139i',V139='139i';
 const Q=typeof location!=='undefined'?location.search:'',OFF=/[?&]crowd=0\b/.test(Q),NOLOD=/[?&]crowdlod=0\b/.test(Q),LO=/[?&]crowd=lo\b/.test(Q),WANTA=/[?&]crowdA=1\b/.test(Q);
 // ④-5 (135n) population + budget: fair blocks a/b 140 people, sidewalk blocks c/d (east frontage, -3,0 / -3,1) 60; ?crowd=lo
 // = 45 %, shorter tiers. Tier A (CPU meshes, 3–5 draws a person) is off by default: tier B draws the same baked frames,
@@ -82,7 +82,7 @@ export function loadCrowd135(){return libP??=(async()=>{
  const[garm,props,hairTex]=await Promise.all([tl('garments135.png',true),tl('props135.png',true),tl('hair137.png',false)]);hairTex.wrapS=hairTex.wrapT=T.RepeatWrapping;hairTex.needsUpdate=true;
  const skin={},hair={};for(const[k,t]of Object.entries(faces)){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(t.image,0,0);
   const med=(x,y,w,h)=>{const d=g.getImageData(x,y,w,h).data,ch=[[],[],[]];for(let i=0;i<d.length;i+=4)for(let j=0;j<3;j++)ch[j].push(d[i+j]);return ch.map(a=>a.sort((p,q)=>p-q)[a.length>>1]);};
-  const s3=med(41,91,10,10);skin[k]=new T.Color().setRGB(s3[0]/255,s3[1]/255,s3[2]/255,T.SRGBColorSpace);   // SKIN island
+  const s3=H139.keys[k].neck??med(41,91,10,10);skin[k]=new T.Color().setRGB(s3[0]/255,s3[1]/255,s3[2]/255,T.SRGBColorSpace);   // V139 H4: lower-cheek median x .9 (crowd139_pack.py); SKIN island fallback
   const hc=CROWD135_FACES[k].scarf?med(0,80,36,20):med(64,88,28,28);   // scarf: BACK band; hair: TOP disc centre
   hair[k]=CROWD135_FACES[k].bald?skin[k].getHex(T.SRGBColorSpace):(hc[0]<<16)|(hc[1]<<8)|hc[2];}
  const bodies=meta.bodies.map(b=>({...b,idx:new T.BufferAttribute(view(Uint16Array,b.index),1),map:view(Uint16Array,b.map),slot:view(Uint8Array,b.slot),P:view(Int16Array,b.pos),N:view(Int8Array,b.nrm),UV:new T.BufferAttribute(view(Float32Array,b.uv75),2)}));
