@@ -22,14 +22,19 @@
 // Tier A swaps the front-face material per person; tier B picks the head-atlas blink tile per instance (crowd135-far.js).
 // ④-4 (135m): movement comes from crowd135-sim-core.js (flow fields, lanes, avoidance, stall queues, red-light waits) run
 // in crowd135-sim-worker.js; this file only reads the newest state. ?crowdsim=main runs the sim on the main thread.
+// V139 H3 (10-22): every head is now a whole-head mesh + 128² UV net per face key (tools/crowd139_head.py, keeper V118c
+// method, packed by tools/crowd139_pack.py into assets/crowd139/heads139.bin; head.png / head-blink.png per key) fitted into
+// each body type's head-bone bind frame (chin -> type chin, crown -> type crown, face depth centred); no retrofitSkinnedHead130.
+// Ears are a separate piece (hidden under bob/long hair). Hair shells (crowd137-hair buildHair137) are fitted to the person's
+// own head in tier A and to one representative head per type in tier B / the sprite bake. f8 headscarf: the body's neck skin
+// (cinfo slot 6 in tier B) takes the scarf colour.
 import * as T from './vendor/three.module.min.js';
-import {retrofitSkinnedHead130} from './retro-head130-gen.js?v=137c';
-import {hairSet137,HAIR137_FACE,HAIR137_STYLES,HAIR137_HIDES_EARS} from './crowd137-hair.js?v=137c';
+import {buildHair137,HAIR137_FACE,HAIR137_STYLES,HAIR137_HIDES_EARS} from './crowd137-hair.js?v=137c';
 import {cityToWorld,CITY_ANGLE} from './urban-layout.js?v=return-1';
 import {roadHeight} from './urban-streets.js?v=135t';
 import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
-import {createTierB135,createTierC135,bRecord135,PROPS135} from './crowd135-far.js?v=137f';
-const A=new URL('./assets/crowd135/',import.meta.url).href,V='137e',VS='137f';
+import {createTierB135,createTierC135,bRecord135,PROPS135,neckMask139} from './crowd135-far.js?v=139h';
+const A=new URL('./assets/crowd135/',import.meta.url).href,A139=new URL('./assets/crowd139/',import.meta.url).href,V='137e',VS='139h',V139='139h';
 const Q=typeof location!=='undefined'?location.search:'',OFF=/[?&]crowd=0\b/.test(Q),NOLOD=/[?&]crowdlod=0\b/.test(Q),LO=/[?&]crowd=lo\b/.test(Q),WANTA=/[?&]crowdA=1\b/.test(Q);
 // ④-5 (135n) population + budget: fair blocks a/b 140 people, sidewalk blocks c/d (east frontage, -3,0 / -3,1) 60; ?crowd=lo
 // = 45 %, shorter tiers. Tier A (CPU meshes, 3–5 draws a person) is off by default: tier B draws the same baked frames,
@@ -71,13 +76,15 @@ export function loadCrowd135(){return libP??=(async()=>{
  const meta=JSON.parse(new TextDecoder().decode(new Uint8Array(buf,4,n))),base=4+n;
  const view=(C,[o,l])=>new C(buf,base+o,l/C.BYTES_PER_ELEMENT);
  const loader=new T.TextureLoader(),faces={},facesB={};
- await Promise.all(Object.keys(CROWD135_FACES).flatMap(k=>[['',faces],['_blink',facesB]].map(async([sf,o])=>{const t=await loader.loadAsync(A+'face_'+k+sf+'.png?v='+V);t.colorSpace=T.SRGBColorSpace;t.flipY=false;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;o[k]=t;})));
+ const hb=await (await fetch(A139+'heads139.bin?v='+V139)).arrayBuffer(),hn=new DataView(hb).getUint32(0,true),H139=JSON.parse(new TextDecoder().decode(new Uint8Array(hb,4,hn))),hb0=4+hn;
+ await Promise.all(Object.keys(CROWD135_FACES).flatMap(k=>[['head',faces],['head-blink',facesB]].map(async([sf,o])=>{const t=await loader.loadAsync(A139+k+'/'+sf+'.png?v='+V139);t.colorSpace=T.SRGBColorSpace;t.flipY=false;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;o[k]=t;})));
  const tl=async(f,srgb)=>{const t=await loader.loadAsync(A+f+'?v='+V);t.colorSpace=srgb?T.SRGBColorSpace:T.NoColorSpace;t.flipY=false;t.minFilter=t.magFilter=T.NearestFilter;t.generateMipmaps=false;t.needsUpdate=true;return t;};
  const[garm,props,hairTex]=await Promise.all([tl('garments135.png',true),tl('props135.png',true),tl('hair137.png',false)]);hairTex.wrapS=hairTex.wrapT=T.RepeatWrapping;hairTex.needsUpdate=true;
  const skin={},hair={};for(const[k,t]of Object.entries(faces)){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(t.image,0,0);
   const med=(x,y,w,h)=>{const d=g.getImageData(x,y,w,h).data,ch=[[],[],[]];for(let i=0;i<d.length;i+=4)for(let j=0;j<3;j++)ch[j].push(d[i+j]);return ch.map(a=>a.sort((p,q)=>p-q)[a.length>>1]);};
-  const sk=[...med(28,72,12,14),...med(88,72,12,14)],s3=[0,1,2].map(j=>(sk[j]+sk[j+3])/2);skin[k]=new T.Color().setRGB(s3[0]/255,s3[1]/255,s3[2]/255,T.SRGBColorSpace);
-  const hc=CROWD135_FACES[k].long?med(1,50,8,40):med(44,0,40,5);hair[k]=CROWD135_FACES[k].bald?skin[k].getHex(T.SRGBColorSpace):(hc[0]<<16)|(hc[1]<<8)|hc[2];}
+  const s3=med(41,91,10,10);skin[k]=new T.Color().setRGB(s3[0]/255,s3[1]/255,s3[2]/255,T.SRGBColorSpace);   // SKIN island
+  const hc=CROWD135_FACES[k].scarf?med(0,80,36,20):med(64,88,28,28);   // scarf: BACK band; hair: TOP disc centre
+  hair[k]=CROWD135_FACES[k].bald?skin[k].getHex(T.SRGBColorSpace):(hc[0]<<16)|(hc[1]<<8)|hc[2];}
  const bodies=meta.bodies.map(b=>({...b,idx:new T.BufferAttribute(view(Uint16Array,b.index),1),map:view(Uint16Array,b.map),slot:view(Uint8Array,b.slot),P:view(Int16Array,b.pos),N:view(Int8Array,b.nrm),UV:new T.BufferAttribute(view(Float32Array,b.uv75),2)}));
  // body shader (135z): garment cell (flat per vertex, -1 = plain colour) + V75 uv inside the 64² cell; recolour = YIQ hue
  // rotation, value and tint per slot (flat attributes so the zero-height waist/torso seam band never blends two cells)
@@ -95,40 +102,47 @@ export function loadCrowd135(){return libP??=(async()=>{
   g.setAttribute('position',new T.BufferAttribute(view(Float32Array,a.pos),3));g.setAttribute('normal',new T.BufferAttribute(view(Float32Array,a.nrm),3));g.setAttribute('uv',new T.BufferAttribute(view(Float32Array,a.uv),2));
   acc[type][n]={geo:g,tris:a.verts/3,mats:a.bone==='head'?view(Float32Array,H.mat):view(Float32Array,H.bones[a.bone])};}}
  const heads={},headMats={};
+ // V139 H3 whole heads: crowd139 frame (chin y 0, crown .245, face +z) -> type bind frame from the bin's head mesh landmarks
+ const fit139={};for(const[type,H]of Object.entries(meta.heads)){const p=view(Float32Array,H.pos);let top=-1e9,bk=1e9,ch=1e9,nz=-1e9;
+  for(let i=0;i<p.length;i+=3){top=Math.max(top,p[i+1]);bk=Math.min(bk,p[i+2]);if(Math.abs(p[i])<.02)nz=Math.max(nz,p[i+2]);if(Math.abs(p[i])<.025&&p[i+2]>.04)ch=Math.min(ch,p[i+1]);}
+  const sc=(top-ch)/.245;fit139[type]={sc,y:ch,z:(nz+bk-sc*(.111-.093))/2};}
+ const isEar=(u,i)=>u[i*2]>.8125&&u[i*2+1]>.59&&u[i*2+2]>.8125&&u[i*2+3]>.59&&u[i*2+4]>.8125&&u[i*2+5]>.59;
  function head(type,fk){const key=type+'/'+fk;if(heads[key])return heads[key];
-  const H=meta.heads[type],pos=view(Float32Array,H.pos),uv=view(Float32Array,H.uv),ix=view(Uint16Array,H.index);
-  const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(pos.slice(),3));g.setAttribute('uv',new T.BufferAttribute(uv.slice(),2));g.setIndex(new T.BufferAttribute(ix.slice(),1));
-  g.computeVertexNormals();const flat=g.toNonIndexed();g.dispose();const c=flat.attributes.position.count;
-  flat.setAttribute('skinIndex',new T.Uint16BufferAttribute(new Uint16Array(c*4),4));flat.setAttribute('skinWeight',new T.Float32BufferAttribute(new Float32Array(c*4).map((_,i)=>i%4?0:1),4));
-  const fm=headMats['f:'+fk]??=Object.assign(new T.MeshLambertMaterial({map:faces[fk]}),{name:'crowd135 face '+fk});
-  const fb=headMats['b:'+fk]??=Object.assign(new T.MeshLambertMaterial({map:facesB[fk]}),{name:'crowd135 face blink '+fk});
-  const bone=new T.Bone();bone.name='head';const holder=new T.Group();holder.add(bone);const sk=new T.SkinnedMesh(flat,fm);holder.add(sk);sk.bind(new T.Skeleton([bone]));
-  const F=CROWD135_FACES[fk],r=retrofitSkinnedHead130(T,sk,{phi0:62,cheek:[.22,.56,.32,.68],hairTexture:null,hairY:F.hairY,hairColor:F.hairColor??hair[fk],
-   ears:F.long||HAIR137_HIDES_EARS(HAIR137_FACE[fk])?false:undefined,earV:[.40,.565],earZ:-.12,earDepth:.30,earLift:.009,earCup:.004,skullFit:true,beard:F.beard,nape:F.nape,seed:h32(type.length,fk.charCodeAt(0)*31+fk.charCodeAt(1)),
-   makeMaterial:tex=>{tex.minFilter=tex.magFilter=T.NearestFilter;tex.generateMipmaps=false;return Object.assign(new T.MeshLambertMaterial({map:tex}),{name:'crowd135 head130 '+key});}});
-  const strip=geo=>{geo.deleteAttribute('skinIndex');geo.deleteAttribute('skinWeight');if(!geo.attributes.normal)geo.computeVertexNormals();return geo;};
-  return heads[key]={front:strip(sk.geometry),frontMat:fm,blinkMat:fb,rear:strip(r.mesh.geometry),rearMat:r.mesh.material,tris:sk.geometry.attributes.position.count/3+r.rearTriangles,mats:view(Float32Array,H.mat)};}
+  const K=H139.keys[fk],F=fit139[type],n=K.n,S=H139.scale,qp=new Int16Array(hb,hb0+K.o,n*3),qn=new Int16Array(hb,hb0+K.o+n*6,n*3),qu=new Uint16Array(hb,hb0+K.o+n*12,n*2);
+  const u=new Float32Array(n*2);for(let i=0;i<n;i++){u[i*2]=qu[i*2]/65535;u[i*2+1]=1-qu[i*2+1]/65535;}   // flipY=false textures
+  const parts=[[],[]];for(let t=0;t<n;t+=3)parts[isEar(u,t)?1:0].push(t);
+  const geo=L=>{const m=L.length*3,P=new Float32Array(m*3),N=new Float32Array(m*3),U=new Float32Array(m*2);let j=0;
+   for(const t of L)for(let v=t;v<t+3;v++,j++){P[j*3]=qp[v*3]*S*F.sc;P[j*3+1]=qp[v*3+1]*S*F.sc+F.y;P[j*3+2]=qp[v*3+2]*S*F.sc+F.z;
+    for(let c=0;c<3;c++)N[j*3+c]=qn[v*3+c]/32767;U[j*2]=u[v*2];U[j*2+1]=u[v*2+1];}
+   const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(P,3));g.setAttribute('normal',new T.BufferAttribute(N,3));g.setAttribute('uv',new T.BufferAttribute(U,2));return g;};
+  const fm=headMats['f:'+fk]??=Object.assign(new T.MeshLambertMaterial({map:faces[fk]}),{name:'crowd139 head '+fk});
+  const fb=headMats['b:'+fk]??=Object.assign(new T.MeshLambertMaterial({map:facesB[fk]}),{name:'crowd139 head blink '+fk});
+  return heads[key]={front:geo(parts[0]),ears:geo(parts[1]),frontMat:fm,blinkMat:fb,tris:n/3,earTris:parts[1].length,mats:view(Float32Array,meta.heads[type].mat)};}
  // ④-3 extras for tiers B/C: one head geometry per type, the head atlas (front + head130 rear + front blink (137d) per
  // type/face key: tiles 3ti, 3ti+1, 3ti+2; 34 keys = 102 tiles in 8 x 13), garment
  // cell means (linear) for the sprite colours, the baked sprite sheet (absent while it is being baked)
- const EARF={man:'m1',woman:'f2',heavy:'m1',child:'c1'},headGeo=type=>head(type,EARF[type]);
+ const EARF={man:'m1',woman:'f1',heavy:'m1',child:'c1'},headGeo=type=>head(type,EARF[type]);   // V139: tier B / sprite head per type
  const AW=1024,AH=1664,ad=new Uint8Array(AW*AH*4),atlas=new T.DataTexture(ad,AW,AH,T.RGBAFormat);atlas.colorSpace=T.SRGBColorSpace;atlas.flipY=false;atlas.minFilter=atlas.magFilter=T.NearestFilter;atlas.generateMipmaps=false;atlas.needsUpdate=true;
  const tiles={};let ntile=0;
  function headTile(type,fk){const key=type+'/'+fk;if(tiles[key]!==undefined)return tiles[key];const ti=tiles[key]=ntile++,H=head(type,fk);
   const put=(t,src,top)=>{const x0=(t%8)*128,y0=Math.floor(t/8)*128;for(let r=0;r<128;r++)ad.set(src.subarray(r*512,r*512+512),((y0+r)*AW+x0)*4);};
   const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');g.drawImage(faces[fk].image,0,0,128,128);put(ti*3,new Uint8Array(g.getImageData(0,0,128,128).data.buffer));
-  put(ti*3+1,H.rearMat.map.image.data);g.drawImage(facesB[fk].image,0,0,128,128);put(ti*3+2,new Uint8Array(g.getImageData(0,0,128,128).data.buffer));atlas.needsUpdate=true;return ti;}
+  g.drawImage(facesB[fk].image,0,0,128,128);put(ti*3+2,new Uint8Array(g.getImageData(0,0,128,128).data.buffer));atlas.needsUpdate=true;return ti;}
  const gm=new Float32Array(40*3);{const c=document.createElement('canvas');c.width=GW;c.height=GH;const g=c.getContext('2d');g.drawImage(garm.image,0,0);const d=g.getImageData(0,0,GW,GH).data,lin=v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;};
   for(let ci=0;ci<40;ci++){const x0=(ci%8)*64+1,y0=Math.floor(ci/8)*64+1;let r=0,gg=0,b=0;for(let y=0;y<62;y++)for(let x=0;x<62;x++){const i=((y0+y)*GW+x0+x)*4;r+=lin(d[i]);gg+=lin(d[i+1]);b+=lin(d[i+2]);}gm.set([r/3844,gg/3844,b/3844],ci*3);}}
  let sprites=null;try{sprites=await loader.loadAsync(A+'sprites135.png?v='+VS);sprites.colorSpace=T.NoColorSpace;sprites.flipY=false;sprites.minFilter=sprites.magFilter=T.NearestFilter;sprites.generateMipmaps=false;sprites.needsUpdate=true;}catch(e){console.warn('[crowd135] no sprite sheet',e);}
  const uniformsB={garmMap:{value:garm},headAtlas:{value:atlas},propMap:{value:props},hairMap:{value:hairTex},headAtlasSize:{value:new T.Vector2(AW,AH)}};
  // V137 Q2: modelled hair styles per body type, fitted to that type's head (crowd137-hair.js); tier A material per colour
- const hairG={},hairMats={},hairGeo=type=>hairG[type]??=(()=>{const H=headGeo(type);return hairSet137(T,H.front,H.rear);})();
+ const hairG={},hairMats={},hairGeo=type=>hairG[type]??=(()=>{const H=headGeo(type);return HAIR137_STYLES.map(s=>s==='bald'?null:buildHair137(T,[[H.front,null]],s));})();
+ const hairK={},hairOf=(type,fk,ix)=>{const k=type+'/'+fk+'/'+ix;return k in hairK?hairK[k]:hairK[k]=HAIR137_STYLES[ix]==='bald'?null:buildHair137(T,[[head(type,fk).front,null]],HAIR137_STYLES[ix]);};   // bald: the whole-head net already shows the fringe
  const hairMat=hex=>hairMats[hex]??=Object.assign(new T.MeshLambertMaterial({map:hairTex,color:new T.Color(hex).multiplyScalar(2)}),{name:'crowd137 hair'});
- return{meta,bodies,faces,facesB,skin,hair,mat,head,acc,propMat,clips:meta.clips,view,headGeo,headTile,atlas,gm,sprites,uniformsB,hairTex,hairGeo,hairMat};
+ return{meta,bodies,faces,facesB,skin,hair,mat,head,acc,propMat,clips:meta.clips,view,headGeo,headTile,atlas,gm,sprites,uniformsB,hairTex,hairGeo,hairOf,hairMat,fit139};
 })();}
 
 const _m=new T.Matrix4(),_c=new T.Color();
+// V139 H3: f8's scarf colour on the neck skin (crowd135-far.js neckMask139)
+const bi0=(lib,B)=>lib.bodies.indexOf(B);
+function neck139(lib,bi,c){const m=neckMask139(lib,bi);return Object.assign(m.slice(),{c:[c.r,c.g,c.b]});}
 // V137 Q3: the createRetroActor75 blink clock (seconds): eyes shut for ~0.17 s once per 3.0–5.7 s, plus a second blink
 // early in roughly one cycle in five
 const bh=(s,k)=>r01(s,k);
@@ -155,8 +169,8 @@ export function look135(lib,seed,opts={}){
  // V137 Q2 hair: style from the face; under a cap/beanie only the thin crop shell (fits under the hat margin); bald fringe greyish
  const hat=props.includes('cap')||props.includes('beanie'),hs0=HAIR137_FACE[fk]??null,hairStyle=hs0&&hat?'crop':hs0,hairIx=hairStyle?HAIR137_STYLES.indexOf(hairStyle):-1;
  const hairC=new T.Color(hs0==='bald'?0x8a8176:CROWD135_FACES[fk].hairColor??lib.hair[fk]);
- {const l=.2126*hairC.r+.7152*hairC.g+.0722*hairC.b;if(l<.012)hairC.lerp(new T.Color(0x2e2924),.55);}   // near-black hair keeps some strand read
- return{seed,type,sil,bi,B,fk,top,bot,rT,rB,sk,shoe,props,propTint,propMask,t0:G135[top],b0:G135[bot],ears:!CROWD135_FACES[fk].long&&!HAIR137_HIDES_EARS(hs0),
+ {const l=.2126*hairC.r+.7152*hairC.g+.0722*hairC.b;if(l<.012&&!CROWD135_FACES[fk].scarf)hairC.lerp(new T.Color(0x2e2924),.55);}   // near-black hair keeps some strand read
+ return{seed,type,sil,bi,B,fk,top,bot,rT,rB,sk,shoe,props,propTint,propMask,t0:G135[top],b0:G135[bot],ears:!CROWD135_FACES[fk].long&&!HAIR137_HIDES_EARS(hs0),scarf:!!CROWD135_FACES[fk].scarf,
   tintA:new T.Color(propTint('backpack')),tintB:new T.Color(propTint('cap')),hairC,hairStyle,hairIx};}
 // tier C record: [body, frame col, skin, top, bottom, shoe, hair] with the garment cell means recoloured like the shader does
 function rec135(m,ci,n,r){const c=[0,0,0];for(let k=0;k<n;k++)for(let j=0;j<3;j++)c[j]+=m[(ci+k)*3+j]/n;
@@ -177,13 +191,14 @@ export function createPerson135(lib,seed,opts={}){
  // slot: 0 skin, 1 top front, 2 top back, 3 sleeve, 4 bottom, 5 shoe -> [tile|null, tint rgb, hue, value]
  const SL=[[null,[sk.r,sk.g,sk.b]],[cell(t0),rT.t,rT.h,rT.v],[cell(t0+1),rT.t,rT.h,rT.v],[cell(t0+2),rT.t,rT.h,rT.v],[cell(b0),rB.t,rB.h,rB.v],[null,[shoe.r,shoe.g,shoe.b]]];
  const nv=B.split,nb=B.verts,g=new T.BufferGeometry(),pos=new Float32Array(nv*3),nrm=new Float32Array(nv*3),ca=new Float32Array(nv*3),cb=new Float32Array(nv*3),ct=new Float32Array(nv*2),S=lib.meta.posScale,MP=B.map;
- for(let i=0;i<nv;i++){const[tile,t,h=0,v=1]=SL[B.slot[i]];ca.set(t,i*3);cb[i*3]=h;cb[i*3+1]=1;cb[i*3+2]=v;ct[i*2]=tile?tile[0]:-1;ct[i*2+1]=tile?tile[1]:-1;}
+ const nk=L.scarf?neck139(lib,bi0(lib,B),L.hairC):null;
+ for(let i=0;i<nv;i++){const[tile,t,h=0,v=1]=SL[B.slot[i]];ca.set(nk&&nk[i]?nk.c:t,i*3);cb[i*3]=h;cb[i*3+1]=1;cb[i*3+2]=v;ct[i*2]=tile?tile[0]:-1;ct[i*2+1]=tile?tile[1]:-1;}
  g.setAttribute('position',new T.BufferAttribute(pos,3).setUsage(T.DynamicDrawUsage));g.setAttribute('normal',new T.BufferAttribute(nrm,3).setUsage(T.DynamicDrawUsage));
  g.setAttribute('cA',new T.BufferAttribute(ca,3));g.setAttribute('cB',new T.BufferAttribute(cb,3));g.setAttribute('ctile',new T.BufferAttribute(ct,2));g.setAttribute('cuv',B.UV);g.setIndex(B.idx);
  const H=lib.head(type,fk),object=new T.Group(),body=new T.Mesh(g,lib.mat),head=new T.Group();
  object.name='crowd135 '+type+'/'+sil+'/'+fk;body.frustumCulled=false;head.matrixAutoUpdate=false;
- const front=new T.Mesh(H.front,H.frontMat);head.add(front,new T.Mesh(H.rear,H.rearMat));let shut=false;object.add(body,head);
- let htris=0;if(L.hairIx>=0){const hg=lib.hairGeo(type)[L.hairIx];head.add(new T.Mesh(hg,lib.hairMat(L.hairC.getHex())));htris=hg.index.count/3;}
+ const front=new T.Mesh(H.front,H.frontMat);head.add(front);if(L.ears&&H.earTris)head.add(new T.Mesh(H.ears,H.frontMat));let shut=false;object.add(body,head);
+ let htris=0;if(L.hairIx>=0){const hg=lib.hairOf(type,fk,L.hairIx);if(hg){head.add(new T.Mesh(hg,lib.hairMat(L.hairC.getHex())));htris=hg.index.count/3;}}
  // props: seed picks; each prop rides its baked bone matrix
  const AC=lib.acc[type]||{},props=[];
  let ptris=0;for(const n of want){const a=AC[n];if(!a)continue;const tint=L.propTint(n);
@@ -195,9 +210,9 @@ export function createPerson135(lib,seed,opts={}){
   const M=H.mats,k=f*12,e=_m.elements;e[0]=M[k];e[1]=M[k+1];e[2]=M[k+2];e[3]=0;e[4]=M[k+3];e[5]=M[k+4];e[6]=M[k+5];e[7]=0;e[8]=M[k+6];e[9]=M[k+7];e[10]=M[k+8];e[11]=0;e[12]=M[k+9];e[13]=M[k+10];e[14]=M[k+11];e[15]=1;
   head.matrix.copy(_m);head.matrixWorldNeedsUpdate=true;for(const[pm,PM]of props)setM(pm,PM,k);}
  function update(t,clip='walk',rate=1){const C=lib.clips[clip],f=C.start+(Math.floor(t*24*rate)%C.frames+C.frames)%C.frames;frame(f);}
- function setBlink(c){if(c===shut)return;shut=c;front.material=c?H.blinkMat:H.frontMat;}
+ function setBlink(c){if(c===shut)return;shut=c;for(const m of head.children)if(m.material===H.frontMat||m.material===H.blinkMat)m.material=c?H.blinkMat:H.frontMat;}
  update(r01(seed,9)*4);
- return{object,update,setBlink,get blinking(){return shut;},type,sil,face:fk,props:want,top,bot,tris:B.tris+H.tris+ptris+htris,dispose(){g.dispose();}};
+ return{object,update,setBlink,get blinking(){return shut;},type,sil,face:fk,props:want,top,bot,tris:B.tris+H.tris-(L.ears?0:H.earTris)+ptris+htris,dispose(){g.dispose();}};
 }
 
 // the fair population of one block (④-4, 135m): agent specs for crowd135-sim-core in city coords. Slot i%6: 5 = browser

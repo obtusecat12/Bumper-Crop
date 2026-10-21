@@ -15,10 +15,13 @@ export const PROPS135=['backpack','satchel','bag_kraft','bag_white','tote','phon
 const BONES=['head','spine','chest','hips','handL','handR'];
 export const SPR135={cw:24,ch:48,cols:72,dirs:8,fcols:9,w:1.0,h:2.0};
 const cap0=64;
+// V139 H3: neck skin vertices of a body (slot 0, bind frame 0, above the type's chin - .14 m, |x| < .085): f8's scarf colour
+export function neckMask139(lib,bi){const B=lib.bodies[bi];if(B._neck)return B._neck;const F=lib.fit139[B.type],S=lib.meta.posScale,m=new Uint8Array(B.split);
+ for(let i=0;i<B.split;i++){const k=B.map[i]*3;if(B.slot[i]===0&&B.P[k+1]*S>F.y-.14&&Math.abs(B.P[k]*S)<.085)m[i]=1;}return B._neck=m;}
 
 const GLSL_COMMON=`
 uniform sampler2D vatTex;uniform sampler2D boneTex;uniform float vatNB;
-attribute vec3 cinfo;// cinfo.y part: 0 body, 1 face, 2 head130 rear, 3 ears, 4..11 props, 12.. hair styles (V137 Q2)
+attribute vec3 cinfo;// cinfo.y part: 0 body, 1 whole head (V139), 3 ears, 4..11 props, 12.. hair styles (V137 Q2); body cinfo.z slot, 6 = neck skin (V139)
 attribute vec2 cuv;
 attribute vec4 iCells;attribute vec4 iTopC;attribute vec4 iBotC;attribute vec4 iMisc;attribute vec4 iSkin;attribute vec4 iShoe;attribute vec2 iProp;
 flat varying vec3 vCA;flat varying vec3 vCB;flat varying vec2 vTile;varying vec2 vCuv;flat varying float vMode;flat varying float vSlot;
@@ -29,14 +32,14 @@ void vat135(){int fr=int(iMisc.z+.5),part=int(cinfo.y+.5);
  if(part==0){int vid=int(cinfo.x+.5);vatPos=texelFetch(vatTex,ivec2(vid,fr),0).xyz;vatNrm=texelFetch(vatTex,ivec2(vid+int(vatNB),fr),0).xyz;}
  else{int b=int(cinfo.x+.5)*3;vec4 a0=texelFetch(boneTex,ivec2(b,fr),0),a1=texelFetch(boneTex,ivec2(b+1,fr),0),a2=texelFetch(boneTex,ivec2(b+2,fr),0);
   mat3 R=mat3(a0.xyz,vec3(a0.w,a1.xy),vec3(a1.zw,a2.x));vatPos=R*position+a2.yzw;vatNrm=R*normal;
-  bool hide=(part==3&&iSkin.w<.5)||(part>=4&&part<12&&((int(iShoe.w+.5)>>(part-4))&1)==0)||(part>=12&&int(iCells.z+.5)!=part-11);if(hide)vatPos=vec3(0.);}
+  bool hide=(part==3&&(iSkin.w<.5||iSkin.w>1.5))||(part>=4&&part<12&&((int(iShoe.w+.5)>>(part-4))&1)==0)||(part>=12&&int(iCells.z+.5)!=part-11);if(hide)vatPos=vec3(0.);}
  vCuv=cuv;vCB=vec3(0.,1.,1.);vTile=vec2(-1.);
  vSlot=part==0?0.:part<4?5.:6.;
- if(part==0){int s=int(cinfo.z+.5);vMode=0.;vSlot=s==0?0.:s<4?1.:s==4?2.:3.;
-  if(s==0)vCA=iSkin.rgb;else if(s==5)vCA=iShoe.rgb;
+ if(part==0){int s=int(cinfo.z+.5);vMode=0.;vSlot=s==0||s==6?0.:s<4?1.:s==4?2.:3.;
+  if(s==0)vCA=iSkin.rgb;else if(s==6){bool sc=iSkin.w>1.5;vCA=sc?unpack135(iCells.w):iSkin.rgb;vSlot=sc?4.:0.;}else if(s==5)vCA=iShoe.rgb;
   else if(s==4){vCA=iBotC.rgb;vCB=vec3(iBotC.w,1.,iMisc.y);vTile=cell135(iCells.y);}
   else{vCA=iTopC.rgb;vCB=vec3(iTopC.w,1.,iMisc.x);vTile=cell135(iCells.x+float(s-1));}}
- else if(part<4){vMode=1.;float hw=floor(iMisc.w+.01),t=hw*3.+(part==1?(iMisc.w-hw>.25?2.:0.):1.);vTile=vec2(mod(t,8.),floor(t/8.))*128.;vCA=vec3(1.);}
+ else if(part<4){vMode=1.;float hw=floor(iMisc.w+.01),t=hw*3.+(iMisc.w-hw>.25?2.:0.);vTile=vec2(mod(t,8.),floor(t/8.))*128.;vCA=vec3(1.);}
  else if(part>=12){vMode=3.;vSlot=4.;vCA=unpack135(iCells.w);}
  else{vMode=2.;int tk=int(cinfo.z+.5);vCA=tk==1?unpack135(iProp.x):tk==2?unpack135(iProp.y):vec3(1.);}}
 `;
@@ -63,13 +66,12 @@ function buildBody(lib,bi,withHair=true){const B=lib.bodies[bi],S=lib.meta.posSc
   vd[a]=B.P[k]*S;vd[a+1]=B.P[k+1]*S;vd[a+2]=B.P[k+2]*S;vd[b]=B.N[k]/127;vd[b+1]=B.N[k+1]/127;vd[b+2]=B.N[k+2]/127;}
  const vat=new T.DataTexture(vd,nb*2,F,T.RGBAFormat,T.FloatType);vat.minFilter=vat.magFilter=T.NearestFilter;vat.needsUpdate=true;
  const P=[],N=[],U=[],C=[],I=[];let base=0;
- for(let i=0;i<nv;i++){const k=MP[i]*3;P.push(B.P[k]*S,B.P[k+1]*S,B.P[k+2]*S);N.push(B.N[k]/127,B.N[k+1]/127,B.N[k+2]/127);U.push(B.UV.array[i*2],B.UV.array[i*2+1]);C.push(MP[i],0,B.slot[i]);}
+ const NK=neckMask139(lib,bi);for(let i=0;i<nv;i++){const k=MP[i]*3;P.push(B.P[k]*S,B.P[k+1]*S,B.P[k+2]*S);N.push(B.N[k]/127,B.N[k+1]/127,B.N[k+2]/127);U.push(B.UV.array[i*2],B.UV.array[i*2+1]);C.push(MP[i],0,NK[i]?6:B.slot[i]);}
  for(let i=0;i<B.idx.count;i++)I.push(B.idx.array[i]);base=nv;
  const add=(g,bone,part,tk,partOf)=>{const p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv;
   for(let i=0;i<p.count;i++){P.push(p.getX(i),p.getY(i),p.getZ(i));N.push(n.getX(i),n.getY(i),n.getZ(i));U.push(u.getX(i),u.getY(i));C.push(bone,partOf?partOf(i):part,tk);}
   if(g.index)for(let i=0;i<g.index.count;i++)I.push(base+g.index.array[i]);else for(let i=0;i<p.count;i++)I.push(base+i);base+=p.count;};
- const H=lib.headGeo(B.type);add(H.front,0,1,0);
- const ru=H.rear.attributes.uv,ear=i=>{const t=i-i%3;return ru.getY(t)<.285&&ru.getY(t+1)<.285&&ru.getY(t+2)<.285?3:2;};add(H.rear,0,2,0,ear);
+ const H=lib.headGeo(B.type);add(H.front,0,1,0);add(H.ears,0,3,0);   // V139 whole head + ears (tile = the instance's face key)
  const AC=lib.acc[B.type]||{};PROPS135.forEach((n,k)=>{const a=AC[n];if(a)add(a.geo,BONES.indexOf(lib.meta.heads[B.type].acc[n].bone),4+k,n==='backpack'?1:n==='cap'?2:0);});
  if(withHair)lib.hairGeo(B.type).forEach((hg,s)=>{if(hg)add(hg,0,12+s,0);});
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(P,3));g.setAttribute('normal',new T.Float32BufferAttribute(N,3));
@@ -85,7 +87,7 @@ function instAttrs(g,cap){const o={};for(const[n,s]of IATTR135){const a=new T.In
 const pack=c=>Math.round(Math.min(1,c.r)*255)*65536+Math.round(Math.min(1,c.g)*255)*256+Math.round(Math.min(1,c.b)*255);
 // instance record of a look (crowd135.js look135): 26 floats, frame at [14]
 export function bRecord135(L,headTile){const r=new Float32Array(26);
- r.set([L.t0,L.b0,(L.hairIx??-1)+1,L.hairC?pack(L.hairC):0, ...L.rT.t,L.rT.h, ...L.rB.t,L.rB.h, L.rT.v,L.rB.v,0,headTile, L.sk.r,L.sk.g,L.sk.b,L.ears?1:0, L.shoe.r,L.shoe.g,L.shoe.b,L.propMask, pack(L.tintA),pack(L.tintB)]);return r;}
+ r.set([L.t0,L.b0,(L.hairIx??-1)+1,L.hairC?pack(L.hairC):0, ...L.rT.t,L.rT.h, ...L.rB.t,L.rB.h, L.rT.v,L.rB.v,0,headTile, L.sk.r,L.sk.g,L.sk.b,L.scarf?2:L.ears?1:0, L.shoe.r,L.shoe.g,L.shoe.b,L.propMask, pack(L.tintA),pack(L.tintB)]);return r;}
 
 // V137 Q5 (137f): hair is no longer merged into the body geometry (all 8 shells were submitted for every instance, 2138 of
 // 4074 tris); each (type, style) pair that is on screen gets its own small InstancedMesh fed with the same instance record.

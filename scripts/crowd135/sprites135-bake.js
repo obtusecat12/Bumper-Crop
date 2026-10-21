@@ -6,7 +6,8 @@
 // R = shade (fixed view-space light), G = slot*32+16 (0 skin 1 top 2 bottom 3 shoe 4 hair), B = detail/2 (head texel luminance vs
 // the slot colour; 1 elsewhere). V137 Q5: one row per (body, hair style) pair of crowd135.js sprRows137 (60 rows), each with its
 // modelled hair (crowd137-hair.js) and a face of that style for the skin/hair split; colours come per person.
-(async()=>{const T=window.T,renderer=window.renderer,C=window.C;const F=await import('./crowd135-far.js?v=137f');
+// V139 H3: heads = crowd139 whole heads (representative head per type, face key texture); f8 rows paint the neck as scarf (hair slot).
+(async()=>{const T=window.T,renderer=window.renderer,C=window.C;const F=await import('./crowd135-far.js?v=139h');
 const lib=await C.loadCrowd135();const ROWS=C.sprRows137(lib),S=F.SPR135,SS=3,W=S.cw*S.cols,H=S.ch*ROWS.length,RW=W*SS,RH=H*SS;
 const RH1=S.ch*SS,rt=new T.WebGLRenderTarget(RW,RH1,{type:T.UnsignedByteType,depthBuffer:true});rt.texture.minFilter=rt.texture.magFilter=T.NearestFilter;
 const scene=new T.Scene(),cam=new T.OrthographicCamera(-S.w/2,S.w/2,S.h/2,-S.h/2,.1,20);
