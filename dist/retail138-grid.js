@@ -15,9 +15,9 @@
 // Module library: retail138-market.js (R2) + retail138-bodega.js (R3). Frame: building centre, +z street, store floor
 // x0..x1 × (d/2−sd)..d/2. Debug: window.__r138 collects per-store {kind,lay,variant,items,dropped}.
 import {GOODS138,gondola138,endcap138,reachIn138,multideck138,chest138,checkout138,impulse138,promo138,baskets138,carts138,
- produceBin138,vegRack138,aisleSign138,addRetail138Market,caseBox138,retail138MarketFill} from './retail138-market.js?v=140d';
+ produceBin138,vegRack138,aisleSign138,addRetail138Market,caseBox138,retail138MarketFill} from './retail138-market.js?v=140e';
 import {NEON138,liquorWall138,beerCave138,smokeCounter138,humidor138,cashier138,neonSign138,neonTube138,addRetail138Bodega,
- retail138BodegaFill} from './retail138-bodega.js?v=140d';
+ retail138BodegaFill} from './retail138-bodega.js?v=140e';
 const PI=Math.PI,RAD=.27,G=.1;
 function rng(seed){let s=(seed>>>0)||1;return()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%100000)/100000;};}
 function stack138(b,seed,{w=.55,d=.4,n=2}){const r=rng(seed);let y=0;for(let i=0;i<n;i++){const hh=.24+r()*.14;caseBox138(b,r,(r()-.5)*.04,y,(r()-.5)*.04,w-i*.03,hh,d-i*.02,(r()-.5)*.12);y+=hh;}b.solid(0,0,w,d);}

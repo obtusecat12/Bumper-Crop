@@ -22,7 +22,7 @@ const EM={r138lamp:[[1,.97,.9],6,'a'],r138lampFlk:[[1,.97,.9],3.6,'a'],r138laneL
  r138scan:[[1,.12,.06],2,'a'],r138screen:[[.25,.5,1],3,'a'],r138coolIn:[[.7,.86,1],1.8,'a']};
 // neon atlas 2×4 cells (retail138-bodega NEON138): open, coldBeer, lotto, cerveza, atm, cigars, vape, 24hrs
 const NEONC=[[1,.18,.12],[.15,.55,1],[.3,1,.3],[1,.5,.12],[.25,1,.45],[1,.62,.2],[.75,.25,1],[1,.2,.3]];
-const CLEAR=/^r138(glass|coolGlass|lexan|glassTop|fog|basket|wire)$/;
+const CLEAR=/^r138(glass|coolGlass|lexan|glassTop|fog|basket|wire|g140[a-z]*)$/;
 export function isR138Emitter(key){return key in EM;}
 // ---- material patch: inside the store, emitted light = albedo × bake138 × K ----
 const patched=new WeakSet();
@@ -44,7 +44,7 @@ export function retail138BakeDefaults(b,mark,P,{d}){
  for(const{key,g}of newParts(b,mark)){if(!key.startsWith('r138')||g.attributes.bake138)continue;
   const p=g.attributes.position,n=p.count,a=new Float32Array(n*3),em=key in EM;
   for(let i=0;i<n;i++){const dx=p.getX(i)-f.x,dz=p.getZ(i)-f.z,lz=s*dx+c*dz,v=em||lz>zf-.075?-1:DEFAULT;a[i*3]=a[i*3+1]=a[i*3+2]=v;}
-  g.setAttribute('bake138',new T.BufferAttribute(a,3));if(!em)patchR138Material(b.mats[key]);}
+  g.setAttribute('bake138',new T.BufferAttribute(a,3));if(!em&&!key.startsWith('r138g140'))patchR138Material(b.mats[key]);} // V140 P2: physical door glass keeps its own lighting
 }
 // ---- the bake ----
 export function* retail138Bake(b,mark,P,{d}){

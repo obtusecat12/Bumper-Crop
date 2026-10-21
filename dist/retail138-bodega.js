@@ -8,8 +8,9 @@
 // scratch-off dispenser, top-row liquor. Neon signs are emissive tube cells (neon.webp, 8 signs) + coloured tube strips.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140d';
+import {addRetail138Market,gondola138,endcap138,impulse138,GOODS138} from './retail138-market.js?v=140e';
 import {caveShelf140,caveFloor140,BEER140,cigWall140,lottoDisp140,vapeShelf140,pipes140,papers140,cigarShelves140,hookah140} from './retail140-bodega.js?v=140d'; // V140 P1c real-shape smoke-shop props
+import {addGlass140,glassPane140,GLASS140} from './retail140-glass.js?v=140e'; // V140 P2 physical beer-cave glass
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138c',PI=Math.PI;
 function tex(name,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v='+V);t.colorSpace=T.SRGBColorSpace;t.wrapS=t.wrapT=rep?T.RepeatWrapping:T.ClampToEdgeWrapping;t.anisotropy=4;t.magFilter=T.NearestFilter;return t;}
@@ -86,7 +87,7 @@ export function beerCave138(b,seed,{len,C=3.15,depth=1.0}){
   if(R140)caveFloor140(b,r,cx,dw-.06,zf*.82);else for(let j=0;j<2;j++){const ww=dw*.46;b.box('r138kraft',cx+(j-.5)*ww,.2,zf*.6,ww-.02,.24,.4);band(b,r,'r138beer',(i+j)%4,4,.12,cx+(j-.5)*ww,.2,zf*.6+.201,ww-.03,.22);}
   // door: frame, heated glass + condensation, long pull handle, kick plate
   for(const s of[-1,1])b.box('r138alu',cx+s*(dw/2-.025),h/2,zf+.02,.05,h,.06);b.box('r138alu',cx,h-.03,zf+.02,dw,.06,.06);b.box('r138alu',cx,.06,zf+.02,dw,.12,.06);
-  b.plane('r138coolGlass',cx,h/2+.03,zf+.015,dw-.06,h-.18);b.plane('r138fog',cx,h/2+.03,zf+.03,dw-.06,h-.18);
+  if(GLASS140)glassPane140(b,2,(seed>>>3)+i,cx,h/2+.03,zf+.02,dw-.06,h-.18);else{b.plane('r138coolGlass',cx,h/2+.03,zf+.015,dw-.06,h-.18);b.plane('r138fog',cx,h/2+.03,zf+.03,dw-.06,h-.18);}
   const hx=cx+(i%2?-1:1)*(dw/2-.09);b.box('r138steel',hx,1.1,zf+.09,.025,.9,.025);for(const yy of[.68,1.52])b.box('r138steel',hx,yy,zf+.065,.025,.025,.05);
   b.box('r138plate',cx,.2,zf+.052,dw-.08,.16,.004);}
  b.box('r138ledW',0,h-.05,zf-.08,L-.12,.02,.02);

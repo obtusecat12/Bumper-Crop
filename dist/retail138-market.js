@@ -7,10 +7,11 @@
 // mullions, belts, wire carts, baskets) with colliders.
 import * as T from './vendor/three.module.min.js';
 import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
-import {r138GridPlane} from './retail138-bake.js?v=140a';
+import {r138GridPlane} from './retail138-bake.js?v=140e';
 import {goodsRun140,catKey140,product140,chestFill140} from './retail140-goods.js?v=140b';
 import {pile140,PRODUCE140} from './retail140-produce.js?v=140b';
 import {case140,promo140,baskets140,carts140,checkoutParts140,priceCard140} from './retail140-fixtures.js?v=140d'; // V140 P1b-2 real-shape fixtures // V140 P1b real fruit & veg // V140 P1 real-shape goods
+import {addGlass140,glassPane140,GLASS140} from './retail140-glass.js?v=140e'; // V140 P2 physical cooler glass
 const R140=!(typeof location!=='undefined'&&/[?&]r140=0\b/.test(location.search));
 const A=new URL('./assets/l11-v138/',import.meta.url).href,V='138b',PI=Math.PI;
 export const GOODS138={dry:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],cool:[20,21,22,23],dairy:[24,25,26,27],frozen:[28,29,30,31],candy:[32,33,34,35,36]};
@@ -20,6 +21,7 @@ function glowM(name,glow,o={}){const m=tex(name,true,o.rep);return new T.MeshSta
 const col=(c,o={})=>new T.MeshStandardMaterial({color:c,roughness:o.r??.6,metalness:o.m??0,vertexColors:true,...(o.e?{emissive:o.e,emissiveIntensity:o.ei??1}:{}),...(o.t?{transparent:true,opacity:o.t,depthWrite:false}:{})});
 export function addRetail138Market(m){
  if(m.r138goods)return m;
+ addGlass140(m);
  m.r138goods=glowM('goods',.24);m.r138goodsCold=glowM('goods',.42); // behind glass / in coolers: lit by the case lamps
  m.r138chest=glowM('chest',.36);m.r138fruit=glowM('fruit',.26);m.r138veg=glowM('veg',.3,{rough:.35});
  m.r138promo1=glowM('promo1',.22);m.r138promo2=glowM('promo2',.22);m.r138aisle=glowM('aisle',.4);m.r138case=glowM('case',.18);
@@ -109,10 +111,10 @@ export function reachIn138(b,seed,{doors=4,h=2.25,cat=GOODS138.cool,frozen=false
   // door: frame + heated glass + vertical bar handle
   for(const s of[-1,1])b.box('r138cool',cx+s*(dw/2-.02),h/2-.04,zf+.02,.04,h-.4,.04);
   b.box('r138cool',cx,.27,zf+.02,dw,.04,.04);b.box('r138cool',cx,h-.19,zf+.02,dw,.04,.04);
-  b.plane('r138coolGlass',cx,h/2-.04,zf+.025,dw-.06,h-.48);
+  if(GLASS140)glassPane140(b,frozen?1:0,(seed>>>3)+i,cx,h/2-.04,zf+.025,dw-.06,h-.48);else b.plane('r138coolGlass',cx,h/2-.04,zf+.025,dw-.06,h-.48);
   const hx=cx+((i%2)?-1:1)*(dw/2-.09);b.box('r138steel',hx,1.12,zf+.08,.025,.95,.025);b.box('r138steel',hx,1.62,zf+.06,.02,.02,.05);b.box('r138steel',hx,.62,zf+.06,.02,.02,.05);
   b.box('r138lamp',cx-dw/2+.012,h/2,zf-.03,.012,h-.5,.012);}
- if(frozen)for(let i=0;i<doors;i++)if(r()<.5)b.plane('r138coolW',-len/2+.05+dw*(i+.5),.48,zf+.027,dw-.1,.06);// frost line on the glass base
+ if(frozen&&!GLASS140)for(let i=0;i<doors;i++)if(r()<.5)b.plane('r138coolW',-len/2+.05+dw*(i+.5),.48,zf+.027,dw-.1,.06);// frost line on the glass base
  b.solid(0,D/2,len,D);
 }
 // ---- 6. open multideck (air-curtain dairy case, against a wall) ----
