@@ -1,0 +1,6 @@
+<!doctype html><html><body><script>const TAU=Math.PI*2;function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}</script>
+<script src="shape142.js"></script><script>
+window.out={};const S=2;
+for(const k of ['dash','nav']){const d=SH142[k];for(const part of ['pieces','cuts']){const c=document.createElement('canvas');c.width=d.W*S;c.height=d.H*S;const g=c.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,c.width,c.height);g.setTransform(S,0,0,S,0,0);g.fillStyle='#fff';d[part](g);out[k+'_'+part]=c.toDataURL('image/png');}
+ out[k+'_domes']=JSON.stringify({W:d.W,H:d.H,edges:d.edges,domes:d.domes});}
+window.done=1;</script></body></html>

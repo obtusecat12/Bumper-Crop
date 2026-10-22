@@ -13,7 +13,7 @@ const U=n=>new URL('./assets/'+n,import.meta.url).href;
 const isL1=()=>document.documentElement.dataset.uiLevel==='1';
 const IMG={};let imgGen=0,imgStarted=false;
 const SRC={'compass-ring':'ui-v114/compass-ring.webp','gauge-ring':'ui-v114/gauge-ring.webp','almond-icon':'ui-v114/almond-icon.webp',standoff:'ui-v114/standoff.webp',
- leather:'ui-v116/leather.jpg',brushed:'ui-v116/brushed.jpg',dust:'ui-v116/dust.jpg',screw:'ui-v116/screw.webp',chromeDash:'ui-v142/chrome-dash.jpg',chromeNav:'ui-v142/chrome-nav.jpg'};
+ leather:'ui-v116/leather.jpg',brushed:'ui-v116/brushed.jpg',dust:'ui-v116/dust.jpg',screw:'ui-v116/screw.webp',chromeDash:'ui-v142/chrome-dash.jpg',chromeNav:'ui-v142/chrome-nav.jpg',shellDash:'ui-v142/shell-dash.webp',shellNav:'ui-v142/shell-nav.webp'};
 function loadImages(){if(imgStarted)return;imgStarted=true;try{for(const f of ['16px Vonwaon16','12px Vonwaon12'])document.fonts.load(f,'理A').then(()=>{imgGen++;});document.fonts.addEventListener('loadingdone',()=>{imgGen++;});}catch{}
  for(const [k,n] of Object.entries(SRC)){const im=new Image();im.decoding='async';im.onload=()=>{
   // V130-C: keep a CPU-resident copy so drawing it into the era pass's CPU canvases never waits on the GPU process
@@ -81,7 +81,7 @@ const wake=()=>{audio();if(AC&&AC.state==='suspended')AC.resume();};addEventList
 // ?era=0 disables it (A/B); performance numbers land in globalThis.__l1Era.
 // =====================================================================================================
 // V142: one notch cleaner (was f .86 / q 45 / smear .42)
-const ERA={on:true,cpu:false,f:.95,q:62,smear:.3,stat:{}};try{const p=new URLSearchParams(location.search);if(p.get('era')==='0'||localStorage.getItem('bumpercrop.l1era')==='0')ERA.on=false;if(p.get('eraf'))ERA.f=+p.get('eraf');if(p.get('eraq'))ERA.q=+p.get('eraq');if(p.get('eracpu'))ERA.cpu=p.get('eracpu')==='1';}catch{}
+const ERA={on:true,cpu:false,f:1,q:70,smear:.3,stat:{}};try{const p=new URLSearchParams(location.search);if(p.get('era')==='0'||localStorage.getItem('bumpercrop.l1era')==='0')ERA.on=false;if(p.get('eraf'))ERA.f=+p.get('eraf');if(p.get('eraq'))ERA.q=+p.get('eraq');if(p.get('eracpu'))ERA.cpu=p.get('eracpu')==='1';}catch{}
 globalThis.__l1Era=ERA;
 const gpu=(w,h)=>{const c=document.createElement('canvas');c.width=Math.max(1,w);c.height=Math.max(1,h);return[c,c.getContext('2d')];};
 const rcv=(w,h)=>ERA.cpu?cpu(w,h):gpu(w,h);
@@ -158,6 +158,65 @@ function mountEraSvg(){if(document.getElementById('l1-era-svg'))return;const st=
 <feComponentTransfer in="m"><feFuncR type="discrete" tableValues="${st(32)}"/><feFuncG type="discrete" tableValues="${st(64)}"/><feFuncB type="discrete" tableValues="${st(32)}"/></feComponentTransfer></filter></svg>`;
  if(ERA.on)document.body.insertAdjacentHTML('beforeend',svg);else document.documentElement.classList.add('l1-era-off');}
 // =====================================================================================================
+// V142-U2 · SHELL GEOMETRY (single source for the runtime AND the Blender bake)
+// The castings are modelled as height fields in Blender (bc/scripts/ui142/bake_shell142.py) from the masks these
+// functions draw, rendered in Cycles with a studio HDRI as polished chrome, and composited as one image per shell.
+// pieces = the casting outline · cuts = recesses machined into it (wells, lens sockets, slots) · each cut gets a
+// raised bezel lip in the bake. Coordinates are the shells' own user units (dash 760×316, nav 400×214).
+// =====================================================================================================
+// a tapered tentacle / prong: from a fat root to a sharp tip along a quadratic curve, ends in a small bead
+function prong142(g,x0,y0,cx,cy,x1,y1,w0,w1=1.6,bead=0){const N=28,L=[],Rt=[];
+ for(let i=0;i<=N;i++){const t=i/N,u=1-t,x=u*u*x0+2*u*t*cx+t*t*x1,y=u*u*y0+2*u*t*cy+t*t*y1,dx=2*u*(cx-x0)+2*t*(x1-cx),dy=2*u*(cy-y0)+2*t*(y1-cy),l=Math.hypot(dx,dy)||1,
+  w=(w0*(1-Math.pow(t,.8))+w1*Math.pow(t,.8))/2,nx=-dy/l*w,ny=dx/l*w;L.push([x+nx,y+ny]);Rt.push([x-nx,y-ny]);}
+ g.beginPath();g.moveTo(...L[0]);for(const p of L)g.lineTo(...p);for(let i=Rt.length-1;i>=0;i--)g.lineTo(...Rt[i]);g.closePath();g.fill();
+ if(bead){g.beginPath();g.arc(x1,y1,bead,0,TAU);g.fill();}}
+const SH142={
+ dash:{W:760,H:316,edges:'lb',
+  GA:{x:126,y:188,R:110},SUB:{x:262,y:72,R:40},RAD:{x:610,y:172,R:48},TUB:{x:708,y:74,w:24,h:196},
+  BAT:{x:311,y:133,w:98,h:48,r:16},NUM:{x:418,y:128,w:110,h:58,r:22},SIGP:{x:388,y:190,w:46,h:42,r:13},ALM:{x:476,y:211,R:23},
+  bars:i=>{const bh=8+i*8.2,X=318+i*13,Y=229-bh;return{x:X-2,y:Y-2,w:14,h:bh+4,r:4};},
+  pieces(g){const F=()=>g.fill(),d=SH142.dash,{GA,SUB,RAD}=d;
+   g.beginPath();g.arc(GA.x,GA.y,GA.R+20,0,TAU);F();                       // speedometer pod
+   g.beginPath();g.arc(SUB.x,SUB.y,SUB.R+11,0,TAU);F();                    // m/s sub-pod
+   g.beginPath();g.moveTo(150,74);g.bezierCurveTo(190,40,230,60,232,96);g.bezierCurveTo(250,110,262,130,240,160);g.lineTo(180,160);g.closePath();F();
+   rr(g,226,98,466,190,58);F();                                            // visor spine
+   g.beginPath();g.arc(RAD.x,RAD.y,RAD.R+18,0,TAU);F();                    // radar pod
+   rr(g,688,50,64,280,32);F();                                             // hydration capsule pod
+   g.beginPath();g.moveTo(-40,232);g.lineTo(700,232);g.lineTo(700,d.H+40);g.lineTo(-40,d.H+40);g.closePath();F();
+   g.beginPath();g.moveTo(-40,120);g.lineTo(40,120);g.lineTo(40,d.H+40);g.lineTo(-40,d.H+40);g.closePath();F();
+   g.beginPath();g.moveTo(740,236);g.bezierCurveTo(756,262,760,296,d.W+40,d.H+40);g.lineTo(720,d.H+40);g.closePath();F();
+   // U2 ①: tentacle supports (after the reference's leaf-pod prongs) and a streamlined fin over the water tube
+   prong142(g,300,92,350,58,452,46,30,2.2,4);                              // sub-pod prong sweeping right over the spine
+   prong142(g,262,40,232,14,176,10,20,1.8,3.2);                            // sub-pod antenna, back over the gauge
+   prong142(g,560,112,600,76,676,58,26,2,3.5);                             // radar-pod prong toward the tube fin
+   g.beginPath();g.moveTo(690,96);g.bezierCurveTo(690,40,700,20,742,6);g.bezierCurveTo(726,30,752,40,752,96);g.closePath();F();   // tube fin
+   prong142(g,64,96,50,40,18,10,26,2,3.4);                                 // gauge antenna up the left edge
+  },
+  cuts(g){const F=()=>g.fill(),d=SH142.dash;
+   for(const c of [d.GA,d.SUB,d.RAD]){g.beginPath();g.arc(c.x,c.y,c===d.GA?c.R:c.R+(c===d.SUB?1:3),0,TAU);F();}
+   for(const b of [d.BAT,d.NUM,d.SIGP]){rr(g,b.x,b.y,b.w,b.h,b.r);F();}
+   for(let i=0;i<5;i++){const b=d.bars(i);rr(g,b.x,b.y,b.w,b.h,b.r);F();}
+   g.beginPath();g.arc(d.ALM.x,d.ALM.y,d.ALM.R,0,TAU);F();
+   const T=d.TUB;rr(g,T.x-8,T.y-8,T.w+16,T.h+16,(T.w+16)/2);F();},
+  // domes the bake adds on top of the rolled profile: [x,y,R,height]  (ellipses: [x,y,rx,ry,height])
+  domes:[[126,188,130,34],[262,72,51,18],[610,172,66,22],[720,190,32,150,14],[454,190,250,96,10],[300,300,420,60,6]]},
+ nav:{W:400,H:250,edges:'tr',
+  MAPL:{x:18,y:22,w:222,h:170,r:34},CC:{x:318,y:94,R:70},
+  pieces(g){const F=()=>g.fill(),{W,CC}=SH142.nav;
+   g.beginPath();g.moveTo(-4,-40);g.lineTo(W+40,-40);g.lineTo(W+40,30);g.lineTo(96,30);g.bezierCurveTo(46,30,18,20,-4,-4);g.closePath();F();
+   rr(g,4,-40,258,244,48);F();
+   g.beginPath();g.arc(CC.x,CC.y,CC.R+12,0,TAU);F();
+   g.beginPath();g.rect(CC.x,-40,W-CC.x+40,CC.y+40);F();
+   g.beginPath();g.rect(CC.x,CC.y-4,W-CC.x+40,40);F();
+   rr(g,CC.x-58,CC.y+CC.R-6,116,40,20);F();
+   g.beginPath();g.moveTo(250,30);g.bezierCurveTo(268,70,266,130,250,182);g.lineTo(CC.x-44,CC.y+CC.R+12);g.bezierCurveTo(CC.x-74,150,CC.x-84,70,CC.x-62,24);g.closePath();F();
+   // U2 ①: the compass pod grows two prongs, like the reference's leaf pod
+   prong142(g,CC.x-46,CC.y+62,CC.x-70,CC.y+130,CC.x-128,244,22,1.8,3.4);
+   prong142(g,CC.x+56,CC.y+56,CC.x+80,CC.y+100,CC.x+72,246,20,1.8,3);
+  },
+  cuts(g){const F=()=>g.fill(),{MAPL:m,CC}=SH142.nav;rr(g,m.x,m.y,m.w,m.h,m.r);F();g.beginPath();g.arc(CC.x,CC.y,CC.R+1,0,TAU);F();rr(g,CC.x-48,CC.y+CC.R+3,96,26,13);F();},
+  domes:[[318,94,82,14],[132,96,150,110,12],[200,8,220,22,5]]}};
+// =====================================================================================================
 // V142 · BRUSHED-CHROME STREAMLINED SHELLS (after the user's "世纪重塑电子系统" reference, minus the green)
 // A shell is the union of rounded pieces (pods, capsules, tails) filled into one mask, so every instrument sits in
 // ONE continuous casting instead of a box in a box. The casting runs off the screen edge it is anchored to.
@@ -169,8 +228,13 @@ function mask142(w,h,s,pieces){const [m,g]=gpu(w,h);g.setTransform(s,0,0,s,0,0);
 function edge142(dst,m,dx,dy,col,blur,alpha,s){const w=m.width,h=m.height,[e,g]=gpu(w,h);g.drawImage(m,0,0);g.globalCompositeOperation='destination-out';g.drawImage(m,dx*s,dy*s);
  g.globalCompositeOperation='source-in';g.fillStyle=col;g.fillRect(0,0,w,h);dst.save();dst.setTransform(1,0,0,1,0,0);dst.globalAlpha=alpha;if(blur)dst.filter=`blur(${(blur*s).toFixed(2)}px)`;dst.drawImage(e,0,0);dst.restore();}
 // draws the casting onto c (whose transform is user units × s); returns the mask for later clipping
-function shell142(c,W,s,pieces,{tex,y0=0,y1=300,pods=[],glints=[],shadow=[0,6,16]}={}){
- const w=c.canvas.width,h=c.canvas.height,m=mask142(w,h,s,pieces);
+function shell142(c,W,s,pieces,{tex,baked,y0=0,y1=300,pods=[],glints=[],shadow=[0,6,16]}={}){
+ const w=c.canvas.width,h=c.canvas.height;
+ // V142-U2: the casting is a Cycles render of the real 3D shell (bc/scripts/ui142) — drawn whole, shadow from its alpha
+ if(ok(baked)){const Hh=W*baked.naturalHeight/baked.naturalWidth;c.save();c.setTransform(1,0,0,1,0,0);c.globalAlpha=1;
+  if(shadow){c.save();c.shadowColor='#000000c0';c.shadowOffsetX=shadow[0]*s;c.shadowOffsetY=shadow[1]*s;c.shadowBlur=shadow[2]*s;c.drawImage(baked,0,0,W*s,Hh*s);c.restore();}
+  c.drawImage(baked,0,0,W*s,Hh*s);c.restore();return null;}
+ const m=mask142(w,h,s,pieces);
  const [b,g]=gpu(w,h);g.setTransform(s,0,0,s,0,0);const Hh=h/s;
  if(ok(tex)){const th=W*tex.naturalHeight/tex.naturalWidth;for(let y=-2;y<Hh+th;y+=th-1)g.drawImage(tex,0,y,W,th);}else{g.fillStyle='#959ca3';g.fillRect(0,0,W,Hh);}
  // cool steel tone (multiply), then the chrome horizon as an overlay: sky on the crown, a deep dark band, a bright
@@ -223,8 +287,8 @@ function etch142(c,s,x,y,font,align='center'){text(c,s,x,y-1,font,'#000000c8',nu
 // shadow of the opaque print and of the clear plate on the wall, fluorescent-tube reflections that slide
 // with the view (parallax against the print), and dust / fingerprints in the reflections.
 // =====================================================================================================
-export const NAV_W=400,NAV_H=214;
-const MAPL={x:18,y:22,w:230,h:170,r:34};
+export const NAV_W=400,NAV_H=250;   // V142-U2: +36 below for the compass pod's prongs
+const MAPL=SH142.nav.MAPL;
 const CC={x:318,y:94,R:70};
 const WIN=CC.R*130/192;
 let navCache=null,NAVFK=1;
@@ -243,20 +307,12 @@ function stepBall(target){const now=performance.now()/1000,st=globalThis.__bcHud
 // a tapered top rail, a rounded visor pod holding the map lens, the compass pod, and a pill for the heading readout.
 // The old acrylic plate (standoffs, green edges, "P1 LEVEL 1 · PARKING DIRECTORY" header strip) is gone.
 const LENS=(c)=>rr(c,MAPL.x,MAPL.y,MAPL.w,MAPL.h,MAPL.r);
-function navPieces(g){
- const F=()=>g.fill();
- g.beginPath();g.moveTo(-4,-4);g.lineTo(NAV_W+4,-4);g.lineTo(NAV_W+4,30);g.lineTo(96,30);g.bezierCurveTo(46,30,18,20,-4,-4);g.closePath();F();   // top rail, tapering into a teardrop at its left end
- rr(g,4,-40,258,244,48);F();                                    // visor pod (runs up off the top edge)
- g.beginPath();g.arc(CC.x,CC.y,CC.R+12,0,TAU);F();              // compass pod (meets the right edge)
- g.beginPath();g.rect(CC.x,-4,NAV_W-CC.x+4,CC.y);F();           // fills the pod into the top-right corner
- rr(g,CC.x-58,CC.y+CC.R-6,116,40,20);F();                       // heading pill
- g.beginPath();g.moveTo(250,30);g.bezierCurveTo(268,70,266,130,250,182);g.lineTo(CC.x-44,CC.y+CC.R+12);g.bezierCurveTo(CC.x-74,150,CC.x-84,70,CC.x-62,24);g.closePath();F();   // web between visor and compass pod
-}
+const navPieces=g=>SH142.nav.pieces(g);   // V142-U2: outline lives in shape142.js (shared with the bake)
 function navStatic(w,h,k){
  const [back]=rcv(1,1),[front]=rcv(1,1);back.width=front.width=w;back.height=front.height=h;
  const b=back.getContext('2d'),f=front.getContext('2d');for(const c of [b,f])c.setTransform(k,0,0,k,0,0);
  FK=NAVFK/k;const {x,y,w:W,h:H,r}=MAPL,fh=17;
- shell142(b,NAV_W,k,navPieces,{tex:IMG.chromeNav,y0:-10,y1:208,pods:[{x:CC.x,y:CC.y,R:CC.R+12,conic:CC.R+1},{x:132,y:96,R:150}],
+ shell142(b,NAV_W,k,navPieces,{baked:IMG.shellNav,tex:IMG.chromeNav,y0:-10,y1:208,pods:[{x:CC.x,y:CC.y,R:CC.R+12,conic:CC.R+1},{x:132,y:96,R:150}],
   glints:[[150,8,120,2.2,.55],[300,12,80,1.6,.4],[40,196,46,1.4,.35],[CC.x+26,CC.y+CC.R+14,40,1.3,.4]],shadow:[-3,7,16]});
  // the map lens, cut into the visor
  socket142(b,LENS,y,y+H,{blur:8});
@@ -275,8 +331,8 @@ function navStatic(w,h,k){
  // ---- front: glass over the map, one polished bezel, rivets ----
  gloss142(f,LENS,x,y,x+W,y+H,.3);
  if(ok(IMG.dust)){f.save();LENS(f);f.clip();f.globalCompositeOperation='screen';f.globalAlpha=.18;f.drawImage(IMG.dust,x-20,y-8,W+40,(W+40)*IMG.dust.naturalHeight/IMG.dust.naturalWidth);f.restore();}
- bezel142(f,LENS,y,y+H,3.4);
- for(const [rx,ry] of [[12,170],[254,170],[CC.x+CC.R+4,CC.y+56]])rivet142(f,rx,ry,3.2);
+ if(!ok(IMG.shellNav))bezel142(f,LENS,y,y+H,3.4);
+ for(const [rx,ry] of [[10,182],[256,150],[CC.x+CC.R+4,CC.y+56]])rivet142(f,rx,ry,3.2);
  return{back,front,map:{x:x+3,y:y+3,w:W-6,h:H-fh-9,r:r-3}};
 }
 // fluorescent-tube reflections on the map glass slide with the view yaw (parallax against the print)
@@ -398,19 +454,10 @@ const DW=760,DH=316;
 const HO={cx:144,cy:180,R:96,top:96,x0:48,x1:716,y1:302,rc:30};   // V117: housing inset — gauges overhang its edge   // housing geometry
 // V142 geometry: the casting is anchored to the bottom-left screen corner (canvas x=0 / y=DH are the screen edges)
 const GA={x:126,y:188,R:110},SUB={x:262,y:72,R:40},VIS={x:288,y:120,w:252,h:118,r:40},MID={x:312,y:124,w:208,h:56,r:6},
- RAD={x:610,y:172,R:48},SIG={x:314,y:186,w:112,h:46},ICO={x:452,y:186,s:44},TUB={x:708,y:74,w:24,h:196};
+ RAD={x:610,y:172,R:48},SIG={x:314,y:186,w:112,h:46},ICO={x:456,y:191,s:40},TUB={x:708,y:74,w:24,h:196};
+const D142=SH142.dash,inset=(b,i)=>c=>rr(c,b.x+i,b.y+i,b.w-2*i,b.h-2*i,Math.max(2,b.r-i));
 const visor=c=>rr(c,VIS.x,VIS.y,VIS.w,VIS.h,VIS.r),tubeSlot=c=>rr(c,TUB.x-8,TUB.y-8,TUB.w+16,TUB.h+16,(TUB.w+16)/2);
-function dashPieces(g){const F=()=>g.fill();
- g.beginPath();g.arc(GA.x,GA.y,GA.R+20,0,TAU);F();                       // speedometer pod
- g.beginPath();g.arc(SUB.x,SUB.y,SUB.R+11,0,TAU);F();                    // m/s sub-pod
- g.beginPath();g.moveTo(150,74);g.bezierCurveTo(190,40,230,60,232,96);g.bezierCurveTo(250,110,262,130,240,160);g.lineTo(180,160);g.closePath();F();   // web gauge → sub-pod
- rr(g,226,98,456,190,58);F();                                            // visor spine
- g.beginPath();g.arc(RAD.x,RAD.y,RAD.R+18,0,TAU);F();                    // radar pod
- rr(g,688,50,64,280,32);F();                                             // hydration capsule pod
- g.beginPath();g.moveTo(-4,232);g.lineTo(700,232);g.lineTo(700,DH+4);g.lineTo(-4,DH+4);g.closePath();F();   // base band, off the bottom edge
- g.beginPath();g.moveTo(-4,120);g.lineTo(40,120);g.lineTo(40,DH+4);g.lineTo(-4,DH+4);g.closePath();F();     // runs off the left edge
- g.beginPath();g.moveTo(740,236);g.bezierCurveTo(756,262,760,296,DW+4,DH+4);g.lineTo(720,DH+4);g.closePath();F();   // teardrop tail
-}
+const dashPieces=g=>SH142.dash.pieces(g);   // V142-U2: outline lives in shape142.js (shared with the bake)
 function housePath(c,ins){const R=HO.R-ins,cx=HO.cx,cy=HO.cy,top=HO.top+ins,x0=HO.x0+ins,x1=HO.x1-ins,y1=HO.y1-ins,rc=Math.max(4,HO.rc-ins);
  const dx=Math.sqrt(Math.max(0,R*R-(cy-top)**2)),ae=Math.atan2(top-cy,dx);
  c.beginPath();c.moveTo(x0,cy);c.arc(cx,cy,R,Math.PI,TAU+ae,false);c.lineTo(x1-rc,top);c.arcTo(x1,top,x1,top+rc,rc);c.lineTo(x1,y1-rc);c.arcTo(x1,y1,x1-rc,y1,rc);
@@ -500,20 +547,23 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   // V142: ONE brushed-chrome casting rising off the bottom-left screen corner: the speedometer pod, its m/s
   // sub-pod on a short web, a long visor spine (health · sanity · almond water behind one black glass), the radar
   // lens pod and the hydration capsule, all on a base band that runs off the bottom edge and ends in a teardrop tail.
-  shell142(c,DW,s,dashPieces,{tex:IMG.chromeDash,y0:40,y1:316,
+  shell142(c,DW,s,D142.pieces,{baked:IMG.shellDash,tex:IMG.chromeDash,y0:40,y1:316,
    pods:[{x:GA.x,y:GA.y,R:GA.R+20,conic:GA.R+2},{x:SUB.x,y:SUB.y,R:SUB.R+11,conic:SUB.R+1},{x:RAD.x,y:RAD.y,R:RAD.R+18,conic:RAD.R+3},{x:VIS.x+VIS.w/2,y:VIS.y+40,R:200}],
    glints:[[GA.x-10,GA.y-GA.R-12,60,1.8,.6],[VIS.x+VIS.w/2,VIS.y-10,150,2,.55],[VIS.x+VIS.w/2+20,250,170,1.6,.4],[TUB.x+TUB.w/2,TUB.y-8,16,1.4,.5],[RAD.x-6,RAD.y-RAD.R-12,40,1.4,.45],[560,300,170,1.4,.3]],shadow:[5,-2,18]});
   // wells for the round instruments, sockets for the visor glass and the tube
   well(c,GA.x,GA.y,GA.R);well(c,SUB.x,SUB.y,SUB.R+1);well(c,RAD.x,RAD.y,RAD.R+3);
-  socket142(c,visor,VIS.y,VIS.y+VIS.h,{deep:'#010203',mid:'#071017',bot:'#0e1c26',blur:11});
-  socket142(c,tubeSlot,TUB.y-8,TUB.y+TUB.h+8,{blur:7});
-  // etched hair-line dividers on the glass (instead of a frame per widget)
-  c.fillStyle='#ffffff14';c.fillRect(MID.x,MID.y+MID.h+3,VIS.w-40,1);c.fillStyle='#00000080';c.fillRect(MID.x,MID.y+MID.h+2,VIS.w-40,1);
-  c.fillStyle='#ffffff12';c.fillRect(ICO.x-12,SIG.y+2,1,SIG.h-4);
+  // V142-U2 ②: every readout sits in its OWN pocket machined into the casting (battery capsule, numeral lens,
+  // stepped signal slots + readout pill, round almond-water lens) — the baked shell carries their raised lips
+  const glassS={deep:'#010203',mid:'#071017',bot:'#0e1c26',blur:7};
+  for(const b of [D142.BAT,D142.NUM,D142.SIGP])socket142(c,inset(b,2.5),b.y,b.y+b.h,glassS);
+  for(let i=0;i<5;i++){const b=D142.bars(i);socket142(c,inset(b,1.6),b.y,b.y+b.h,{blur:3});}
+  {const A=D142.ALM;socket142(c,g=>{g.beginPath();g.arc(A.x,A.y,A.R-2.5,0,TAU);},A.y-A.R,A.y+A.R,glassS);}
+  socket142(c,inset({x:TUB.x-8,y:TUB.y-8,w:TUB.w+16,h:TUB.h+16,r:(TUB.w+16)/2},2.5),TUB.y-8,TUB.y+TUB.h+8,{blur:7});
+  etch142(c,'HEALTH 生命',D142.BAT.x+46,D142.BAT.y-8,f12());
   // printed scale on the tube glass
   for(let i=0;i<=10;i++){const yy=TUB.y+TUB.h-(TUB.h-14)*i/10;c.fillStyle='#ffffff60';c.fillRect(TUB.x+TUB.w-(i%5?6:10),yy,i%5?6:10,1);}
   // engraved legends cut into the chrome
-  etch142(c,'SANITY 理智',SIG.x+SIG.w/2,VIS.y+VIS.h+15,f12());etch142(c,'杏仁水',ICO.x+ICO.s/2,VIS.y+VIS.h+15,f12());
+  etch142(c,'SANITY 理智',SIG.x+SIG.w/2,VIS.y+VIS.h+15,f12());etch142(c,'杏仁水',D142.ALM.x,VIS.y+VIS.h+15,f12());
   etch142(c,'THREAT SCAN',RAD.x,RAD.y+RAD.R+30,f12());etch142(c,'水分',TUB.x+TUB.w/2,TUB.y+TUB.h+24,f12());
   // the LEVEL 1 name is now block lettering standing on the base band (no separate badge frame)
   blockText(c,'LEVEL 1',VIS.x+VIS.w/2,VIS.y+VIS.h+30,18,{align:'center',shadow:'#000'});
@@ -524,8 +574,9 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   for(const a of [-1.2,2.2])rivet142(c,RAD.x+Math.cos(a)*(RAD.R+11),RAD.y+Math.sin(a)*(RAD.R+11),3);
   // ---- front layer: the radar's chrome ring, the visor glass + bezel, the tube's chrome caps ----
   if(ok(IMG['gauge-ring'])){f.drawImage(IMG['gauge-ring'],RAD.x-RAD.R*1.13,RAD.y-RAD.R*1.13,RAD.R*2.26,RAD.R*2.26);}else{chromeRing(f,RAD.x,RAD.y,RAD.R,5);}
-  gloss142(f,visor,VIS.x,VIS.y,VIS.x+VIS.w,VIS.y+VIS.h,.24);bezel142(f,visor,VIS.y,VIS.y+VIS.h,3.6);
-  bezel142(f,tubeSlot,TUB.y-8,TUB.y+TUB.h+8,2.6);
+  for(const b of [D142.BAT,D142.NUM,D142.SIGP])gloss142(f,inset(b,2.5),b.x,b.y,b.x+b.w,b.y+b.h,.22);
+  {const A=D142.ALM;gloss142(f,g=>{g.beginPath();g.arc(A.x,A.y,A.R-2.5,0,TAU);},A.x-A.R,A.y-A.R,A.x+A.R,A.y+A.R,.34);}
+  if(!ok(IMG.shellDash)){gloss142(f,visor,VIS.x,VIS.y,VIS.x+VIS.w,VIS.y+VIS.h,.24);bezel142(f,visor,VIS.y,VIS.y+VIS.h,3.6);bezel142(f,tubeSlot,TUB.y-8,TUB.y+TUB.h+8,2.6);}
   for(const cy of [TUB.y-2,TUB.y+TUB.h-14]){f.save();f.shadowColor='#000000a0';f.shadowBlur=4;f.shadowOffsetY=2;rr(f,TUB.x-7,cy,TUB.w+14,10,5);f.fillStyle=lg(f,0,cy,0,cy+10,[[0,'#f6f8f9'],[.4,'#9ba1a6'],[.55,'#5b6166'],[1,'#d6dadd']]);f.fill();f.restore();}
   stat=bc;front=fc;statKey=size+'/'+imgGen;}
  // ---------------------------------------------------------------- dynamic drawing
@@ -540,7 +591,7 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   if(red!=null){c.strokeStyle='#d8261c';c.lineWidth=F*.045;c.beginPath();c.arc(x,y,F*.79,a0,ang(red));c.stroke();}
   for(let t=0;t<=max+1e-6;t+=minor){const a=ang(t/max),major=Math.abs(t%step)<1e-6,r0=F*(major?.7:.75),r1=F*.83;c.strokeStyle=major?'#f4f4f4':'#8f969c';c.lineWidth=major?F*.024:F*.012;c.beginPath();c.moveTo(x+Math.cos(a)*r0,y+Math.sin(a)*r0);c.lineTo(x+Math.cos(a)*r1,y+Math.sin(a)*r1);c.stroke();
    if(major){c.save();c.shadowColor='#bff6ff';c.shadowBlur=F*.05;text(c,String(t),x+Math.cos(a)*F*.56,y+Math.sin(a)*F*.56,`${big?16:12}px ${big?PX16:PX12}`,'#f6fbff',null);c.restore();}}
-  if(label)text(c,label,x,y-F*.34,f12(),'#aeb8c2',null);if(label2)text(c,label2,x,y-F*.2,f12(),'#7d8790',null);
+  if(label)text(c,label,x,y+F*.74,f12(),'#aeb8c2',null);if(label2)text(c,label2,x,y+F*.25+13,f12(),'#7d8790',null);
   return{ang};}
  function needle(c,x,y,F,ang,t,col='#ff4b1f'){const a=ang(clamp(t,-.02,1.02));c.save();c.translate(x,y);c.rotate(a);
   c.save();c.shadowColor='#000000d0';c.shadowBlur=F*.05;c.shadowOffsetX=F*.03;c.shadowOffsetY=F*.05;c.fillStyle='#000';c.beginPath();c.moveTo(-F*.18,-F*.03);c.lineTo(F*.84,-F*.006);c.lineTo(F*.84,F*.006);c.lineTo(-F*.18,F*.03);c.closePath();c.fill();c.restore();
@@ -552,8 +603,8 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   c.fillStyle=rg(c,x,y,R*.75,x,y,R,[[0,'#00000000'],[1,'#00000090']]);c.fillRect(x-R,y-R,R*2,R*2);c.restore();}
  function draw(){if(statKey!==size+'/'+imgGen)buildStatic();FK=1/S.k;const c=rx,s=S.k*S.rs;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,R.width,R.height);c.drawImage(stat,0,0);c.setTransform(s,0,0,s,0,0);
   // ---- speedometer (stamina) ----
-  const F=GA.R-12,m=face(c,GA.x,GA.y,F,S.needle.a,{label:'STAMINA',label2:'体力 %',red:.2});
-  const pct=Math.round(S.shown[0]),lw=78,lh=28,lx=GA.x-lw/2,ly=GA.y+F*.42;rr(c,lx,ly,lw,lh,5);c.fillStyle=lg(c,0,ly,0,ly+lh,[[0,'#050607'],[1,'#1c2124']]);c.fill();rr(c,lx+.5,ly+.5,lw-1,lh-1,4.5);c.strokeStyle='#ffffff26';c.lineWidth=1;c.stroke();
+  const F=GA.R-12,m=face(c,GA.x,GA.y,F,S.needle.a,{label:'STAMINA 体力',red:.2});
+  const pct=Math.round(S.shown[0]),lw=58,lh=26,lx=GA.x-lw/2,ly=GA.y+F*.27;rr(c,lx,ly,lw,lh,5);c.fillStyle=lg(c,0,ly,0,ly+lh,[[0,'#050607'],[1,'#1c2124']]);c.fill();rr(c,lx+.5,ly+.5,lw-1,lh-1,4.5);c.strokeStyle='#ffffff26';c.lineWidth=1;c.stroke();
   text3d(c,pct+'%',GA.x,ly+lh/2+1,f16(),pct<20?{top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20',depth:2}:{depth:2});
   needle(c,GA.x,GA.y,F,m.ang,S.needle.a);dome(c,GA.x,GA.y,F+2);chromeRing(c,GA.x,GA.y,GA.R-4,6);
   // ---- sub dial: walking speed ----
@@ -563,7 +614,6 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   c.setTransform(1,0,0,1,0,0);c.drawImage(front,0,0);if(R!==cvs){pipe.submit(R);if(!pipe.out){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cvs.width,cvs.height);upscale(ctx,R,0,0,cvs.width,cvs.height);}}}
  function drawMID(c){const {x,y,w,h,r}=MID;c.save();rr(c,x-6,y-4,w+12,h+8,r);c.clip();
   const b=S.bat,bx=x+4,by=y+14,bw=80,bh=38,br=9,fl=b.flash>0?Math.pow(Math.abs(Math.sin((1-b.flash)*Math.PI*4.5)),.7)*b.flash:0;
-  text(c,'HEALTH 生命',x+6,y+6,f12(),'#9fb6c4',null,'left');
   // iPhone OS 1 battery: glossy silver shell
   rr(c,bx,by,bw,bh,br);c.fillStyle=lg(c,0,by,0,by+bh,[[0,'#ffffff'],[.45,'#d8dce0'],[.55,'#a9b0b7'],[1,'#e9ecef']]);c.fill();
   c.fillStyle=lg(c,0,by+bh*.3,0,by+bh*.7,[[0,'#f4f6f8'],[.5,'#a2a9b0'],[1,'#e2e5e8']]);rr(c,bx+bw-1,by+bh*.3,9,bh*.4,3);c.fill();
@@ -610,7 +660,7 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   c.fillStyle=lg(c,x,0,x+w,0,[[0,'#ffffff00'],[.18,'#ffffffb0'],[.32,'#ffffff20'],[.8,'#ffffff00'],[.9,'#ffffff50'],[1,'#ffffff00']]);c.fillRect(x+1,y+4,w-2,h-w/2);
   text3d(c,String(Math.round(S.shown[1])),cxm,y+h-52,f16(),{line:'#0b3a6a',depth:2});}
  function drawIcon(c){const {x,y,s}=ICO;
-  if(ok(IMG['almond-icon']))c.drawImage(IMG['almond-icon'],x,y,s,s*IMG['almond-icon'].naturalHeight/IMG['almond-icon'].naturalWidth);else{rr(c,x,y,s,s,12);c.fillStyle='#6cb8e8';c.fill();}
+  {const A=D142.ALM;c.save();c.beginPath();c.arc(A.x,A.y,A.R-2.5,0,TAU);c.clip();if(ok(IMG['almond-icon']))c.drawImage(IMG['almond-icon'],A.x-A.R-1,A.y-A.R-1,(A.R+1)*2,(A.R+1)*2*IMG['almond-icon'].naturalHeight/IMG['almond-icon'].naturalWidth);else{c.fillStyle='#6cb8e8';c.fillRect(A.x-A.R,A.y-A.R,A.R*2,A.R*2);}c.restore();}
   const n=S.bottles;if(n>0){const bx=x+s-2,by=y+3,t=String(n),bw=Math.max(22,10+t.length*9);c.save();c.shadowColor='#0009';c.shadowBlur=4;c.shadowOffsetY=2;rr(c,bx-bw/2,by-11,bw,22,11);c.fillStyle='#fff';c.fill();c.restore();
    rr(c,bx-bw/2+2,by-9,bw-4,18,9);c.fillStyle=lg(c,0,by-9,0,by+9,[[0,'#ff6a5a'],[.5,'#e3170a'],[1,'#b80c02']]);c.fill();c.fillStyle='#ffffff50';rr(c,bx-bw/2+3,by-8,bw-6,8,4);c.fill();text(c,t,bx,by+1,f16(),'#fff',null);}}
  raf=requestAnimationFrame(frame);

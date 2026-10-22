@@ -1,7 +1,7 @@
 /* V116 (master redo; V114 base) · Level 1 宜居地带 — 2007–2009 skeuomorphic garage UI. Everything scoped to :root[data-ui-level="1"]. */
 :root:not([data-ui-level="1"]) .l1-dash,:root:not([data-ui-level="1"]) .l1-legend{display:none!important}
 /* ---- navigation cluster: acrylic directory sign + liquid ball compass (painted into .map-mini-dom) ---- */
-:root[data-ui-level="1"] .map-mini{width:clamp(270px,calc(var(--scene-width,100vw) * .27),420px)!important;height:auto!important;aspect-ratio:400/214;right:0!important;top:0!important;transform:none!important}
+:root[data-ui-level="1"] .map-mini{width:clamp(270px,calc(var(--scene-width,100vw) * .27),420px)!important;height:auto!important;aspect-ratio:400/250;right:0!important;top:0!important;transform:none!important}
 :root[data-ui-level="1"] .map-mini .instrument-label,:root[data-ui-level="1"] .map-mini .map-cardinal,:root[data-ui-level="1"] .map-mini .map-mini-caption,:root[data-ui-level="1"] .map-mini .map-mini-player,:root[data-ui-level="1"] .map-mini .map-mini-art{visibility:hidden!important}
 :root[data-ui-level="1"] .map-mini .map-mini-viewport{opacity:0!important}
 :root[data-ui-level="1"] .map-mini canvas.map-mini-dom{position:absolute;left:0!important;top:0!important;width:100%!important;height:100%!important;transform:none!important;image-rendering:auto!important;z-index:3}
