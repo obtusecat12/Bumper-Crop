@@ -18,6 +18,7 @@ import {soho135BuildingTask} from './soho135-street.js?v=141j'; // V135-capital 
 import {soho135FairTask} from './soho135-fair.js?v=141j'; // V135-capital ③-2 SoHo street fair (closed road x=-224)
 import {spire135Task} from './soho135-spire.js?v=141j'; // ③-3b SoHo focal spire tower
 import {brick144Task} from './brick144.js?v=144b'; // V144 A1 capital brick apartment slab
+import {barricade144Task,BARRICADE144,BARRICADE144_ON} from './brick144-barricade.js?v=144d'; // V144 B alley barricade (pallet pile)
 import {sohoBake135,SOHO135_BAKE_BLOCKS} from './soho135-bake.js?v=144c';
 import {soho141Ready,soho141Load} from './soho141-facade.js?v=141j'; // V141 F4: SoHo facade tables stream in with their blocks // ③-3c per-block Blender bake of the streamed SoHo blocks
 import {CAPITAL135_LAZY} from './capital135/geo/lazy.js?v=135h'; // V135 ②c-2b-2b deferred roots (photo landmarks, milling mouth)
@@ -121,6 +122,7 @@ function* buildBlock(mats,plan,lod){
  const b=new UrbanBatch(mats);try{b.push(CITY_ORIGIN.x,0,CITY_ORIGIN.z,CITY_ANGLE);yield* addBlockStreetsTask(b,plan,lod);
  if(plan.soho135==='a'||plan.soho135==='b'){b.push(plan.x,Y,plan.z);yield* soho135FairTask(b,plan,lod);b.pop();}
  for(const spec of plan.buildings){b.push(spec.x,Y+.15,spec.z,spec.ry);if(spec.soho135)yield* soho135BuildingTask(b,spec,lod);else if(spec.spire135)yield* spire135Task(b,spec,lod);else if(spec.brick144)yield* brick144Task(b,spec,lod);else yield* addStreetwallBuildingTask(b,{...spec,lod});if(spec.infill){b.box('sidewalk',0,-.075,spec.d/2+1.8,spec.w,.15,3.6);b.walk(0,spec.d/2+1.8,spec.w,3.6,0);b.push(0,-.15,0);curb(b,0,spec.d/2+3.6,spec.w,Math.PI,.15);b.pop();if(spec.seed%3===0)place(b,0,0,spec.d/2+2.85,0,P.addStreetTree,{seed:spec.seed,scale:.68});else if(spec.seed%3===1)place(b,0,0,spec.d/2+2.85,0,P.addHydrant);else place(b,0,0,spec.d/2+2.85,0,P.addStreetLight,{height:7.4,arm:1.5});}b.pop();yield;}
+ if(BARRICADE144_ON&&plan.ix===BARRICADE144.block[0]&&plan.iz===BARRICADE144.block[1]){b.push(plan.x+BARRICADE144.x,Y+.15,plan.z+BARRICADE144.z,0);yield* barricade144Task(b,lod);b.pop();}
 
  b.pop();const object=yield* b.finishTask('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district);const sub=plan.reserved?null:yield* subwayBlockTask(mats,plan,lod);return{object,colliders:b.colliders,walks:b.walks,plan,lod,sub,stairWalks:b.stairWalks||[],stairSolids:b.stairSolids||[],signals132:b.signals132||[],picks140:b.picks140||[]};}finally{b.discard();}
 }
