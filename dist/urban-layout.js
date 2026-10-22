@@ -4,6 +4,7 @@ import {urbanHash,urbanRandom} from './urban-batch.js?v=60';
 import {canalBlock,CANAL_HERO} from './canal128-layout.js?v=128';
 import {soho135Filter,spire135Filter} from './soho135-layout.js?v=135v';
 import {retail138Mark} from './retail138-layout.js?v=138a'; // V138 walk-in stores
+import {brick144Filter} from './brick144-layout.js?v=144a'; // V144 A1 capital brick apartment slab
 export const CITY_BLOCK=112,CITY_ROAD_HALF=7.5,CITY_SIDEWALK=4.5;
 export const CITY_ORIGIN=exitPoint(382),CITY_ANGLE=Math.atan2(CITY_ORIGIN.tx,CITY_ORIGIN.tz);
 const ca=Math.cos(CITY_ANGLE),sa=Math.sin(CITY_ANGLE);
@@ -41,6 +42,7 @@ export function cityBlockPlan(ix,iz,types){
  if(iz===CANAL_HERO.row&&(ix===4||ix===5))for(const q of result.buildings)q.floors=Math.min(q.floors,Math.abs(q.ry)===Math.PI/2?3:ix===4?4:6);   // V129: beyond the far bridge the photo stays low
  if((ix===-2||ix===-3)&&(iz===0||iz===1))soho135Filter(result);   // V135-capital ③ SoHo street frontage (soho135-layout.js)
  if(ix===-2&&iz===2)spire135Filter(result);   // ③-3b focal spire tower (soho135-spire.js)
+ if(ix===-2&&iz===-1)brick144Filter(result);   // V144 A1 brick apartment slab + A2 road works (brick144.js)
  return retail138Mark(result);   // V138 walk-in stores
 }
 export function cityWaypoint(name){const edge=exitPoint(282),p=name==='city-core'?cityToWorld(112,478):name==='city-plaza'?cityToWorld(224,702):{x:edge.x+edge.nx*15,z:edge.z+edge.nz*15};return{...p,label:name==='city-core'?'Level 11 · 金融街峡谷':name==='city-plaza'?'Level 11 · 公共广场':'Level 11 · 商业边缘区',yaw:name==='city-plaza'?CITY_ANGLE-Math.PI/2:name==='city-edge'?Math.atan2(-edge.nx,-edge.nz):Math.atan2(-CITY_ORIGIN.tx,-CITY_ORIGIN.tz)};}
