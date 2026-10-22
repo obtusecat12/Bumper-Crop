@@ -13,7 +13,7 @@ const U=n=>new URL('./assets/'+n,import.meta.url).href;
 const isL1=()=>document.documentElement.dataset.uiLevel==='1';
 const IMG={};let imgGen=0,imgStarted=false;
 const SRC={'compass-ring':'ui-v114/compass-ring.webp','gauge-ring':'ui-v114/gauge-ring.webp','almond-icon':'ui-v114/almond-icon.webp',standoff:'ui-v114/standoff.webp',
- leather:'ui-v116/leather.jpg',brushed:'ui-v116/brushed.jpg',dust:'ui-v116/dust.jpg',screw:'ui-v116/screw.webp'};
+ leather:'ui-v116/leather.jpg',brushed:'ui-v116/brushed.jpg',dust:'ui-v116/dust.jpg',screw:'ui-v116/screw.webp',chromeDash:'ui-v142/chrome-dash.jpg',chromeNav:'ui-v142/chrome-nav.jpg'};
 function loadImages(){if(imgStarted)return;imgStarted=true;try{for(const f of ['16px Vonwaon16','12px Vonwaon12'])document.fonts.load(f,'理A').then(()=>{imgGen++;});document.fonts.addEventListener('loadingdone',()=>{imgGen++;});}catch{}
  for(const [k,n] of Object.entries(SRC)){const im=new Image();im.decoding='async';im.onload=()=>{
   // V130-C: keep a CPU-resident copy so drawing it into the era pass's CPU canvases never waits on the GPU process
@@ -80,7 +80,8 @@ const wake=()=>{audio();if(AC&&AC.state==='suspended')AC.resume();};addEventList
 //  · and a bilinear upscale back to device pixels — the soft "screenshot shown at the wrong size" blur.
 // ?era=0 disables it (A/B); performance numbers land in globalThis.__l1Era.
 // =====================================================================================================
-const ERA={on:true,cpu:false,f:.86,q:45,stat:{}};try{const p=new URLSearchParams(location.search);if(p.get('era')==='0'||localStorage.getItem('bumpercrop.l1era')==='0')ERA.on=false;if(p.get('eraf'))ERA.f=+p.get('eraf');if(p.get('eraq'))ERA.q=+p.get('eraq');if(p.get('eracpu'))ERA.cpu=p.get('eracpu')==='1';}catch{}
+// V142: one notch cleaner (was f .86 / q 45 / smear .42)
+const ERA={on:true,cpu:false,f:.95,q:62,smear:.3,stat:{}};try{const p=new URLSearchParams(location.search);if(p.get('era')==='0'||localStorage.getItem('bumpercrop.l1era')==='0')ERA.on=false;if(p.get('eraf'))ERA.f=+p.get('eraf');if(p.get('eraq'))ERA.q=+p.get('eraq');if(p.get('eracpu'))ERA.cpu=p.get('eracpu')==='1';}catch{}
 globalThis.__l1Era=ERA;
 const gpu=(w,h)=>{const c=document.createElement('canvas');c.width=Math.max(1,w);c.height=Math.max(1,h);return[c,c.getContext('2d')];};
 const rcv=(w,h)=>ERA.cpu?cpu(w,h):gpu(w,h);
@@ -91,7 +92,7 @@ const LUTsrc=()=>{const L=[new Uint8Array(256),new Uint8Array(256),new Uint8Arra
  L[0][i]=Math.min(255,Math.round(v*251));L[1][i]=Math.min(255,Math.round(v*255));L[2][i]=Math.min(255,Math.round(v*255+3));}return L;};const LUT=LUTsrc();
 const X5=new Uint8Array(32).map((_,i)=>(i<<3)|(i>>2)),X6=new Uint8Array(64).map((_,i)=>(i<<2)|(i>>4));
 // tone curve + chroma smear + RGB565 dither, in place on straight RGBA (alpha untouched; transparent → black)
-function eraPixels(d,w,h,smear=.42){const [LR,LG,LB]=LUT;
+function eraPixels(d,w,h,smear=.3){const [LR,LG,LB]=LUT;
  for(let y=0;y<h;y++){let pcb=0,pcr=0,fresh=true;const row=(y&3)<<2;
   for(let x=0;x<w;x++){const i=(y*w+x)<<2;if(d[i+3]===0){d[i]=d[i+1]=d[i+2]=0;fresh=true;continue;}
    let r=LR[d[i]],g=LG[d[i+1]],b=LB[d[i+2]];const Y=.299*r+.587*g+.114*b;let cb=b-Y,cr=r-Y;
@@ -143,7 +144,7 @@ function eraClient(key,onFrame,q){const C={busy:false,pend:null,out:null,ox:null
  C.submit=(src,tag)=>{if(C.busy){C.pend=[src,tag];return;}const t0=performance.now(),w=src.width,h=src.height,id=src.getContext('2d',{willReadFrequently:true}).getImageData(0,0,w,h);tick(key+'.main',t0);
   const wk=worker();if(!wk){eraPixels(id.data,w,h);jpegish(id.data,w,h,q??ERA.q);land(id.data,w,h,tag);tick(key+'.sync',t0);return;}
   C.busy=true;const n=++WKid,t1=performance.now();WKcb.set(n,buf=>{C.busy=false;if(buf){land(new Uint8ClampedArray(buf),w,h,tag);tick(key+'.rt',t1);}
-   if(C.pend){const [s,t]=C.pend;C.pend=null;C.submit(s,t);}});wk.postMessage({id:n,buf:id.data.buffer,w,h,q:q??ERA.q,smear:.42},[id.data.buffer]);};
+   if(C.pend){const [s,t]=C.pend;C.pend=null;C.submit(s,t);}});wk.postMessage({id:n,buf:id.data.buffer,w,h,q:q??ERA.q,smear:ERA.smear},[id.data.buffer]);};
  return C;}
 const eraEvery=k=>Math.max(66,Math.min(400,(ERA.stat[k+'.main']?.ms||0)*8));
 function upscale(c,img,x,y,w,h){c.save();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='low';c.drawImage(img,x,y,w,h);c.restore();}
@@ -157,6 +158,65 @@ function mountEraSvg(){if(document.getElementById('l1-era-svg'))return;const st=
 <feComponentTransfer in="m"><feFuncR type="discrete" tableValues="${st(32)}"/><feFuncG type="discrete" tableValues="${st(64)}"/><feFuncB type="discrete" tableValues="${st(32)}"/></feComponentTransfer></filter></svg>`;
  if(ERA.on)document.body.insertAdjacentHTML('beforeend',svg);else document.documentElement.classList.add('l1-era-off');}
 // =====================================================================================================
+// V142 · BRUSHED-CHROME STREAMLINED SHELLS (after the user's "世纪重塑电子系统" reference, minus the green)
+// A shell is the union of rounded pieces (pods, capsules, tails) filled into one mask, so every instrument sits in
+// ONE continuous casting instead of a box in a box. The casting runs off the screen edge it is anchored to.
+// Body = generated brushed-steel plate (ui-v142) · chrome horizon bands · pillow shading per pod · anisotropic
+// glints along the brushing · a rolled bevel made from the mask shifted against itself (sharp + soft, light and dark).
+// Lenses are cut INTO the body as recesses (inner shadow + machined lip) and get one polished bezel in front.
+// =====================================================================================================
+function mask142(w,h,s,pieces){const [m,g]=gpu(w,h);g.setTransform(s,0,0,s,0,0);g.fillStyle='#fff';pieces(g);return m;}
+function edge142(dst,m,dx,dy,col,blur,alpha,s){const w=m.width,h=m.height,[e,g]=gpu(w,h);g.drawImage(m,0,0);g.globalCompositeOperation='destination-out';g.drawImage(m,dx*s,dy*s);
+ g.globalCompositeOperation='source-in';g.fillStyle=col;g.fillRect(0,0,w,h);dst.save();dst.setTransform(1,0,0,1,0,0);dst.globalAlpha=alpha;if(blur)dst.filter=`blur(${(blur*s).toFixed(2)}px)`;dst.drawImage(e,0,0);dst.restore();}
+// draws the casting onto c (whose transform is user units × s); returns the mask for later clipping
+function shell142(c,W,s,pieces,{tex,y0=0,y1=300,pods=[],glints=[],shadow=[0,6,16]}={}){
+ const w=c.canvas.width,h=c.canvas.height,m=mask142(w,h,s,pieces);
+ const [b,g]=gpu(w,h);g.setTransform(s,0,0,s,0,0);const Hh=h/s;
+ if(ok(tex)){const th=W*tex.naturalHeight/tex.naturalWidth;for(let y=-2;y<Hh+th;y+=th-1)g.drawImage(tex,0,y,W,th);}else{g.fillStyle='#959ca3';g.fillRect(0,0,W,Hh);}
+ // cool steel tone (multiply), then the chrome horizon as an overlay: sky on the crown, a deep dark band, a bright
+ // floor reflection, a dark foot — the high-contrast banding that reads as polished chrome rather than grey plastic
+ g.globalCompositeOperation='multiply';g.fillStyle='#8c97a3';g.fillRect(0,0,W,Hh);
+ g.globalCompositeOperation='overlay';
+ g.fillStyle=lg(g,0,y0,0,y1,[[0,'#ffffff'],[.08,'#f0f4f8'],[.2,'#9aa4ad'],[.34,'#2a3138'],[.44,'#1a1f24'],[.52,'#c8d0d8'],[.6,'#ffffff'],[.7,'#8e98a2'],[.85,'#4a525a'],[1,'#1e2328']]);g.fillRect(0,0,W,Hh);
+ // each pod is a pillow: lit up-left, rolling into shadow at its rim; collars get a turned conic sheen
+ g.globalCompositeOperation='overlay';
+ for(const p of pods){const {x,y,R}=p;g.fillStyle=rg(g,x-R*.3,y-R*.45,R*.04,x,y,R,[[0,'#ffffffd0'],[.4,'#ffffff40'],[.7,'#80808000'],[.88,'#00000070'],[1,'#000000c0']]);g.beginPath();g.arc(x,y,R,0,TAU);g.fill();
+  if(p.conic&&g.createConicGradient){const cg=g.createConicGradient(-Math.PI/2,x,y);for(const [o,col] of [[0,'#ffffffb0'],[.13,'#00000090'],[.25,'#ffffffa0'],[.4,'#000000a0'],[.52,'#ffffff80'],[.64,'#ffffffc0'],[.77,'#00000090'],[.9,'#ffffff70'],[1,'#ffffffb0']])cg.addColorStop(o,col);
+   g.fillStyle=cg;g.beginPath();g.arc(x,y,R,0,TAU);g.arc(x,y,p.conic,0,TAU,true);g.fill('evenodd');}}
+ // anisotropic glints: long thin streaks of light running along the brushing
+ g.globalCompositeOperation='screen';
+ for(const [x,y,len,th,a] of glints){g.save();g.translate(x,y);g.scale(len/th,1);g.fillStyle=rg(g,0,0,0,0,0,th,[[0,`rgba(255,255,255,${a})`],[.35,`rgba(220,236,255,${a*.45})`],[1,'#00000000']]);g.beginPath();g.arc(0,0,th,0,TAU);g.fill();g.restore();}
+ g.globalCompositeOperation='destination-in';g.setTransform(1,0,0,1,0,0);g.drawImage(m,0,0);g.globalCompositeOperation='source-atop';
+ // rolled bevel: sharp + soft rim light (up-left), sharp + soft core shadow (down-right)
+ edge142(g,m,3,4,'#ffffff',.9,.95,s);edge142(g,m,9,11,'#f4f8ff',5,.42,s);edge142(g,m,-3,-4,'#0a0d10',.9,.75,s);edge142(g,m,-10,-12,'#000000',6,.45,s);
+ c.save();c.setTransform(1,0,0,1,0,0);
+ if(shadow){c.save();c.shadowColor='#000000b8';c.shadowOffsetX=shadow[0]*s;c.shadowOffsetY=shadow[1]*s;c.shadowBlur=shadow[2]*s;c.drawImage(m,0,0);c.restore();
+  c.save();c.shadowColor='#000000d0';c.shadowBlur=2.5*s;c.shadowOffsetY=1*s;c.drawImage(m,0,0);c.restore();}
+ c.drawImage(b,0,0);c.restore();return m;}
+// a lens/slot sunk into the casting: dark well, inner shadow from the upper lip, bright lower lip
+function socket142(c,path,y0,y1,{deep='#030506',mid='#0d1217',bot='#1d252c',blur=10}={}){
+ c.save();path(c);c.clip();c.fillStyle=lg(c,0,y0,0,y1,[[0,deep],[.55,mid],[1,bot]]);c.fillRect(-9999,-9999,19999,19999);
+ c.shadowColor='#000';c.shadowBlur=blur;c.shadowOffsetY=blur*.5;c.lineWidth=blur*1.6;c.strokeStyle='#000';path(c);c.stroke();c.restore();
+ c.save();path(c);c.lineWidth=2.2;c.strokeStyle=lg(c,0,y0,0,y1,[[0,'#00000000'],[.4,'#00000000'],[.75,'#ffffff40'],[1,'#ffffffd0']]);c.stroke();
+ path(c);c.lineWidth=1.2;c.strokeStyle=lg(c,0,y0,0,y1,[[0,'#000000d0'],[.5,'#00000030'],[1,'#00000000']]);c.stroke();c.restore();}
+// one polished bezel line round a lens (front layer), plus a soft glass gloss inside it
+function bezel142(c,path,y0,y1,t=3.2){c.save();path(c);c.lineWidth=t;c.strokeStyle=lg(c,0,y0-t,0,y1+t,[[0,'#ffffff'],[.12,'#cfd6dc'],[.42,'#5d666e'],[.52,'#f4f7f9'],[.8,'#7e868d'],[1,'#e6eaee']]);c.stroke();
+ path(c);c.lineWidth=.8;c.strokeStyle='#00000080';c.stroke();c.restore();}
+function gloss142(c,path,x0,y0,x1,y1,a=.26){c.save();path(c);c.clip();
+ c.fillStyle=lg(c,0,y0,0,y0+(y1-y0)*.55,[[0,`rgba(255,255,255,${a})`],[1,'#ffffff00']]);c.beginPath();c.ellipse((x0+x1)/2,y0+(y1-y0)*.08,(x1-x0)*.62,(y1-y0)*.42,0,0,TAU);c.fill();
+ c.fillStyle=lg(c,0,y1-(y1-y0)*.25,0,y1,[[0,'#ffffff00'],[1,`rgba(170,215,255,${a*.35})`]]);c.fillRect(x0,y1-(y1-y0)*.25,x1-x0,(y1-y0)*.25);c.restore();}
+// small chrome rivet / dome screw head
+function rivet142(c,x,y,r){c.save();c.shadowColor='#000000a0';c.shadowBlur=r*.9;c.shadowOffsetX=r*.2;c.shadowOffsetY=r*.45;c.fillStyle=rg(c,x-r*.35,y-r*.4,r*.1,x,y,r,[[0,'#ffffff'],[.4,'#c4cbd1'],[.8,'#5a636b'],[1,'#2b3136']]);c.beginPath();c.arc(x,y,r,0,TAU);c.fill();c.restore();
+ c.strokeStyle='#00000055';c.lineWidth=.7;c.beginPath();c.arc(x,y,r+.8,0,TAU);c.stroke();}
+// indicator lamp in a chrome cup: amber or ice blue, lit or dim
+function lamp142(c,x,y,r,col,on=1){rivet142(c,x,y,r+1.6);c.save();c.fillStyle=rg(c,x-r*.3,y-r*.35,r*.05,x,y,r,[[0,'#ffffff'],[.3,col],[1,'#05080a']]);c.globalAlpha=.35+.65*on;c.shadowColor=col;c.shadowBlur=on*r*2.4;c.beginPath();c.arc(x,y,r,0,TAU);c.fill();c.restore();
+ c.fillStyle='#ffffffd0';c.beginPath();c.ellipse(x-r*.35,y-r*.42,r*.32,r*.16,-.6,0,TAU);c.fill();}
+// machined vent grille: a row of capsule slots
+function grille142(c,x,y,n,gap,w,h){for(let i=0;i<n;i++){const X=x+i*gap;c.save();rr(c,X,y,w,h,w/2);c.fillStyle=lg(c,0,y,0,y+h,[[0,'#020304'],[1,'#1b2228']]);c.fill();c.restore();
+ rr(c,X-.5,y-.5,w+1,h+1,w/2+.5);c.lineWidth=1;c.strokeStyle=lg(c,0,y,0,y+h,[[0,'#00000090'],[.6,'#00000000'],[1,'#ffffffc0']]);c.stroke();}}
+// engraved into light metal: dark cut with a light lower lip
+function etch142(c,s,x,y,font,align='center'){text(c,s,x,y-1,font,'#000000c8',null,align);text(c,s,x+.5,y+1,font,'#00000070',null,align);text(c,s,x,y,font,'#eef3f7',null,align);}
+// =====================================================================================================
 // NAVIGATION CLUSTER (minimap acrylic sign + liquid ball compass), painted by map-ui into .map-mini-dom
 // V116: a real 3/8" cast-acrylic directory plate: back-printed sheet seen through the clear border,
 // polished green-glowing edges with visible thickness, stainless standoff barrels seen through the plate,
@@ -164,8 +224,8 @@ function mountEraSvg(){if(document.getElementById('l1-era-svg'))return;const st=
 // with the view (parallax against the print), and dust / fingerprints in the reflections.
 // =====================================================================================================
 export const NAV_W=400,NAV_H=214;
-const SG={x:8,y:8,w:244,h:192,r:10,t:5};
-const CC={x:326,y:94,R:72};
+const MAPL={x:18,y:22,w:230,h:170,r:34};
+const CC={x:318,y:94,R:70};
 const WIN=CC.R*130/192;
 let navCache=null,NAVFK=1;
 const ball={h:null,v:0,tilt:0,tv:0,roll:0,rv:0,acc:0,t:0,vx:0,vz:0,ax:0,az:0};
@@ -179,64 +239,57 @@ function stepBall(target){const now=performance.now()/1000,st=globalThis.__bcHud
   const wt=6.2,zt=.16;ball.tv+=(-wt*wt*ball.tilt-2*zt*wt*ball.tv+fwd*.02-a*.004)*H;ball.tilt=clamp(ball.tilt+ball.tv*H,-.32,.32);
   const wr=5.4,zr=.15;ball.rv+=(-wr*wr*ball.roll-2*zr*wr*ball.rv+side*.016-a*.012)*H;ball.roll=clamp(ball.roll+ball.rv*H,-.3,.3);}
  if(n>=120)ball.acc=0;}
-const STAND=()=>{const {x,y,w,h}=SG;return[[x+11,y+11],[x+w-11,y+11],[x+11,y+h-11],[x+w-11,y+h-11]];};
-// stainless standoff barrel running back to the wall (seen through the clear acrylic), offset toward the shadow
-function barrel(c,sx,sy,r,len){const dx=len*.55,dy=len;c.save();
- c.fillStyle=lg(c,sx-r,0,sx+r,0,[[0,'#5d6266'],[.25,'#e9ecee'],[.45,'#9aa0a5'],[.7,'#4a4f53'],[1,'#7d8387']]);
- c.beginPath();c.moveTo(sx-r,sy);c.lineTo(sx-r+dx,sy+dy);c.arc(sx+dx,sy+dy,r,Math.PI,0,true);c.lineTo(sx+r,sy);c.closePath();c.fill();c.restore();}
-function cap(c,sx,sy,r){c.save();c.shadowColor='#000000a0';c.shadowBlur=r*.7;c.shadowOffsetX=r*.25;c.shadowOffsetY=r*.45;
- c.fillStyle='#8a9095';c.beginPath();c.arc(sx,sy,r,0,TAU);c.fill();c.restore();
- if(ok(IMG.standoff))c.drawImage(IMG.standoff,sx-r*1.08,sy-r*1.08,r*2.16,r*2.16);
- else{c.fillStyle=rg(c,sx-r*.3,sy-r*.3,1,sx,sy,r,[[0,'#fff'],[1,'#777']]);c.beginPath();c.arc(sx,sy,r,0,TAU);c.fill();}
- c.strokeStyle='#00000040';c.lineWidth=.8;c.beginPath();c.arc(sx,sy,r+.6,0,TAU);c.stroke();
- c.fillStyle='#ffffffe0';c.beginPath();c.ellipse(sx-r*.45,sy-r*.5,r*.22,r*.1,-.7,0,TAU);c.fill();}
+// V142: the minimap and compass live in ONE chrome casting hung from the top edge and running off the right edge:
+// a tapered top rail, a rounded visor pod holding the map lens, the compass pod, and a pill for the heading readout.
+// The old acrylic plate (standoffs, green edges, "P1 LEVEL 1 · PARKING DIRECTORY" header strip) is gone.
+const LENS=(c)=>rr(c,MAPL.x,MAPL.y,MAPL.w,MAPL.h,MAPL.r);
+function navPieces(g){
+ const F=()=>g.fill();
+ g.beginPath();g.moveTo(-4,-4);g.lineTo(NAV_W+4,-4);g.lineTo(NAV_W+4,30);g.lineTo(96,30);g.bezierCurveTo(46,30,18,20,-4,-4);g.closePath();F();   // top rail, tapering into a teardrop at its left end
+ rr(g,4,-40,258,244,48);F();                                    // visor pod (runs up off the top edge)
+ g.beginPath();g.arc(CC.x,CC.y,CC.R+12,0,TAU);F();              // compass pod (meets the right edge)
+ g.beginPath();g.rect(CC.x,-4,NAV_W-CC.x+4,CC.y);F();           // fills the pod into the top-right corner
+ rr(g,CC.x-58,CC.y+CC.R-6,116,40,20);F();                       // heading pill
+ g.beginPath();g.moveTo(250,30);g.bezierCurveTo(268,70,266,130,250,182);g.lineTo(CC.x-44,CC.y+CC.R+12);g.bezierCurveTo(CC.x-74,150,CC.x-84,70,CC.x-62,24);g.closePath();F();   // web between visor and compass pod
+}
 function navStatic(w,h,k){
  const [back]=rcv(1,1),[front]=rcv(1,1);back.width=front.width=w;back.height=front.height=h;
  const b=back.getContext('2d'),f=front.getContext('2d');for(const c of [b,f])c.setTransform(k,0,0,k,0,0);
- FK=NAVFK/k;const {x,y,w:W,h:Hh,r,t}=SG,ins=17,px=x+ins,py=y+ins,pw=W-ins*2,ph=Hh-ins*2;
- // 1 · shadows: the clear plate throws a pale, wide shadow; the opaque back print a darker, sharper one
- b.save();b.shadowColor='#00000066';b.shadowBlur=16;b.shadowOffsetX=7;b.shadowOffsetY=11;rr(b,x,y,W,Hh,r);b.fillStyle='#0000001c';b.fill();b.restore();
- b.save();b.shadowColor='#000000a8';b.shadowBlur=9;b.shadowOffsetX=6;b.shadowOffsetY=9;b.fillStyle='#00000030';b.fillRect(px+2,py+2,pw-4,ph-4);b.restore();
- // 2 · standoff barrels behind the plate
- for(const [sx,sy] of STAND())barrel(b,sx,sy,5.2,9);
- // 3 · edge thickness: polished side faces, deep bottle-green where you look into the cut edge
- rr(b,x+t*.7,y+t,W,Hh,r);b.fillStyle=lg(b,x,y+Hh,x+W,y,[[0,'#1d5a49'],[.5,'#3d8a73'],[1,'#2b6f5c']]);b.fill();
- rr(b,x+t*.35,y+t*.5,W,Hh,r);b.fillStyle='#6fb8a2c0';b.fill();
- // 4 · clear acrylic body
- rr(b,x,y,W,Hh,r);b.fillStyle=lg(b,x,y,x+W,y+Hh,[[0,'#eaf6f2d8'],[.5,'#cfe6dfc8'],[1,'#b4d6cbd0']]);b.fill();
- b.save();rr(b,x,y,W,Hh,r);b.clip();b.globalAlpha=.55;for(const [sx,sy] of STAND())barrel(b,sx+1,sy+1,5,8);b.restore();
- // 5 · back-printed sheet
- b.save();b.shadowColor='#1f4a3f70';b.shadowBlur=2.5;b.shadowOffsetX=1;b.shadowOffsetY=1.5;b.fillStyle='#f6f6f1';b.fillRect(px,py,pw,ph);b.restore();
- const hb=32;b.fillStyle=lg(b,0,py,0,py+hb,[[0,'#237f49'],[1,'#165c34']]);b.fillRect(px,py,pw,hb);b.fillStyle='#e8c04a';b.fillRect(px,py+hb,pw,2.5);
- b.fillStyle='#ffffff';b.beginPath();b.arc(px+16,py+hb/2,11.5,0,TAU);b.fill();text(b,'P1',px+16,py+hb/2+1,f16(),'#165c34',null);
- text(b,'LEVEL 1',px+32,py+11,f16(),'#ffffff','#0b2e1a','left');
- text(b,'宜居地带',px+32,py+25.5,f12(),'#d8f0de',null,'left');
- text(b,'PARKING',px+pw-6,py+10,f12(),'#ffffff',null,'right');text(b,'DIRECTORY',px+pw-6,py+22,f12(),'#bfe3c9',null,'right');
- const fy=py+ph-17;b.fillStyle='#eeefea';b.fillRect(px,fy,pw,17);b.fillStyle='#cfd3cd';b.fillRect(px,fy,pw,1);
- b.fillStyle='#d7261e';b.beginPath();b.arc(px+10,fy+8.5,4.2,0,TAU);b.fill();b.strokeStyle='#fff';b.lineWidth=1.2;b.stroke();
- text(b,'YOU ARE HERE',px+19,fy+9,f12(),'#c3201a',null,'left');text(b,'M 全图',px+pw-6,fy+9,f12(),'#30353b',null,'right');
- // ---- front: the acrylic face ----
- f.save();rr(f,x,y,W,Hh,r);f.clip();
- f.strokeStyle='#2f7e6a55';f.lineWidth=1.6;f.strokeRect(px-.8,py-.8,pw+1.6,ph+1.6);f.strokeStyle='#ffffff50';f.lineWidth=.8;f.strokeRect(px+.6,py+.6,pw-1.2,ph-1.2);
- const eg=6;for(const [g,X,Y,WW,HH] of [[lg(f,0,y,0,y+eg,[[0,'#7fd6bb90'],[1,'#7fd6bb00']]),x,y,W,eg],[lg(f,0,y+Hh,0,y+Hh-eg,[[0,'#2f8f7290'],[1,'#2f8f7200']]),x,y+Hh-eg,W,eg],[lg(f,x,0,x+eg,0,[[0,'#7fd6bb80'],[1,'#7fd6bb00']]),x,y,eg,Hh],[lg(f,x+W,0,x+W-eg,0,[[0,'#2f8f7290'],[1,'#2f8f7200']]),x+W-eg,y,eg,Hh]]){f.fillStyle=g;f.fillRect(X,Y,WW,HH);}
- if(ok(IMG.dust)){f.globalCompositeOperation='screen';f.globalAlpha=.3;f.drawImage(IMG.dust,x-20,y-8,W+40,(W+40)*IMG.dust.naturalHeight/IMG.dust.naturalWidth);f.globalAlpha=1;f.globalCompositeOperation='source-over';}
- f.restore();
- rr(f,x+.6,y+.6,W-1.2,Hh-1.2,r);f.strokeStyle=lg(f,x,y,x+W,y+Hh,[[0,'#ffffff'],[.45,'#e6f7f0c0'],[.55,'#9fd1c180'],[1,'#1f6b56']]);f.lineWidth=1.3;f.stroke();
- rr(f,x+2.2,y+2.2,W-4.4,Hh-4.4,r-1.5);f.strokeStyle=lg(f,x,y,x+W,y+Hh,[[0,'#ffffff70'],[1,'#3a8f7650']]);f.lineWidth=.7;f.stroke();
- for(const [sx,sy] of STAND())cap(f,sx,sy,6.4);
- return{back,front,map:{x:px,y:py+hb+2.5,w:pw,h:ph-hb-2.5-17}};
+ FK=NAVFK/k;const {x,y,w:W,h:H,r}=MAPL,fh=17;
+ shell142(b,NAV_W,k,navPieces,{tex:IMG.chromeNav,y0:-10,y1:208,pods:[{x:CC.x,y:CC.y,R:CC.R+12,conic:CC.R+1},{x:132,y:96,R:150}],
+  glints:[[150,8,120,2.2,.55],[300,12,80,1.6,.4],[40,196,46,1.4,.35],[CC.x+26,CC.y+CC.R+14,40,1.3,.4]],shadow:[-3,7,16]});
+ // the map lens, cut into the visor
+ socket142(b,LENS,y,y+H,{blur:8});
+ b.save();LENS(b);b.clip();b.fillStyle='#f3f4f0';b.fillRect(x+3,y+3,W-6,H-6);
+ // YOU ARE HERE strip printed along the bottom of the sheet (kept; only the header strip went)
+ const fy=y+H-fh-3;b.fillStyle='#e6e8e3';b.fillRect(x,fy,W,fh+4);b.fillStyle='#c9cdc7';b.fillRect(x,fy,W,1);
+ b.fillStyle='#d7261e';b.beginPath();b.arc(x+30,fy+8.5,4.2,0,TAU);b.fill();b.strokeStyle='#fff';b.lineWidth=1.2;b.stroke();
+ text(b,'YOU ARE HERE',x+39,fy+9,f12(),'#c3201a',null,'left');text(b,'M 全图',x+W-26,fy+9,f12(),'#30353b',null,'right');
+ b.restore();
+ // compass seat and the heading pill window
+ b.save();b.beginPath();b.arc(CC.x,CC.y,CC.R+1,0,TAU);b.fillStyle='#0a0c0e';b.fill();b.restore();
+ socket142(b,c=>rr(c,CC.x-48,CC.y+CC.R+3,96,26,13),CC.y+CC.R+3,CC.y+CC.R+29,{blur:5});
+ // rail details: lamps, a vent grille, an etched maker's mark
+ lamp142(b,176,13,2.4,'#ffb838',1);lamp142(b,189,13,2.4,'#6fc8ff',.85);lamp142(b,202,13,2.4,'#6fc8ff',.3);
+ grille142(b,64,6,7,6.5,3,12);
+ // ---- front: glass over the map, one polished bezel, rivets ----
+ gloss142(f,LENS,x,y,x+W,y+H,.3);
+ if(ok(IMG.dust)){f.save();LENS(f);f.clip();f.globalCompositeOperation='screen';f.globalAlpha=.18;f.drawImage(IMG.dust,x-20,y-8,W+40,(W+40)*IMG.dust.naturalHeight/IMG.dust.naturalWidth);f.restore();}
+ bezel142(f,LENS,y,y+H,3.4);
+ for(const [rx,ry] of [[12,170],[254,170],[CC.x+CC.R+4,CC.y+56]])rivet142(f,rx,ry,3.2);
+ return{back,front,map:{x:x+3,y:y+3,w:W-6,h:H-fh-9,r:r-3}};
 }
-// fluorescent-tube reflections on the face slide with the view yaw (parallax against the back print)
-function reflections(c,yaw){const {x,y,w:W,h:Hh,r}=SG;c.save();rr(c,x,y,W,Hh,r);c.clip();
+// fluorescent-tube reflections on the map glass slide with the view yaw (parallax against the print)
+function reflections(c,yaw){const {x,y,w:W,h:Hh}=MAPL;c.save();LENS(c);c.clip();
  const o=((yaw/TAU)%1+1)%1,span=W*2.6;
- for(const [ph,wd,a] of [[0,7,.30],[.07,3,.22],[.5,9,.22],[.56,3,.16]]){const cx0=x-W*.3+((o+ph)%1)*span-span*.35;
+ for(const [ph,wd,a] of [[0,7,.24],[.07,3,.18],[.5,9,.18],[.56,3,.12]]){const cx0=x-W*.3+((o+ph)%1)*span-span*.35;
   c.save();c.translate(cx0,y);c.transform(1,0,-.55,1,0,0);c.fillStyle=lg(c,0,0,wd,0,[[0,'#ffffff00'],[.5,`rgba(255,255,255,${a})`],[1,'#ffffff00']]);c.fillRect(0,0,wd,Hh);c.restore();}
- c.fillStyle=lg(c,x,y,x+W*.7,y+Hh,[[0,'#ffffff3a'],[.3,'#ffffff10'],[.31,'#ffffff00'],[1,'#ffffff00']]);c.fillRect(x,y,W,Hh);c.restore();}
+ c.restore();}
 function drawBall(c,cx,cy){
  const Rb=WIN*.98,hd=ball.h||0;
  c.save();c.beginPath();c.arc(cx,cy,WIN,0,TAU);c.clip();
  // fluid behind the ball
- c.fillStyle=rg(c,cx,cy-WIN*.3,2,cx,cy,WIN,[[0,'#24302c'],[1,'#030605']]);c.fillRect(cx-WIN,cy-WIN,WIN*2,WIN*2);
+ c.fillStyle=rg(c,cx,cy-WIN*.3,2,cx,cy,WIN,[[0,'#232b33'],[1,'#030507']]);c.fillRect(cx-WIN,cy-WIN,WIN*2,WIN*2);
  c.save();c.translate(cx,cy+2);c.rotate(ball.roll);
  // the sphere
  c.fillStyle=rg(c,-Rb*.35,-Rb*.45,Rb*.05,0,0,Rb,[[0,'#ffffff'],[.45,'#f0ece0'],[.8,'#c9c2ae'],[1,'#7d776a']]);c.beginPath();c.arc(0,0,Rb,0,TAU);c.fill();
@@ -261,10 +314,10 @@ function drawBall(c,cx,cy){
  // fixed lubber line on the inner glass
  c.save();c.shadowColor='#0009';c.shadowBlur=2;c.shadowOffsetX=1;c.fillStyle='#ff5a1ec8';c.fillRect(cx-.7,cy-WIN*.62,1.4,WIN*1.25);c.beginPath();c.moveTo(cx,cy-WIN*.62+6);c.lineTo(cx-4,cy-WIN*.62-1);c.lineTo(cx+4,cy-WIN*.62-1);c.closePath();c.fill();c.restore();
  // fluid tint + glass dome reflections
- c.fillStyle='#1f6b5a14';c.fillRect(cx-WIN,cy-WIN,WIN*2,WIN*2);
+ c.fillStyle='#1f4a6b14';c.fillRect(cx-WIN,cy-WIN,WIN*2,WIN*2);
  c.fillStyle=rg(c,cx,cy,WIN*.7,cx,cy,WIN,[[0,'#00000000'],[1,'#000000a0']]);c.fillRect(cx-WIN,cy-WIN,WIN*2,WIN*2);
  c.fillStyle=lg(c,0,cy-WIN,0,cy-WIN*.05,[[0,'#ffffffb8'],[.55,'#ffffff30'],[1,'#ffffff00']]);c.beginPath();c.ellipse(cx,cy-WIN*.46,WIN*.84,WIN*.5,0,0,TAU);c.fill();
- c.fillStyle=lg(c,0,cy+WIN*.55,0,cy+WIN,[[0,'#ffffff00'],[1,'#bff5e440']]);c.beginPath();c.ellipse(cx,cy+WIN*.82,WIN*.7,WIN*.22,0,0,TAU);c.fill();
+ c.fillStyle=lg(c,0,cy+WIN*.55,0,cy+WIN,[[0,'#ffffff00'],[1,'#bfe0f540']]);c.beginPath();c.ellipse(cx,cy+WIN*.82,WIN*.7,WIN*.22,0,0,TAU);c.fill();
  c.restore();
 }
 function paintNavRaw(c,rect,map,yaw,bearing){loadImages();
@@ -273,7 +326,7 @@ function paintNavRaw(c,rect,map,yaw,bearing){loadImages();
  const hdg=wrap(-yaw);stepBall(hdg);FK=NAVFK/k;
  c.save();c.setTransform(1,0,0,1,0,0);c.drawImage(navCache.back,ox,oy);c.translate(ox,oy);c.scale(k,k);
  // ---- back-printed minimap (north-up, centred on you) ----
- const M=navCache.map;c.save();c.beginPath();c.rect(M.x,M.y,M.w,M.h);c.clip();
+ const M=navCache.map;c.save();LENS(c);c.clip();c.beginPath();c.rect(M.x,M.y,M.w,M.h);c.clip();
  if(map&&map.width){const f=1.12,sw=M.w*f,sh=M.h*f;c.imageSmoothingEnabled=true;c.drawImage(map,(map.width-sw)/2,(map.height-sh)/2,sw,sh,M.x,M.y,M.w,M.h);
   c.fillStyle=rg(c,M.x+M.w/2,M.y+M.h/2,M.h*.4,M.x+M.w/2,M.y+M.h/2,M.w*.66,[[0,'#00000000'],[1,'#1e4a3f22']]);c.fillRect(M.x,M.y,M.w,M.h);}
  const mx=M.x+M.w/2,my=M.y+M.h/2;
@@ -285,18 +338,16 @@ function paintNavRaw(c,rect,map,yaw,bearing){loadImages();
  reflections(c,yaw);
  c.setTransform(1,0,0,1,0,0);c.drawImage(navCache.front,ox,oy);c.translate(ox,oy);c.scale(k,k);
  // ---- liquid ball compass in its brushed-aluminium housing, carried on a stainless arm from the plate ----
- c.save();c.shadowColor='#00000080';c.shadowBlur=6;c.shadowOffsetX=3;c.shadowOffsetY=5;
- c.fillStyle=lg(c,0,CC.y-7,0,CC.y+7,[[0,'#f4f6f7'],[.35,'#a9afb4'],[.6,'#6b7176'],[1,'#c9ced2']]);rr(c,SG.x+SG.w-4,CC.y-7,CC.x-CC.R-(SG.x+SG.w)+12,14,3);c.fill();c.restore();
+ // V142: the stainless arm is gone; the compass sits in its pod of the shared casting
  c.save();c.shadowColor='#000000b0';c.shadowBlur=14;c.shadowOffsetX=4;c.shadowOffsetY=8;c.fillStyle='#111';c.beginPath();c.arc(CC.x,CC.y,CC.R-2,0,TAU);c.fill();c.restore();
  drawBall(c,CC.x,CC.y);
  if(ok(IMG['compass-ring']))c.drawImage(IMG['compass-ring'],CC.x-CC.R,CC.y-CC.R,CC.R*2,CC.R*2);
  else{c.strokeStyle='#ccc';c.lineWidth=CC.R-WIN;c.beginPath();c.arc(CC.x,CC.y,(CC.R+WIN)/2,0,TAU);c.stroke();}
  // heading plate under the compass: 3D block numerals
  const deg=Math.round(((hdg*180/Math.PI)%360+360)%360)%360,dir=['N','NE','E','SE','S','SW','W','NW'][Math.round(deg/45)%8];
- const py=CC.y+CC.R+5,pw=112,ph2=32,px=CC.x-pw/2;c.save();c.shadowColor='#00000090';c.shadowBlur=5;c.shadowOffsetY=3;rr(c,px,py,pw,ph2,6);c.fillStyle='#16191b';c.fill();c.restore();
- rr(c,px,py,pw,ph2,6);c.fillStyle=lg(c,0,py,0,py+ph2,[[0,'#2a2f33'],[1,'#0b0d0e']]);c.fill();rr(c,px+.5,py+.5,pw-1,ph2-1,5.5);c.strokeStyle=lg(c,0,py,0,py+ph2,[[0,'#ffffff55'],[1,'#ffffff10']]);c.lineWidth=1;c.stroke();
- text3d(c,String(deg).padStart(3,'0')+'°',CC.x-6,py+ph2/2,`${(16*FK*1.0).toFixed(2)}px ${PX16}`,{align:'right'});text3d(c,dir,CC.x+8,py+ph2/2,f16(),{align:'left',top:'#ffe58a',bot:'#d9a52c',line:'#6b5418'});
- c.fillStyle=lg(c,0,py,0,py+12,[[0,'#ffffff26'],[1,'#ffffff00']]);rr(c,px+2,py+1.5,pw-4,11,5);c.fill();
+ const py=CC.y+CC.R+3,ph2=26;
+ text3d(c,String(deg).padStart(3,'0')+'°',CC.x-6,py+ph2/2,`${(16*FK).toFixed(2)}px ${PX16}`,{align:'right',top:'#eaf6ff',bot:'#8fb8d8',line:'#28445c'});text3d(c,dir,CC.x+8,py+ph2/2,f16(),{align:'left',top:'#ffe58a',bot:'#d9a52c',line:'#6b5418'});
+ c.fillStyle=lg(c,0,py,0,py+10,[[0,'#ffffff30'],[1,'#ffffff00']]);rr(c,CC.x-46,py+1.5,92,9,5);c.fill();
  c.restore();
  return Math.abs(ball.v)>.004||Math.abs(wrap(hdg-ball.h))>.003||Math.abs(ball.tv)>.004||Math.abs(ball.rv)>.004||Math.abs(ball.tilt)>.002||Math.abs(ball.roll)>.002;
 }
@@ -345,8 +396,21 @@ function l1MapPlayerRaw(c,x,z,yaw,big){const s=big?1.5:1;c.save();c.translate(x,
 // =====================================================================================================
 const DW=760,DH=316;
 const HO={cx:144,cy:180,R:96,top:96,x0:48,x1:716,y1:302,rc:30};   // V117: housing inset — gauges overhang its edge   // housing geometry
-const GA={x:144,y:180,R:114},SUB={x:244,y:82,R:44},MID={x:354,y:88,w:212,h:100,r:12},
- RAD={x:622,y:190,R:52},SIG={x:352,y:206,w:118,h:60},ICO={x:486,y:204,s:58},TUB={x:704,y:92,w:26,h:172},BADGE={x:574,y:84,w:114,h:34};
+// V142 geometry: the casting is anchored to the bottom-left screen corner (canvas x=0 / y=DH are the screen edges)
+const GA={x:126,y:188,R:110},SUB={x:262,y:72,R:40},VIS={x:288,y:120,w:252,h:118,r:40},MID={x:312,y:124,w:208,h:56,r:6},
+ RAD={x:610,y:172,R:48},SIG={x:314,y:186,w:112,h:46},ICO={x:452,y:186,s:44},TUB={x:708,y:74,w:24,h:196};
+const visor=c=>rr(c,VIS.x,VIS.y,VIS.w,VIS.h,VIS.r),tubeSlot=c=>rr(c,TUB.x-8,TUB.y-8,TUB.w+16,TUB.h+16,(TUB.w+16)/2);
+function dashPieces(g){const F=()=>g.fill();
+ g.beginPath();g.arc(GA.x,GA.y,GA.R+20,0,TAU);F();                       // speedometer pod
+ g.beginPath();g.arc(SUB.x,SUB.y,SUB.R+11,0,TAU);F();                    // m/s sub-pod
+ g.beginPath();g.moveTo(150,74);g.bezierCurveTo(190,40,230,60,232,96);g.bezierCurveTo(250,110,262,130,240,160);g.lineTo(180,160);g.closePath();F();   // web gauge → sub-pod
+ rr(g,226,98,456,190,58);F();                                            // visor spine
+ g.beginPath();g.arc(RAD.x,RAD.y,RAD.R+18,0,TAU);F();                    // radar pod
+ rr(g,688,50,64,280,32);F();                                             // hydration capsule pod
+ g.beginPath();g.moveTo(-4,232);g.lineTo(700,232);g.lineTo(700,DH+4);g.lineTo(-4,DH+4);g.closePath();F();   // base band, off the bottom edge
+ g.beginPath();g.moveTo(-4,120);g.lineTo(40,120);g.lineTo(40,DH+4);g.lineTo(-4,DH+4);g.closePath();F();     // runs off the left edge
+ g.beginPath();g.moveTo(740,236);g.bezierCurveTo(756,262,760,296,DW+4,DH+4);g.lineTo(720,DH+4);g.closePath();F();   // teardrop tail
+}
 function housePath(c,ins){const R=HO.R-ins,cx=HO.cx,cy=HO.cy,top=HO.top+ins,x0=HO.x0+ins,x1=HO.x1-ins,y1=HO.y1-ins,rc=Math.max(4,HO.rc-ins);
  const dx=Math.sqrt(Math.max(0,R*R-(cy-top)**2)),ae=Math.atan2(top-cy,dx);
  c.beginPath();c.moveTo(x0,cy);c.arc(cx,cy,R,Math.PI,TAU+ae,false);c.lineTo(x1-rc,top);c.arcTo(x1,top,x1,top+rc,rc);c.lineTo(x1,y1-rc);c.arcTo(x1,y1,x1-rc,y1,rc);
@@ -432,74 +496,37 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   S.bottles=Number(document.getElementById('bottle-count')?.textContent)||0;}
  // ---------------------------------------------------------------- static layers
  function layer(){const [c,g]=ERA.on?rcv(R.width,R.height):(()=>{const c=document.createElement('canvas');c.width=R.width;c.height=R.height;return[c,c.getContext('2d')];})();const s=S.k*S.rs;g.setTransform(s,0,0,s,0,0);return[c,g];}
- function buildStatic(){FK=1/S.k;const [bc,c]=layer(),[fc,f]=layer();
-  // shadows on the scene: wide ambient + tight contact
-  c.save();c.shadowColor='#000000a0';c.shadowBlur=22;c.shadowOffsetY=10;housePath(c,0);c.fillStyle='#000';c.fill();c.restore();
-  c.save();c.shadowColor='#000000c0';c.shadowBlur=4;c.shadowOffsetY=2;housePath(c,0);c.fillStyle='#000';c.fill();c.restore();
-  // V117 pods: the speedometer, its m/s sub-dial and the tube break out of the housing outline; each sits in its own
-  // deep black cup that throws a contact shadow onto the scene and onto the hood
-  for(const [x,y,R] of [[GA.x,GA.y,GA.R+4],[SUB.x,SUB.y,SUB.R+7]]){c.save();c.shadowColor='#000000b0';c.shadowBlur=18;c.shadowOffsetX=3;c.shadowOffsetY=9;c.fillStyle='#000';c.beginPath();c.arc(x,y,R,0,TAU);c.fill();c.restore();}
-  c.save();c.shadowColor='#000000a0';c.shadowBlur=12;c.shadowOffsetY=6;rr(c,TUB.x-11,TUB.y-12,TUB.w+22,TUB.h+24,13);c.fillStyle='#000';c.fill();c.restore();
-  // leather hood
-  c.save();housePath(c,0);c.clip();c.fillStyle=ok(IMG.leather)?c.createPattern(IMG.leather,'repeat'):'#1b1b1c';c.fillRect(0,0,DW,DH);
-  c.fillStyle=lg(c,0,HO.cy-HO.R,0,HO.y1,[[0,'#ffffff1e'],[.25,'#ffffff08'],[.6,'#00000000'],[1,'#00000070']]);c.fillRect(0,0,DW,DH);
-  // crown specular of the hood leather + rolled edge: highlight on the upper rim, darkness under the lower rim
-  c.save();c.globalCompositeOperation='screen';c.strokeStyle=lg(c,HO.cx-HO.R,0,HO.x1,0,[[0,'#ffffff00'],[.12,'#ffffff30'],[.3,'#ffffff12'],[.6,'#ffffff0a'],[1,'#ffffff00']]);c.lineWidth=5;housePath(c,4);c.stroke();c.restore();
-  c.lineWidth=7;housePath(c,1.5);c.strokeStyle=lg(c,0,HO.cy-HO.R,0,HO.y1,[[0,'#ffffff30'],[.45,'#ffffff0c'],[1,'#00000080']]);c.stroke();
-  // scuffs on the leather rim
-  c.strokeStyle='#ffffff14';c.lineWidth=.7;for(const [x,y,l,a] of [[40,90,14,.4],[230,52,10,-.3],[690,110,12,.2],[30,250,9,1.2],[600,286,16,0],[420,90,8,.1]]){c.beginPath();c.moveTo(x,y);c.lineTo(x+Math.cos(a)*l,y+Math.sin(a)*l);c.stroke();}
-  c.restore();
-  // stitching: a pressed groove + a row of slanted, shaded stitches
-  c.save();housePath(c,7.5);c.lineWidth=1.6;c.strokeStyle='#00000090';c.stroke();housePath(c,8.6);c.lineWidth=.6;c.strokeStyle='#ffffff18';c.stroke();
-  c.setLineDash([4.2,2.6]);c.lineCap='round';housePath(c,7.2);c.lineWidth=1.5;c.strokeStyle='#00000099';c.stroke();housePath(c,6.6);c.lineWidth=1.35;c.strokeStyle='#bdb5a3';c.stroke();
-  c.setLineDash([1.6,5.2]);housePath(c,6.4);c.lineWidth=.6;c.strokeStyle='#efe9da';c.stroke();c.restore();
-  // brushed-aluminium fascia set into the hood, with a chamfered edge
-  const IN=15;c.save();c.shadowColor='#000000d0';c.shadowBlur=6;c.shadowOffsetY=-1;housePath(c,IN);c.fillStyle='#777';c.fill();c.restore();
-  c.save();housePath(c,IN);c.clip();
-  if(ok(IMG.brushed))c.drawImage(IMG.brushed,0,0,DW,DW*IMG.brushed.naturalHeight/IMG.brushed.naturalWidth);else{c.fillStyle='#9a9ea3';c.fillRect(0,0,DW,DH);}
-  // the fascia is lit from above-left; the hood throws a soft shadow down onto its top
-  // titanium tone + light from above-left; the hood throws a soft shadow down onto the top of the plate
-  c.fillStyle='#2a303833';c.fillRect(0,0,DW,DH);
-  c.fillStyle=lg(c,0,HO.top,0,HO.y1,[[0,'#000000a0'],[.1,'#00000040'],[.28,'#ffffff08'],[.7,'#00000020'],[1,'#00000070']]);c.fillRect(0,0,DW,DH);
-  c.fillStyle=lg(c,0,0,DW,0,[[0,'#ffffff18'],[.5,'#00000000'],[1,'#00000030']]);c.fillRect(0,0,DW,DH);
-  // anisotropic sheen of the brushing: a soft horizontal streak of light across the plate
-  c.fillStyle=lg(c,0,150,0,250,[[0,'#ffffff00'],[.45,'#ffffff26'],[.55,'#ffffff2c'],[1,'#ffffff00']]);c.fillRect(0,150,DW,100);
-  c.restore();
-  housePath(c,IN+.6);c.lineWidth=1.2;c.strokeStyle=lg(c,0,HO.top,0,HO.y1,[[0,'#00000080'],[.6,'#ffffff30'],[1,'#ffffffa0']]);c.stroke();
-  // wells
-  for(const [x,y,R] of [[GA.x,GA.y,GA.R+4],[SUB.x,SUB.y,SUB.R+7]]){c.save();c.shadowColor='#000000c0';c.shadowBlur=10;c.shadowOffsetY=5;c.beginPath();c.arc(x,y,R,0,TAU);
-   c.fillStyle=lg(c,0,y-R,0,y+R,[[0,'#3a3e42'],[.5,'#16181a'],[1,'#050606']]);c.fill();c.restore();c.lineWidth=1;c.strokeStyle='#ffffff28';c.beginPath();c.arc(x,y,R-.5,Math.PI*1.1,Math.PI*1.9);c.stroke();}
-  rr(c,TUB.x-11,TUB.y-12,TUB.w+22,TUB.h+24,13);c.fillStyle=lg(c,TUB.x-11,0,TUB.x+TUB.w+11,0,[[0,'#2c3034'],[.5,'#121416'],[1,'#26292c']]);c.fill();
-  well(c,GA.x,GA.y,GA.R);well(c,RAD.x,RAD.y,RAD.R+3);
-  rwell(c,MID.x,MID.y,MID.w,MID.h,MID.r);rwell(c,SIG.x,SIG.y,SIG.w,SIG.h,9);rwell(c,ICO.x-6,ICO.y-6,ICO.s+12,ICO.s+12,16);rwell(c,TUB.x-7,TUB.y-8,TUB.w+14,TUB.h+16,10);
-  // printed scale beside the tube
-  for(let i=0;i<=10;i++){const yy=TUB.y+TUB.h-(TUB.h-12)*i/10;c.fillStyle='#ffffff70';c.fillRect(TUB.x+TUB.w+9,yy+.7,i%5?5:9,1);c.fillStyle='#202326';c.fillRect(TUB.x+TUB.w+9,yy,i%5?5:9,1);}
-  engrave(c,'水分',TUB.x+TUB.w/2,TUB.y+TUB.h+17,f12());
-  // engraved labels on the fascia
-  engrave(c,'SANITY 理智',SIG.x+SIG.w/2,SIG.y+SIG.h+15,f12());engrave(c,'杏仁水',ICO.x+ICO.s/2,ICO.y+ICO.s+17,f12());
-  engrave(c,'THREAT SCAN',RAD.x,RAD.y+RAD.R+16,f12());
-  // name badge: chrome-framed black plate with the 3D block LEVEL 1
-  chromeRect(c,BADGE.x,BADGE.y,BADGE.w,BADGE.h,5,2.5);rr(c,BADGE.x,BADGE.y,BADGE.w,BADGE.h,5);c.fillStyle=lg(c,0,BADGE.y,0,BADGE.y+BADGE.h,[[0,'#1d2124'],[1,'#07090a']]);c.fill();
-  blockText(c,'LEVEL 1',BADGE.x+BADGE.w/2,BADGE.y+8,18,{align:'center',shadow:'#000'});
-  // screws
-  screw(c,338,96,6,.4);screw(c,338,284,6,1.1);screw(c,600,284,6,.9);screw(c,672,128,6,.2);
-  // ---- front layer: chrome rings, glass, the one lens over everything ----
-  if(ok(IMG['gauge-ring'])){f.drawImage(IMG['gauge-ring'],RAD.x-RAD.R*1.13,RAD.y-RAD.R*1.13,RAD.R*2.26,RAD.R*2.26);}
-  else{chromeRing(f,RAD.x,RAD.y,RAD.R,5);}
-  chromeRect(f,MID.x,MID.y,MID.w,MID.h,MID.r,3);chromeRect(f,SIG.x,SIG.y,SIG.w,SIG.h,9,2.5);
-  // tube clamps
-  for(const cy of [TUB.y+6,TUB.y+TUB.h-22]){f.save();f.shadowColor='#000000a0';f.shadowBlur=4;f.shadowOffsetY=2;rr(f,TUB.x-9,cy,TUB.w+18,12,3);f.fillStyle=lg(f,0,cy,0,cy+12,[[0,'#f6f8f9'],[.4,'#9ba1a6'],[.55,'#5b6166'],[1,'#d6dadd']]);f.fill();f.restore();
-   screw(f,TUB.x-4,cy+6,3.2,cy*.1);screw(f,TUB.x+TUB.w+4,cy+6,3.2,cy*.07);}
-  // smoked lens: one broad reflection across the whole cluster (ties every instrument together), plus dust
-  f.save();housePath(f,IN);f.clip();
-  f.fillStyle=lg(f,0,HO.top,DW*.35,DH,[[0,'#ffffff2a'],[.34,'#ffffff12'],[.345,'#ffffff00'],[1,'#ffffff00']]);f.fillRect(0,0,DW,DH);
-  // the lens is curved: one long arc-shaped highlight runs over all the instruments
-  f.fillStyle=lg(f,0,HO.top,0,HO.top+70,[[0,'#ffffff00'],[.5,'#ffffff1a'],[1,'#ffffff00']]);f.beginPath();f.moveTo(20,HO.top+70);f.quadraticCurveTo(DW*.45,HO.top-30,DW-20,HO.top+40);f.lineTo(DW-20,HO.top+60);f.quadraticCurveTo(DW*.45,HO.top-2,20,HO.top+92);f.closePath();f.fill();
-  f.save();f.translate(470,0);f.transform(1,0,-.8,1,0,0);f.fillStyle=lg(f,0,0,40,0,[[0,'#ffffff00'],[.5,'#ffffff12'],[1,'#ffffff00']]);f.fillRect(0,HO.top,40,DH);f.restore();
-  if(ok(IMG.dust)){f.globalCompositeOperation='screen';f.globalAlpha=.16;f.drawImage(IMG.dust,0,HO.top-20,DW,DW*IMG.dust.naturalHeight/IMG.dust.naturalWidth);f.globalAlpha=1;f.globalCompositeOperation='source-over';}
-  f.restore();
-  // the hood's lip overhangs the lens: a thin dark line and the highlight on its roll
-  housePath(f,IN-1);f.lineWidth=2;f.strokeStyle='#00000070';f.stroke();
+ function buildStatic(){FK=1/S.k;const [bc,c]=layer(),[fc,f]=layer(),s=S.k*S.rs;
+  // V142: ONE brushed-chrome casting rising off the bottom-left screen corner: the speedometer pod, its m/s
+  // sub-pod on a short web, a long visor spine (health · sanity · almond water behind one black glass), the radar
+  // lens pod and the hydration capsule, all on a base band that runs off the bottom edge and ends in a teardrop tail.
+  shell142(c,DW,s,dashPieces,{tex:IMG.chromeDash,y0:40,y1:316,
+   pods:[{x:GA.x,y:GA.y,R:GA.R+20,conic:GA.R+2},{x:SUB.x,y:SUB.y,R:SUB.R+11,conic:SUB.R+1},{x:RAD.x,y:RAD.y,R:RAD.R+18,conic:RAD.R+3},{x:VIS.x+VIS.w/2,y:VIS.y+40,R:200}],
+   glints:[[GA.x-10,GA.y-GA.R-12,60,1.8,.6],[VIS.x+VIS.w/2,VIS.y-10,150,2,.55],[VIS.x+VIS.w/2+20,250,170,1.6,.4],[TUB.x+TUB.w/2,TUB.y-8,16,1.4,.5],[RAD.x-6,RAD.y-RAD.R-12,40,1.4,.45],[560,300,170,1.4,.3]],shadow:[5,-2,18]});
+  // wells for the round instruments, sockets for the visor glass and the tube
+  well(c,GA.x,GA.y,GA.R);well(c,SUB.x,SUB.y,SUB.R+1);well(c,RAD.x,RAD.y,RAD.R+3);
+  socket142(c,visor,VIS.y,VIS.y+VIS.h,{deep:'#010203',mid:'#071017',bot:'#0e1c26',blur:11});
+  socket142(c,tubeSlot,TUB.y-8,TUB.y+TUB.h+8,{blur:7});
+  // etched hair-line dividers on the glass (instead of a frame per widget)
+  c.fillStyle='#ffffff14';c.fillRect(MID.x,MID.y+MID.h+3,VIS.w-40,1);c.fillStyle='#00000080';c.fillRect(MID.x,MID.y+MID.h+2,VIS.w-40,1);
+  c.fillStyle='#ffffff12';c.fillRect(ICO.x-12,SIG.y+2,1,SIG.h-4);
+  // printed scale on the tube glass
+  for(let i=0;i<=10;i++){const yy=TUB.y+TUB.h-(TUB.h-14)*i/10;c.fillStyle='#ffffff60';c.fillRect(TUB.x+TUB.w-(i%5?6:10),yy,i%5?6:10,1);}
+  // engraved legends cut into the chrome
+  etch142(c,'SANITY 理智',SIG.x+SIG.w/2,VIS.y+VIS.h+15,f12());etch142(c,'杏仁水',ICO.x+ICO.s/2,VIS.y+VIS.h+15,f12());
+  etch142(c,'THREAT SCAN',RAD.x,RAD.y+RAD.R+30,f12());etch142(c,'水分',TUB.x+TUB.w/2,TUB.y+TUB.h+24,f12());
+  // the LEVEL 1 name is now block lettering standing on the base band (no separate badge frame)
+  blockText(c,'LEVEL 1',VIS.x+VIS.w/2,VIS.y+VIS.h+30,18,{align:'center',shadow:'#000'});
+  // ridge details: indicator lamps and a vent grille on the spine crown, rivets on the pods' collars
+  grille142(c,VIS.x+118,VIS.y-17,9,7,3.2,12);
+  lamp142(c,VIS.x+62,VIS.y-11,2.8,'#ffb838',1);lamp142(c,VIS.x+77,VIS.y-11,2.8,'#6fc8ff',.9);lamp142(c,VIS.x+92,VIS.y-11,2.8,'#6fc8ff',.35);
+  for(const a of [-2.35,-.6,.3]){rivet142(c,GA.x+Math.cos(a)*(GA.R+11),GA.y+Math.sin(a)*(GA.R+11),3.4);}
+  for(const a of [-1.2,2.2])rivet142(c,RAD.x+Math.cos(a)*(RAD.R+11),RAD.y+Math.sin(a)*(RAD.R+11),3);
+  // ---- front layer: the radar's chrome ring, the visor glass + bezel, the tube's chrome caps ----
+  if(ok(IMG['gauge-ring'])){f.drawImage(IMG['gauge-ring'],RAD.x-RAD.R*1.13,RAD.y-RAD.R*1.13,RAD.R*2.26,RAD.R*2.26);}else{chromeRing(f,RAD.x,RAD.y,RAD.R,5);}
+  gloss142(f,visor,VIS.x,VIS.y,VIS.x+VIS.w,VIS.y+VIS.h,.24);bezel142(f,visor,VIS.y,VIS.y+VIS.h,3.6);
+  bezel142(f,tubeSlot,TUB.y-8,TUB.y+TUB.h+8,2.6);
+  for(const cy of [TUB.y-2,TUB.y+TUB.h-14]){f.save();f.shadowColor='#000000a0';f.shadowBlur=4;f.shadowOffsetY=2;rr(f,TUB.x-7,cy,TUB.w+14,10,5);f.fillStyle=lg(f,0,cy,0,cy+10,[[0,'#f6f8f9'],[.4,'#9ba1a6'],[.55,'#5b6166'],[1,'#d6dadd']]);f.fill();f.restore();}
   stat=bc;front=fc;statKey=size+'/'+imgGen;}
  // ---------------------------------------------------------------- dynamic drawing
  function face(c,x,y,F,val,{max=100,step=20,minor=5,label='',label2='',red=null,big=true}){
@@ -508,7 +535,7 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   c.strokeStyle='#ffffff07';c.lineWidth=.6;for(let r=F*.2;r<F;r+=F*.035){c.beginPath();c.arc(x,y,r,0,TAU);c.stroke();}
   const a0=Math.PI*.75,a1=Math.PI*2.25,ang=t=>a0+(a1-a0)*t,v=clamp(val,0,1);
   c.lineCap='butt';c.lineWidth=F*.06;c.strokeStyle='#ffffff0d';c.beginPath();c.arc(x,y,F*.9,a0,a1);c.stroke();
-  if(v>.002){const g=c.createConicGradient?c.createConicGradient(a0,x,y):null;if(g){g.addColorStop(0,'#ff3b2a');g.addColorStop(.16,'#ffb62a');g.addColorStop(.4,'#b8f04a');g.addColorStop(.75,'#3fe0ff');g.addColorStop(1,'#3fe0ff');}
+  if(v>.002){const g=c.createConicGradient?c.createConicGradient(a0,x,y):null;if(g){g.addColorStop(0,'#ff3b2a');g.addColorStop(.16,'#ffb62a');g.addColorStop(.4,'#f2f6ff');g.addColorStop(.75,'#3fe0ff');g.addColorStop(1,'#3fe0ff');}
    c.save();c.shadowColor=v<.2?'#ff4020':'#5ff0ff';c.shadowBlur=F*.14;c.strokeStyle=g||'#5ff0ff';c.beginPath();c.arc(x,y,F*.9,a0,ang(v));c.stroke();c.restore();}
   if(red!=null){c.strokeStyle='#d8261c';c.lineWidth=F*.045;c.beginPath();c.arc(x,y,F*.79,a0,ang(red));c.stroke();}
   for(let t=0;t<=max+1e-6;t+=minor){const a=ang(t/max),major=Math.abs(t%step)<1e-6,r0=F*(major?.7:.75),r1=F*.83;c.strokeStyle=major?'#f4f4f4':'#8f969c';c.lineWidth=major?F*.024:F*.012;c.beginPath();c.moveTo(x+Math.cos(a)*r0,y+Math.sin(a)*r0);c.lineTo(x+Math.cos(a)*r1,y+Math.sin(a)*r1);c.stroke();
@@ -534,45 +561,41 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   if(ok(IMG['gauge-ring']))c.drawImage(IMG['gauge-ring'],SUB.x-SUB.R*1.13,SUB.y-SUB.R*1.13,SUB.R*2.26,SUB.R*2.26);else chromeRing(c,SUB.x,SUB.y,SUB.R,5);
   drawMID(c);drawSignal(c);drawRadar(c);drawTube(c);drawIcon(c);
   c.setTransform(1,0,0,1,0,0);c.drawImage(front,0,0);if(R!==cvs){pipe.submit(R);if(!pipe.out){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cvs.width,cvs.height);upscale(ctx,R,0,0,cvs.width,cvs.height);}}}
- function drawMID(c){const {x,y,w,h,r}=MID;c.save();rr(c,x,y,w,h,r);c.clip();
-  // black glass display with a faint blue backlight bloom
-  c.fillStyle=rg(c,x+w*.4,y+h*.55,4,x+w*.4,y+h*.55,w*.7,[[0,'#13202a'],[1,'#030506']]);c.fillRect(x,y,w,h);
-  const b=S.bat,bx=x+10,by=y+28,bw=84,bh=46,br=10,fl=b.flash>0?Math.pow(Math.abs(Math.sin((1-b.flash)*Math.PI*4.5)),.7)*b.flash:0;
-  text(c,'HEALTH 生命',x+14,y+11,f12(),'#9fb6c4',null,'left');
+ function drawMID(c){const {x,y,w,h,r}=MID;c.save();rr(c,x-6,y-4,w+12,h+8,r);c.clip();
+  const b=S.bat,bx=x+4,by=y+14,bw=80,bh=38,br=9,fl=b.flash>0?Math.pow(Math.abs(Math.sin((1-b.flash)*Math.PI*4.5)),.7)*b.flash:0;
+  text(c,'HEALTH 生命',x+6,y+6,f12(),'#9fb6c4',null,'left');
   // iPhone OS 1 battery: glossy silver shell
   rr(c,bx,by,bw,bh,br);c.fillStyle=lg(c,0,by,0,by+bh,[[0,'#ffffff'],[.45,'#d8dce0'],[.55,'#a9b0b7'],[1,'#e9ecef']]);c.fill();
   c.fillStyle=lg(c,0,by+bh*.3,0,by+bh*.7,[[0,'#f4f6f8'],[.5,'#a2a9b0'],[1,'#e2e5e8']]);rr(c,bx+bw-1,by+bh*.3,9,bh*.4,3);c.fill();
   const ix=bx+5,iy=by+5,iw=bw-10,ih=bh-10,ir=br-4;rr(c,ix,iy,iw,ih,ir);c.fillStyle=lg(c,0,iy,0,iy+ih,[[0,'#16181b'],[.5,'#2b2f33'],[1,'#3a3e43']]);c.fill();
   c.save();rr(c,ix,iy,iw,ih,ir);c.clip();
-  const low=b.lvl<.22,top=low?'#ff8a7a':'#a6f56a',mid=low?'#e0261a':'#4fd12a',bot=low?'#8a0f08':'#1f8a14';
-  if(b.ghost>b.lvl+.004){const gx=ix+iw*b.ghost;c.fillStyle=low?'#e0261a40':'#62d83a42';c.fillRect(ix,iy,gx-ix,ih);for(let i=0;i<5;i++){const dx=ix+iw*(b.lvl+(b.ghost-b.lvl)*(i+.5)/5);c.fillStyle=low?'#ff6a5050':'#8cf06055';c.fillRect(dx-1,iy+ih*.55,2,ih*.45*(.5+.5*Math.sin(i*2.3+S.t)));}}
+  const low=b.lvl<.22,top=low?'#ff8a7a':'#c4f0ff',mid=low?'#e0261a':'#3fb2ee',bot=low?'#8a0f08':'#135f90';
+  if(b.ghost>b.lvl+.004){const gx=ix+iw*b.ghost;c.fillStyle=low?'#e0261a40':'#3fb2ee42';c.fillRect(ix,iy,gx-ix,ih);for(let i=0;i<5;i++){const dx=ix+iw*(b.lvl+(b.ghost-b.lvl)*(i+.5)/5);c.fillStyle=low?'#ff6a5050':'#8cd8ff55';c.fillRect(dx-1,iy+ih*.55,2,ih*.45*(.5+.5*Math.sin(i*2.3+S.t)));}}
   const fx=ix+iw*clamp(b.lvl,0,1),wv=b.wave*6;c.beginPath();c.moveTo(ix-2,iy-2);
   for(let i=0;i<=12;i++){const yy=iy-2+(ih+4)*i/12,bulge=Math.sin(i/12*Math.PI)*3,sl=Math.sin(i/12*Math.PI*2+S.t*3)*wv;c.lineTo(fx+bulge+sl,yy);}c.lineTo(ix-2,iy+ih+2);c.closePath();
   c.fillStyle=lg(c,0,iy,0,iy+ih,[[0,top],[.48,mid],[1,bot]]);c.fill();
   c.save();c.clip();c.fillStyle=lg(c,0,iy,0,iy+ih*.5,[[0,'#ffffffd0'],[1,'#ffffff20']]);rr(c,ix+3,iy+2,Math.max(0,fx-ix-4),ih*.46,ir-2);c.fill();
-  c.fillStyle=lg(c,0,iy+ih*.6,0,iy+ih,[[0,'#ffffff00'],[1,low?'#ffb0a060':'#d6ff9a70']]);c.fillRect(ix,iy+ih*.6,fx-ix,ih*.4);c.restore();c.restore();
+  c.fillStyle=lg(c,0,iy+ih*.6,0,iy+ih,[[0,'#ffffff00'],[1,low?'#ffb0a060':'#d0f2ff70']]);c.fillRect(ix,iy+ih*.6,fx-ix,ih*.4);c.restore();c.restore();
   c.fillStyle=lg(c,0,iy,0,iy+ih*.45,[[0,'#ffffff55'],[1,'#ffffff00']]);rr(c,ix+2,iy+1,iw-4,ih*.42,ir-1);c.fill();rr(c,ix,iy,iw,ih,ir);c.strokeStyle='#00000080';c.lineWidth=1.2;c.stroke();
   if(fl>.01){c.save();c.shadowColor='#ff1a0a';c.shadowBlur=14*fl;rr(c,bx-1,by-1,bw+2,bh+2,br+1);c.strokeStyle=`rgba(255,40,24,${.95*fl})`;c.lineWidth=3;c.stroke();rr(c,bx+bw-1,by+bh*.3,9,bh*.4,3);c.stroke();c.restore();}
   // health readout in 3D block numerals (reflection of the battery on the glass below it)
-  const hp=Math.round(S.shown[2]);text3d(c,String(hp),x+w-14,y+52,`${(32*FK).toFixed(2)}px ${PX16}`,low?{align:'right',top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20'}:{align:'right',top:'#eaffd8',bot:'#7fc85a',line:'#1f5a14'});
-  // screen glass: top gloss band
-  c.fillStyle=lg(c,0,y,0,y+h*.5,[[0,'#ffffff24'],[1,'#ffffff00']]);c.beginPath();c.moveTo(x,y);c.lineTo(x+w,y);c.lineTo(x+w,y+h*.28);c.quadraticCurveTo(x+w*.5,y+h*.5,x,y+h*.42);c.closePath();c.fill();
+  const hp=Math.round(S.shown[2]);text3d(c,String(hp),x+w-6,y+33,`${(32*FK).toFixed(2)}px ${PX16}`,low?{align:'right',top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20'}:{align:'right',top:'#eaf7ff',bot:'#7fbfe6',line:'#1c4560'});
   c.restore();}
- function drawSignal(c){const {x,y,w,h}=SIG,san=S.shown[3],lit=Math.ceil(san/20-.001),col=san>60?['#c8ff8a','#46d21e','#1c7a0a']:san>30?['#ffe08a','#f0a81e','#8a5a08']:['#ffa08a','#e8321e','#7a1208'];
-  c.save();rr(c,x,y,w,h,9);c.clip();c.fillStyle=lg(c,0,y,0,y+h,[[0,'#0c0e0f'],[1,'#1d2124']]);c.fillRect(x,y,w,h);
-  const bx=x+10,by=y+h-8;for(let i=0;i<5;i++){const bw=10,bh=10+i*9.5,X=bx+i*13,Y=by-bh;
+ function drawSignal(c){const {x,y,w,h}=SIG,san=S.shown[3],lit=Math.ceil(san/20-.001),col=san>60?['#c4f0ff','#3fb2ee','#135f90']:san>30?['#ffe08a','#f0a81e','#8a5a08']:['#ffa08a','#e8321e','#7a1208'];
+  c.save();
+  const bx=x+4,by=y+h-3;for(let i=0;i<5;i++){const bw=10,bh=8+i*8.2,X=bx+i*13,Y=by-bh;
    rr(c,X-1,Y-1,bw+2,bh+2,2.5);c.fillStyle='#000';c.fill();rr(c,X,Y+1,bw,bh,2);c.fillStyle='#ffffff14';c.fill();
    rr(c,X,Y,bw,bh,2);c.fillStyle=i<lit?lg(c,X,0,X+bw,0,[[0,col[0]],[.5,col[1]],[1,col[2]]]):lg(c,0,Y,0,Y+bh,[[0,'#2a2e31'],[1,'#17191b']]);c.fill();
    if(i<lit){c.fillStyle='#ffffff70';rr(c,X+1,Y+1,bw*.45,bh-2,1.5);c.fill();c.save();c.shadowColor=col[1];c.shadowBlur=6;c.fillStyle=col[1]+'40';c.fillRect(X,Y,bw,bh);c.restore();}}
-  text(c,'3G',x+w-14,y+12,f12(),col[1],null);text3d(c,String(Math.round(san)),x+w-10,y+h-20,f16(),{align:'right',...(san<=30?{top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20'}:{})});
-  c.fillStyle=lg(c,0,y,0,y+h*.45,[[0,'#ffffff1c'],[1,'#ffffff00']]);c.fillRect(x,y,w,h*.45);c.restore();}
+  text(c,'3G',x+w-12,y+8,f12(),col[1],null);text3d(c,String(Math.round(san)),x+w-6,y+h-13,f16(),{align:'right',...(san<=30?{top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20'}:{})});
+  c.restore();}
  function drawRadar(c){const {x:cx0,y:cy0,R}=RAD,r=S.radar;
-  c.fillStyle=rg(c,cx0,cy0,2,cx0,cy0,R,[[0,'#125a22'],[.7,'#062a0e'],[1,'#010c03']]);c.beginPath();c.arc(cx0,cy0,R,0,TAU);c.fill();
+  c.fillStyle=rg(c,cx0,cy0,2,cx0,cy0,R,[[0,'#0f3a58'],[.7,'#061b2c'],[1,'#01060c']]);c.beginPath();c.arc(cx0,cy0,R,0,TAU);c.fill();
   c.save();c.beginPath();c.arc(cx0,cy0,R,0,TAU);c.clip();
-  c.strokeStyle='#3cff6a40';c.lineWidth=1;for(const f of [.33,.66,1]){c.beginPath();c.arc(cx0,cy0,R*f-1,0,TAU);c.stroke();}c.beginPath();c.moveTo(cx0-R,cy0);c.lineTo(cx0+R,cy0);c.moveTo(cx0,cy0-R);c.lineTo(cx0,cy0+R);c.stroke();
-  if(c.createConicGradient){const sg=c.createConicGradient(r.a-1.6,cx0,cy0);sg.addColorStop(0,'#00ff5000');sg.addColorStop(.25,'#2cff6a70');sg.addColorStop(.2551,'#00ff5000');sg.addColorStop(1,'#00ff5000');c.fillStyle=sg;c.fillRect(cx0-R,cy0-R,R*2,R*2);}
-  c.strokeStyle='#9dffb0';c.lineWidth=1.5;c.shadowColor='#3cff6a';c.shadowBlur=6;c.beginPath();c.moveTo(cx0,cy0);c.lineTo(cx0+Math.cos(r.a-1.6+TAU*.25)*R,cy0+Math.sin(r.a-1.6+TAU*.25)*R);c.stroke();
-  for(const p of r.blips){if(p.life<=0)continue;const px=cx0+Math.cos(p.a-1.6+TAU*.25)*R*p.d,py=cy0+Math.sin(p.a-1.6+TAU*.25)*R*p.d,red=S.shown[3]<35;c.fillStyle=red?`rgba(255,120,80,${p.life})`:`rgba(170,255,180,${p.life})`;c.shadowColor=red?'#ff5030':'#3cff6a';c.shadowBlur=8;c.beginPath();c.arc(px,py,2.4,0,TAU);c.fill();}
+  c.strokeStyle='#6fcaff40';c.lineWidth=1;for(const f of [.33,.66,1]){c.beginPath();c.arc(cx0,cy0,R*f-1,0,TAU);c.stroke();}c.beginPath();c.moveTo(cx0-R,cy0);c.lineTo(cx0+R,cy0);c.moveTo(cx0,cy0-R);c.lineTo(cx0,cy0+R);c.stroke();
+  if(c.createConicGradient){const sg=c.createConicGradient(r.a-1.6,cx0,cy0);sg.addColorStop(0,'#2aa8ff00');sg.addColorStop(.25,'#5cc4ff70');sg.addColorStop(.2551,'#2aa8ff00');sg.addColorStop(1,'#2aa8ff00');c.fillStyle=sg;c.fillRect(cx0-R,cy0-R,R*2,R*2);}
+  c.strokeStyle='#c8ecff';c.lineWidth=1.5;c.shadowColor='#4fbaff';c.shadowBlur=6;c.beginPath();c.moveTo(cx0,cy0);c.lineTo(cx0+Math.cos(r.a-1.6+TAU*.25)*R,cy0+Math.sin(r.a-1.6+TAU*.25)*R);c.stroke();
+  for(const p of r.blips){if(p.life<=0)continue;const px=cx0+Math.cos(p.a-1.6+TAU*.25)*R*p.d,py=cy0+Math.sin(p.a-1.6+TAU*.25)*R*p.d,red=S.shown[3]<35;c.fillStyle=red?`rgba(255,120,80,${p.life})`:`rgba(200,236,255,${p.life})`;c.shadowColor=red?'#ff5030':'#4fbaff';c.shadowBlur=8;c.beginPath();c.arc(px,py,2.4,0,TAU);c.fill();}
   c.shadowBlur=0;c.restore();dome(c,cx0,cy0,R);}
  function drawTube(c){const t=S.tube,{x,y,w,h}=TUB,cxm=x+w/2;
   const shape=()=>{c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h-w/2);c.arc(cxm,y+h-w/2,w/2,Math.PI,0,true);c.lineTo(x+w,y);c.closePath();};
