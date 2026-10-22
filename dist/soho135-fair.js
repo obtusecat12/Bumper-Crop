@@ -6,6 +6,8 @@
 // (art-v135stall -> bc/tools/stall135_assets.py -> assets/l11-v135s/stalls.webp, 4x4 atlas); three builds: wooden food
 // booth, pop-up tent, tent with a tall banner on poles (the reference's Crêpes stand). Goods/grills/coolers are real boxes.
 import * as T from './vendor/three.module.min.js';
+import {URBAN_TILE_SIZE} from './urban-materials.js?v=60';
+import {fair141On,canvas141,goods141,table141,isFood141} from './fair141.js?v=141i';   // V141 F5a modelled food goods + draped tables
 const A=new URL('./assets/l11-v135s/',import.meta.url).href;
 // sign aspect (h/w of the cropped sign) printed by stall135_assets.py, atlas order
 const ASP=[0.2035,0.4936,0.2009,0.2071,0.2649,0.1944,0.1734,0.1984,0.2051,0.1795,0.2095,0.1701,0.2127,0.4773,0.2045,0.1816];
@@ -25,7 +27,7 @@ export function addFairMaterials(m){
  m.fairSign=new T.MeshStandardMaterial({map:tex('stalls'),roughness:.9,vertexColors:true});
  m.fairBarrier=new T.MeshStandardMaterial({map:tex('barrier'),roughness:.8,vertexColors:true});
  m.fairBlue=new T.MeshStandardMaterial({color:0x1f3f8c,roughness:.75,vertexColors:true});
- CANVAS.forEach((c,i)=>m['fairCv'+i]=new T.MeshStandardMaterial({color:c,roughness:.93,vertexColors:true,side:T.DoubleSide}));
+ const cv=fair141On()?canvas141():{};CANVAS.forEach((c,i)=>{m['fairCv'+i]=new T.MeshStandardMaterial({color:c,roughness:.93,vertexColors:true,side:T.DoubleSide,...cv});if(cv.map)URBAN_TILE_SIZE['fairCv'+i]=1.1;});
  GOODS.forEach((c,i)=>m['fairGd'+i]=new T.MeshStandardMaterial({color:c,roughness:.8,vertexColors:true}));
  m.fairWood=new T.MeshStandardMaterial({color:0xe9e3d3,roughness:.88,vertexColors:true});
  m.fairSteel=new T.MeshStandardMaterial({color:0x9a9ea2,roughness:.45,metalness:.55,vertexColors:true});
@@ -41,7 +43,7 @@ const signUV=i=>{const c=i%4,r=i>>2,e=.5/1024;return[c/4+e,1-(r+1)/4+.5/512,(c+1
 // sign i, width w, bottom edge y0, at local z, facing +z; plain canvas back
 function sign(b,i,w,y0,z,back){const h=w*ASP[i],x=w/2;quad(b,'fairSign',[[-x,y0,z],[x,y0,z],[x,y0+h,z],[-x,y0+h,z]],signUV(i),[0,0,1]);
  quad(b,back,[[x,y0,z-.01],[-x,y0,z-.01],[-x,y0+h,z-.01],[x,y0+h,z-.01]],[0,0,1,1],[0,0,-1],.8);return h;}
-function goods(b,kind,w,z,seed,top=.78){const r=n=>H(seed,n);
+function goods(b,kind,w,z,seed,top=.78){if(fair141On()&&isFood141(kind))return goods141(b,kind,w,z,seed,top);const r=n=>H(seed,n);
  if(kind==='grill'){b.box('fairDark',-w*.18,top+.12,z-.05,w*.42,.24,.6);for(let i=0;i<7;i++)b.box('fairGd'+(i%2?6:0),-w*.36+i*w*.06,top+.255,z-.05+(r(i)-.5)*.3,.05,.04,.42,0,.9);
   b.cylinder('fairSteel',w*.2,top+.14,z,.16,.16,.28,10);b.cylinder('fairSteel',w*.32,top+.11,z+.05,.13,.13,.22,10);b.cylinder('fairGd3',-w*.4,.42,z-1.3,.18,.18,.84,10);}
  else if(kind==='steam'){for(let i=0;i<3;i++)for(let j=0;j<1+(i!==1);j++)b.cylinder('fairGd6',-w*.3+i*.55,top+.08+j*.16,z,.24,.24,.15,12,0,0,.8+j*.1);b.box('fairSteel',w*.2,top+.2,z,.9,.4,.5);}
@@ -56,21 +58,21 @@ function goods(b,kind,w,z,seed,top=.78){const r=n=>H(seed,n);
  else if(kind==='chairs'){for(const s of[-1,1]){b.box('fairDark',s*.6,.45,z-1.0,.42,.05,.42);b.box('fairDark',s*.6,.7,z-1.2,.42,.5,.04);for(const q of[[-.18,-.18],[.18,-.18],[-.18,.18],[.18,.18]])b.box('fairSteel',s*.6+q[0],.22,z-1.0+q[1],.03,.44,.03);}
   for(let i=0;i<5;i++)b.cylinder('fairGd'+[6,0,3,2,1][i],-w*.3+i*.14,top+.06,z+.1,.035,.035,.12,6);}
 }
-function table(b,w,z,cv){b.box(cv,0,.39,z,w-.35,.78,.72,0,.95);b.box('fairWood',0,.79,z,w-.3,.03,.78,0,.9);}
+function table(b,w,z,cv,seed=0){if(fair141On())return table141(b,w,z,seed,[cv,'fairGing141','fairGingB141'][seed%3]);b.box(cv,0,.39,z,w-.35,.78,.72,0,.95);b.box('fairWood',0,.79,z,w-.3,.03,.78,0,.9);}
 // pop-up tent: four legs, pyramid roof, valance, sign hanging under the front valance
 function tent(b,s,i,seed){const w=s.w,d=DEPTH,cv='fairCv'+s.c,hl=2.35;
  for(const[x,z]of[[-w/2,-d/2],[w/2,-d/2],[w/2,d/2],[-w/2,d/2]])b.box('fairSteel',x,hl/2,z,.05,hl,.05);
- const roof=new T.ConeGeometry(Math.SQRT1_2,1,4,1,true);roof.rotateY(Math.PI/4);b.add(roof,cv,0,hl+.32,0,w*1.02,.64,d*1.02);roof.dispose();
+ const roof=new T.ConeGeometry(Math.SQRT1_2,1,4,1,true);roof.rotateY(Math.PI/4);if(fair141On())roof.deleteAttribute('uv');b.add(roof,cv,0,hl+.32,0,w*1.02,.64,d*1.02);roof.dispose();
  for(const[x,z,ww,dd]of[[0,d/2,w,.02],[0,-d/2,w,.02],[w/2,0,.02,d],[-w/2,0,.02,d]])b.box(cv,x,hl-.1,z,ww+.02,.22,dd+.02,0,.9);
  if(seed%3)b.box(cv,0,hl/2+.1,-d/2+.02,w,hl-.2,.02,0,.8);   // back wall on two of three
- const sw=w-.1,sh=sw*ASP[i];sign(b,i,sw,hl-.2-sh,d/2+.03,cv);table(b,w,d/2-.55,'fairCv'+((s.c+3)%7));goods(b,s.g,w,d/2-.55,seed);b.solid(0,0,w,d);}
+ const sw=w-.1,sh=sw*ASP[i];sign(b,i,sw,hl-.2-sh,d/2+.03,cv);table(b,w,d/2-.55,'fairCv'+((s.c+3)%7),seed);goods(b,s.g,w,d/2-.55,seed);b.solid(0,0,w,d);}
 // tent with a tall banner on two poles above the front (the Crêpes / Smoothies stand)
 function banner(b,s,i,seed){const w=s.w,d=DEPTH,cv='fairCv'+s.c,hl=2.35;
  for(const[x,z]of[[-w/2,-d/2],[w/2,-d/2],[w/2,d/2],[-w/2,d/2]])b.box('fairSteel',x,hl/2,z,.05,hl,.05);
- const roof=new T.ConeGeometry(Math.SQRT1_2,1,4,1,true);roof.rotateY(Math.PI/4);b.add(roof,cv,0,hl+.3,0,w*1.02,.6,d*1.02);roof.dispose();
+ const roof=new T.ConeGeometry(Math.SQRT1_2,1,4,1,true);roof.rotateY(Math.PI/4);if(fair141On())roof.deleteAttribute('uv');b.add(roof,cv,0,hl+.3,0,w*1.02,.6,d*1.02);roof.dispose();
  for(const[x,z,ww,dd]of[[0,d/2,w,.02],[0,-d/2,w,.02],[w/2,0,.02,d],[-w/2,0,.02,d]])b.box(cv,x,hl-.1,z,ww+.02,.22,dd+.02,0,.9);
  const bw=w*.95,bh=bw*ASP[i],y0=hl+.75;for(const x of[-bw/2-.03,bw/2+.03])b.box('fairSteel',x,(y0+bh+.1)/2,d/2+.08,.05,y0+bh+.1,.05);
- sign(b,i,bw,y0,d/2+.08,cv);table(b,w,d/2-.55,'fairCv'+((s.c+4)%7));goods(b,s.g,w,d/2-.55,seed);b.solid(0,0,w,d);}
+ sign(b,i,bw,y0,d/2+.08,cv);table(b,w,d/2-.55,'fairCv'+((s.c+4)%7),seed);goods(b,s.g,w,d/2-.55,seed);b.solid(0,0,w,d);}
 // wooden food booth: counter, back/side walls, front posts, roof (flat or gabled), sign band above the opening
 function booth(b,s,i,seed){const w=s.w,d=DEPTH-.3,cv='fairCv'+s.c,hc=1.05,hw=2.3;
  b.box('fairWood',0,hc/2,d/2-.25,w,hc,.5);b.box(cv,0,hc+.02,d/2-.2,w+.1,.04,.66,0,.9);
