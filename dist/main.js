@@ -1,7 +1,7 @@
 import {inManila,nearManila} from './manila-plan.js';
 import {keys131 as K131} from './keys131.js?v=131';
 import {createLevel0World} from './level0-world.js?v=133a';
-import {createNoclip130} from './level0-noclip130.js?v=130'; // V130-D noclip 0->1
+import {createNoclip130} from './level0-noclip130.js?v=143'; // V130-D noclip 0->1
 import {makeAlmondBottle} from './almond-water-assets.js?v=60';
 import {L0_CHUNK,l0Hash,L0_SPAWN_INDEX} from './level0-layout.js?v=119';
 import {initializeOutpostTextures,attachOutpostGround} from './lake-outpost-materials.js';

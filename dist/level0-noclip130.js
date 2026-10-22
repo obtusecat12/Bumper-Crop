@@ -44,6 +44,8 @@ void main(){vec3 N=normalize(vN),n=abs(N);vec2 uv=n.y>.6?vW.xz:(n.x>n.z?vW.zy:vW
  vec3 c=t*uTint*(.12+.55*rim*rim)*scan+seam*.45*vec3(.85,.92,1.)*(.3+.7*rim);
  gl_FragColor=vec4(c*uAlpha*fall,1.);}`;
 
+import {createRush143} from './level0-noclip143.js?v=143';
+const NC4D=!/[?&]nc4d=0\b/.test(globalThis.location?.search||''); // V143 4D space; ?nc4d=0 = V130-D rush
 export function createNoclip130({T,renderer,camera,displayFilter,audio,toast,zero,one,state,feet,enterOne,keys}){
  let wander=0,threshold=WANDER_MIN+Math.random()*WANDER_SPAN,searchCool=0,patch=null,touch=0,hinted=false,forced=false;
  let active=false,t=0,last=0,pin=null,skipReq=false,loadP=null,loaded=false,failed=false,origRender=null,rushEnd=RUSH_MIN,emergeT=-1;
@@ -142,7 +144,8 @@ export function createNoclip130({T,renderer,camera,displayFilter,audio,toast,zer
   displayFilter.render(s,camera,now);}
 
  // ---------- the 4D rush ----------
- function buildRush(){const scene=new T.Scene();scene.background=new T.Color(0);const cam=new T.PerspectiveCamera(70,camera.aspect||1.6,.05,400);
+ function buildRush(){if(NC4D){const R=createRush143(T,{l0Map:wallMap(),l1Url:new URL('./assets/level1/wall.webp',import.meta.url).href});return{v143:true,R,objs:[],src:'v143'};}
+  const scene=new T.Scene();scene.background=new T.Color(0);const cam=new T.PerspectiveCamera(70,camera.aspect||1.6,.05,400);
   const pts=[];for(let i=0;i<14;i++){const a=i/14*Math.PI*2;pts.push(new T.Vector3(Math.cos(a)*70+Math.sin(a*3)*18,Math.sin(a*2)*22+Math.cos(a*5)*8,Math.sin(a)*55+Math.cos(a*2)*20));}
   const path=new T.CatmullRomCurve3(pts,true,'catmullrom',.5);
   const map=wallMap(),zw=zero(),objs=[];
@@ -165,7 +168,8 @@ export function createNoclip130({T,renderer,camera,displayFilter,audio,toast,zer
   for(let i=0;i<N;i++){const c=pal[i%5];tint.set(c,i*3);meta.push({u:-.02+rnd()*.1,r:2.5+rnd()*12,a:rnd()*6.28,va:(rnd()-.5)*.25,rot:new T.Euler(rnd()*6,rnd()*6,rnd()*6),vr:(rnd()-.5)*.5,du:rnd()*.004});}
   pg.setAttribute('tint',new T.InstancedBufferAttribute(tint,3));panels.frustumCulled=false;scene.add(panels);
   return{src:srcs.length+'/'+picked.length+'/'+(srcs[0]?srcs[0].geometry.attributes.position.count:0),scene,cam,path,objs,panels,meta,pm,u:0,m4:new T.Matrix4(),q:new T.Quaternion(),p:new T.Vector3(),s:new T.Vector3(1,1,1),up:new T.Vector3(0,1,0),fr:new T.Matrix4()};}
- function rushFrame(now,dt){const R=rush,u=t-FALL;R.cam.aspect=camera.aspect||R.cam.aspect;
+ function rushFrame(now,dt){if(rush.v143){const u=t-FALL;rush.R.update(u,dt,u/(RUSH_MIN-FALL),camera.aspect);rush.R.render(renderer);return;}
+  const R=rush,u=t-FALL;R.cam.aspect=camera.aspect||R.cam.aspect;
   // slow motion: the track creeps, the world swings past — a little faster in the middle
   const speed=.0045+.0055*Math.sin(Math.min(1,u/6)*Math.PI);R.u=(R.u+dt*speed)%1;
   const p=R.path.getPointAt(R.u),q=R.path.getPointAt((R.u+.004)%1),tan=q.clone().sub(p).normalize(),p2=R.path.getPointAt((R.u+.012)%1).sub(q).normalize();
@@ -192,6 +196,7 @@ export function createNoclip130({T,renderer,camera,displayFilter,audio,toast,zer
   displayFilter.render=function(scene,view,now,before,skip){const r=origRender.call(displayFilter,scene,view,now,before,skip);if(active&&rush&&emergeT<0&&scene!==rush.scene){try{rushFrame(now,0);}catch{}}return r;};
   rushSound();loadP=Promise.resolve().then(()=>enterOne()).then(()=>{loaded=state.level===1;if(!loaded)failed=true;},err=>{console.error('noclip130 load',err);failed=true;});}
  function finish(ok=true){const o=one();if(o?.scene)o.scene.overrideMaterial=null;if(origRender){displayFilter.render=origRender;origRender=null;}
+  if(rush?.v143){rush.R.dispose();rush=null;}
   if(rush){rush.panels.geometry.dispose();rush.pm.dispose();rush.objs.forEach(h=>h.userData.inner.children[0].material.dispose());rush=null;}
   if(base?.oneCam){camera.position.copy(base.oneCam.pos);camera.quaternion.copy(base.oneCam.quat);camera.fov=base.oneCam.fov;camera.updateProjectionMatrix();}
   ghostMat.uniforms.uTint.value.setRGB(1,.93,.6);if(saved)restoreZero();
