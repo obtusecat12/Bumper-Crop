@@ -11,6 +11,8 @@ import {GEO as A1} from './soho141-a1.js?v=141b';import {GEO as A2} from './soho
 import {GEO as B0} from './soho141-b0.js?v=141c';import {GEO as B1} from './soho141-b1.js?v=141c';import {GEO as B2} from './soho141-b2.js?v=141c';import {GEO as B3} from './soho141-b3.js?v=141c';
 import {GEO as C0} from './soho141-c0.js?v=141d';import {GEO as C1} from './soho141-c1.js?v=141d';import {GEO as C2} from './soho141-c2.js?v=141d';import {GEO as C3} from './soho141-c3.js?v=141d';import {GEO as C4} from './soho141-c4.js?v=141d';
 import {GEO as D0} from './soho141-d0.js?v=141e';import {GEO as D1} from './soho141-d1.js?v=141e';import {GEO as D2} from './soho141-d2.js?v=141e';import {GEO as D3} from './soho141-d3.js?v=141e';import {GEO as D4} from './soho141-d4.js?v=141e';
+import {GEO as SA3} from './soho141-sa3.js?v=141f';import {GEO as SA4} from './soho141-sa4.js?v=141f';import {GEO as SB0} from './soho141-sb0.js?v=141f';import {GEO as SB3} from './soho141-sb3.js?v=141f';
+import {GEO as SC4} from './soho141-sc4.js?v=141f';import {GEO as SC2} from './soho141-sc2.js?v=141f';import {GEO as SD1} from './soho141-sd1.js?v=141f';import {GEO as SD3} from './soho141-sd3.js?v=141f';
 const A=new URL('./assets/l11-v141/',import.meta.url).href;
 // per facade: baked low-poly + blueprint px grid (photo 750 x 1358 px) for the separate fire escape / awnings
 export const SOHO141={
@@ -37,6 +39,17 @@ export const SOHO141={
  d2:{geo:D2,px:[828,1247],fe:{x0:167,x1:455,levels:[922,724,532,340]}},
  d3:{geo:D3,px:[828,1247],awn:{bays:[[15,325],[350,488],[512,822]],top:975}},
  d4:{geo:D4,px:[750,1339],fe:{x0:170,x1:480,levels:[928,675,465,288]}}};
+// V141 F3: the 8 corner side elevations (bc/scripts/facade141/sides141.py blueprints, same build141/cook141 pipeline). Low-poly
+// frame: x along the side wall (17 m = lot depth, image left = street end for cs=+1; cs=-1 blueprints are rolled so their
+// street-end part sits at the image's right = street end once the wall is turned to face -x), y up, z out of the wall.
+export const SIDE141={a3:SA3,a4:SA4,b0:SB0,b3:SB3,c4:SC4,c2:SC2,d1:SD1,d3:SD3};
+// d3's café side has a striped awning over its shopfront (photo px of its 832 x 1250 blueprint)
+const SIDE141AWN={d3:{px:[832,1250],awn:{bays:[[18,332]],top:940}}};
+export function soho141Side(b,spec,lod,fkey,cs){const w=spec.w,d=spec.d,H=spec.soho135.H,key='s'+fkey,G=SIDE141[fkey];
+ addSoho141Materials(b.mats,key);const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(G.pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(G.uv,2));g.setAttribute('normal',new T.Float32BufferAttribute(G.nrm,3));
+ b.add(g,'soho141'+key,cs*w/2,0,0,1,1,1,cs*Math.PI/2);g.dispose();
+ const A=SIDE141AWN[fkey];if(lod||!A)return;const[PW,PH]=A.px;b.push(cs*w/2,0,0,cs*Math.PI/2);awnings141(b,A.awn,p=>p/PW*d-d/2,p=>(PH-p)/PH*H,0);b.pop();
+}
 export function soho141On(){return !/[?&]fac141=0\b/.test(globalThis.location?.search||'');}
 function tex(name,srgb=true,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v=141b');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 export function addSoho141Materials(m,key){
