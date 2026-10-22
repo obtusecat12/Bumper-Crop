@@ -6,6 +6,7 @@
 // storefront awnings (sloped canvas, valance, side panels, iron arms + front bar), all placed on the photo's own px grid.
 // Built into the block's UrbanBatch by soho135-street.js. Off: ?fac141=0 (old flat photo quad).
 import * as T from './vendor/three.module.min.js';
+import {awnStripe141} from './merch141.js?v=141j';   // V141 F5b striped café awning
 
 
 
@@ -49,7 +50,7 @@ const SIDE141AWN={d3:{px:[832,1250],awn:{bays:[[18,332]],top:940}}};
 export function soho141Side(b,spec,lod,fkey,cs){const w=spec.w,d=spec.d,H=spec.soho135.H,key='s'+fkey,G=SIDE141[fkey].geo;
  addSoho141Materials(b.mats,key);const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(G.pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(G.uv,2));g.setAttribute('normal',new T.Float32BufferAttribute(G.nrm,3));
  b.add(g,'soho141'+key,cs*w/2,0,0,1,1,1,cs*Math.PI/2);g.dispose();
- const A=SIDE141AWN[fkey];if(lod||!A)return;const[PW,PH]=A.px;b.push(cs*w/2,0,0,cs*Math.PI/2);awnings141(b,A.awn,p=>p/PW*d-d/2,p=>(PH-p)/PH*H,0);b.pop();
+ const A=SIDE141AWN[fkey];if(lod||!A)return;const[PW,PH]=A.px;b.push(cs*w/2,0,0,cs*Math.PI/2);awnings141(b,A.awn,p=>p/PW*d-d/2,p=>(PH-p)/PH*H,0,awnKey(fkey));b.pop();
 }
 // V141 F3b: the focal spire's shaft base (bc/scripts/facade141/spire141.py blueprints): S = Gothic portal + revolving door, W = granite
 // base with four shopfronts (real awnings) + side door. w/H = blueprint metres; cutv = where the flat upper atlas quad takes over.
@@ -63,6 +64,7 @@ export function soho141Spire(b,f,lod,fw,yc){const F=SPIRE141[f],key='sp'+f;addSo
 }
 // V141 F4 streaming: geometry tables load on demand; exit-scene holds SoHo blocks in its queue until soho141Ready()
 let loadP=null,ready=false,failed=false;
+const awnKey=k=>k==='d3'?'soho141AwnStr':'soho141Awning';
 export function soho141Ready(){return ready||!soho141On();}
 export function soho141Load(){return loadP??=import('./soho141-geo.js?v=141h').then(({GEO141:G})=>{for(const t of[SOHO141,SIDE141,SPIRE141])for(const e of Object.values(t))e.geo=G[e.g];ready=true;}).catch(err=>{console.warn('[soho141] facade tables failed, old flat facades',err);failed=true;});}
 export function soho141On(){return !failed&&!/[?&]fac141=0\b/.test(globalThis.location?.search||'');}
@@ -72,6 +74,8 @@ export function addSoho141Materials(m,key){
  if(m.soho141Iron)return m;
  m.soho141Iron=new T.MeshStandardMaterial({map:tex('iron-alb',true,true),normalMap:tex('iron-nrm',false,true),roughnessMap:tex('iron-orm',false,true),metalnessMap:tex('iron-orm',false,true),roughness:1,metalness:1,vertexColors:true});
  m.soho141Grate=new T.MeshStandardMaterial({map:tex('grate-alb',true,true),normalMap:tex('grate-nrm',false,true),alphaTest:.5,side:T.DoubleSide,roughness:.7,metalness:.3,vertexColors:true});
+ // V141 F5b: d3 Café Rossignol's awnings are cream / taupe stripes like its photo (the others keep the green canvas)
+ m.soho141AwnStr=new T.MeshStandardMaterial({...awnStripe141(),normalScale:new T.Vector2(.6,.6),side:T.DoubleSide,roughness:.92,metalness:0,vertexColors:true});
  m.soho141Awning=new T.MeshStandardMaterial({map:tex('awning-alb',true,true),normalMap:tex('awning-nrm',false,true),normalScale:new T.Vector2(.6,.6),side:T.DoubleSide,roughness:.92,metalness:0,vertexColors:true});
  return m;
 }
@@ -98,11 +102,11 @@ function fireEscape141(b,F,X,Y,zf){const x0=X(F.x0),x1=X(F.x1),zb=zf+.22,zo=zf+1
  const y0=lv[0],lx=x1-.45,zl=zo-.12,bot=y0-1.55;for(const sx of[lx-.2,lx+.2])rail(b,[sx,bot,zl],[sx,y0+.9,zl],.02);
  for(let y=bot+.12;y<y0+.85;y+=.3)rail(b,[lx-.2,y,zl],[lx+.2,y,zl],.012);
 }
-function awnings141(b,W,X,Y,zf){const yt=Y(W.top)-.04,D=1.35,yf=yt-1.0,vh=.32,z0=zf+.03,z1=zf+D;
+function awnings141(b,W,X,Y,zf,K='soho141Awning'){const yt=Y(W.top)-.04,D=1.35,yf=yt-1.0,vh=.32,z0=zf+.03,z1=zf+D;
  for(const[a,c]of W.bays){const xa=X(a)-.05,xb=X(c)+.05,ru=(xb-xa)/1.2;
-  let g=quadGeo([[xa,yt,z0],[xb,yt,z0],[xb,yf,z1],[xa,yf,z1]],[[0,1],[ru,1],[ru,.25],[0,.25]]);b.add(g,'soho141Awning',0,0,0);g.dispose();   // slope
-  g=quadGeo([[xa,yf-vh,z1],[xb,yf-vh,z1],[xb,yf,z1],[xa,yf,z1]],[[0,0],[ru,0],[ru,.25],[0,.25]]);b.add(g,'soho141Awning',0,0,0);g.dispose(); // valance
-  for(const x of[xa,xb]){g=soup([x,yt,z0,x,yf,z1,x,yf-vh,z1],[0,1,.9,.25,.9,0]);b.add(g,'soho141Awning',0,0,0);g.dispose();}         // side panels
+  let g=quadGeo([[xa,yt,z0],[xb,yt,z0],[xb,yf,z1],[xa,yf,z1]],[[0,1],[ru,1],[ru,.25],[0,.25]]);b.add(g,K,0,0,0);g.dispose();   // slope
+  g=quadGeo([[xa,yf-vh,z1],[xb,yf-vh,z1],[xb,yf,z1],[xa,yf,z1]],[[0,0],[ru,0],[ru,.25],[0,.25]]);b.add(g,K,0,0,0);g.dispose(); // valance
+  for(const x of[xa,xb]){g=soup([x,yt,z0,x,yf,z1,x,yf-vh,z1],[0,1,.9,.25,.9,0]);b.add(g,K,0,0,0);g.dispose();}         // side panels
   rail(b,[xa,yf,z1],[xb,yf,z1],.025);for(const x of[xa+.08,xb-.08])rail(b,[x,yt-1.25,zf+.02],[x,yf+.02,z1-.04],.02);                  // front bar + arms
   rail(b,[xa,yt,z0+.02],[xb,yt,z0+.02],.03);}                                                                                         // roller bar at the wall
 }
@@ -111,5 +115,5 @@ export function soho141Build(b,spec,lod,fkey){const F=SOHO141[fkey],w=spec.w,H=s
  addSoho141Materials(b.mats,fkey);const X=p=>p/PW*w-w/2,Y=p=>(PH-p)/PH*H;
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(F.geo.pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(F.geo.uv,2));g.setAttribute('normal',new T.Float32BufferAttribute(F.geo.nrm,3));
  b.add(g,'soho141'+fkey,0,0,zf);g.dispose();
- if(lod)return;if(F.fe)fireEscape141(b,F.fe,X,Y,zf);if(F.awn)awnings141(b,F.awn,X,Y,zf);
+ if(lod)return;if(F.fe)fireEscape141(b,F.fe,X,Y,zf);if(F.awn)awnings141(b,F.awn,X,Y,zf,awnKey(fkey));
 }

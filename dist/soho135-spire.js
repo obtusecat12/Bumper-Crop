@@ -6,7 +6,7 @@
 // Lot frame is the block row's (back row: ry 0, local +z = north); cells are assigned so the shaftS/upperS faces look south
 // (towards SoHo) and shaftW/upperW face the SoHo road (west) whatever the lot rotation.
 import * as T from './vendor/three.module.min.js';
-import {SPIRE141,soho141On,soho141Spire} from './soho141-facade.js?v=141h'; // V141 F3b real-geometry shaft base (S portal, W shopfronts)
+import {SPIRE141,soho141On,soho141Spire} from './soho141-facade.js?v=141j'; // V141 F3b real-geometry shaft base (S portal, W shopfronts)
 const A=new URL('./assets/l11-v135s/',import.meta.url).href;
 export const SPIRE135_CELLS=['shaftS','shaftW','shaftN','shaftE','upperS','upperW','upperN','upperE'];
 function tex(name,srgb=true,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v=135v');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
