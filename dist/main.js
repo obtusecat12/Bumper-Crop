@@ -52,7 +52,7 @@ import {initializeExitTextures} from './exit-textures.js?v=60';
 import {initializeReferenceTextures} from './reference-materials.js?v=60';
 import {initializeUrbanAssets} from './urban-assets.js?v=60';
 import {referenceEnvironment} from './reference-scenes.js?v=60';
-import {createExitScene} from './exit-scene.js?v=144e';import {update140,take140,name140,hint140} from './retail140-pick.js?v=140i'; // V140 P6
+import {createExitScene} from './exit-scene.js?v=144f';import {update140,take140,name140,hint140} from './retail140-pick.js?v=140i'; // V140 P6
 import {ExitAudio} from './exit-audio.js?v=60';
 import {initializeAlmondTextures,hydrateAlmondPickups,releaseAlmondBottle,almondVariant} from './almond-water-assets.js?v=60';
 import {createRuralPowerNetwork} from './rural-power-render.js?v=60';

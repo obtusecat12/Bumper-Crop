@@ -44,7 +44,7 @@ def paint(t,rect,im,rough,bevel=2,hgain=1.0):
     r=ImageChops.add(ImageOps.invert(g).point(lambda v:int(v*40/255)),Image.new('L',(w,h),rough-25))
     rmap.paste(r,(ox+x0,oy+y0))
 
-def spray(t,text,box,col,ang,R,size=40,blur=1.4):
+def spray(t,text,box,col,ang,R,size=40,blur=1.4,mirror=False):
     """spray-paint text into tile t (tile px box), rotated, soft edged with overspray"""
     ox,oy=(t%COLS)*TW,(t//COLS)*TH;x0,y0,x1,y1=box;W,H=(x1-x0)*4,(y1-y0)*4
     m=Image.new('L',(W,H),0);d=ImageDraw.Draw(m);f=ImageFont.truetype(FONT,size*4)
@@ -53,6 +53,7 @@ def spray(t,text,box,col,ang,R,size=40,blur=1.4):
         bb=d.textbbox((0,0),ln,font=f);d.text(((W-(bb[2]-bb[0]))/2,y),ln,font=f,fill=255,stroke_width=1);y+=(bb[3]-bb[1])*1.25
     m=m.rotate(ang,resample=Image.BICUBIC).filter(ImageFilter.GaussianBlur(blur*4))
     m=m.point(lambda v:min(255,int(v*1.6)))
+    if mirror:m=ImageOps.flip(m)   # painted on a face the planar map shows from below (V144 B3: "312" read flipped)
     px=m.load()
     for _ in range(W*H//300):  # overspray specks
         x,y=R.randrange(W),R.randrange(H)
@@ -186,7 +187,7 @@ def build(t,spec):
             add_board(b,wood,bot=rb,long_axis='x')
             if i==1 and spec.get('stamp'):
                 # "312" sprayed on the middle bottom board's underside (the face the pile shows)
-                spray(t,spec['stamp'],[rb[0]+30,rb[1]-2,rb[0]+92,rb[3]+2],(24,22,22),0,R,14,.5)
+                spray(t,spec['stamp'],[rb[0]+30,rb[1]-2,rb[0]+92,rb[3]+2],(24,22,22),0,R,14,.5,True)
         xs3=[-L/2+.0725,0,L/2-.0725];
         chunks=[]
         for r in[T.strip_rect() for _ in range(5)]:

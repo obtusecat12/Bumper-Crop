@@ -6,7 +6,8 @@
 // standing in the photo's arrangement. Frame: origin = alley mouth centre on the building line, y 0 = alley ground,
 // +z = out to the street, x across the alley (walls at |x| = 3). The whole mouth is one collider. ?barr144=0 off.
 import * as T from './vendor/three.module.min.js';
-import {PAL144,PAL144_ATLAS} from './brick144-pallets-data.js?v=144d';
+import {PAL144,PAL144_ATLAS} from './brick144-pallets-data.js?v=144f';
+import {CHIP144,CHIP144_SHEET_M} from './brick144-chips-data.js?v=144f';
 export const BARRICADE144_ON=!/[?&]barr144=0\b/.test(globalThis.location?.search||'');
 export const BARRICADE144={block:[-3,-1],x:56,z:100};
 const A=new URL('./assets/l11-v144/',import.meta.url).href,PI=Math.PI;
@@ -52,12 +53,13 @@ const PILE=[
  ['flatL',-.95,-1.25,0,.1],['backL',-.95,-1.45,.144,.08,UP-.15,0,UP],
  ['left',-2.25,-.55,0,.3,.12,.05,0],['farL',-2.3,-1.4,0,-.2,UP-.27,0,UP],['back4',.4,-1.75,.42,.2,.6,0,0],
  // front: the new pine "312" block pallet (bottom face out, leaning back), the pale one on its long edge, the orange one in the mud
- ['p312',-1.3,.3,0,-.55,-(UP+.36),-.06,0],['pale',2.15,-.35,0,-.05,UP-.12,0,0],['amber',2.45,.3,0,-.12,.32,0,0],
+ ['p312',-1.3,.3,0,-.55,-(UP+.36),-.06,0],['pale',2.15,-.35,0,-.05,UP-.12,0,0],['amber',2.45,.42,0,-.12,.52,0,0],
 ];
 export function* barricade144Task(b,lod){
  mats(b.mats);for(let i=0;i<PILE.length;i++){place(b,PILE[i]);if(i%6===5)yield;}
  b.solid(0,-1.1,6.2,3.4);   // the alley is closed wall to wall
  yield* barricade144B2(b,lod,POSE,PAL144);   // B2: door slab, stove, bucket, DOOR board, tarps, shed, fence, bags, hay, rope, film
+ yield* barricade144B3(b,lod);   // B3: mud ground + broken-wood chips
 }
 
 // ======================================================================================================================
@@ -189,12 +191,12 @@ function fence(S,x0,x1,z,lod){const H=1.3,pw=.075,pt=.02,gap=.05;
   for(const[zz,o]of[[z+pt,1],[z,-1]]){S.q('b2pick',[x,0,zz],[x+pw,0,zz],[x+pw,h-.06,zz],[x,h-.06,zz],[[u,0],[u+.15,0],[u+.15,1],[u,1]],[0,0,o]);S.tri('b2pick',[x,h-.06,zz],[x+pw,h-.06,zz],[x+pw/2,h,zz],[u,.94],[u+.15,.94],[u+.075,1],[0,0,o]);}}}
 export function* barricade144B2(b,lod,POSE,PAL){
  mats2(b.mats);const S=new Q();
- // door slab: front long edge on the ground, back edge resting on the low pallets (photo: tipped ~16 deg toward the street)
- const drx=.28,dry=-.06,dO=[.56,DW/2*Math.sin(drx)+DT/2+.012,.78];
+ // door slab: hinge edge on the ground, top edge propped on the low pallets (B3 matched to the photo camera: ~55 deg, face to the street)
+ const drx=.95,dry=-.06,dO=[.56,DW/2*Math.sin(drx)+DT/2+.012,.56];
  doorSlab(S,lod);
  {const s=S.p;S.p={};for(const[k,v]of Object.entries(s)){const P=v.pos;for(let i=0;i<P.length;i+=3){const q=pose([P[i],P[i+1],P[i+2]],dO,dry,drx);P[i]=q[0];P[i+1]=q[1];P[i+2]=q[2];}S.p[k]=v;}}
  film(S,pose([DL/2-.32,DT/2,-DW/2+.05],dO,dry,drx),-.3,.3,.42,11,.05);film(S,pose([DL/2-.12,DT/2,-DW/2+.3],dO,dry,drx),-1.2,.22,.36,23,.18);
- S.flush(b);b.solid(.56,.78,2.1,.98,dry);yield;
+ S.flush(b);b.solid(.56,.56,2.1,.62,dry);yield;
  // stove (front left, angled to the street)
  stove(S,lod);S.flush(b,-2.5,0,.52,.32);b.solid(-2.5,.52,.72,.6,.32);
  // DOOR board on edge on the low left pallet + a plain board on top; hay bale with the bucket behind them
@@ -222,4 +224,40 @@ export function* barricade144B2(b,lod,POSE,PAL){
  // garbage bags: back left by the fence, one behind the right stack, one squeezed at the front right of the stove
  bag(S,[-2.6,0,-3.12],[.25,.28,.22],3,lod);bag(S,[-1.85,.32,-.72],[.26,.22,.22],9,lod);bag(S,[-2.0,.66,-.95],[.2,.18,.18],17,lod);
  bag(S,[2.6,0,-3.1],[.3,.3,.26],21,lod);bag(S,[-2.85,.32,-.3],[.18,.16,.16],29,lod);S.flush(b);
+}
+
+// ======================================================================================================================
+// V144 B3: the ground of the photo. A shaped mud sheet (wall to wall in the alley, spilling out over the sidewalk with a
+// ragged front edge, slight lumps) with its own seamless texture set b3_mud (base/-n/-r from art-v144/b144b3_mud.png), and
+// broken-wood chips + splinters strewn mostly in front of the pile: each chip is the convex outline of one piece segmented
+// from the generated chip sheet (brick144-chips-data.js, bc/tools/brick144b3_assets.py), extruded to its thickness, top =
+// the piece's own pixels, bottom + sides = its edge colour. Flat on the ground, so no colliders.
+let M3=null;
+function mats3(m){if(m.b3mud)return;if(!M3){const t=(n,s=true)=>{const q=new T.TextureLoader().load(A+n+'.webp?v=144f');if(s)q.colorSpace=T.SRGBColorSpace;q.anisotropy=4;q.magFilter=T.NearestFilter;q.wrapS=q.wrapT=T.RepeatWrapping;return q;};
+ M3={b3mud:new T.MeshStandardMaterial({map:t('b3_mud'),normalMap:t('b3_mud-n',false),roughnessMap:t('b3_mud-r',false),roughness:1,metalness:0,vertexColors:true,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),
+  b3chip:new T.MeshStandardMaterial({map:t('b3_chip'),normalMap:t('b3_chip-n',false),roughnessMap:t('b3_chip-r',false),roughness:1,metalness:0,vertexColors:true})};
+ M3.b3mud.normalScale=new T.Vector2(1.1,1.1);M3.b3mud.name='V144 B3 mud';M3.b3chip.name='V144 B3 chips';}Object.assign(m,M3);}
+const MUD_BACK=-6.2,MUD_TILE=1.6;
+const mudFront=u=>2.3+.5*Math.sin(u*9.1+.7)+.22*Math.sin(u*23.7+2.1)-1.2*Math.pow(Math.abs(u*2-1),3);   // ragged front edge (frame z)
+function mudGround(S,lod){const nu=lod?20:48,nv=lod?14:28;
+ S.grid('b3mud',nu,nv,(u,v)=>{const zf=mudFront(u),z=zf+v*(MUD_BACK-zf),out=Math.max(0,z)/Math.max(.1,zf),spread=.45*out*(1+.5*Math.sin(u*17));
+  const x=(u*2-1)*(3+spread),lump=.006+.006*(Math.sin(x*5.3+z*3.1)*.5+.5)*(Math.sin(x*11.9-z*7.7)*.5+.5)+.005*(1-out);   // stays 3..17 mm above the paving
+  const edge=(u===0||u===1||v===0)?-.004:0;return[x,lump+edge,z];},(u,v)=>{const zf=mudFront(u),z=zf+v*(MUD_BACK-zf),x=(u*2-1)*(3+.45*Math.max(0,z)/Math.max(.1,zf));return[x/MUD_TILE,-z/MUD_TILE];});}
+function chip(S,P,o,s,yaw,tilt,th){   // P = convex outline in sheet uv; s = metres per uv unit; o = centre on the ground
+ const c=P.reduce((a,p)=>[a[0]+p[0]/P.length,a[1]+p[1]/P.length],[0,0]),cs=Math.cos(yaw),sn=Math.sin(yaw);
+ const L=(p,y)=>{const lx=(p[0]-c[0])*s,lz=-(p[1]-c[1])*s,yy=y+lx*tilt;return[o[0]+lx*cs+lz*sn,o[1]+yy,o[2]-lx*sn+lz*cs];};
+ const top=P.map(p=>L(p,th)),bot=P.map(p=>L(p,0)),eu=[c[0]+(P[0][0]-c[0])*.85,c[1]+(P[0][1]-c[1])*.85],cc=L(c,th);
+ for(let i=0;i<P.length;i++){const j=(i+1)%P.length;S.tri('b3chip',cc,top[i],top[j],c,P[i],P[j],[0,1,0]);
+  const e0=[c[0]+(P[i][0]-c[0])*.85,c[1]+(P[i][1]-c[1])*.85],e1=[c[0]+(P[j][0]-c[0])*.85,c[1]+(P[j][1]-c[1])*.85];
+  const mid=[(top[i][0]+top[j][0])/2-cc[0],0,(top[i][2]+top[j][2])/2-cc[2]];S.q('b3chip',bot[i],bot[j],top[j],top[i],[e0,e1,e1,e0],mid);}}
+export function* barricade144B3(b,lod){
+ mats3(b.mats);const S=new Q();mudGround(S,lod);S.flush(b);yield;
+ // chips: 3/4 in a fan in front of the pile (z 0.2..2.4, thicker near the door), the rest scattered in the alley; skip under the stove
+ const N=lod?50:170;
+ for(let i=0;i<N;i++){const p=CHIP144[(hs(i,71)*CHIP144.length)|0],front=i%4!==3;
+  let x,z;if(front){const r=hs(i,72);z=.15+Math.pow(r,1.4)*2.2;x=(hs(i,73)*2-1)*(2.9-.25*z)+.4;}else{z=MUD_BACK+.3+hs(i,74)*5.6;x=(hs(i,73)*2-1)*2.8;}
+  if(z>mudFront((x/3.4+1)/2)-.1)z=mudFront((x/3.4+1)/2)-.15;if(Math.abs(x+2.5)<.42&&Math.abs(z-.52)<.35)continue;
+  const kind=p.k,s=CHIP144_SHEET_M*(kind==='pale'?.75+hs(i,75)*.5:.55+hs(i,75)*.6),th=kind==='pale'?.006+hs(i,76)*.006:.008+hs(i,76)*.012;
+  chip(S,p.h,[x,.019,z],s*1.15,hs(i,77)*PI*2,(hs(i,78)-.5)*.12,th);}
+ S.flush(b);
 }
