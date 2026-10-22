@@ -17,7 +17,7 @@ import {geo135Enabled,shell135,loadCapitalGeo135} from './capital135-geo.js?v=13
 import {soho135BuildingTask} from './soho135-street.js?v=141j'; // V135-capital ③ SoHo street frontage
 import {soho135FairTask} from './soho135-fair.js?v=141j'; // V135-capital ③-2 SoHo street fair (closed road x=-224)
 import {spire135Task} from './soho135-spire.js?v=141j'; // ③-3b SoHo focal spire tower
-import {brick144Task} from './brick144.js?v=144a'; // V144 A1 capital brick apartment slab
+import {brick144Task} from './brick144.js?v=144b'; // V144 A1 capital brick apartment slab
 import {sohoBake135,SOHO135_BAKE_BLOCKS} from './soho135-bake.js?v=141j';
 import {soho141Ready,soho141Load} from './soho141-facade.js?v=141j'; // V141 F4: SoHo facade tables stream in with their blocks // ③-3c per-block Blender bake of the streamed SoHo blocks
 import {CAPITAL135_LAZY} from './capital135/geo/lazy.js?v=135h'; // V135 ②c-2b-2b deferred roots (photo landmarks, milling mouth)
@@ -34,7 +34,7 @@ import * as P from './urban-props.js?v=132st';
 import {shrub131} from './shrub131.js?v=131';   // V131 cross-card shrubs
 import * as S from './urban-smallprops.js?v=132st';
 import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=140i';
-import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=135t';
+import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=144b';
 import {addReferenceMaterials} from './reference-materials.js?v=60';
 import {createReferenceScenes,referenceWaypoint,clinicToWorld} from './reference-scenes.js?v=60';
 import {canalBlock,CANAL} from './canal128-layout.js?v=128';

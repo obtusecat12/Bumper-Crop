@@ -8,3 +8,6 @@ export function brick144Filter(result){
  result.buildings=result.buildings.filter(q=>q.ry!==0);
  result.buildings.push({type:'brick144',brick144:true,skipStorefront:true,x:x+(BRICK144.x0+BRICK144.x1)/2,z:z+100-12,ry:0,w:BRICK144.w,d:24,floors:6,seed:urbanHash(result.ix,result.iz,0x144b),lot:result.district,streetwall:true});
  return result;}
+// V144 A2: city-coordinate rectangles [x0,x1,z0,z1] where urban-streets' stock frontage furniture (trees, meters, lights, signs,
+// newspaper boxes, the parked sedan) is skipped so brick144-street.js can lay out the photo's street (sidewalk, then parking lane).
+export const BRICK144_CLEAR=BRICK144_ON?[[-207,-124.5,-12.3,-7.6],[-212,-124.5,-6.9,-3.4]]:[];

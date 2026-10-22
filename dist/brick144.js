@@ -10,6 +10,7 @@ import * as T from './vendor/three.module.min.js';
 import {urbanHash} from './urban-batch.js?v=60';
 const A=new URL('./assets/l11-v144/',import.meta.url).href;
 import {BRICK144} from './brick144-layout.js?v=144a';
+import {brick144StreetTask} from './brick144-street.js?v=144b'; // V144 A2 street + road works
 const PX=20,EXT=7,WB=BRICK144.w,TOP=19.9+.45;   // photo px per metre, metres added west of the photo's left edge, width, roof height
 // rows: photo y (top, bottom) of the white units, floor 6 (top) .. 2
 const ROWS=[[42,78],[99,137],[156,195],[216,255],[277,318]];
@@ -141,4 +142,5 @@ export function* brick144Task(b,spec,lod){
  S.flush(b);
  b.solid(0,zf-d/2,WB,d);
  yield;
+ yield* brick144StreetTask(b,spec,lod);
 }
