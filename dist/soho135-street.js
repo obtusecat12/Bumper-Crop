@@ -5,7 +5,7 @@
 // SoHo frontage streams, LODs and unloads with its block. lod 1 = body + facade + cornice only.
 import * as T from './vendor/three.module.min.js';
 import {SOHO135} from './soho135-layout.js?v=135v';
-import {SOHO141,SIDE141,soho141On,soho141Build,soho141Side} from './soho141-facade.js?v=141g'; // V141 real-geometry facades
+import {SOHO141,SIDE141,soho141On,soho141Build,soho141Side} from './soho141-facade.js?v=141h'; // V141 real-geometry facades
 const A=new URL('./assets/l11-v135s/',import.meta.url).href;
 function tex(name,srgb=true){const t=new T.TextureLoader().load(A+name+'.webp?v=135s');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;t.generateMipmaps=true;return t;}
 export function addSoho135Materials(m){
@@ -55,27 +55,26 @@ function tank(b,x,y,z,r){b.cylinder('soho135Tank',x,y+2.2+1.5,z,r,r,3.0,9);b.add
 export function* soho135BuildingTask(b,spec,lod){
  addSoho135Materials(b.mats);const S=spec.soho135,w=spec.w,d=spec.d,H=S.H,key='soho135'+S.side,h=(spec.seed>>>0);
  const cw=1/S.cells,u0=S.i*cw+.5/1024,u1=(S.i+1)*cw-.5/1024,zf=d/2;
- // V141: facades rebuilt as real geometry. Until the F4 SoHo re-bake the old pieces stay in the batch (same vertex counts ->
- // the per-block bake keys still match) but are parked 2.2 m inside the body; the body front steps back 1 m for the recesses.
- const f141=SOHO141[S.side+S.i]&&soho141On(),zO=f141?zf-2.2:zf;
- // V141 F3: corner side as real geometry too -> body pulled 1.1 m in on that end, old side quad parked 2.2 m inside
+ // V141: facades rebuilt as real geometry (F4: re-baked, the old flat quad / cornice / fire escape are gone); body front steps back 1 m.
+ const f141=SOHO141[S.side+S.i]&&soho141On(),zO=zf;
+ // V141 F3: corner side as real geometry too -> body pulled 1.1 m in on that end, no old side quad
  const cs=cornerSide(spec),ci=SIDE135.indexOf(S.side+S.i),s141=f141&&cs&&ci>=0&&SIDE141[S.side+S.i],bw=s141?w-1.14:w-.04,bx=s141?-cs*.55:0;
  // body (brick party walls, back, roof deck) + roof parapet
  if(f141)b.box(h%2?'brickRed':'brickOchre',bx,H/2,-.56,bw,H,d-1.12,0,.94);else b.box(h%2?'brickRed':'brickOchre',0,H/2,-.06,w-.04,H,d-.12,0,.94);b.box('soho135Roof',0,H+.03,-.06,w-.5,.08,d-.6);
  for(const[x,z,ww,dd]of[[0,-d/2+.15,w-.04,.3],[-w/2+.17,-.06,.3,d-.4],[w/2-.17,-.06,.3,d-.4]])b.box(h%2?'brickRed':'brickOchre',x,H+.5,z,ww,1.0,dd,0,.9);
  // the generated elevation, full height, 1 cm proud of the body
- quad(b,key,[[-w/2,0,zO],[w/2,0,zO],[w/2,H,zO],[-w/2,H,zO]],[u0,0,u1,1],[0,0,1]);
+ if(!f141)quad(b,key,[[-w/2,0,zO],[w/2,0,zO],[w/2,H,zO],[-w/2,H,zO]],[u0,0,u1,1],[0,0,1]);
  // projecting cornice: top 4 % of the elevation, 0.75 m out; sheet-metal cap
- if(cs&&ci>=0){const x=cs*(w/2-(s141?2.2:.005)),zb=-d/2,su0=ci/SIDE135.length+.5/2048,su1=(ci+1)/SIDE135.length-.5/2048;
+ if(cs&&ci>=0&&!s141){const x=cs*(w/2-.005),zb=-d/2,su0=ci/SIDE135.length+.5/2048,su1=(ci+1)/SIDE135.length-.5/2048;
   if(cs<0)quad(b,'soho135side',[[x,0,zb],[x,0,zf],[x,H,zf],[x,H,zb]],[su1,0,su0,1],[-1,0,0]);
   else quad(b,'soho135side',[[x,0,zf],[x,0,zb],[x,H,zb],[x,H,zf]],[su0,0,su1,1],[1,0,0]);}
- const ch=Math.max(.9,H*.035);uvBox(b,key,0,H-ch/2,zO+.38,w+.1,ch,.76,[u0,.962,u1,.995]);b.box('soho135Iron',0,H+.03,zO+.35,w+.16,.06,.84,0,.8);
+ const ch=Math.max(.9,H*.035);if(!f141){uvBox(b,key,0,H-ch/2,zO+.38,w+.1,ch,.76,[u0,.962,u1,.995]);b.box('soho135Iron',0,H+.03,zO+.35,w+.16,.06,.84,0,.8);}
  if(f141)soho141Build(b,spec,lod,S.side+S.i);
  if(s141)soho141Side(b,spec,lod,S.side+S.i,cs);
  b.solid(0,-.06,w,d);yield;
  if(lod)return;
  // fire escape on 3 of 4 buildings (the bay hashed per lot), from the 2nd storey up
- if(h%4!==1&&S.n>=4){const fw=Math.min(7.2,w*.46),x0=-w/2+.6+((h>>>3)%100)/100*(w-fw-1.2),lv=[];const k=S.scale;
+ if(!f141&&h%4!==1&&S.n>=4){const fw=Math.min(7.2,w*.46),x0=-w/2+.6+((h>>>3)%100)/100*(w-fw-1.2),lv=[];const k=S.scale;
   for(let f=2;f<=S.n;f++)lv.push((SOHO135.ground+SOHO135.storey*(f-2))*k+.05);
   fireEscape(b,x0,x0+fw,zO+.01,lv);yield;}
  if(h%3===0){const r=1.5+(h>>>5)%3*.2;tank(b,((h>>>7)%2?-1:1)*Math.max(0,w/2-3.2),H+.05,-d/2+3.2,r);}

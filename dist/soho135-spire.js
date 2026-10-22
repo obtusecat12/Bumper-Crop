@@ -6,7 +6,7 @@
 // Lot frame is the block row's (back row: ry 0, local +z = north); cells are assigned so the shaftS/upperS faces look south
 // (towards SoHo) and shaftW/upperW face the SoHo road (west) whatever the lot rotation.
 import * as T from './vendor/three.module.min.js';
-import {SPIRE141,soho141On,soho141Spire} from './soho141-facade.js?v=141g'; // V141 F3b real-geometry shaft base (S portal, W shopfronts)
+import {SPIRE141,soho141On,soho141Spire} from './soho141-facade.js?v=141h'; // V141 F3b real-geometry shaft base (S portal, W shopfronts)
 const A=new URL('./assets/l11-v135s/',import.meta.url).href;
 export const SPIRE135_CELLS=['shaftS','shaftW','shaftN','shaftE','upperS','upperW','upperN','upperE'];
 function tex(name,srgb=true,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v=135v');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
@@ -22,15 +22,15 @@ function geo(pos,uv,nr,b,key,tone=1){const g=new T.BufferGeometry();g.setAttribu
 // facade quad: p = bl, br, tr, tl seen from outside; atlas cell c
 function face(b,p,c,n,key='spire135',v0=0){const u0=c/SPIRE135_CELLS.length+.5/1024,u1=(c+1)/SPIRE135_CELLS.length-.5/1024,U=[[u0,v0],[u1,v0],[u1,1],[u0,1]],pos=[],uv=[],nr=[];
  for(const i of[0,1,2,0,2,3]){pos.push(...p[i]);uv.push(...U[i]);nr.push(...n);}geo(pos,uv,nr,b,key);}
-// four facades of a box x +-hw, z +-hd, y0..y1, cells for the local faces [+z,+x,-z,-x]; pk[i] = face i pushed that far inside
-function faces(b,hw,hd,y0,y1,c,pk=[0,0,0,0]){
- face(b,[[-hw,y0,hd-pk[0]],[hw,y0,hd-pk[0]],[hw,y1,hd-pk[0]],[-hw,y1,hd-pk[0]]],c[0],[0,0,1]);
- face(b,[[hw-pk[1],y0,hd],[hw-pk[1],y0,-hd],[hw-pk[1],y1,-hd],[hw-pk[1],y1,hd]],c[1],[1,0,0]);
- face(b,[[hw,y0,-hd+pk[2]],[-hw,y0,-hd+pk[2]],[-hw,y1,-hd+pk[2]],[hw,y1,-hd+pk[2]]],c[2],[0,0,-1]);
- face(b,[[-hw+pk[3],y0,-hd],[-hw+pk[3],y0,hd],[-hw+pk[3],y1,hd],[-hw+pk[3],y1,-hd]],c[3],[-1,0,0]);}
+// four facades of a box x +-hw, z +-hd, y0..y1, cells for the local faces [+z,+x,-z,-x]; skip[i] = drop face i
+function faces(b,hw,hd,y0,y1,c,skip=[0,0,0,0]){
+ if(!skip[0])face(b,[[-hw,y0,hd],[hw,y0,hd],[hw,y1,hd],[-hw,y1,hd]],c[0],[0,0,1]);
+ if(!skip[1])face(b,[[hw,y0,hd],[hw,y0,-hd],[hw,y1,-hd],[hw,y1,hd]],c[1],[1,0,0]);
+ if(!skip[2])face(b,[[hw,y0,-hd],[-hw,y0,-hd],[-hw,y1,-hd],[hw,y1,-hd]],c[2],[0,0,-1]);
+ if(!skip[3])face(b,[[-hw,y0,-hd],[-hw,y0,hd],[-hw,y1,hd],[-hw,y1,-hd]],c[3],[-1,0,0]);}
 // V141 F3b: the shaftS / shaftW faces get their bottom (below a string course) as baked real geometry (soho141Spire) and a flat
-// upper quad (own material key 'spire141', same atlas) from v = cutv up. Until the F4 SoHo re-bake the old full-height quads stay
-// in the batch (same vertex counts -> per-block bake keys match) but are parked 2.2 m inside; the stone core steps back 1 m there.
+// upper quad (own material key 'spire141', same atlas) from v = cutv up; the old full-height quads are dropped (F4 re-bake);
+// the stone core steps back 1 m there.
 const DIR=[[0,1],[1,0],[0,-1],[-1,0]];
 function base141(b,hw,hd,hs,cell,lod){
  if(!b.mats.spire141)b.mats.spire141=b.mats.spire135.clone();
@@ -48,7 +48,7 @@ function pinnacle(b,x,z,y,s){b.box('spire135Stone',x,y+s*1.6,z,s,s*3.2,s,0,.92);
 export function* spire135Task(b,spec,lod){
  addSpire135Materials(b.mats);const ry=spec.ry||0,cell=[[0,1],[1,0],[0,-1],[-1,0]].map(([x,z])=>{const cx=x*Math.cos(ry)+z*Math.sin(ry),cz=-x*Math.sin(ry)+z*Math.cos(ry);return Math.abs(cz)>Math.abs(cx)?(cz<0?0:2):(cx<0?1:3);});const w=spec.w-.1,d=spec.d-.1,hw=w/2,hd=d/2,hs=w*2.9*1.1,uw=Math.min(w,d)*.64,uh=uw*1.89*1.12;
  // shaft: stone core + four generated faces, cornice band with a small parapet
- const on141=soho141On(),pk=cell.map(c=>on141&&c<2?2.2:0),ins=cell.map(c=>on141&&c<2?1.0:.03);
+ const on141=soho141On(),pk=cell.map(c=>on141&&c<2?1:0),ins=cell.map(c=>on141&&c<2?1.0:.03);
  b.box('spire135Stone',(ins[3]-ins[1])/2,hs/2,(ins[2]-ins[0])/2,w-ins[1]-ins[3],hs,d-ins[0]-ins[2],0,.9);faces(b,hw,hd,0,hs,cell,pk);if(on141)base141(b,hw,hd,hs,cell,lod);
  b.box('spire135Stone',0,hs+.5,0,w+.9,1.0,d+.9,0,.95);b.box('spire135Stone',0,hs+1.25,0,w+.3,.5,d+.3,0,.86);
  b.solid(0,0,w,d);yield;

@@ -1,0 +1,32 @@
+// V141 F4: all baked SoHo facade low-polys in one lazily imported module (soho141Load in soho141-facade.js), so the
+// ~2.9 MB of tables is only fetched/parsed when SoHo blocks stream in, not at game boot.
+import {GEO as A0} from './soho141-a0.js?v=141a';
+import {GEO as A1} from './soho141-a1.js?v=141b';
+import {GEO as A2} from './soho141-a2.js?v=141b';
+import {GEO as A3} from './soho141-a3.js?v=141b';
+import {GEO as A4} from './soho141-a4.js?v=141b';
+import {GEO as B0} from './soho141-b0.js?v=141c';
+import {GEO as B1} from './soho141-b1.js?v=141c';
+import {GEO as B2} from './soho141-b2.js?v=141c';
+import {GEO as B3} from './soho141-b3.js?v=141c';
+import {GEO as C0} from './soho141-c0.js?v=141d';
+import {GEO as C1} from './soho141-c1.js?v=141d';
+import {GEO as C2} from './soho141-c2.js?v=141d';
+import {GEO as C3} from './soho141-c3.js?v=141d';
+import {GEO as C4} from './soho141-c4.js?v=141d';
+import {GEO as D0} from './soho141-d0.js?v=141e';
+import {GEO as D1} from './soho141-d1.js?v=141e';
+import {GEO as D2} from './soho141-d2.js?v=141e';
+import {GEO as D3} from './soho141-d3.js?v=141e';
+import {GEO as D4} from './soho141-d4.js?v=141e';
+import {GEO as SA3} from './soho141-sa3.js?v=141f';
+import {GEO as SA4} from './soho141-sa4.js?v=141f';
+import {GEO as SB0} from './soho141-sb0.js?v=141f';
+import {GEO as SB3} from './soho141-sb3.js?v=141f';
+import {GEO as SC4} from './soho141-sc4.js?v=141f';
+import {GEO as SC2} from './soho141-sc2.js?v=141f';
+import {GEO as SD1} from './soho141-sd1.js?v=141f';
+import {GEO as SD3} from './soho141-sd3.js?v=141f';
+import {GEO as SPS} from './soho141-spS.js?v=141g';
+import {GEO as SPW} from './soho141-spW.js?v=141g';
+export const GEO141={A0:A0,A1:A1,A2:A2,A3:A3,A4:A4,B0:B0,B1:B1,B2:B2,B3:B3,C0:C0,C1:C1,C2:C2,C3:C3,C4:C4,D0:D0,D1:D1,D2:D2,D3:D3,D4:D4,SA3:SA3,SA4:SA4,SB0:SB0,SB3:SB3,SC4:SC4,SC2:SC2,SD1:SD1,SD3:SD3,SPS:SPS,SPW:SPW};

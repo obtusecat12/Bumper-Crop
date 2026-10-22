@@ -6,62 +6,66 @@
 // storefront awnings (sloped canvas, valance, side panels, iron arms + front bar), all placed on the photo's own px grid.
 // Built into the block's UrbanBatch by soho135-street.js. Off: ?fac141=0 (old flat photo quad).
 import * as T from './vendor/three.module.min.js';
-import {GEO as A0} from './soho141-a0.js?v=141a';
-import {GEO as A1} from './soho141-a1.js?v=141b';import {GEO as A2} from './soho141-a2.js?v=141b';import {GEO as A3} from './soho141-a3.js?v=141b';import {GEO as A4} from './soho141-a4.js?v=141b';
-import {GEO as B0} from './soho141-b0.js?v=141c';import {GEO as B1} from './soho141-b1.js?v=141c';import {GEO as B2} from './soho141-b2.js?v=141c';import {GEO as B3} from './soho141-b3.js?v=141c';
-import {GEO as C0} from './soho141-c0.js?v=141d';import {GEO as C1} from './soho141-c1.js?v=141d';import {GEO as C2} from './soho141-c2.js?v=141d';import {GEO as C3} from './soho141-c3.js?v=141d';import {GEO as C4} from './soho141-c4.js?v=141d';
-import {GEO as D0} from './soho141-d0.js?v=141e';import {GEO as D1} from './soho141-d1.js?v=141e';import {GEO as D2} from './soho141-d2.js?v=141e';import {GEO as D3} from './soho141-d3.js?v=141e';import {GEO as D4} from './soho141-d4.js?v=141e';
-import {GEO as SA3} from './soho141-sa3.js?v=141f';import {GEO as SA4} from './soho141-sa4.js?v=141f';import {GEO as SB0} from './soho141-sb0.js?v=141f';import {GEO as SB3} from './soho141-sb3.js?v=141f';
-import {GEO as SC4} from './soho141-sc4.js?v=141f';import {GEO as SC2} from './soho141-sc2.js?v=141f';import {GEO as SD1} from './soho141-sd1.js?v=141f';import {GEO as SD3} from './soho141-sd3.js?v=141f';
-import {GEO as SPS} from './soho141-spS.js?v=141g';import {GEO as SPW} from './soho141-spW.js?v=141g';
+
+
+
+
+
+
+
+
 const A=new URL('./assets/l11-v141/',import.meta.url).href;
 // per facade: baked low-poly + blueprint px grid (photo 750 x 1358 px) for the separate fire escape / awnings
 export const SOHO141={
- a0:{geo:A0,px:[750,1358],fe:{x0:74,x1:298,levels:[990,742,525,328]},awn:{bays:[[70,170],[198,300],[456,556],[585,690]],top:1095}},
+ a0:{geo:null,g:'A0',px:[750,1358],fe:{x0:74,x1:298,levels:[990,742,525,328]},awn:{bays:[[70,170],[198,300],[456,556],[585,690]],top:1095}},
  // V141 F2: no awnings in these photos; fire escapes where the old flat version had one, on the photo's floor lines
- a1:{geo:A1,px:[876,1172]},
- a2:{geo:A2,px:[750,1314],fe:{x0:175,x1:375,levels:[1050,845,650,460,290]}},
- a3:{geo:A3,px:[750,1358],fe:{x0:190,x1:420,levels:[920,650,397]}},
- a4:{geo:A4,px:[828,1237],fe:{x0:185,x1:462,levels:[840,560,305]}},
+ a1:{geo:null,g:'A1',px:[876,1172]},
+ a2:{geo:null,g:'A2',px:[750,1314],fe:{x0:175,x1:375,levels:[1050,845,650,460,290]}},
+ a3:{geo:null,g:'A3',px:[750,1358],fe:{x0:190,x1:420,levels:[920,650,397]}},
+ a4:{geo:null,g:'A4',px:[828,1237],fe:{x0:185,x1:462,levels:[840,560,305]}},
  // V141 F2b block -2,1 (b2 had no fire escape in the flat version)
- b0:{geo:B0,px:[906,1117],fe:{x0:60,x1:355,levels:[800,600,407,228]}},
- b1:{geo:B1,px:[828,1247],fe:{x0:50,x1:390,levels:[928,702,492,290]}},
- b2:{geo:B2,px:[828,1205]},
- b3:{geo:B3,px:[750,1333],fe:{x0:190,x1:420,levels:[1046,862,712,545,355]}},
+ b0:{geo:null,g:'B0',px:[906,1117],fe:{x0:60,x1:355,levels:[800,600,407,228]}},
+ b1:{geo:null,g:'B1',px:[828,1247],fe:{x0:50,x1:390,levels:[928,702,492,290]}},
+ b2:{geo:null,g:'B2',px:[828,1205]},
+ b3:{geo:null,g:'B3',px:[750,1333],fe:{x0:190,x1:420,levels:[1046,862,712,545,355]}},
  // V141 F2c block -3,0 (east face; lots are rotated, not mirrored, so the local frame reads like the west side; c2 had no fire escape)
- c0:{geo:C0,px:[750,1358],fe:{x0:175,x1:520,levels:[925,645,378]}},
- c1:{geo:C1,px:[750,1336],fe:{x0:189,x1:534,levels:[920,650,390]}},
- c2:{geo:C2,px:[750,1358]},
- c3:{geo:C3,px:[828,1239],fe:{x0:316,x1:556,levels:[958,775,605,435,277]}},
- c4:{geo:C4,px:[750,1358],fe:{x0:227,x1:572,levels:[1000,735,470]}},
+ c0:{geo:null,g:'C0',px:[750,1358],fe:{x0:175,x1:520,levels:[925,645,378]}},
+ c1:{geo:null,g:'C1',px:[750,1336],fe:{x0:189,x1:534,levels:[920,650,390]}},
+ c2:{geo:null,g:'C2',px:[750,1358]},
+ c3:{geo:null,g:'C3',px:[828,1239],fe:{x0:316,x1:556,levels:[958,775,605,435,277]}},
+ c4:{geo:null,g:'C4',px:[750,1358],fe:{x0:227,x1:572,levels:[1000,735,470]}},
  // V141 F2d block -3,1 (east face; d3 had no fire escape in the flat version, but its café photo has three striped awnings)
- d0:{geo:D0,px:[828,1222],fe:{x0:120,x1:454,levels:[852,598,352]}},
- d1:{geo:D1,px:[750,1358],fe:{x0:117,x1:462,levels:[918,640,372]}},
- d2:{geo:D2,px:[828,1247],fe:{x0:167,x1:455,levels:[922,724,532,340]}},
- d3:{geo:D3,px:[828,1247],awn:{bays:[[15,325],[350,488],[512,822]],top:975}},
- d4:{geo:D4,px:[750,1339],fe:{x0:170,x1:480,levels:[928,675,465,288]}}};
+ d0:{geo:null,g:'D0',px:[828,1222],fe:{x0:120,x1:454,levels:[852,598,352]}},
+ d1:{geo:null,g:'D1',px:[750,1358],fe:{x0:117,x1:462,levels:[918,640,372]}},
+ d2:{geo:null,g:'D2',px:[828,1247],fe:{x0:167,x1:455,levels:[922,724,532,340]}},
+ d3:{geo:null,g:'D3',px:[828,1247],awn:{bays:[[15,325],[350,488],[512,822]],top:975}},
+ d4:{geo:null,g:'D4',px:[750,1339],fe:{x0:170,x1:480,levels:[928,675,465,288]}}};
 // V141 F3: the 8 corner side elevations (bc/scripts/facade141/sides141.py blueprints, same build141/cook141 pipeline). Low-poly
 // frame: x along the side wall (17 m = lot depth, image left = street end for cs=+1; cs=-1 blueprints are rolled so their
 // street-end part sits at the image's right = street end once the wall is turned to face -x), y up, z out of the wall.
-export const SIDE141={a3:SA3,a4:SA4,b0:SB0,b3:SB3,c4:SC4,c2:SC2,d1:SD1,d3:SD3};
+export const SIDE141={a3:{geo:null,g:'SA3'},a4:{geo:null,g:'SA4'},b0:{geo:null,g:'SB0'},b3:{geo:null,g:'SB3'},c4:{geo:null,g:'SC4'},c2:{geo:null,g:'SC2'},d1:{geo:null,g:'SD1'},d3:{geo:null,g:'SD3'}};
 // d3's café side has a striped awning over its shopfront (photo px of its 832 x 1250 blueprint)
 const SIDE141AWN={d3:{px:[832,1250],awn:{bays:[[18,332]],top:940}}};
-export function soho141Side(b,spec,lod,fkey,cs){const w=spec.w,d=spec.d,H=spec.soho135.H,key='s'+fkey,G=SIDE141[fkey];
+export function soho141Side(b,spec,lod,fkey,cs){const w=spec.w,d=spec.d,H=spec.soho135.H,key='s'+fkey,G=SIDE141[fkey].geo;
  addSoho141Materials(b.mats,key);const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(G.pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(G.uv,2));g.setAttribute('normal',new T.Float32BufferAttribute(G.nrm,3));
  b.add(g,'soho141'+key,cs*w/2,0,0,1,1,1,cs*Math.PI/2);g.dispose();
  const A=SIDE141AWN[fkey];if(lod||!A)return;const[PW,PH]=A.px;b.push(cs*w/2,0,0,cs*Math.PI/2);awnings141(b,A.awn,p=>p/PW*d-d/2,p=>(PH-p)/PH*H,0);b.pop();
 }
 // V141 F3b: the focal spire's shaft base (bc/scripts/facade141/spire141.py blueprints): S = Gothic portal + revolving door, W = granite
 // base with four shopfronts (real awnings) + side door. w/H = blueprint metres; cutv = where the flat upper atlas quad takes over.
-export const SPIRE141={S:{geo:SPS,w:22.6378,H:19.3675,cutv:.26819,px:[768,597]},
- W:{geo:SPW,w:23.9,H:14.7734,cutv:.20458,px:[1002,456],awn:{bays:[[40,196],[225,390],[420,586],[614,778]],top:239}}};
+export const SPIRE141={S:{geo:null,g:'SPS',w:22.6378,H:19.3675,cutv:.26819,px:[768,597]},
+ W:{geo:null,g:'SPW',w:23.9,H:14.7734,cutv:.20458,px:[1002,456],awn:{bays:[[40,196],[225,390],[420,586],[614,778]],top:239}}};
 // batch frame = face plane (x along the face, z out); fw = face width, yc = cut height (geometry scaled to fit)
 export function soho141Spire(b,f,lod,fw,yc){const F=SPIRE141[f],key='sp'+f;addSoho141Materials(b.mats,key);
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(F.geo.pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(F.geo.uv,2));g.setAttribute('normal',new T.Float32BufferAttribute(F.geo.nrm,3));
  b.add(g,'soho141'+key,0,0,0,fw/F.w,yc/F.H,1);g.dispose();
  if(lod||!F.awn)return;const[PW,PH]=F.px;awnings141(b,F.awn,p=>p/PW*fw-fw/2,p=>(PH-p)/PH*yc,0);
 }
-export function soho141On(){return !/[?&]fac141=0\b/.test(globalThis.location?.search||'');}
+// V141 F4 streaming: geometry tables load on demand; exit-scene holds SoHo blocks in its queue until soho141Ready()
+let loadP=null,ready=false,failed=false;
+export function soho141Ready(){return ready||!soho141On();}
+export function soho141Load(){return loadP??=import('./soho141-geo.js?v=141h').then(({GEO141:G})=>{for(const t of[SOHO141,SIDE141,SPIRE141])for(const e of Object.values(t))e.geo=G[e.g];ready=true;}).catch(err=>{console.warn('[soho141] facade tables failed, old flat facades',err);failed=true;});}
+export function soho141On(){return !failed&&!/[?&]fac141=0\b/.test(globalThis.location?.search||'');}
 function tex(name,srgb=true,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v=141b');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 export function addSoho141Materials(m,key){
  if(!m['soho141'+key])m['soho141'+key]=new T.MeshStandardMaterial({map:tex(key+'-alb'),normalMap:tex(key+'-nrm',false),roughnessMap:tex(key+'-orm',false),roughness:1,metalness:0,vertexColors:true});
