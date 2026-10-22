@@ -13,6 +13,7 @@ import {GEO as C0} from './soho141-c0.js?v=141d';import {GEO as C1} from './soho
 import {GEO as D0} from './soho141-d0.js?v=141e';import {GEO as D1} from './soho141-d1.js?v=141e';import {GEO as D2} from './soho141-d2.js?v=141e';import {GEO as D3} from './soho141-d3.js?v=141e';import {GEO as D4} from './soho141-d4.js?v=141e';
 import {GEO as SA3} from './soho141-sa3.js?v=141f';import {GEO as SA4} from './soho141-sa4.js?v=141f';import {GEO as SB0} from './soho141-sb0.js?v=141f';import {GEO as SB3} from './soho141-sb3.js?v=141f';
 import {GEO as SC4} from './soho141-sc4.js?v=141f';import {GEO as SC2} from './soho141-sc2.js?v=141f';import {GEO as SD1} from './soho141-sd1.js?v=141f';import {GEO as SD3} from './soho141-sd3.js?v=141f';
+import {GEO as SPS} from './soho141-spS.js?v=141g';import {GEO as SPW} from './soho141-spW.js?v=141g';
 const A=new URL('./assets/l11-v141/',import.meta.url).href;
 // per facade: baked low-poly + blueprint px grid (photo 750 x 1358 px) for the separate fire escape / awnings
 export const SOHO141={
@@ -49,6 +50,16 @@ export function soho141Side(b,spec,lod,fkey,cs){const w=spec.w,d=spec.d,H=spec.s
  addSoho141Materials(b.mats,key);const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(G.pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(G.uv,2));g.setAttribute('normal',new T.Float32BufferAttribute(G.nrm,3));
  b.add(g,'soho141'+key,cs*w/2,0,0,1,1,1,cs*Math.PI/2);g.dispose();
  const A=SIDE141AWN[fkey];if(lod||!A)return;const[PW,PH]=A.px;b.push(cs*w/2,0,0,cs*Math.PI/2);awnings141(b,A.awn,p=>p/PW*d-d/2,p=>(PH-p)/PH*H,0);b.pop();
+}
+// V141 F3b: the focal spire's shaft base (bc/scripts/facade141/spire141.py blueprints): S = Gothic portal + revolving door, W = granite
+// base with four shopfronts (real awnings) + side door. w/H = blueprint metres; cutv = where the flat upper atlas quad takes over.
+export const SPIRE141={S:{geo:SPS,w:22.6378,H:19.3675,cutv:.26819,px:[768,597]},
+ W:{geo:SPW,w:23.9,H:14.7734,cutv:.20458,px:[1002,456],awn:{bays:[[40,196],[225,390],[420,586],[614,778]],top:239}}};
+// batch frame = face plane (x along the face, z out); fw = face width, yc = cut height (geometry scaled to fit)
+export function soho141Spire(b,f,lod,fw,yc){const F=SPIRE141[f],key='sp'+f;addSoho141Materials(b.mats,key);
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(F.geo.pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(F.geo.uv,2));g.setAttribute('normal',new T.Float32BufferAttribute(F.geo.nrm,3));
+ b.add(g,'soho141'+key,0,0,0,fw/F.w,yc/F.H,1);g.dispose();
+ if(lod||!F.awn)return;const[PW,PH]=F.px;awnings141(b,F.awn,p=>p/PW*fw-fw/2,p=>(PH-p)/PH*yc,0);
 }
 export function soho141On(){return !/[?&]fac141=0\b/.test(globalThis.location?.search||'');}
 function tex(name,srgb=true,rep=false){const t=new T.TextureLoader().load(A+name+'.webp?v=141b');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
