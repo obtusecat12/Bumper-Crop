@@ -12,7 +12,7 @@ import {CANAL} from './canal128-layout.js?v=128';
 import {subwayEntrances} from './subway128.js?v=128';
 import {subwayStairs,SUB} from './subway128-layout.js?v=128';
 import {BRICK144_CLEAR} from './brick144-layout.js?v=144b'; // V144 A2 frontage clear
-import {STUCCO146_CLEAR,stucco146AreaRF,stucco146AreaHoles} from './stucco146-layout.js?v=146b'; // V146 T2 basement areas + frontage clear
+import {STUCCO146_CLEAR,STUCCO146_CLEAR2,stucco146AreaRF,stucco146AreaHoles} from './stucco146-layout.js?v=146c'; // V146 T2 basement areas + frontage clear
 const PI=Math.PI;
 // V131m: street furniture never lands in or right in front of a subway opening (city rects incl. a 2 m apron, set per block)
 let KEEP_CLEAR=[];
@@ -84,7 +84,7 @@ export function* addBlockStreetsTask(b,plan,lod){
  b.push(plan.x,Y,plan.z);
  if(plan.reserved){for(const[a,c,u,v]of subtractRectangles(plan.x,plan.x+B,plan.z,plan.z+B,HOPE_GROUND_RECTS)){let pieces=[[[a,0,u],[a,0,v],[c,0,v],[c,0,u]]];if(plan.z<0)for(const shape of[FABRIC_GROUND_POLYGON,...TRANSITION_TERRAIN_QUADS,...APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,...DISTRICT_GROUND_POLYGONS]){const xs=shape.map(p=>p[0]),zs=shape.map(p=>p[1]);if(Math.max(...xs)<a||Math.min(...xs)>c||Math.max(...zs)<u||Math.min(...zs)>v)continue;pieces=pieces.flatMap(p=>subtractConvex(p,shape));}for(const poly of pieces){const g=new T.BufferGeometry(),pos=[];for(let k=1;k<poly.length-1;k++)for(const p of[poly[0],poly[k],poly[k+1]])pos.push(p[0]-plan.x,p[1],p[2]-plan.z);g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.computeVertexNormals();b.add(g,'asphalt',0,0,0);g.dispose();yield;}}b.pop();return;}
  const cn=plan.canal;
- const stairs=subwayStairs(plan.ix,plan.iz),holes=stairs.map(q=>[q.x0,q.x1,q.z0,q.z1]);KEEP_CLEAR=stairs.map(q=>q.axis==='z'?[plan.x+q.x0-1.2,plan.x+q.x1+1.2,plan.z+q.z0-3.2,plan.z+q.z1]:[plan.x+q.x0-3.2,plan.x+q.x1,plan.z+q.z0-1.2,plan.z+q.z1+1.2]);if(plan.ix===-2&&plan.iz===-1)KEEP_CLEAR.push(...BRICK144_CLEAR);if(plan.stucco146){KEEP_CLEAR.push(...STUCCO146_CLEAR);holes.push(...stucco146AreaHoles());}if(cn)holes.push([0,B,CANAL.z0,CANAL.z1]);
+ const stairs=subwayStairs(plan.ix,plan.iz),holes=stairs.map(q=>[q.x0,q.x1,q.z0,q.z1]);KEEP_CLEAR=stairs.map(q=>q.axis==='z'?[plan.x+q.x0-1.2,plan.x+q.x1+1.2,plan.z+q.z0-3.2,plan.z+q.z1]:[plan.x+q.x0-3.2,plan.x+q.x1,plan.z+q.z0-1.2,plan.z+q.z1+1.2]);if(plan.ix===-2&&plan.iz===-1)KEEP_CLEAR.push(...BRICK144_CLEAR);KEEP_CLEAR.push(...STUCCO146_CLEAR2);if(plan.stucco146){KEEP_CLEAR.push(...STUCCO146_CLEAR);holes.push(...stucco146AreaHoles());}if(cn)holes.push([0,B,CANAL.z0,CANAL.z1]);
  {const xs=[0,B],zs=[0,B];for(const h of holes){xs.push(h[0],h[1]);zs.push(h[2],h[3]);}const ux=[...new Set(xs)].sort((a,b)=>a-b),uz=[...new Set(zs)].sort((a,b)=>a-b);
   for(let i=0;i<ux.length-1;i++)for(let j=0;j<uz.length-1;j++){const a=ux[i],c=ux[i+1],u=uz[j],v=uz[j+1],x=(a+c)/2,z=(u+v)/2;if(holes.some(h=>x>h[0]&&x<h[1]&&z>h[2]&&z<h[3]))continue;b.box('asphalt',x,-.035,z,c-a,.07,v-u);}}
  const holeFor=side=>{for(const q of stairs){if(side===1&&q.axis==='z')return[B-q.z1,B-q.z0];if(side===0&&q.axis==='x')return[q.x0,q.x1];}return null;};

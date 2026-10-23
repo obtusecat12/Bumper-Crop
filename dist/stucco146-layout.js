@@ -20,3 +20,6 @@ export function stucco146AreaRF(side){if(!STUCCO146_ON)return null;const r=side=
 export function stucco146AreaHoles(){if(!STUCCO146_ON)return[];const d=STUCCO146_AREA.d;return[...STUCCO146_AREA.n.map(([a,c])=>[100+a,100+c,100,100+d]),...STUCCO146_AREA.e.map(([a,c])=>[100,100+d,100-c,100-a])];}
 // city-coordinate rectangles where the stock frontage furniture (trees, signals, meters, lights, signs, parked sedan) is skipped
 export const STUCCO146_CLEAR=STUCCO146_ON?[[-172,-112,-125,-116],[-125,-116,-172,-112]]:[];
+// V146 T3: frontage furniture also cleared where the photo's trees stand (any block: north sidewalk west of the terrace, the far
+// sidewalks across the street and the avenue, the avenue sidewalk south of the main building); stucco146-t3.js plants there.
+export const STUCCO146_CLEAR2=STUCCO146_ON?[[-200,-172,-125,-116],[-200,-90,-106,-98],[-106,-98,-160,-98],[-125,-116,-182,-170]]:[];
