@@ -5,7 +5,7 @@ import {canalBlock,CANAL_HERO} from './canal128-layout.js?v=128';
 import {soho135Filter,spire135Filter} from './soho135-layout.js?v=135v';
 import {retail138Mark} from './retail138-layout.js?v=138a'; // V138 walk-in stores
 import {brick144Filter} from './brick144-layout.js?v=144a'; // V144 A1 capital brick apartment slab
-import {maltose145Filter} from './maltose145-layout.js?v=145a'; // V145 Maltose Market schoolyard
+import {maltose145Filter,maltose145Filter2} from './maltose145-layout.js?v=145b'; // V145 Maltose Market schoolyard
 export const CITY_BLOCK=112,CITY_ROAD_HALF=7.5,CITY_SIDEWALK=4.5;
 export const CITY_ORIGIN=exitPoint(382),CITY_ANGLE=Math.atan2(CITY_ORIGIN.tx,CITY_ORIGIN.tz);
 const ca=Math.cos(CITY_ANGLE),sa=Math.sin(CITY_ANGLE);
@@ -45,6 +45,7 @@ export function cityBlockPlan(ix,iz,types){
  if(ix===-2&&iz===2)spire135Filter(result);   // ③-3b focal spire tower (soho135-spire.js)
  if(ix===-2&&iz===-1)brick144Filter(result);   // V144 A1 brick apartment slab + A2 road works (brick144.js)
  if(ix===1&&iz===-1)maltose145Filter(result);   // V145 Maltose Market schoolyard (maltose145.js)
+ if(iz===-2&&(ix===1||ix===2))maltose145Filter2(result);   // V145 M2 the photo's near buildings (maltose145-bldg.js)
  return retail138Mark(result);   // V138 walk-in stores
 }
 export function cityWaypoint(name){const edge=exitPoint(282),p=name==='city-core'?cityToWorld(112,478):name==='city-plaza'?cityToWorld(224,702):{x:edge.x+edge.nx*15,z:edge.z+edge.nz*15};return{...p,label:name==='city-core'?'Level 11 · 金融街峡谷':name==='city-plaza'?'Level 11 · 公共广场':'Level 11 · 商业边缘区',yaw:name==='city-plaza'?CITY_ANGLE-Math.PI/2:name==='city-edge'?Math.atan2(-edge.nx,-edge.nz):Math.atan2(-CITY_ORIGIN.tx,-CITY_ORIGIN.tz)};}
