@@ -10,7 +10,7 @@
 //  far tables: clutter relief (height grid from each clutter photo, CLUTH) + a few hashed standalone pieces.
 // ?malt145=0 off (with the yard).
 import * as T from './vendor/three.module.min.js';
-import {G,TB145} from './maltose145-stalls.js?v=145g';
+import {G,TB145} from './maltose145-stalls.js?v=147a';
 const A=new URL('./assets/l11-v145/',import.meta.url).href,PI=Math.PI,Y0=.15,YT=Y0+.745,V='?v=145e';
 function tex(n,srgb=true,rep=true){const t=new T.TextureLoader().load(A+n+'.webp'+V);if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 // clutter relief height grids (32 x 16, rows from the far edge), printed by the asset script

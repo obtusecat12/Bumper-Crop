@@ -54,7 +54,7 @@ class G{constructor(){this.p={};this.f=null;}
   const parts=b.parts.get(k),last=parts[parts.length-1],c=last.attributes.color,ix=s.idx;for(let i=0;i<ix.length;i++){const t=tone[ix[i]*3];c.setXYZ(i,c.getX(i)*t,c.getY(i)*t,c.getZ(i)*t);}
   gg.dispose();}this.p={};}
 }
-export {G};export const TB145=[];   // M5 goods read the table list built below
+export {G,tent,table,garmentRack};export const TB145=[];   // M5 goods read the table list built below
 const hash=(i)=>{let x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
 // ---------------- pop-up peaked canopy tent, 3 x 3 m (legs 1.45 out, eave 2.15, peak 2.95)
 function tent(g,b,x,z,ry,{key='m145canvas',lod=false}={}){g.at(x,z,ry);const h=1.45,E=Y0+2.15,P=Y0+2.95,o=1.52;
