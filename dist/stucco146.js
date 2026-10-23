@@ -12,8 +12,9 @@
 import * as T from './vendor/three.module.min.js';
 import {urbanHash} from './urban-batch.js?v=60';
 import {Soup,face,fq,fbox,wall,reveal,TILE,addMats} from './maltose145-bldg.js?v=145c';
+import {stucco146T2Task} from './stucco146-t2.js?v=146b'; // T2 left terrace, areas + railings, street furniture, cars
 const A=new URL('./assets/l11-v146/',import.meta.url).href,PI=Math.PI;
-function tex(n,srgb=true,rep=true){const t=new T.TextureLoader().load(A+n+'.webp?v=146a');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
+function tex(n,srgb=true,rep=true){const t=new T.TextureLoader().load(A+n+'.webp?v=146b');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 let M=null;
 export function addMats146(m){addMats(m);if(m.s146br)return;if(!M){const S=(o)=>new T.MeshStandardMaterial({metalness:0,roughness:1,vertexColors:true,...o});
  const W=(n,o={})=>S({map:tex(n),normalMap:tex(n+'-n',false),roughnessMap:tex(n+'-r',false),...o});
@@ -166,4 +167,5 @@ function mainBuilding(S,b,lod,R){const FN=face([0,0],[0,1]),FE=face([0,0],[1,0])
 let railTexDone=false;
 function makeRailTex(){if(railTexDone)return;railTexDone=true;}
 export function* stucco146Task(b,spec,lod){addMats146(b.mats);makeRailTex();const S=new Soup();let s=urbanHash(spec.seed|0,146,0x146a)>>>0;const R=()=>((s=(s*1664525+1013904223)>>>0)/4294967296);
- mainBuilding(S,b,lod,R);yield;S.flush(b);yield;}
+ mainBuilding(S,b,lod,R);yield;S.flush(b);yield;yield* stucco146T2Task(b,lod,R);}
+export {sash146,win as win146,aedicule as aedicule146,balcony as balcony146,chimney as chimney146,lathe as lathe146};

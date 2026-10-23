@@ -11,3 +11,12 @@ export function stucco146Filter(result){
  result.buildings=result.buildings.filter(q=>!(q.ry===0&&q.x-x>56)&&!(q.ry===Math.PI/2&&q.z-z>56));
  result.buildings.push({type:'stucco146_main',stucco146:'main',skipStorefront:true,x:x+100,z:z+100,ry:0,w:10.5,d:40,floors:5,seed:0x146a1,lot:result.district,streetwall:true});
  result.stucco146=true;return result;}
+// V146 T2: basement areas (pits) in front of the north (u = building-local x) and east (u = -z) fronts, 1.35 m deep from the facade.
+// urban-streets trims the sidewalk slabs + block asphalt there (stucco146AreaRF / stucco146AreaHoles); stucco146-t2.js builds them.
+export const STUCCO146_AREA={d:1.35,n:[[-41,-33.42],[-31.92,-23.42],[-21.92,-16.65],[-15.15,-9.75],[-6.05,-4.2]],e:[[4.2,26.5],[27.95,39.8]]};
+// road-frame x ranges of urban-streets frontageTask (side 2 = north: x_rf = 12 - u, side 3 = east: x_rf = 100 - u)
+export function stucco146AreaRF(side){if(!STUCCO146_ON)return null;const r=side===2?STUCCO146_AREA.n.map(([a,c])=>[12-c,12-a]):side===3?STUCCO146_AREA.e.map(([a,c])=>[100-c,100-a]):null;return r&&r.sort((p,q)=>p[0]-q[0]);}
+// block-local [x0,x1,z0,z1] holes in the block asphalt slab
+export function stucco146AreaHoles(){if(!STUCCO146_ON)return[];const d=STUCCO146_AREA.d;return[...STUCCO146_AREA.n.map(([a,c])=>[100+a,100+c,100,100+d]),...STUCCO146_AREA.e.map(([a,c])=>[100,100+d,100-c,100-a])];}
+// city-coordinate rectangles where the stock frontage furniture (trees, signals, meters, lights, signs, parked sedan) is skipped
+export const STUCCO146_CLEAR=STUCCO146_ON?[[-172,-112,-125,-116],[-125,-116,-172,-112]]:[];

@@ -12,6 +12,7 @@ import {CANAL} from './canal128-layout.js?v=128';
 import {subwayEntrances} from './subway128.js?v=128';
 import {subwayStairs,SUB} from './subway128-layout.js?v=128';
 import {BRICK144_CLEAR} from './brick144-layout.js?v=144b'; // V144 A2 frontage clear
+import {STUCCO146_CLEAR,stucco146AreaRF,stucco146AreaHoles} from './stucco146-layout.js?v=146b'; // V146 T2 basement areas + frontage clear
 const PI=Math.PI;
 // V131m: street furniture never lands in or right in front of a subway opening (city rects incl. a 2 m apron, set per block)
 let KEEP_CLEAR=[];
@@ -49,10 +50,10 @@ function roads(b,cn){
  for(const x of[0,B])for(const z of[0,B]){const sx=x===0?1:-1,sz=z===0?1:-1;face(b,'asphalt',[[x,.045,z],[x,.045,z+sz*R],[x+sx*R,0,z+sz*R],[x+sx*R,.045,z]]);}
 }
 function corner(b,x,z,ry){b.push(x,0,z,ry);face(b,'sidewalk',[[0,.15,W],[W,.15,0],[W,.15,W],[0,.15,W]]);b.walk(W*.70,W*.70,W*.60,W*.60,.15);curb(b,W/2,W/2,W*Math.SQRT2,PI/4);b.pop();}
-function* frontageTask(b,seed,lod,ry,portal,exclude,canalSpan,hole,noPark){
+function* frontageTask(b,seed,lod,ry,portal,exclude,canalSpan,hole,noPark,area){
  const inHole=x=>hole&&x>hole[0]-1.2&&x<hole[1]+1.2;
  b.push(56,0,56,ry);b.push(-56,0,-56);
- for(let[a,c]of(portal?[[12,14],[16,53],[59,96],[98,100]]:[[12,14],[16,96],[98,100]])){if(exclude){if(a>=exclude[0]&&c<=exclude[1])continue;if(a<exclude[0]&&c>exclude[0])c=exclude[0];else if(a<exclude[1]&&c>exclude[1])a=exclude[1];}if(hole&&a<hole[1]&&c>hole[0]){for(const[e,f]of[[a,Math.max(a,hole[0])],[Math.min(c,hole[1]),c]])if(f-e>.01)slabs(b,e,f,R+.24,R+W);const e=Math.max(a,hole[0]),f=Math.min(c,hole[1]);slabs(b,e,f,R+.24,SUB.stairX0);slabs(b,e,f,SUB.stairX1,R+W);}else slabs(b,a,c,R+.24,R+W);curb(b,(a+c)/2,R,c-a,0,.15,14);yield;}
+ for(let[a,c]of(portal?[[12,14],[16,53],[59,96],[98,100]]:[[12,14],[16,96],[98,100]])){if(exclude){if(a>=exclude[0]&&c<=exclude[1])continue;if(a<exclude[0]&&c>exclude[0])c=exclude[0];else if(a<exclude[1]&&c>exclude[1])a=exclude[1];}if(hole&&a<hole[1]&&c>hole[0]){for(const[e,f]of[[a,Math.max(a,hole[0])],[Math.min(c,hole[1]),c]])if(f-e>.01)slabs(b,e,f,R+.24,R+W);const e=Math.max(a,hole[0]),f=Math.min(c,hole[1]);slabs(b,e,f,R+.24,SUB.stairX0);slabs(b,e,f,SUB.stairX1,R+W);}else if(area){let u=a;for(const[e,f]of area){if(f<=u||e>=c)continue;if(e>u)slabs(b,u,e,R+.24,R+W);slabs(b,Math.max(u,e),Math.min(c,f),R+.24,R+W-1.35);u=Math.min(c,f);}if(u<c)slabs(b,u,c,R+.24,R+W);}else slabs(b,a,c,R+.24,R+W);curb(b,(a+c)/2,R,c-a,0,.15,14);yield;}
  if(portal)ramp(b,56,R+W/2,6,W,0);yield;
  // (V131m) slab joints every 1.45 m along, three slabs across.
  // V131m: joints come from the slab texture (aligned to the kerb); the extra joint boxes and the gutter strip are gone.
@@ -83,13 +84,13 @@ export function* addBlockStreetsTask(b,plan,lod){
  b.push(plan.x,Y,plan.z);
  if(plan.reserved){for(const[a,c,u,v]of subtractRectangles(plan.x,plan.x+B,plan.z,plan.z+B,HOPE_GROUND_RECTS)){let pieces=[[[a,0,u],[a,0,v],[c,0,v],[c,0,u]]];if(plan.z<0)for(const shape of[FABRIC_GROUND_POLYGON,...TRANSITION_TERRAIN_QUADS,...APPROACH_GROUND_QUADS,CLINIC_GROUND_POLYGON,...DISTRICT_GROUND_POLYGONS]){const xs=shape.map(p=>p[0]),zs=shape.map(p=>p[1]);if(Math.max(...xs)<a||Math.min(...xs)>c||Math.max(...zs)<u||Math.min(...zs)>v)continue;pieces=pieces.flatMap(p=>subtractConvex(p,shape));}for(const poly of pieces){const g=new T.BufferGeometry(),pos=[];for(let k=1;k<poly.length-1;k++)for(const p of[poly[0],poly[k],poly[k+1]])pos.push(p[0]-plan.x,p[1],p[2]-plan.z);g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.computeVertexNormals();b.add(g,'asphalt',0,0,0);g.dispose();yield;}}b.pop();return;}
  const cn=plan.canal;
- const stairs=subwayStairs(plan.ix,plan.iz),holes=stairs.map(q=>[q.x0,q.x1,q.z0,q.z1]);KEEP_CLEAR=stairs.map(q=>q.axis==='z'?[plan.x+q.x0-1.2,plan.x+q.x1+1.2,plan.z+q.z0-3.2,plan.z+q.z1]:[plan.x+q.x0-3.2,plan.x+q.x1,plan.z+q.z0-1.2,plan.z+q.z1+1.2]);if(plan.ix===-2&&plan.iz===-1)KEEP_CLEAR.push(...BRICK144_CLEAR);if(cn)holes.push([0,B,CANAL.z0,CANAL.z1]);
+ const stairs=subwayStairs(plan.ix,plan.iz),holes=stairs.map(q=>[q.x0,q.x1,q.z0,q.z1]);KEEP_CLEAR=stairs.map(q=>q.axis==='z'?[plan.x+q.x0-1.2,plan.x+q.x1+1.2,plan.z+q.z0-3.2,plan.z+q.z1]:[plan.x+q.x0-3.2,plan.x+q.x1,plan.z+q.z0-1.2,plan.z+q.z1+1.2]);if(plan.ix===-2&&plan.iz===-1)KEEP_CLEAR.push(...BRICK144_CLEAR);if(plan.stucco146){KEEP_CLEAR.push(...STUCCO146_CLEAR);holes.push(...stucco146AreaHoles());}if(cn)holes.push([0,B,CANAL.z0,CANAL.z1]);
  {const xs=[0,B],zs=[0,B];for(const h of holes){xs.push(h[0],h[1]);zs.push(h[2],h[3]);}const ux=[...new Set(xs)].sort((a,b)=>a-b),uz=[...new Set(zs)].sort((a,b)=>a-b);
   for(let i=0;i<ux.length-1;i++)for(let j=0;j<uz.length-1;j++){const a=ux[i],c=ux[i+1],u=uz[j],v=uz[j+1],x=(a+c)/2,z=(u+v)/2;if(holes.some(h=>x>h[0]&&x<h[1]&&z>h[2]&&z<h[3]))continue;b.box('asphalt',x,-.035,z,c-a,.07,v-u);}}
  const holeFor=side=>{for(const q of stairs){if(side===1&&q.axis==='z')return[B-q.z1,B-q.z0];if(side===0&&q.axis==='x')return[q.x0,q.x1];}return null;};
  roads(b,cn);yield;
  // Sidewalk ring surrounds occupied lots, with six-metre rear-access portals.
- const joinsLandmark=plan.ix===0&&plan.iz===4;for(let side=0;side<4;side++){if(cn&&((side===1&&cn.noRoadW)||(side===3&&cn.noRoadE)))continue;yield* frontageTask(b,plan.seed+side*29,lod,side*PI/2,side%2===0,joinsLandmark?(side===0?[0,33]:side===1?[76,112]:null):null,cn&&side%2===1,holeFor(side),plan.soho135&&side===('ab'.includes(plan.soho135)?1:3));}
+ const joinsLandmark=plan.ix===0&&plan.iz===4;for(let side=0;side<4;side++){if(cn&&((side===1&&cn.noRoadW)||(side===3&&cn.noRoadE)))continue;yield* frontageTask(b,plan.seed+side*29,lod,side*PI/2,side%2===0,joinsLandmark?(side===0?[0,33]:side===1?[76,112]:null):null,cn&&side%2===1,holeFor(side),plan.soho135&&side===('ab'.includes(plan.soho135)?1:3),plan.stucco146?stucco146AreaRF(side):null);}
  for(const[x,z,ry]of[[R,R,0],[B-R,R,-PI/2],[B-R,B-R,PI],[R,B-R,PI/2]]){if(joinsLandmark&&x===R&&z===R)continue;if(cn&&((x===R&&cn.noRoadW)||(x===B-R&&cn.noRoadE)))continue;corner(b,x,z,ry);yield;}
  // Four lanes total: 3.15 m travel lanes with narrow parking/curb space.
  const xr=e=>!(cn&&((e===0&&cn.noRoadW)||(e===B&&cn.noRoadE)));
