@@ -53,6 +53,7 @@ class G{constructor(){this.p={};this.f=null;}
   const parts=b.parts.get(k),last=parts[parts.length-1],c=last.attributes.color,ix=s.idx;for(let i=0;i<ix.length;i++){const t=tone[ix[i]*3];c.setXYZ(i,c.getX(i)*t,c.getY(i)*t,c.getZ(i)*t);}
   gg.dispose();}this.p={};}
 }
+export {G};export const TB145=[];   // M5 goods read the table list built below
 const hash=(i)=>{let x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
 // ---------------- pop-up peaked canopy tent, 3 x 3 m (legs 1.45 out, eave 2.15, peak 2.95)
 function tent(g,b,x,z,ry,{key='m145canvas',lod=false}={}){g.at(x,z,ry);const h=1.45,E=Y0+2.15,P=Y0+2.95,o=1.52;
@@ -152,6 +153,7 @@ export function* maltose145StallsTask(b,lod){addMats(b.mats);const g=new G();
   [88.6,46.2,PI/2,2.44,'w'],[88.6,43.4,PI/2,2.44,'r']];
  for(let k=0;k<7;k++)TB.push([73.9,53.6-k*2.52,PI/2,2.44,['w','r','w',null,'w','r','p'][k]]);
  for(const[x,z,r]of TENTS){const c=Math.cos(r),s=Math.sin(r);TB.push([x,z+.7,r,1.83,['w',null,'r','w','p','w','r','w'][TB.length%8]]);TB.push([x-.8*s+1.05*c,z-.8*c-1.05*s,r+PI/2,1.83,['r','w',null,'w','w','p','w','r'][TB.length%8]]);}
+ TB145.length=0;TB145.push(...TB);
  TB.forEach(([x,z,r,l,c],k)=>table(g,b,x,z,r,{len:l,cloth:c,seed:k,lod,drop:c==='p'?.62:.55}));yield;
  // garment rack (Chinese jackets + sweaters; the white embroidered jacket faces the aisle) and the chrome wire rack
  garmentRack(g,b,79.9,54.0,RF+.12,[1,5,2,3,6,4,7,1,2,0],{lod});
