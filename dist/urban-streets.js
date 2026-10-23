@@ -106,8 +106,9 @@ export function* addBlockStreetsTask(b,plan,lod){
  if(cn||plan.canalExtra){yield* canalBlockTask(b,plan,lod);if(cn){b.pop();return;}}
  // Real inner service court, bounded by the backs of continuous perimeter buildings.
  b.box('asphalt',56,.008,56,44,.016,40);for(const z of[24,88])b.box('asphalt',56,.008,z,6,.016,24);b.walk(56,56,6,88,.016);for(const front of[true,false]){b.push(56,0,front?13:99,front?0:PI);face(b,'sidewalk',[[-3,.15,-1],[-3,.016,1],[3,.016,1],[3,.15,-1]]);b.walk(0,0,6,2,.083,0,-.067);b.pop();}
- for(const z of[38.0,74.0]){place(b,44,.025,z,0,S.addDumpster);place(b,64,.025,z,0,P.addUtilityCabinet,{variant:1});yield;}
- if(!lod){for(const x of[39,43,47,65,69,73]){b.box('white',x,.028,56,.08,.009,5.0,0,.57);place(b,x+1.6,.02,58,0,P.addWheelStop);}if(plan.seed%2===0)place(b,70,.026,54,0,S.addParkedSedan,{seed:plan.seed+377});}
+ const yard145=!!plan.maltose145;   // V145: the east half of the service court is under the Maltose Market schoolyard slab
+ for(const z of[38.0,74.0]){place(b,44,.025,z,0,S.addDumpster);if(!yard145)place(b,64,.025,z,0,P.addUtilityCabinet,{variant:1});yield;}
+ if(!lod){for(const x of[39,43,47,65,69,73]){if(yard145&&x>58)continue;b.box('white',x,.028,56,.08,.009,5.0,0,.57);place(b,x+1.6,.02,58,0,P.addWheelStop);}if(plan.seed%2===0&&!yard145)place(b,70,.026,54,0,S.addParkedSedan,{seed:plan.seed+377});}
  b.pop();
 }
 

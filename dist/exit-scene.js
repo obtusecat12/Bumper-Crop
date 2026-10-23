@@ -18,6 +18,7 @@ import {soho135BuildingTask} from './soho135-street.js?v=141j'; // V135-capital 
 import {soho135FairTask} from './soho135-fair.js?v=141j'; // V135-capital ③-2 SoHo street fair (closed road x=-224)
 import {spire135Task} from './soho135-spire.js?v=141j'; // ③-3b SoHo focal spire tower
 import {brick144Task} from './brick144.js?v=144b'; // V144 A1 capital brick apartment slab
+import {maltose145Task} from './maltose145.js?v=145a'; // V145 Maltose Market schoolyard (M1)
 import {barricade144Task,BARRICADE144,BARRICADE144_ON} from './brick144-barricade.js?v=144f'; // V144 B alley barricade (pallet pile)
 import {sohoBake135,SOHO135_BAKE_BLOCKS} from './soho135-bake.js?v=144f';
 import {soho141Ready,soho141Load} from './soho141-facade.js?v=141j'; // V141 F4: SoHo facade tables stream in with their blocks // ③-3c per-block Blender bake of the streamed SoHo blocks
@@ -35,7 +36,7 @@ import * as P from './urban-props.js?v=132st';
 import {shrub131} from './shrub131.js?v=131';   // V131 cross-card shrubs
 import * as S from './urban-smallprops.js?v=132st';
 import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=140i';
-import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=144b';
+import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=145a';
 import {addReferenceMaterials} from './reference-materials.js?v=60';
 import {createReferenceScenes,referenceWaypoint,clinicToWorld} from './reference-scenes.js?v=60';
 import {canalBlock,CANAL} from './canal128-layout.js?v=128';
@@ -44,7 +45,7 @@ import {subwayStairs} from './subway128-layout.js?v=128';
 import {createTraffic132} from './traffic132.js?v=135t';
 import {createCrowd135} from './crowd135.js?v=139j'; // V135-capital ④-1/④-2/④-2b SoHo fair pedestrians
 import {bakeFixed133} from './city-bake133.js?v=135g'; // V133-bake-city
-import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=144a';
+import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=145a';
 const B=CITY_BLOCK,Y=EXIT_CITY_Y;
 const fashionEye=clinicToWorld(69,50),fashionAim=clinicToWorld(88,64.75),fashionWaypoint={...fashionEye,label:'Level 11 · ECHO 服装广告',yaw:Math.atan2(fashionEye.x-fashionAim.x,fashionEye.z-fashionAim.z),pitch:.62};
 const ground=(x,z)=>exitSurface(exitSample(x,z,{}),height(x,z));
@@ -123,6 +124,7 @@ function* buildBlock(mats,plan,lod){
  if(plan.soho135==='a'||plan.soho135==='b'){b.push(plan.x,Y,plan.z);yield* soho135FairTask(b,plan,lod);b.pop();}
  for(const spec of plan.buildings){b.push(spec.x,Y+.15,spec.z,spec.ry);if(spec.soho135)yield* soho135BuildingTask(b,spec,lod);else if(spec.spire135)yield* spire135Task(b,spec,lod);else if(spec.brick144)yield* brick144Task(b,spec,lod);else yield* addStreetwallBuildingTask(b,{...spec,lod});if(spec.infill){b.box('sidewalk',0,-.075,spec.d/2+1.8,spec.w,.15,3.6);b.walk(0,spec.d/2+1.8,spec.w,3.6,0);b.push(0,-.15,0);curb(b,0,spec.d/2+3.6,spec.w,Math.PI,.15);b.pop();if(spec.seed%3===0)place(b,0,0,spec.d/2+2.85,0,P.addStreetTree,{seed:spec.seed,scale:.68});else if(spec.seed%3===1)place(b,0,0,spec.d/2+2.85,0,P.addHydrant);else place(b,0,0,spec.d/2+2.85,0,P.addStreetLight,{height:7.4,arm:1.5});}b.pop();yield;}
  if(BARRICADE144_ON&&plan.ix===BARRICADE144.block[0]&&plan.iz===BARRICADE144.block[1]){b.push(plan.x+BARRICADE144.x,Y+.15,plan.z+BARRICADE144.z,0);yield* barricade144Task(b,lod);b.pop();}
+ if(plan.maltose145){b.push(plan.x,Y,plan.z);yield* maltose145Task(b,lod);b.pop();}
 
  b.pop();const object=yield* b.finishTask('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district);const sub=plan.reserved?null:yield* subwayBlockTask(mats,plan,lod);return{object,colliders:b.colliders,walks:b.walks,plan,lod,sub,stairWalks:b.stairWalks||[],stairSolids:b.stairSolids||[],signals132:b.signals132||[],picks140:b.picks140||[]};}finally{b.discard();}
 }
