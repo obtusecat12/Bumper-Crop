@@ -55,6 +55,9 @@ function frontBolt(b, x, y, z, radius = .009) {
   b.cylinder('metal', x, y, z, radius, radius, .007, 6, PI / 2, 0, .72);
 }
 
+// V145 M3: a module may take over the tree itself (the grate stays): hook(b, seed, scale) returns true when it drew one.
+let streetTreeHook = null;
+export function setStreetTreeHook(fn) { streetTreeHook = fn; }
 export function addStreetTree(b, { seed = 1, scale = 1 } = {}) {
   const rng = random(seed), s = scale;
   const at = (p) => p.map(v => v * s);
@@ -74,6 +77,7 @@ export function addStreetTree(b, { seed = 1, scale = 1 } = {}) {
   }
   for (const v of [-1, 1]) b.box('metal', 0, .019 * s, v * .273 * s,
     .58 * s, .035 * s, .029 * s, 0, .45);
+  if (streetTreeHook && streetTreeHook(b, seed, s)) return;
   // Flared roots and a branching trunk share endpoints all the way to the twigs.
   const trunk = [[0, .015, 0], [.04, 1.08, .015], [-.035, 2.34, .025], [.075, 3.46, -.035]];
   limb(trunk[0], trunk[1], .245, .85);

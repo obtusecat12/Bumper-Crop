@@ -23,3 +23,21 @@ export function maltose145Filter2(result){
  if(ix===2&&iz===-2){result.buildings=result.buildings.filter(q=>!(q.ry===0&&q.x-x<56)&&q.ry!==-Math.PI/2);
   result.buildings.push({type:'maltose145_brown',malt145b:'brown',skipStorefront:true,x:x+12,z:z+100,ry:0,w:41,d:18,floors:7,seed:0x145a3,lot:result.district,streetwall:true});}
  return result;}
+// V145 M3: the photo's far / side buildings (maltose145-far.js), deduced in the M2 photo camera:
+//  (2,-1) south-west corner L = RR (right near red), replacing its south row west lots + west side lots;
+//  (2,-2) courtyard = TB (tall brown), south row west lots = LG (light grey);  (1,-2) courtyard = TL (tall dark, its north-west
+//  side lot goes), the rest of (1,-2) capped at 7 floors so nothing pokes over BEIGE;  (2,-3) north = SR (San Remo twin towers):
+//  north row + the side lots north of lz 54 go.
+export function maltose145Filter3(result){
+ if(!MALTOSE145_ON)return result;const{ix,iz,x,z}=result,L=result.district,add=(o)=>result.buildings.push({skipStorefront:true,lot:L,streetwall:true,ry:0,...o});
+ if(ix===2&&iz===-1){result.buildings=result.buildings.filter(q=>!(q.ry===Math.PI&&q.x-x<56)&&q.ry!==-Math.PI/2);
+  add({type:'maltose145_rr',malt145f:'rr',x:x+12,z:z+12,ry:-Math.PI/2,w:41,d:64,floors:7,seed:0x145b1});}
+ if(ix===2&&iz===-2){result.buildings=result.buildings.filter(q=>!(q.ry===Math.PI&&q.x-x<56));
+  add({type:'maltose145_tb',malt145f:'tb',x:x+49,z:z+65,w:34,d:22,floors:14,seed:0x145b2});
+  add({type:'maltose145_lg',malt145f:'lg',x:x+32.5,z:z+24,w:41,d:24,floors:5,seed:0x145b3});}
+ if(ix===1&&iz===-2){result.buildings=result.buildings.filter(q=>!(q.ry===-Math.PI/2&&q.z-z>54));
+  for(const q of result.buildings)if(!q.malt145b)q.floors=Math.min(q.floors,q.type==='brick_walkup'?6:7);
+  add({type:'maltose145_tl',malt145f:'tl',x:x+42,z:z+62,w:28,d:24,floors:20,seed:0x145b4});}
+ if(ix===2&&iz===-3){result.buildings=result.buildings.filter(q=>q.ry!==0&&!(Math.abs(q.ry)===Math.PI/2&&q.z-z>54));
+  add({type:'maltose145_sr',malt145f:'sr',x:x+56.5,z:z+72,w:61,d:36,floors:27,seed:0x145b5});}
+ return result;}

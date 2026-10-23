@@ -155,7 +155,7 @@ function facade(S,F,cfg){const {u0,u1,wall:k,floors,bays,R,lod}=cfg,D=cfg.D||.32
 function shops(S,F,u0,u1,h,key,pier,R,lod,fascia=null){const n=Math.max(1,Math.round((u1-u0)/6.2)),w=(u1-u0)/n;
  for(let i=0;i<n;i++){const a=u0+i*w,b=a+w,m=R()<.5;
   fbox(S,pier,F,a,a+.45,0,h,-.02,.12);   // pier
-  const sa=a+.45,sb=b-(i===n-1?.45:0);fq(S,key,F,sa,sb,0,h-.15,-.2,m?[[1,0],[0,0],[0,1],[1,1]]:[[0,0],[1,0],[1,1],[0,1]]);
+  const kk=Array.isArray(key)?key[i%key.length]:key,sa=a+.45,sb=b-(i===n-1?.45:0);fq(S,kk,F,sa,sb,0,h-.15,-.2,m?[[1,0],[0,0],[0,1],[1,1]]:[[0,0],[1,0],[1,1],[0,1]]);
   if(!lod){fbox(S,pier,F,sa,sb,h-.15,h,-.2,0,false,'b');fbox(S,pier,F,sa,sa+.02,0,h,-.2,0,false,'b');}
   if(fascia)fbox(S,fascia,F,sa,sb,h-.75,h-.2,-.2,-.05,true);}
  fbox(S,pier,F,u1-.45,u1,0,h,-.02,.12);}
@@ -249,3 +249,5 @@ function brownBuilding(S,b,lod,R){// local: corner at (0,0); north face z = 0 (x
 const BUILD={red:redBuilding,beige:beigeBuilding,brown:brownBuilding};
 export function* maltose145BldgTask(b,spec,lod){addMats(b.mats);const S=new Soup();let s=urbanHash(spec.seed|0,145,0x145b)>>>0;const R=()=>((s=(s*1664525+1013904223)>>>0)/4294967296);
  BUILD[spec.malt145b](S,b,lod,R);yield;S.flush(b);yield;}
+// V145 M3: helpers shared with maltose145-far.js
+export {Soup,face,fq,fbox,wall,reveal,sash,acUnit,fireEscape,cornice,band,facade,shops,TILE,addMats,tex};
