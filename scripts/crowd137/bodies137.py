@@ -33,6 +33,10 @@ ARMF = {'clavicle': .5, 'upperArm': 1., 'foreArm': 1., 'hand': 1.}
 tname_of = lambda t: next(k for k, v in TYPES.items() if v is t)
 BONECLS = lambda n: n.rstrip('LR')
 SILS = ['short', 'coat', 'skirt']   # 'skirt' = skirt for woman/child, shorts for man/heavy
+# V145 M6: BC145=1 builds the Maltose Market extra bin instead (assets/crowd135/crowd145.bin): sil 'jacket' (short body,
+# long sleeves, jacket girth, no coat tail) for man / woman / heavy, clips walk + idle + sit, same 135z layout and heads.
+BC145 = __import__('os').environ.get('BC145') == '1'
+if BC145: SILS = ['jacket']
 NS = 14
 REG = {'skin': 0, 'top': 1, 'bottom': 2, 'shoe': 3, 'coat': 4, 'trim': 5}
 J0 = BASE['joints']
@@ -80,6 +84,8 @@ def body(tname, sil):
   t = TYPES[tname]; s = t['h']; B = bones_for(t); V0, F0, W0 = base_mesh(t['src'])
   skirtish = sil == 'skirt' and tname in ('woman', 'child'); shorts = sil == 'skirt' and not skirtish; coat = sil == 'coat'
   G = dict(GIRTH[tname]); belly = G.pop('belly', 1.)
+  if sil == 'jacket':   # V145: padded winter jacket over the short body
+    for k in ('hips', 'spine', 'chest', 'clavicle', 'upperArm', 'foreArm'): G[k] = G.get(k, 1.) * (1.06 if k != 'foreArm' else 1.05)
   if coat:
     for k in ('hips', 'spine', 'chest', 'clavicle', 'upperArm', 'foreArm'): G[k] = G.get(k, 1.) * (1.07 if k != 'foreArm' else 1.05)
   m = Body(); m.yb = []; kneeY = J0['shinL'][1]; midThigh = (J0['thighL'][1] + kneeY) / 2 - .03
@@ -123,7 +129,7 @@ def body(tname, sil):
     m.r.append('skin' if dom in ('hand', 'head') else 'shoe' if dom == 'foot' else 'bottom' if dom in ('thigh', 'shin') or p[1] < m.hemY else 'top')
   m.extra = []   # (first vertex, kind) of welded-on garment shells
   m.ftag = {}    # face index -> uv kind for added shells
-  long_sleeve = coat or (sil == 'skirt' and tname == 'child')
+  long_sleeve = coat or sil == 'jacket' or (sil == 'skirt' and tname == 'child')
   if not long_sleeve:
     for side in 'LR': add_lip(m, lambda i, sd=side: m.dom[i] in ('upperArm', 'foreArm') and (m.v[i][0] > 0) == (sd == 'L'), m.cutY - 3e-4, -1,
                               lambda p, sd=side: closest(Vector(p) / s, 'upperArm' + sd) * s, .007 * s, .016 * s, 'sleeve')
@@ -401,7 +407,26 @@ def char_rot(e):
   # character-space euler (x lateral, y up, z forward) -> Blender armature-space rotation
   return Euler((e.x, -e.z, e.y), 'XYZ').to_matrix().to_4x4()
 
-CLIPS = [('walk', 24, walk_pose), ('idle', 12, idle_pose)]
+# V145 M6 (10-24): seated pose for market vendors (maltose145-npc.js): thighs forward ~86 deg, shins down, feet a little
+# forward, slight forward slouch, forearms resting on the thighs; slow breathing. The hips drop so the thigh joint sits
+# .085 m above a .41 m seat (folding / camp chair); the person origin goes ~.08 m in front of the seat centre.
+SEAT145 = .41
+def sit_pose(p, tname):
+  c = math.cos(2 * math.pi * p); s = TYPES[tname]['h']; P = {}
+  for side, sg in (('L', 1), ('R', -1)):
+    P['thigh' + side] = Euler((-math.radians(86), 0, sg * math.radians(-5)))
+    P['shin' + side] = Euler((math.radians(80), 0, sg * math.radians(3)))
+    P['foot' + side] = Euler((math.radians(4), 0, 0))
+    P['upperArm' + side] = Euler((-math.radians(30 + .8 * c), 0, sg * math.radians(-7)))
+    P['foreArm' + side] = Euler((-math.radians(42 + .8 * c), 0, 0))
+    P['hand' + side] = Euler((math.radians(10), 0, 0))
+  P['hips'] = Euler((0, 0, 0)); P['spine'] = Euler((math.radians(6 + .8 * c), 0, 0))
+  P['chest'] = Euler((math.radians(5 + .6 * c), 0, 0)); P['neck'] = Euler((-math.radians(4), 0, 0))
+  P['head'] = Euler((-math.radians(5), math.radians(5) * math.sin(2 * math.pi * p + .7), 0))
+  drop = HIP * s - (SEAT145 + .085)
+  return P, Vector((0, 0, -drop + .002 * c))
+
+CLIPS = [('walk', 24, walk_pose), ('idle', 12, idle_pose)] + ([('sit', 6, sit_pose)] if BC145 else [])   # sit only in crowd145.bin (appended: walk/idle rows unchanged)
 
 def key_clips(rig, tname):
   rig.animation_data_create(); start = 0; spans = {}
@@ -486,9 +511,10 @@ def sil_child_long(m): return m.sk.get('long', False)
 
 rigs = {}; heads = {}; bodies = []; accs = {}
 for tname in TYPES:
+  if BC145 and tname == 'child': continue
   rig = make_armature(tname); rigs[tname] = (rig, key_clips(rig, tname))
   for sil in SILS:
-    m, B = body(tname, sil); m.sk['long'] = (sil == 'skirt' and tname == 'child')
+    m, B = body(tname, sil); m.sk['long'] = (sil == 'skirt' and tname == 'child') or sil == 'jacket'
     me = bpy.data.meshes.new(f'{tname}_{sil}'); me.from_pydata([G2B(v) for v in m.v], [], m.f); me.update()
     ob = bpy.data.objects.new(me.name, me); scn.collection.objects.link(ob)
     for n in B: ob.vertex_groups.new(name=n)
@@ -553,6 +579,7 @@ for tname, (V, UV, F) in heads.items():
   meta['heads'][tname]['acc'] = ac
 J = json.dumps(meta, separators=(',', ':')).encode()
 pad = (4 - (len(J) + 4) % 4) % 4; J += b' ' * pad
-with open(OUT + '/crowd135.bin', 'wb') as fh: fh.write(struct.pack('<I', len(J))); fh.write(J); fh.write(blobs)
-bpy.ops.wm.save_as_mainfile(filepath=OUT + '/crowd135.blend')
-print('WROTE', OUT + '/crowd135.bin', 4 + len(J) + len(blobs))
+BIN = OUT + ('/crowd145.bin' if BC145 else '/crowd135.bin')
+with open(BIN, 'wb') as fh: fh.write(struct.pack('<I', len(J))); fh.write(J); fh.write(blobs)
+bpy.ops.wm.save_as_mainfile(filepath=BIN[:-4] + '.blend')
+print('WROTE', BIN, 4 + len(J) + len(blobs))

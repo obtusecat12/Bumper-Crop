@@ -430,6 +430,63 @@ def skirt(name, srcn, kind):
   p.sh += -.3 * gauss(V - .975, .012) + .1 * gauss(V - .95, .012)
   return p.out(name, sides=0.)
 
+# ---- V145 M6 (10-24) winter garments for the Maltose Market cast (appended cells 33..38: crowd135.js G135 puffer / wrap) ----
+def puffer():
+  # quilted down jacket (short top): horizontal baffles with stitched channels, centre zip + storm flap, stand collar,
+  # zip hand pockets, elastic cuffs; nylon sheen per baffle
+  _, g, _ = grain('z_top_leather_f.png', box=(.15, .5, .4, .8), k=.35); base = np.array([.085, .09, .105])
+  def baffles(p, v0=.1, v1=.97, n=7, sleeve=False):
+    for i in range(n + 1):
+      y = v0 + (v1 - v0) * i / n
+      p.sh += -.38 * gauss(V - y, .008) + .1 * gauss(V - y - .012, .01)
+      if i < n: p.sh += .2 * gauss(V - (y + (v1 - v0) / n * .42), (v1 - v0) / n * .22) * (1 - .4 * np.abs(2 * U - 1))   # puffed sheen
+      if i and i < n: p.stitch([(.02, y), (.98, y)], (0, 0, 0, 120), .002, .008)
+  zipc = (150, 150, 150, 255)
+  f = Panel(base, g); torso_common(f, True, hem=False); baffles(f)
+  f.poly([(.38, .0), (.62, .0), (.63, .1), (.37, .1)], rgba(base, 1.25, 255), (5, 5, 5, 230), .004)                 # stand collar
+  f.line([(.5, .0), (.5, .97)], (12, 12, 12, 255), .02); f.line([(.5, .0), (.5, .97)], zipc, .004)                   # zip
+  f.poly([(.505, .1), (.55, .1), (.55, .95), (.505, .95)], rgba(base, 1.1, 255), (5, 5, 5, 200), .003)              # storm flap
+  for y in (.2, .4, .6, .8): f.button(.53, y, .008, (40, 40, 44))
+  for x0, sgn in ((.2, 1), (.8, -1)): f.line([(x0, .6), (x0 + sgn * .06, .78)], (8, 8, 8, 255), .008)
+  f.poly([(0, .93), (1, .93), (1, .99), (0, .99)], rgba(base, .7, 255))                                           # elastic hem
+  f.poly([(.08, .14), (.18, .14), (.18, .18), (.08, .18)], (180, 60, 40, 255))                                     # small brand patch (unlettered)
+  b = Panel(base, g); torso_common(b, False, hem=False); baffles(b)
+  b.poly([(.36, .0), (.64, .0), (.65, .1), (.35, .1)], rgba(base, 1.25, 255), (5, 5, 5, 230), .004)
+  b.poly([(0, .93), (1, .93), (1, .99), (0, .99)], rgba(base, .7, 255))
+  s = Panel(base, g); sleeve_common(s, False, cuff=.9); baffles(s, .05, .9, 6, True)
+  s.poly([(0, .9), (1, .9), (1, 1), (0, 1)], rgba(base, .6, 255))
+  for x in np.arange(0, 1, .03): s.line([(x, .9), (x, 1)], rgba(base, .35, 140), .003)
+  return [f.out('puffer_f'), b.out('puffer_b'), s.out('puffer_s')]
+
+def wrapcoat():
+  # women's long wool wrap coat (maroon): wide shawl collar, overlapping front edge, tie belt with hanging ends, patch
+  # pockets, knitted scarf at the neck
+  _, g, _ = grain('z_coat_wool_f.png', box=(.62, .6, .78, .72), k=.5); base = np.array([.40, .085, .115])
+  f = Panel(base, g); coat_common(f)
+  for sgn in (-1, 1):
+    col = [(.5 + sgn * .04, .02), (.5 + sgn * .24, .03), (.5 + sgn * .26, .16), (.5 + sgn * .14, .3), (.5 + sgn * .05, .42)]
+    f.poly([(x + .012, y + .016) for x, y in col], (0, 0, 0, 110)); f.poly(col, rgba(base, 1.22, 255), rgba(base, .35, 240), .004)
+  f.line([(.55, .4), (.58, .97)], rgba(base, .38, 240), .006)                                                     # wrap edge
+  fold(f.sh, [(.57, .45), (.6, .97)], .02, .25, .14, side=(1, 0))
+  scarf = (52, 48, 56, 255)
+  f.poly([(.36, .0), (.64, .0), (.6, .1), (.4, .1)], scarf, (20, 20, 24, 230), .004)                               # scarf wrap
+  f.poly([(.44, .08), (.53, .08), (.55, .34), (.45, .33)], scarf, (20, 20, 24, 230), .004)                         # scarf end
+  for y in np.arange(.1, .33, .025): f.line([(.445, y), (.545, y + .004)], (30, 28, 34, 200), .003)
+  f.poly([(0, .39), (1, .39), (1, .44), (0, .44)], rgba(base, .92, 255), rgba(base, .4, 230), .004)              # tie belt
+  f.poly([(.6, .44), (.64, .44), (.66, .64), (.62, .65)], rgba(base, .95, 255), rgba(base, .4, 230), .003)        # belt ends
+  f.poly([(.64, .44), (.67, .44), (.71, .6), (.68, .61)], rgba(base, .9, 255), rgba(base, .4, 230), .003)
+  for x0 in (.14, .64):
+    f.poly([(x0, .55), (x0 + .2, .55), (x0 + .2, .7), (x0, .7)], rgba(base, 1.04, 255), rgba(base, .4, 230), .004)
+    f.stitch([(x0 + .01, .56), (x0 + .19, .56)], rgba(base, .5, 160))
+  b = Panel(base, g); coat_common(b)
+  b.poly([(.26, .0), (.74, .0), (.76, .12), (.24, .12)], rgba(base, 1.18, 255), rgba(base, .38, 230), .004)        # collar back
+  b.poly([(.4, .0), (.6, .0), (.58, .05), (.42, .05)], scarf)
+  b.poly([(0, .39), (1, .39), (1, .44), (0, .44)], rgba(base, .92, 255), rgba(base, .4, 230), .004)
+  b.line([(.5, .44), (.5, .97)], rgba(base, .45, 220), .004); fold(b.sh, [(.5, .65), (.5, .97)], .02, .22, .12)
+  s = Panel(base, g); sleeve_common(s, False, cuff=.8)
+  s.poly([(0, .8), (1, .8), (1, .86), (0, .86)], rgba(base, 1.1, 255), rgba(base, .4, 220), .003)                  # turned-back cuff
+  return [f.out('wrap_f'), b.out('wrap_b'), s.out('wrap_s')]
+
 cells = []
 for fn in (tee, breton, chambray, floral, hoodie, knit, leather, trench, wool): cells += fn()
 cells += [trousers('jeans', 'z_bot_jeans_f.png', (.3, .3, .45, .7), 'jeans'),
@@ -437,6 +494,7 @@ cells += [trousers('jeans', 'z_bot_jeans_f.png', (.3, .3, .45, .7), 'jeans'),
           trousers('chinos', 'z_bot_chinos_f.png', (.3, .3, .45, .7), 'chinos'),
           trousers('greytrousers', 'z_bot_greytrousers_f.png', (.3, .3, .45, .7), 'grey'),
           skirt('tartanskirt', 'z_bot_tartanskirt_f.png', 'tartan'), skirt('navyskirt', 'z_bot_navyskirt_f.png', 'navy')]
+cells += puffer() + wrapcoat()   # V145 M6: cells 33..38
 cells = [lowfi(c) for c in cells]
 rows = (len(cells) + PER - 1) // PER
 A = Image.new('RGB', (PER * C, rows * C), (128, 128, 128))
