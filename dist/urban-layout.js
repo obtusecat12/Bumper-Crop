@@ -6,6 +6,7 @@ import {soho135Filter,spire135Filter} from './soho135-layout.js?v=135v';
 import {retail138Mark} from './retail138-layout.js?v=138a'; // V138 walk-in stores
 import {brick144Filter} from './brick144-layout.js?v=144a'; // V144 A1 capital brick apartment slab
 import {maltose145Filter,maltose145Filter2,maltose145Filter3} from './maltose145-layout.js?v=145c'; // V145 Maltose Market schoolyard
+import {stucco146Filter} from './stucco146-layout.js?v=146a'; // V146 capital stucco corner terrace
 export const CITY_BLOCK=112,CITY_ROAD_HALF=7.5,CITY_SIDEWALK=4.5;
 export const CITY_ORIGIN=exitPoint(382),CITY_ANGLE=Math.atan2(CITY_ORIGIN.tx,CITY_ORIGIN.tz);
 const ca=Math.cos(CITY_ANGLE),sa=Math.sin(CITY_ANGLE);
@@ -47,6 +48,7 @@ export function cityBlockPlan(ix,iz,types){
  if(ix===1&&iz===-1)maltose145Filter(result);   // V145 Maltose Market schoolyard (maltose145.js)
  if(iz===-2&&(ix===1||ix===2))maltose145Filter2(result);   // V145 M2 the photo's near buildings (maltose145-bldg.js)
  if(ix>=1&&ix<=2&&iz>=-3&&iz<=-1)maltose145Filter3(result);   // V145 M3 far / side buildings (maltose145-far.js)
+ if(ix===-2&&iz===-2)stucco146Filter(result);   // V146 stucco corner terrace (stucco146.js)
  return retail138Mark(result);   // V138 walk-in stores
 }
 export function cityWaypoint(name){const edge=exitPoint(282),p=name==='city-core'?cityToWorld(112,478):name==='city-plaza'?cityToWorld(224,702):{x:edge.x+edge.nx*15,z:edge.z+edge.nz*15};return{...p,label:name==='city-core'?'Level 11 · 金融街峡谷':name==='city-plaza'?'Level 11 · 公共广场':'Level 11 · 商业边缘区',yaw:name==='city-plaza'?CITY_ANGLE-Math.PI/2:name==='city-edge'?Math.atan2(-edge.nx,-edge.nz):Math.atan2(-CITY_ORIGIN.tx,-CITY_ORIGIN.tz)};}
