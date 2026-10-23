@@ -9,6 +9,7 @@
 //  street / east fences (rug back = mirrored, darker). Placement from the photo camera (see version-history V145 M4).
 // Colliders: tent legs, tables, racks. ?malt145=0 off (with the yard).
 import * as T from './vendor/three.module.min.js';
+import {winterTreeAt145} from './maltose145-trees.js?v=145g';
 const A=new URL('./assets/l11-v145/',import.meta.url).href,PI=Math.PI,Y0=.15;
 function tex(n,srgb=true,rep=true){const t=new T.TextureLoader().load(A+n+'.webp?v=145d');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 const GARM=[{"n":"jk_white","cell":[0,0],"t":[0.323,0.686],"sh":0.127,"col":0.012,"hem":0.933,"asp":2.054,"sl":[{"j":[0.308,0.334],"c":[0.004,0.55],"jw":0.288,"cw":0.113},{"j":[0.7,0.338],"c":[0.996,0.554],"jw":0.281,"cw":0.117}]},{"n":"jk_red","cell":[1,0],"t":[0.316,0.685],"sh":0.122,"col":0.014,"hem":0.932,"asp":2.057,"sl":[{"j":[0.302,0.34],"c":[0.005,0.57],"jw":0.291,"cw":0.119},{"j":[0.699,0.346],"c":[0.995,0.57],"jw":0.291,"cw":0.119}]},{"n":"jk_navy","cell":[2,0],"t":[0.324,0.676],"sh":0.11,"col":0.012,"hem":0.931,"asp":2.089,"sl":[{"j":[0.311,0.308],"c":[0.005,0.461],"jw":0.285,"cw":0.132},{"j":[0.69,0.308],"c":[0.995,0.457],"jw":0.283,"cw":0.137}]},{"n":"jk_plum","cell":[3,0],"t":[0.324,0.681],"sh":0.147,"col":0.015,"hem":0.93,"asp":2.101,"sl":[{"j":[0.31,0.333],"c":[0.005,0.61],"jw":0.294,"cw":0.104},{"j":[0.695,0.333],"c":[0.995,0.586],"jw":0.29,"cw":0.114}]},{"n":"jk_black","cell":[0,2],"t":[0.327,0.675],"sh":0.106,"col":0.011,"hem":0.932,"asp":2.055,"sl":[{"j":[0.313,0.288],"c":[0.005,0.441],"jw":0.269,"cw":0.128},{"j":[0.689,0.289],"c":[0.995,0.438],"jw":0.274,"cw":0.136}]},{"n":"sw_burgundy","cell":[1,2],"t":[0.335,0.657],"sh":0.061,"col":0.019,"hem":0.932,"asp":1.978,"sl":[{"j":[0.322,0.234],"c":[0.004,0.645],"jw":0.268,"cw":0.093},{"j":[0.67,0.227],"c":[0.996,0.645],"jw":0.268,"cw":0.09}]},{"n":"sw_grey","cell":[2,2],"t":[0.35,0.651],"sh":0.059,"col":0.038,"hem":0.932,"asp":2.083,"sl":[{"j":[0.338,0.243],"c":[0.005,0.65],"jw":0.264,"cw":0.081},{"j":[0.663,0.245],"c":[0.995,0.645],"jw":0.264,"cw":0.081}]},{"n":"sw_mustard","cell":[3,2],"t":[0.345,0.656],"sh":0.13,"col":0.011,"hem":0.931,"asp":2.093,"sl":[{"j":[0.333,0.301],"c":[0.005,0.477],"jw":0.273,"cw":0.121},{"j":[0.668,0.301],"c":[0.995,0.484],"jw":0.273,"cw":0.122}]}];
@@ -148,8 +149,12 @@ export function* maltose145StallsTask(b,lod){addMats(b.mats);const g=new G();
  const TENTS=[[74.4,37.4,RF],[79.6,30.2,RF],[84.6,15.6,RF+.05],[84.9,32.2,RF],[88.3,24.8,RF-.1,'m145canvg'],[65.2,19.5,RF],[68.6,29.6,RF+.1],[71.6,16.2,RF]];
  for(const[x,z,r,k]of TENTS)tent(g,b,x,z,r,{key:k||'m145canvas',lod});yield;
  // tables: near row, mid row, left row (along z), right row, one under each tent
- const TB=[[76.2,58.7,RF*.3,2.44,'w'],[78.55,58.75,RF*.6,1.83,null],[80.45,58.3,RF,1.83,'p'],
-  [76.2,57.1,RF*.5,1.83,'w'],[78.1,57.15,RF*.5,1.83,'w'],[78.35,52.95,RF,1.83,'r'],[75.6,50.0,RF,1.83,'r'],[77.5,48.9,RF,1.83,'p'],[80.6,47.6,RF,2.44,'w'],[86.2,47.9,RF,1.83,'r'],[82.75,49.4,RF,1.83,'w'],[83.3,55.2,RF-.25,1.83,null],[86.5,50.6,RF,1.83,'w'],[87.1,52.9,RF-.4,1.83,null],
+ // V145 M7: the near tables re-solved from the photo edges (their feet are out of frame; inv.py at top height .89):
+ //  TB0 lacquer table front edge z 59.72 x 77.5..78.4 (tub at its left end), TB1 bare horn table front z 59.0 right end x 80.0 (square to the
+ //  camera), TB2 pink front z 58.8 from x 80.06, TB3/TB4 brass + beads table front edge z 57.41 (x 77.2) .. 57.85 (x 78.8) -> ry -.27,
+ //  TB4 = red-cloth half with the bead spread under the $5 sign; TB5 (the M4 'red $5' guess 5 m deeper) is now a plain far table.
+ const TB=[[77.81,59.36,0,1.22,'w'],[78.78,58.62,0,2.44,null],[80.98,58.42,0,1.83,'p'],
+  [76.62,56.92,-.27,2.44,'w'],[78.45,57.36,-.27,1.22,'r'],[78.35,52.95,RF,1.83,'r'],[75.6,50.0,RF,1.83,'r'],[77.5,48.9,RF,1.83,'p'],[80.6,47.6,RF,2.44,'w'],[86.2,47.9,RF,1.83,'r'],[82.75,49.4,RF,1.83,'w'],[83.3,55.52,-.32,1.83,null],[86.5,50.6,RF,1.83,'w'],[87.1,52.9,RF-.4,1.83,null],
   [88.6,46.2,PI/2,2.44,'w'],[88.6,43.4,PI/2,2.44,'r']];
  for(let k=0;k<7;k++)TB.push([73.9,53.6-k*2.52,PI/2,2.44,['w','r','w',null,'w','r','p'][k]]);
  for(const[x,z,r]of TENTS){const c=Math.cos(r),s=Math.sin(r);TB.push([x,z+.7,r,1.83,['w',null,'r','w','p','w','r','w'][TB.length%8]]);TB.push([x-.8*s+1.05*c,z-.8*c-1.05*s,r+PI/2,1.83,['r','w',null,'w','w','p','w','r'][TB.length%8]]);}
@@ -160,13 +165,15 @@ export function* maltose145StallsTask(b,lod){addMats(b.mats);const g=new G();
  wireRack(g,b,84.0,50.4,RF,{lod});yield;
  // signs: $5 EACH on a stake behind the brass table, $2-$8 diamond on the rack end, ALL $10 taped on the rack upright,
  // 3 FOR $10 on the right white table, SALE on the wire rack's top shelf
- if(!lod){g.tube('m145dst',[78.0,Y0+.74,52.72],[78.0,Y0+1.3,52.72],.005,4,.05,.3);sign(g,0,[78.0,Y0+1.4,52.75],.36,RF);
+ if(!lod){g.tube('m145dst',[78.2,Y0+.74,57.02],[78.2,Y0+1.22,57.02],.005,4,.05,.3);sign(g,0,[78.2,Y0+1.31,57.05],.3,-.27);
   const rq=(lx,ly,lz)=>{const c=Math.cos(RF+.12),s=Math.sin(RF+.12);return[79.9+lx*c+lz*s,Y0+ly,54.0-lx*s+lz*c];};
   sign(g,1,rq(.8,1.67,0),.3,RF,{rz:PI/4,curl:.01});g.tube('m145dst',rq(.76,1.5,0),rq(.8,1.56,0),.002,3,.02,.1);
   sign(g,2,rq(.77,1.1,.03),.2,RF+.3,{curl:.015});
-  sign(g,4,[83.0,Y0+.62,55.62],.26,RF-.25,{curl:.01});
+  sign(g,4,[80.62,Y0+.88,58.12],.2,-.05,{curl:.01});
   sign(g,3,[84.0,Y0+1.69,50.45],.22,RF,{rz:.05,curl:.02});}
  // rug wall: on the street fence by the east corner, then along the east fence (photo: hung from ~3.8 m down)
  rug(g,0,97.9,3.95,12.62,0,3.3);rug(g,2,95.6,3.85,12.62,0,2.7);
  for(const[i,zz,yt,hh]of[[1,13.35,3.75,3.1],[3,15.05,3.65,2.5],[4,17.35,3.6,2.6]])rug(g,i,99.45,yt,zz,-PI/2,hh);
- g.flush(b);yield;}
+ g.flush(b);
+ // M7: the photo's bare tree on the market-side sidewalk in front of the red block (city ~ (169.5, -114.5))
+ winterTreeAt145(b,57.5,Y0,-2.5,0x145e7,1.12);yield;}

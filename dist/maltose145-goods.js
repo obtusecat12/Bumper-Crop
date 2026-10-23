@@ -10,7 +10,7 @@
 //  far tables: clutter relief (height grid from each clutter photo, CLUTH) + a few hashed standalone pieces.
 // ?malt145=0 off (with the yard).
 import * as T from './vendor/three.module.min.js';
-import {G,TB145} from './maltose145-stalls.js?v=145e';
+import {G,TB145} from './maltose145-stalls.js?v=145g';
 const A=new URL('./assets/l11-v145/',import.meta.url).href,PI=Math.PI,Y0=.15,YT=Y0+.745,V='?v=145e';
 function tex(n,srgb=true,rep=true){const t=new T.TextureLoader().load(A+n+'.webp'+V);if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 // clutter relief height grids (32 x 16, rows from the far edge), printed by the asset script
@@ -167,32 +167,37 @@ function brassFill(o,len,seed,keep){let k=0;for(let i=0;i<9;i++)for(let j=0;j<3;
 export function* maltose145GoodsTask(b,lod){if(!TB145.length)return;addMats(b.mats);g=new G();
  const at=(k,f)=>{const[x,z,r,l,c]=TB145[k];g.at(x,z,r);f(l,c);g.f=null;};
  if(!lod){
- // TB0 near-left white (photo bottom-left): clear tub with jewellery trays, lacquer boxes, small red box
- at(0,(l)=>{tub(O(-.62,YT,.02,.08),.46,.2,.32);tray(O(-.62,YT+.2,.02,.05),.4,.27);tray(O(-.6,YT+.226,-.0,-.12),.36,.24);
-  lacq(O(-.05,YT,.05,.1),.24,.11,.17);lacq(O(.3,YT,.02,-.06),.34,.15,.22);lacq(O(.7,YT,.06,.15),.2,.1,.14);lacq(O(1.0,YT,-.05,-.1),.3,.12,.2);lacq(O(.3,YT+.15,.0,.12),.26,.09,.17);lacq(O(1.02,YT+.12,-.04,-.2),.22,.08,.15,{yellow:true});lacq(O(-.05,YT+.11,-.1,.3),.16,.07,.11);
-  box('m145velv',O(.0,YT+.11,.04,.12),[0,0,0],.12,.06,.09,tileF(.12,.06,.09,.15));});
- // TB1 near bare: domed red chest, yellow box, portfolio, wrought-iron plant stand underneath
- at(1,(l)=>{lacq(O(-.55,YT-.005,.05,.05),.52,.2,.3,{dome:true});lacq(O(.25,YT-.005,.12,-.2),.26,.08,.18,{yellow:true});folio(O(.5,YT-.005,-.1,.3),.5,.36);
-  plantStand(O(.2,Y0,.0));});
- // TB2 near pink: tumbled stones in a clear box, wooden tray with trinkets, crystal ball
- at(2,(l)=>{stonesBox(O(-.25,YT+.02,.04,.2),.32,.22,.08);tray(O(.35,YT+.02,.0,-.1),.42,.3,14);crystal(O(.7,YT+.02,.15),1.1);bell(O(-.7,YT+.02,.12),1);});
- // TB3 + TB4: the brass table (Buddhas, bells, tripods, horse, crystal balls, candlesticks) and the horns / carved head / trug end
- at(3,(l)=>{buddha(O(.15,YT,-.1,.1),.36,'m145bronze');buddha(O(.55,YT,-.05,-.15),.3,'m145brass',{mudra:1});buddha(O(-.3,YT,-.12,.2),.26,'m145brass');
-  tripod(O(.85,YT,.15),1.1);bell(O(.35,YT,.2),1.2);horse(O(-.05,YT,.18,.6),.9);candle(O(-.55,YT,.0),1.2);candle(O(-.48,YT,.12),.9);crystal(O(.72,YT,-.15),1.2);vase(O(-.75,YT,-.15),1.1);
-  brassFill(O(0,YT,0),l,31,[[.15,-.1,.16],[.55,-.05,.14],[-.3,-.12,.13],[.85,.15,.1],[.35,.2,.08],[-.05,.18,.12],[-.55,.0,.08],[-.48,.12,.07],[.72,-.15,.08],[-.75,-.15,.08]]);});
- at(4,(l)=>{buddha(O(-.75,YT,-.08,-.1),.42,'m145brass');bell(O(-.45,YT,.15),.9);crystal(O(-.5,YT,-.12),1);
-  horns(O(-.12,YT,-.05,.1),.5);head(O(.25,YT,-.02,-.15),.95);trug(O(.62,YT,.1,-.08),.5,.26,.11);
-  brassFill(O(-.55,YT,0),.75,47,[[-.2,-.08,.17],[.1,.15,.08],[.05,-.12,.08]]);});
- // TB5 red table under $5 EACH: bead spread + strands, celadon teapot on a red velvet box, brass vase
- at(5,(l)=>{beads(O(-.3,YT,.05),.7,.5,5);box('m145velv',O(.45,YT,-.05,.1),[0,0,0],.24,.18,.22,tileF(.24,.18,.22,.15));teapot(O(.45,YT+.18,-.05,.4),1);vase(O(.78,YT,.12),1.2,'m145brass',1);});
+ // V145 M7: goods re-placed on the photo-solved tables (positions read off files/ref-1023-maltose-market.webp with inv.py, then
+ // converted to each table's local frame). TB0 front lacquer table: tub + trays at the left end, lacquer boxes, the big red chest in front,
+ // the red velvet box with the celadon teapot behind it.
+ at(0,(l)=>{tub(O(-.36,YT,.2,.06),.32,.16,.26);tray(O(-.36,YT+.16,.2,.04),.3,.21);tray(O(-.35,YT+.182,.18,-.1),.27,.19);
+  lacq(O(-.08,YT,.22,.02),.34,.12,.22);lacq(O(-.09,YT+.12,.2,-.06),.3,.09,.19);lacq(O(.34,YT,.22,.0),.45,.16,.26,{dome:true});
+  box('m145velv',O(.3,YT,-.08,.1),[0,0,0],.22,.14,.2,tileF(.22,.14,.2,.15));teapot(O(.3,YT+.14,-.08,.4),.9);
+  lacq(O(-.18,YT,-.16,.12),.26,.1,.17);lacq(O(.05,YT,-.2,-.08),.24,.09,.15,{yellow:true});
+  box('m145velv',O(.1,YT,.02,.12),[0,0,0],.12,.06,.09,tileF(.12,.06,.09,.15));});
+ // TB1 bare horn table (photo centre): water-buffalo horns on a block, the dotted carved head behind, the wooden trug at the right end,
+ // grey portfolio, yellow + red lacquer boxes at the left, wrought-iron plant stand underneath
+ at(1,(l)=>{horns(O(.24,YT-.005,-.0,.05),.7);head(O(.66,YT-.005,-.2,-.2),1.0);trug(O(.95,YT-.005,.06,-.04),.6,.3,.13);folio(O(-.12,YT-.005,.12,.08),.5,.36);
+  lacq(O(-.12,YT-.005,-.2,.05),.26,.08,.18,{yellow:true});lacq(O(-.45,YT-.005,-.12,-.1),.3,.12,.2);lacq(O(-.44,YT+.115,-.12,.15),.22,.08,.15);lacq(O(-.85,YT-.005,0,.2),.34,.14,.22);lacq(O(-.95,YT-.005,-.25,-.1),.24,.1,.16,{yellow:true});
+  plantStand(O(.45,Y0,.0));});
+ // TB2 pink: tumbled stones in a clear box at the left end (photo: it sits over the horn table's right end), wooden tray, crystal ball, bell
+ at(2,(l)=>{stonesBox(O(-.72,YT+.02,.1,.05),.34,.24,.08);tray(O(-.25,YT+.02,.05,-.05),.42,.3,14);crystal(O(.3,YT+.02,.1),1.1);bell(O(.6,YT+.02,-.1),1);vase(O(.8,YT+.02,.15),1,'m145porc',1);});
+ // TB3 the long white brass table (Buddhas, bells, tripods, horse, crystal balls, candlesticks; most of it visible = its right half)
+ at(3,(l)=>{buddha(O(.55,YT,-.1,.1),.36,'m145bronze');buddha(O(.92,YT,-.05,-.15),.3,'m145brass',{mudra:1});buddha(O(.2,YT,-.12,.2),.26,'m145brass');buddha(O(-.75,YT,-.08,-.1),.42,'m145brass');
+  tripod(O(1.05,YT,.17),1.1);bell(O(.75,YT,.2),1.2);bell(O(-.45,YT,.15),.9);horse(O(.35,YT,.18,.6),.9);candle(O(-.05,YT,.0),1.2);candle(O(.02,YT,.12),.9);crystal(O(1.1,YT,-.15),1.2);crystal(O(-.5,YT,-.12),1);vase(O(-.25,YT,-.15),1.1);
+  brassFill(O(0,YT,0),l,31,[[.55,-.1,.16],[.92,-.05,.14],[.2,-.12,.13],[-.75,-.08,.17],[1.05,.17,.1],[.75,.2,.08],[-.45,.15,.08],[.35,.18,.12],[-.05,.0,.08],[.02,.12,.07],[1.1,-.15,.08],[-.5,-.12,.08],[-.25,-.15,.08]]);
+  // M7: the photo's brass table is about twice as full -> a second, half-step-offset fill of smaller pieces
+  brassFill(O(.13,YT,.1),l-.3,77,[[.42,-.2,.16],[.79,-.15,.14],[.07,-.22,.13],[-.88,-.18,.17],[.92,.07,.1],[.62,.1,.08],[-.58,.05,.08],[.22,.08,.12],[-.18,-.1,.08],[-.11,.02,.07],[.97,-.25,.08],[-.63,-.22,.08],[-.38,-.25,.08]]);});
+ // TB4 the red-cloth half under $5 EACH: bead spread with strands over the front edge, a brass vase
+ at(4,(l)=>{beads(O(-.05,YT,.04),.95,.55,5);vase(O(.48,YT,-.2),1.2,'m145brass',1);});
  // right white table (3 FOR $10): glassware
  at(11,(l)=>{for(let k=0;k<5;k++)wineGlass(O(-.6+k*.13,YT-.005,.15-k%2*.08),1);decanter(O(.1,YT-.005,0),1);decanter(O(.3,YT-.005,.12),.8);ell('m145glass',O(.6,YT-.005,0),[0,.05,0],.08,.05,.08,{n:12,m:5});
   beads(O(.55,YT-.005,-.15),.4,.2,11);});
  // ground: chairs by the seated vendor, trash cans by the left row and the west fence
- g.f=null;campChair(O(84.25,Y0,56.1,-PI/2-.3));b.circle(84.25,56.1,.32);foldChair(O(86.7,Y0,51.7,-PI/2+.2));b.circle(86.7,51.7,.26);
- canes(O(76.95,Y0,57.92));b.circle(76.95,57.92,.16);
+ g.f=null;campChair(O(84.95,Y0,55.35,-PI/2-.3));b.circle(84.95,55.35,.32);foldChair(O(86.7,Y0,51.7,-PI/2+.2));b.circle(86.7,51.7,.26);
+ canes(O(77.2,Y0,58.58));b.circle(77.2,58.58,.16);
  trashCan(O(72.85,Y0,50.6));b.circle(72.85,50.6,.33);trashCan(O(61.2,Y0,58.0),.95);b.circle(61.2,58.0,.32);
  g.flush(b);yield;}
  // every other table: clutter relief + hashed standalone pieces (also the LOD shell keeps the relief)
- TB145.forEach(([x,z,r,l,c],k)=>{if(!lod&&(k<=5||k===11))return;g.at(x,z,r);relief(O(0,YT-(c?0:.005),0),l-.14,.62,k);farPieces(O(0,YT,0),l,k,lod);g.f=null;});
+ TB145.forEach(([x,z,r,l,c],k)=>{if(!lod&&(k<=4||k===11))return;g.at(x,z,r);relief(O(0,YT-(c?0:.005),0),l-.14,.62,k);farPieces(O(0,YT,0),l,k,lod);g.f=null;});
  g.flush(b);yield;}

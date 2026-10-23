@@ -20,12 +20,12 @@ import {EXIT_CITY_Y as Y} from './exit-route.js?v=60';
 import {MALTOSE145,MALTOSE145_ON} from './maltose145-layout.js?v=145c';
 const PI=Math.PI,OFF=!MALTOSE145_ON||/[?&]malt145npc=0\b/.test(globalThis.location?.search||'');
 const BX=MALTOSE145.block[0]*CITY_BLOCK,BZ=MALTOSE145.block[1]*CITY_BLOCK,KEY=MALTOSE145.block.join(','),Y0=.15;
-// t = garment tint (multiply, may lift), hat = prop tint
+// t = garment tint (multiply, may lift), hat = prop tint, s = height scale (M7: the near pair reads ~6 % taller in the photo)
 const CAST=[
- {seed:0x14561,type:'man',sil:'jacket',face:'m6',top:'puffer',t:[1.45,1.45,1.55],bot:'greytrousers',props:['beanie'],hat:0x5a6a98,sit:[84.25,56.1,-PI/2-.3]},
+ {seed:0x14561,type:'man',sil:'jacket',face:'m6',top:'puffer',t:[1.45,1.45,1.55],bot:'greytrousers',props:['beanie'],hat:0x5a6a98,sit:[84.95,55.35,-PI/2-.3]},
  {seed:0x14562,type:'heavy',sil:'jacket',face:'m7',top:'puffer',t:[2.1,2.4,3.7],bot:'blackjeans',props:['cap'],hat:0x3b3b40,sit:[86.7,51.7,-PI/2+.2]},
- {seed:0x14563,type:'woman',sil:'coat',face:'f3',top:'wrap',bot:'blackjeans',props:['beanie'],hat:0xe8e6e2,stand:[77.0,59.58,PI-.6]},
- {seed:0x14564,type:'man',sil:'jacket',face:'m8',top:'hoodie',t:[1.25,1.25,1.27],bot:'jeans',props:['cap'],hat:0xf4f4f2,stand:[76.5,57.9,.2]},
+ {seed:0x14563,type:'woman',sil:'coat',face:'f3',top:'wrap',bot:'blackjeans',props:['beanie'],hat:0xe8e6e2,stand:[76.76,58.88,PI/2+.4],s:1.05},
+ {seed:0x14564,type:'man',sil:'jacket',face:'m8',top:'hoodie',t:[1.25,1.25,1.27],bot:'jeans',props:['cap'],hat:0xf4f4f2,stand:[76.5,58.1,.2],s:1.07},
  {seed:0x14565,type:'woman',sil:'jacket',face:'f2',top:'hoodie',t:[1.75,.42,.4],bot:'blackjeans',props:['beanie'],hat:0xd9c9a8,stand:[77.2,52.66,.4]},
  {seed:0x14566,type:'man',sil:'jacket',face:'m4',top:'hoodie',t:[.62,.62,.66],bot:'greytrousers',props:[],stand:[77.89,55.15,.05]},
  {seed:0x14567,type:'woman',sil:'coat',face:'f4',top:'trench',t:[1.12,1.12,1.1],bot:'jeans',props:[],stand:[85.76,53.46,PI/2-.2]},
@@ -68,7 +68,7 @@ export function createMaltose145Npc({blocks}){
    if(c.sit){const[sx,sz,r]=c.sit;x=sx-Math.sin(r)*.16;z=sz-Math.cos(r)*.16;h=r;clip='sit';rate=.25;}
    else if(c.stand){[x,z,h]=c.stand;rate=.8;}
    else{const s=walkAt(c.walk,t);[x,z,h]=s;if(s[3]){clip='walk';rate=RATE(c.walk.speed);}}
-   cityToWorld(BX+x,BZ+z,w);const o=p.object;o.position.set(w.x,Y+Y0+.004,w.z);o.rotation.set(0,CITY_ANGLE+h,0);
+   cityToWorld(BX+x,BZ+z,w);const o=p.object;o.position.set(w.x,Y+Y0+.004,w.z);o.rotation.set(0,CITY_ANGLE+h,0);o.scale.setScalar(c.s||1);
    p.update(t+(c.seed&7),clip,rate);p.setBlink(blink135(c.seed,t));
    if(!c.sit)solids.push({kind:'obb',x:w.x,z:w.z,w:.5,d:.4,ry:CITY_ANGLE+h});}}
  function dispose(){if(people)for(const{p}of people){p.object.removeFromParent();p.dispose();}people=null;object.removeFromParent();}

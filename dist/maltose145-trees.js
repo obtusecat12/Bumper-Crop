@@ -46,6 +46,8 @@ export function winterTree145(S,seed,scale=1,young=false){let s=(seed*2654435761
  // a leader continuing up the middle
  grow(S,B,lean.clone().add(V((R()-.5)*.2,0,(R()-.5)*.2)).normalize(),3.6*k,r0*.55,1,R,1);}
 const ZONE=[104,344,-344,4],BEIGE=[172,216,-126,-98];
+// V145 M7: a free-standing winter tree at block-local (x,y,z) of the current builder frame (the photo's bare tree in front of the red block)
+export function winterTreeAt145(b,x,y,z,seed,scale=1){mats(b.mats);b.push(x,y,z,0);const S=new Soup();winterTree145(S,seed,scale);S.flush(b);b.pop();}
 setStreetTreeHook((b,seed,scale)=>{if(!MALTOSE145_ON)return false;const p=b.point(0,0,0),c=worldToCity(p.x,p.z);
  if(c.x<ZONE[0]||c.x>ZONE[1]||c.z<ZONE[2]||c.z>ZONE[3])return false;mats(b.mats);
  const young=c.x>BEIGE[0]&&c.x<BEIGE[1]&&c.z>BEIGE[2]&&c.z<BEIGE[3];const S=new Soup();winterTree145(S,seed,scale,young);S.flush(b);return true;});
