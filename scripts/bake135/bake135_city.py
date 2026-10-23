@@ -12,26 +12,29 @@ import bpy,sys,json,base64,array,struct,time,math
 import numpy as np
 from mathutils import Vector
 argv=sys.argv[sys.argv.index('--')+1:];SRC,OUT=argv[0],argv[1];AOS=int(argv[2]) if len(argv)>2 else 32;GIS=int(argv[3]) if len(argv)>3 else 96
+import os
+LEAF_T=float(os.environ.get('LEAF_T','0'))  # V146 T4: alpha-tested leaf-card occluders ('leaf' in name) let this fraction of rays through (0 = opaque, old behaviour)
 SUN=(.42,.78,.46);SUNE=2.2;AO_DIST=5.0;SMOOTH=2
 CLEAR=('glass','window','water','liquid','refraction','pane','glaze','mirror','spray','foam','steam','smoke','fog','halo','glow','beam')
 d=json.load(open(SRC))
 bpy.ops.wm.read_factory_settings(use_empty=True)
 sc=bpy.context.scene;sc.render.engine='CYCLES';cy=sc.cycles;cy.device='CPU';cy.use_denoising=False
-cy.max_bounces=2;cy.diffuse_bounces=2;cy.glossy_bounces=0;cy.transmission_bounces=0;cy.transparent_max_bounces=4;cy.sample_clamp_indirect=4
+cy.max_bounces=2;cy.diffuse_bounces=2;cy.glossy_bounces=0;cy.transmission_bounces=0;cy.transparent_max_bounces=24 if LEAF_T>0 else 4;cy.sample_clamp_indirect=4
 w=bpy.data.worlds.new('w');sc.world=w;w.use_nodes=True;wn=w.node_tree.nodes;wl=w.node_tree.links;bg=wn['Background'];bg.inputs[0].default_value=(1,1,1,1)
 tc=wn.new('ShaderNodeTexCoord');sp=wn.new('ShaderNodeSeparateXYZ');gt=wn.new('ShaderNodeMath');gt.operation='GREATER_THAN';gt.inputs[1].default_value=0
 wl.new(tc.outputs['Generated'],sp.inputs[0]);wl.new(sp.outputs['Y'],gt.inputs[0]);wl.new(gt.outputs[0],bg.inputs[1])
 GROUND=('ground','road','pave','asphalt','kerb','curb','sidewalk','sett','slab','tarmac','lawn','grass')  # matched on the material part (last '/' segment)
 def arr(b,t):a=array.array(t);a.frombytes(base64.b64decode(b));return a
 mats={}
-def material(m,clear):
-  alb=m.get('albedo',[.3,.3,.3]);key=(tuple(round(x,2) for x in alb),clear)
+def material(m,clear,leaf=False):
+  alb=m.get('albedo',[.3,.3,.3]);key=(tuple(round(x,2) for x in alb),clear,leaf)
   if key in mats:return mats[key]
   mt=bpy.data.materials.new('m%d'%len(mats));mt.use_nodes=True;nt=mt.node_tree;bs=nt.nodes['Principled BSDF']
   bs.inputs['Base Color'].default_value=(*[min(.9,max(0,x)) for x in alb],1);bs.inputs['Roughness'].default_value=1;bs.inputs['Specular IOR Level'].default_value=0
   if clear:tr=nt.nodes.new('ShaderNodeBsdfTransparent');nt.links.new(tr.outputs[0],nt.nodes['Material Output'].inputs[0])
+  elif leaf:tr=nt.nodes.new('ShaderNodeBsdfTransparent');mx=nt.nodes.new('ShaderNodeMixShader');mx.inputs[0].default_value=LEAF_T;nt.links.new(bs.outputs[0],mx.inputs[1]);nt.links.new(tr.outputs[0],mx.inputs[2]);nt.links.new(mx.outputs[0],nt.nodes['Material Output'].inputs[0])
   mats[key]=mt;return mt
-def mkobj(name,m,col=False,clear=False):
+def mkobj(name,m,col=False,clear=False,leaf=False):
   P=np.frombuffer(base64.b64decode(m['P']),np.float32);I=np.frombuffer(base64.b64decode(m['I']),np.uint32);n=m['count'];nt=len(I)//3
   me=bpy.data.meshes.new(name);me.vertices.add(n);me.vertices.foreach_set('co',P)
   me.loops.add(len(I));me.loops.foreach_set('vertex_index',I.astype(np.int32));me.polygons.add(nt);me.polygons.foreach_set('loop_start',np.arange(0,len(I),3,dtype=np.int32));me.polygons.foreach_set('loop_total',np.full(nt,3,np.int32))
@@ -41,7 +44,7 @@ def mkobj(name,m,col=False,clear=False):
     if len(N)==n*3 and len(me.vertices)==n:
       try:me.normals_split_custom_set_from_vertices(N.reshape(-1,3).tolist())
       except Exception as ex:print('normals',ex)
-  me.materials.append(material(m,clear))
+  me.materials.append(material(m,clear,leaf))
   o=bpy.data.objects.new(name,me);sc.collection.objects.link(o)
   nm=((m.get('key') or m.get('name','')).split('|')[0].split('/')[-1]+' '+m.get('mname','').split('/')[-1]).lower()
   if any(k in nm for k in GROUND):o.visible_diffuse=False
@@ -51,7 +54,7 @@ t0=time.time();targets=[]
 for i,m in enumerate(d['meshes']):targets.append(mkobj('t%d'%i,m,col=True))
 for i,m in enumerate(d['occ']):
   s=(m.get('name','')+' '+m.get('mname','')).lower();clear=m.get('opacity',1)<.95 or any(k in s for k in CLEAR)
-  mkobj('o%d'%i,m,clear=clear)
+  mkobj('o%d'%i,m,clear=clear,leaf=LEAF_T>0 and not clear and 'leaf' in s)
 sd=bpy.data.lights.new('sun','SUN');sd.energy=SUNE*math.pi;sd.angle=math.radians(1.5);so=bpy.data.objects.new('sun',sd);sc.collection.objects.link(so)
 so.rotation_mode='QUATERNION';so.rotation_quaternion=Vector((0,0,1)).rotation_difference(Vector(SUN).normalized())
 print('built',len(targets),'targets',len(d['occ']),'occ',round(time.time()-t0,1),flush=True)

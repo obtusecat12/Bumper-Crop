@@ -11,7 +11,8 @@ export const SOHO135_BAKE_BLOCKS=new Set(['-3,0','-3,1','-3,2','-2,0','-2,1','-2
 // six SoHo packs stay untouched. Kept out of SOHO135_BAKE_BLOCKS, which also gates the soho141 facade-table load in exit-scene.
 // V144 B3: block (-3,-1) (alley barricade brick144-barricade.js) = 8th pack, kit /workspace/work/v144/b3k.
 // V145 M7: block (1,-1) (Maltose Market yard + stalls + goods, maltose145*.js) = 9th pack, kit /workspace/work/v145/m7/bk.
-export const SOHO135_PACK_BLOCKS=new Set([...SOHO135_BAKE_BLOCKS,'-2,-1','-3,-1','1,-1']);
+// V146 T4: block (-2,-2) (stucco146 corner terrace + T2 street + T3 trees) = 10th pack, kit /workspace/work/v146/t4/bk (leaf cards = 40 % see-through occluders).
+export const SOHO135_PACK_BLOCKS=new Set([...SOHO135_BAKE_BLOCKS,'-2,-1','-3,-1','1,-1','-2,-2']);
 export const SOHO135_L=5;
 const MOVING=/water|glass|flame|fire|smoke|steam|spray|flag|cloth|garment|laundry|rain|fountain|jet|door|gate|leaf|leaves|foliage|blade|wheel|fan|traffic|signal|glow|halo|beam/i;
 const filter=o=>!(MOVING.test(o.name||'')||MOVING.test(o.material?.name||''))&&!o.userData?.noBake133;
@@ -25,7 +26,7 @@ export function sohoBake135(v,key,share,{force=false,budget=3}={}){
  const prep=prepSoho135(v.object,share),alive=()=>!!v.object.parent||force;v.bake135=prep;
  prep.ready=(async()=>{
   const t0=performance.now();await keySky133(prep,{budget});prep.keyMs=Math.round(performance.now()-t0);if(!alive())return prep;
-  idxP??=import('./capital135/soho/index.js?v=145g').then(m=>m.SOHO135_INDEX);const idx=await idxP,e=idx[key];if(!e)return prep;
+  idxP??=import('./capital135/soho/index.js?v=146d').then(m=>m.SOHO135_INDEX);const idx=await idxP,e=idx[key];if(!e)return prep;
   const r=await fetch(BASE+e.f);if(!r.ok)throw Error('soho135 pack '+r.status);const u8=new Uint8Array(await r.arrayBuffer());if(!alive())return prep;
   const byKey=new Map(prep.list.map(x=>[x.key,x]));let t=performance.now();
   for(const[k,off,len]of e.k){const x=byKey.get(k),a=x?.mesh.geometry.attributes.bake133;if(!a){prep.miss++;continue;}

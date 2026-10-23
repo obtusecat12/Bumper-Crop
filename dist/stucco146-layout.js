@@ -23,3 +23,8 @@ export const STUCCO146_CLEAR=STUCCO146_ON?[[-172,-112,-125,-116],[-125,-116,-172
 // V146 T3: frontage furniture also cleared where the photo's trees stand (any block: north sidewalk west of the terrace, the far
 // sidewalks across the street and the avenue, the avenue sidewalk south of the main building); stucco146-t3.js plants there.
 export const STUCCO146_CLEAR2=STUCCO146_ON?[[-200,-172,-125,-116],[-200,-90,-106,-98],[-106,-98,-160,-98],[-125,-116,-182,-170]]:[];
+// V146 T4: the photo looks west-south-west over the terrace roofs into trees and sky; cap the procedural towers in that wedge
+// (from the photo camera city (-110,-106), 40..320 m out, slope dz/dx 0..0.9) to 5 floors. Only rows iz <= -2 (no baked pack blocks).
+export function stucco146Cap(result){if(!STUCCO146_ON||result.iz>-2)return result;
+ for(const q of result.buildings){if(q.stucco146)continue;const dx=q.x-(-110),dz=q.z-(-106);if(dx>-40||dx<-320||dz>0)continue;const s=dz/dx;if(s<0||s>.9)continue;q.floors=Math.min(q.floors,5);}
+ return result;}

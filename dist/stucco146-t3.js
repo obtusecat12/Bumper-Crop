@@ -20,7 +20,7 @@ function mats(m){if(m.s146pl)return;if(!M){const S=(o)=>new T.MeshStandardMateri
  const W=(n,o={})=>S({map:tex(n),normalMap:tex(n+'-n',false),roughnessMap:tex(n+'-r',false),...o});
  const L=n=>{const t=tex(n,true,false);t.magFilter=T.LinearFilter;return S({map:t,normalMap:tex(n+'-n',false,false),normalScale:new T.Vector2(.6,.6),alphaTest:.5,roughness:.85});};
  M={s146pb:W('pbark146'),s146lb:W('lbark146'),s146so:W('soil146'),s146pl:L('pleaf146'),s146ll:L('lleaf146')};
- for(const[k,v]of Object.entries(M))v.name='V146 '+k;}Object.assign(m,M);}
+ for(const[k,v]of Object.entries(M))v.name='V146 '+k+(k==='s146pl'||k==='s146ll'?' leaf':'');}Object.assign(m,M);}   // T4: ' leaf' keeps the crowns out of the bake targets (soho135-bake MOVING)
 Object.assign(TILE,{s146so:[1.2,1.2]});
 const V=(x,y,z)=>new T.Vector3(x,y,z);
 const KIND={plane:{bark:'s146pb',leaf:'s146pl',asp:.516,clump:2.9,base:.2,n:120,limbs:5,r0:.021},
@@ -84,7 +84,7 @@ const TREES=[
  [-47,3.4,'plane',20,7.6,1],[-56.5,3.4,'lime',18.5,6.4,1],[-66,3.4,'plane',20,7.6,1],[-42,21.3,'plane',20,7.8,1],[-55,21.3,'lime',19,6.6,1],[-68,21.3,'plane',19,7.4,1],
  [-50,30,'lime',21,7,0],[-63,29,'plane',22,8,0],
  // back gardens: tall trees over the left terrace roofline (x <= -38 so the main building does not hide them from the photo corner)
- [-40,-17,'lime',26,7,0],[-51,-21,'plane',25,7.8,0],[-25,-24,'plane',23,7.2,0],[-12,-33,'lime',19,5.6,0],
+ [-40,-17,'lime',29,8.5,0],[-51,-21,'plane',28,9,0],[-60,-12,'plane',27,8.6,0],[-25,-24,'plane',23,7.2,0],[-12,-33,'lime',19,5.6,0],
  // further down the avenue on the building side (beyond the main building) and across
  [3.4,-48,'plane',16.5,6.2,1],[21.3,-26,'plane',17,6.5,1]];
 export function* stucco146T3Task(b,lod){if(!ON)return;mats(b.mats);const S=new Soup(),Lv=new Leaves();let i=0;

@@ -20,14 +20,14 @@ import {spire135Task} from './soho135-spire.js?v=141j'; // ③-3b SoHo focal spi
 import {brick144Task} from './brick144.js?v=144b'; // V144 A1 capital brick apartment slab
 import {maltose145Task} from './maltose145.js?v=145a'; // V145 Maltose Market schoolyard (M1)
 import {maltose145BldgTask} from './maltose145-bldg.js?v=145c'; // V145 M2 near buildings
-import {stucco146Task} from './stucco146.js?v=146c'; // V146 capital stucco corner terrace
+import {stucco146Task} from './stucco146.js?v=146d'; // V146 capital stucco corner terrace
 import {maltose145FarTask} from './maltose145-far.js?v=145c'; // V145 M3 far / side buildings + twin towers
 import './maltose145-trees.js?v=145g'; // V145 M3 winter street trees around the market
 import {maltose145StallsTask} from './maltose145-stalls.js?v=145g'; // V145 M4 tents / tables / cloths / racks / signs / rugs
 import {maltose145GoodsTask} from './maltose145-goods.js?v=145g'; // V145 M5 goods on the tables + chairs / cans
 import {createMaltose145Npc} from './maltose145-npc.js?v=145g'; // V145 M6 market vendors + customers (crowd135 pipeline)
 import {barricade144Task,BARRICADE144,BARRICADE144_ON} from './brick144-barricade.js?v=144f'; // V144 B alley barricade (pallet pile)
-import {sohoBake135,SOHO135_BAKE_BLOCKS} from './soho135-bake.js?v=145g';
+import {sohoBake135,SOHO135_BAKE_BLOCKS} from './soho135-bake.js?v=146d';
 import {soho141Ready,soho141Load} from './soho141-facade.js?v=141j'; // V141 F4: SoHo facade tables stream in with their blocks // ③-3c per-block Blender bake of the streamed SoHo blocks
 import {CAPITAL135_LAZY} from './capital135/geo/lazy.js?v=135h'; // V135 ②c-2b-2b deferred roots (photo landmarks, milling mouth)
 import {ubox132} from './street132-props.js?v=132';
@@ -43,7 +43,7 @@ import * as P from './urban-props.js?v=132st';
 import {shrub131} from './shrub131.js?v=131';   // V131 cross-card shrubs
 import * as S from './urban-smallprops.js?v=132st';
 import {addStreetwallBuilding,addStreetwallBuildingTask} from './urban-streetwall.js?v=140i';
-import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=146c';
+import {addBlockStreetsTask,pavement,curb,roadHeight} from './urban-streets.js?v=146d';
 import {addReferenceMaterials} from './reference-materials.js?v=60';
 import {createReferenceScenes,referenceWaypoint,clinicToWorld} from './reference-scenes.js?v=60';
 import {canalBlock,CANAL} from './canal128-layout.js?v=128';
@@ -52,7 +52,7 @@ import {subwayStairs} from './subway128-layout.js?v=128';
 import {createTraffic132} from './traffic132.js?v=135t';
 import {createCrowd135} from './crowd135.js?v=145f'; // V135-capital ④-1/④-2/④-2b SoHo fair pedestrians
 import {bakeFixed133} from './city-bake133.js?v=135g'; // V133-bake-city
-import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=146a';
+import {CITY_BLOCK,CITY_ANGLE,CITY_ORIGIN,worldToCity,cityToWorld,cityBlockPlan,cityDistrict,cityWaypoint} from './urban-layout.js?v=146d';
 const B=CITY_BLOCK,Y=EXIT_CITY_Y;
 const fashionEye=clinicToWorld(69,50),fashionAim=clinicToWorld(88,64.75),fashionWaypoint={...fashionEye,label:'Level 11 · ECHO 服装广告',yaw:Math.atan2(fashionEye.x-fashionAim.x,fashionEye.z-fashionAim.z),pitch:.62};
 const ground=(x,z)=>exitSurface(exitSample(x,z,{}),height(x,z));

@@ -6,8 +6,8 @@
 // Textures bc/tools/stucco146t2_assets.py -> assets/l11-v146 (abrick/flag/awall/lamp/boll/bike/rub/door2/sign/plaque/lant).
 import * as T from './vendor/three.module.min.js';
 import {Soup,face,fq,fbox,wall,reveal,TILE} from './maltose145-bldg.js?v=145c';
-import {sash146,win146,aedicule146,balcony146,chimney146,lathe146} from './stucco146.js?v=146c';
-import {STUCCO146_AREA} from './stucco146-layout.js?v=146b';
+import {sash146,win146,aedicule146,balcony146,chimney146,lathe146} from './stucco146.js?v=146d';
+import {STUCCO146_AREA} from './stucco146-layout.js?v=146d';
 import {CAR132,car132Geometry,car132Material} from './cars132.js?v=133c';
 const A=new URL('./assets/l11-v146/',import.meta.url).href,PI=Math.PI;
 function tex(n,srgb=true,rep=true){const t=new T.TextureLoader().load(A+n+'.webp?v=146b');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}

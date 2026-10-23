@@ -12,7 +12,7 @@ import {CANAL} from './canal128-layout.js?v=128';
 import {subwayEntrances} from './subway128.js?v=128';
 import {subwayStairs,SUB} from './subway128-layout.js?v=128';
 import {BRICK144_CLEAR} from './brick144-layout.js?v=144b'; // V144 A2 frontage clear
-import {STUCCO146_CLEAR,STUCCO146_CLEAR2,stucco146AreaRF,stucco146AreaHoles} from './stucco146-layout.js?v=146c'; // V146 T2 basement areas + frontage clear
+import {STUCCO146_CLEAR,STUCCO146_CLEAR2,stucco146AreaRF,stucco146AreaHoles} from './stucco146-layout.js?v=146d'; // V146 T2 basement areas + frontage clear
 const PI=Math.PI;
 // V131m: street furniture never lands in or right in front of a subway opening (city rects incl. a 2 m apron, set per block)
 let KEEP_CLEAR=[];

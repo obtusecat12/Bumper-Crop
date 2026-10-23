@@ -12,8 +12,8 @@
 import * as T from './vendor/three.module.min.js';
 import {urbanHash} from './urban-batch.js?v=60';
 import {Soup,face,fq,fbox,wall,reveal,TILE,addMats} from './maltose145-bldg.js?v=145c';
-import {stucco146T2Task} from './stucco146-t2.js?v=146c';
-import {stucco146T3Task} from './stucco146-t3.js?v=146c'; // T3 lush plane + lime trees // T2 left terrace, areas + railings, street furniture, cars
+import {stucco146T2Task} from './stucco146-t2.js?v=146d';
+import {stucco146T3Task} from './stucco146-t3.js?v=146d'; // T3 lush plane + lime trees // T2 left terrace, areas + railings, street furniture, cars
 const A=new URL('./assets/l11-v146/',import.meta.url).href,PI=Math.PI;
 function tex(n,srgb=true,rep=true){const t=new T.TextureLoader().load(A+n+'.webp?v=146b');if(srgb)t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;t.magFilter=T.NearestFilter;if(rep)t.wrapS=t.wrapT=T.RepeatWrapping;return t;}
 let M=null;
@@ -71,8 +71,11 @@ function pilaster(S,F,u0,u1,lod,p=.12){fbox(S,'s146st',F,u0-.05,u1+.05,G,G+.4,-.
  if(!lod)for(const u of[u0-.03,u1+.03]){const y=CAP1-.18;S.tube('s146st',F.P(u,y,p+.02),F.P(u,y,p+.1),.06,6);}}   // corner volutes
 // entablature + main cornice over the giant order (architrave, frieze, bed, modillions, corona, cyma)
 function entab(S,F,u0,u1,lod,e=[1,1]){fbox(S,'s146st',F,u0-.12*e[0],u1+.12*e[1],CAP1,CAP1+.28,0,.2,false,'b');fbox(S,'s146st',F,u0-.12*e[0],u1+.12*e[1],CAP1+.28,ENT-.62,0,.16,false,'b');
- fbox(S,'s146st',F,u0-.2*e[0],u1+.2*e[1],ENT-.62,ENT-.48,0,.3,false,'b');
- if(!lod){const N=Math.floor((u1-u0)/.5);for(let i=0;i<=N;i++){const u=u0+.08+i*(u1-u0-.16)/N;fbox(S,'s146st',F,u-.05,u+.05,ENT-.48,ENT-.3,.25,.62,false,'b');}}
+ fbox(S,'s146st',F,u0-.3*e[0],u1+.3*e[1],ENT-.62,ENT-.48,0,.3,false,'b');   // T4: bed mould reaches the other face's bed (no corner notch)
+ if(!lod){const N=Math.floor((u1-u0)/.5);for(let i=0;i<=N;i++){const u=u0+.08+i*(u1-u0-.16)/N;fbox(S,'s146st',F,u-.05,u+.05,ENT-.48,ENT-.3,.25,.62,false,'b');}
+  // T4: diagonal corner modillion + a soffit backing strip over the modillion zone so the corner reads closed from the street
+  if(e[0])fbox(S,'s146st',F,u0-.62,u0-.25,ENT-.48,ENT-.3,.25,.62,false,'b');if(e[1])fbox(S,'s146st',F,u1+.25,u1+.62,ENT-.48,ENT-.3,.25,.62,false,'b');}
+ fbox(S,'s146st',F,u0-.3*e[0],u1+.3*e[1],ENT-.48,ENT-.3,0,.25,false,'b');
  fbox(S,'s146st',F,u0-.66*e[0],u1+.66*e[1],ENT-.3,ENT-.08,0,.68,false,'b');fbox(S,'s146st',F,u0-.7*e[0],u1+.7*e[1],ENT-.08,ENT,0,.72,false,'b');}
 // cast-iron balcony: stucco slab on consoles, alpha-tested pattern panel, top/bottom rails, standards
 function balcony(S,F,u0,u1,y,dep,lod){fbox(S,'s146st',F,u0,u1,y-.14,y,0,dep,false,'b');
