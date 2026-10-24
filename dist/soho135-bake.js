@@ -26,7 +26,7 @@ export function sohoBake135(v,key,share,{force=false,budget=3}={}){
  const prep=prepSoho135(v.object,share),alive=()=>!!v.object.parent||force;v.bake135=prep;
  prep.ready=(async()=>{
   const t0=performance.now();await keySky133(prep,{budget});prep.keyMs=Math.round(performance.now()-t0);if(!alive())return prep;
-  idxP??=import('./capital135/soho/index.js?v=146d').then(m=>m.SOHO135_INDEX);const idx=await idxP,e=idx[key];if(!e)return prep;
+  idxP??=import('./capital135/soho/index.js?v=147d').then(m=>m.SOHO135_INDEX);const idx=await idxP,e=idx[key];if(!e)return prep;
   const r=await fetch(BASE+e.f);if(!r.ok)throw Error('soho135 pack '+r.status);const u8=new Uint8Array(await r.arrayBuffer());if(!alive())return prep;
   const byKey=new Map(prep.list.map(x=>[x.key,x]));let t=performance.now();
   for(const[k,off,len]of e.k){const x=byKey.get(k),a=x?.mesh.geometry.attributes.bake133;if(!a){prep.miss++;continue;}
