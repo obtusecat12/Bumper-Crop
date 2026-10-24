@@ -27,6 +27,7 @@ import {maltose145StallsTask} from './maltose145-stalls.js?v=147a'; // V145 M4 t
 import {maltose145GoodsTask} from './maltose145-goods.js?v=147a'; // V145 M5 goods on the tables + chairs / cans
 import {maltose147StallsTask} from './maltose147-stalls.js?v=147a';
 import {maltose147GoodsTask} from './maltose147-goods.js?v=147b'; // V147 D2 goods batch 1: records / books / paintings / clocks / lamps / radios / cameras / porcelain // V147 D1 market densify: tents+curtains / tarps / umbrellas / blankets / crates / boxes / gridwalls / lights
+import {maltose147Goods2Task} from './maltose147-goods2.js?v=147c'; // V147 D3 goods batch 2: copper / enamel / toys / shoes + bags / mirrors / typewriter / stools + cabinet / rug rolls / globe / silver + far-table densify
 import {createMaltose145Npc} from './maltose145-npc.js?v=145g'; // V145 M6 market vendors + customers (crowd135 pipeline)
 import {barricade144Task,BARRICADE144,BARRICADE144_ON} from './brick144-barricade.js?v=144f'; // V144 B alley barricade (pallet pile)
 import {sohoBake135,SOHO135_BAKE_BLOCKS} from './soho135-bake.js?v=146d';
@@ -133,7 +134,7 @@ function* buildBlock(mats,plan,lod){
  if(plan.soho135==='a'||plan.soho135==='b'){b.push(plan.x,Y,plan.z);yield* soho135FairTask(b,plan,lod);b.pop();}
  for(const spec of plan.buildings){b.push(spec.x,Y+.15,spec.z,spec.ry);if(spec.soho135)yield* soho135BuildingTask(b,spec,lod);else if(spec.spire135)yield* spire135Task(b,spec,lod);else if(spec.brick144)yield* brick144Task(b,spec,lod);else if(spec.malt145b)yield* maltose145BldgTask(b,spec,lod);else if(spec.malt145f)yield* maltose145FarTask(b,spec,lod);else if(spec.stucco146)yield* stucco146Task(b,spec,lod);else yield* addStreetwallBuildingTask(b,{...spec,lod});if(spec.infill){b.box('sidewalk',0,-.075,spec.d/2+1.8,spec.w,.15,3.6);b.walk(0,spec.d/2+1.8,spec.w,3.6,0);b.push(0,-.15,0);curb(b,0,spec.d/2+3.6,spec.w,Math.PI,.15);b.pop();if(spec.seed%3===0)place(b,0,0,spec.d/2+2.85,0,P.addStreetTree,{seed:spec.seed,scale:.68});else if(spec.seed%3===1)place(b,0,0,spec.d/2+2.85,0,P.addHydrant);else place(b,0,0,spec.d/2+2.85,0,P.addStreetLight,{height:7.4,arm:1.5});}b.pop();yield;}
  if(BARRICADE144_ON&&plan.ix===BARRICADE144.block[0]&&plan.iz===BARRICADE144.block[1]){b.push(plan.x+BARRICADE144.x,Y+.15,plan.z+BARRICADE144.z,0);yield* barricade144Task(b,lod);b.pop();}
- if(plan.maltose145){b.push(plan.x,Y,plan.z);yield* maltose145Task(b,lod);yield* maltose145StallsTask(b,lod);yield* maltose145GoodsTask(b,lod);yield* maltose147StallsTask(b,lod);yield* maltose147GoodsTask(b,lod);b.pop();}
+ if(plan.maltose145){b.push(plan.x,Y,plan.z);yield* maltose145Task(b,lod);yield* maltose145StallsTask(b,lod);yield* maltose145GoodsTask(b,lod);yield* maltose147StallsTask(b,lod);yield* maltose147GoodsTask(b,lod);yield* maltose147Goods2Task(b,lod);b.pop();}
 
  b.pop();const object=yield* b.finishTask('Level 11 block '+plan.ix+','+plan.iz+' / '+plan.district);const sub=plan.reserved?null:yield* subwayBlockTask(mats,plan,lod);return{object,colliders:b.colliders,walks:b.walks,plan,lod,sub,stairWalks:b.stairWalks||[],stairSolids:b.stairSolids||[],signals132:b.signals132||[],picks140:b.picks140||[]};}finally{b.discard();}
 }
