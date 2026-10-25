@@ -1,0 +1,226 @@
+diff --git a/dist/flashlight117.js b/dist/flashlight117.js
+index c1b3914..4037953 100644
+--- a/dist/flashlight117.js
++++ b/dist/flashlight117.js
+@@ -1,9 +1,9 @@
+ // V117 · first-person flashlight: a right hand wrapped round a 2-cell aluminium torch, carried in front of the camera.
+ // Procedural geometry (no external model): knurled barrel, bezel + reflector + lens, rubber tail cap, a thumb that
+-// presses the tail-side switch. A real SpotLight (soft penumbra, inverse-square decay, projected ring cookie) plus an
+-// additive volumetric cone with drifting dust lights the world. The light lives in whichever scene is being rendered
++// presses the tail-side switch. A real SpotLight has a soft hotspot, inverse-square decay and a bounded dynamic shadow.
++// The light lives in whichever scene is being rendered
+ // (prepare(scene) is called right before each render), and is never removed — only its intensity changes, so toggling
+-// never triggers a shader recompile. Shadows are off (the cost of a moving shadow map was not worth it here).
++// never triggers a shader recompile. The player light is never part of a static bake.
+ import {GLTFLoader} from './vendor/GLTFLoader.js';
+ import {fl2Mesh,loadFL2,FL2} from './torch132b.js?v=132b';
+ // V117b: the hand is now the CC0 "PSX First Person Arms" by Drillimpact (assets/fp-arms-v117/CREDITS.txt). Its knife_idle
+@@ -106,11 +106,15 @@ export function createFlashlight117(T){
+ 
+  // ---- light ----
+  const cookie=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');const R=128;
+-  const gr=g.createRadialGradient(R,R,0,R,R,R);for(const [o,v] of [[0,1],[.12,.98],[.2,.78],[.26,.9],[.34,.55],[.5,.42],[.62,.3],[.7,.36],[.82,.12],[1,0]])gr.addColorStop(o,`rgba(255,255,255,${v})`);
++  const gr=g.createRadialGradient(R,R,0,R,R,R);for(const [o,v] of [[0,1],[.12,.98],[.24,.86],[.38,.57],[.55,.32],[.72,.16],[.9,.035],[1,0]])gr.addColorStop(o,`rgba(255,255,255,${v})`);
+   g.fillStyle='#000';g.fillRect(0,0,256,256);g.fillStyle=gr;g.fillRect(0,0,256,256);
+-  const d=g.getImageData(0,0,256,256);for(let i=0;i<d.data.length;i+=4){const n=(Math.random()-.5)*10;d.data[i]+=n;d.data[i+1]+=n;d.data[i+2]+=n;}g.putImageData(d,0,0);
++  const d=g.getImageData(0,0,256,256);for(let i=0;i<d.data.length;i+=4){const n=.6*Math.sin(i*.618);d.data[i]+=n;d.data[i+1]+=n;d.data[i+2]+=n;}g.putImageData(d,0,0);
+   const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return t;})();
+- const spot=new T.SpotLight(0xfff0d6,0,34,.42,.55,2);spot.map=cookie;spot.castShadow=false;const target=new T.Object3D();spot.target=target;
++ const spot=new T.SpotLight(0xfff0d6,0,34,.46,.78,2);spot.map=cookie;spot.castShadow=true;const target=new T.Object3D();spot.target=target;
++ // One 1024px map shared by stock materials and Level 1's custom light shader.
++ // Keep castShadow constant; only request a depth refresh while the lamp is on.
++ spot.shadow.mapSize.set(1024,1024);spot.shadow.camera.near=.04;spot.shadow.camera.far=34;
++ spot.shadow.bias=-.00008;spot.shadow.normalBias=.012;spot.shadow.radius=2;spot.shadow.autoUpdate=false;
+  // volumetric cone: additive, fades with distance from the lens and towards the cone edge, slow dust noise
+  const coneLen=7,coneGeo=new T.ConeGeometry(Math.tan(.46)*coneLen,coneLen,32,1,true);coneGeo.translate(0,-coneLen/2,0);coneGeo.rotateX(-Math.PI/2);
+  const coneMat=new T.ShaderMaterial({transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide,uniforms:{uI:{value:0},uT:{value:0}},
+@@ -155,13 +159,17 @@ const vmScene=new T.Scene();vmScene.add(rig);const vmCam=new T.PerspectiveCamera
+  // V133-arms: speed is net travel over a 0.25 s window, so collision push-back jitter (in/out against a wall or crate)
+ // cancels out instead of kicking the bob; jumps > 20 m/s (teleport, level change, noclip push) reset the history.
+ const eyeHist=[];let eyeSpeed=0,eyeT=-1;
+- function prepare(sc,camera){{const now=performance.now(),e=camera.getWorldPosition(lensP),ddt=eyeT<0?0:Math.max(1e-3,(now-eyeT)/1000);eyeT=now;const last=eyeHist[eyeHist.length-1];
++ function prepare(sc,camera,renderer){{const now=performance.now(),e=camera.getWorldPosition(lensP),ddt=eyeT<0?0:Math.max(1e-3,(now-eyeT)/1000);eyeT=now;const last=eyeHist[eyeHist.length-1];
+   if(last&&Math.hypot(e.x-last.x,e.z-last.z)/ddt>20)eyeHist.length=0;eyeHist.push({x:e.x,z:e.z,t:now});while(eyeHist.length>2&&now-eyeHist[1].t>250)eyeHist.shift();
+   const o=eyeHist[0],span=(now-o.t)/1000,d=span>.05?Math.min(8,Math.hypot(e.x-o.x,e.z-o.z)/span):0;eyeSpeed+=(d-eyeSpeed)*Math.min(1,ddt*6);}if(sc!==scene){lightRig.parent?.remove(lightRig);scene=sc;if(sc)sc.add(lightRig);}
+   rig.position.set(0,0,0);rig.quaternion.identity();rig.updateMatrixWorld(true);
+   lens.getWorldPosition(lensP).multiplyScalar(.4);torch.getWorldQuaternion(tq);
+-  camera.updateMatrixWorld();lightRig.position.copy(lensP).applyMatrix4(camera.matrixWorld);if(sc)sc.worldToLocal(lightRig.position);
+-  lightRig.quaternion.copy(camera.getWorldQuaternion(new T.Quaternion())).multiply(tq);lightRig.updateMatrixWorld(true);fdir.set(0,0,1).applyQuaternion(lightRig.quaternion);}
++  camera.updateMatrixWorld();lightRig.position.copy(lensP).applyMatrix4(camera.matrixWorld);
++  // L1 shifts its camera only inside scene.onBeforeRender. Its children retain logical coordinates.
++  // Applying worldToLocal here would add the floating origin for a second time.
++  if(sc&&level!==1)sc.worldToLocal(lightRig.position);
++  lightRig.quaternion.copy(camera.getWorldQuaternion(new T.Quaternion())).multiply(tq);lightRig.updateMatrixWorld(true);fdir.set(0,0,1).applyQuaternion(lightRig.quaternion);
++  if(renderer&&spot.intensity>0){spot.shadow.needsUpdate=true;renderer.shadowMap.needsUpdate=true;}}
+  const fdir=new T.Vector3(0,0,1);
+  function update(dt,{moving=0,running=false,yaw=0,pitch=0,step=0}={}){t+=dt;syncModel();coneMat.uniforms.uT.value=t;
+   // V131: never pop out — while the L0→L1 noclip plays the hand is lowered out of frame with the same ease as unequipping
+@@ -176,7 +184,9 @@ const eyeHist=[];let eyeSpeed=0,eyeT=-1;
+   hand.position.set(.2+bob.x+sway.x*.4,-.21+bob.y+breathe-(1-raise)*.3-press*.004,-.4);hand.rotation.set(-.04-sway.y*.6-press*.05,Math.PI+.08+sway.x*.8,-bob.x*1.4);armRoot.position.set(bob.x+sway.x*.4,bob.y+breathe-(1-raise)*.3-press*.004,0);armRoot.rotation.set(-sway.y*.6-press*.05,sway.x*.8,-bob.x*1.4);
+   thumb.children[0].rotation.x=-press*.25;if(btnRest)btn.position.copy(btnRest).addScaledVector(btnN,-press*.002);else btn.position.y=.017-press*.002;
+   let I=on&&equipped?1:0;if(flick>0){flick-=dt;I*=flick>.12?(Math.sin(flick*90)>0?.3:1):1;}
+-  const lv=level;spot.intensity=I*(lv===10||lv===11?28:46);spot.decay=2;coneMat.uniforms.uI.value=I;cone.visible=I>0;lensMat.color.setScalar(I?1.6:(torch132?.8:.12));lensMat.opacity=torch132&&!I?.35:1;}
++  const lv=level;spot.intensity=I*(lv===10||lv===11?28:46);spot.decay=2;coneMat.uniforms.uI.value=I;
++  // The old additive cone did not sample depth and could glow through a partition.
++  cone.visible=false;lensMat.color.setScalar(I?1.6:(torch132?.8:.12));lensMat.opacity=torch132&&!I?.35:1;}
+  function toggle(){if(!equipped)return;on=!on;press=1;click(on);if(on)flick=.22;}
+  function setEquipped(v){if(v===equipped)return;equipped=v;}
+  // V132-flashlight2: the held model follows the selected flashlight stack's meta ({fl:1..3,v:1|2} = AcchiHaven torches,
+@@ -188,5 +198,5 @@ const eyeHist=[];let eyeSpeed=0,eyeT=-1;
+   if(!n){lens.position.copy(lensBase.p);lens.scale.copy(lensBase.s);return;}
+   alt.add(fl2Mesh(n,v,0x181818));loadFL2(n).then(r=>{if(model!==key)return;const L=FL2[n].lens;lens.position.set(L[0],L[1],L[2]+.0015);lens.geometry.computeBoundingSphere();const r0=lens.geometry.boundingSphere?.radius||.0225;lens.scale.setScalar(r.lensR/r0);}).catch(()=>{});}
+  function syncModel(){const inv=globalThis.__bcInventory,s=inv?.slots?.[inv.sel];if(s&&s.id==='flashlight')setModel(s.items.at(-1));}
+- return{rig,prepare,overlay,update,toggle,setEquipped,setModel,setLevel(v){level=v;},get on(){return on&&equipped;},get beam(){return{p:lightRig.position,d:fdir,i:coneMat.uniforms.uI.value,cos:Math.cos(.46)};},get equipped(){return equipped;},spot,cone,armRoot,torch};
++ return{rig,prepare,overlay,update,toggle,setEquipped,setModel,setLevel(v){level=v;},get on(){return on&&equipped;},get beam(){return{p:lightRig.position,d:fdir,i:coneMat.uniforms.uI.value,cos:Math.cos(spot.angle),shadow:spot.shadow};},get equipped(){return equipped;},spot,cone,armRoot,torch};
+ }
+diff --git a/dist/l1loot124-main.js b/dist/l1loot124-main.js
+index 1a907a1..5d7581e 100644
+--- a/dist/l1loot124-main.js
++++ b/dist/l1loot124-main.js
+@@ -68,7 +68,7 @@ export function rollCrate(l,force,legacy=false){const R=rng(l.id);let theme='sup
+ 
+ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio,updateHUD=()=>{},enterOne,resetCameraRig=()=>{},inspect=null}){
+  let shiftDown=false;addEventListener('keydown',e=>{if(e.key==='Shift')shiftDown=true;});addEventListener('keyup',e=>{if(e.key==='Shift')shiftDown=false;});addEventListener('blur',()=>{shiftDown=false;});
+- let FL=null;import('./flashlight117.js?v=134').then(m=>{FL=m;}).catch(()=>{});
++ let FL=null;import('./flashlight117.js?v=150m').then(m=>{FL=m;}).catch(()=>{});
+  const W=()=>world();let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}');}catch{}
+  const save=()=>{try{const k=Object.keys(saved);if(k.length>800)for(const x of k.slice(0,k.length-800))delete saved[x];localStorage.setItem(KEY,JSON.stringify(saved));}catch{}};
+  const ready=prepareLootItems();
+@@ -82,7 +82,7 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
+     if(WOOD.has(li))for(const s of[-1,1])P(box,C.osb,0,wh*.5,s*(d/2+.006),w*.96,.08,.012);});
+    const parts=CARTON.has(li)?[{geo:wd.kitGeo((P,C,{box})=>P(box,C[name],w/4,lt/2,0,w/2,lt,d)),piv:[-w/2,wh,0],ax:'z',sg:1,max:2.2},{geo:wd.kitGeo((P,C,{box})=>P(box,C[name],-w/4,lt/2,0,w/2,lt,d)),piv:[w/2,wh,0],ax:'z',sg:-1,max:2.15}]
+     :[{geo:wd.kitGeo((P,C,{box})=>{P(box,C[name],0,lt/2,d/2,w,lt,d);if(WOOD.has(li))for(const s of[-.3,.3])P(box,C.osb,s*w,lt+.006,d/2,.09,.012,d*.96);}),piv:[0,wh,-d/2],ax:'x',sg:-1,max:WOOD.has(li)?1.75:1.95}];
+-   const mk=g=>{const m=new T.InstancedMesh(g,wd.lootMat,48);m.count=0;m.frustumCulled=false;m.visible=false;m.instanceMatrix.setUsage(T.DynamicDrawUsage);scene.add(m);return m;};
++   const mk=g=>{const m=new T.InstancedMesh(g,wd.lootMat,48);m.count=0;m.frustumCulled=false;m.castShadow=m.receiveShadow=true;m.visible=false;m.instanceMatrix.setUsage(T.DynamicDrawUsage);scene.add(m);return m;};
+    return{name,w,h,d,t,wh,body:mk(body),parts:parts.map(p=>({...p,im:mk(p.geo)}))};});}
+  const tmp=new T.Matrix4(),tmp2=new T.Matrix4(),q=new T.Quaternion(),e=new T.Euler(),v=new T.Vector3(),sc=new T.Vector3();
+  function crateMatrix(l,out){q.setFromEuler(e.set(0,l.ry,0));v.set(l.x-anchor.x,0,l.z-anchor.z);sc.set(l.s,l.s,l.s);return out.compose(v,q,sc);}
+@@ -257,7 +257,7 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
+   doorKit={lo:[leafO(1),leafO(-1)],li:[leafI(1),leafI(-1)],chain,chip};}
+  function doorRt(d){let r=doors.get(d.id);if(r)return r;r={d,broken:!!saved[doorKey(d.id)],t:-1,grp:null,parts:null,chips:[]};doors.set(d.id,r);return r;}
+  function doorMesh(r){if(r.grp||!scene)return;if(!doorKit)buildDoorKit();const d=r.d,M=W().lootMat,g=new T.Group();g.position.set(d.x,0,d.z);g.rotation.y=d.ry;
+-  const mk=(geo)=>{const m=new T.Mesh(geo,M);m.frustumCulled=false;return m;};
++  const mk=(geo)=>{const m=new T.Mesh(geo,M);m.frustumCulled=false;m.castShadow=m.receiveShadow=true;return m;};
+   const leaves=[1,-1].map((s,i)=>{const h=new T.Group();h.position.set(-s*.8,0,0);const o=mk(doorKit.lo[i]),n=mk(doorKit.li[i]);n.position.set(s*.65,1.075,0);h.add(o,n);g.add(h);return{h,o,n,s};});
+   const ch=mk(doorKit.chain);ch.position.set(0,1,0);g.add(ch);r.grp=g;r.parts={leaves,ch};scene.add(g);if(r.broken)doorPose(r,1,true);}
+  // a = 0 closed … 1 fully broken (static pose); used for the reload pose and the end of the animation
+diff --git a/dist/level1-corridors.js b/dist/level1-corridors.js
+index a4d6a7c..116f30c 100644
+--- a/dist/level1-corridors.js
++++ b/dist/level1-corridors.js
+@@ -83,7 +83,7 @@ export function createLevel1Corridors(T,renderer,textures){
+   else if(kind==='mattress'){for(let i=0;i<3;i++)add(M.mattress,X-.6+i*.6,.1+i*.02,Z+(hr(60+i)-.5),.9,.18,1.9,hr(63+i)*.5);}}
+  // ---------- streaming ----------
+  const chunks=new Map(),key=(a,b)=>a+','+b;let want=[],center='';
+- function chunkAt(cx,cz){const k=key(cx,cz);let c=chunks.get(k);if(!c){c=buildChunk(cx,cz);chunks.set(k,c);scene.add(c.group);}return c;}
++ function chunkAt(cx,cz){const k=key(cx,cz);let c=chunks.get(k);if(!c){c=buildChunk(cx,cz);c.group.traverse(o=>{if(o.isMesh&&o.material?.isMeshLambertMaterial)o.castShadow=o.receiveShadow=true;});chunks.set(k,c);scene.add(c.group);}return c;}
+  function drop(k,c){scene.remove(c.group);c.group.traverse(o=>o.geometry?.dispose());chunks.delete(k);}
+  function plan(x,z){const ccx=Math.floor(x/CK),ccz=Math.floor(z/CK),k=key(ccx,ccz);if(k===center)return;center=k;want=[];
+   for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)if(!chunks.has(key(ccx+dx,ccz+dz)))want.push([ccx+dx,ccz+dz]);
+diff --git a/dist/level1-world.js b/dist/level1-world.js
+index a1c2292..9a933a3 100644
+--- a/dist/level1-world.js
++++ b/dist/level1-world.js
+@@ -5,11 +5,26 @@
+ import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
+ import {makeL1Props} from './level1-props.js?v=116';
+ import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=116';
+-import {createLevel1Corridors} from './level1-corridors.js?v=113';
++import {createLevel1Corridors} from './level1-corridors.js?v=150m';
+ import {L1_DEC,L1_ATLAS_LAYERS as NLAY,L1_NORM} from './level1-decals.js?v=116';
+ import {l1Rebase,L1_BAY as B,L1_CHUNK as K,L1_H as H,L1_COL,L1_WALL,l1Hash,l1WallX,l1WallZ,l1Column,l1DoorX,l1DoorZ,l1Ceiling,l1ColumnTube,l1ColumnFace,l1TubeX,l1TubeZ,l1TubeSideX,l1TubeSideZ,l1TubeOffX,l1TubeOffZ,l1RunX,l1RunZ,l1RunSideX,l1RunSideZ,l1LowX,l1LowZ,l1Sector,l1SecV,L1_SEC_H,L1_SEC_G,L1_SEC_O,l1ThrSite,l1Thr,l1InClu,L1_LAYOUT_GLSL} from './level1-layout.js?v=113';
+ 
+ const LIGHT_GLSL=`${L1_LAYOUT_GLSL}
++#include <packing>
++uniform sampler2D l1FlShadowMap;
++uniform mat4 l1FlShadowMatrix;
++uniform float l1FlShadowOn;
++float l1TorchVisibility(vec3 P,vec3 N){
++ if(l1FlShadowOn<.5)return 1.0;
++ vec4 q=l1FlShadowMatrix*vec4(P+N*.012,1.0);
++ if(q.w<=0.0)return 0.0;
++ vec3 uv=q.xyz/q.w;
++ if(uv.z<0.0||uv.z>1.0||any(lessThan(uv.xy,vec2(0.0)))||any(greaterThan(uv.xy,vec2(1.0))))return 0.0;
++ float vis=0.0;
++ for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++)
++  vis+=step(uv.z-.00008,unpackRGBAToDepth(texture2D(l1FlShadowMap,uv.xy+vec2(float(x),float(y))/1024.0)));
++ return vis/9.0;
++}
+ uniform ivec2 l1OB;// floating-origin offset in bays (integer, exact)
+ float lh(int x,int z,int s){return l1h(x+l1OB.x,z+l1OB.y,s);}
+ // V131 perf: every per-bay layout predicate the light loops need is baked on the CPU (same JS layout functions the
+@@ -63,7 +78,15 @@ vec3 l1light(vec3 P,vec3 N){
+  if(linc(fx,fz))hemi*=.6;
+  // V117 hand torch (flashlight117): soft-edged cone, inverse-square falloff, independent of the hall power
+  vec3 fl=vec3(0.0);if(l1FlP.w>0.0){vec3 d=l1FlP.xyz-P;float r2=max(dot(d,d),.04);vec3 l=d*inversesqrt(r2);float c=dot(-l,l1FlD.xyz);
+-  float cone=smoothstep(l1FlD.w,mix(l1FlD.w,1.0,.55),c);float ring=.85+.15*sin(acos(clamp(c,-1.,1.))*38.0);fl=vec3(1.0,.93,.8)*l1FlP.w*cone*ring*(max(dot(N,l),0.0)*.92+.08)/(1.0+r2*.55);}
++  float cone=smoothstep(l1FlD.w,mix(l1FlD.w,1.0,.78),c);
++  if(l1FlD.w<0.0){ // Keep the existing broad match/lighter light separate from the torch.
++   fl=vec3(1.0,.93,.8)*l1FlP.w*cone*(max(dot(N,l),0.0)*.92+.08)/(1.0+r2*.55);
++  }else{
++   float radial=sqrt(clamp((1.0-c)/(1.0-l1FlD.w),0.0,1.0));
++   float hotspot=mix(.15,1.0,1.0-smoothstep(.12,.62,radial));
++   float range=pow(max(0.0,1.0-pow(sqrt(r2)/34.0,4.0)),2.0);
++   fl=vec3(1.0,.93,.8)*l1FlP.w*cone*hotspot*range*max(dot(N,l),0.0)/max(r2,.25)*l1TorchVisibility(P,N);
++  }}
+  return (l1Amb*hemi*l1AmbK*(.08+.92*l1Power)+l1Lamp*(accT+cb*(1.0-.6*l1T))*l1Power+fl)*ao;}
+ `;
+ const NOISE_GLSL=`
+@@ -171,9 +194,17 @@ scene.background=new T.Color(0x24282b);scene.fog=new T.FogExp2(0x2b3033,.03);
+  uniforms.l1Lay={value:layTex};
+  const corridors=createLevel1Corridors(T,renderer,{wall:uniforms.l1Wall.value,floor:uniforms.l1Floor.value,ceil:uniforms.l1Ceil.value});let mode='halls',hallReturn=null;
+  const mk=(defines={})=>new T.ShaderMaterial({uniforms:T.UniformsUtils.merge([T.UniformsLib.fog,{}]),vertexShader:VERT,fragmentShader:FRAG,fog:true,defines});
++ let flashShadow=null,torchShadowActive=false;
++ Object.assign(uniforms,{l1FlShadowMap:{value:null},l1FlShadowMatrix:{value:new T.Matrix4()},l1FlShadowOn:{value:0}});
+  const mat=mk();Object.assign(mat.uniforms,uniforms);
+  const mirrorRT=new T.WebGLRenderTarget(256,256,{type:T.HalfFloatType});mirrorRT.texture.generateMipmaps=false;
+  const floorMat=mk({L1_FLOOR:1});Object.assign(floorMat.uniforms,uniforms,{l1Mirror:{value:mirrorRT.texture},l1TexMat:{value:new T.Matrix4()}});
++ // Three renders the depth map before these material callbacks. Bind the freshly rendered
++ // packed RGBA depth texture/matrix, including the first enabled frame and origin changes.
++ mat.onBeforeRender=floorMat.onBeforeRender=()=>{
++  uniforms.l1FlShadowOn.value=torchShadowActive&&flashShadow?.map?1:0;
++  if(flashShadow?.map){uniforms.l1FlShadowMap.value=flashShadow.map.texture;uniforms.l1FlShadowMatrix.value.copy(flashShadow.matrix);}
++ };
+  const GV=`attribute vec4 l1t;attribute vec3 color;varying vec4 vT;varying vec2 vUv;varying vec3 vCol;
+ #include <common>
+ #include <fog_pars_vertex>
+@@ -425,7 +456,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
+    [fx,fz]=F(.42);lootAt(`m${cx},${cz}`,fx,fz,ax?0:Math.PI/2,1,-1,.75);}
+   flush();yield;resume();
+   const geo=rowP.length>1?mergeGeometries(rowP,false):rowP[0],glow=rowG.length?(rowG.length>1?mergeGeometries(rowG,false):rowG[0]):null;if(rowP.length>1)rowP.forEach(g=>g.dispose());if(rowG.length>1)rowG.forEach(g=>g.dispose());
+-  const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
++  const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;m.castShadow=m.receiveShadow=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
+   if(halos.length){const hm=new T.Mesh(haloGeo(halos),haloMat);hm.renderOrder=5;group.add(hm);}
+   const out={cx,cz,group,solids,loot:loots,ldoors};parts=glows=exits=solids=halos=loots=ldoors=null;return out;}
+ 
+@@ -550,5 +581,5 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
+  let hand={i:0,p:new T.Vector3(),d:new T.Vector3(0,0,-1)};
+  async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);layUpdate(camera.position.x,camera.position.z);const g=new T.Group();for(const m of [mat,glowMat,exitMat]){const q=new T.Mesh(col(box.clone(),C.concrete,[1,1,1]),m);q.position.set(camera.position.x,-50,camera.position.z);g.add(q);}g.add(new T.Mesh(haloGeo([[0,-50,0,1,1,1]]),haloMat));scene.add(g);await r.compileAsync(scene,camera);scene.remove(g);g.traverse(o=>o.geometry?.dispose());}
+  return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='corridor'?corridors.scene:scene},get mode(){return mode},nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt:()=>H,
+-  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA)=>{if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,lockDoorsNear,setMapOverlay:f=>{mapOverlay=f;},kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
++  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA,shadow)=>{flashShadow=shadow||null;torchShadowActive=i>0&&hand.i<=i;if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,lockDoorsNear,setMapOverlay:f=>{mapOverlay=f;},kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
+ }
+diff --git a/dist/main.js b/dist/main.js
+index 47e7e2f..f403518 100644
+--- a/dist/main.js
++++ b/dist/main.js
+@@ -104,8 +104,8 @@ import {createNavigationMap} from './map-ui.js?v=150c';
+ import {drawAsciiTitle} from './ascii-title.js?v=116';
+ import {enhanceDeveloperPanel} from './dev-ui.js?v=117';
+ import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
+-import {createInventory117} from './inventory117.js?v=132b';import {createL1Loot124} from './l1loot124-main.js?v=132b';import {createPerf131} from './perf131.js?v=131';import {createFlashlight117} from './flashlight117.js?v=134';import {createIntro120} from './intro120.js?v=120';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=148a'; // V117 shared inventory
+-import {createLevel1World} from './level1-world.js?v=117'; // V107 Level 1
++import {createInventory117} from './inventory117.js?v=132b';import {createL1Loot124} from './l1loot124-main.js?v=150m';import {createPerf131} from './perf131.js?v=131';import {createFlashlight117} from './flashlight117.js?v=150m';import {createIntro120} from './intro120.js?v=120';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=148a'; // V117 shared inventory
++import {createLevel1World} from './level1-world.js?v=150m'; // V107 Level 1
+ 
+ await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
+ const $=s=>document.querySelector(s),game=$('#game');
+@@ -185,7 +185,7 @@ const displayFilter=createDisplayFilter(renderer,{onError:()=>{settings.filter='
+ // V117 flashlight: rides the camera into whichever scene is rendered this frame
+ const flashlight=createFlashlight117(T),intro=createIntro120(T);globalThis.__bcIntro=intro;globalThis.__bcFlashlight=flashlight;displayFilter.setOverlay?.(flashlight.overlay);{const r0=displayFilter.render.bind(displayFilter);let lt=performance.now();displayFilter.render=(sc,cam,...rest)=>{const now=performance.now(),dt=Math.min(.1,(now-lt)/1000);lt=now;
+  if(cam&&intro.active){intro.apply(cam,dt);if(intro.scene)sc=intro.scene;}flashlight.setEquipped(playing&&!intro.active&&!referenceView&&inventory.selected()==='flashlight');flashlight.setLevel(state.level);const sp=Math.hypot(state.velocity.x,state.velocity.z);flashlight.update(dt,{moving:Math.min(1,sp/2),running:sp>2.6,yaw:state.yaw,pitch:state.pitch,step:state.distance*.75});
+- if(sc&&cam){flashlight.prepare(sc,cam);globalThis.__bcLast={sc,cam,T};}if(state.level===1&&oneWorld?.setFlash){const b=flashlight.beam;oneWorld.setFlash(b.p,b.d,b.i*7,b.cos);}return r0(sc,cam,...rest);};}
++ if(sc&&cam){flashlight.prepare(sc,cam,renderer);globalThis.__bcLast={sc,cam,T};}if(state.level===1&&oneWorld?.setFlash){const b=flashlight.beam;oneWorld.setFlash(b.p,b.d,b.i*14,b.cos,b.shadow);}return r0(sc,cam,...rest);};}
+ const scene=new T.Scene();scene.matrixAutoUpdate=false;scene.background=new T.Color('#acb6b1');scene.fog=new T.Fog('#acb6b1',60,225);
+ const skyFill=new T.HemisphereLight('#c9d2d4','#6b6042',1.4);scene.add(skyFill);
+ // A stable local light avoids shader recompilation as the shelter streams.
