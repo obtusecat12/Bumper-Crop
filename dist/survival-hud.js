@@ -1,5 +1,5 @@
 import {createVialMotion} from './vial-motion.js?v=60';
-import {GAUGES,gaugePath,liquidPath,paintVitals,paintVial,PART_URL} from './retro-instruments.js?v=60';
+import {GAUGES,gaugePath,liquidPath,paintVitals,paintVial,PART_URL} from './retro-instruments.js?v=150i4';
 const keys=['stamina','hydration','health'],percent=v=>Math.max(0,Math.min(100,Number(v)||0));
 export function survivalMarkup(){return `<div class="stats" data-ui-part="vitals" role="group" aria-label="生命状态与补给">
  <div class="sanity-vial" id="sanity-meter" role="meter" aria-label="精神值" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><img crossorigin="anonymous" class="tube-back" src="${PART_URL('back_glass')}" alt=""><svg viewBox="0 0 256 780" aria-hidden="true"><defs><clipPath id="liquid-clip"><path d="M67 111 L174 111 L174 648 Q174 703 121 704 Q67 703 67 648 Z"/></clipPath><linearGradient id="liquid-color"><stop stop-color="#655d3d"/><stop offset=".5" stop-color="#c3b47c"/><stop offset="1" stop-color="#655d3d"/></linearGradient></defs><path class="liquid-path" clip-path="url(#liquid-clip)" fill="url(#liquid-color)" d="${liquidPath(100)}"/></svg><img crossorigin="anonymous" class="tube-front" src="${PART_URL('front_glass')}" alt=""><img crossorigin="anonymous" class="tube-cork" src="${PART_URL('cork')}" alt=""></div>
@@ -12,7 +12,7 @@ export function createSurvivalDisplay(host,parts){
  function updatePaths(){const next=shown.map(v=>v.toFixed(2)).join(',')+','+slope.toFixed(3)+','+ripple.toFixed(3)+','+bottles;if(next===key)return;key=next;revision++;
   paths.forEach((el,i)=>el.setAttribute('d',gaugePath(i,shown[i])));liquid.setAttribute('d',liquidPath(shown[3],slope,ripple));}
  function shellPaint(){const c=shell.getContext('2d');c.clearRect(0,0,640,320);paintVitals(c,parts,[0,0,0],bottles,tokens);revision++;}
- shellPaint();updatePaths();
+ shellPaint();updatePaths();try{addEventListener('bc-lang',()=>{shellPaint();});}catch{}
  return{root,get revision(){return revision;},
   paint(c,r){c.save();c.translate(r.left,r.top);c.scale(r.width/640,r.height/320);paintVial(c,parts,shown[3],slope,ripple,tokens);paintVitals(c,parts,shown,bottles,{...tokens,pixelMode:document.body.dataset.filter==='ps1'});c.restore();},
   update(stamina,hydration,n,health=100,spirit=100){target=[stamina,hydration,health,spirit].map(percent);target.forEach((v,i)=>(meters[i]||sanity).setAttribute('aria-valuenow',String(Math.round(v))));

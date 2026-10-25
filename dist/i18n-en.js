@@ -923,7 +923,7 @@ globalThis.BC_I18N_EN = Object.assign(globalThis.BC_I18N_EN || {}, {
   '无尽柱厅 · 120 × 130 米': 'Endless pillar hall · 120 × 130 m', '墙上配电箱': 'Wall breaker box',
   // L1 dashboard
   '天鹰段 停车层': 'Aquila section parking deck', '衔尾段': 'Ouroboros section', '传说段': 'Legend section', '出口门': 'Exit door',
-  'M 全图': 'M Full map', 'HEALTH 生命': 'HEALTH', 'SANITY 理智': 'SANITY',
+  'M 全图': 'M', 'STAMINA 体力': 'STAMINA', 'HEALTH 生命': 'HEALTH', 'SANITY 理智': 'SANITY',
   '天鹰段 · 切入点': 'Aquila section · entry point', '天鹰段 · 积水长廊': 'Aquila section · flooded corridor',
   '天鹰段 · 柱列纵深': 'Aquila section · pillar rows', '储物货架 · 板条箱': 'Storage racks · crates',
   '团体地标 · 彩布与杏仁水': 'Group landmark · coloured cloth & almond water',

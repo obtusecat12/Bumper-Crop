@@ -1,3 +1,4 @@
+const __bcT=s=>{const b=globalThis.BCi18n;return b&&typeof s==='string'?b.t(s):s;};
 // Small reusable material / object parts. Never a screenshot of a whole widget.
 export const PART_NAMES=['leather_panel','brass_panel','wheat_sprig','rivet','almond_water_bottle','housing_ring','glass_lid','loop_crown','caption_tag','cork','back_glass','front_glass','holder_single_band_optional'];
 export const PART_URL=name=>new URL('./assets/ui-v20/'+name+'.png',import.meta.url).href;
@@ -33,10 +34,10 @@ export function paintVitals(c,parts,values,bottles,tokens={}){
  for(let i=0;i<3;i++){
   const d=gaugePath(i,100);shape(c,d,'#171b14','#ab915d',5);shape(c,gaugePath(i,values[i]),gaugeGradient(c,i));shape(c,d,null,'#5a4930',1.5);
   const y=GAUGES[i].y,tag=`M300 ${y-23} L${i===0?442:573} ${y-23} Q598 ${y-22} 603 ${y+23} L300 ${y+23} Z`;
-  c.save();c.clip(new Path2D(CASE_PATH));shape(c,tag,leather,'#907344',3);c.fillStyle=ink;c.font=`32px ${FONT}`;c.fillText(GAUGES[i].label,322,y+12);c.restore();
+  c.save();c.clip(new Path2D(CASE_PATH));shape(c,tag,leather,'#907344',3);c.fillStyle=ink;c.font=`32px ${FONT}`;c.fillText(__bcT(GAUGES[i].label),322,y+12);c.restore();
  }
  const supply='M298 227 L603 227 L612 286 Q612 298 596 298 L289 298 Z';shape(c,supply,'#25261bd9','#917747',3);
- c.fillStyle=ink;c.font=`32px ${FONT}`;c.fillText('杏仁水',324,274);c.font=`32px ${FONT}`;c.fillText(String(bottles).padStart(2,'0'),555,276);
+ c.fillStyle=ink;c.font=`32px ${FONT}`;c.fillText(__bcT('杏仁水'),324,274);c.font=`32px ${FONT}`;c.fillText(__bcT(String(bottles).padStart(2,'0')),555,276);
  image(c,parts,'almond_water_bottle',504,238,25,58);
  shape(c,CASE_PATH,null,'#51412a',3);
  // Fine-grained ornament parts are prepared at native old-console texture sizes.
@@ -49,6 +50,6 @@ export function paintCompass(c,parts,map,yaw,bearing,tokens={}){
  c.translate(128,142);c.rotate(yaw);c.drawImage(map,-155,-155,310,310);c.restore();
  image(c,parts,'caption_tag',32,231,196,65);image(c,parts,'loop_crown',103,0,51,46);image(c,parts,'housing_ring',7,21,242,242);image(c,parts,'glass_lid',25,39,206,206,.5);
  c.fillStyle=tokens.mapPlayer||'#e2d9b3';c.strokeStyle='#403d2c';c.lineWidth=2;c.beginPath();c.moveTo(128,132);c.lineTo(134,151);c.lineTo(128,148);c.lineTo(122,151);c.closePath();c.fill();c.stroke();
- for(let i=0;i<4;i++){const a=yaw+i*Math.PI/2,x=128+Math.sin(a)*96,y=142-Math.cos(a)*96;c.fillStyle='#302b1f';c.fillRect(x-10,y-12,20,24);c.strokeStyle='#a68b56';c.lineWidth=1;c.strokeRect(x-10,y-12,20,24);c.fillStyle=tokens.ink||'#c8ba96';c.font=`16px ${FONT}`;c.textAlign='center';c.fillText('NESW'[i],x,y+7);}
- c.fillStyle='#3c3322';c.font=`16px ${FONT}`;c.textAlign='left';c.fillText(bearing,46,270);c.textAlign='right';c.fillText('M 地图',208,270);c.textAlign='left';
+ for(let i=0;i<4;i++){const a=yaw+i*Math.PI/2,x=128+Math.sin(a)*96,y=142-Math.cos(a)*96;c.fillStyle='#302b1f';c.fillRect(x-10,y-12,20,24);c.strokeStyle='#a68b56';c.lineWidth=1;c.strokeRect(x-10,y-12,20,24);c.fillStyle=tokens.ink||'#c8ba96';c.font=`16px ${FONT}`;c.textAlign='center';c.fillText(__bcT('NESW'[i]),x,y+7);}
+ c.fillStyle='#3c3322';c.font=`16px ${FONT}`;c.textAlign='left';c.fillText(__bcT(bearing),46,270);c.textAlign='right';c.fillText(__bcT('M 地图'),208,270);c.textAlign='left';
 }
