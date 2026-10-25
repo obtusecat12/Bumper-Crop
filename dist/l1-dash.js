@@ -451,6 +451,16 @@ function l1MapPlayerRaw(c,x,z,yaw,big){const s=big?1.5:1;c.save();c.translate(x,
 // with one reflection covers the lot. Static layers are cached; only needles / liquids / sweep repaint.
 // =====================================================================================================
 const DW=760,DH=316;
+// V149: the cluster's type is iPhone OS 1–3 system type — Helvetica (Arimo, metric-compatible, OFL) + STHeiti-style
+// 黑体 (Noto Sans SC subset, OFL); smooth anti-aliased, no bitmap font, no stepped extrusion. Sizes are in cluster
+// units, floored at a legible on-screen size when the cluster is scaled down.
+const IOS149="BC149Sans,BC149Hei,'Helvetica Neue',Helvetica,Arial,'PingFang SC','Microsoft YaHei',sans-serif";
+let K149=1;const fI=(u,w=700,min=9)=>`${w} ${Math.max(u,min/K149).toFixed(2)}px ${IOS149}`;
+// iPhone-OS-style label: vertical sheen fill, 1px dark drop under it (engraved on chrome / printed on glass)
+function ios149(c,s,x,y,font,{align='center',top='#ffffff',bot='#cfd8df',shadow='#000000b0',sy=1,glow=null}={}){c.save();c.font=font;c.textAlign=align;c.textBaseline='middle';
+ const fs=parseFloat(font.split(' ')[1])||12;if(shadow){c.fillStyle=shadow;c.fillText(s,x,y+sy);}
+ if(glow){c.shadowColor=glow;c.shadowBlur=fs*.35;}c.fillStyle=lg(c,0,y-fs*.5,0,y+fs*.5,[[0,top],[1,bot]]);c.fillText(s,x,y);c.restore();}
+const etch149=(c,s,x,y,u,align='center')=>ios149(c,s,x,y,fI(u),{align,top:'#ffffff',bot:'#e6ecf1',shadow:'#000000c8'});
 const HO={cx:144,cy:180,R:96,top:96,x0:48,x1:716,y1:302,rc:30};   // V117: housing inset — gauges overhang its edge   // housing geometry
 // V142 geometry: the casting is anchored to the bottom-left screen corner (canvas x=0 / y=DH are the screen edges)
 const GA={x:126,y:188,R:110},SUB={x:262,y:72,R:40},VIS={x:288,y:120,w:252,h:118,r:40},MID={x:312,y:124,w:208,h:56,r:6},
@@ -484,20 +494,21 @@ function chromeRing(c,x,y,R,t){c.save();c.beginPath();c.arc(x,y,R+t,0,TAU);c.arc
  c.fillStyle=c.createConicGradient?(()=>{const g=c.createConicGradient(-Math.PI/2,x,y);for(const [o,col] of [[0,'#f6f8f9'],[.12,'#8d9398'],[.25,'#e8ebee'],[.38,'#4f555a'],[.5,'#c4c9cd'],[.62,'#f7f9fa'],[.75,'#6a7075'],[.88,'#d9dde0'],[1,'#f6f8f9']])g.addColorStop(o,col);return g;})():'#ccc';c.fill();c.restore();
  c.strokeStyle='#00000070';c.lineWidth=.8;c.beginPath();c.arc(x,y,R+t,0,TAU);c.stroke();c.beginPath();c.arc(x,y,R,0,TAU);c.stroke();}
 let dashMounted=null;
+const DERA149=(()=>{try{return new URLSearchParams(location.search).get('dashera')==='1';}catch{return false;}})();   // V149: era JPEG/565 pass off for the cluster (?dashera=1 = old)
 export function mountL1Dash(){if(dashMounted)return dashMounted;
  let host=null,cvs=null,ctx=null,R=null,rx=null,size='',raf=0,lastT=0,acc=0,visible=false,wasL1=false,stat=null,front=null,statKey='';
  const S={shown:[100,100,100,100],t:0,k:1,dpr:1,needle:{a:1,v:0},sub:{a:0,v:0},sweep:0,
   bat:{lvl:1,ghost:1,flash:0,wave:0,wv:0,last:100},tube:{lvl:1,tilt:0,tv:0},radar:{a:0,blips:[]},bottles:0,
   spr:{y:0,v:0,on:true,settled:true,delay:0}};
  const pipe=eraClient('dash',out=>{if(!cvs||!ctx)return;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cvs.width,cvs.height);upscale(ctx,out,0,0,cvs.width,cvs.height);});
- preloadSfx();mountEraSvg();
+ preloadSfx();mountEraSvg();try{for(const f of ['700 12px BC149Sans','400 12px BC149Sans','700 12px BC149Hei'])document.fonts.load(f,'理A').then(()=>{imgGen++;});}catch{}
  function ensure(){const stats=document.querySelector('.stats');if(!stats)return false;if(host&&host.isConnected)return true;
   stats.insertAdjacentHTML('beforeend',`<div class="l1-dash" aria-hidden="true"><canvas class="l1-cluster"></canvas></div>`);
   host=stats.querySelector('.l1-dash');cvs=host.querySelector('canvas');ctx=cvs.getContext('2d');size='';return true;}
- function resize(){const r=host.getBoundingClientRect();if(r.width<4)return false;const dpr=Math.min(2,devicePixelRatio||1),k=r.width/DW,key=r.width.toFixed(1)+'/'+dpr;if(key===size)return true;size=key;S.k=k;S.dpr=dpr;
+ function resize(){const r=host.getBoundingClientRect();if(r.width<4)return false;const dpr=Math.min(3,Math.max(1,devicePixelRatio||1)),k=r.width/DW,key=r.width.toFixed(1)+'/'+dpr;if(key===size)return true;size=key;S.k=k;S.dpr=dpr;
   cvs.width=Math.round(DW*k*dpr);cvs.height=Math.round(DH*k*dpr);
   // V130-C: draw small (≈ .78 of CSS size) on a CPU canvas; the era pipe JPEGs it and upscales it into cvs
-  if(ERA.on){S.rs=ERA.f;[R,rx]=rcv(Math.round(DW*k*S.rs),Math.round(DH*k*S.rs));}else{S.rs=dpr;R=cvs;rx=ctx;}statKey='';return true;}
+  if(DERA149){S.rs=ERA.f;[R,rx]=rcv(Math.round(DW*k*S.rs),Math.round(DH*k*S.rs));}else{S.rs=dpr;R=cvs;rx=ctx;}statKey='';return true;}
  function readVals(){const st=globalThis.__bcHudState,get=id=>Number(document.getElementById(id)?.getAttribute('aria-valuenow'));
   const v=st?[st.stamina,st.hydration,st.health,st.sanity??get('sanity-meter')]:[get('stamina-meter'),get('hydration-meter'),get('health-meter'),get('sanity-meter')];return v.map(x=>Number.isFinite(Number(x))?Number(x):100);}
  // ---- Dashboard entrance: the whole cluster rises on an under-damped spring, then the needles sweep ----
@@ -515,16 +526,24 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   // Dashboard "squash": the cluster stretches a touch while it flies and squashes on the bounce
   const sq=clamp(-s.v*.00035,-.05,.05);cvs.style.transform=`translate3d(0,${(s.y*S.k).toFixed(2)}px,0) scale(${(1-sq*.5).toFixed(4)},${(1+sq).toFixed(4)})`;
   cvs.style.visibility=(!s.on&&s.y>DH+50)?'hidden':'visible';return Math.abs(s.y-(s.on?0:DH+60))>.05||Math.abs(s.v)>.05;}
+ // V149 fit: the cluster sits in the bottom-left corner (CSS: fixed, left 0 bottom 0) at ~42 % of the screen width
+ // (≤ 44 % of its height); the hotbar slides right only as far as the key hints allow, then the cluster shrinks so
+ // the two never overlap. Writes --l1d-w / --l1-inv-x on <html>; l1-ui.css reads them only on data-ui-level=1.
+ function fit149(){const de=document.documentElement,vw=innerWidth,vh=innerHeight,inv=document.querySelector('.inv117 .inv-bar');
+  let W0=Math.min(1140,Math.max(300,vw*.42),vh*.44*DW/DH);
+  if(inv&&inv.offsetWidth){const hb=inv.offsetWidth,cl=vw/2-hb/2,kh=document.querySelector('.hud .key-hints'),kr=kh&&kh.getClientRects().length?kh.getBoundingClientRect():null,lim=kr&&kr.width>4?kr.left-14:vw-24,mx=Math.max(cl,lim-hb),x=Math.min(Math.max(W0+10,cl),mx);W0=Math.min(W0,x-10);
+   const v=x>cl+.5?x.toFixed(1)+'px':'';if(de.style.getPropertyValue('--l1-inv-x')!==v){if(v)de.style.setProperty('--l1-inv-x',v);else de.style.removeProperty('--l1-inv-x');}}
+  const w=Math.max(200,W0).toFixed(1)+'px';if(de.style.getPropertyValue('--l1d-w')!==w)de.style.setProperty('--l1d-w',w);}
  const typing=()=>{const ae=document.activeElement;return ae&&/INPUT|SELECT|TEXTAREA/.test(ae.tagName);};
  function onKey(e){if(!isL1()||e.repeat||typing())return;const K=globalThis.__bcKeys131;if(K?K.is(e,'map'):e.code==='KeyM'){play('key',1,.96);return;}if(!(K?K.is(e,'hud'):e.code==='KeyH'))return;if(document.querySelector('.modal:not([hidden]),dialog[open]'))return;e.preventDefault();play('key');if(visible)hide();else show();}
  function onKeyUp(e){if(!isL1()||typing())return;const K=globalThis.__bcKeys131,mp=K?K.is(e,'map'):e.code==='KeyM';if(mp||(K?K.is(e,'hud'):e.code==='KeyH'))play('keyUp',1,mp?.96:1);}
  addEventListener('keydown',onKey);addEventListener('keyup',onKeyUp);
- function frame(now){raf=requestAnimationFrame(frame);const l1=isL1();if(l1&&!wasL1)S.pending=true;wasL1=l1;if(!l1||document.hidden)return;if(!ensure())return;
+ function frame(now){raf=requestAnimationFrame(frame);if(isL1()&&now-(S.fitT||0)>250){S.fitT=now;fit149();}const l1=isL1();if(l1&&!wasL1)S.pending=true;wasL1=l1;if(!l1||document.hidden)return;if(!ensure())return;
   const dt=Math.min(.5,(now-(lastT||now))/1000);lastT=now;if(!host.getClientRects().length)return;if(!resize())return;
   if(S.pending){S.pending=false;show(true,'enter');}
   stepSpring(dt);acc+=Math.min(dt,.1);if(acc<1/30)return;const step=Math.min(.1,acc);acc=0;simulate(step);
   // V130-C: with the era pass on, repaint at ~15 fps (2009 gadgets were never smooth); slower if the readback is costly
-  if(!ERA.on||now-(S.lastDraw||0)>=eraEvery('dash')){S.lastDraw=now;const t0=performance.now();draw();tick('dash.draw',t0);}}
+  if(!DERA149||now-(S.lastDraw||0)>=eraEvery('dash')){S.lastDraw=now;const t0=performance.now();draw();tick('dash.draw',t0);}}
  // ---------------------------------------------------------------- simulation
  function simulate(dt){S.t+=dt;const v=readVals(),st=globalThis.__bcHudState;
   for(let i=0;i<4;i++){const t=clamp(v[i],0,100);S.shown[i]+=(t-S.shown[i])*(1-Math.exp(-dt*(i===2?2.2:6)));}
@@ -542,8 +561,8 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   for(const p of r.blips){const crossed=(prev<=p.a&&r.a>=p.a)||(prev>r.a&&(p.a>=prev||p.a<=r.a));if(crossed){p.life=1;p.a+=(Math.random()-.5)*.25*threat;p.d=clamp(p.d+(Math.random()-.55)*.08,.12,.95);}p.life=Math.max(0,p.life-dt*.45);}
   S.bottles=Number(document.getElementById('bottle-count')?.textContent)||0;}
  // ---------------------------------------------------------------- static layers
- function layer(){const [c,g]=ERA.on?rcv(R.width,R.height):(()=>{const c=document.createElement('canvas');c.width=R.width;c.height=R.height;return[c,c.getContext('2d')];})();const s=S.k*S.rs;g.setTransform(s,0,0,s,0,0);return[c,g];}
- function buildStatic(){FK=1/S.k;const [bc,c]=layer(),[fc,f]=layer(),s=S.k*S.rs;
+ function layer(){const [c,g]=DERA149?rcv(R.width,R.height):(()=>{const c=document.createElement('canvas');c.width=R.width;c.height=R.height;return[c,c.getContext('2d')];})();const s=S.k*S.rs;g.setTransform(s,0,0,s,0,0);return[c,g];}
+ function buildStatic(){FK=1/S.k;K149=S.k;const [bc,c]=layer(),[fc,f]=layer(),s=S.k*S.rs;
   // V142: ONE brushed-chrome casting rising off the bottom-left screen corner: the speedometer pod, its m/s
   // sub-pod on a short web, a long visor spine (health · sanity · almond water behind one black glass), the radar
   // lens pod and the hydration capsule, all on a base band that runs off the bottom edge and ends in a teardrop tail.
@@ -559,14 +578,13 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   for(let i=0;i<5;i++){const b=D142.bars(i);socket142(c,inset(b,1.6),b.y,b.y+b.h,{blur:3});}
   {const A=D142.ALM;socket142(c,g=>{g.beginPath();g.arc(A.x,A.y,A.R-2.5,0,TAU);},A.y-A.R,A.y+A.R,glassS);}
   socket142(c,inset({x:TUB.x-8,y:TUB.y-8,w:TUB.w+16,h:TUB.h+16,r:(TUB.w+16)/2},2.5),TUB.y-8,TUB.y+TUB.h+8,{blur:7});
-  etch142(c,'HEALTH 生命',D142.BAT.x+46,D142.BAT.y-8,f12());
+  ios149(c,'HEALTH 生命',D142.BAT.x+46,D142.BAT.y-8,fI(11),{top:'#2a3036',bot:'#11161a',shadow:'#ffffffb0',sy:1});   // dark engraving: it sits on the bright lip
   // printed scale on the tube glass
   for(let i=0;i<=10;i++){const yy=TUB.y+TUB.h-(TUB.h-14)*i/10;c.fillStyle='#ffffff60';c.fillRect(TUB.x+TUB.w-(i%5?6:10),yy,i%5?6:10,1);}
   // engraved legends cut into the chrome
-  etch142(c,'SANITY 理智',SIG.x+SIG.w/2,VIS.y+VIS.h+15,f12());etch142(c,'杏仁水',D142.ALM.x,VIS.y+VIS.h+15,f12());
-  etch142(c,'THREAT SCAN',RAD.x,RAD.y+RAD.R+30,f12());etch142(c,'水分',TUB.x+TUB.w/2,TUB.y+TUB.h+24,f12());
-  // the LEVEL 1 name is now block lettering standing on the base band (no separate badge frame)
-  blockText(c,'LEVEL 1',VIS.x+VIS.w/2,VIS.y+VIS.h+30,18,{align:'center',shadow:'#000'});
+  etch149(c,'SANITY 理智',SIG.x+SIG.w/2,VIS.y+VIS.h+15,12);etch149(c,'杏仁水',D142.ALM.x,VIS.y+VIS.h+15,12);
+  etch149(c,'THREAT SCAN',RAD.x,RAD.y+RAD.R+30,12);etch149(c,'水分',TUB.x+TUB.w/2,TUB.y+TUB.h+24,12);
+  // V149: the LEVEL 1 block lettering on the base band is removed (user 10-25)
   // ridge details: indicator lamps and a vent grille on the spine crown, rivets on the pods' collars
   grille142(c,VIS.x+118,VIS.y-17,9,7,3.2,12);
   lamp142(c,VIS.x+62,VIS.y-11,2.8,'#ffb838',1);lamp142(c,VIS.x+77,VIS.y-11,2.8,'#6fc8ff',.9);lamp142(c,VIS.x+92,VIS.y-11,2.8,'#6fc8ff',.35);
@@ -590,8 +608,8 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
    c.save();c.shadowColor=v<.2?'#ff4020':'#5ff0ff';c.shadowBlur=F*.14;c.strokeStyle=g||'#5ff0ff';c.beginPath();c.arc(x,y,F*.9,a0,ang(v));c.stroke();c.restore();}
   if(red!=null){c.strokeStyle='#d8261c';c.lineWidth=F*.045;c.beginPath();c.arc(x,y,F*.79,a0,ang(red));c.stroke();}
   for(let t=0;t<=max+1e-6;t+=minor){const a=ang(t/max),major=Math.abs(t%step)<1e-6,r0=F*(major?.7:.75),r1=F*.83;c.strokeStyle=major?'#f4f4f4':'#8f969c';c.lineWidth=major?F*.024:F*.012;c.beginPath();c.moveTo(x+Math.cos(a)*r0,y+Math.sin(a)*r0);c.lineTo(x+Math.cos(a)*r1,y+Math.sin(a)*r1);c.stroke();
-   if(major){c.save();c.shadowColor='#bff6ff';c.shadowBlur=F*.05;text(c,String(t),x+Math.cos(a)*F*.56,y+Math.sin(a)*F*.56,`${big?16:12}px ${big?PX16:PX12}`,'#f6fbff',null);c.restore();}}
-  if(label)text(c,label,x,y+F*.74,f12(),'#aeb8c2',null);if(label2)text(c,label2,x,y+F*.25+13,f12(),'#7d8790',null);
+   if(major){c.save();c.shadowColor='#bff6ff';c.shadowBlur=F*.05;text(c,String(t),x+Math.cos(a)*F*.56,y+Math.sin(a)*F*.56,fI(big?15:11,700,big?8:7),'#f6fbff',null);c.restore();}}
+  if(label)text(c,label,x,y+F*.74,fI(12),'#c3ccd4',null);if(label2)text(c,label2,x,y+F*.25+13,fI(11),'#7d8790',null);
   return{ang};}
  function needle(c,x,y,F,ang,t,col='#ff4b1f'){const a=ang(clamp(t,-.02,1.02));c.save();c.translate(x,y);c.rotate(a);
   c.save();c.shadowColor='#000000d0';c.shadowBlur=F*.05;c.shadowOffsetX=F*.03;c.shadowOffsetY=F*.05;c.fillStyle='#000';c.beginPath();c.moveTo(-F*.18,-F*.03);c.lineTo(F*.84,-F*.006);c.lineTo(F*.84,F*.006);c.lineTo(-F*.18,F*.03);c.closePath();c.fill();c.restore();
@@ -601,14 +619,14 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   c.fillStyle='#ffffffc0';c.beginPath();c.ellipse(x-F*.035,y-F*.05,F*.04,F*.02,-.5,0,TAU);c.fill();}
  function dome(c,x,y,R){c.save();c.beginPath();c.arc(x,y,R,0,TAU);c.clip();c.fillStyle=lg(c,0,y-R,0,y+R*.1,[[0,'#ffffff55'],[.55,'#ffffff12'],[1,'#ffffff00']]);c.beginPath();c.ellipse(x-R*.08,y-R*.5,R*.9,R*.55,-.12,0,TAU);c.fill();
   c.fillStyle=rg(c,x,y,R*.75,x,y,R,[[0,'#00000000'],[1,'#00000090']]);c.fillRect(x-R,y-R,R*2,R*2);c.restore();}
- function draw(){if(statKey!==size+'/'+imgGen)buildStatic();FK=1/S.k;const c=rx,s=S.k*S.rs;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,R.width,R.height);c.drawImage(stat,0,0);c.setTransform(s,0,0,s,0,0);
+ function draw(){if(statKey!==size+'/'+imgGen)buildStatic();FK=1/S.k;K149=S.k;const c=rx,s=S.k*S.rs;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,R.width,R.height);c.drawImage(stat,0,0);c.setTransform(s,0,0,s,0,0);
   // ---- speedometer (stamina) ----
   const F=GA.R-12,m=face(c,GA.x,GA.y,F,S.needle.a,{label:'STAMINA 体力',red:.2});
-  const pct=Math.round(S.shown[0]),lw=58,lh=26,lx=GA.x-lw/2,ly=GA.y+F*.27;rr(c,lx,ly,lw,lh,5);c.fillStyle=lg(c,0,ly,0,ly+lh,[[0,'#050607'],[1,'#1c2124']]);c.fill();rr(c,lx+.5,ly+.5,lw-1,lh-1,4.5);c.strokeStyle='#ffffff26';c.lineWidth=1;c.stroke();
-  text3d(c,pct+'%',GA.x,ly+lh/2+1,f16(),pct<20?{top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20',depth:2}:{depth:2});
+  const pct=Math.round(S.shown[0]),lw=50,lh=24,lx=GA.x-lw/2,ly=GA.y+F*.27;rr(c,lx,ly,lw,lh,5);c.fillStyle=lg(c,0,ly,0,ly+lh,[[0,'#050607'],[1,'#1c2124']]);c.fill();rr(c,lx+.5,ly+.5,lw-1,lh-1,4.5);c.strokeStyle='#ffffff26';c.lineWidth=1;c.stroke();
+  ios149(c,pct+'%',GA.x,ly+lh/2+1,fI(14,700,9),pct<20?{top:'#ffd2c4',bot:'#ff4a30',glow:'#ff3a2080'}:{top:'#ffffff',bot:'#c9e9ff',glow:'#7fd4ff60'});
   needle(c,GA.x,GA.y,F,m.ang,S.needle.a);dome(c,GA.x,GA.y,F+2);chromeRing(c,GA.x,GA.y,GA.R-4,6);
   // ---- sub dial: walking speed ----
-  const sF=SUB.R-2,sm=face(c,SUB.x,SUB.y,sF,S.sub.a,{max:8,step:2,minor:1,big:false});text(c,'m/s',SUB.x,SUB.y+sF*.62,f12(),'#aeb8c2',null);needle(c,SUB.x,SUB.y,sF,sm.ang,S.sub.a,'#ff7a1f');dome(c,SUB.x,SUB.y,sF+1);
+  const sF=SUB.R-2,sm=face(c,SUB.x,SUB.y,sF,S.sub.a,{max:8,step:2,minor:1,big:false});text(c,'m/s',SUB.x,SUB.y+sF*.62,fI(10,700,7),'#c3ccd4',null);needle(c,SUB.x,SUB.y,sF,sm.ang,S.sub.a,'#ff7a1f');dome(c,SUB.x,SUB.y,sF+1);
   if(ok(IMG['gauge-ring']))c.drawImage(IMG['gauge-ring'],SUB.x-SUB.R*1.13,SUB.y-SUB.R*1.13,SUB.R*2.26,SUB.R*2.26);else chromeRing(c,SUB.x,SUB.y,SUB.R,5);
   drawMID(c);drawSignal(c);drawRadar(c);drawTube(c);drawIcon(c);
   c.setTransform(1,0,0,1,0,0);c.drawImage(front,0,0);if(R!==cvs){pipe.submit(R);if(!pipe.out){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cvs.width,cvs.height);upscale(ctx,R,0,0,cvs.width,cvs.height);}}}
@@ -629,7 +647,7 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   c.fillStyle=lg(c,0,iy,0,iy+ih*.45,[[0,'#ffffff55'],[1,'#ffffff00']]);rr(c,ix+2,iy+1,iw-4,ih*.42,ir-1);c.fill();rr(c,ix,iy,iw,ih,ir);c.strokeStyle='#00000080';c.lineWidth=1.2;c.stroke();
   if(fl>.01){c.save();c.shadowColor='#ff1a0a';c.shadowBlur=14*fl;rr(c,bx-1,by-1,bw+2,bh+2,br+1);c.strokeStyle=`rgba(255,40,24,${.95*fl})`;c.lineWidth=3;c.stroke();rr(c,bx+bw-1,by+bh*.3,9,bh*.4,3);c.stroke();c.restore();}
   // health readout in 3D block numerals (reflection of the battery on the glass below it)
-  const hp=Math.round(S.shown[2]);text3d(c,String(hp),x+w-6,y+33,`${(32*FK).toFixed(2)}px ${PX16}`,low?{align:'right',top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20'}:{align:'right',top:'#eaf7ff',bot:'#7fbfe6',line:'#1c4560'});
+  const hp=Math.round(S.shown[2]);ios149(c,String(hp),x+w-8,y+33,fI(34,700,14),low?{align:'right',top:'#ffd2c4',bot:'#ff4a30',glow:'#ff3a2090'}:{align:'right',top:'#ffffff',bot:'#8fd0f5',glow:'#4fbaff80'});
   c.restore();}
  function drawSignal(c){const {x,y,w,h}=SIG,san=S.shown[3],lit=Math.ceil(san/20-.001),col=san>60?['#c4f0ff','#3fb2ee','#135f90']:san>30?['#ffe08a','#f0a81e','#8a5a08']:['#ffa08a','#e8321e','#7a1208'];
   c.save();
@@ -637,7 +655,7 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
    rr(c,X-1,Y-1,bw+2,bh+2,2.5);c.fillStyle='#000';c.fill();rr(c,X,Y+1,bw,bh,2);c.fillStyle='#ffffff14';c.fill();
    rr(c,X,Y,bw,bh,2);c.fillStyle=i<lit?lg(c,X,0,X+bw,0,[[0,col[0]],[.5,col[1]],[1,col[2]]]):lg(c,0,Y,0,Y+bh,[[0,'#2a2e31'],[1,'#17191b']]);c.fill();
    if(i<lit){c.fillStyle='#ffffff70';rr(c,X+1,Y+1,bw*.45,bh-2,1.5);c.fill();c.save();c.shadowColor=col[1];c.shadowBlur=6;c.fillStyle=col[1]+'40';c.fillRect(X,Y,bw,bh);c.restore();}}
-  text(c,'3G',x+w-12,y+8,f12(),col[1],null);text3d(c,String(Math.round(san)),x+w-6,y+h-13,f16(),{align:'right',...(san<=30?{top:'#ffd2c4',bot:'#d23a26',line:'#7a2a20'}:{})});
+  text(c,'3G',x+w-12,y+8,fI(10,700,7),col[1],null);ios149(c,String(Math.round(san)),x+w-6,y+h-13,fI(16,700,9),{align:'right',...(san<=30?{top:'#ffd2c4',bot:'#ff4a30'}:{top:'#ffffff',bot:'#c9e9ff'})});
   c.restore();}
  function drawRadar(c){const {x:cx0,y:cy0,R}=RAD,r=S.radar;
   c.fillStyle=rg(c,cx0,cy0,2,cx0,cy0,R,[[0,'#0f3a58'],[.7,'#061b2c'],[1,'#01060c']]);c.beginPath();c.arc(cx0,cy0,R,0,TAU);c.fill();
@@ -658,11 +676,11 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   c.restore();
   shape();c.strokeStyle='#e9f5ffa0';c.lineWidth=1.3;c.stroke();
   c.fillStyle=lg(c,x,0,x+w,0,[[0,'#ffffff00'],[.18,'#ffffffb0'],[.32,'#ffffff20'],[.8,'#ffffff00'],[.9,'#ffffff50'],[1,'#ffffff00']]);c.fillRect(x+1,y+4,w-2,h-w/2);
-  text3d(c,String(Math.round(S.shown[1])),cxm,y+h-52,f16(),{line:'#0b3a6a',depth:2});}
+  ios149(c,String(Math.round(S.shown[1])),cxm,y+h-52,fI(13,700,8),{top:'#ffffff',bot:'#dff2ff',shadow:'#0b3a6ad0'});}
  function drawIcon(c){const {x,y,s}=ICO;
   {const A=D142.ALM;c.save();c.beginPath();c.arc(A.x,A.y,A.R-2.5,0,TAU);c.clip();if(ok(IMG['almond-icon']))c.drawImage(IMG['almond-icon'],A.x-A.R-1,A.y-A.R-1,(A.R+1)*2,(A.R+1)*2*IMG['almond-icon'].naturalHeight/IMG['almond-icon'].naturalWidth);else{c.fillStyle='#6cb8e8';c.fillRect(A.x-A.R,A.y-A.R,A.R*2,A.R*2);}c.restore();}
   const n=S.bottles;if(n>0){const bx=x+s-2,by=y+3,t=String(n),bw=Math.max(22,10+t.length*9);c.save();c.shadowColor='#0009';c.shadowBlur=4;c.shadowOffsetY=2;rr(c,bx-bw/2,by-11,bw,22,11);c.fillStyle='#fff';c.fill();c.restore();
-   rr(c,bx-bw/2+2,by-9,bw-4,18,9);c.fillStyle=lg(c,0,by-9,0,by+9,[[0,'#ff6a5a'],[.5,'#e3170a'],[1,'#b80c02']]);c.fill();c.fillStyle='#ffffff50';rr(c,bx-bw/2+3,by-8,bw-6,8,4);c.fill();text(c,t,bx,by+1,f16(),'#fff',null);}}
+   rr(c,bx-bw/2+2,by-9,bw-4,18,9);c.fillStyle=lg(c,0,by-9,0,by+9,[[0,'#ff6a5a'],[.5,'#e3170a'],[1,'#b80c02']]);c.fill();c.fillStyle='#ffffff50';rr(c,bx-bw/2+3,by-8,bw-6,8,4);c.fill();text(c,t,bx,by+1,fI(14,700,8),'#fff',null);}}
  raf=requestAnimationFrame(frame);
  dashMounted={show,hide,get visible(){return visible;},dispose(){cancelAnimationFrame(raf);removeEventListener('keydown',onKey);removeEventListener('keyup',onKeyUp);host?.remove();dashMounted=null;}};loadImages();return dashMounted;
 }

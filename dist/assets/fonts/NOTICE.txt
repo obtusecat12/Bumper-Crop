@@ -13,3 +13,6 @@ as unifont-LICENSE.txt. These font licenses do not apply to game code.
 VonwaonBitmap-12px.woff2 / VonwaonBitmap-16px.woff2
 凤凰点阵体 Vonwaon Bitmap v1.02 by Haoyu Qiu (TimothyQiu), CC0 1.0 (public domain).
 https://timothyqiu.itch.io/vonwaon-bitmap — converted from TTF to WOFF2 unchanged.
+
+ios149-sans*.woff2 — subset of Arimo (Copyright 2020 The Arimo Project Authors), SIL Open Font License 1.1, see OFL-Arimo.txt. Used for the Level 1 dashboard (V149).
+ios149-hei*.woff2 — subset of Noto Sans SC (Copyright The Noto Project Authors / Adobe Source Han Sans), SIL Open Font License 1.1, see OFL-NotoSansSC.txt. Used for the Level 1 dashboard (V149).
