@@ -121,7 +121,7 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  // V119b: photo-mode shift lens (rising front). The reference photo was taken with the camera tilted only a little and
  // the frame shifted down, so verticals converge far less than a plain 15° pitched pinhole. ref.shiftY = principal
  // point height above the frame centre as a fraction of the frame height; ref.fov stays the 4:3 frame's vertical fov.
- function lensShift(view){const ref=globalThis.__bcDebug?.ref,sy=ref?.shiftY;if(!view?.isPerspectiveCamera)return;
+ function lensShift(view){const ref=globalThis.__bcDebug?.ref,sy=ref?.shiftY;if(!view?.isPerspectiveCamera)return;if(ref?.spawn)view.rotation.z=ref.roll||0;
   if(!sy){if(view.view?.enabled){view.clearViewOffset();}return;}
   const a=ref.referenceAspect||4/3,h=1000,w=h*a,t=Math.tan(ref.fov*Math.PI/360),fh=h*(1+2*Math.abs(sy)),fov=2*Math.atan(t*fh/h)*180/Math.PI,oy=sy>0?h*2*sy:0;
   const v=view.view;if(v?.enabled&&v.fullHeight===fh&&v.offsetY===oy&&Math.abs(view.fov-fov)<1e-6&&Math.abs(view.aspect-w/fh)<1e-9)return;
