@@ -1,3 +1,4 @@
+const __bcT=s=>{const b=globalThis.BCi18n;return b&&typeof s==='string'?b.t(s):s;};
 // V102b · Level 0 "Windows 98, but yellow" UI.
 // UI-only (no world/renderer state): the Date/Time-applet style compass that frames the
 // minimap, the AutoCAD R14 blueprint recolour + window chrome for the full map (F), and a
@@ -21,17 +22,17 @@ function bevel(c,x,y,w,h,raised=true,win=false){
  px(c,x,y,w,1,oTL);px(c,x,y,1,h,oTL);px(c,x,y+h-1,w,1,oBR);px(c,x+w-1,y,1,h,oBR);
  px(c,x+1,y+1,w-2,1,iTL);px(c,x+1,y+1,1,h-2,iTL);px(c,x+1,y+h-2,w-2,1,iBR);px(c,x+w-2,y+1,1,h-2,iBR);
 }
-function button(c,x,y,w,h,label,font=SM){px(c,x,y,w,h,W98.face);bevel(c,x,y,w,h,true);if(label){c.fillStyle=W98.text;c.font=`12px ${font}`;c.textAlign='center';c.textBaseline='middle';c.fillText(label,x+w/2,y+h/2+1);}}
+function button(c,x,y,w,h,label,font=SM){px(c,x,y,w,h,W98.face);bevel(c,x,y,w,h,true);if(label){c.fillStyle=W98.text;c.font=`12px ${font}`;c.textAlign='center';c.textBaseline='middle';c.fillText(__bcT(label),x+w/2,y+h/2+1);}}
 function titleBar(c,x,y,w,title,icon,{help=true}={}){
  const g=c.createLinearGradient(x,0,x+w,0);g.addColorStop(0,W98.title1);g.addColorStop(1,W98.title2);c.fillStyle=g;c.fillRect(x,y,w,18);
  if(icon?.complete&&icon.naturalWidth)c.drawImage(icon,x+2,y+1,16,16);
- c.fillStyle='#fffbe8';c.font=`12px ${SM}`;c.textAlign='left';c.textBaseline='middle';c.fillText(title,x+21,y+10);
+ c.fillStyle='#fffbe8';c.font=`12px ${SM}`;c.textAlign='left';c.textBaseline='middle';c.fillText(__bcT(title),x+21,y+10);
  const bx=x+w-18;button(c,bx,y+2,16,14);c.fillStyle=W98.text;c.fillRect(bx+4,y+5,2,1);c.fillRect(bx+10,y+5,2,1);for(let k=0;k<6;k++){c.fillRect(bx+4+k,y+5+k,2,1);c.fillRect(bx+10-k,y+5+k,2,1);} // ×
- if(help){const hx=bx-18;button(c,hx,y+2,16,14);c.font=`bold 11px ${SM}`;c.textAlign='center';c.fillText('?',hx+8,y+10);}
+ if(help){const hx=bx-18;button(c,hx,y+2,16,14);c.font=`bold 11px ${SM}`;c.textAlign='center';c.fillText(__bcT('?'),hx+8,y+10);}
 }
 function etched(c,x,y,w,h,label){
  c.strokeStyle=W98.shadow;c.lineWidth=1;c.strokeRect(x+.5,y+.5,w-2,h-2);c.strokeStyle=W98.hi;c.strokeRect(x+1.5,y+1.5,w-2,h-2);
- if(label){c.font=`12px ${SM}`;const tw=c.measureText(label).width;px(c,x+7,y-6,tw+6,13,W98.face);c.fillStyle=W98.text;c.textAlign='left';c.textBaseline='middle';c.fillText(label,x+10,y+1);}
+ if(label){c.font=`12px ${SM}`;const tw=c.measureText(__bcT(label)).width;px(c,x+7,y-6,tw+6,13,W98.face);c.fillStyle=W98.text;c.textAlign='left';c.textBaseline='middle';c.fillText(__bcT(label),x+10,y+1);}
 }
 function sunken(c,x,y,w,h,fill=W98.field){px(c,x,y,w,h,fill);bevel(c,x,y,w,h,false);}
 
@@ -53,7 +54,7 @@ export function paintWin98Compass(c,map,yaw,bearing){
   if(i%5===0){const s=i%15===0?7:5,h=s>>1;px(c,x-h,y-h,s,s,i===0?'#c8281e':W98.cyan);px(c,x-h,y-h,s,1,i===0?'#ff9a8c':'#7ffcfc');px(c,x-h,y-h,1,s,i===0?'#ff9a8c':'#7ffcfc');px(c,x-h,y+h,s,1,i===0?'#5e0d06':'#004848');px(c,x+h,y-h,1,s,i===0?'#5e0d06':'#004848');}
   else{px(c,x-1,y-1,2,2,'#5e4f1e');px(c,x,y,1,1,W98.hi);}}
  c.font=`12px ${SM}`;c.textAlign='center';c.textBaseline='middle';
- for(let i=0;i<4;i++){const a=yaw+i*Math.PI/2,x=X+Math.sin(a)*(RR-10.5),y=Y-Math.cos(a)*(RR-10.5);c.fillStyle=W98.hi;c.fillText('NESW'[i],x+1,y+1);c.fillStyle=i?W98.text:'#a01a10';c.fillText('NESW'[i],x,y);}
+ for(let i=0;i<4;i++){const a=yaw+i*Math.PI/2,x=X+Math.sin(a)*(RR-10.5),y=Y-Math.cos(a)*(RR-10.5);c.fillStyle=W98.hi;c.fillText(__bcT('NESW'[i]),x+1,y+1);c.fillStyle=i?W98.text:'#a01a10';c.fillText(__bcT('NESW'[i]),x,y);}
  // north "minute hand" in the annulus, bevelled like the Win98 clock hands
  c.save();c.translate(X,Y);c.rotate(yaw);c.beginPath();c.moveTo(0,-RR+16);c.lineTo(5,-RM+3);c.lineTo(-5,-RM+3);c.closePath();c.fillStyle=W98.cyan;c.fill();c.strokeStyle='#004848';c.lineWidth=1;c.stroke();c.beginPath();c.moveTo(0,-RR+17);c.lineTo(-4,-RM+4);c.strokeStyle='#7ffcfc';c.stroke();c.restore();
  // fixed heading index at 12 o'clock
@@ -61,11 +62,11 @@ export function paintWin98Compass(c,map,yaw,bearing){
  // player = Win98 "up arrow" cursor (IDC_UPARROW), white with black outline
  c.save();c.translate(X,Y);c.beginPath();c.moveTo(0,-11);c.lineTo(7,-3);c.lineTo(3,-3);c.lineTo(3,9);c.lineTo(-3,9);c.lineTo(-3,-3);c.lineTo(-7,-3);c.closePath();c.fillStyle='#ffffff';c.fill();c.strokeStyle='#000';c.lineWidth=1.4;c.stroke();c.restore();
  // spinner field with the bearing (like the "18:10:18" time box) + Map button
- sunken(c,8,250,150,24);c.fillStyle=W98.text;c.font=`16px ${MD}`;c.textAlign='left';c.textBaseline='middle';c.fillText(bearing||'N 000°',14,263);
+ sunken(c,8,250,150,24);c.fillStyle=W98.text;c.font=`16px ${MD}`;c.textAlign='left';c.textBaseline='middle';c.fillText(__bcT(bearing||'N 000°'),14,263);
  const sx=140;button(c,sx,252,16,10);button(c,sx,262,16,10);c.fillStyle=W98.text;for(let k=0;k<3;k++){c.fillRect(sx+8-k,255+k,1+k*2,1);c.fillRect(sx+8-k,268-k,1+k*2,1);}
  button(c,166,250,82,24,'地图(M)',MD);c.strokeStyle=W98.text;c.setLineDash([1,1]);c.strokeRect(170.5,254.5,73,15);c.setLineDash([]);
  // status bar
- sunken(c,4,279,180,14,W98.face);sunken(c,186,279,66,14,W98.face);c.fillStyle=W98.text;c.font=`12px ${SM}`;c.textAlign='left';c.fillText('LEVEL0.DWG · 1:500',8,287);c.fillText('MODEL',200,287);
+ sunken(c,4,279,180,14,W98.face);sunken(c,186,279,66,14,W98.face);c.fillStyle=W98.text;c.font=`12px ${SM}`;c.textAlign='left';c.fillText(__bcT('LEVEL0.DWG · 1:500'),8,287);c.fillText(__bcT('MODEL'),200,287);
  c.restore();
 }
 
@@ -105,7 +106,7 @@ export function blueprintize(ctx,w,h,ox,oz,scale,{grid=true}={}){
 // UCS icon (R14 WCS "W" L-arrows) bottom-left of the full drawing.
 export function cadUCS(ctx,w,h){const x=18,y=h-18;ctx.save();ctx.strokeStyle='#ffffff';ctx.fillStyle='#ffffff';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x+.5,y-46);ctx.lineTo(x+.5,y+.5);ctx.lineTo(x+46,y+.5);ctx.stroke();
  ctx.beginPath();ctx.moveTo(x+.5,y-50);ctx.lineTo(x-3.5,y-40);ctx.lineTo(x+4.5,y-40);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(x+50,y+.5);ctx.lineTo(x+40,y-3.5);ctx.lineTo(x+40,y+4.5);ctx.closePath();ctx.stroke();
- ctx.strokeRect(x+.5,y-11.5,12,12);ctx.font=`12px ${SM}`;ctx.textBaseline='middle';ctx.textAlign='center';ctx.fillText('W',x+7,y-5);ctx.fillText('X',x+46,y-10);ctx.fillText('Y',x+12,y-46);ctx.restore();}
+ ctx.strokeRect(x+.5,y-11.5,12,12);ctx.font=`12px ${SM}`;ctx.textBaseline='middle';ctx.textAlign='center';ctx.fillText(__bcT('W'),x+7,y-5);ctx.fillText(__bcT('X'),x+46,y-10);ctx.fillText(__bcT('Y'),x+12,y-46);ctx.restore();}
 // AutoCAD crosshair + pickbox at the hover point.
 export function cadCursor(ctx,p,w,h){ctx.save();ctx.strokeStyle='#ffffff';ctx.lineWidth=1;const x=Math.round(p.x)+.5,z=Math.round(p.z)+.5,L=Math.max(w,h)*.05;ctx.beginPath();ctx.moveTo(x-L,z);ctx.lineTo(x-4,z);ctx.moveTo(x+4,z);ctx.lineTo(x+L,z);ctx.moveTo(x,z-L);ctx.lineTo(x,z-4);ctx.moveTo(x,z+4);ctx.lineTo(x,z+L);ctx.stroke();ctx.strokeRect(x-3,z-3,6,6);ctx.restore();}
 // Player as an AutoCAD block in layer colour 2 (yellow): circle + direction arrow.
@@ -147,7 +148,7 @@ let tmTimer=0;
 const VITALS=[['stamina','体力','#00ff00'],['hydration','水分','#00ffff'],['health','血量','#ff3030'],['sanity','精神','#ffff00']];
 function paintLED(cv,v,col){const c=cv.getContext('2d'),w=cv.width,h=cv.height;c.fillStyle='#000';c.fillRect(0,0,w,h);const rows=Math.floor((h-18)/3),lit=Math.round(rows*v/100);
  for(let r=0;r<rows;r++){const y=h-18-(r+1)*3+1,on=r<lit;c.fillStyle=on?col:'#007a00';if(!on&&col!=='#00ff00')c.fillStyle='#145014';c.fillRect(7,y,w/2-9,2);c.fillRect(w/2+2,y,w/2-9,2);}
- c.fillStyle=col;c.font=`12px ${SM}`;c.textAlign='center';c.textBaseline='middle';c.fillText(v+'%',w/2,h-8);}
+ c.fillStyle=col;c.font=`12px ${SM}`;c.textAlign='center';c.textBaseline='middle';c.fillText(__bcT(v+'%'),w/2,h-8);}
 function paintHistory(cv,hist,offset){const c=cv.getContext('2d'),w=cv.width,h=cv.height;c.fillStyle='#000';c.fillRect(0,0,w,h);c.strokeStyle='#008040';c.lineWidth=1;c.beginPath();for(let x=w-1-((offset*2)%12);x>=0;x-=12){c.moveTo(x+.5,0);c.lineTo(x+.5,h);}for(let y=h-1;y>=0;y-=12){c.moveTo(0,y+.5);c.lineTo(w,y+.5);}c.stroke();
  VITALS.forEach((v,k)=>{c.strokeStyle=v[2];c.beginPath();hist.forEach((s,i)=>{const x=w-1-(hist.length-1-i)*2,y=1+(h-3)*(1-s[k]/100);i?c.lineTo(x,y):c.moveTo(x,y);});c.stroke();});}
 // Win98 combo boxes: mirror the custom dropdown's label without its text arrow (CSS draws the button).

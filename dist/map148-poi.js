@@ -5,6 +5,7 @@
 // Region = city x -448..336, z -336..784 (blocks ix -4..2, iz -3..6). Outside it the procedural map/satellite is unchanged.
 // ?map148=0 → old map.
 import {FOOT148} from './map148-foot.js?v=148a';
+const __bcT=s=>{const b=globalThis.BCi18n;return b&&typeof s==='string'?b.t(s):s;};
 export const ON148=!/[?&]map148=0\b/.test(globalThis.location?.search||'');
 export const REGION148={x0:-448,z0:-336,x1:336,z1:784};
 export const in148=(x,z)=>ON148&&x>=REGION148.x0&&x<REGION148.x1&&z>=REGION148.z0&&z<REGION148.z1;
@@ -55,17 +56,17 @@ function marker(ctx,x,y,L,small){const k=small?.72:1;ctx.save();ctx.translate(x,
  ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(13,-14);ctx.quadraticCurveTo(20,-21,13,-24);ctx.quadraticCurveTo(7,-25,5,-17);ctx.closePath();ctx.fill();
  const g=ctx.createLinearGradient(-10,-34,10,-10);g.addColorStop(0,'#ff8a7a');g.addColorStop(.5,'#f23d2b');g.addColorStop(1,'#b0180c');
  ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(-2,-8,-10,-13,-10,-23);ctx.arc(0,-23,10,Math.PI,0);ctx.bezierCurveTo(10,-13,2,-8,0,0);ctx.closePath();ctx.fillStyle=g;ctx.fill();ctx.strokeStyle='#8e1308';ctx.lineWidth=1;ctx.stroke();
- ctx.fillStyle='#000';ctx.font=`bold 11px ${FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(L,0,-23);ctx.restore();}
+ ctx.fillStyle='#000';ctx.font=`bold 11px ${FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(__bcT(L),0,-23);ctx.restore();}
 function balloon(ctx,x,y,p,w){ctx.save();const tw=280,pad=10;ctx.font=`13px ${FONT}`;
- const words=p.desc,lines=[];let cur='';for(const ch of words){if(ctx.measureText(cur+ch).width>tw-2*pad){lines.push(cur);cur=ch;}else cur+=ch;}if(cur)lines.push(cur);
+ const words=p.desc,lines=[];let cur='';for(const ch of words){if(ctx.measureText(__bcT(cur+ch)).width>tw-2*pad){lines.push(cur);cur=ch;}else cur+=ch;}if(cur)lines.push(cur);
  const bh=82+lines.length*17;let bx=Math.max(6,Math.min(w-tw-6,x-40)),by=y-36-bh-20;if(by<6)by=6;
  ctx.shadowColor='rgba(0,0,0,.3)';ctx.shadowBlur=6;ctx.shadowOffsetX=4;ctx.shadowOffsetY=4;const r=8;
  ctx.beginPath();ctx.moveTo(bx+r,by);ctx.lineTo(bx+tw-r,by);ctx.arcTo(bx+tw,by,bx+tw,by+r,r);ctx.lineTo(bx+tw,by+bh-r);ctx.arcTo(bx+tw,by+bh,bx+tw-r,by+bh,r);const tx=Math.max(bx+20,Math.min(bx+tw-40,x));ctx.lineTo(tx+22,by+bh);ctx.lineTo(x,y-34);ctx.lineTo(tx,by+bh);ctx.lineTo(bx+r,by+bh);ctx.arcTo(bx,by+bh,bx,by+bh-r,r);ctx.lineTo(bx,by+r);ctx.arcTo(bx,by,bx+r,by,r);ctx.closePath();
  ctx.fillStyle='#fff';ctx.fill();ctx.shadowColor='transparent';ctx.strokeStyle='#ababab';ctx.lineWidth=1;ctx.stroke();
- ctx.textAlign='left';ctx.textBaseline='top';ctx.fillStyle='#0000cc';ctx.font=`bold 14px ${FONT}`;ctx.fillText(p.name,bx+pad,by+8,tw-40);
- ctx.fillStyle='#000';ctx.font=`bold 12px ${FONT}`;ctx.fillText(p.zh,bx+pad,by+26,tw-2*pad);ctx.font=`13px ${FONT}`;lines.forEach((l,i)=>ctx.fillText(l,bx+pad,by+46+i*17));
- ctx.fillStyle='#008000';ctx.font=`12px ${FONT}`;ctx.fillText(p.addr,bx+pad,by+bh-34,tw-2*pad);
- ctx.fillStyle='#0000cc';ctx.font=`12px ${FONT}`;ctx.fillText('Directions - Search nearby - 点地面传送',bx+pad,by+bh-18,tw-2*pad);
+ ctx.textAlign='left';ctx.textBaseline='top';ctx.fillStyle='#0000cc';ctx.font=`bold 14px ${FONT}`;ctx.fillText(__bcT(p.name),bx+pad,by+8,tw-40);
+ ctx.fillStyle='#000';ctx.font=`bold 12px ${FONT}`;ctx.fillText(__bcT(p.zh),bx+pad,by+26,tw-2*pad);ctx.font=`13px ${FONT}`;lines.forEach((l,i)=>ctx.fillText(__bcT(l),bx+pad,by+46+i*17));
+ ctx.fillStyle='#008000';ctx.font=`12px ${FONT}`;ctx.fillText(__bcT(p.addr),bx+pad,by+bh-34,tw-2*pad);
+ ctx.fillStyle='#0000cc';ctx.font=`12px ${FONT}`;ctx.fillText(__bcT('Directions - Search nearby - 点地面传送'),bx+pad,by+bh-18,tw-2*pad);
  ctx.strokeStyle='#888';ctx.strokeRect(bx+tw-17.5,by+6.5,11,11);ctx.beginPath();ctx.moveTo(bx+tw-15,by+9);ctx.lineTo(bx+tw-9,by+15);ctx.moveTo(bx+tw-9,by+9);ctx.lineTo(bx+tw-15,by+15);ctx.stroke();
  hits.push({box:[bx,by,bx+tw,by+bh],p,balloon:true});ctx.restore();}
 export function paintPoi148(ctx,toS,scale,w,h,photo){
@@ -74,7 +75,7 @@ export function paintPoi148(ctx,toS,scale,w,h,photo){
  const vis=[];for(const p of POI148){const[x,y]=toS(p.x,p.z);if(x<-40||y<-10||x>w+40||y>h+50)continue;vis.push([p,x,y]);}
  vis.sort((a,b)=>a[2]-b[2]);const lbs=[];
  for(const[p,x,y]of vis){marker(ctx,x,y,p.letter,small);hits.push({box:[x-11,y-36,x+11,y],p});
-  if(scale>.35||p===sel){const t=p.zh,tw=ctx.measureText(t).width,lb=[x+10,y-31,x+14+tw,y-15];if(p!==sel&&lbs.some(q=>q[0]<lb[2]&&lb[0]<q[2]&&q[1]<lb[3]&&lb[1]<q[3]))continue;lbs.push(lb);ctx.textAlign='left';ctx.strokeStyle=photo?'#000':'#fff';ctx.lineWidth=3;ctx.strokeText(t,x+11,y-23);ctx.fillStyle=photo?'#fff':(p.cat==='water'?'#2a5aa0':'#333');ctx.fillText(t,x+11,y-23);}}
+  if(scale>.35||p===sel){const t=p.zh,tw=ctx.measureText(__bcT(t)).width,lb=[x+10,y-31,x+14+tw,y-15];if(p!==sel&&lbs.some(q=>q[0]<lb[2]&&lb[0]<q[2]&&q[1]<lb[3]&&lb[1]<q[3]))continue;lbs.push(lb);ctx.textAlign='left';ctx.strokeStyle=photo?'#000':'#fff';ctx.lineWidth=3;ctx.strokeText(__bcT(t),x+11,y-23);ctx.fillStyle=photo?'#fff':(p.cat==='water'?'#2a5aa0':'#333');ctx.fillText(__bcT(t),x+11,y-23);}}
  ctx.restore();
  if(sel){const[x,y]=toS(sel.x,sel.z);if(x>-50&&y>-50&&x<w+50&&y<h+50)balloon(ctx,x,y,sel,w);}
 }

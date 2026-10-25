@@ -7,8 +7,8 @@
 import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan,cityDistrict} from './urban-layout.js?v=return-1';
 import {BUILDING_TYPES} from './urban-buildings.js?v=132st';
 import {exitPoint} from './exit-route.js?v=60';
-import {paintCanalSat,paintSubwaySat,inCanalWater} from './map131-canal.js?v=131';
-import {sat148,satDraw148} from './map148-poi.js?v=148a'; // V148 E4 fake aerial of the capital region
+import {paintCanalSat,paintSubwaySat,inCanalWater} from './map131-canal.js?v=150c';
+import {sat148,satDraw148} from './map148-poi.js?v=150c'; // V148 E4 fake aerial of the capital region
 
 const O=cityToWorld(0,0),E=cityToWorld(1,0),CA=E.x-O.x,SA=O.z-E.z;
 const SUN=[-.6,-.8],LEAN=[.18,-.98],SHADOW_K=.55,LEAN_K=.045;

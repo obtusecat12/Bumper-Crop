@@ -9,11 +9,12 @@ import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.j
 import {BUILDING_TYPES} from './urban-buildings.js?v=132st';
 import {paintCompass} from './retro-instruments.js?v=60';
 import {createMapAtlas} from './map-atlas.js?v=99';
-import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=148a';
-import {click148,hover148,setFocus148} from './map148-poi.js?v=148a'; // V148 E4
-import {mountL10Dash,paintBrassCompass} from './l10-dash.js?v=106';
-import {mountL1Dash,paintL1Nav,l1MapPlayer,L1_MAP_PAL,L1_LEGEND} from './l1-dash.js?v=149';
-import {paintWin98Compass,blueprintize,cadUCS,cadCursor,cadPlayer,mountCadChrome,mountTaskManager} from './win98-ui.js?v=102b';
+import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=150c';
+import {click148,hover148,setFocus148} from './map148-poi.js?v=150c'; // V148 E4
+import {mountL10Dash,paintBrassCompass} from './l10-dash.js?v=150c';
+import {mountL1Dash,paintL1Nav,l1MapPlayer,L1_MAP_PAL,L1_LEGEND} from './l1-dash.js?v=150c';
+import {paintWin98Compass,blueprintize,cadUCS,cadCursor,cadPlayer,mountCadChrome,mountTaskManager} from './win98-ui.js?v=150c';
+const __bcT=s=>{const b=globalThis.BCi18n;return b&&typeof s==='string'?b.t(s):s;};
 
 const CELL=64,MINI=288,MINI_SCALE=.78;
 export function mapPoint(center,dx,dz){
@@ -57,7 +58,7 @@ function usgsOverlay(context,c,w,h,scale){
  context.save();context.strokeStyle='#c2412a';context.lineWidth=1;context.setLineDash([]);context.beginPath();
  for(let x=x0;x<=ox+w/2/scale;x+=S){context.moveTo(X(x),0);context.lineTo(X(x),h);}for(let z=z0;z<=oz+h/2/scale;z+=S){context.moveTo(0,Z(z));context.lineTo(w,Z(z));}context.stroke();
  context.fillStyle='#c2412a';context.font='16px Vonwaon16, monospace';context.textAlign='center';context.textBaseline='middle';
- for(let x=x0;x<=ox+w/2/scale;x+=S)for(let z=z0;z<=oz+h/2/scale;z+=S){const n=((Math.floor(z/S)%6+6)%6)*6+(((Math.floor(z/S)%2)?5-((Math.floor(x/S)%6+6)%6):((Math.floor(x/S)%6+6)%6)))+1;const px=X(x+S/2),pz=Z(z+S/2);if(px>-20&&pz>-20&&px<w+20&&pz<h+20&&S*scale>90)context.fillText(String(n),px,pz);}
+ for(let x=x0;x<=ox+w/2/scale;x+=S)for(let z=z0;z<=oz+h/2/scale;z+=S){const n=((Math.floor(z/S)%6+6)%6)*6+(((Math.floor(z/S)%2)?5-((Math.floor(x/S)%6+6)%6):((Math.floor(x/S)%6+6)%6)))+1;const px=X(x+S/2),pz=Z(z+S/2);if(px>-20&&pz>-20&&px<w+20&&pz<h+20&&S*scale>90)context.fillText(__bcT(String(n)),px,pz);}
  context.restore();
 }
 // One cached geographic layer; the rotating minimap uses a CSS transform.
@@ -149,7 +150,7 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
   if(usgs){context.fillStyle='#f1ead2';context.fillRect(0,0,w,h);}
   for(const tile of list){const image=tiles.request(tile.cx,tile.cz,tile.d);if(image){context.drawImage(image,Math.round(tile.x),Math.round(tile.z),Math.ceil(64*scale)+1,Math.ceil(64*scale)+1);}else{missing++;context.strokeStyle=uiPalette.mapGrid;context.strokeRect(tile.x,tile.z,64*scale,64*scale);}}
   const px=w/2+(OUTPOST.x-Number(c.cx)*64-c.x)*scale,pz=h/2+(OUTPOST.z-Number(c.cz)*64-c.z)*scale;
-  if(px>-40&&pz>-40&&px<w+40&&pz<h+40){context.save();context.translate(px,pz);context.fillStyle='#e9dfc3';context.strokeStyle='#1c1a14';context.lineWidth=1;context.fillRect(-OUTPOST.hx*scale,-OUTPOST.hz*scale,OUTPOST.hx*2*scale,OUTPOST.hz*2*scale);context.strokeRect(-OUTPOST.hx*scale,-OUTPOST.hz*scale,OUTPOST.hx*2*scale,OUTPOST.hz*2*scale);const draw=(p,width,depth,color)=>{context.save();context.translate(p[0]*scale,p[1]*scale);context.rotate(-p[2]);context.fillStyle=color;context.fillRect(-width/2*scale,-depth/2*scale,width*scale,depth*scale);context.restore();};for(const p of [CAMP.office,CAMP.kitchen])draw(p,8,10,'#1c1a14');for(const p of CAMP.dorms)draw(p,3.8,4.8,'#1c1a14');draw(CAMP.container,7,3.2,'#777d6b');if(scale>.65){context.fillStyle='#eee1ac';context.font='bold 10px sans-serif';context.fillText('M.E.G.',-14,4);}context.restore();}
+  if(px>-40&&pz>-40&&px<w+40&&pz<h+40){context.save();context.translate(px,pz);context.fillStyle='#e9dfc3';context.strokeStyle='#1c1a14';context.lineWidth=1;context.fillRect(-OUTPOST.hx*scale,-OUTPOST.hz*scale,OUTPOST.hx*2*scale,OUTPOST.hz*2*scale);context.strokeRect(-OUTPOST.hx*scale,-OUTPOST.hz*scale,OUTPOST.hx*2*scale,OUTPOST.hz*2*scale);const draw=(p,width,depth,color)=>{context.save();context.translate(p[0]*scale,p[1]*scale);context.rotate(-p[2]);context.fillStyle=color;context.fillRect(-width/2*scale,-depth/2*scale,width*scale,depth*scale);context.restore();};for(const p of [CAMP.office,CAMP.kitchen])draw(p,8,10,'#1c1a14');for(const p of CAMP.dorms)draw(p,3.8,4.8,'#1c1a14');draw(CAMP.container,7,3.2,'#777d6b');if(scale>.65){context.fillStyle='#eee1ac';context.font='bold 10px sans-serif';context.fillText(__bcT('M.E.G.'),-14,4);}context.restore();}
   if(usgs)usgsOverlay(context,c,w,h,scale);
   return missing;
  }

@@ -9,9 +9,10 @@
 // Bitmaps (assets/ui-v114, sources art-l1ui/) are only the brushed/chrome rings, the icon and the standoffs;
 // everything that moves or carries text is painted here so the text stays crisp.
 import {blockTextPx as blockText,L1_BLOCK_PAL} from './l1-block.js?v=116';
+const __bcT=s=>{const b=globalThis.BCi18n;return b&&typeof s==='string'?b.t(s):s;};
 const U=n=>new URL('./assets/'+n,import.meta.url).href;
 const isL1=()=>document.documentElement.dataset.uiLevel==='1';
-const IMG={};let imgGen=0,imgStarted=false;
+const IMG={};let imgGen=0,imgStarted=false;try{addEventListener('bc-lang',()=>{imgGen++;});}catch{}
 const SRC={'compass-ring':'ui-v114/compass-ring.webp','gauge-ring':'ui-v114/gauge-ring.webp','almond-icon':'ui-v114/almond-icon.webp',standoff:'ui-v114/standoff.webp',
  leather:'ui-v116/leather.jpg',brushed:'ui-v116/brushed.jpg',dust:'ui-v116/dust.jpg',screw:'ui-v116/screw.webp',chromeDash:'ui-v142/chrome-dash.jpg',chromeNav:'ui-v142/chrome-nav.jpg',shellDash:'ui-v142/shell-dash.webp',shellNav:'ui-v142/shell-nav.webp'};
 function loadImages(){if(imgStarted)return;imgStarted=true;try{for(const f of ['16px Vonwaon16','12px Vonwaon12'])document.fonts.load(f,'理A').then(()=>{imgGen++;});document.fonts.addEventListener('loadingdone',()=>{imgGen++;});}catch{}
@@ -29,11 +30,11 @@ function rrp(c,x,y,w,h,r){c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
 // Vonwaon bitmap text with a stepped extrusion in the block-title's shadow ink + a cream→grey face ramp
 function text3d(c,s,x,y,font,{align='center',line='#8b958f',top='#fbf7ea',bot='#a5aca8',depth=3,ink='#000000b0'}={}){if(globalThis.__l1Era?.on&&(parseFloat(font)||12)*(Math.hypot(c.getTransform().a,c.getTransform().b))<22)depth=Math.min(depth,1);c.save();c.font=font;c.textAlign=align;c.textBaseline='middle';const m=c.getTransform(),u=1/(Math.hypot(m.a,m.b)||1);
- c.fillStyle=ink;c.fillText(s,x+(depth+1)*u*.6,y+(depth+1)*u);c.fillStyle=line;for(let i=depth;i>=1;i--)c.fillText(s,x+i*u*.6,y+i*u);
- const fs=parseFloat(font)||12;c.fillStyle=lg(c,0,y-fs*.5,0,y+fs*.5,[[0,top],[1,bot]]);c.fillText(s,x,y);c.restore();}
+ c.fillStyle=ink;c.fillText(__bcT(s),x+(depth+1)*u*.6,y+(depth+1)*u);c.fillStyle=line;for(let i=depth;i>=1;i--)c.fillText(__bcT(s),x+i*u*.6,y+i*u);
+ const fs=parseFloat(font)||12;c.fillStyle=lg(c,0,y-fs*.5,0,y+fs*.5,[[0,top],[1,bot]]);c.fillText(__bcT(s),x,y);c.restore();}
 function lg(c,x0,y0,x1,y1,stops){const g=c.createLinearGradient(x0,y0,x1,y1);for(const [o,col] of stops)g.addColorStop(o,col);return g;}
 function rg(c,x0,y0,r0,x1,y1,r1,stops){const g=c.createRadialGradient(x0,y0,r0,x1,y1,r1);for(const [o,col] of stops)g.addColorStop(o,col);return g;}
-function text(c,s,x,y,font,fill,shadow='#000000c0',align='center',sy=1){c.font=font;c.textAlign=align;c.textBaseline='middle';if(shadow){c.fillStyle=shadow;c.fillText(s,x,y+sy);}c.fillStyle=fill;c.fillText(s,x,y);}
+function text(c,s,x,y,font,fill,shadow='#000000c0',align='center',sy=1){c.font=font;c.textAlign=align;c.textBaseline='middle';if(shadow){c.fillStyle=shadow;c.fillText(__bcT(s),x,y+sy);}c.fillStyle=fill;c.fillText(__bcT(s),x,y);}
 
 // ---------- map palette: the printed directory (light) ----------
 export const L1_MAP_PAL=Object.freeze({bg:'#e9ebe6',floor:'#d9ddd8',sec:['','#efe1a1','#e6c4bb','#cbe0c2','#ecd0a6'],wall:'#30353b',low:'#a3a9ad',door:'#13994a',thr:'#e2741c',cluBg:'#e4dccb',cluRoom:'#f1eadb',cluWall:'#5a4938'});
@@ -359,8 +360,8 @@ function drawBall(c,cx,cy){
  const L={0:'N',45:'NE',90:'E',135:'SE',180:'S',225:'SW',270:'W',315:'NW'};
  for(let d=0;d<360;d+=15){const th=wrap(d*Math.PI/180-hd);if(Math.abs(th)>1.45)continue;const big=L[d];if(!big&&d%30)continue;
   const p=P(th,big?.25:-.33);if(p[2]<.08)continue;c.save();c.globalAlpha=clamp(p[2]*1.8,0,1);c.translate(p[0],p[1]);c.scale(Math.max(.05,Math.cos(th)),1);
-  if(big){const card=big.length===1;c.font=`bold ${card?19:11}px ${SIGN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle=big==='N'?'#c8231b':'#1d1d1b';c.fillText(big,0,0);}
-  else{c.font=`bold 9px ${SIGN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#2a2a28';c.fillText(String(d/10|0),0,0);}c.restore();}
+  if(big){const card=big.length===1;c.font=`bold ${card?19:11}px ${SIGN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle=big==='N'?'#c8231b':'#1d1d1b';c.fillText(__bcT(big),0,0);}
+  else{c.font=`bold 9px ${SIGN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#2a2a28';c.fillText(__bcT(String(d/10|0)),0,0);}c.restore();}
  c.globalAlpha=1;
  // spherical shading over the print
  c.fillStyle=rg(c,-Rb*.25,-Rb*.3,Rb*.2,0,0,Rb,[[0,'#ffffff00'],[.62,'#00000000'],[.88,'#0000004a'],[1,'#000000b0']]);c.beginPath();c.arc(0,0,Rb,0,TAU);c.fill();
@@ -439,7 +440,7 @@ function l1MapPlayerRaw(c,x,z,yaw,big){const s=big?1.5:1;c.save();c.translate(x,
  c.fillStyle='#d7261e30';c.beginPath();c.arc(0,0,16*s,0,TAU);c.fill();
  c.save();c.rotate(-yaw);c.fillStyle='#d7261e';c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.moveTo(0,-17*s);c.lineTo(7*s,0);c.lineTo(-7*s,0);c.closePath();c.fill();c.stroke();c.restore();
  c.fillStyle='#d7261e';c.beginPath();c.arc(0,0,7*s,0,TAU);c.fill();c.strokeStyle='#fff';c.lineWidth=2.5;c.stroke();
- if(big){c.font=`bold 13px ${SIGN}`;c.textBaseline='middle';const t='YOU ARE HERE',tw=c.measureText(t).width;c.fillStyle='#d7261e';rr(c,14*s,-10,tw+14,20,10);c.fill();c.fillStyle='#fff';c.textAlign='left';c.fillText(t,14*s+7,.5);}
+ if(big){c.font=`bold 13px ${SIGN}`;c.textBaseline='middle';const t='YOU ARE HERE',tw=c.measureText(__bcT(t)).width;c.fillStyle='#d7261e';rr(c,14*s,-10,tw+14,20,10);c.fill();c.fillStyle='#fff';c.textAlign='left';c.fillText(__bcT(t),14*s+7,.5);}
  c.restore();}
 
 // =====================================================================================================
@@ -458,8 +459,8 @@ const IOS149="BC149Sans,BC149Hei,'Helvetica Neue',Helvetica,Arial,'PingFang SC',
 let K149=1;const fI=(u,w=700,min=9)=>`${w} ${Math.max(u,min/K149).toFixed(2)}px ${IOS149}`;
 // iPhone-OS-style label: vertical sheen fill, 1px dark drop under it (engraved on chrome / printed on glass)
 function ios149(c,s,x,y,font,{align='center',top='#ffffff',bot='#cfd8df',shadow='#000000b0',sy=1,glow=null}={}){c.save();c.font=font;c.textAlign=align;c.textBaseline='middle';
- const fs=parseFloat(font.split(' ')[1])||12;if(shadow){c.fillStyle=shadow;c.fillText(s,x,y+sy);}
- if(glow){c.shadowColor=glow;c.shadowBlur=fs*.35;}c.fillStyle=lg(c,0,y-fs*.5,0,y+fs*.5,[[0,top],[1,bot]]);c.fillText(s,x,y);c.restore();}
+ const fs=parseFloat(font.split(' ')[1])||12;if(shadow){c.fillStyle=shadow;c.fillText(__bcT(s),x,y+sy);}
+ if(glow){c.shadowColor=glow;c.shadowBlur=fs*.35;}c.fillStyle=lg(c,0,y-fs*.5,0,y+fs*.5,[[0,top],[1,bot]]);c.fillText(__bcT(s),x,y);c.restore();}
 const etch149=(c,s,x,y,u,align='center')=>ios149(c,s,x,y,fI(u),{align,top:'#ffffff',bot:'#e6ecf1',shadow:'#000000c8'});
 const HO={cx:144,cy:180,R:96,top:96,x0:48,x1:716,y1:302,rc:30};   // V117: housing inset — gauges overhang its edge   // housing geometry
 // V142 geometry: the casting is anchored to the bottom-left screen corner (canvas x=0 / y=DH are the screen edges)

@@ -1,3 +1,4 @@
+const __bcT=s=>{const b=globalThis.BCi18n;return b&&typeof s==='string'?b.t(s):s;};
 // V105 · Level 10 skeuomorphic field instruments, second pass (scoped to :root[data-ui-level="10"]).
 // The look is carried by rendered bitmaps (assets/ui-v105, sources in art-l10v2/): a small tooled
 // leather pad with a loose cluster of separate instruments on and around it: a brass stopwatch
@@ -41,7 +42,7 @@ function sprite(c,name,t,shadow=[3,5,7,'#000000a0']){const im=IMG[name];if(!ok(i
  if(shadow){c.shadowColor=shadow[3];c.shadowBlur=shadow[2]/t.s;const cs=Math.cos(-(t.r||0)),sn=Math.sin(-(t.r||0));c.shadowOffsetX=(shadow[0]*cs-shadow[1]*sn);c.shadowOffsetY=(shadow[0]*sn+shadow[1]*cs);}
  c.drawImage(im,0,0);c.restore();}
 // canvas shadowOffset is in device space; keep it simple: offsets are applied unscaled
-function label(c,t,text,size,color='#2a1808'){c.save();at(c,t,t.ax,t.ay);c.font=`${size}px ${CN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#f8e2a070';c.fillText(text,91,38.5);c.fillStyle=color;c.fillText(text,90,37);c.restore();}
+function label(c,t,text,size,color='#2a1808'){c.save();at(c,t,t.ax,t.ay);c.font=`${size}px ${CN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#f8e2a070';c.fillText(__bcT(text),91,38.5);c.fillStyle=color;c.fillText(__bcT(text),90,37);c.restore();}
 function arcPlate(c){
  // brass quadrant plate the arcs are set into, cut from the photographic brass texture
  const rIn=97,rOut=150;c.save();c.beginPath();c.arc(O.x,O.y,rOut,A0-.05,A1+.06);c.arc(O.x,O.y,rIn,A1+.06,A0-.05,true);c.closePath();
@@ -72,7 +73,7 @@ sprite(c,'wheat',L.wheatFront,[2,4,5,'#00000080']);
  // stopwatch body without its bow+crown (the crown is drawn live so it can be pushed)
  const sw=IMG.stopwatch;if(ok(sw)){const t=L.stopwatch,sp=SP.stopwatch;c.save();at(c,t,sp.ax,sp.ay);c.shadowColor='#000000a0';c.shadowBlur=9;c.shadowOffsetX=4;c.shadowOffsetY=5;c.drawImage(sw,0,sp.crownY,sw.width,sw.height-sp.crownY,0,sp.crownY,sw.width,sw.height-sp.crownY);c.shadowColor='transparent';
   // dial lettering: big, bold, Chinese only
-  c.font=`30px ${CN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#5a1a10e0';c.fillText('体力',sp.ax,sp.ay-40);c.restore();}
+  c.font=`30px ${CN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#5a1a10e0';c.fillText(__bcT('体力'),sp.ax,sp.ay-40);c.restore();}
  sprite(c,'bottle',L.bottle,[2,3,4,'#000a']);
  sprite(c,'plaque',L.plaqueBottle,[1,2,3,'#000a']);
  // tube: glass drawn once behind the liquid; highlights re-applied in front with 'screen'
@@ -104,7 +105,7 @@ function audio(){if(AC)return AC.state==='running'?AC:null;try{AC=new (globalThi
 function play(buf,gain=1,rate=1){const ac=audio();if(!ac||!buf)return;const v=volume();if(v<=0)return;const s=ac.createBufferSource();s.buffer=buf;s.playbackRate.value=rate;const g=ac.createGain();g.gain.value=gain*v;s.connect(g);g.connect(bus);s.start();}
 addEventListener('pointerdown',()=>{audio();if(AC&&AC.state==='suspended')AC.resume();},{passive:true});addEventListener('keydown',()=>{audio();if(AC&&AC.state==='suspended')AC.resume();},{passive:true});
 // ---------- live dashboard ----------
-let mounted=null,shiftHeld=false,fontGen=0;
+let mounted=null,shiftHeld=false,fontGen=0;try{addEventListener('bc-lang',()=>{fontGen++;cCache=null;});}catch{}
 document.fonts?.addEventListener?.('loadingdone',()=>{fontGen++;cCache=null;});
 addEventListener('keydown',e=>{if(e.key==='Shift')shiftHeld=true;},{passive:true});addEventListener('keyup',e=>{if(e.key==='Shift')shiftHeld=false;},{passive:true});addEventListener('blur',()=>{shiftHeld=false;});
 const PAPER=SP.drum.paper;
@@ -191,7 +192,7 @@ export function mountL10Dash(){if(mounted)return mounted;loadImages();
   c.save();c.rotate(s0+(s1-s0)*clamp(b.a,0,1)+Math.PI/2);c.shadowColor='#0008';c.shadowBlur=3;c.shadowOffsetX=2.5;c.shadowOffsetY=3.5;c.fillStyle='#1b2130';c.beginPath();c.moveTo(-2.6,18);c.lineTo(-.8,-br+10);c.lineTo(0,-br+2);c.lineTo(.8,-br+10);c.lineTo(2.6,18);c.closePath();c.fill();
   c.beginPath();c.arc(0,20,6.5,0,TAU);c.fill();c.shadowColor='transparent';c.restore();c.fillStyle='#c9a258';c.beginPath();c.arc(0,0,6,0,TAU);c.fill();c.fillStyle='#4a3010';c.beginPath();c.arc(0,0,2.2,0,TAU);c.fill();
   // sanity zones written on the dial, big
-  c.font=`22px ${CN}`;c.textAlign='center';c.textBaseline='middle';[['狂','#7a1c16'],['乱','#4a2a1a'],['静','#2a2a1a'],['明','#1a2a4a']].forEach(([w,col],i)=>{const a=s0+(s1-s0)*(i+.5)/4;c.fillStyle=col+'d0';c.fillText(w,Math.cos(a)*(br-16),Math.sin(a)*(br-16));});c.restore();
+  c.font=`22px ${CN}`;c.textAlign='center';c.textBaseline='middle';[['狂','#7a1c16'],['乱','#4a2a1a'],['静','#2a2a1a'],['明','#1a2a4a']].forEach(([w,col],i)=>{const a=s0+(s1-s0)*(i+.5)/4;c.fillStyle=col+'d0';c.fillText(__bcT(w),Math.cos(a)*(br-16),Math.sin(a)*(br-16));});c.restore();
   // tube liquid (cool almond-water blue), sloshing
   const TT=L.tube,ts=SP.tube,lvl=clamp(S.shown[1]/100,0,1),x0=ts.in0,x1=ts.in1,rad=(x1-x0)/2,cx=(x0+x1)/2,yTop=ts.top+6,yBot=ts.bot,yS=yBot-(yBot-yTop)*lvl;
   if(lvl>.003){c.save();at(c,TT,ts.ax,0);c.beginPath();c.moveTo(x0,ts.top);c.lineTo(x0,yBot-rad);c.arc(cx,yBot-rad,rad,Math.PI,0,true);c.lineTo(x1,ts.top);c.closePath();c.clip();
@@ -202,7 +203,7 @@ export function mountL10Dash(){if(mounted)return mounted;loadImages();
    for(let i=0;i<3;i++){const u=((S.t*.12+i*.37)%1),by=yBot-10-u*(yBot-10-yS),bx=cx-12+i*12+Math.sin(S.t*2+i)*3;if(by>yS+5){c.strokeStyle='#e6f6ff90';c.lineWidth=1.2;c.beginPath();c.arc(bx,by,2+i*.6,0,TAU);c.stroke();}}
    c.restore();}
   // almond water count, stamped on its plaque
-  const p=L.plaqueBottle,n=parseInt(document.getElementById('bottle-count')?.textContent||'0',10)||0;c.save();at(c,p,p.ax,p.ay);c.font=`48px ${CN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#f8e2a080';c.fillText('×'+String(n).padStart(2,'0'),92,39.5);c.fillStyle='#24140a';c.fillText('×'+String(n).padStart(2,'0'),90,37);c.restore();
+  const p=L.plaqueBottle,n=parseInt(document.getElementById('bottle-count')?.textContent||'0',10)||0;c.save();at(c,p,p.ax,p.ay);c.font=`48px ${CN}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#f8e2a080';c.fillText(__bcT('×'+String(n).padStart(2,'0')),92,39.5);c.fillStyle='#24140a';c.fillText(__bcT('×'+String(n).padStart(2,'0')),90,37);c.restore();
  }
  const tu=()=>S.tube;
  raf=requestAnimationFrame(frame);
@@ -220,7 +221,7 @@ function compassStatic(w,h,k){const back=document.createElement('canvas'),front=
  const rr=CC.R-2,rs=Math.ceil(rr*2*k);ring.width=ring.height=rs;const r=ring.getContext('2d');r.scale(k,k);r.translate(rr,rr);
  r.strokeStyle='#2a1e14d0';for(let i=0;i<72;i++){if(i%18===0)continue;const a=i/72*TAU-Math.PI/2,big=i%9===0,mid=i%3===0;r.lineWidth=big?1.6:.8;r.beginPath();r.moveTo(Math.cos(a)*(rr-2),Math.sin(a)*(rr-2));r.lineTo(Math.cos(a)*(rr-(big?9:mid?6:4)),Math.sin(a)*(rr-(big?9:mid?6:4)));r.stroke();}
  
- r.textAlign='center';r.textBaseline='middle';[['北','#9a2018'],['东','#1b130c'],['南','#1b130c'],['西','#1b130c']].forEach(([t,col],i)=>{r.save();r.rotate(i*Math.PI/2);r.font=`16px ${CN}`;r.fillStyle=col;r.fillText(t,0,-(rr-20.5));r.restore();});
+ r.textAlign='center';r.textBaseline='middle';[['北','#9a2018'],['东','#1b130c'],['南','#1b130c'],['西','#1b130c']].forEach(([t,col],i)=>{r.save();r.rotate(i*Math.PI/2);r.font=`16px ${CN}`;r.fillStyle=col;r.fillText(__bcT(t),0,-(rr-20.5));r.restore();});
  return{back,front,ring,rr,k,w,h,plaque:{x:CC.x,y:py+ph/2}};}
 export function paintBrassCompass(c,rect,map,yaw,bearing){
  const w=Math.round(rect.width),h=Math.round(rect.height),k=Math.min(w/CW,h/CH),ox=rect.left+(w-CW*k)/2,oy=rect.top+(h-CH*k)/2;
@@ -245,7 +246,7 @@ export function paintBrassCompass(c,rect,map,yaw,bearing){
  c.save();c.beginPath();c.arc(CC.x,CC.y,CC.R,0,TAU);c.clip();const rg=c.createRadialGradient(CC.x,CC.y,CC.R*.78,CC.x,CC.y,CC.R);rg.addColorStop(0,'#00000000');rg.addColorStop(1,'#1a0e0460');c.fillStyle=rg;c.fillRect(CC.x-CC.R,CC.y-CC.R,CC.R*2,CC.R*2);
  const gg=c.createLinearGradient(CC.x-CC.R,CC.y-CC.R,CC.x,CC.y);gg.addColorStop(0,'#fff8e048');gg.addColorStop(.6,'#fff8e010');gg.addColorStop(.61,'#fff8e000');c.fillStyle=gg;c.beginPath();c.ellipse(CC.x-CC.R*.2,CC.y-CC.R*.34,CC.R*.8,CC.R*.46,-.62,0,TAU);c.fill();c.restore();
  c.setTransform(1,0,0,1,0,0);c.drawImage(cCache.front,ox,oy);c.translate(ox,oy);c.scale(k,k);
- c.font=`22px ${CN}`;c.textAlign='center';c.textBaseline='middle';const q=cCache.plaque;c.fillStyle='#f6dfa080';c.fillText(bearing||'',q.x+1,q.y+1.5);c.fillStyle='#24160a';c.fillText(bearing||'',q.x,q.y);
+ c.font=`22px ${CN}`;c.textAlign='center';c.textBaseline='middle';const q=cCache.plaque;c.fillStyle='#f6dfa080';c.fillText(__bcT(bearing||''),q.x+1,q.y+1.5);c.fillStyle='#24160a';c.fillText(__bcT(bearing||''),q.x,q.y);
  c.restore();
  return Math.abs(needle.v)>.002||Math.abs(diff)>.002;
 }

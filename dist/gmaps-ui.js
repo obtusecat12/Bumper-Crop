@@ -7,9 +7,10 @@ import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan,cityDistrict} from './u
 import {BUILDING_TYPES} from './urban-buildings.js?v=132st';
 import {exitPoint} from './exit-route.js?v=60';
 import {paintSatellite,setSatInvalidate148} from './gmaps-satellite.js?v=148a';
-import {paintCanalMap} from './map131-canal.js?v=131';
+import {paintCanalMap} from './map131-canal.js?v=150c';
 import {gmCtlHTML} from './gm-ctl132.js?v=132';
-import {in148,paintFoot148,paintPoi148,sideHTML148,select148,onSelect148} from './map148-poi.js?v=148a'; // V148 E4
+import {in148,paintFoot148,paintPoi148,sideHTML148,select148,onSelect148} from './map148-poi.js?v=150c'; // V148 E4
+const __bcT=s=>{const b=globalThis.BCi18n;return b&&typeof s==='string'?b.t(s):s;};
 
 const FONT='Arial, Helvetica, sans-serif',AQUA="'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 // Classic (pre-2013) tile palette. Satellite/Hybrid are a dark aerial look.
@@ -67,7 +68,7 @@ export function gmCityPaint(context,c,w,h,scale,shapes=[],opts={}){
    // Label each road once, at its point nearest the view centre (clamped on-screen).
    const dx=q.b[0]-q.a[0],dz=q.b[1]-q.a[1],L=Math.hypot(dx,dz);if(L<1)continue;let t=((w/2-q.a[0])*dx+(h/2-q.a[1])*dz)/(L*L);const off=((q.k*37)%5-2)*90/L;t=Math.max(.05,Math.min(.95,t+off));
    const x=q.a[0]+dx*t,z=q.a[1]+dz*t;if(x<30||z<20||x>w-30||z>h-20)continue;let ang=Math.atan2(dz,dx);if(ang>Math.PI/2)ang-=Math.PI;if(ang<-Math.PI/2)ang+=Math.PI;
-   const name=q.axis?streetName(q.k):avenueName(q.k);context.save();context.translate(x,z);context.rotate(ang);context.strokeStyle=P.halo;context.lineWidth=3;context.strokeText(name,0,0);context.fillStyle=P.label;context.fillText(name,0,0);context.restore();
+   const name=q.axis?streetName(q.k):avenueName(q.k);context.save();context.translate(x,z);context.rotate(ang);context.strokeStyle=P.halo;context.lineWidth=3;context.strokeText(__bcT(name),0,0);context.fillStyle=P.label;context.fillText(__bcT(name),0,0);context.restore();
   }
   context.restore();
  }
@@ -89,11 +90,11 @@ export function gmDrawPin(context,x,y,yaw,title='You are here'){
  context.save();context.rotate(-yaw);context.translate(0,-14);context.fillStyle='#2a6fdb';context.strokeStyle='#fff';context.lineWidth=1.5;context.beginPath();context.moveTo(0,-6);context.lineTo(6,4);context.lineTo(0,1);context.lineTo(-6,4);context.closePath();context.stroke();context.fill();context.restore();
  context.restore();
  // balloon
- context.save();context.font=`bold 13px ${FONT}`;const tw=Math.max(118,context.measureText(title).width+44),bh=46,bx=x-26,by=y-38-bh-18;
+ context.save();context.font=`bold 13px ${FONT}`;const tw=Math.max(118,context.measureText(__bcT(title)).width+44),bh=46,bx=x-26,by=y-38-bh-18;
  context.shadowColor='rgba(0,0,0,.3)';context.shadowBlur=6;context.shadowOffsetX=4;context.shadowOffsetY=4;
  context.beginPath();const r=8;context.moveTo(bx+r,by);context.lineTo(bx+tw-r,by);context.arcTo(bx+tw,by,bx+tw,by+r,r);context.lineTo(bx+tw,by+bh-r);context.arcTo(bx+tw,by+bh,bx+tw-r,by+bh,r);context.lineTo(bx+46,by+bh);context.lineTo(x-2,y-40);context.lineTo(bx+26,by+bh);context.lineTo(bx+r,by+bh);context.arcTo(bx,by+bh,bx,by+bh-r,r);context.lineTo(bx,by+r);context.arcTo(bx,by,bx+r,by,r);context.closePath();
  context.fillStyle='#fff';context.fill();context.shadowColor='transparent';context.strokeStyle='#ababab';context.lineWidth=1;context.stroke();
- context.fillStyle='#000';context.textBaseline='top';context.fillText(title,bx+10,by+8);context.font=`13px ${FONT}`;context.fillStyle='#0000cc';context.fillText('Directions',bx+10,by+26);
+ context.fillStyle='#000';context.textBaseline='top';context.fillText(__bcT(title),bx+10,by+8);context.font=`13px ${FONT}`;context.fillStyle='#0000cc';context.fillText(__bcT('Directions'),bx+10,by+26);
  // close box
  context.strokeStyle='#888';context.strokeRect(bx+tw-17.5,by+6.5,11,11);context.beginPath();context.moveTo(bx+tw-15,by+9);context.lineTo(bx+tw-9,by+15);context.moveTo(bx+tw-9,by+9);context.lineTo(bx+tw-15,by+15);context.stroke();
  context.restore();
@@ -122,7 +123,7 @@ export function paintSafariCompass(c,map,yaw,bearing,opts={}){
  c.save();c.translate(X,Y);c.rotate(yaw);
  for(let i=0;i<72;i++){const a=i*Math.PI/36,big=i%6===0,len=big?9:5;c.strokeStyle=big?'#ffffff':'rgba(255,255,255,.75)';c.lineWidth=big?2:1;c.beginPath();c.moveTo(Math.sin(a)*(RB-3),-Math.cos(a)*(RB-3));c.lineTo(Math.sin(a)*(RB-3-len),-Math.cos(a)*(RB-3-len));c.stroke();}
  c.font=`bold 13px ${AQUA}`;c.textAlign='center';c.textBaseline='middle';
- for(let i=0;i<4;i++){const a=i*Math.PI/2;c.save();c.translate(Math.sin(a)*(RM+9.5),-Math.cos(a)*(RM+9.5));c.rotate(a);c.fillStyle='rgba(0,20,70,.6)';c.fillText('NESW'[i],0,1);c.fillStyle=i===0?'#ffe4e1':'#ffffff';c.fillText('NESW'[i],0,0);c.restore();}
+ for(let i=0;i<4;i++){const a=i*Math.PI/2;c.save();c.translate(Math.sin(a)*(RM+9.5),-Math.cos(a)*(RM+9.5));c.rotate(a);c.fillStyle='rgba(0,20,70,.6)';c.fillText(__bcT('NESW'[i]),0,1);c.fillStyle=i===0?'#ffe4e1':'#ffffff';c.fillText(__bcT('NESW'[i]),0,0);c.restore();}
  c.restore();
  // map window
  c.save();c.beginPath();c.arc(X,Y,RM,0,Math.PI*2);c.fillStyle='#f2efe9';c.fill();c.clip();
@@ -145,7 +146,7 @@ export function paintSafariCompass(c,map,yaw,bearing,opts={}){
  // Aqua pill caption
  const py=250,pw=196,ph=26,px=X-pw/2;g=c.createLinearGradient(0,py,0,py+ph);g.addColorStop(0,'#ffffff');g.addColorStop(.5,'#e9ecef');g.addColorStop(.5,'#d8dde2');g.addColorStop(1,'#f4f6f8');
  c.beginPath();c.roundRect?c.roundRect(px,py,pw,ph,13):c.rect(px,py,pw,ph);c.fillStyle=g;c.fill();c.strokeStyle='#7d858c';c.lineWidth=1;c.stroke();
- c.font=`bold 13px ${AQUA}`;c.fillStyle='#1d1d1d';c.textBaseline='middle';c.textAlign='left';c.fillText(bearing,px+14,py+ph/2+1);c.textAlign='right';c.font=`12px ${AQUA}`;c.fillStyle='#0b56c7';c.fillText('M  Map',px+pw-14,py+ph/2+1);
+ c.font=`bold 13px ${AQUA}`;c.fillStyle='#1d1d1d';c.textBaseline='middle';c.textAlign='left';c.fillText(__bcT(bearing),px+14,py+ph/2+1);c.textAlign='right';c.font=`12px ${AQUA}`;c.fillStyle='#0b56c7';c.fillText(__bcT('M  Map'),px+pw-14,py+ph/2+1);
  c.restore();
 }
 

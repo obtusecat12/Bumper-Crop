@@ -7,6 +7,7 @@
 import {canalOpen,canalBlock,canalRow,CANAL} from './canal128-layout.js?v=128';
 import {subwayStairs,subwayBlock} from './subway128-layout.js?v=128';
 import {CITY_BLOCK as B} from './urban-layout.js?v=return-1';
+const __bcT=s=>{const b=globalThis.BCi18n;return b&&typeof s==='string'?b.t(s):s;};
 const NAMES=['Hope Canal','Канал Бесконечный','Canal du Nulle-Part','Grachtsingel Eindeloos',"Naviglio dell'Eco",'不归渠 Bùguī Canal','Kanał Ciszy','Kanal der leeren Stunde','Canal Saint-Perpétuel','鏡川運河 Kagami Canal','Canale delle Sale Vuote','Tyst Kanal'];
 export const canalName=iz=>{const k=Math.round((iz-CANAL.row)/CANAL.period);return NAMES[((k%NAMES.length)+NAMES.length)%NAMES.length];};
 // open reach of a block in city coords (x range incl. the road halves the water passes under, z = water)
@@ -49,14 +50,14 @@ export function paintCanalMap(g,toS,{bx,bz,r,scale,P,photo,stage}){
   for(const iz of R){let best=null,bd=1e9;for(let ix=bx-r;ix<=bx+r;ix++){const q=reach(ix,iz);if(!q)continue;const d=Math.abs(ix+.5-bx-.5);if(d<bd){bd=d;best=q;}}
    if(!best)continue;const a=toS(best.x+20,(best.z0+best.z1)/2),c=toS(best.x+B-20,(best.z0+best.z1)/2),m=[(a[0]+c[0])/2,(a[1]+c[1])/2];
    let ang=Math.atan2(c[1]-a[1],c[0]-a[0]);if(ang>Math.PI/2)ang-=Math.PI;if(ang<-Math.PI/2)ang+=Math.PI;
-   g.save();g.translate(...m);g.rotate(ang);g.strokeStyle=photo?'#000000':'#a5bfdd';g.lineWidth=3;const t=canalName(iz);g.strokeText(t,0,0);g.fillStyle=photo?'#bcd3f2':'#2f5d9e';g.fillText(t,0,0);g.restore();}
+   g.save();g.translate(...m);g.rotate(ang);g.strokeStyle=photo?'#000000':'#a5bfdd';g.lineWidth=3;const t=canalName(iz);g.strokeText(__bcT(t),0,0);g.fillStyle=photo?'#bcd3f2':'#2f5d9e';g.fillText(__bcT(t),0,0);g.restore();}
   g.restore();
  }
  if(stage==='icons'&&scale>.5){
   // subway entrances: classic transit marker (white rounded square, dark-blue border, "M")
   const s=Math.round(Math.min(14,Math.max(9,scale*14)));g.save();g.font=`bold ${s-4}px Arial, Helvetica, sans-serif`;g.textAlign='center';g.textBaseline='middle';
   for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++)for(const st of subwayStairs(ix,iz)){const p=st.axis==='z'?toS(ix*B+(st.x0+st.x1)/2,iz*B+st.z0+1.5):toS(ix*B+st.x0+1.5,iz*B+(st.z0+st.z1)/2);
-   const x=p[0]-s/2,y=p[1]-s/2;g.fillStyle='#ffffff';g.strokeStyle='#28468c';g.lineWidth=1.5;g.beginPath();g.roundRect?g.roundRect(x,y,s,s,2):g.rect(x,y,s,s);g.fill();g.stroke();g.fillStyle='#28468c';g.fillText('M',p[0],p[1]+.5);}
+   const x=p[0]-s/2,y=p[1]-s/2;g.fillStyle='#ffffff';g.strokeStyle='#28468c';g.lineWidth=1.5;g.beginPath();g.roundRect?g.roundRect(x,y,s,s,2):g.rect(x,y,s,s);g.fill();g.stroke();g.fillStyle='#28468c';g.fillText(__bcT('M'),p[0],p[1]+.5);}
   g.restore();
  }
 }
