@@ -10,7 +10,7 @@ blender -b -t 8 --python scripts/bake-spawn-cycles.py
 python scripts/pack-spawn-cycles.py
 ```
 
-使用 Blender 4.3.2、Cycles CPU、64 samples、六次漫反射反弹；压缩脚本需要 NumPy、Pillow、SciPy。运行时使用一张 1024² WebP 光照图，平方解码到线性空间，颜色与法线保持独立。每个接收面单独滤波和扩边，游戏直接在原材质上采样；替代出生点原来的乘色覆盖面，其他区域沿用现有光场。
+使用 Blender 4.3.2、Cycles CPU、64 samples、六次漫反射反弹；压缩脚本需要 NumPy、Pillow、SciPy。运行时使用一张 1024² WebP 光照图，平方解码到线性空间，颜色与法线保持独立。源光照保留为半浮点 EXR（DWAA 压缩），临时 `.f32` 可通过上述命令重新生成。每个接收面单独滤波和扩边，游戏直接在原材质上采样；替代出生点原来的乘色覆盖面，其他区域沿用现有光场。
 
 只有七盏固定荧光灯参与烘焙。玩家已有的实时手电筒保留其光束、cookie 和材质响应，绝不参与 Blender 烘焙。电闸继续控制本区静态光照。
 

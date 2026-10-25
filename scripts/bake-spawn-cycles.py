@@ -62,7 +62,7 @@ def box(name,kind,x,y,z,w,h,d,ry=0):
 for w in D['SPAWN_WALLS']:
     kind={3:'right',4:'dots',6:'stripe',7:'dots',8:'front'}[w['mat']]
     box(w['id'],kind,w['x'],w['y'],w['z'],w['w'],w['h'],w['d'],w.get('ry',0))
-for i,r in enumerate(D['SPAWN_RAILS']):box('oak bumper '+str(i),'rail',r['x'],r['y'],r['z'],r['w'],.035,r['d'])
+for i,r in enumerate(D['SPAWN_RAILS']):box('oak bumper '+str(i),'rail',r['x'],r['y'],r['z'],r['w'],.05,r['d'],r.get('ry',0))
 for w in D['SPAWN_SKIRT']:box(w['id'],'skirt',w['x'],w['y'],w['z'],w['w'],w['h'],w['d'],w.get('ry',0))
 face('carpet','floor',[-10,0,4.5],[20.5,0,0],[0,0,-18.1])
 face('acoustic ceiling','ceiling',[-10,2.72,-13.6],[20.5,0,0],[0,0,18.1])
@@ -153,9 +153,12 @@ if '--render-only' not in sys.argv:
     bpy.context.view_layer.objects.active=objects[0];scene.render.bake.use_pass_color=False;scene.render.bake.use_pass_direct=True;scene.render.bake.use_pass_indirect=True;scene.render.bake.margin=PAD
     bpy.ops.object.bake(type='DIFFUSE',uv_layer='Irradiance')
     data=np.empty(SIZE*SIZE*4,dtype=np.float32);atlas.pixels.foreach_get(data);data.tofile(str(OUT/'irradiance.f32'))
-    scene.render.image_settings.file_format='OPEN_EXR';scene.render.image_settings.color_depth='16';scene.render.image_settings.exr_codec='ZIP';atlas.save_render(str(OUT/'irradiance.exr'),scene=scene)
+    scene.render.image_settings.file_format='OPEN_EXR';scene.render.image_settings.color_depth='16';scene.render.image_settings.exr_codec='DWAA';atlas.save_render(str(OUT/'irradiance.exr'),scene=scene)
     for nm,strength in bump_nodes:nm.inputs['Strength'].default_value=strength
     print('BAKE_FINISHED',len(faces),flush=True)
 scene.render.image_settings.file_format='PNG';scene.render.image_settings.color_mode='RGB';scene.render.image_settings.color_depth='8';scene.render.filepath=str(OUT/'blender-reference.png')
 bpy.ops.render.render(write_still=True)
+if '--render-only' not in sys.argv:
+    atlas.filepath='//irradiance.exr';atlas.source='FILE';atlas.reload()
+    bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'level0-spawn.blend'),compress=True)
 print('RENDER_FINISHED',flush=True)

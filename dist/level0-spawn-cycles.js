@@ -17,7 +17,7 @@ export function createSpawnIrradiance(T,loader,pending){
 if(plane<best&&dot(n,${v3(f.n)})>.7&&all(greaterThanEqual(uv,vec2(-.008)))&&all(lessThanEqual(uv,vec2(1.008)))){best=plane;coord=(vec2(${x}.0,${y}.0)+clamp(uv,0.,1.)*vec2(${w}.0,${h}.0))/${SPAWN_BAKE.size}.;found=1.;}}`;
     }).join('\n');
     return `uniform sampler2D spawnAtlas;uniform float spawnGain;
-vec4 spawnIrradiance(vec3 world,vec3 n){vec3 p=world-${v3(SPAWN_BAKE.origin)};${kind==='grid'?'p.y=2.72;n=vec3(0.,-1.,0.);':''}
+vec4 spawnIrradiance(vec3 world,vec3 n){vec3 p=world-${v3(SPAWN_BAKE.origin)};${kind==='grid'||kind==='ceiling'?'p.y=2.72;n=vec3(0.,-1.,0.);':''}
 float best=.14,found=0.;vec2 coord=vec2(0.);${code}
 float edge=min(min(p.x+10.,10.5-p.x),min(p.z+13.6,4.5-p.z));float weight=found*smoothstep(0.,1.2,edge)*step(.0001,spawnGain);
 vec3 t=texture2D(spawnAtlas,coord).rgb;return vec4(t*t*12.*spawnGain,weight);}`;
@@ -40,7 +40,7 @@ export function injectSpawnBake(T,s,bake,kind){
   s.fragmentShader=s.fragmentShader.replace('#include <opaque_fragment>',`reflectedLight.directDiffuse=mix(reflectedLight.directDiffuse,spawnLiveDiffuse,spawnSample.a);
 // outgoingLight has already been summed by Three here: replace its static terms,
 // while preserving the existing dynamic direct light terms without field dimming.
-vec3 spawnLit=diffuseColor.rgb*spawnSample.rgb*circuitAt(l0World)+spawnLiveDiffuse+spawnLiveSpecular;
+vec3 spawnLit=${kind==='grid'?'vec3(.50,.48,.30)':'diffuseColor.rgb'}*spawnSample.rgb*circuitAt(l0World)+spawnLiveDiffuse+spawnLiveSpecular;
 outgoingLight=mix(outgoingLight,spawnLit,spawnSample.a);
 #include <opaque_fragment>`);
 }

@@ -1,0 +1,97 @@
+[
+  {
+    "region": "right",
+    "rect": [
+      450,
+      80,
+      580,
+      330
+    ],
+    "reference_mean_rgb": [
+      148.9,
+      148.1,
+      91.2
+    ],
+    "game_mean_rgb": [
+      149.4,
+      148.3,
+      91.7
+    ]
+  },
+  {
+    "region": "left",
+    "rect": [
+      10,
+      70,
+      80,
+      300
+    ],
+    "reference_mean_rgb": [
+      143.8,
+      138.1,
+      66.9
+    ],
+    "game_mean_rgb": [
+      140.3,
+      138.2,
+      61.6
+    ]
+  },
+  {
+    "region": "floor",
+    "rect": [
+      130,
+      320,
+      350,
+      430
+    ],
+    "reference_mean_rgb": [
+      105.7,
+      89.6,
+      31.4
+    ],
+    "game_mean_rgb": [
+      96.0,
+      82.7,
+      30.3
+    ]
+  },
+  {
+    "region": "far",
+    "rect": [
+      195,
+      110,
+      310,
+      175
+    ],
+    "reference_mean_rgb": [
+      141.3,
+      135.0,
+      67.7
+    ],
+    "game_mean_rgb": [
+      147.7,
+      143.9,
+      78.1
+    ]
+  },
+  {
+    "region": "ceiling",
+    "rect": [
+      140,
+      5,
+      360,
+      24
+    ],
+    "reference_mean_rgb": [
+      103.4,
+      92.3,
+      37.6
+    ],
+    "game_mean_rgb": [
+      86.6,
+      80.9,
+      35.5
+    ]
+  }
+]

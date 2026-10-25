@@ -10,7 +10,9 @@ const h=1000,w=h*4/3,fh=h*(1+2*Math.abs(v.shiftY));camera.fov=2*Math.atan(Math.t
 const world=createLevel0World(T,renderer);await world.ready;world.update(0,v.x,v.z,v.yaw);await world.field.ready;
 // Allow the native asynchronous field to settle; the Cycles receivers are static.
 const torch=createFlashlight117(T);torch.setLevel(0);torch.prepare(world.scene,camera);
-function draw(){world.update(.016,camera.position.x,camera.position.z,camera.rotation.y);torch.prepare(world.scene,camera);renderer.render(world.scene,camera);}
+const target=new T.WebGLRenderTarget(640,480,{type:T.HalfFloatType,depthBuffer:true});target.depthTexture=new T.DepthTexture(640,480,T.UnsignedIntType);target.samples=4;
+const screen=new T.Scene(),screenCamera=new T.Camera(),output=new T.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{map:{value:null}},vertexShader:'varying vec2 uv0;void main(){uv0=uv;gl_Position=vec4(position,1.);}',fragmentShader:'uniform sampler2D map;varying vec2 uv0;void main(){gl_FragColor=texture2D(map,uv0);\n#include <tonemapping_fragment>\n#include <colorspace_fragment>\n}'});screen.add(new T.Mesh(new T.PlaneGeometry(2,2),output));
+function draw(){world.update(.016,camera.position.x,camera.position.z,camera.rotation.y);torch.prepare(world.scene,camera);renderer.setRenderTarget(target);renderer.render(world.scene,camera);output.uniforms.map.value=world.scene.userData.springVolume.compose(renderer,target.texture,target.depthTexture,camera,640,480);renderer.setRenderTarget(null);renderer.render(screen,screenCamera);}
 for(let i=0;i<2;i++)draw();
 window.qa={ready:true,world,camera,renderer,draw,torch,turn(){camera.rotation.y-=.4;draw();},light(){torch.setEquipped(true);if(!torch.on)torch.toggle();torch.update(.4);draw();return {on:torch.on,intensity:torch.spot.intensity}},stats(){return world.stats()}};
 </script>

@@ -1,0 +1,15 @@
+{
+  "label": "final",
+  "errors": [],
+  "stats": {
+    "chunks": 51,
+    "batches": 237,
+    "instances": 45939,
+    "rebuildCount": 1,
+    "textureUnits": 32,
+    "estimatedSamplerPeak": 12,
+    "breakers": 2,
+    "offCircuits": 0
+  },
+  "renderer": "Local Chrome / SwiftShader, native Level 0 world"
+}
