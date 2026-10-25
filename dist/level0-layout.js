@@ -6,7 +6,7 @@ import {place95,blockage95,showcaseFurniture95} from './level0-arrangements95.js
 import {createMacro94,terrain94,showcase94,showcaseHeight94,SPACE94_REGION,SPACE94_VIEWS} from './level0-space94.js';
 import {placeStack94,stackTemplate94,HERO94,CHAIRS94} from './level0-stacks94.js';
 import {KANE_REGION,KANE_LANDMARKS,KANE_WALLS,KANE_THINGS,inKane} from './level0-k-plan.js';
-import {SPAWN_REGION,SPAWN_WALLS,SPAWN_RAILS,SPAWN_OUTLETS,SPAWN_LIGHTS,SPAWN_VIEW,SPAWN_PLAY,SPAWN_HOLES,inSpawn} from './level0-spawn117.js?v=119';
+import {SPAWN_REGION,SPAWN_WALLS,SPAWN_RAILS,SPAWN_OUTLETS,SPAWN_LIGHTS,SPAWN_VIEW,SPAWN_PLAY,SPAWN_HOLES,inSpawn} from './level0-spawn117.js?v=148a';
 import {MANILA_RECT,MANILA_VIEWS,inManila,subtractManilaFloor,manilaRegionsNear,firstRareManila} from './manila-plan.js';
 // Spatial authority: storage chunks do not impose room boundaries.
 export const L0_CELL=3.6,L0_N=6,L0_CHUNK=21.6,L0_HEIGHT=2.72;

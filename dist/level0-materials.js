@@ -1,5 +1,5 @@
-import {SPAWN_LOOK} from './level0-spawn-look.js';
-import {createSpawnIrradiance,injectSpawnBake} from './level0-spawn-cycles.js';
+import {SPAWN_LOOK} from './level0-spawn-look.js?v=148a';
+import {createSpawnIrradiance,injectSpawnBake} from './level0-spawn-cycles.js?v=148a';
 // Each linked material stays far below 16 samplers; circuits use uniform vectors.
 import {L0_FIELD_GLSL} from './level0-lightfield.js?v=104';
 export function createL0Materials(T,renderer,fieldUniforms={}){

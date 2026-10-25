@@ -1,4 +1,4 @@
-import {SPAWN_REGION} from './level0-spawn117.js';
+import {SPAWN_REGION} from './level0-spawn117.js?v=148a';
 import * as T from './vendor/three.module.min.js';
 import {nearManila} from './manila-plan.js';
 // One existing scene depth texture, no second geometry/normal pass or SSR allocation.

@@ -1,5 +1,5 @@
-import {SPAWN_BAKE} from './level0-spawn-cycles-data.js';
-import {SPAWN_LOOK} from './level0-spawn-look.js';
+import {SPAWN_BAKE} from './level0-spawn-cycles-data.js?v=148a';
+import {SPAWN_LOOK} from './level0-spawn-look.js?v=148a';
 
 const number=v=>Number(v).toFixed(7),v3=v=>`vec3(${v.map(number).join(',')})`;
 export function createSpawnIrradiance(T,loader,pending){

@@ -1,9 +1,9 @@
 import {inManila,nearManila} from './manila-plan.js';
 import {keys131 as K131} from './keys131.js?v=131';
-import {createLevel0World} from './level0-world.js?v=133a';
+import {createLevel0World} from './level0-world.js?v=148a';
 import {createNoclip130} from './level0-noclip130.js?v=143'; // V130-D noclip 0->1
 import {makeAlmondBottle} from './almond-water-assets.js?v=60';
-import {L0_CHUNK,l0Hash,L0_SPAWN_INDEX} from './level0-layout.js?v=119';
+import {L0_CHUNK,l0Hash,L0_SPAWN_INDEX} from './level0-layout.js?v=148a';
 import {initializeOutpostTextures,attachOutpostGround} from './lake-outpost-materials.js';
 import {createLakeOutpost} from './lake-outpost.js';
 import {initializeCampLife98} from './camp-life-materials98.js';
@@ -87,7 +87,7 @@ import {createAtm136,nearAtmDoor136,resolve136,atLobbyExit136,L136} from './atm1
 import {createMaterialFinish} from './material-finish.js?v=71';
 import {createRuralShadows} from './rural-shadows.js?v=60';
 import {createIrradianceField} from './irradiance-field.js?v=60';
-import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=119';
+import {createDisplayFilter,displaySize,displayFrame,FILTERS} from './display-filter.js?v=148a';
 import {farmViewTarget,photoCorridorTiles} from './photo-view.js?v=60';
 import {createPerformanceMeter} from './performance-meter.js?v=60';
 import {createChunkStream} from './world-stream.js?v=60';
@@ -102,7 +102,7 @@ import {createNavigationMap} from './map-ui.js?v=127';
 import {drawAsciiTitle} from './ascii-title.js?v=116';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=117';
 import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
-import {createInventory117} from './inventory117.js?v=132b';import {createL1Loot124} from './l1loot124-main.js?v=132b';import {createPerf131} from './perf131.js?v=131';import {createFlashlight117} from './flashlight117.js?v=134';import {createIntro120} from './intro120.js?v=120';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=119'; // V117 shared inventory
+import {createInventory117} from './inventory117.js?v=132b';import {createL1Loot124} from './l1loot124-main.js?v=132b';import {createPerf131} from './perf131.js?v=131';import {createFlashlight117} from './flashlight117.js?v=134';import {createIntro120} from './intro120.js?v=120';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=148a'; // V117 shared inventory
 import {createLevel1World} from './level1-world.js?v=117'; // V107 Level 1
 
 await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
