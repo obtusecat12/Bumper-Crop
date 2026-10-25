@@ -1,0 +1,4 @@
+scene.json
+*.blend
+*.blend1
+irradiance-source.npz

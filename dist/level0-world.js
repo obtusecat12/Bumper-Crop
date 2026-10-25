@@ -1,5 +1,5 @@
 import {ATRIUM_LEVELS97,atriumSupport97,atriumLanding97,atriumBlocked97,atriumHeadroom97,atriumTier97,atriumMap97} from './level0-atrium-plan97.js';
-import {createAtrium96} from './level0-atrium96.js?v=133';
+import {createAtrium96} from './level0-atrium96.js?v=149';
 import {ATRIUM_RECT96,inAtrium96,atriumPit96,atriumBlocked96,topWalls96} from './level0-atrium-plan96.js';
 import {createCeiling95} from './level0-ceiling95.js';
 import {createFurniture95} from './level0-furniture95.js';
@@ -17,12 +17,13 @@ import {createLevel0DetailAssets} from './level0-ceiling-details.js';
 import {createLevel0Props} from './level0-props.js';
 import {RectAreaLightUniformsLib} from './vendor/RectAreaLightUniformsLib.js';
 import {inSpawn,SPAWN_SKIRT} from './level0-spawn117.js?v=148a';
-import {createPitBake133} from './level0-bake133-pit.js?v=133';
+import {createPitCycles} from './level0-pit-cycles.js?v=149';
 export function createLevel0World(T,renderer){
  RectAreaLightUniformsLib.init();
  const scene=new T.Scene();scene.userData.noAtmosphere=true;scene.userData.antialiasSamples=4;scene.userData.springVolume=createLevel0Occlusion94();scene.background=new T.Color(0x686752);scene.fog=new T.FogExp2(0x99977f,.016);
- const group=new T.Group();group.name='Level 0 · 阈界';scene.add(group);scene.add(createPitBake133(T));
+ const group=new T.Group();group.name='Level 0 · 阈界';scene.add(group);
  const field=createLevel0LightField(T,7*K),{mats,uniforms,ready}=createL0Materials(T,renderer,field.uniforms),assets=createLevel0DetailAssets(T),props={...createLevel0Props(T),...createKaneProps(T),...createFurniture93(T),...createFurniture94(T)},box=new T.BoxGeometry(1,1,1),plane=new T.PlaneGeometry(1,1),floorPlane=plane.clone().rotateX(-Math.PI/2),tmp=new T.Object3D();
+ const pitCycles=createPitCycles(T,mats,uniforms);
  const ceiling95=createCeiling95(T);Object.assign(props,createFurniture95(T,props));
  const manila=createManilaField96(T,renderer,scene);
  const atrium=createAtrium96(T,renderer,scene,mats,props,ceiling95);
@@ -79,13 +80,13 @@ export function createLevel0World(T,renderer){
  function generateMesh(c){if(c.renderPlan)return c.renderPlan;recording=[];
   const red=c.type==='red',wallM=red?[mats.red,mats.red,mats.red]:mats.wall,ground=red?mats.redFloor:mats.carpet;
   for(const w of SPAWN_SKIRT)if(w.x>=c.ox&&w.x<c.ox+K&&w.z>=c.oz&&w.z<c.oz+K)add(box,mats.spawnSkirt,w.x,w.y,w.z,w.w,w.h,w.d,w.ry||0);
-  const slopeParts=[];for(const f of c.floors){const ground=f.type==='red'?mats.redFloor:f.type==='spawn'?mats.spawnCarpet:mats.carpet;if(f.type==='blackout'&&l0Hash(Math.round(f.x/S),Math.round(f.z/S),71)>.94){add(depression,ground,f.x,0,f.z,1,1,1,0,false);add(floorPlane,mats.water,f.x,-.028,f.z,2.58,1,2.58,0,false,false);}else if([[-.5,-.5],[.5,.5],[0,0],[-.5,.5],[.5,-.5]].some(([a,b])=>Math.abs(l0FloorBase(f.x+a*f.w,f.z+b*f.d))>.001)){if(!c.slopeGeometry)slopeParts.push(floorGeometry(f));}else add(floorPlane,ground,f.x,0,f.z,f.w,1,f.d,0,false);}
+  const slopeParts=[];for(const f of c.floors){const ground=f.type==='red'?mats.redFloor:f.type==='spawn'?mats.spawnCarpet:mats.carpet;if(f.type==='blackout'&&l0Hash(Math.round(f.x/S),Math.round(f.z/S),71)>.94){add(depression,ground,f.x,0,f.z,1,1,1,0,false);add(floorPlane,mats.water,f.x,-.028,f.z,2.58,1,2.58,0,false,false);}else if([[-.5,-.5],[.5,.5],[0,0],[-.5,.5],[.5,-.5]].some(([a,b])=>Math.abs(l0FloorBase(f.x+a*f.w,f.z+b*f.d))>.001)){if(!c.slopeGeometry)slopeParts.push(floorGeometry(f));}else add(floorPlane,pitCycles.floorMaterial(f,c,ground),f.x,0,f.z,f.w,1,f.d,0,false);}
   if(slopeParts.length){c.slopeGeometry=mergeGeometries(slopeParts,false);slopeParts.forEach(g=>g.dispose());}if(c.slopeGeometry)add(c.slopeGeometry,mats.carpet,0,0,0,1,1,1,0,false);
   for(const w of [...c.walls,...c.pillars]){const base=w.y-w.h/2;add(wallBox,l0TypeAt(w.x,w.z)==='red'?mats.red:w.kind==='column'?mats.columnWall:mats.wall[w.mat||0],w.x,w.y,w.z,w.w,w.h,w.d,w.ry||0);if(base<.6&&w.mat!==5){if(!(w.id&&w.id.startsWith('spawn-wall-')))add(box,mats.trim,w.x,base+.045,w.z,w.w+.010,.09,w.d+.010,w.ry||0);if(!w.ry&&!w.id?.startsWith('spawn-wall-'))ao(w.x,w.z,w.w,w.d);}if(w.h<1.6&&base<.6&&w.mat!==5)add(wallBox,mats.railWood,w.x,base+w.h+.025,w.z,w.w+.058,.05,w.d+.058);}
   for(const p of c.portals)add(portalGeos[p.style],mats.wall[p.mat||0],p.x,p.spring,p.z,p.w,p.top-p.spring,p.d,p.rotation);
   for(const r of c.rails){const c0=Math.cos(r.rotation),s0=Math.sin(r.rotation),len=r.length,n=Math.ceil(len/.24);for(let i=0;i<=n;i++){const u=-len/2+i*len/n,x=r.x+u*c0,z=r.z-u*s0,base=(r.y||0)+l0FloorBase(x,z);add(railPost,mats.railWood,x,base+.26,z);if(i===0||i===n)add(wallBox,mats.railWood,x,base+.44,z,.105,.88,.105);if(i<n){const xx=r.x+(u+len/n)*c0,zz=r.z-(u+len/n)*s0,by=(r.y||0)+l0FloorBase(xx,zz),delta=new T.Vector3(xx-x,by-base,zz-z),q=new T.Quaternion().setFromUnitVectors(new T.Vector3(1,0,0),delta.clone().normalize());for(const[y,h,d]of[[.87,.068,.095],[.22,.05,.06]])emit({geo:wallBox,mat:mats.railWood,cast:true,receive:true,matrix:new T.Matrix4().compose(new T.Vector3((x+xx)/2,(base+by)/2+y,(z+zz)/2),q,new T.Vector3(delta.length()+.002,h,d))});}}}
   for(const a of c.arches){add(realArch,mats.pale,a.x,0,a.z,1,1,1,a.rotation);add(box,mats.pale,a.x,.455,a.z,.20,.91,a.w);add(box,mats.pale,a.x,2.505,a.z-a.w/2,.20,.41,.20);add(box,mats.trim,a.x,.04,a.z,.212,.08,a.w);ao(a.x,a.z,.20,a.w);}
-  for(const h of c.holes){const dep=8;add(box,mats.pitWall,h.x-h.w/2-.04,-dep/2,h.z,.08,dep,h.d);add(box,mats.pitWall,h.x+h.w/2+.04,-dep/2,h.z,.08,dep,h.d);add(box,mats.pitWall,h.x,-dep/2,h.z-h.d/2-.04,h.w,dep,.08);add(box,mats.pitWall,h.x,-dep/2,h.z+h.d/2+.04,h.w,dep,.08);add(floorPlane,mats.void,h.x,-dep,h.z,h.w,1,h.d,0,false,false);}
+  for(const h of c.holes)pitCycles.addHole(h,c.lights,add,floorPlane);
   // Recessed fixtures fit the acoustic tile lattice; rare cavities remove real ceiling panels.
   const damage=c.damage,lamps=c.lights,vents=c.details.filter(a=>a.kind<4);
   const spawnApertures=lamps.filter(l=>l.spawn).map(l=>({x:l.x,z:l.z,w:1.202,d:.602}));
@@ -190,5 +191,5 @@ export function createLevel0World(T,renderer){
   try{for(const cfg of[-1,0,1,2]){for(let i=0;i<3;i++)set(i,i===cfg);await renderer.compileAsync(scene,camera);}}finally{for(const[o,v]of save)o.visible=v;}
   await renderer.compileAsync(scene,camera);}
  function map(ctx,px,pz,cx,cy,scale,range){ctx.save();ctx.translate(cx,cy);for(let z=Math.floor((pz-range)/K);z<=Math.floor((pz+range)/K);z++)for(let x=Math.floor((px-range)/K);x<=Math.floor((px+range)/K);x++){const c=getChunk(x,z);for(const f of c.floors){ctx.fillStyle=f.type==='red'?'#774432':f.type==='blackout'?'#342f23':'#b1a374';ctx.fillRect((f.x-f.w/2-px)*scale,(f.z-f.d/2-pz)*scale,f.w*scale,f.d*scale);}ctx.fillStyle='#564d32';for(const w of [...c.walls,...c.pillars])ctx.fillRect((w.x-w.w/2-px)*scale,(w.z-w.d/2-pz)*scale,Math.max(w.w*scale,1),Math.max(w.d*scale,1));for(const f of c.furniture){if(f.mapFootprint){const q=f.mapFootprint;ctx.fillRect((q.x-q.w/2-px)*scale,(q.z-q.d/2-pz)*scale,q.w*scale,q.d*scale);continue;}ctx.save();ctx.translate((f.x-px)*scale,(f.z-pz)*scale);ctx.rotate(-(f.rotation||0));ctx.fillRect(-f.w*scale/2,-f.d*scale/2,f.w*scale,f.d*scale);ctx.restore();}for(const a of c.arches)ctx.fillRect((a.x-.1-px)*scale,(a.z-a.w/2-pz)*scale,Math.max(.2*scale,1),a.w*scale);ctx.fillStyle='#16150e';for(const h of c.holes)ctx.fillRect((h.x-h.w/2-px)*scale,(h.z-h.d/2-pz)*scale,h.w*scale,h.d*scale);}ctx.restore();if(Math.abs(px-302)<range+12&&Math.abs(pz-70)<range+15){ctx.save();ctx.translate(cx+(302-px)*scale,cy+(70-pz)*scale);atriumMap97(ctx,scale,activeFeet);ctx.restore();}manila.map(ctx,px,pz,cx,cy,scale);}
- return{scene,group,field,prewarm,ready:Promise.all([ready,manila.ready,atrium.ready]),manila,atrium,ensure,update,blocked,safe,pitAt,floorAt,supportAt,landingAt,headAt,map,getChunk,powerAt,nearestBreaker,toggleBreaker,circuits,get breakers(){return visibleBreakers},materials:mats,landmarks:L0_LANDMARKS,stats:()=>({chunks:chunks.size,batches:group.children.length,instances,rebuildCount,textureUnits:renderer.capabilities.maxTextures,estimatedSamplerPeak:12,breakers:visibleBreakers.length,offCircuits:circuits.size})};
+ return{scene,group,field,prewarm,ready:Promise.all([ready,manila.ready,atrium.ready,pitCycles.ready]),manila,atrium,ensure,update,blocked,safe,pitAt,floorAt,supportAt,landingAt,headAt,map,getChunk,powerAt,nearestBreaker,toggleBreaker,circuits,get breakers(){return visibleBreakers},materials:mats,landmarks:L0_LANDMARKS,stats:()=>({chunks:chunks.size,batches:group.children.length,instances,rebuildCount,textureUnits:renderer.capabilities.maxTextures,estimatedSamplerPeak:12,breakers:visibleBreakers.length,offCircuits:circuits.size})};
 }

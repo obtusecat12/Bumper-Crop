@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><body style="margin:0;background:#111"><script type="module">
+import * as T from '/vendor/three.module.min.js';
+import {createLevel0World} from '/level0-world.js';
+const v={fov:64,x:-59.4,y:1.77,z:4.9,yaw:0,pitch:-.50};
+import {createFlashlight117} from '/flashlight117.js';
+const renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setSize(640,480);renderer.setPixelRatio(1);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.91;document.body.append(renderer.domElement);
+const camera=new T.PerspectiveCamera(v.fov,4/3,.04,180);camera.rotation.order='YXZ';camera.position.set(v.x,v.y,v.z);camera.rotation.set(v.pitch,v.yaw,v.roll||0,'YXZ');
+const world=createLevel0World(T,renderer);await world.ready;world.update(0,v.x,v.z,v.yaw);await world.field.ready;
+// Allow the native asynchronous field to settle; the Cycles receivers are static.
+const torch=createFlashlight117(T);torch.setLevel(0);torch.prepare(world.scene,camera);
+const target=new T.WebGLRenderTarget(640,480,{type:T.HalfFloatType,depthBuffer:true});target.depthTexture=new T.DepthTexture(640,480,T.UnsignedIntType);target.samples=4;
+const screen=new T.Scene(),screenCamera=new T.Camera(),output=new T.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{map:{value:null}},vertexShader:'varying vec2 uv0;void main(){uv0=uv;gl_Position=vec4(position,1.);}',fragmentShader:'uniform sampler2D map;varying vec2 uv0;void main(){gl_FragColor=texture2D(map,uv0);\n#include <tonemapping_fragment>\n#include <colorspace_fragment>\n}'});screen.add(new T.Mesh(new T.PlaneGeometry(2,2),output));
+function draw(){world.update(.016,camera.position.x,camera.position.z,camera.rotation.y);torch.prepare(world.scene,camera);renderer.setRenderTarget(target);renderer.render(world.scene,camera);output.uniforms.map.value=world.scene.userData.springVolume.compose(renderer,target.texture,target.depthTexture,camera,640,480);renderer.setRenderTarget(null);renderer.render(screen,screenCamera);}
+for(let i=0;i<2;i++)draw();
+window.qa={ready:true,world,camera,renderer,draw,torch,view(name){const a=name==='atrium'?[302,1.77,82,0,-.65]:name==='pit'?[-59.4,1.77,15.8,0,-.30]:[-59.4,1.77,4.9,0,-.50];camera.position.set(...a.slice(0,3));camera.rotation.set(a[4],a[3],0,'YXZ');draw();draw();},turn(){camera.rotation.y-=.4;draw();},light(){torch.setEquipped(true);if(!torch.on)torch.toggle();torch.update(.4);draw();return {on:torch.on,intensity:torch.spot.intensity}},stats(){return world.stats()}};
+</script>

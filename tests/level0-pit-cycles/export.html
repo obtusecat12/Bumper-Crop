@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import * as T from '/vendor/three.module.min.js';
+import {createLevel0World} from '/level0-world.js';
+import {prepareSky133,keySky133,dumpBake133} from '/venue133-bake.js';
+import {ATRIUM_LEVELS97} from '/level0-atrium-plan97.js';
+const r=new T.WebGLRenderer(),w=createLevel0World(T,r);await w.ready;
+const root=w.atrium.root;root.visible=true;root.updateMatrixWorld(true);
+const p=prepareSky133([[root,1.6]]);await keySky133(p);
+window.dump=async()=>{const out=await dumpBake133(root,p.list);out.areas=[];
+for(let z=-14.1;z<14.4;z+=.6)for(let x=-11.1;x<11.4;x+=.6)if(Math.round((x+11.1)/.6)%6===2&&Math.round((z+14.1)/.6)%6===2)out.areas.push({p:[x+302,2.69,z+70],power:22,size:.536});
+for(const tier of ATRIUM_LEVELS97.slice(1,7))for(const l of tier.lamps)out.areas.push({p:[l.x+302,l.y-.018,l.z+70],power:20,size:.57});return out;};window.ready=true;
+</script>

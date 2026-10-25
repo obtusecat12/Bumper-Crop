@@ -27,11 +27,12 @@ in vec3 position;out vec2 vUv;
 void main(){vUv=position.xy*.5+.5;gl_Position=vec4(position,1.0);}`;
 export const DISPLAY_FRAGMENT = `precision highp float;
 precision highp int;
-uniform sampler2D picture;uniform int filterMode;uniform float frameHeight;
+uniform sampler2D picture;uniform int filterMode;uniform float frameHeight;uniform float rewindAmount,rewindClock;
 in vec2 vUv;out vec4 outColor;
 const int dither[16]=int[16](-4,0,-3,1,2,-2,3,-1,-3,1,-4,0,3,-1,2,-2);
 void main(){
  vec2 uv=(filterMode==0||filterMode==2)?vec2(vUv.x,1.0-vUv.y):vUv;
+ if(rewindAmount>0.){float band=step(.86,fract(uv.y*7.+rewindClock*2.));uv.x+=rewindAmount*(sin(uv.y*250.+rewindClock*31.)*.003+band*sin(rewindClock*19.)*.055);uv.x=clamp(uv.x,0.,1.);}
  // All processing is internal 720p or below; output enlargement is nearest.
  // The scene and HUD share one source frame; no sharp layer is added afterward.
  vec3 c=texture(picture,uv).rgb;
@@ -51,13 +52,14 @@ void main(){
   c=clamp(floor((floor(c*255.0+.5)+float(dither[y*4+x]))/8.0),0.0,31.0)/31.0;
  }
  // Mode 0 is ONLY the official ntsc-rs output. No crisp residual or overlay.
+ if(rewindAmount>0.){float line=step(.87,fract(vUv.y*6.-rewindClock*1.7));float noise=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233))+rewindClock*113.)*43758.5453);c=mix(c,vec3(dot(c,vec3(.299,.587,.114))),rewindAmount*.35);c=mix(c,vec3(noise),line*rewindAmount*.5);c*=1.-.08*rewindAmount*step(.5,fract(gl_FragCoord.y*.5));}
  outColor=vec4(c,1.0);
 }`;
 export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  const readback=createFrameReadback(renderer.getContext());
  const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute([-1,-1,0,3,-1,0,-1,3,0],3));
  const material=new T.RawShaderMaterial({glslVersion:T.GLSL3,vertexShader:DISPLAY_VERTEX,fragmentShader:DISPLAY_FRAGMENT,
-  uniforms:{picture:{value:null},filterMode:{value:0},frameHeight:{value:1080}},depthTest:false,depthWrite:false,toneMapped:false,blending:T.NoBlending});
+  uniforms:{picture:{value:null},filterMode:{value:0},frameHeight:{value:1080},rewindAmount:{value:0},rewindClock:{value:0}},depthTest:false,depthWrite:false,toneMapped:false,blending:T.NoBlending});
  const screen=new T.Scene(),camera=new T.Camera(),quad=new T.Mesh(geometry,material);quad.frustumCulled=false;screen.add(quad);
  const uiMaterial=new T.RawShaderMaterial({glslVersion:T.GLSL3,vertexShader:DISPLAY_VERTEX,fragmentShader:`precision highp float;uniform sampler2D picture;in vec2 vUv;out vec4 outColor;void main(){outColor=texture(picture,vUv);}`,
   uniforms:{picture:{value:null}},transparent:true,premultipliedAlpha:false,depthTest:false,depthWrite:false,toneMapped:false});
@@ -159,5 +161,6 @@ export function createDisplayFilter(renderer,{onError=()=>{}}={}){
  }
  function contextLost(){scenePipeline?.contextLost();lensEffect?.contextLost();epoch++;readback.cancel(true);if(readJob){readJob.slot.busy=false;readJob=null;}width=height=outputWidth=outputHeight=0;compositor?.invalidate();}
  function dispose(){scenePipeline?.dispose();lensEffect?.dispose();disposed=true;epoch++;readback.cancel(renderer.getContext().isContextLost());stopWorkers();source?.dispose();texture?.dispose();internal?.dispose();uiTexture?.dispose();geometry.dispose();material.dispose();uiMaterial.dispose();compositor?.dispose();}
- return{configure,render,settleScene,contextLost,dispose,setCompositor,setLensEffect,setScenePipeline,setOverlay,values};
+ function setRewind(amount,clock){material.uniforms.rewindAmount.value=amount;material.uniforms.rewindClock.value=clock;}
+ return{setRewind,configure,render,settleScene,contextLost,dispose,setCompositor,setLensEffect,setScenePipeline,setOverlay,values};
 }
