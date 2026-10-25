@@ -139,3 +139,10 @@
 :root[data-ui-level="11"] .gm-iw-links a{color:#0000cc;text-decoration:underline}
 :root[data-ui-level="11"] .gm-iw-tail{position:absolute;left:34px;bottom:0;width:30px;height:21px;background:#ababab;clip-path:polygon(0 0,100% 0,0 100%)}
 :root[data-ui-level="11"] .gm-iw-tail:after{content:'';position:absolute;left:1px;top:-1px;width:27px;height:19px;background:#fff;clip-path:polygon(0 0,100% 0,0 100%)}
+/* V148 E4 place list (2009 search results) */
+:root[data-ui-level="11"] .gm148-head{margin:10px 0 6px;padding:4px 6px;background:#e5ecf9;font-size:12px;border-top:1px solid #3366cc}
+:root[data-ui-level="11"] .gm148-r{cursor:pointer;padding:6px 4px 8px}
+:root[data-ui-level="11"] .gm148-r:hover,:root[data-ui-level="11"] .gm148-r.on{background:#fff8d6}
+:root[data-ui-level="11"] .gm148-r .gm-res-title{color:#0000cc;text-decoration:underline;font-size:13px}
+:root[data-ui-level="11"] .gm148-zh{font-weight:bold;font-size:12px}
+:root[data-ui-level="11"] .gm148-desc{color:#444;font-size:12px}

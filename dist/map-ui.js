@@ -9,7 +9,8 @@ import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan} from './urban-layout.j
 import {BUILDING_TYPES} from './urban-buildings.js?v=132st';
 import {paintCompass} from './retro-instruments.js?v=60';
 import {createMapAtlas} from './map-atlas.js?v=99';
-import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=127';
+import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=148a';
+import {click148,hover148,setFocus148} from './map148-poi.js?v=148a'; // V148 E4
 import {mountL10Dash,paintBrassCompass} from './l10-dash.js?v=106';
 import {mountL1Dash,paintL1Nav,l1MapPlayer,L1_MAP_PAL,L1_LEGEND} from './l1-dash.js?v=142b';
 import {paintWin98Compass,blueprintize,cadUCS,cadCursor,cadPlayer,mountCadChrome,mountTaskManager} from './win98-ui.js?v=102b';
@@ -98,9 +99,10 @@ export function createNavigationMap({host,seed,onOpen,onClose,onTeleport,parts})
  canvas.addEventListener('pointerdown',e=>{if(busy||e.button!==0)return;e.preventDefault();canvas.focus();const p=relative(e);pointer={id:e.pointerId,start:p,last:p,moved:false};canvas.setPointerCapture(e.pointerId);});
  canvas.addEventListener('pointermove',e=>{if(busy)return;const p=relative(e);hover=p;keyboardTarget=false;
   if(pointer?.id===e.pointerId){if(Math.hypot(p.x-pointer.start.x,p.z-pointer.start.z)>6)pointer.moved=true;if(pointer.moved){center=mapPoint(center,(pointer.last.x-p.x)/zoom,(pointer.last.z-p.z)/zoom);dirty=true;}pointer.last=p;}
-  setStatus(describe(cursorPoint(p)));dirty=true;
+  const hp=level===11&&hover148(p.x,p.z);canvas.style.cursor=hp?'pointer':'';setStatus(hp?`${hp.letter} · ${hp.name} · ${hp.zh}`:describe(cursorPoint(p)));dirty=true;
  });
- canvas.addEventListener('pointerup',e=>{if(pointer?.id!==e.pointerId)return;const click=!pointer.moved,p=relative(e);pointer=null;if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);if(click)teleport(cursorPoint(p));});
+ canvas.addEventListener('pointerup',e=>{if(pointer?.id!==e.pointerId)return;const click=!pointer.moved,p=relative(e);pointer=null;if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);if(click&&level===11){const h=click148(p.x,p.z);if(h){dirty=true;return;}}if(click)teleport(cursorPoint(p));});
+ setFocus148((x,z)=>{const q=cityToWorld(x,z);center=mapPoint({cx:0n,cz:0n,x:0,z:0},q.x,q.z);hover=null;tiles.cancelPending?.();dirty=true;});
  canvas.addEventListener('pointercancel',()=>pointer=null);
  canvas.addEventListener('lostpointercapture',()=>pointer=null);
  canvas.addEventListener('pointerleave',()=>{if(!pointer){hover=null;dirty=true;}});

@@ -6,9 +6,10 @@
 import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan,cityDistrict} from './urban-layout.js?v=return-1';
 import {BUILDING_TYPES} from './urban-buildings.js?v=132st';
 import {exitPoint} from './exit-route.js?v=60';
-import {paintSatellite} from './gmaps-satellite.js?v=131';
+import {paintSatellite,setSatInvalidate148} from './gmaps-satellite.js?v=148a';
 import {paintCanalMap} from './map131-canal.js?v=131';
 import {gmCtlHTML} from './gm-ctl132.js?v=132';
+import {in148,paintFoot148,paintPoi148,sideHTML148,select148,onSelect148} from './map148-poi.js?v=148a'; // V148 E4
 
 const FONT='Arial, Helvetica, sans-serif',AQUA="'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 // Classic (pre-2013) tile palette. Satellite/Hybrid are a dark aerial look.
@@ -30,7 +31,7 @@ export function gmCityPaint(context,c,w,h,scale,shapes=[],opts={}){
  // V102: full-map Satellite/Hybrid is a fake low-res aerial photo (gmaps-satellite.js);
  // the minimap keeps the cheap flat palette because it repaints while walking.
  const photo=opts.labels&&(m==='satellite'||m==='hybrid');
- if(photo){paintSatellite(context,ox,oz,w,h,scale,shapes);if(m==='satellite')return 0;}
+ if(photo){paintSatellite(context,ox,oz,w,h,scale,shapes);if(m==='satellite'){const sxy=(x,z)=>{const p=cityToWorld(x,z);return[w/2+(p.x-ox)*scale,h/2+(p.z-oz)*scale];};paintFoot148(context,sxy,scale,P,true);paintPoi148(context,sxy,scale,w,h,true);return 0;}}
  const xy=p=>[w/2+(p.x-ox)*scale,h/2+(p.z-oz)*scale];
  const center=worldToCity(ox,oz),bx=Math.floor(center.x/CITY_BLOCK),bz=Math.floor(center.z/CITY_BLOCK),r=Math.ceil(Math.max(w,h)/scale/CITY_BLOCK*.72)+1;
  if(!photo){context.fillStyle=P.land;context.fillRect(0,0,w,h);}
@@ -55,9 +56,10 @@ export function gmCityPaint(context,c,w,h,scale,shapes=[],opts={}){
  // Building footprints (light fill, darker 1px edge) once zoomed in.
  if(scale>.45&&!photo){
   const foot=(q,x,z,ry,bw,bd,toW,fill)=>{const pts=[];for(let k=0;k<4;k++){const u=(k===0||k===3?-1:1)*bw/2,v=(k<2?-1:1)*bd/2;pts.push(xy(toW(x+Math.cos(ry)*u+Math.sin(ry)*v,z-Math.sin(ry)*u+Math.cos(ry)*v)));}quad(pts,fill,scale>.6?P.bldEdge:null);};
-  for(const q of shapes)foot(q,q.x,q.z,q.ry,q.w,q.d,(x,z)=>({x,z}),P.bld);
-  for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++)for(const b of cityBlockPlan(ix,iz,BUILDING_TYPES).buildings)foot(b,b.x,b.z,b.ry,b.w,b.d,cityToWorld,b.floors>7?P.bldTall:P.bld);
+  for(const q of shapes){const cc=worldToCity(q.x,q.z);if(!in148(cc.x,cc.z))foot(q,q.x,q.z,q.ry,q.w,q.d,(x,z)=>({x,z}),P.bld);}
+  for(let iz=bz-r;iz<=bz+r;iz++)for(let ix=bx-r;ix<=bx+r;ix++)for(const b of cityBlockPlan(ix,iz,BUILDING_TYPES).buildings)if(!in148(b.x,b.z))foot(b,b.x,b.z,b.ry,b.w,b.d,cityToWorld,b.floors>7?P.bldTall:P.bld);
  }
+ paintFoot148(context,toS,scale,P,photo); // V148 E4: real footprints of the capital region + place areas
  paintCanalMap(context,toS,{...cv,stage:'icons'});if(labels)paintCanalMap(context,toS,{...cv,stage:'labels'});
  if(labels){
   context.save();context.font=`bold 11px ${FONT}`;context.textAlign='center';context.textBaseline='middle';context.lineJoin='round';
@@ -69,6 +71,7 @@ export function gmCityPaint(context,c,w,h,scale,shapes=[],opts={}){
   }
   context.restore();
  }
+ if(opts.labels)paintPoi148(context,toS,scale,w,h,photo); // V148 E4 markers + info window
  return 0;
 }
 
@@ -149,7 +152,7 @@ export function paintSafariCompass(c,map,yaw,bearing,opts={}){
 // ---------- Full-map chrome ----------
 const LOGO='<span class="gm-wordmark" aria-label="Goggle"><i style="color:#1c4fd6">G</i><i style="color:#d8291d">o</i><i style="color:#f1b51c">g</i><i style="color:#1c4fd6">g</i><i style="color:#16943a">l</i><i style="color:#d8291d">e</i></span>';
 export function mountGmapsChrome(modal,{invalidate:inv}={}){
- if(inv)invalidate=inv;
+ if(inv)invalidate=inv;setSatInvalidate148(()=>invalidate());
  const panel=modal.querySelector('.map-panel'),surface=modal.querySelector('.map-surface'),canvas=modal.querySelector('.map-canvas');
  panel.insertAdjacentHTML('afterbegin',`<div class="gm-top"><nav><a>Web</a><a>Images</a><a>Videos</a><b>Maps</b><a>News</a><a>Shopping</a><a>Gmail</a><a>more ▾</a></nav><div class="gm-top-right"><a>Help</a> | <a class="gm-close" href="#" role="button">Close map (M)</a></div></div>
  <div class="gm-head"><div class="gm-brand">${LOGO}<span class="gm-maps">maps</span></div><div class="gm-search"><div class="gm-search-row"><input type="text" value="Level 11, The Endless City" aria-label="Search Maps" readonly><button type="button" class="gm-btn" data-gm="search">Search Maps</button><a class="gm-small-link">Show search options</a></div><small>Find businesses, addresses and places of interest.</small></div></div>
@@ -157,12 +160,14 @@ export function mountGmapsChrome(modal,{invalidate:inv}={}){
  <aside class="gm-side"><div class="gm-result"><span class="gm-pin-a">A</span><div><a class="gm-res-title">Level 11 · The Endless City</a><div class="gm-addr">无垠城市 · Infinite street grid</div><div class="gm-green">level11.backrooms.meg - Heading <span class="gm-heading">N</span></div><div class="gm-links"><a>Directions</a> - <a>Search nearby</a> - <a>Save to…</a> - <a>more ▾</a></div></div></div>
  <div class="gm-hint"><b>Tips</b><br>Drag the map to pan · scroll to zoom<br>Click any street to travel there</div>
  <div class="gm-legend"><b>Legend</b><span><i style="background:#f9b235;border-color:#d48a2a"></i>Boulevard / exit route</span><span><i style="background:#ffe168;border-color:#e3b24a"></i>Arterial (every 4th street)</span><span><i style="background:#fff;border-color:#c9c2b3"></i>Street</span><span><i style="background:#c8deb5;border-color:#b5d29f"></i>Civic park / campus</span><span><i style="background:#e8e4dc;border-color:#cbc4b6"></i>Building</span></div>
- <p class="gm-put">Put <a>your business on Goggle Maps</a></p></aside>`);
+ <div class="gm148-list">${sideHTML148()}</div><p class="gm-put">Put <a>your business on Goggle Maps</a></p></aside>`);
  surface.insertAdjacentHTML('beforeend',`${gmCtlHTML()}
  <div class="gm-types" role="group" aria-label="Map type"><button data-type="map" class="on">Map</button><button data-type="satellite">Satellite</button><button data-type="hybrid">Hybrid</button></div>
  <div class="gm-foot"><span class="gm-logo-small">${LOGO}</span><div class="gm-scale"><span class="gm-ft">200 ft</span><span class="gm-m">50 m</span><i class="gm-bar-ft"></i><i class="gm-bar-m"></i></div></div>
  <div class="gm-copy">©2009 Goggle - Map data ©2009 Tele Atlas, M.E.G. - <a>Terms of Use</a></div>`);
  const q=s=>modal.querySelector(s),press=a=>q(`[data-map-action="${a}"]`)?.click();
+ modal.querySelectorAll('[data-poi]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();select148(el.dataset.poi);invalidate();}));
+ onSelect148(p=>{modal.querySelectorAll('[data-poi]').forEach(el=>el.classList.toggle('on',!!p&&el.dataset.poi===p.id));if(p)modal.querySelector(`[data-poi="${p.id}"]`)?.scrollIntoView({block:'nearest'});});
  q('.gm-close').addEventListener('click',e=>{e.preventDefault();q('.map-close')?.click();});
  modal.querySelectorAll('[data-pan]').forEach(b=>b.addEventListener('click',()=>{for(let i=0;i<4;i++)canvas.dispatchEvent(new KeyboardEvent('keydown',{code:b.dataset.pan,bubbles:false}));}));
  q('[data-gm="center"]').addEventListener('click',()=>press('center'));

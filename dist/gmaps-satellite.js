@@ -8,6 +8,7 @@ import {CITY_BLOCK,cityToWorld,worldToCity,cityBlockPlan,cityDistrict} from './u
 import {BUILDING_TYPES} from './urban-buildings.js?v=132st';
 import {exitPoint} from './exit-route.js?v=60';
 import {paintCanalSat,paintSubwaySat,inCanalWater} from './map131-canal.js?v=131';
+import {sat148,satDraw148} from './map148-poi.js?v=148a'; // V148 E4 fake aerial of the capital region
 
 const O=cityToWorld(0,0),E=cityToWorld(1,0),CA=E.x-O.x,SA=O.z-E.z;
 const SUN=[-.6,-.8],LEAN=[.18,-.98],SHADOW_K=.55,LEAN_K=.045;
@@ -40,11 +41,12 @@ function roofStyle(b,u){
  return{kind:fam===ROOF.red&&u>.72?'pitched':'flat',col:pick(fam,u*7%1),fac:'#86796a'};
 }
 
-let cache={key:'',cv:null},shadowCv=null;
+let cache={key:'',cv:null},shadowCv=null,satInvalidate=()=>{};
+export function setSatInvalidate148(fn){satInvalidate=fn;}
 export function paintSatellite(target,ox,oz,w,h,scale,shapes=[]){
  const ds=Math.max(2.5,.6*scale),pm=ds/scale,S=32*pm,left=ox-w/2/scale,top=oz-h/2/scale;
  const X0=Math.floor(left/S)*S-S,Z0=Math.floor(top/S)*S-S,LW=Math.ceil((w/ds+96)/16)*16,LH=Math.ceil((h/ds+96)/16)*16;
- const key=[Math.round(X0/pm),Math.round(Z0/pm),pm.toFixed(5),LW,LH,shapes.length].join('|');
+ const key=[Math.round(X0/pm),Math.round(Z0/pm),pm.toFixed(5),LW,LH,shapes.length,sat148(()=>{cache.key='';satInvalidate();})?1:0].join('|');
  if(cache.key!==key){
   const cv=cache.cv||document.createElement('canvas');if(cv.width!==LW||cv.height!==LH){cv.width=LW;cv.height=LH;}
   const t0=performance.now();render(cv.getContext('2d',{willReadFrequently:true}),X0,Z0,pm,LW,LH,shapes);cache={key,cv,ms:performance.now()-t0};
@@ -182,6 +184,7 @@ function render(g,X0,Z0,pm,LW,LH,shapes){
  // ---- tree canopies
  setM(g,M);
  for(const t of trees){const[x,z,rr]=t,k=hash(x*10|0,z*10|0,1);g.fillStyle=k<.3?'#3b4d2c':k<.7?'#425433':'#4d5b35';g.beginPath();g.arc(x,z,rr,0,7);g.fill();if(mid){g.fillStyle=k<.5?'#56683d':'#5f7044';g.beginPath();g.arc(x-SUN[0]*rr*.3,z-SUN[1]*rr*.3,rr*.55,0,7);g.fill();}}
+ setM(g,M);satDraw148(g); // V148 E4
  g.setTransform(1,0,0,1,0,0);
  const t1=performance.now();post(g,LW,LH,Math.round(X0/pm),Math.round(Z0/pm));if(typeof window!=='undefined')window.__gmSatPost=performance.now()-t1;
 }
