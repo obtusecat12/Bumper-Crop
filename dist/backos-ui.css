@@ -38,6 +38,14 @@
 #menu .bos-ctl i{display:block;width:16px;height:14px;font:400 12px/14px var(--rx-font-sm)!important;font-style:normal;text-align:center;letter-spacing:0;color:#120f06;background:#e6c983;
  box-shadow:inset 1px 1px 0 #fff3cf,inset -1px -1px 0 #5a4416}
 #menu .bos-ctl i:last-child{margin-left:2px}
+/* V148 E3: thin, crisp title bar — the bar inherited #menu's 1px black outline text-shadow, which smeared the dark text into a bold blob */
+#menu .bos-bar,#menu .bos-bar *{text-shadow:none!important;-webkit-text-stroke:0!important;font-synthesis:none}
+#menu .bos-bar span{font:400 12px/16px Vonwaon12,'Courier New',monospace!important;letter-spacing:.14em;color:#1c1608;-webkit-font-smoothing:none}
+#menu .bos-bar small{color:#3a2d0e;opacity:1;letter-spacing:.1em}
+#menu .bos-ctl i{font-size:0!important;color:transparent;background-repeat:no-repeat;background-position:0 0}
+#menu .bos-ctl i:nth-child(1){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='14' shape-rendering='crispEdges'%3E%3Crect x='4' y='9' width='6' height='2' fill='%23120f06'/%3E%3C/svg%3E"),linear-gradient(#e6c983,#e6c983)}
+#menu .bos-ctl i:nth-child(2){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='14' shape-rendering='crispEdges'%3E%3Cpath d='M3 2h9v9H3z M4 4v6h7V4z' fill='%23120f06' fill-rule='evenodd'/%3E%3C/svg%3E"),linear-gradient(#e6c983,#e6c983)}
+#menu .bos-ctl i:nth-child(3){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='14' shape-rendering='crispEdges'%3E%3Cpath d='M4 3h2v1h1v1h1V4h1V3h2v1h-1v1H9v1H8v1h1v1h1v1h1v1H9V9H8V8H7v1H6v1H4V9h1V8h1V7h1V6H6V5H5V4H4z' fill='%23120f06'/%3E%3C/svg%3E"),linear-gradient(#e6c983,#e6c983)}
 #menu .bos-win .menu{padding:2px 4px!important;gap:0!important;align-items:stretch!important;width:auto!important;max-width:none!important}
 
 /* terminal-menu selection: inverted gold bar, dotted focus rect on hover */
