@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><body style="margin:0;background:#111"><script type="module">
+import * as T from '/vendor/three.module.min.js';
+import {createLevel0World} from '/level0-world.js';
+import {SPAWN_VIEW as v} from '/level0-spawn117.js';
+import {createFlashlight117} from '/flashlight117.js';
+const renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setSize(640,480);renderer.setPixelRatio(1);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.91;document.body.append(renderer.domElement);
+const camera=new T.PerspectiveCamera(v.fov,4/3,.04,180);camera.rotation.order='YXZ';camera.position.set(v.x,v.y,v.z);camera.rotation.set(v.pitch,v.yaw,v.roll||0,'YXZ');
+const h=1000,w=h*4/3,fh=h*(1+2*Math.abs(v.shiftY));camera.fov=2*Math.atan(Math.tan(v.fov*Math.PI/360)*fh/h)*180/Math.PI;camera.aspect=w/fh;camera.setViewOffset(w,fh,0,2*h*v.shiftY,w,h);
+const world=createLevel0World(T,renderer);await world.ready;world.update(0,v.x,v.z,v.yaw);await world.field.ready;
+// Allow the native asynchronous field to settle; the Cycles receivers are static.
+const torch=createFlashlight117(T);torch.setLevel(0);torch.prepare(world.scene,camera);
+function draw(){world.update(.016,camera.position.x,camera.position.z,camera.rotation.y);torch.prepare(world.scene,camera);renderer.render(world.scene,camera);}
+for(let i=0;i<2;i++)draw();
+window.qa={ready:true,world,camera,renderer,draw,torch,turn(){camera.rotation.y-=.4;draw();},light(){torch.setEquipped(true);if(!torch.on)torch.toggle();torch.update(.4);draw();return {on:torch.on,intensity:torch.spot.intensity}},stats(){return world.stats()}};
+</script>
