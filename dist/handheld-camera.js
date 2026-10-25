@@ -94,7 +94,7 @@ export class HandheldCameraRig {
   this.heelRoll.velocity+=side*.16*strength;
  }
  update(dt,input){
-  const {x,z,yaw,pitch,eyeY,jump=0,moved=0,dx=0,dz=0,grounded=true,running=false,crouch=false,stamina=100,landingSpeed=0,enabled=true,locked=false}=input;
+  const {x,z,yaw,pitch,eyeY,jump=0,moved=0,dx=0,dz=0,grounded=true,running=false,crouch=false,sneak=false,stamina=100,landingSpeed=0,enabled=true,locked=false}=input;
   if(!this.initialized)this.reset({x,z,yaw,pitch,eyeY,jump});
   dt=clamp(dt,0,.1);const result=this.output;result.contacts=0;result.landing=landingSpeed>0;
   if(locked){this.reset({x,z,yaw,pitch,eyeY,jump});return result;}
@@ -107,9 +107,9 @@ export class HandheldCameraRig {
   if(Math.abs(this.pitch.position)>=1.4&&this.pitch.position*this.pitch.velocity>0)this.pitch.velocity=0;
   const eye=this.height.advance(dt,eyeY,24,1);
   const speed=moved/dt,walking=grounded&&speed>.08&&!landingSpeed;
-  const activity=walking?clamp(speed/2.6,0,1)*(crouch?.52:running?1.32:1):0;
+  const activity=walking?clamp(speed/2.6,0,1)*(sneak?.25:crouch?.52:running?1.32:1):0;
   const gain=clamp(this.gain.advance(dt,enabled?activity:0,18,1),0,1.4);
-  const strideLength=crouch?.76:running?1.72:1.34;
+  const strideLength=sneak?.9:crouch?.76:running?1.72:1.34;
   const oldPhase=this.phase,advance=walking?Math.PI*moved/strideLength:0;
   if(landingSpeed){
    this.phase=0;
@@ -126,7 +126,7 @@ export class HandheldCameraRig {
     if(end<boundary)end=boundary;
     const fraction=clamp((boundary-oldPhase)/advance,0,1),duration=(fraction-lastFraction)*dt;
     this.advanceImpacts(duration);remaining-=duration;lastFraction=fraction;
-    result.contacts++;if(enabled)this.strike((Math.round(boundary/Math.PI)&1)?-1:1,(running?1.32:1)*(crouch?.55:1)*clamp(speed/1.5,.2,1));
+    result.contacts++;if(enabled)this.strike((Math.round(boundary/Math.PI)&1)?-1:1,(running?1.32:1)*(sneak?.2:crouch?.55:1)*clamp(speed/1.5,.2,1));
     boundary+=Math.PI;
    }
    this.phase=end%TAU;

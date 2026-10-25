@@ -9,6 +9,7 @@ export const ACTIONS=[
  {id:'right',name:'右移',def:['KeyD','ArrowRight'],hold:'KeyD'},
  {id:'sprint',name:'冲刺（按住）',def:['ShiftLeft','ShiftRight'],hold:'ShiftLeft'},
  {id:'crouch',name:'蹲下（按住）',def:['KeyC',''],hold:'KeyC'},
+ {id:'sneak',name:'潜行（按住）',def:['ControlLeft','ControlRight'],hold:'ControlLeft'},
  {id:'jump',name:'跳跃',def:['Space','']},
  {id:'interact',name:'交互 / 拾取 / 开箱（长按整扎拿）',def:['KeyE','']},
  {id:'flashlight',name:'手电筒 开 / 关',def:['KeyF','']},
