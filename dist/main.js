@@ -1,4 +1,4 @@
-import {MOVEMENT150 as MOVE150,JumpController150,movementStance150} from './player-movement150.js?v=150m';
+import {MOVEMENT150 as MOVE150,JumpController150,movementStance150} from './player-movement150.js?v=150s1';
 import {createPitRewind} from './level0-pit-rewind.js?v=149';
 import {inManila,nearManila} from './manila-plan.js';
 import {keys131 as K131} from './keys131.js?v=150m';
@@ -104,8 +104,8 @@ import {createNavigationMap} from './map-ui.js?v=150c';
 import {drawAsciiTitle} from './ascii-title.js?v=116';
 import {enhanceDeveloperPanel} from './dev-ui.js?v=117';
 import {initBackOS} from './backos-ui.js?v=101'; // V101 backOS
-import {createInventory117} from './inventory117.js?v=132b';import {createL1Loot124} from './l1loot124-main.js?v=132b';import {createPerf131} from './perf131.js?v=131';import {createFlashlight117} from './flashlight117.js?v=134';import {createIntro120} from './intro120.js?v=120';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=148a'; // V117 shared inventory
-import {createLevel1World} from './level1-world.js?v=117'; // V107 Level 1
+import {createInventory117} from './inventory117.js?v=132b';import {createL1Loot124} from './l1loot124-main.js?v=150s1';import {createPerf131} from './perf131.js?v=131';import {createFlashlight117} from './flashlight117.js?v=150s1';import {createIntro120} from './intro120.js?v=120';import {SPAWN_LIGHTS,SPAWN_HOLES} from './level0-spawn117.js?v=148a'; // V117 shared inventory
+import {createLevel1World} from './level1-world.js?v=150s1'; // V107 Level 1
 
 await Promise.race([Promise.all(['16px Vonwaon16','12px Vonwaon12'].map(f=>document.fonts.load(f,'丰裕LEVEL'))).catch(()=>{}),new Promise(r=>setTimeout(r,3000))]);
 const $=s=>document.querySelector(s),game=$('#game');
@@ -185,7 +185,7 @@ const displayFilter=createDisplayFilter(renderer,{onError:()=>{settings.filter='
 // V117 flashlight: rides the camera into whichever scene is rendered this frame
 const flashlight=createFlashlight117(T),intro=createIntro120(T);globalThis.__bcIntro=intro;globalThis.__bcFlashlight=flashlight;displayFilter.setOverlay?.(flashlight.overlay);{const r0=displayFilter.render.bind(displayFilter);let lt=performance.now();displayFilter.render=(sc,cam,...rest)=>{const now=performance.now(),dt=Math.min(.1,(now-lt)/1000);lt=now;
  if(cam&&intro.active){intro.apply(cam,dt);if(intro.scene)sc=intro.scene;}flashlight.setEquipped(playing&&!intro.active&&!referenceView&&inventory.selected()==='flashlight');flashlight.setLevel(state.level);const sp=Math.hypot(state.velocity.x,state.velocity.z);flashlight.update(dt,{moving:Math.min(1,sp/2),running:sp>2.6,yaw:state.yaw,pitch:state.pitch,step:state.distance*.75});
- if(sc&&cam){flashlight.prepare(sc,cam);globalThis.__bcLast={sc,cam,T};}if(state.level===1&&oneWorld?.setFlash){const b=flashlight.beam;oneWorld.setFlash(b.p,b.d,b.i*7,b.cos);}return r0(sc,cam,...rest);};}
+ if(sc&&cam){flashlight.prepare(sc,cam,renderer);globalThis.__bcLast={sc,cam,T};}if(state.level===1&&oneWorld?.setFlash){const b=flashlight.beam;oneWorld.setFlash(b.p,b.d,b.i*14,b.cos,b.shadow);}try{return r0(sc,cam,...rest);}finally{flashlight.finishShadowPass();}};}
 const scene=new T.Scene();scene.matrixAutoUpdate=false;scene.background=new T.Color('#acb6b1');scene.fog=new T.Fog('#acb6b1',60,225);
 const skyFill=new T.HemisphereLight('#c9d2d4','#6b6042',1.4);scene.add(skyFill);
 // A stable local light avoids shader recompilation as the shelter streams.
@@ -371,6 +371,9 @@ function nearestOneSupply(){let best=null,dist=1.7;for(const p of oneSupplies){c
 function pickupOne(){const p=nearestOneSupply();if(!p||collected.has(p.id))return false;const wp=p.mesh.position.clone();waterInspection.begin(p.variant,wp,camera);waterInventory.push(p.variant);state.bottles=waterInventory.length;collected.add(p.id);releaseAlmondBottle(p.mesh);oneSupplies=oneSupplies.filter(q=>q!==p);audio.chime();toast('已拾取杏仁水 · '+p.note);updateHUD();return true;}
 function stance150(outdoor=false){
  const m=movementStance150(keys,state,touchRun,outdoor);
+ if(state.level===1&&oneWorld&&zeroFall+m.eye+.08>oneWorld.headAt(state.x,state.z)){
+  m.crouch=true;m.running=false;m.eye=MOVE150.crouchEye;m.speed=Math.min(m.speed,MOVE150.crouchSpeed);m.noise=Math.min(m.noise,.35);
+ }
  if(state.level===0&&state.y-zeroFall<1.65){
   const h=zeroWorld.headAt(state.x,state.z,zeroFall,zeroFall+m.eye+.10);
   if(h<zeroFall+m.eye+.08||zeroWorld.blocked(state.x,state.z,.25,zeroFall,m.eye+.08)){
@@ -379,13 +382,14 @@ function stance150(outdoor=false){
  }
  return m;
 }
+function bodyHeight150(stance){return Math.max(stance.eye,cameraRig.output.eyeHeight??stance.eye)+.08;}
 function jumpAllowed150(){return playing&&!waterInspection.active&&!inventory.open&&!intro.active;}
 function animateOne(now,dt,rawDt){
  let moved=0,dx=0,dz=0,landingSpeed=0;const stance=stance150(),{crouch,sneak,running}=stance;
- if(playing){state.elapsed+=dt;let sx=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+joy.x,sz=Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp'))+joy.z;const len=Math.hypot(sx,sz);if(len>1){sx/=len;sz/=len;}if(waterInspection.active||inventory.open||intro.active)sx=sz=0;const run=running&&Math.hypot(sx,sz)>.1,speed=stance.speed;const vx=(Math.cos(state.yaw)*sx+Math.sin(state.yaw)*sz)*speed,vz=(-Math.sin(state.yaw)*sx+Math.cos(state.yaw)*sz)*speed;state.velocity.x=T.MathUtils.lerp(state.velocity.x,vx,1-Math.exp(-dt*11));state.velocity.z=T.MathUtils.lerp(state.velocity.z,vz,1-Math.exp(-dt*11));const ox=state.x,oz=state.z,nx=ox+state.velocity.x*dt,nz=oz+state.velocity.z*dt;if(!oneWorld.blocked(nx,oz,.25))state.x=nx;if(!oneWorld.blocked(state.x,nz,.25))state.z=nz;dx=state.x-ox;dz=state.z-oz;moved=Math.hypot(dx,dz);state.distance+=moved;state.stamina=T.MathUtils.clamp(state.stamina+dt*(run&&len>.1?-5:7),0,100);state.hydration=Math.max(0,state.hydration-dt*.008);state.sanity=Math.max(0,state.sanity-dt*(oneType==='flicker'?.03:.002));
+ if(playing){state.elapsed+=dt;let sx=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+joy.x,sz=Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp'))+joy.z;const len=Math.hypot(sx,sz);if(len>1){sx/=len;sz/=len;}if(waterInspection.active||inventory.open||intro.active)sx=sz=0;const run=running&&Math.hypot(sx,sz)>.1,speed=stance.speed;const vx=(Math.cos(state.yaw)*sx+Math.sin(state.yaw)*sz)*speed,vz=(-Math.sin(state.yaw)*sx+Math.cos(state.yaw)*sz)*speed;state.velocity.x=T.MathUtils.lerp(state.velocity.x,vx,1-Math.exp(-dt*11));state.velocity.z=T.MathUtils.lerp(state.velocity.z,vz,1-Math.exp(-dt*11));const ox=state.x,oz=state.z,nx=ox+state.velocity.x*dt,nz=oz+state.velocity.z*dt;if(!oneWorld.blocked(nx,oz,.25)&&zeroFall+bodyHeight150(stance)<=oneWorld.headAt(nx,oz))state.x=nx;if(!oneWorld.blocked(state.x,nz,.25)&&zeroFall+bodyHeight150(stance)<=oneWorld.headAt(state.x,nz))state.z=nz;dx=state.x-ox;dz=state.z-oz;moved=Math.hypot(dx,dz);state.distance+=moved;state.stamina=T.MathUtils.clamp(state.stamina+dt*(run&&len>.1?-5:7),0,100);state.hydration=Math.max(0,state.hydration-dt*.008);state.sanity=Math.max(0,state.sanity-dt*(oneType==='flicker'?.03:.002));
   jump150.advance(dt,state.grounded);jump150.consume(state,jumpAllowed150());
   if(!state.grounded){let next=zeroFall+state.vy*dt-.5*MOVE150.gravity*dt*dt;state.vy-=MOVE150.gravity*dt;
-   const head=oneWorld.headAt?.(state.x,state.z)??3.3,top=head-stance.eye-.08;
+   const head=oneWorld.headAt?.(state.x,state.z)??3.3,top=head-bodyHeight150(stance);
    if(next>top){next=Math.min(zeroFall,top);state.vy=Math.min(0,state.vy);}
    if(next<=0){landingSpeed=Math.max(0,-state.vy);next=0;state.vy=0;state.grounded=true;}zeroFall=next;
    if(state.grounded)jump150.consume(state,jumpAllowed150());
@@ -400,14 +404,14 @@ function animateOne(now,dt,rawDt){
 }
 function animateZero(now,dt,rawDt){
  let moved=0,dx=0,dz=0,landingSpeed=0;const stance=stance150(),{crouch,sneak,running}=stance;
- if(playing){state.elapsed+=dt;let sx=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+joy.x,sz=Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp'))+joy.z;const len=Math.hypot(sx,sz);if(len>.1||crouch)leaveReferenceView();if(len>1){sx/=len;sz/=len;}if(waterInspection.active||inventory.open||intro.active)sx=sz=0;const run=running&&Math.hypot(sx,sz)>.1,speed=stance.speed*(zeroType==='arches'?.82:1);const vx=(Math.cos(state.yaw)*sx+Math.sin(state.yaw)*sz)*speed,vz=(-Math.sin(state.yaw)*sx+Math.cos(state.yaw)*sz)*speed;state.velocity.x=T.MathUtils.lerp(state.velocity.x,vx,1-Math.exp(-dt*11));state.velocity.z=T.MathUtils.lerp(state.velocity.z,vz,1-Math.exp(-dt*11));const ox=state.x,oz=state.z,nx=ox+state.velocity.x*dt,nz=oz+state.velocity.z*dt;if(!zeroWorld.blocked(nx,oz,.25,zeroFall,stance.eye+.08))state.x=nx;if(!zeroWorld.blocked(state.x,nz,.25,zeroFall,stance.eye+.08))state.z=nz;dx=state.x-ox;dz=state.z-oz;moved=Math.hypot(dx,dz);state.distance+=moved;state.stamina=T.MathUtils.clamp(state.stamina+dt*(run&&len>.1?-5:7),0,100);state.hydration=Math.max(0,state.hydration-dt*.008);state.sanity=Math.max(0,state.sanity-dt*(zeroType==='red'?.055:.004));if(len>.5&&moved<speed*dt*.15&&zeroType!=='red'&&!inManila(state.x,state.z)&&(noclip130.pushWall?.()??true)){zeroPush+=dt;if(zeroPush>4.5&&!noclip130.flickering){zeroPush=0;noclip130.force(true,true);}/*V131p-push*/if(zeroPush>2.2&&!zeroPushHint){zeroPushHint=true;toast('墙面开始闪烁……继续推挤也许能切出。');}}else zeroPush=Math.max(0,zeroPush-dt*2);if(noclip130.update(dt,{pushing:len>.5&&moved<speed*dt*.15,moving:moved/Math.max(dt,1e-3),ok:zeroType!=='red'&&!inManila(state.x,state.z)&&!intro.active&&!waterInspection.active&&!inventory.open&&!referenceView}))return;
+ if(playing){state.elapsed+=dt;let sx=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+joy.x,sz=Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp'))+joy.z;const len=Math.hypot(sx,sz);if(len>.1||crouch)leaveReferenceView();if(len>1){sx/=len;sz/=len;}if(waterInspection.active||inventory.open||intro.active)sx=sz=0;const run=running&&Math.hypot(sx,sz)>.1,speed=stance.speed*(zeroType==='arches'?.82:1);const vx=(Math.cos(state.yaw)*sx+Math.sin(state.yaw)*sz)*speed,vz=(-Math.sin(state.yaw)*sx+Math.cos(state.yaw)*sz)*speed;state.velocity.x=T.MathUtils.lerp(state.velocity.x,vx,1-Math.exp(-dt*11));state.velocity.z=T.MathUtils.lerp(state.velocity.z,vz,1-Math.exp(-dt*11));const ox=state.x,oz=state.z,nx=ox+state.velocity.x*dt,nz=oz+state.velocity.z*dt;if(!zeroWorld.blocked(nx,oz,.25,zeroFall,bodyHeight150(stance)))state.x=nx;if(!zeroWorld.blocked(state.x,nz,.25,zeroFall,bodyHeight150(stance)))state.z=nz;dx=state.x-ox;dz=state.z-oz;moved=Math.hypot(dx,dz);state.distance+=moved;state.stamina=T.MathUtils.clamp(state.stamina+dt*(run&&len>.1?-5:7),0,100);state.hydration=Math.max(0,state.hydration-dt*.008);state.sanity=Math.max(0,state.sanity-dt*(zeroType==='red'?.055:.004));if(len>.5&&moved<speed*dt*.15&&zeroType!=='red'&&!inManila(state.x,state.z)&&(noclip130.pushWall?.()??true)){zeroPush+=dt;if(zeroPush>4.5&&!noclip130.flickering){zeroPush=0;noclip130.force(true,true);}/*V131p-push*/if(zeroPush>2.2&&!zeroPushHint){zeroPushHint=true;toast('墙面开始闪烁……继续推挤也许能切出。');}}else zeroPush=Math.max(0,zeroPush-dt*2);if(noclip130.update(dt,{pushing:len>.5&&moved<speed*dt*.15,moving:moved/Math.max(dt,1e-3),ok:zeroType!=='red'&&!inManila(state.x,state.z)&&!intro.active&&!waterInspection.active&&!inventory.open&&!referenceView}))return;
  // Absolute foot height with swept landings: every visible lower slab can catch a fall.
  const support=zeroWorld.supportAt(state.x,state.z,zeroFall+.19);
  if(state.grounded&&Number.isFinite(support)&&support>=zeroFall-.24){zeroFall=support;state.vy=0;}else state.grounded=false;
  jump150.advance(dt,state.grounded);jump150.consume(state,jumpAllowed150());
  if(!state.grounded){
   const previous=zeroFall;let next=previous+state.vy*dt-.5*MOVE150.gravity*dt*dt;state.vy-=MOVE150.gravity*dt;
-  if(next>previous){const head=zeroWorld.headAt(state.x,state.z,previous,next+stance.eye+.08);if(Number.isFinite(head)&&next+stance.eye+.08>head){next=Math.min(next,head-stance.eye-.08);state.vy=Math.min(0,state.vy);}}
+  if(next>previous){const height=bodyHeight150(stance),head=zeroWorld.headAt(state.x,state.z,previous,next+height);if(Number.isFinite(head)&&next+height>head){next=Math.min(next,head-height);state.vy=Math.min(0,state.vy);}}
   const landed=state.vy<=0?zeroWorld.landingAt(state.x,state.z,previous,next):null;
   if(landed!==null){landingSpeed=-state.vy;zeroFall=landed;state.vy=0;state.grounded=true;jump150.consume(state,jumpAllowed150());}else zeroFall=next;
  }
@@ -865,7 +869,7 @@ document.addEventListener('keydown',e=>{if(bathLoading){e.preventDefault();retur
   if(selected&&!selected.disabled)selected.click();
  }
  return;
-} if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys.add(K131.canon(e.code));if(K131.is(e,'inventory'))e.preventDefault();if(K131.is(e,'interact')){if(!e.repeat&&playing)interactDown131();return;}if(e.repeat)return;if(K131.is(e,'flashlight')){if(playing)flashlight131();return;}if(K131.is(e,'inventory')&&!waterInspection.active){inventory.setOpen(!inventory.open);keys.clear();if(inventory.open)document.exitPointerLock?.();else if(!touchDevice)try{renderer.domElement.requestPointerLock?.()?.catch?.(()=>{});}catch{}return;}if(inventory.key(e)){if(e.code==='Escape'){keys.clear();if(!touchDevice)try{renderer.domElement.requestPointerLock?.()?.catch?.(()=>{});}catch{}}return;}if(e.code==='Escape'){if(waterInspection.active){waterInspection.stow();return;}setPlay(false);}if(K131.is(e,'drop'))drop131();if(K131.is(e,'jump'))jump();if(K131.is(e,'journal'))openModal('journal');if(K131.is(e,'fullscreen')){e.preventDefault();fullscreen();}});
+} if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)||(playing&&['forward','back','left','right','sneak','crouch','sprint'].some(a=>K131.is(e,a))))e.preventDefault();keys.add(K131.canon(e.code));if(K131.is(e,'inventory'))e.preventDefault();if(K131.is(e,'interact')){if(!e.repeat&&playing)interactDown131();return;}if(e.repeat)return;if(K131.is(e,'flashlight')){if(playing)flashlight131();return;}if(K131.is(e,'inventory')&&!waterInspection.active){inventory.setOpen(!inventory.open);keys.clear();if(inventory.open)document.exitPointerLock?.();else if(!touchDevice)try{renderer.domElement.requestPointerLock?.()?.catch?.(()=>{});}catch{}return;}if(inventory.key(e)){if(e.code==='Escape'){keys.clear();if(!touchDevice)try{renderer.domElement.requestPointerLock?.()?.catch?.(()=>{});}catch{}}return;}if(e.code==='Escape'){if(waterInspection.active){waterInspection.stow();return;}setPlay(false);}if(K131.is(e,'drop'))drop131();if(K131.is(e,'jump'))jump();if(K131.is(e,'journal'))openModal('journal');if(K131.is(e,'fullscreen')){e.preventDefault();fullscreen();}});
 document.addEventListener('keyup',e=>{keys.delete(K131.canon(e.code));if(K131.is(e,'interact'))interactUp131();});
 addEventListener('blur',()=>{keys.clear();resetLookInput();if(playing)setPlay(false)});
 document.addEventListener('visibilitychange',()=>{irradiance.pause(document.hidden||state.level===11);weatherDirector.resetClock();if(document.hidden&&playing)setPlay(false)});

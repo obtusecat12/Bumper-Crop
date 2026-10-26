@@ -5,11 +5,26 @@
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {makeL1Props} from './level1-props.js?v=116';
 import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=116';
-import {createLevel1Corridors} from './level1-corridors.js?v=113';
+import {createLevel1Corridors} from './level1-corridors.js?v=150s1';
 import {L1_DEC,L1_ATLAS_LAYERS as NLAY,L1_NORM} from './level1-decals.js?v=116';
 import {l1Rebase,L1_BAY as B,L1_CHUNK as K,L1_H as H,L1_COL,L1_WALL,l1Hash,l1WallX,l1WallZ,l1Column,l1DoorX,l1DoorZ,l1Ceiling,l1ColumnTube,l1ColumnFace,l1TubeX,l1TubeZ,l1TubeSideX,l1TubeSideZ,l1TubeOffX,l1TubeOffZ,l1RunX,l1RunZ,l1RunSideX,l1RunSideZ,l1LowX,l1LowZ,l1Sector,l1SecV,L1_SEC_H,L1_SEC_G,L1_SEC_O,l1ThrSite,l1Thr,l1InClu,L1_LAYOUT_GLSL} from './level1-layout.js?v=113';
 
 const LIGHT_GLSL=`${L1_LAYOUT_GLSL}
+#include <packing>
+uniform sampler2D l1FlShadowMap;
+uniform mat4 l1FlShadowMatrix;
+uniform float l1FlShadowOn;
+float l1TorchVisibility(vec3 P,vec3 N){
+ if(l1FlShadowOn<.5)return 1.0;
+ vec4 q=l1FlShadowMatrix*vec4(P+N*.012,1.0);
+ if(q.w<=0.0)return 0.0;
+ vec3 uv=q.xyz/q.w;
+ if(uv.z<0.0||uv.z>1.0||any(lessThan(uv.xy,vec2(0.0)))||any(greaterThan(uv.xy,vec2(1.0))))return 0.0;
+ float vis=0.0;
+ for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++)
+  vis+=step(uv.z-.00008,unpackRGBAToDepth(texture2D(l1FlShadowMap,uv.xy+vec2(float(x),float(y))/1024.0)));
+ return vis/9.0;
+}
 uniform ivec2 l1OB;// floating-origin offset in bays (integer, exact)
 float lh(int x,int z,int s){return l1h(x+l1OB.x,z+l1OB.y,s);}
 // V131 perf: every per-bay layout predicate the light loops need is baked on the CPU (same JS layout functions the
@@ -63,7 +78,16 @@ vec3 l1light(vec3 P,vec3 N){
  if(linc(fx,fz))hemi*=.6;
  // V117 hand torch (flashlight117): soft-edged cone, inverse-square falloff, independent of the hall power
  vec3 fl=vec3(0.0);if(l1FlP.w>0.0){vec3 d=l1FlP.xyz-P;float r2=max(dot(d,d),.04);vec3 l=d*inversesqrt(r2);float c=dot(-l,l1FlD.xyz);
-  float cone=smoothstep(l1FlD.w,mix(l1FlD.w,1.0,.55),c);float ring=.85+.15*sin(acos(clamp(c,-1.,1.))*38.0);fl=vec3(1.0,.93,.8)*l1FlP.w*cone*ring*(max(dot(N,l),0.0)*.92+.08)/(1.0+r2*.55);}
+  float cone=smoothstep(l1FlD.w,mix(l1FlD.w,1.0,l1FlD.w<0.0?.55:.78),c);
+  if(l1FlD.w<0.0){ // Keep the existing broad match/lighter light separate from the torch.
+   float ring=.85+.15*sin(acos(clamp(c,-1.,1.))*38.0);
+   fl=vec3(1.0,.93,.8)*l1FlP.w*cone*ring*(max(dot(N,l),0.0)*.92+.08)/(1.0+r2*.55);
+  }else{
+   float radial=sqrt(clamp((1.0-c)/(1.0-l1FlD.w),0.0,1.0));
+   float hotspot=mix(.15,1.0,1.0-smoothstep(.12,.62,radial));
+   float range=pow(max(0.0,1.0-pow(sqrt(r2)/34.0,4.0)),2.0);
+   fl=vec3(1.0,.93,.8)*l1FlP.w*cone*hotspot*range*max(dot(N,l),0.0)/max(r2,.25)*l1TorchVisibility(P,N);
+  }}
  return (l1Amb*hemi*l1AmbK*(.08+.92*l1Power)+l1Lamp*(accT+cb*(1.0-.6*l1T))*l1Power+fl)*ao;}
 `;
 const NOISE_GLSL=`
@@ -171,9 +195,18 @@ scene.background=new T.Color(0x24282b);scene.fog=new T.FogExp2(0x2b3033,.03);
  uniforms.l1Lay={value:layTex};
  const corridors=createLevel1Corridors(T,renderer,{wall:uniforms.l1Wall.value,floor:uniforms.l1Floor.value,ceil:uniforms.l1Ceil.value});let mode='halls',hallReturn=null;
  const mk=(defines={})=>new T.ShaderMaterial({uniforms:T.UniformsUtils.merge([T.UniformsLib.fog,{}]),vertexShader:VERT,fragmentShader:FRAG,fog:true,defines});
+ let flashShadow=null,torchShadowActive=false;
+ Object.assign(uniforms,{l1FlShadowMap:{value:null},l1FlShadowMatrix:{value:new T.Matrix4()},l1FlShadowOn:{value:0}});
  const mat=mk();Object.assign(mat.uniforms,uniforms);
  const mirrorRT=new T.WebGLRenderTarget(256,256,{type:T.HalfFloatType});mirrorRT.texture.generateMipmaps=false;
  const floorMat=mk({L1_FLOOR:1});Object.assign(floorMat.uniforms,uniforms,{l1Mirror:{value:mirrorRT.texture},l1TexMat:{value:new T.Matrix4()}});
+ // Three renders the depth map before these material callbacks. Bind the freshly rendered
+ // packed RGBA depth texture/matrix, including the first enabled frame and origin changes.
+ mat.onBeforeRender=floorMat.onBeforeRender=function(){
+  uniforms.l1FlShadowOn.value=torchShadowActive&&flashShadow?.map?1:0;
+  if(flashShadow?.map){uniforms.l1FlShadowMap.value=flashShadow.map.texture;uniforms.l1FlShadowMatrix.value.copy(flashShadow.matrix);}
+  this.uniformsNeedUpdate=true;
+ };
  const GV=`attribute vec4 l1t;attribute vec3 color;varying vec4 vT;varying vec2 vUv;varying vec3 vCol;
 #include <common>
 #include <fog_pars_vertex>
@@ -425,7 +458,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
    [fx,fz]=F(.42);lootAt(`m${cx},${cz}`,fx,fz,ax?0:Math.PI/2,1,-1,.75);}
   flush();yield;resume();
   const geo=rowP.length>1?mergeGeometries(rowP,false):rowP[0],glow=rowG.length?(rowG.length>1?mergeGeometries(rowG,false):rowG[0]):null;if(rowP.length>1)rowP.forEach(g=>g.dispose());if(rowG.length>1)rowG.forEach(g=>g.dispose());
-  const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
+  const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;m.castShadow=m.receiveShadow=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
   if(halos.length){const hm=new T.Mesh(haloGeo(halos),haloMat);hm.renderOrder=5;group.add(hm);}
   const out={cx,cz,group,solids,loot:loots,ldoors};parts=glows=exits=solids=halos=loots=ldoors=null;return out;}
 
@@ -498,6 +531,28 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   for(let i=0;i<=1;i++)if(Math.abs(x-(ix+i)*B)<lw&&l1LowZ(ix+i,iz)){const[u0,u1]=low(ix+i,iz,162),u=z-iz*B;if(u>u0-r&&u<u1+r)return true;}
   const c=chunks.get(key(Math.floor(x/K),Math.floor(z/K)));if(c)for(const s of c.solids)if(Math.abs(x-s.x)<s.w/2+r&&Math.abs(z-s.z)<s.d/2+r)return true;return false;}
  function safe(x,z){for(let rr=0;rr<12;rr+=.5)for(let a=0;a<16;a++){const px=x+Math.cos(a/16*Math.PI*2)*rr,pz=z+Math.sin(a/16*Math.PI*2)*rr;if(!blocked(px,pz,.45))return{x:px,z:pz};if(rr===0)break;}return{x,z};}
+ // Match the existing sector ceilings, low cluster ceilings and actual door-frame bottoms.
+ // Sample the body footprint so entering a lower bay cannot clip its ceiling at the edge.
+ function headAt(x,z,r=.25){
+  if(mode==='corridor')return CHC;
+  let top=Infinity;
+  for(const [dx,dz]of [[0,0],[-r,-r],[r,-r],[-r,r],[r,r]]){
+   const px=x+dx,pz=z+dz,ix=Math.floor(px/B),iz=Math.floor(pz/B),k=l1Sector(ix,iz);
+   const y=l1InClu(ix,iz)?CHC:k===2?Math.max(arch(1-Math.abs(px-ix*B-4)/4),arch(1-Math.abs(pz-iz*B-4)/4)):L1_SEC_H[k];
+   top=Math.min(top,y);
+  }
+  const ix=Math.floor(x/B),iz=Math.floor(z/B);
+  for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){
+   const a=ix+i,b=iz+j;
+   if(l1WallX(a,b)&&l1DoorX(a,b)&&Math.abs(z-b*B)<L1_WALL/2+.06+r&&Math.abs(x-a*B-4)<.86+r)top=Math.min(top,2.29);
+   if(l1WallZ(a,b)&&l1DoorZ(a,b)&&Math.abs(x-a*B)<L1_WALL/2+.06+r&&Math.abs(z-b*B-4)<.86+r)top=Math.min(top,2.29);
+  }
+  for(const d of lockDoorsNear(x,z,2)){
+   const dx=x-d.x,dz=z-d.z;
+   if(Math.abs(dx*d.nx+dz*d.nz)<.13+r&&Math.abs(dx*d.nz-dz*d.nx)<.88+r)top=Math.min(top,2.16);
+  }
+  return top;
+ }
  // ---- Flickering: all lights die at random, for a random time; exit signs stay ----
  let lampTick=0,flickerStart=0,elapsed=0,nextFlicker=70+Math.random()*120,flickerEnd=-1,power=1,forced=null;
  function update(dt,x,z){elapsed+=dt;if(mode==='halls')layUpdate(x,z);if(mode==='halls'&&rebase.update(x,z))uniforms.l1OB.value.set(rebase.o.x/B,rebase.o.z/B);uniforms.l1Time.value=elapsed;if(mode==='halls'){plan(x,z);stepBuild();}
@@ -549,6 +604,6 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  function kitGeo(fn){const sv=[parts,ox0,oz0];parts=[];ox0=oz0=0;try{fn((...a)=>put(parts,...a),C,{box,cyl,vcyl});const g=parts.length>1?mergeGeometries(parts,false):parts[0];if(parts.length>1)parts.forEach(q=>q.dispose());return g;}finally{[parts,ox0,oz0]=sv;}}
  let hand={i:0,p:new T.Vector3(),d:new T.Vector3(0,0,-1)};
  async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);layUpdate(camera.position.x,camera.position.z);const g=new T.Group();for(const m of [mat,glowMat,exitMat]){const q=new T.Mesh(col(box.clone(),C.concrete,[1,1,1]),m);q.position.set(camera.position.x,-50,camera.position.z);g.add(q);}g.add(new T.Mesh(haloGeo([[0,-50,0,1,1,1]]),haloMat));scene.add(g);await r.compileAsync(scene,camera);scene.remove(g);g.traverse(o=>o.geometry?.dispose());}
- return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='corridor'?corridors.scene:scene},get mode(){return mode},nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt:()=>H,
-  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA)=>{if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,lockDoorsNear,setMapOverlay:f=>{mapOverlay=f;},kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
+ return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='corridor'?corridors.scene:scene},get mode(){return mode},nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt,
+  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA,shadow)=>{flashShadow=shadow||null;torchShadowActive=i>0&&hand.i<=i;if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,lockDoorsNear,setMapOverlay:f=>{mapOverlay=f;},kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
 }

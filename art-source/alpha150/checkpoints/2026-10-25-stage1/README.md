@@ -1,6 +1,8 @@
 # Stage 1 dynamic flashlight checkpoint — 2026-10-25
 
-Status: source draft; NOT integrated into `dist`. Stage 1 is not complete.
+Status: integrated into `dist` on 2026-10-26 after reconciling main `4b355b24f7ddb74bf41eb0aba294045b112b0ea5`. This patch is historical recovery material; **do not apply it again**. The latest user instruction is screenshots only, with no gameplay operation sequence. Two in-game flashlight views are still missing because the preview cannot create WebGL 2. See `docs/alpha150-progress.md` for the current status.
+
+The remaining notes below describe the original 2026-10-25 checkpoint, not a new task or a current acceptance gate.
 
 Base main: `14aa26e82bd54843a8155fa1fd9c9e20bd3aa3de`.
 The patch is a minimal diff against that commit, not a replacement checkout. Preserve newer changes with a three-way merge.

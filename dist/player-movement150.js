@@ -28,7 +28,7 @@ export function movementStance150(keys,state,touchRun=false,outdoor=false){
  const crouch=keys.has('KeyC'),sneak=keys.has('ControlLeft');
  const running=!crouch&&!sneak&&(keys.has('ShiftLeft')||keys.has('ShiftRight')||touchRun)&&state.stamina>4;
  return {crouch,sneak,running,
-  speed:crouch?MOVEMENT150.crouchSpeed:sneak?MOVEMENT150.sneakSpeed:running?(outdoor?MOVEMENT150.outdoorRun:MOVEMENT150.indoorRun):(outdoor?MOVEMENT150.outdoorWalk:MOVEMENT150.indoorWalk),
+  speed:sneak?MOVEMENT150.sneakSpeed:crouch?MOVEMENT150.crouchSpeed:running?(outdoor?MOVEMENT150.outdoorRun:MOVEMENT150.indoorRun):(outdoor?MOVEMENT150.outdoorWalk:MOVEMENT150.indoorWalk),
   eye:crouch?MOVEMENT150.crouchEye:sneak?MOVEMENT150.sneakEye:MOVEMENT150.eye,
   noise:sneak?.18:crouch?.35:running?1.1:1};
 }

@@ -1,9 +1,9 @@
 // V117 · first-person flashlight: a right hand wrapped round a 2-cell aluminium torch, carried in front of the camera.
 // Procedural geometry (no external model): knurled barrel, bezel + reflector + lens, rubber tail cap, a thumb that
-// presses the tail-side switch. A real SpotLight (soft penumbra, inverse-square decay, projected ring cookie) plus an
-// additive volumetric cone with drifting dust lights the world. The light lives in whichever scene is being rendered
+// presses the tail-side switch. A real SpotLight has a soft hotspot, inverse-square decay and a bounded dynamic shadow.
+// The light lives in whichever scene is being rendered
 // (prepare(scene) is called right before each render), and is never removed — only its intensity changes, so toggling
-// never triggers a shader recompile. Shadows are off (the cost of a moving shadow map was not worth it here).
+// never triggers a shader recompile. The player light is never part of a static bake.
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {fl2Mesh,loadFL2,FL2} from './torch132b.js?v=132b';
 // V117b: the hand is now the CC0 "PSX First Person Arms" by Drillimpact (assets/fp-arms-v117/CREDITS.txt). Its knife_idle
@@ -106,11 +106,41 @@ export function createFlashlight117(T){
 
  // ---- light ----
  const cookie=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');const R=128;
-  const gr=g.createRadialGradient(R,R,0,R,R,R);for(const [o,v] of [[0,1],[.12,.98],[.2,.78],[.26,.9],[.34,.55],[.5,.42],[.62,.3],[.7,.36],[.82,.12],[1,0]])gr.addColorStop(o,`rgba(255,255,255,${v})`);
+  const gr=g.createRadialGradient(R,R,0,R,R,R);for(const [o,v] of [[0,1],[.12,.98],[.24,.86],[.38,.57],[.55,.32],[.72,.16],[.9,.035],[1,0]])gr.addColorStop(o,`rgba(255,255,255,${v})`);
   g.fillStyle='#000';g.fillRect(0,0,256,256);g.fillStyle=gr;g.fillRect(0,0,256,256);
-  const d=g.getImageData(0,0,256,256);for(let i=0;i<d.data.length;i+=4){const n=(Math.random()-.5)*10;d.data[i]+=n;d.data[i+1]+=n;d.data[i+2]+=n;}g.putImageData(d,0,0);
+  const d=g.getImageData(0,0,256,256);for(let i=0;i<d.data.length;i+=4){const n=.6*Math.sin(i*.618);d.data[i]+=n;d.data[i+1]+=n;d.data[i+2]+=n;}g.putImageData(d,0,0);
   const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return t;})();
- const spot=new T.SpotLight(0xfff0d6,0,34,.42,.55,2);spot.map=cookie;spot.castShadow=false;const target=new T.Object3D();spot.target=target;
+ const spot=new T.SpotLight(0xfff0d6,0,34,.46,.78,2);spot.map=cookie;spot.castShadow=true;const target=new T.Object3D();spot.target=target;
+ // One 1024px map shared by stock materials and Level 1's custom light shader.
+ // Keep castShadow constant; only request a depth refresh while the lamp is on.
+ spot.shadow.mapSize.set(1024,1024);spot.shadow.camera.near=.04;spot.shadow.camera.far=34;
+ spot.shadow.bias=-.00008;spot.shadow.normalBias=.012;spot.shadow.radius=2;spot.shadow.autoUpdate=false;
+ // Request the torch pass only once the world's own before-render work has run.
+ // When a scene normally freezes all shadows, keep its other automatic maps frozen
+ // for this torch-only pass. Explicit per-light/world refreshes are still honored.
+ const shadowHooks=new WeakMap();let pendingShadow=false,activeShadowHook=null;
+ function bindShadowPass(sc){
+  let hook=shadowHooks.get(sc);
+  if(!hook){hook={depth:0,frozen:[],before:sc.onBeforeRender,after:sc.onAfterRender};
+   hook.restore=()=>{for(const shadow of hook.frozen)shadow.autoUpdate=true;hook.frozen.length=0;hook.depth=0;};
+   hook.begin=function(r,...args){
+    hook.before?.call(this,r,...args);
+    if(hook.depth++>0||!pendingShadow)return;
+    pendingShadow=false;
+    if(!r.shadowMap.autoUpdate&&!r.shadowMap.needsUpdate)sc.traverse(o=>{
+     if(o!==spot&&o.isLight&&o.castShadow&&o.shadow?.autoUpdate){hook.frozen.push(o.shadow);o.shadow.autoUpdate=false;}
+    });
+    spot.shadow.needsUpdate=true;r.shadowMap.needsUpdate=true;
+   };
+   hook.end=function(...args){try{hook.after?.apply(this,args);}finally{if(--hook.depth===0)hook.restore();}};
+   shadowHooks.set(sc,hook);
+  }
+  // Preserve any scene hook installed later (for example an origin-rebasing hook).
+  if(sc.onBeforeRender!==hook.begin){hook.before=sc.onBeforeRender;sc.onBeforeRender=hook.begin;}
+  if(sc.onAfterRender!==hook.end){hook.after=sc.onAfterRender;sc.onAfterRender=hook.end;}
+  activeShadowHook=hook;
+ }
+ function finishShadowPass(){activeShadowHook?.restore();pendingShadow=false;}
  // volumetric cone: additive, fades with distance from the lens and towards the cone edge, slow dust noise
  const coneLen=7,coneGeo=new T.ConeGeometry(Math.tan(.46)*coneLen,coneLen,32,1,true);coneGeo.translate(0,-coneLen/2,0);coneGeo.rotateX(-Math.PI/2);
  const coneMat=new T.ShaderMaterial({transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide,uniforms:{uI:{value:0},uT:{value:0}},
@@ -155,13 +185,17 @@ const vmScene=new T.Scene();vmScene.add(rig);const vmCam=new T.PerspectiveCamera
  // V133-arms: speed is net travel over a 0.25 s window, so collision push-back jitter (in/out against a wall or crate)
 // cancels out instead of kicking the bob; jumps > 20 m/s (teleport, level change, noclip push) reset the history.
 const eyeHist=[];let eyeSpeed=0,eyeT=-1;
- function prepare(sc,camera){{const now=performance.now(),e=camera.getWorldPosition(lensP),ddt=eyeT<0?0:Math.max(1e-3,(now-eyeT)/1000);eyeT=now;const last=eyeHist[eyeHist.length-1];
+ function prepare(sc,camera,renderer){{const now=performance.now(),e=camera.getWorldPosition(lensP),ddt=eyeT<0?0:Math.max(1e-3,(now-eyeT)/1000);eyeT=now;const last=eyeHist[eyeHist.length-1];
   if(last&&Math.hypot(e.x-last.x,e.z-last.z)/ddt>20)eyeHist.length=0;eyeHist.push({x:e.x,z:e.z,t:now});while(eyeHist.length>2&&now-eyeHist[1].t>250)eyeHist.shift();
   const o=eyeHist[0],span=(now-o.t)/1000,d=span>.05?Math.min(8,Math.hypot(e.x-o.x,e.z-o.z)/span):0;eyeSpeed+=(d-eyeSpeed)*Math.min(1,ddt*6);}if(sc!==scene){lightRig.parent?.remove(lightRig);scene=sc;if(sc)sc.add(lightRig);}
   rig.position.set(0,0,0);rig.quaternion.identity();rig.updateMatrixWorld(true);
   lens.getWorldPosition(lensP).multiplyScalar(.4);torch.getWorldQuaternion(tq);
-  camera.updateMatrixWorld();lightRig.position.copy(lensP).applyMatrix4(camera.matrixWorld);if(sc)sc.worldToLocal(lightRig.position);
-  lightRig.quaternion.copy(camera.getWorldQuaternion(new T.Quaternion())).multiply(tq);lightRig.updateMatrixWorld(true);fdir.set(0,0,1).applyQuaternion(lightRig.quaternion);}
+  camera.updateMatrixWorld();lightRig.position.copy(lensP).applyMatrix4(camera.matrixWorld);
+  // L1 shifts its camera only inside scene.onBeforeRender. Its children retain logical coordinates.
+  // Applying worldToLocal here would add the floating origin for a second time.
+  if(sc&&level!==1)sc.worldToLocal(lightRig.position);
+  lightRig.quaternion.copy(camera.getWorldQuaternion(new T.Quaternion())).multiply(tq);lightRig.updateMatrixWorld(true);fdir.set(0,0,1).applyQuaternion(lightRig.quaternion);
+  pendingShadow=!!renderer&&spot.intensity>0;if(sc)bindShadowPass(sc);}
  const fdir=new T.Vector3(0,0,1);
  function update(dt,{moving=0,running=false,yaw=0,pitch=0,step=0}={}){t+=dt;syncModel();coneMat.uniforms.uT.value=t;
   // V131: never pop out — while the L0→L1 noclip plays the hand is lowered out of frame with the same ease as unequipping
@@ -176,7 +210,9 @@ const eyeHist=[];let eyeSpeed=0,eyeT=-1;
   hand.position.set(.2+bob.x+sway.x*.4,-.21+bob.y+breathe-(1-raise)*.3-press*.004,-.4);hand.rotation.set(-.04-sway.y*.6-press*.05,Math.PI+.08+sway.x*.8,-bob.x*1.4);armRoot.position.set(bob.x+sway.x*.4,bob.y+breathe-(1-raise)*.3-press*.004,0);armRoot.rotation.set(-sway.y*.6-press*.05,sway.x*.8,-bob.x*1.4);
   thumb.children[0].rotation.x=-press*.25;if(btnRest)btn.position.copy(btnRest).addScaledVector(btnN,-press*.002);else btn.position.y=.017-press*.002;
   let I=on&&equipped?1:0;if(flick>0){flick-=dt;I*=flick>.12?(Math.sin(flick*90)>0?.3:1):1;}
-  const lv=level;spot.intensity=I*(lv===10||lv===11?28:46);spot.decay=2;coneMat.uniforms.uI.value=I;cone.visible=I>0;lensMat.color.setScalar(I?1.6:(torch132?.8:.12));lensMat.opacity=torch132&&!I?.35:1;}
+  const lv=level;spot.intensity=I*(lv===10||lv===11?28:46);spot.decay=2;coneMat.uniforms.uI.value=I;
+  // The old additive cone did not sample depth and could glow through a partition.
+  cone.visible=false;lensMat.color.setScalar(I?1.6:(torch132?.8:.12));lensMat.opacity=torch132&&!I?.35:1;}
  function toggle(){if(!equipped)return;on=!on;press=1;click(on);if(on)flick=.22;}
  function setEquipped(v){if(v===equipped)return;equipped=v;}
  // V132-flashlight2: the held model follows the selected flashlight stack's meta ({fl:1..3,v:1|2} = AcchiHaven torches,
@@ -188,5 +224,5 @@ const eyeHist=[];let eyeSpeed=0,eyeT=-1;
   if(!n){lens.position.copy(lensBase.p);lens.scale.copy(lensBase.s);return;}
   alt.add(fl2Mesh(n,v,0x181818));loadFL2(n).then(r=>{if(model!==key)return;const L=FL2[n].lens;lens.position.set(L[0],L[1],L[2]+.0015);lens.geometry.computeBoundingSphere();const r0=lens.geometry.boundingSphere?.radius||.0225;lens.scale.setScalar(r.lensR/r0);}).catch(()=>{});}
  function syncModel(){const inv=globalThis.__bcInventory,s=inv?.slots?.[inv.sel];if(s&&s.id==='flashlight')setModel(s.items.at(-1));}
- return{rig,prepare,overlay,update,toggle,setEquipped,setModel,setLevel(v){level=v;},get on(){return on&&equipped;},get beam(){return{p:lightRig.position,d:fdir,i:coneMat.uniforms.uI.value,cos:Math.cos(.46)};},get equipped(){return equipped;},spot,cone,armRoot,torch};
+ return{rig,prepare,finishShadowPass,overlay,update,toggle,setEquipped,setModel,setLevel(v){level=v;},get on(){return on&&equipped;},get beam(){return{p:lightRig.position,d:fdir,i:coneMat.uniforms.uI.value,cos:Math.cos(spot.angle),shadow:spot.shadow};},get equipped(){return equipped;},spot,cone,armRoot,torch};
 }

@@ -68,7 +68,7 @@ export function rollCrate(l,force,legacy=false){const R=rng(l.id);let theme='sup
 
 export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio,updateHUD=()=>{},enterOne,resetCameraRig=()=>{},inspect=null}){
  let shiftDown=false;addEventListener('keydown',e=>{if(e.key==='Shift')shiftDown=true;});addEventListener('keyup',e=>{if(e.key==='Shift')shiftDown=false;});addEventListener('blur',()=>{shiftDown=false;});
- let FL=null;import('./flashlight117.js?v=134').then(m=>{FL=m;}).catch(()=>{});
+ let FL=null;import('./flashlight117.js?v=150s1').then(m=>{FL=m;}).catch(()=>{});
  const W=()=>world();let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}');}catch{}
  const save=()=>{try{const k=Object.keys(saved);if(k.length>800)for(const x of k.slice(0,k.length-800))delete saved[x];localStorage.setItem(KEY,JSON.stringify(saved));}catch{}};
  const ready=prepareLootItems();
@@ -82,7 +82,7 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
     if(WOOD.has(li))for(const s of[-1,1])P(box,C.osb,0,wh*.5,s*(d/2+.006),w*.96,.08,.012);});
    const parts=CARTON.has(li)?[{geo:wd.kitGeo((P,C,{box})=>P(box,C[name],w/4,lt/2,0,w/2,lt,d)),piv:[-w/2,wh,0],ax:'z',sg:1,max:2.2},{geo:wd.kitGeo((P,C,{box})=>P(box,C[name],-w/4,lt/2,0,w/2,lt,d)),piv:[w/2,wh,0],ax:'z',sg:-1,max:2.15}]
     :[{geo:wd.kitGeo((P,C,{box})=>{P(box,C[name],0,lt/2,d/2,w,lt,d);if(WOOD.has(li))for(const s of[-.3,.3])P(box,C.osb,s*w,lt+.006,d/2,.09,.012,d*.96);}),piv:[0,wh,-d/2],ax:'x',sg:-1,max:WOOD.has(li)?1.75:1.95}];
-   const mk=g=>{const m=new T.InstancedMesh(g,wd.lootMat,48);m.count=0;m.frustumCulled=false;m.visible=false;m.instanceMatrix.setUsage(T.DynamicDrawUsage);scene.add(m);return m;};
+   const mk=g=>{const m=new T.InstancedMesh(g,wd.lootMat,48);m.count=0;m.frustumCulled=false;m.castShadow=m.receiveShadow=true;m.visible=false;m.instanceMatrix.setUsage(T.DynamicDrawUsage);scene.add(m);return m;};
    return{name,w,h,d,t,wh,body:mk(body),parts:parts.map(p=>({...p,im:mk(p.geo)}))};});}
  const tmp=new T.Matrix4(),tmp2=new T.Matrix4(),q=new T.Quaternion(),e=new T.Euler(),v=new T.Vector3(),sc=new T.Vector3();
  function crateMatrix(l,out){q.setFromEuler(e.set(0,l.ry,0));v.set(l.x-anchor.x,0,l.z-anchor.z);sc.set(l.s,l.s,l.s);return out.compose(v,q,sc);}
@@ -257,7 +257,7 @@ export function createL1Loot124({T:TT=T,world,inventory,state,camera,toast,audio
   doorKit={lo:[leafO(1),leafO(-1)],li:[leafI(1),leafI(-1)],chain,chip};}
  function doorRt(d){let r=doors.get(d.id);if(r)return r;r={d,broken:!!saved[doorKey(d.id)],t:-1,grp:null,parts:null,chips:[]};doors.set(d.id,r);return r;}
  function doorMesh(r){if(r.grp||!scene)return;if(!doorKit)buildDoorKit();const d=r.d,M=W().lootMat,g=new T.Group();g.position.set(d.x,0,d.z);g.rotation.y=d.ry;
-  const mk=(geo)=>{const m=new T.Mesh(geo,M);m.frustumCulled=false;return m;};
+  const mk=(geo)=>{const m=new T.Mesh(geo,M);m.frustumCulled=false;m.castShadow=m.receiveShadow=true;return m;};
   const leaves=[1,-1].map((s,i)=>{const h=new T.Group();h.position.set(-s*.8,0,0);const o=mk(doorKit.lo[i]),n=mk(doorKit.li[i]);n.position.set(s*.65,1.075,0);h.add(o,n);g.add(h);return{h,o,n,s};});
   const ch=mk(doorKit.chain);ch.position.set(0,1,0);g.add(ch);r.grp=g;r.parts={leaves,ch};scene.add(g);if(r.broken)doorPose(r,1,true);}
  // a = 0 closed … 1 fully broken (static pose); used for the reload pose and the end of the animation

@@ -83,7 +83,7 @@ export function createLevel1Corridors(T,renderer,textures){
   else if(kind==='mattress'){for(let i=0;i<3;i++)add(M.mattress,X-.6+i*.6,.1+i*.02,Z+(hr(60+i)-.5),.9,.18,1.9,hr(63+i)*.5);}}
  // ---------- streaming ----------
  const chunks=new Map(),key=(a,b)=>a+','+b;let want=[],center='';
- function chunkAt(cx,cz){const k=key(cx,cz);let c=chunks.get(k);if(!c){c=buildChunk(cx,cz);chunks.set(k,c);scene.add(c.group);}return c;}
+ function chunkAt(cx,cz){const k=key(cx,cz);let c=chunks.get(k);if(!c){c=buildChunk(cx,cz);c.group.traverse(o=>{if(o.isMesh&&o.material?.isMeshLambertMaterial)o.castShadow=o.receiveShadow=true;});chunks.set(k,c);scene.add(c.group);}return c;}
  function drop(k,c){scene.remove(c.group);c.group.traverse(o=>o.geometry?.dispose());chunks.delete(k);}
  function plan(x,z){const ccx=Math.floor(x/CK),ccz=Math.floor(z/CK),k=key(ccx,ccz);if(k===center)return;center=k;want=[];
   for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)if(!chunks.has(key(ccx+dx,ccz+dz)))want.push([ccx+dx,ccz+dz]);
