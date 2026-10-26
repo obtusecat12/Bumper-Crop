@@ -151,4 +151,7 @@
 - 本轮未做移动操作序列、性能测量或其他关卡测试。预览页面提示无法创建 WebGL 2，未进入游戏；保存的启动失败截图是 `art-source/alpha150/checkpoints/2026-10-26-stage1/preview-blocked.jpg`，不是游戏效果证据。
 - 剩余：两张游戏内手电筒静态视角及 GPU 渲染结果尚未取得。阶段 2—6 未开工，未把已有方案或失败截图计作交付。
 - 下一轮首个具体动作：读取最新 main 后，在可渲染 WebGL 2 的预览直接补 Level 0 墙/门口和 Level 1 柱/墙的手电筒截图；不重放补丁，不做移动操作序列。若截图仍被同一环境阻塞，保存明确缺口，不循环重试。
-- 本轮代码提交 SHA 在下一笔账本提交补记。
+- 本轮运行时代码和截图保存提交：`a3619e47a87b3c7a6a6bbc1e13c83a0864756d45`（以 `4b355b24f7ddb74bf41eb0aba294045b112b0ea5` 为父提交，expected-SHA 快进成功，无强推）。
+- 保存前仅对 7 个改动 JS 做语法检查并检查差异空白，均通过；没有运行游戏操作、GPU 编译测试或无关测试套件。原始失败截图为 19,798 字节。
+- 本轮实际改动：`dist/{index.html,boot.js,main.js,player-movement150.js,flashlight117.js,level1-world.js,level1-corridors.js,l1loot124-main.js}`，旧检查点 README、本账本与上述失败截图。没有改写 Maltose 帐篷或 i18n，没有部署网站。
+- 阶段 1 的代码已交付，视觉截图仍未完成；完整六阶段没有完成。
