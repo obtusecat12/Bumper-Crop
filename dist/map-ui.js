@@ -12,7 +12,7 @@ import {createMapAtlas} from './map-atlas.js?v=99';
 import {gmCityPaint,gmDrawPin,paintSafariCompass,mountGmapsChrome,mountGmapsVitals} from './gmaps-ui.js?v=150c';
 import {click148,hover148,setFocus148} from './map148-poi.js?v=150c'; // V148 E4
 import {mountL10Dash,paintBrassCompass} from './l10-dash.js?v=150c';
-import {mountL1Dash,paintL1Nav,l1MapPlayer,L1_MAP_PAL,L1_LEGEND} from './l1-dash.js?v=150c';
+import {mountL1Dash,paintL1Nav,l1MapPlayer,L1_MAP_PAL,L1_LEGEND} from './l1-dash.js?v=151a';
 import {paintWin98Compass,blueprintize,cadUCS,cadCursor,cadPlayer,mountCadChrome,mountTaskManager} from './win98-ui.js?v=150c';
 const __bcT=s=>{const b=globalThis.BCi18n;return b&&typeof s==='string'?b.t(s):s;};
 

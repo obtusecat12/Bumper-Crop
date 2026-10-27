@@ -461,7 +461,7 @@ let K149=1;const fI=(u,w=700,min=9)=>`${w} ${Math.max(u,min/K149).toFixed(2)}px 
 function ios149(c,s,x,y,font,{align='center',top='#ffffff',bot='#cfd8df',shadow='#000000b0',sy=1,glow=null}={}){c.save();c.font=font;c.textAlign=align;c.textBaseline='middle';
  const fs=parseFloat(font.split(' ')[1])||12;if(shadow){c.fillStyle=shadow;c.fillText(__bcT(s),x,y+sy);}
  if(glow){c.shadowColor=glow;c.shadowBlur=fs*.35;}c.fillStyle=lg(c,0,y-fs*.5,0,y+fs*.5,[[0,top],[1,bot]]);c.fillText(__bcT(s),x,y);c.restore();}
-const etch149=(c,s,x,y,u,align='center')=>ios149(c,s,x,y,fI(u),{align,top:'#ffffff',bot:'#e6ecf1',shadow:'#000000c8'});
+const etch149=(c,s,x,y,u,align='center',maxW=0)=>{let f=fI(u);if(maxW){c.save();c.font=f;const w=c.measureText(__bcT(s)).width;c.restore();if(w>maxW){const px=parseFloat(f.split(' ')[1])*maxW/w;f=`700 ${px.toFixed(2)}px ${IOS149}`;}}ios149(c,s,x,y,f,{align,top:'#ffffff',bot:'#e6ecf1',shadow:'#000000c8'});};
 const HO={cx:144,cy:180,R:96,top:96,x0:48,x1:716,y1:302,rc:30};   // V117: housing inset — gauges overhang its edge   // housing geometry
 // V142 geometry: the casting is anchored to the bottom-left screen corner (canvas x=0 / y=DH are the screen edges)
 const GA={x:126,y:188,R:110},SUB={x:262,y:72,R:40},VIS={x:288,y:120,w:252,h:118,r:40},MID={x:312,y:124,w:208,h:56,r:6},
@@ -583,8 +583,8 @@ export function mountL1Dash(){if(dashMounted)return dashMounted;
   // printed scale on the tube glass
   for(let i=0;i<=10;i++){const yy=TUB.y+TUB.h-(TUB.h-14)*i/10;c.fillStyle='#ffffff60';c.fillRect(TUB.x+TUB.w-(i%5?6:10),yy,i%5?6:10,1);}
   // engraved legends cut into the chrome
-  etch149(c,'SANITY 理智',SIG.x+SIG.w/2,VIS.y+VIS.h+15,12);etch149(c,'杏仁水',D142.ALM.x,VIS.y+VIS.h+15,12);
-  etch149(c,'THREAT SCAN',RAD.x,RAD.y+RAD.R+30,12);etch149(c,'水分',TUB.x+TUB.w/2,TUB.y+TUB.h+24,12);
+  etch149(c,'SANITY 理智',SIG.x+SIG.w/2,VIS.y+VIS.h+15,12,'center',SIG.w-4);etch149(c,document.documentElement.dataset.lang==='en'?'ALMOND':'杏仁水',D142.ALM.x,VIS.y+VIS.h+15,12,'center',2*(D142.ALM.x-SIG.x-SIG.w)-6);
+  etch149(c,'THREAT SCAN',RAD.x,RAD.y+RAD.R+30,12,'center',RAD.R*2+30);etch149(c,'水分',TUB.x+TUB.w/2,TUB.y+TUB.h+24,12,'center',TUB.w+20);
   // V149: the LEVEL 1 block lettering on the base band is removed (user 10-25)
   // ridge details: indicator lamps and a vent grille on the spine crown, rivets on the pods' collars
   grille142(c,VIS.x+118,VIS.y-17,9,7,3.2,12);
