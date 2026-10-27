@@ -1,3 +1,5 @@
+> 2026-10-27：本检查点已接入并在 dist/alpha150-*.js 中继续修正。以下为历史草稿，不要覆盖当前运行时或重复应用；以 docs/alpha150-progress.md 为准。
+
 # Alpha stage 2 working checkpoint — 2026-10-26
 
 Source base: 72320b2a30ea96a287edd3d200ea5b24caa86f61. These modules are not imported by runtime yet.

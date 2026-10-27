@@ -2,6 +2,8 @@
 // One merged mesh per 64 m chunk (one lit material, vertex colours), one emissive mesh per chunk,
 // global floor/ceiling planes. Lighting is analytic and layout-hashed in the shader: a constant
 // number of light evaluations per fragment, no scene lights → no program recompiles.
+import {ALPHA150,inAlphaExterior150,exteriorApproach150,exteriorSafe150} from './alpha150-plan.js';
+import {createAlphaExterior150} from './alpha150-exterior.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {makeL1Props} from './level1-props.js?v=116';
 import {makeL1Clusters,HC as CHC} from './level1-clusters.js?v=116';
@@ -164,6 +166,14 @@ void main(){vec3 N=normalize(vN);vec3 alb=vC.rgb;
 
 export function createLevel1World(T,renderer){
  const scene=new T.Scene();scene.userData.noAtmosphere=true;
+ const alphaExterior=createAlphaExterior150(T,scene);let alphaWorld=null,alphaReturn=null;
+ async function crossAlpha(pose){
+  if(mode==='alpha'){const p=alphaReturn;alphaWorld.dispose();alphaWorld=null;mode='halls';center='';ensure(p.x,p.z);alphaExterior.update(p.x,p.z);return{...p,mode};}
+  if(!alphaExterior.nearDoor(pose.x,pose.z,pose.yaw))return null;
+  try{const {createAlphaWorld150}=await import('./alpha150-world.js?v=150s2');alphaWorld=createAlphaWorld150(T);await alphaWorld.ready;await alphaWorld.ensure(ALPHA150.entry.x,ALPHA150.entry.z);alphaReturn={...pose};mode='alpha';return{...ALPHA150.entry,pitch:0,mode};}
+  catch(e){alphaWorld?.dispose();alphaWorld=null;throw e;}
+ }
+
  // V124c: almond-water glass (camp bottles, crate loot) lives on ALMOND_GLASS_LAYER and needs the pipeline's glass pass; the pipeline
  // skips it for noAtmosphere scenes, so report whether any bottle glass is near (rescanned every 0.4 s).
  {let gT=0,gOn=false;const gp=new T.Vector3();scene.userData.bottleGlass=(cam)=>{const now=performance.now();if(now-gT<400)return gOn;gT=now;gOn=false;
@@ -280,7 +290,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  function lootAt(id,x,z,ry,li,kb,s){const L=PR.LOOK[LOOK1[li%LOOK1.length]];s=s??(.88+l1Hash(x*13|0,z*13|0,410)*.2);loots.push({id:'l1c:'+id,x,z,ry,look:LOOK1[li%LOOK1.length],s,kb,w:L[1]*s,h:L[2]*s,d:L[3]*s});
   const a=Math.abs(Math.cos(ry)),b=Math.abs(Math.sin(ry)),w=L[1]*s,d=L[3]*s;solid(x,z,w*a+d*b+.04,w*b+d*a+.04);}const HL=(x,y,z,w,h,i)=>halos.push([x-ox0,y,z-oz0,w,h,i]);
  tmp.rotation.order='YXZ';
- function put(list,geo,c,x,y,z,w,h,d,ry=0,rx=0,rz=0){tmp.position.set(x-ox0,y,z-oz0);tmp.rotation.set(rx,ry,rz);tmp.scale.set(w,h,d);tmp.updateMatrix();const g=geo.clone().applyMatrix4(tmp.matrix);list.push(c.length===4?col(g,c,[w,h,d]):colGlow(g,c));}
+ function put(list,geo,c,x,y,z,w,h,d,ry=0,rx=0,rz=0){if(inAlphaExterior150(x,z,.7)||exteriorApproach150(x,z))return;tmp.position.set(x-ox0,y,z-oz0);tmp.rotation.set(rx,ry,rz);tmp.scale.set(w,h,d);tmp.updateMatrix();const g=geo.clone().applyMatrix4(tmp.matrix);list.push(c.length===4?col(g,c,[w,h,d]):colGlow(g,c));}
  function colGlow(g,c){const n=g.attributes.position.count,a=new Float32Array(n*3);for(let i=0;i<n;i++)a.set(c,i*3);g.setAttribute('color',new T.BufferAttribute(a,3));return texAttr(g,c.t);}
  const P=(...a)=>put(parts,...a),G=(...a)=>put(a[0]===GLOW.exit?exits:glows,box,...a);
  function solid(x,z,w,d){solids.push({x,z,w,d});}
@@ -295,7 +305,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
    if(ax?!(l1WallX(ix,iz)&&!l1RunX(ix,iz)):!(l1WallZ(ix,iz)&&!l1RunZ(ix,iz)))continue;const door=ax?l1DoorX(ix,iz):l1DoorZ(ix,iz),u=door?(l1Hash(ix,iz,260)>.5?2.1:-2.1):(l1Hash(ix,iz,261)-.5)*3.6;
    const X=ix*B,Z=iz*B,x=ax?X+4+u:X+side*(L1_WALL/2),z=ax?Z+side*(L1_WALL/2):Z+4+u;out={x,z,nx:ax?0:side,nz:ax?side:0,door,col:CLOTH[Math.floor(l1Hash(cx,cz,262)*CLOTH.length)],col2:CLOTH[Math.floor(l1Hash(cx,cz,263)*CLOTH.length)],note:NOTES[Math.floor(l1Hash(cx,cz,264)*NOTES.length)],id:`level1:${cx},${cz}:camp`};
    out.bottle={x:x+out.nx*.42,y:.455,z:z+out.nz*.42};}
-  campCache.set(k,out);if(campCache.size>2000)campCache.delete(campCache.keys().next().value);return out;}
+  if(out&&(inAlphaExterior150(out.x,out.z,1)||exteriorApproach150(out.x,out.z)))out=null;campCache.set(k,out);if(campCache.size>2000)campCache.delete(campCache.keys().next().value);return out;}
  // the maintenance door faces an open side of its bay (pure, shared by geometry and interaction)
  function siteDir(st){const D=[[0,1],[0,-1],[1,0],[-1,0]],o=Math.floor(l1Hash(st.bx,st.bz,323)*4);for(let k=0;k<4;k++){const[fx,fz]=D[(o+k)%4],w=fz===1?l1WallX(st.bx,st.bz+1):fz===-1?l1WallX(st.bx,st.bz):fx===1?l1WallZ(st.bx+1,st.bz):l1WallZ(st.bx,st.bz);if(!w)return[fx,fz];}return D[o];}
  // ---- sector pieces ----
@@ -355,6 +365,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   const rowP=[],rowG=[],flush=()=>{if(ctx.parts.length){rowP.push(mergeGeometries(ctx.parts,false));ctx.parts.forEach(g=>g.dispose());ctx.parts.length=0;}if(ctx.glows.length){rowG.push(mergeGeometries(ctx.glows,false));ctx.glows.forEach(g=>g.dispose());ctx.glows.length=0;}};
   const kc=new Map(),kind=(a,b)=>{const k=a*100003+b;let v=kc.get(k);if(v===undefined){v=l1Sector(a,b);kc.set(k,v);}return v;},hgt=(a,b)=>L1_SEC_H[kind(a,b)];
   for(let iz=z0;iz<z0+8;iz++){if(iz>z0){flush();yield;resume();}for(let ix=x0;ix<x0+8;ix++){if(ix>x0){yield;resume();}
+   if(inAlphaExterior150(ix*B+4,iz*B+4)||(ix*B+8>628&&ix*B<641&&iz*B+8>ALPHA150.gate.z-5&&iz*B<ALPHA150.gate.z+5))continue;
    const X=ix*B,Z=iz*B,r=(s)=>l1Hash(ix,iz,s),kb=kind(ix,iz),hb=L1_SEC_H[kb],gw=Math.max(0,Math.min(1,(l1SecV(ix,iz)-.62)/.14))*(kb===2?0:1);
    const hX=Math.max(hb,hgt(ix,iz-1)),hZ=Math.max(hb,hgt(ix-1,iz)),hCol=Math.max(hX,hZ,hgt(ix-1,iz-1));
    // column at corner (Gothic: round shaft + mushroom capital when all four bays are Gothic)
@@ -458,7 +469,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
    [fx,fz]=F(.42);lootAt(`m${cx},${cz}`,fx,fz,ax?0:Math.PI/2,1,-1,.75);}
   flush();yield;resume();
   const geo=rowP.length>1?mergeGeometries(rowP,false):rowP[0],glow=rowG.length?(rowG.length>1?mergeGeometries(rowG,false):rowG[0]):null;if(rowP.length>1)rowP.forEach(g=>g.dispose());if(rowG.length>1)rowG.forEach(g=>g.dispose());
-  const group=new T.Group(),m=new T.Mesh(geo,mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;m.castShadow=m.receiveShadow=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
+  const group=new T.Group(),m=new T.Mesh(geo||new T.BufferGeometry(),mat);group.position.set(cx*K,0,cz*K);m.frustumCulled=true;m.castShadow=m.receiveShadow=true;group.add(m);if(glow){const gm=new T.Mesh(glow,glowMat);group.add(gm);}if(exits.length){const eg=mergeGeometries(exits,false);exits.forEach(g=>g.dispose());group.add(new T.Mesh(eg,exitMat));}
   if(halos.length){const hm=new T.Mesh(haloGeo(halos),haloMat);hm.renderOrder=5;group.add(hm);}
   const out={cx,cz,group,solids,loot:loots,ldoors};parts=glows=exits=solids=halos=loots=ldoors=null;return out;}
 
@@ -468,7 +479,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  const regOf=(ix,iz)=>{const rx=Math.floor(ix/5),rz=Math.floor(iz/5);return{rx,rz,g:pick(DREG,l1Hash(rx,rz,400))};}; // ~40 m numbering regions
  const AGE=[[1,1,1],[.93,.9,.84],[.84,.8,.72],[.72,.69,.62]];
  // d=[name,kind,group,aspect,layer,quad]; L = metres of the item's long side; (nx,nz) face normal; roll in radians
- function decal(d,x,y,z,nx,nz,L,roll,age){const g=DQ.clone(),uv=g.attributes.uv,qx=d[5]%2,qy=d[5]>>1;for(let i=0;i<uv.count;i++)uv.setXY(i,(qx+uv.getX(i))*.5,(1-qy+uv.getY(i))*.5);
+ function decal(d,x,y,z,nx,nz,L,roll,age){if(inAlphaExterior150(x,z,.7)||exteriorApproach150(x,z))return;const g=DQ.clone(),uv=g.attributes.uv,qx=d[5]%2,qy=d[5]>>1;for(let i=0;i<uv.count;i++)uv.setXY(i,(qx+uv.getX(i))*.5,(1-qy+uv.getY(i))*.5);
   const s=L*128/122;tmp.position.set(x-ox0,y,z-oz0);tmp.rotation.set(0,Math.atan2(nx,nz),roll);tmp.scale.set(s,s,1);tmp.updateMatrix();g.applyMatrix4(tmp.matrix);
   const a=AGE[age|0],c=[a[0],a[1],a[2],0];c.t=[d[4],3,1,1,0];parts.push(col(g,c,[s,s,0]));}
  const FACES=[[0,1],[0,-1],[1,0],[-1,0]];
@@ -515,12 +526,12 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  function chunkAt(cx,cz){const k=key(cx,cz);let c=chunks.get(k);if(!c){if(building&&building.k===k){let r;do r=building.g.next();while(!r.done);c=r.value;building=null;}else c=buildChunk(cx,cz);chunks.set(k,c);scene.add(c.group);}return c;}
  function stepBuild(){if(!building){while(want.length){const[a,b]=want.shift(),k=key(a,b);if(!chunks.has(k)){building={k,g:chunkGen(a,b)};break;}}}if(!building)return;const t0=performance.now();let r;do{r=building.g.next();}while(!r.done&&performance.now()-t0<BUILD_MS);if(r.done){chunks.set(building.k,r.value);scene.add(r.value.group);building=null;}}
  const BUILD_MS=2;
- function ensure(x,z){if(mode==='corridor')return corridors.ensure(x,z);const cx=Math.floor(x/K),cz=Math.floor(z/K);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)chunkAt(cx+dx,cz+dz);}
+ function ensure(x,z){if(mode==='alpha')return alphaWorld.ensure(x,z);alphaExterior.update(x,z);if(mode==='corridor')return corridors.ensure(x,z);const cx=Math.floor(x/K),cz=Math.floor(z/K);for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)chunkAt(cx+dx,cz+dz);}
  function plan(x,z){const cx=Math.floor((x+K/2)/K-.5),cz=Math.floor((z+K/2)/K-.5),k=key(Math.floor(x/K),Math.floor(z/K));if(k===center)return;center=k;const ccx=Math.floor(x/K),ccz=Math.floor(z/K);want=[];
   for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)if(!chunks.has(key(ccx+dx,ccz+dz)))want.push([ccx+dx,ccz+dz]);
   for(const[k2,c]of chunks)if(Math.abs(c.cx-ccx)>2||Math.abs(c.cz-ccz)>2){scene.remove(c.group);c.group.traverse(o=>o.geometry?.dispose());chunks.delete(k2);}}
  // ---- collision ----
- function blocked(x,z,r=.25){if(mode==='corridor')return corridors.blocked(x,z,r);const cx=Math.round(x/B),cz=Math.round(z/B),hc=L1_COL/2+r;
+ function blocked(x,z,r=.25){if(mode==='alpha')return alphaWorld.blocked(x,z,r);if(inAlphaExterior150(x,z,r))return true;if(exteriorApproach150(x,z))return false;if(mode==='corridor')return corridors.blocked(x,z,r);const cx=Math.round(x/B),cz=Math.round(z/B),hc=L1_COL/2+r;
   for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const X=(cx+i)*B,Z=(cz+j)*B;if(Math.abs(x-X)<hc&&Math.abs(z-Z)<hc&&l1Column(cx+i,cz+j))return true;}
   const ix=Math.floor(x/B),iz=Math.floor(z/B),hw=L1_WALL/2+r;
   for(let j=0;j<=1;j++)if(Math.abs(z-(iz+j)*B)<hw&&l1WallX(ix,iz+j)&&!(l1DoorX(ix,iz+j)&&Math.abs(x-ix*B-4)<.8-r))return true;
@@ -530,10 +541,11 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   for(let j=0;j<=1;j++)if(Math.abs(z-(iz+j)*B)<lw&&l1LowX(ix,iz+j)){const[u0,u1]=low(ix,iz+j,160),u=x-ix*B;if(u>u0-r&&u<u1+r)return true;}
   for(let i=0;i<=1;i++)if(Math.abs(x-(ix+i)*B)<lw&&l1LowZ(ix+i,iz)){const[u0,u1]=low(ix+i,iz,162),u=z-iz*B;if(u>u0-r&&u<u1+r)return true;}
   const c=chunks.get(key(Math.floor(x/K),Math.floor(z/K)));if(c)for(const s of c.solids)if(Math.abs(x-s.x)<s.w/2+r&&Math.abs(z-s.z)<s.d/2+r)return true;return false;}
- function safe(x,z){for(let rr=0;rr<12;rr+=.5)for(let a=0;a<16;a++){const px=x+Math.cos(a/16*Math.PI*2)*rr,pz=z+Math.sin(a/16*Math.PI*2)*rr;if(!blocked(px,pz,.45))return{x:px,z:pz};if(rr===0)break;}return{x,z};}
+ function safe(x,z){if(mode==='alpha')return alphaWorld.safe(x,z);({x,z}=exteriorSafe150(x,z,.6));for(let rr=0;rr<12;rr+=.5)for(let a=0;a<16;a++){const px=x+Math.cos(a/16*Math.PI*2)*rr,pz=z+Math.sin(a/16*Math.PI*2)*rr;if(!blocked(px,pz,.45))return{x:px,z:pz};if(rr===0)break;}return{x,z};}
  // Match the existing sector ceilings, low cluster ceilings and actual door-frame bottoms.
  // Sample the body footprint so entering a lower bay cannot clip its ceiling at the edge.
  function headAt(x,z,r=.25){
+  if(mode==='alpha')return alphaWorld.headAt(x,z,r);if(exteriorApproach150(x,z))return 3.35;
   if(mode==='corridor')return CHC;
   let top=Infinity;
   for(const [dx,dz]of [[0,0],[-r,-r],[r,-r],[-r,r],[r,r]]){
@@ -555,14 +567,14 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
  }
  // ---- Flickering: all lights die at random, for a random time; exit signs stay ----
  let lampTick=0,flickerStart=0,elapsed=0,nextFlicker=70+Math.random()*120,flickerEnd=-1,power=1,forced=null;
- function update(dt,x,z){elapsed+=dt;if(mode==='halls')layUpdate(x,z);if(mode==='halls'&&rebase.update(x,z))uniforms.l1OB.value.set(rebase.o.x/B,rebase.o.z/B);uniforms.l1Time.value=elapsed;if(mode==='halls'){plan(x,z);stepBuild();}
+ function update(dt,x,z){if(mode==='alpha')return alphaWorld.update(dt,x,z);alphaExterior.update(x,z);elapsed+=dt;if(mode==='halls')layUpdate(x,z);if(mode==='halls'&&rebase.update(x,z))uniforms.l1OB.value.set(rebase.o.x/B,rebase.o.z/B);uniforms.l1Time.value=elapsed;if(mode==='halls'){plan(x,z);stepBuild();}
   floor.position.set(Math.round(x/B)*B,0,Math.round(z/B)*B);ceiling.position.copy(floor.position);
   let target=1;if(forced!==null)target=forced;else{if(flickerEnd<0&&elapsed>nextFlicker){flickerStart=elapsed;flickerEnd=elapsed+6+Math.random()*16;}if(flickerEnd>0){target=0;if(elapsed<flickerStart+1.1)target=Math.sin(elapsed*47)+Math.sin(elapsed*31)>.4?1:0;if(elapsed>=flickerEnd){flickerEnd=-1;target=1;nextFlicker=elapsed+90+Math.random()*240;}}}
   power+=(target-power)*Math.min(1,dt*(target>power?4:16));uniforms.l1Power.value=power;
   if((lampTick=(lampTick+1)%6)===0){const ls=CL.lampsNear(x,z,8),U=uniforms.l1Pt.value;for(let i=0;i<8;i++){const L=ls[i];if(L)U[i].set(L.x-rebase.o.x,0,L.z-rebase.o.z,L.bulb?1.45:1.9);else U[i].w=0;}uniforms.l1PtN.value=ls.length;}glowMat.color.setScalar(.04+.96*power);propLight.intensity=.08+1.02*power;if(mode==='corridor'){corridors.update(dt,x,z,power);return power<.3?'flicker':'corridor:'+(corridors.roomAt(x,z)||'');}
   if(power<.3)return 'flicker';const rk=CL.at(x,z)?CL.roomAt(x,z):null;return rk!==null?'corridor:'+rk:'halls';}
  function setPower(v){forced=v;}
- function nearDoor(x,z,yaw){if(mode==='corridor')return corridors.atDoor(x,z);return null;const ix=Math.floor(x/B),iz=Math.floor(z/B);
+ function nearDoor(x,z,yaw){if(mode==='alpha')return alphaWorld.nearDoor(x,z);const alphaDoor=alphaExterior.nearDoor(x,z,yaw);if(alphaDoor)return alphaDoor;if(mode==='corridor')return corridors.atDoor(x,z);return null;const ix=Math.floor(x/B),iz=Math.floor(z/B);
   for(let j=0;j<=1;j++)for(let i=-1;i<=1;i++){const a=ix+i,b=iz+j;if(l1DoorX(a,b)){const dx=x-(a*B+4),dz=z-b*B;if(Math.abs(dx)<1.3&&Math.abs(dz)<1.4)return{x:a*B+4,z:b*B,side:Math.sign(dz)||1,axis:'x',id:a*7919+b*31};}}
   for(let j=-1;j<=1;j++)for(let i=0;i<=1;i++){const a=ix+i,b=iz+j;if(l1DoorZ(a,b)){const dx=x-a*B,dz=z-(b*B+4);if(Math.abs(dz)<1.3&&Math.abs(dx)<1.4)return{x:a*B,z:b*B+4,side:Math.sign(dx)||1,axis:'z',id:a*104729+b*13};}}return null;}
  function nearCamp(x,z){if(mode!=='halls')return null;const cx=Math.floor(x/K),cz=Math.floor(z/K);for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const c=campAt(cx+i,cz+j);if(c&&Math.hypot(c.bottle.x-x,c.bottle.z-z)<1.9)return c;}return null;}
@@ -576,7 +588,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   const p=corridors.build(Math.abs(d.id)%100000);mode='corridor';return{...p,mode};}
 
  const MAPPAL={bg:'#1d2022',floor:'#3a3f42',sec:['','#4a4f50','#3f3a33','#45403a','#4a3b2c'],wall:'#c9cfd2',low:'#7d8487',door:'#3fd36b',thr:'#e58a2a',cluBg:'#2a2826',cluRoom:'#3a3530',cluWall:'#e6e0d4'};
- function map(ctx,ox,oz,cxp,cyp,scale,radius,pal){const P=pal||MAPPAL;if(mode==='corridor')return corridors.map(ctx,ox,oz,cxp,cyp,scale,radius);ctx.save();ctx.fillStyle=P.bg;ctx.fillRect(cxp-radius*scale,cyp-radius*scale,radius*scale*2,radius*scale*2);
+ function map(ctx,ox,oz,cxp,cyp,scale,radius,pal){if(mode==='alpha')return alphaWorld.map(ctx,ox,oz,cxp,cyp,scale,radius);const P=pal||MAPPAL;if(mode==='corridor')return corridors.map(ctx,ox,oz,cxp,cyp,scale,radius);ctx.save();ctx.fillStyle=P.bg;ctx.fillRect(cxp-radius*scale,cyp-radius*scale,radius*scale*2,radius*scale*2);
   const x0=Math.floor((ox-radius)/B)-1,x1=Math.ceil((ox+radius)/B)+1,z0=Math.floor((oz-radius)/B)-1,z1=Math.ceil((oz+radius)/B)+1,sx=v=>cxp+(v-ox)*scale,sz=v=>cyp+(v-oz)*scale;
   ctx.fillStyle=P.floor;ctx.fillRect(sx(x0*B),sz(z0*B),(x1-x0)*B*scale,(z1-z0)*B*scale);
   for(let iz=z0;iz<=z1;iz++)for(let ix=x0;ix<=x1;ix++){const k=l1Sector(ix,iz);if(k){ctx.fillStyle=P.sec[k];ctx.fillRect(sx(ix*B),sz(iz*B),B*scale+.5,B*scale+.5);}}
@@ -585,6 +597,7 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   CL.map(ctx,sx,sz,scale,x0,x1,z0,z1,P);
   for(const c of camps(ox,oz)){ctx.fillStyle=`rgb(${c.col.map(v=>Math.round(Math.pow(v,1/2.2)*255)).slice(0,3).join(',')})`;ctx.fillRect(sx(c.x)-3,sz(c.z)-3,6,6);}
   {const s=l1ThrSite(Math.floor(ox/B),Math.floor(oz/B));if(s&&Math.abs(s.x-ox)<radius+8&&Math.abs(s.z-oz)<radius+8){ctx.fillStyle=P.thr;ctx.fillRect(sx(s.x)-2.5*scale,sz(s.z)-.8*scale,5*scale,1.6*scale);}}
+  alphaExterior.map(ctx,sx,sz,scale);
   if(mapOverlay)try{mapOverlay(ctx,sx,sz,scale,ox,oz,radius);}catch(e){console.warn(e);}// V124b: yarn trails + chained doors (l1loot124-main.js)
   ctx.restore();}
  let mapOverlay=null;
@@ -599,11 +612,12 @@ void main(){vec3 c=vCol;if(vT.x>=0.0)c*=texture(l1Atlas,vec3(vUv*vT.zw,vT.x)).rg
   {const d=CL.nearest(4,4);if(!d)add(null);if(d)landmarks.push({name:'小径 · 过道墙上的门洞',x:d.x,z:d.z,yaw:d.yaw,pitch:-.02});}
   add(sec(3),{name:'衔尾段 · 装修中',yaw:.5,pitch:.1});add(sec(4),{name:'传说段 · 木构老屋',yaw:.5,pitch:.05});
   {const d=CL.nearestLock(4,4);if(!d)add(null);if(d)landmarks.push({name:'小径 · 铁链锁住的储藏间',x:d.x+d.nx*2,z:d.z+d.nz*2,yaw:d.ry,pitch:-.04});}}
- function lootNear(x,z,R=24){const o=[];for(const c of chunks.values()){if(!c.loot)continue;const gx=c.cx*K+K/2,gz=c.cz*K+K/2;if(Math.abs(gx-x)>K/2+R||Math.abs(gz-z)>K/2+R)continue;for(const l of c.loot)if(Math.abs(l.x-x)<R&&Math.abs(l.z-z)<R)o.push(l);}return o;}
+ function lootNear(x,z,R=24){const o=[];for(const c of chunks.values()){if(!c.loot)continue;const gx=c.cx*K+K/2,gz=c.cz*K+K/2;if(Math.abs(gx-x)>K/2+R||Math.abs(gz-z)>K/2+R)continue;for(const l of c.loot)if(!inAlphaExterior150(l.x,l.z,1)&&!exteriorApproach150(l.x,l.z)&&Math.abs(l.x-x)<R&&Math.abs(l.z-z)<R)o.push(l);}return o;}
  // build a geometry (local frame, origin at 0) out of the world's own primitives and atlas materials
  function kitGeo(fn){const sv=[parts,ox0,oz0];parts=[];ox0=oz0=0;try{fn((...a)=>put(parts,...a),C,{box,cyl,vcyl});const g=parts.length>1?mergeGeometries(parts,false):parts[0];if(parts.length>1)parts.forEach(q=>q.dispose());return g;}finally{[parts,ox0,oz0]=sv;}}
+ landmarks.push({name:'M.E.G. Alpha · 西门',x:ALPHA150.gate.approachX,z:ALPHA150.gate.approachZ,yaw:-Math.PI/2,pitch:0});
  let hand={i:0,p:new T.Vector3(),d:new T.Vector3(0,0,-1)};
- async function prewarm(r,camera){ensure(camera.position.x,camera.position.z);layUpdate(camera.position.x,camera.position.z);const g=new T.Group();for(const m of [mat,glowMat,exitMat]){const q=new T.Mesh(col(box.clone(),C.concrete,[1,1,1]),m);q.position.set(camera.position.x,-50,camera.position.z);g.add(q);}g.add(new T.Mesh(haloGeo([[0,-50,0,1,1,1]]),haloMat));scene.add(g);await r.compileAsync(scene,camera);scene.remove(g);g.traverse(o=>o.geometry?.dispose());}
- return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='corridor'?corridors.scene:scene},get mode(){return mode},nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt,
-  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA,shadow)=>{flashShadow=shadow||null;torchShadowActive=i>0&&hand.i<=i;if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,lockDoorsNear,setMapOverlay:f=>{mapOverlay=f;},kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
+ async function prewarm(r,camera){if(mode==='alpha')return;ensure(camera.position.x,camera.position.z);layUpdate(camera.position.x,camera.position.z);const g=new T.Group();for(const m of [mat,glowMat,exitMat]){const q=new T.Mesh(col(box.clone(),C.concrete,[1,1,1]),m);q.position.set(camera.position.x,-50,camera.position.z);g.add(q);}g.add(new T.Mesh(haloGeo([[0,-50,0,1,1,1]]),haloMat));scene.add(g);await r.compileAsync(scene,camera);scene.remove(g);g.traverse(o=>o.geometry?.dispose());}
+ return{clusters:CL,hallsScene:scene,nearCamp,camps,nearThreshold,threshold:(x,z)=>l1Thr(x,z),sector:(x,z)=>l1Sector(Math.floor(x/B),Math.floor(z/B)),get scene(){return mode==='alpha'?alphaWorld.scene:mode==='corridor'?corridors.scene:scene},get mode(){return mode},crossAlpha,alphaStats:()=>alphaWorld?.stats()||null,nearDoor,interact,ready:Promise.all(pending),ensure,update,blocked,safe,floorAt:()=>0,supportAt:(x,z,maxY=.15)=>maxY>=-.001?0:-Infinity,landingAt:(x,z,from,to)=>from>=-.03&&to<=0.001?0:null,headAt,
+  powerAt:()=>power,setPower,toHalls:()=>{if(mode!=='halls'){alphaWorld?.dispose();alphaWorld=null;mode='halls';center='';}},flicker:()=>{forced=null;flickerEnd=-1;nextFlicker=elapsed;},map,landmarks,prewarm,setFlash:(p,d,i,cosA,shadow)=>{flashShadow=shadow||null;torchShadowActive=i>0&&hand.i<=i;if(hand.i>i){p=hand.p;d=hand.d;i=hand.i;cosA=-.7;}uniforms.l1FlP.value.set(p.x-rebase.o.x,p.y,p.z-rebase.o.z,i);uniforms.l1FlD.value.set(d.x,d.y,d.z,cosA);},setHandLight:(i,p,d)=>{hand.i=i;if(p)hand.p.copy(p);if(d)hand.d.copy(d);},lootNear,lockDoorsNear,setMapOverlay:f=>{mapOverlay=f;},kitGeo,lootMat:mat,unsolid:(x,z)=>{for(const c of chunks.values()){const i=c.solids.findIndex(q=>Math.abs(q.x-x)<.01&&Math.abs(q.z-z)<.01);if(i>=0){c.solids.splice(i,1);return true;}}return false;},stats:()=>({chunks:chunks.size,drawCalls:chunks.size*2+2,origin:{...rebase.o},corridor:corridors.stats()}),corridors,get power(){return power},setMirrorScale:v=>{mirrorScale=v;}};
 }
