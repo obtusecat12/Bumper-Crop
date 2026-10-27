@@ -3,7 +3,7 @@ const nextTurn=()=>new Promise(r=>setTimeout(r,0));
 export function createAlphaStream150({prepare=async id=>{await nextTurn();return describeChunk150(id);},create,release,budgetMs=2,loadRadius=44,unloadRadius=76}){
  const resident=new Map(),pending=new Map(),ready=[],desired=new Set();let active=null,epoch=0,lastPlan='',lastX=0,lastZ=0,disposed=false;
  const stats={requested:0,cancelled:0,released:0,failed:0,created:0};
- function cancel(id){const p=pending.get(id);if(p){p.cancelled=true;pending.delete(id);stats.cancelled++;}}
+ function cancel(id){const p=pending.get(id);if(p){p.cancelled=true;p.abort?.();pending.delete(id);stats.cancelled++;}}
  function request(c){if(resident.has(c.id)||pending.has(c.id)||ready.some(a=>a.id===c.id)||active?.id===c.id)return;
   const token={epoch,cancelled:false};pending.set(c.id,token);stats.requested++;
   Promise.resolve().then(()=>prepare(c.id,token)).then(desc=>{if(disposed||token.cancelled||token.epoch!==epoch||!desired.has(c.id))return;ready.push(desc);},()=>{if(!token.cancelled)stats.failed++;}).finally(()=>{if(pending.get(c.id)===token)pending.delete(c.id);});

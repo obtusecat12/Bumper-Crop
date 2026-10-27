@@ -36,6 +36,7 @@ const W=ALPHA150.width,D=ALPHA150.depth,t=ALPHA150.wall;
 wall('perimeter-n',W/2,t/2,W,t);wall('perimeter-s',W/2,D-t/2,W,t);
 wall('perimeter-e',W-t/2,D/2,t,D);
 wall('perimeter-w-n',t/2,91,t,182);wall('perimeter-w-s',t/2,224,t,72);
+wall('west-link-n',25,179,50,t);wall('west-link-s',25,191,50,t);
 wall('west-door',t/2,185,.28,6,2.7);wall('west-header',t/2,185,.32,6,.7,2.7);
 for(const r of ALPHA_ROOMS150){
  const x=r.x,z=r.z,w=r.w,d=r.d,leaf=(w-r.door)/2;

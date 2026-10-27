@@ -164,3 +164,5 @@
 - 已从官方页面重新读取分区图（https://backrooms-wiki-cn.wikidot.com/base-alpha）；米制比例 300×260m 是项目设计，非官方测绘。
 - 第一模块保存：`art-source/alpha150/checkpoints/2026-10-26-stage2/alpha150-plan.js` 与 `alpha150-stream.js`。四署/五片区邻接、统一墙体/碰撞/门洞、24m 分块描述，以及异步准备/取消/分时创建/滞回释放。暂未接入运行时。
 - 下一动作：完成场景资源生命周期，加入 Level 1 外部同尺寸禁入围墙、西门交互与独立 mode=alpha，再保存开发预览。
+
+- 2026-10-27 恢复：远端仍为 `826595b65f58fdd72ac473da61a09e8ed0dd7882`；先追加保存 scene/material/worker/exterior 草稿，未接入运行时。重新开始本轮 90 分钟预算：04:02 UTC 开始，05:12 UTC 后只收尾，05:32 UTC 硬截止。
