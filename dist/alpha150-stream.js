@@ -1,4 +1,4 @@
-import {ALPHA_CHUNKS150,chunkAt150,describeChunk150} from './alpha150-plan.js';
+import {ALPHA_CHUNKS150,chunkAt150,describeChunk150} from './alpha150-plan.js?v=150s3r';
 const nextTurn=()=>new Promise(r=>setTimeout(r,0));
 export function createAlphaStream150({prepare=async id=>{await nextTurn();return describeChunk150(id);},create,release,budgetMs=2,loadRadius=44,unloadRadius=76}){
  const resident=new Map(),pending=new Map(),ready=[],desired=new Set();let active=null,epoch=0,lastPlan='',lastX=0,lastZ=0,disposed=false;

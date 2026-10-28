@@ -1,15 +1,16 @@
-import {ALPHA150,ALPHA_ZONES150,ALPHA_ROOMS150,ALPHA_WALLS150,alphaBlocked150,alphaHead150,alphaSafe150,zoneAt150,describeChunk150} from './alpha150-plan.js';
-import {createAlphaStream150} from './alpha150-stream.js';
+import {RADIO_FINISHES,RADIO_PLACEMENT150} from './alpha150-radio.js';
+import {ALPHA150,ALPHA_ZONES150,ALPHA_ROOMS150,ALPHA_WALLS150,alphaBlocked150,alphaHead150,alphaSafe150,zoneAt150,describeChunk150} from './alpha150-plan.js?v=150s3r';
+import {createAlphaStream150} from './alpha150-stream.js?v=150s3r';
 // Stage 2 architectural finishes; authored photographic maps and Cycles room maps arrive in stages 3/5.
 const COLORS={floor:0x777970,ceiling:0xb8b6a4,wall:0xb8b6a4,skirt:0x4a5b51,gate:0x536962,fixture:0x626963,diffuser:0xe6e1bd};
 export function createAlphaMaterials150(T){
  const finishes=new Map(),rooms=new Map();
  function ensureRoom(id){rooms.set(id,(rooms.get(id)||0)+1);}
  function releaseRoom(id){const n=(rooms.get(id)||1)-1;if(n)rooms.set(id,n);else rooms.delete(id);}
- function materialFor(key,roomId){let rec=finishes.get(key);if(!rec){const material=new T.MeshLambertMaterial({color:COLORS[key]||0xb7b3a4});if(key==='diffuser'){material.emissive.setHex(0xffefbf);material.emissiveIntensity=.7;}rec={material,refs:0};finishes.set(key,rec);}return rec.material;}
+ function materialFor(key,roomId){let rec=finishes.get(key);if(!rec){const radio=key.startsWith('radio:');const material=radio?new T.MeshStandardMaterial({color:RADIO_FINISHES[key.slice(6)],roughness:.84,metalness:key==='radio:rail'?.35:.03}):new T.MeshLambertMaterial({color:COLORS[key]||0xb7b3a4});if(key==='radio:enamel'&&typeof document!=='undefined'){const loader=new T.TextureLoader();material.color.setHex(0xffffff);for(const [slot,name] of [['map','rack-enamel.webp'],['normalMap','rack-enamel-normal.webp']]){const tex=loader.load(new URL('./assets/alpha150/'+name,import.meta.url).href);tex.wrapS=tex.wrapT=T.RepeatWrapping;tex.repeat.set(2,2);if(slot==='map')tex.colorSpace=T.SRGBColorSpace;material[slot]=tex;}material.normalScale.set(.32,.32);}if(key==='diffuser'){material.emissive.setHex(0xffefbf);material.emissiveIntensity=.7;}rec={material,refs:0};finishes.set(key,rec);}return rec.material;}
  function acquire(keys,roomIds){for(const key of keys){materialFor(key);finishes.get(key).refs++;}roomIds.forEach(ensureRoom);}
  function release(keys,roomIds){roomIds.forEach(releaseRoom);for(const key of keys){const rec=finishes.get(key);if(rec&&--rec.refs<=0){for(const k of ['map','normalMap','roughnessMap','lightMap'])rec.material[k]?.dispose();rec.material.dispose();finishes.delete(key);}}}
- function dispose(){for(const rec of finishes.values())rec.material.dispose();finishes.clear();rooms.clear();}
+ function dispose(){for(const rec of finishes.values()){for(const k of ['map','normalMap','roughnessMap','lightMap'])rec.material[k]?.dispose();rec.material.dispose();}finishes.clear();rooms.clear();}
  return{materialFor,ensureRoom,releaseRoom,acquire,release,dispose,stats:()=>({materials:finishes.size,rooms:rooms.size,roomRefs:[...rooms.values()].reduce((a,b)=>a+b,0)})};
 }
 // A chamfered box has real bevel faces. UVs are metre-scaled and remain stable across chunk seams.
@@ -31,7 +32,7 @@ export function createAlphaWorld150(T){
  const fills=Array.from({length:3},()=>{const p=new T.PointLight(0xffe5b4,18,20,2);p.castShadow=false;scene.add(p);return p;});
  let worker=null,serial=0,lastX=ALPHA150.entry.x,lastZ=ALPHA150.entry.z,disposed=false;
  const jobs=new Map();
- try{worker=new Worker(new URL('./alpha150-worker.js',import.meta.url),{type:'module'});
+ try{worker=new Worker(new URL('./alpha150-worker.js?v=150s3r',import.meta.url),{type:'module'});
   worker.onmessage=({data})=>{const job=jobs.get(data.job);if(!job)return;jobs.delete(data.job);data.error?job.reject(Error(data.error)):job.resolve(data.desc);};
   worker.onerror=()=>{worker?.terminate();worker=null;for(const job of jobs.values()){try{job.resolve(describeChunk150(job.id));}catch(e){job.reject(e);}}jobs.clear();};
  }catch{}
@@ -40,9 +41,10 @@ export function createAlphaWorld150(T){
   const job=++serial;jobs.set(job,{id,resolve,reject});token.abort=()=>{jobs.delete(job);worker?.postMessage({cancel:job});reject(Error('cancelled'));};worker.postMessage({job,id});
  });
  function release(item){scene.remove(item.group);item.group.traverse(o=>{o.geometry?.dispose();if(o.userData.ownedMaterial){o.material.map?.dispose();o.material.dispose();}});materials.release(item.keys,item.rooms);}
- function* create(desc){const group=new T.Group();group.name='alpha:'+desc.id;const keys=[...new Set([...desc.boxes.map(b=>b.kind),...(desc.signs.length?['skirt']:[])])];materials.acquire(keys,desc.rooms);const item={group,keys,rooms:desc.rooms,chunk:desc.chunk};let done=false;
+ function* create(desc){const group=new T.Group();group.name='alpha:'+desc.id;const keys=[...new Set([...desc.boxes.map(b=>b.kind),...(desc.props||[]).map(p=>'radio:'+p.mat),...(desc.signs.length?['skirt']:[])])];materials.acquire(keys,desc.rooms);const item={group,keys,rooms:desc.rooms,chunk:desc.chunk};let done=false;
   try{const arrays=new Map();let n=0;
    for(const b of desc.boxes){let out=arrays.get(b.kind);if(!out){out={position:[],normal:[],uv:[]};arrays.set(b.kind,out);}appendBox150(out,b,['wall','gate','fixture'].includes(b.kind)?.014:0);if(++n%8===0)yield;}
+   for(const p of desc.props||[]){const key='radio:'+p.mat;let out=arrays.get(key);if(!out){out={position:[],normal:[],uv:[]};arrays.set(key,out);}appendRadioPart150(T,out,p);yield;}
    for(const [kind,a]of arrays){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(a.position,3));g.setAttribute('normal',new T.Float32BufferAttribute(a.normal,3));g.setAttribute('uv',new T.Float32BufferAttribute(a.uv,2));g.computeBoundingSphere();const mesh=new T.Mesh(g,materials.materialFor(kind));mesh.castShadow=!['diffuser','fixture'].includes(kind);mesh.receiveShadow=true;mesh.userData.alphaKind=kind;group.add(mesh);yield;}
    for(const sign of desc.signs){if(typeof document==='undefined')continue;const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const ctx=canvas.getContext('2d');ctx.fillStyle='#273b36';ctx.fillRect(0,0,512,128);ctx.fillStyle='#eee4bf';ctx.font='bold 32px sans-serif';ctx.textAlign='center';ctx.fillText(sign.text,256,59);ctx.font='18px monospace';ctx.fillText('M.E.G. ALPHA  /  '+sign.zone.toUpperCase(),256,99);const tex=new T.CanvasTexture(canvas);tex.colorSpace=T.SRGBColorSpace;const mat=new T.MeshLambertMaterial({map:tex,side:T.DoubleSide});const panel=new T.Mesh(new T.BoxGeometry(3.6,.9,.08),mat);panel.position.set(sign.x+1.5,sign.y,sign.z);panel.userData.ownedMaterial=true;group.add(panel);for(const dx of [-1.6,1.6]){const pole=new T.Mesh(new T.BoxGeometry(.065,2.5,.065),materials.materialFor('skirt'));pole.position.set(sign.x+1.5+dx,1.25,sign.z);group.add(pole);}yield;}
    scene.add(group);done=true;return item;
@@ -56,4 +58,18 @@ export function createAlphaWorld150(T){
   nearDoor:(x,z)=>x<3&&Math.abs(z-ALPHA150.exit.z)<2.5?{alpha:true,back:true,label:'E 返回 Level 1 · Alpha 西门'}:null,
   suspend(){stream.clear();},stats:()=>({...stream.stats(),...materials.stats(),worker:!!worker}),
   dispose(){if(disposed)return;disposed=true;stream.dispose();worker?.terminate();worker=null;for(const j of jobs.values())j.reject(Error('Alpha disposed'));jobs.clear();materials.dispose();scene.clear();}};
+}
+
+// A single small primitive per generator step, merged into one mesh per finish afterward.
+export function appendRadioPart150(T,out,p){
+ let g;
+ if(p.shape==='box'){
+  const a={position:[],normal:[],uv:[]};appendBox150(a,{...p,x:0,y:0,z:0},.006);g=new T.BufferGeometry();for(const [k,n]of [['position',3],['normal',3],['uv',2]])g.setAttribute(k,new T.Float32BufferAttribute(a[k],n));
+ }else if(p.shape==='disc'){g=new T.CylinderGeometry(p.r,p.r,p.depth,12);g.rotateX(Math.PI/2);}
+ else {const a=new T.Vector3(...p.a),b=new T.Vector3(...p.b);g=new T.CylinderGeometry(p.r,p.r,a.distanceTo(b),6);g.applyQuaternion(new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),b.clone().sub(a).normalize()));g.translate(...a.add(b).multiplyScalar(.5).toArray());}
+ if(p.shape!=='cable'){g.rotateZ(p.rz||0);g.translate(p.x,p.y,p.z);}
+ g.translate(RADIO_PLACEMENT150.x,0,RADIO_PLACEMENT150.z);
+ const count=g.index?.count||g.attributes.position.count;
+ for(let i=0;i<count;i++){const j=g.index?g.index.getX(i):i;for(const k of ['position','normal','uv']){const a=g.attributes[k];for(let n=0;n<a.itemSize;n++)out[k].push(a.array[j*a.itemSize+n]);}}
+ g.dispose();
 }

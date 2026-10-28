@@ -2,7 +2,7 @@
 // One merged mesh per 64 m chunk (one lit material, vertex colours), one emissive mesh per chunk,
 // global floor/ceiling planes. Lighting is analytic and layout-hashed in the shader: a constant
 // number of light evaluations per fragment, no scene lights → no program recompiles.
-import {ALPHA150,inAlphaExterior150,exteriorApproach150,exteriorSafe150} from './alpha150-plan.js';
+import {ALPHA150,inAlphaExterior150,exteriorApproach150,exteriorSafe150} from './alpha150-plan.js?v=150s3r';
 import {createAlphaExterior150} from './alpha150-exterior.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {makeL1Props} from './level1-props.js?v=116';
@@ -170,7 +170,7 @@ export function createLevel1World(T,renderer){
  async function crossAlpha(pose){
   if(mode==='alpha'){const p=alphaReturn;alphaWorld.dispose();alphaWorld=null;mode='halls';center='';ensure(p.x,p.z);alphaExterior.update(p.x,p.z);return{...p,mode};}
   if(!alphaExterior.nearDoor(pose.x,pose.z,pose.yaw))return null;
-  try{const {createAlphaWorld150}=await import('./alpha150-world.js?v=150s2');alphaWorld=createAlphaWorld150(T);await alphaWorld.ready;await alphaWorld.ensure(ALPHA150.entry.x,ALPHA150.entry.z);alphaReturn={...pose};mode='alpha';return{...ALPHA150.entry,pitch:0,mode};}
+  try{const {createAlphaWorld150}=await import('./alpha150-world.js?v=150s3r');alphaWorld=createAlphaWorld150(T);await alphaWorld.ready;await alphaWorld.ensure(ALPHA150.entry.x,ALPHA150.entry.z);alphaReturn={...pose};mode='alpha';return{...ALPHA150.entry,pitch:0,mode};}
   catch(e){alphaWorld?.dispose();alphaWorld=null;throw e;}
  }
 

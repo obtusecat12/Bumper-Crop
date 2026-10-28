@@ -1,3 +1,4 @@
+import {RADIO_PLACEMENT150,RADIO_SHELL150,RADIO_WORLD_COLLIDERS150,radioParts150} from './alpha150-radio.js';
 // Alpha design scale (not an official survey). All bounds, rendering and collision share this plan.
 export const ALPHA150 = Object.freeze({width:300,depth:260,chunk:24,height:3.4,wall:.22,
  exterior:{x0:640,x1:940,z0:-640,z1:-380},
@@ -44,10 +45,11 @@ for(const r of ALPHA_ROOMS150){
  wall(r.id+'-s0',x+leaf/2,z+d,leaf,t);wall(r.id+'-s1',x+w-leaf/2,z+d,leaf,t);
  wall(r.id+'-header',x+w/2,z+d,r.door,t,r.height-r.head,r.head);
 }
+for(const [i,b] of RADIO_SHELL150.entries())wall('radio-shell-'+i,b.x+12,b.z+12,b.w,b.d,b.h,b.y);
 export function insideAlpha150(x,z,r=0){return x>=r&&x<=W-r&&z>=r&&z<=D-r;}
 export function alphaBlocked150(x,z,r=.25){
  if(!insideAlpha150(x,z,r))return true;
- return ALPHA_WALLS150.some(a=>a.y<1.8&&Math.abs(x-a.x)<a.w/2+r&&Math.abs(z-a.z)<a.d/2+r);
+ return [...ALPHA_WALLS150,...RADIO_WORLD_COLLIDERS150].some(a=>a.y<1.8&&Math.abs(x-a.x)<a.w/2+r&&Math.abs(z-a.z)<a.d/2+r);
 }
 export function alphaHead150(x,z,r=.25){
  let top=ALPHA150.height;
@@ -91,5 +93,7 @@ export function describeChunk150(id){
   box('fixture',x,3.34,z,1.28,.12,.34);box('diffuser',x,3.27,z,1.12,.025,.24);
  }
  const signs=ALPHA_ZONES150.filter(a=>a.x>=c.x&&a.x<c.x+c.w&&a.z>=c.z&&a.z<c.z+c.d).map(a=>({text:a.code+' · '+a.name,x:a.x+1,z:a.z,y:2.5,zone:a.id}));
- return{id,chunk:c,boxes,rooms:[...rooms],signs};
+ const props=id===RADIO_PLACEMENT150.chunk?radioParts150():[];
+ if(props.length)rooms.add(RADIO_PLACEMENT150.roomId);
+ return{id,chunk:c,boxes,props,rooms:[...rooms],signs};
 }

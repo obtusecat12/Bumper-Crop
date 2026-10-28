@@ -1,6 +1,6 @@
 # Stage 3 / EX-01 radio room checkpoint — 2026-10-27
 
-Not imported by the game. First authored equipment bay for exploration-01; room shell resizing, streaming ownership, collider integration and final material binding are still pending. Local metre coordinates, roughly 7 × 4 m scene.
+Updated 2026-10-28 UTC: equipment descriptors now live in dist/alpha150-radio.js and ARE imported by Alpha. Placement (12,12), exploration-01, owner chunk0:0. The roughly7.3m-wide equipment bay has shared collision/partition descriptors; existing Alpha floor/ceiling remain authoritative. Other architectural finishes and fixed-light fixtures still need work.
 
 Reference: https://backrooms-wiki-cn.wikidot.com/base-alpha , linked Capalaba receiving-station equipment-room photo:
 https://brsandbox-pro.wdfiles.com/local--files/file-pale-chamber/US_Army_Radio_Receiving_Station,_Capalaba,_Equipment_Room_(2020).jpg
@@ -16,6 +16,6 @@ Photo viewed for composition; original photo is not redistributed. Five open rac
 - https://shayno.itch.io/ps1-retro-pccomputer-asset rechecked2026-10-27: no clear license displayed; not redistributed.
 
 ## Preview
-Start managed project preview, visit `/__alpha-radio.html`. Front/rear use the actual Three.js geometry projected in Canvas2D. Screen-space faint enamel texture is an inspection aid, not final metre-scaled UV material; no baked lighting. Normal map is saved for runtime integration but not represented by this software view. Model hard edges have6mm bevels, circles12segments, cables6segments. Collision descriptors are prepared but not active. No gameplay or GPU claims. No site deployment.
+Start managed project preview, visit `/__alpha-radio.html`. Front/rear use the actual Three.js geometry projected in Canvas2D. Updated preview uses a per-pixel depth buffer and perspective-correct metre UV diffuse sampling; no baked lighting. Normal map is bound in the runtime shared material service but is not represented by this software view. Model hard edges have6mm bevels, circles12segments, cables6segments. Collision descriptors are active; furniture stays in one chunk, 330 components merge into9 finish batches (12,932 triangles). No gameplay or GPU claims. No site deployment.
 
-Next: integrate a scaled EX-01 equipment room shell and these colliders/geometry into chunk ownership; bind diffuse/normal through shared material service; generate the six planned architectural textures separately; then official conference/storage/archive/lab references, one finished representative room at a time.
+Next: generate the six planned architectural textures separately and complete fixed fluorescent fixtures/room dressing; then official conference/storage/archive/lab references, one representative room at a time. The room is still a partial reproduction; no claim that all four departments are delivered.

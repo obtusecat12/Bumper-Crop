@@ -1,4 +1,4 @@
-import {describeChunk150} from './alpha150-plan.js';
+import {describeChunk150} from './alpha150-plan.js?v=150s3r';
 const cancelled=new Set();
 self.onmessage=({data})=>{
  if(data.cancel){cancelled.add(data.cancel);if(cancelled.size>256)cancelled.delete(cancelled.values().next().value);return;}
