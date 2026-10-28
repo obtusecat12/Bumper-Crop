@@ -1,0 +1,122 @@
+{
+  "output": "rack-enamel-original.png",
+  "bytes": 4381560,
+  "sha256": "28af693629dda7ef3634ff44ea4f90fc5ac55f61fcc0d39b7ba86c9ad7e3753a",
+  "parts": [
+    {
+      "file": "rack-enamel-00.part",
+      "bytes": 196608,
+      "sha256": "8182766f8950eb7e71dedb50608a3cc675ae51aa1ee0f857df4a0096550e1656"
+    },
+    {
+      "file": "rack-enamel-01.part",
+      "bytes": 196608,
+      "sha256": "c1ce616f16ad98a8efc5191f4338b97b09b520730515e5c528dabec9405881a3"
+    },
+    {
+      "file": "rack-enamel-02.part",
+      "bytes": 196608,
+      "sha256": "69a60c760171c6a9e3f27041fbe0695b8eabcb360e8986420b30e3a101f38ff2"
+    },
+    {
+      "file": "rack-enamel-03.part",
+      "bytes": 196608,
+      "sha256": "fd3a72cafe11298fcf581b97dd4ca61441e8e2d5772aa418f238fcc5ae511701"
+    },
+    {
+      "file": "rack-enamel-04.part",
+      "bytes": 196608,
+      "sha256": "0b3817f7c2094f2b6fd988777f052d235bf31aa6896539a65402bd43f81a7946"
+    },
+    {
+      "file": "rack-enamel-05.part",
+      "bytes": 196608,
+      "sha256": "70f80710529a2caca078def249bdb2c21c5be00b6df9d9f7a227fb5ab298ee9d"
+    },
+    {
+      "file": "rack-enamel-06.part",
+      "bytes": 196608,
+      "sha256": "2b928b43c2e0cdc41db772fc5bcd85136a054255d08c4d157c2c83bd46f36572"
+    },
+    {
+      "file": "rack-enamel-07.part",
+      "bytes": 196608,
+      "sha256": "beee8b44d0a2f0b3a1cde71e89da36adda9a14f02862580bb8488918bfccd789"
+    },
+    {
+      "file": "rack-enamel-08.part",
+      "bytes": 196608,
+      "sha256": "d7de2719c560e1dab96eaceeaa069ee91b5e55f21d7c79086fec4bea6fcfc48d"
+    },
+    {
+      "file": "rack-enamel-09.part",
+      "bytes": 196608,
+      "sha256": "591e13e094dc8af46804b73a6a32562a7eb6b731bea98ecb883a2cc1101e85a3"
+    },
+    {
+      "file": "rack-enamel-10.part",
+      "bytes": 196608,
+      "sha256": "ab16992efb1d70d0a9a13a1f31d750f85832c771e9282a9798715d2af88b1757"
+    },
+    {
+      "file": "rack-enamel-11.part",
+      "bytes": 196608,
+      "sha256": "70a0dffcff66997a703f485da5cbbbc8010b86d96afffbaf2e64dbcfe0cfe343"
+    },
+    {
+      "file": "rack-enamel-12.part",
+      "bytes": 196608,
+      "sha256": "a21d7dbe35eadd5a7ac7057f318fbdf01fdda1ae8ef840d743f9bdbad3997827"
+    },
+    {
+      "file": "rack-enamel-13.part",
+      "bytes": 196608,
+      "sha256": "823a1f08fbe174c16645a8e271bc2f9d804dfba54ccb9b9263cf57233072037e"
+    },
+    {
+      "file": "rack-enamel-14.part",
+      "bytes": 196608,
+      "sha256": "15e386ed17f599892d8287aa791d5f737307680fdab413afdcedadbdf9566500"
+    },
+    {
+      "file": "rack-enamel-15.part",
+      "bytes": 196608,
+      "sha256": "a5348df5dc174c97a13540c88c6acc79150f185bde9312352d8fb082d13f49ce"
+    },
+    {
+      "file": "rack-enamel-16.part",
+      "bytes": 196608,
+      "sha256": "8ada2bd79c77afec929ed088086043657d73623ff614ccc5d23a7a6cd41d618c"
+    },
+    {
+      "file": "rack-enamel-17.part",
+      "bytes": 196608,
+      "sha256": "8cb5949f57cd0866b5e4d58ec6be6fa15952f2e9e0c86eb6c50db2b5efc1716a"
+    },
+    {
+      "file": "rack-enamel-18.part",
+      "bytes": 196608,
+      "sha256": "3cec5c9303e6d9c22ed99c89c680d43bab8bf709dd56ec70e33f43e25d95703f"
+    },
+    {
+      "file": "rack-enamel-19.part",
+      "bytes": 196608,
+      "sha256": "ea9df56ed4693b4239da1b619c8e7820471acedf4b31b181ae72339cb369f6fd"
+    },
+    {
+      "file": "rack-enamel-20.part",
+      "bytes": 196608,
+      "sha256": "120fe3d84ef183f70701893726522e64071a316b3907f6177baa3151a9cc7188"
+    },
+    {
+      "file": "rack-enamel-21.part",
+      "bytes": 196608,
+      "sha256": "fa01b7d62f043461a5102bb72a74dc2626db54f3727b4baa6d59c684836b1fbc"
+    },
+    {
+      "file": "rack-enamel-22.part",
+      "bytes": 56184,
+      "sha256": "62177160498e103e5faf5c899278f94b1854fe6b48021cb944e1451cf0458ce6"
+    }
+  ]
+}
