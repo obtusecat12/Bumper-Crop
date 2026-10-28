@@ -17,6 +17,7 @@ async function visualCheck(url){
 createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://terminal.local');
+  if(url.pathname==='/__alpha-radio.html'||url.pathname==='/__alpha-radio-model.js'){const model=url.pathname.endsWith('.js');res.writeHead(200,{'Content-Type':model?types['.js']:types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('art-source/alpha150/stage3/'+(model?'radio-room.js':'preview.html'))));return;}
   if(url.pathname==='/__alpha150.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('art-source/alpha150/preview/index.html')));return;}
   if(url.pathname==='/__tiki-v80.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/tiki-v80/preview.html')));return;}
   if(url.pathname==='/__terrace-v80.html'){res.writeHead(200,{'Content-Type':types['.html'],'Cache-Control':'no-store'});res.end(await readFile(resolve('tests/tiki-v80/terrace.html')));return;}
