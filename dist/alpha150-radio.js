@@ -1,6 +1,6 @@
 // Stage 3 radio equipment: pure metre-scale descriptors shared by worker, collisions and development view.
 // Local metre coordinates. Based on the Capalaba equipment-room photograph linked by the Alpha article.
-export const RADIO_FINISHES={enamel:'#30322f',rail:'#9da8ae',ivory:'#dedbc5',wood:'#735039',rubber:'#272825',brass:'#a79158',paper:'#e4ddbb',wall:'#e6dfb8',floor:'#b7ad88',glass:'#393c2e',red:'#a85842'};
+export const RADIO_FINISHES={enamel:'#30322f',rail:'#9da8ae',ivory:'#dedbc5',wood:'#735039',rubber:'#272825',brass:'#a79158',paper:'#e4ddbb',wall:'#e6dfb8',floor:'#b7ad88',glass:'#393c2e',red:'#a85842',tube:'#f3f1df'};
 export function radioParts150(){
  const p=[];const box=(mat,x,y,z,w,h,d,extra={})=>p.push({shape:'box',mat,x,y,z,w,h,d,...extra});
  const disc=(mat,x,y,z,r,depth,extra={})=>p.push({shape:'disc',mat,x,y,z,r,depth,...extra});
@@ -39,6 +39,19 @@ export function radioParts150(){
  for(const x of [5.5,6.55])box('ivory',x,1.23,.15,.1,2.46,.24);box('ivory',6.025,2.46,.15,1.15,.11,.24);
  for(const x of [5.58,6.48])for(const z of [-.55,-1.15])box('rail',x,1.05,z,.04,2.1,.04);
  for(const y of [.2,.72,1.24,1.76])box('enamel',6.03,y,-.86,.98,.035,.67);
+ // Two ceiling-mounted twin-tube battens: mounting brackets, housing, reflector and sockets.
+ for(const x of [1.6,4.9]){const z=2.0;
+  for(const dx of [-.47,.47])box('rail',x+dx,3.365,z,.085,.07,.24);
+  box('ivory',x,3.29,z,1.3,.09,.34);box('rail',x,3.237,z,1.23,.016,.29);
+  for(const dz of [-.09,.09]){
+   for(const dx of [-.58,.58])box('ivory',x+dx,3.20,z+dz,.065,.065,.07);
+   cable([x-.55,3.19,z+dz],[x+.55,3.19,z+dz],.019,'tube');
+  }
+  for(const dx of [-.45,.45])box('rail',x+dx,3.187,z,.018,.018,.28);
+ }
+ // Wall switch and surface conduit stop below the existing 3.4m ceiling.
+ box('ivory',4.42,1.3,3.94,.12,.17,.06);box('rubber',4.42,1.3,3.903,.035,.065,.015);
+ cable([4.42,1.39,3.94],[4.42,3.32,3.94],.012,'rail');
  return p;
 }
 export const RADIO_COLLIDERS=[{x:2.2,z:.62,w:4.3,d:.64,h:2.3},{x:2.22,z:1.32,w:4.3,d:.7,h:.8},...[1.05,2.8].map(x=>({x,z:2.06,w:.55,d:.62,h:1.1}))];
@@ -56,3 +69,6 @@ export const RADIO_SHELL150=[
  {x:5.3,z:4.05,w:1.4,d:.16,h:.85,y:2.55}
 ];
 export const RADIO_WORLD_COLLIDERS150=RADIO_COLLIDERS.concat([{x:6.03,z:-.86,w:1.02,d:.7,h:2.1}]).map(b=>({...b,x:b.x+12,z:b.z+12,y:0}));
+
+// Stage 5 emitter metadata only: no extra runtime lights and no player flashlight bake.
+export const RADIO_FIXED_LIGHTS150=[1.6,4.9].map((x,i)=>({id:`radio-batten-${i}`,roomId:RADIO_PLACEMENT150.roomId,chunk:RADIO_PLACEMENT150.chunk,x:x+12,y:3.19,z:14,width:1.1,depth:.22,direction:[0,-1,0],color:0xf3f1df}));
